@@ -1,7 +1,7 @@
 # Kong Spec Renderer
 
 > [!IMPORTANT]
-> This repository and the `@kong/spec-renderer` package are currently in development. Breaking changes should be expected.
+> This repository and the `@kong/spec-renderer` package are currently in development on the `alpha` branch. Breaking changes should be expected.
 
 Kong's open-source spec renderer.
 
