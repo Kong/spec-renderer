@@ -1,5 +1,5 @@
 {
-  "name": "@kong/spec-renderer",
+  "name": "@kong/spec-renderer-poc",
   "version": "0.0.1",
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",

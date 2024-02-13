@@ -2,7 +2,7 @@
   <div class="sandbox-container">
     <main>
       <div class="page-header">
-        <h1><code>@kong/spec-renderer</code></h1>
+        <h1><code>@kong/spec-renderer-poc</code></h1>
         <a
           href="https://github.com/Kong/spec-renderer"
           target="_blank"
