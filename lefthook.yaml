@@ -1,0 +1,30 @@
+# Reference:
+# https://github.com/evilmartians/lefthook/blob/master/docs/full_guide.md
+
+pre-push:
+  parallel: true
+  commands:
+    stylelint:
+      skip:
+        - merge
+        - rebase
+      run: pnpm run stylelint
+    eslint:
+      skip:
+        - merge
+        - rebase
+      run: pnpm run lint
+    typecheck:
+      skip:
+        - merge
+        - rebase
+      run: pnpm run typecheck
+
+commit-msg:
+  parallel: true
+  commands:
+    commitlint:
+      skip:
+        - merge
+        - rebase
+      run: pnpm commitlint --edit "$1"

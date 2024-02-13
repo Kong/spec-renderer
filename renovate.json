@@ -1,0 +1,18 @@
+{
+  "extends": [
+    "github>Kong/public-shared-renovate:kong-frontend-config.json"
+  ],
+  "packageRules": [
+    {
+      "groupName": "node engines range",
+      "groupSlug": "node-engines",
+      "matchPackageNames": [
+        "node"
+      ],
+      "matchDepTypes": [
+        "engines"
+      ],
+      "enabled": false
+    }
+  ]
+}

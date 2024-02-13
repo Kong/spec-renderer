@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false
+  },
+  "exclude": [
+    "sandbox",
+    "node_modules",
+    "dist",
+    "src/**/*.spec.ts",
+  ],
+}
