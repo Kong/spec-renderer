@@ -1,7 +1,7 @@
 # Kong Spec Renderer
 
 > [!IMPORTANT]
-> This repository and the `@kong/spec-renderer-poc` package are currently in development on the `main` branch. Breaking changes should be expected.
+> This repository and the `@kong/spec-renderer-dev` package are currently in development on the `main` branch. Breaking changes should be expected.
 >
 > Once the `1.x` version is ready, the package name will change to `@kong/spec-renderer`.
 
