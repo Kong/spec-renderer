@@ -1,0 +1,9 @@
+import useSchemaParser from './useSchemaParser'
+// import useSchemaParserOas from './useSchemaParserOas'
+
+// All composables must be exported as part of the default object for Cypress test stubs
+export default {
+  useSchemaParser,
+  // useSchemaParserOas,
+
+}

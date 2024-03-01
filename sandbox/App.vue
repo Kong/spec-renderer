@@ -1,26 +1,37 @@
 <template>
   <div class="sandbox-container">
-    <main>
-      <div class="page-header">
-        <h1><code>@kong/spec-renderer-dev</code></h1>
-        <a
-          href="https://github.com/Kong/spec-renderer"
-          target="_blank"
-        >GitHub Docs</a>
-      </div>
+    <header class="page-header">
+      <h1><code>@kong/spec-renderer-dev</code></h1>
+      <router-link to="/spec-renderer/parser">
+        Spec-Renderer
+      </router-link>
+      <router-link to="/spec-renderer/stoplight">
+        Stoplight-Playground
+      </router-link>
+
+      <a
+        href="https://github.com/Kong/spec-renderer"
+        target="_blank"
+      >GitHub Docs</a>
+    </header>
+    <main class="page-main">
+      <router-view />
     </main>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .sandbox-container {
-  background: $kui-color-background;
-  color: $kui-color-text;
   font-family: $kui-font-family-text;
-  padding: var(--kui-space-70, $kui-space-70);
 }
 
+.page-main {
+  padding: 6px;
+}
 .page-header {
+  background-color: $kui-color-background-primary-strongest;
+  color: $kui-color-text-inverse;
+
   align-items: baseline;
   gap: $kui-space-70;
   margin-bottom: $kui-space-70;
@@ -32,6 +43,7 @@
   h1 {
     margin-bottom: $kui-space-20;
     margin-top: $kui-space-0;
+    margin-left: $kui-space-40;
 
     @media (min-width: $kui-breakpoint-mobile) {
       margin-bottom: $kui-space-0;
@@ -39,16 +51,18 @@
   }
 
   a {
-    color: $kui-color-text-primary;
+    color: $kui-color-text-inverse;
     display: inline-block;
     text-decoration: none;
+    padding: 10px;
 
     &:hover {
-      color: $kui-color-text-primary-stronger;
+      //color: $kui-color-text-primary-stronger;
     }
 
-    &:active {
+    &.router-link-exact-active {
       color: $kui-color-text-primary-strongest;
+      background-color: $kui-color-text-decorative-aqua;
     }
   }
 }

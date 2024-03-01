@@ -3,6 +3,7 @@ import VueDevTools from 'vite-plugin-vue-devtools'
 import vue from '@vitejs/plugin-vue'
 import path, { join } from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 // Include the rollup-plugin-visualizer if the BUILD_VISUALIZER env var is set to "true"
 const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
@@ -17,7 +18,16 @@ const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.startsWith('elements-api'),
+        },
+      },
+    }),
+    nodePolyfills({
+      include: ['process', 'fs'],
+    }),
     VueDevTools(),
   ],
   resolve: {
