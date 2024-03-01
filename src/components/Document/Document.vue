@@ -32,8 +32,12 @@ const serviceNode = ref<ServiceNode| null>(null)
 
 watch(() => (props.path), (pathname) => {
   const isRootPath = !pathname || pathname === '/'
+  // @ts-ignore
   serviceNode.value = isRootPath ? props.document : props.document.children.find((child:any) => child.uri === pathname)
-  serviceNode.value.data = resolveRefs(serviceNode.value.data, props.json)
+  if (serviceNode.value) {
+    // @ts-ignore
+    serviceNode.value.data = resolveRefs(serviceNode.value.data, props.json)
+  }
 }, { immediate: true })
 </script>
 

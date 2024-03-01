@@ -10,8 +10,8 @@ import type { ValidateResult } from '@scalar/openapi-parser'
 
 export default function useSchemaParser():any {
 
-  const parsedDocument = ref<ServiceNode | null>(null)
-  const jsonDocument = ref<Record<string, any>|null>(null)
+  const parsedDocument = ref<ServiceNode | null>()
+  const jsonDocument = ref<Record<string, any>|undefined>()
 
   const tableOfContents = ref<TableOfContentsItem[]>()
   const validationResults = ref < ValidateResult | undefined>()
