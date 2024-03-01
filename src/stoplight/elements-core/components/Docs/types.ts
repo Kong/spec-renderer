@@ -1,4 +1,5 @@
 export type TableOfContentsProps = {
+  // eslint-disable-next-line no-use-before-define
   tree: TableOfContentsItem[];
   activeId: string;
   maxDepthOpenByDefault?: number;
@@ -7,22 +8,8 @@ export type TableOfContentsProps = {
   onLinkClick?(): void;
 };
 
-export type TableOfContentsItem = TableOfContentsDivider | TableOfContentsGroupItem;
-
 export type TableOfContentsDivider = {
   title: string;
-};
-
-export type TableOfContentsGroupItem =
-  | TableOfContentsGroup
-  | TableOfContentsNodeGroup
-  | TableOfContentsNode
-  | TableOfContentsExternalLink;
-
-export type TableOfContentsGroup = {
-  title: string;
-  items: TableOfContentsGroupItem[];
-  itemsType?: 'article' | 'http_operation' | 'http_webhook' | 'model';
 };
 
 export type TableOfContentsExternalLink = {
@@ -41,4 +28,20 @@ export type TableOfContentsNode<
   version?: string;
 };
 
+// eslint-disable-next-line no-use-before-define
 export type TableOfContentsNodeGroup = TableOfContentsNode<'http_service'> & TableOfContentsGroup;
+
+export type TableOfContentsGroup = {
+  title: string;
+  // eslint-disable-next-line no-use-before-define
+  items: TableOfContentsGroupItem[];
+  itemsType?: 'article' | 'http_operation' | 'http_webhook' | 'model';
+};
+
+export type TableOfContentsGroupItem =
+  | TableOfContentsGroup
+  | TableOfContentsNodeGroup
+  | TableOfContentsNode
+  | TableOfContentsExternalLink;
+
+export type TableOfContentsItem = TableOfContentsDivider | TableOfContentsGroupItem;

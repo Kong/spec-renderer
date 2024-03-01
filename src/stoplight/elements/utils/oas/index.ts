@@ -181,7 +181,7 @@ function findMapMatch(key: string | number, map: ISourceNodeMap[]): ISourceNodeM
   if (typeof key === 'number') return
   for (const entry of map) {
     const escapedKey = key.replace(/[\\^$*+?.()|[\]{}]/g, '\\$&')
-
+    // eslint-disable-next-line
     if (!!entry.match?.match(escapedKey) || (entry.notMatch !== void 0 && !entry.notMatch.match(escapedKey))) {
       return entry
     }

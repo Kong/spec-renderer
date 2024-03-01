@@ -29,6 +29,3 @@ const selectItem = (id: string): void => {
 }
 
 </script>
-
-<style lang="scss" scoped>
-</style>

@@ -34,5 +34,3 @@ const selectItem = (id: any) => {
 }
 
 </script>
-
-<style lang="scss" scoped></style>TableOfContentsNode

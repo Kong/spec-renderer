@@ -5,7 +5,7 @@
       :table-of-contents="tableOfContents"
       @item-selected="itemSelected"
     />
-    <Document
+    <DocumentComponent
       v-if="parsedDocument && selectedPath"
       :document="parsedDocument"
       :json="jsonDocument"
@@ -20,7 +20,7 @@
 import { watch, ref } from 'vue'
 import composables from '../composables'
 import TableOfContents from './TableOfContents/TableOfContents.vue'
-import Document from './Document/Document.vue'
+import DocumentComponent from './Document/DocumentComponent.vue'
 import TryMe from './TryMe/TryMe.vue'
 
 const props = defineProps({

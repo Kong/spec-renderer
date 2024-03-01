@@ -1,4 +1,4 @@
-import { resolveInlineRef, resolveExternalRef, isExternalRef, isLocalRef } from '@stoplight/json'
+import { resolveInlineRef, isLocalRef } from '@stoplight/json'
 
 export const resolveRefs = (fragment: Record<string, any>, specJson: Record<string, any>) => {
   Object.keys(fragment).forEach(key => {
