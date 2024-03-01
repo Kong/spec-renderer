@@ -5,8 +5,7 @@ export const resolveRefs = (fragment: Record<string, any>, specJson: Record<stri
 
     if (typeof fragment[key] === 'object' && fragment[key] !== null) {
       fragment[key] = resolveRefs(fragment[key], specJson)
-    }
-    if (isLocalRef(fragment[key])) {
+    } else if (fragment[key] && isLocalRef(fragment[key])) {
       const res = resolveInlineRef(specJson, fragment[key])
       delete fragment[key]
       fragment = { ...fragment, ...<Record<string, any>>res }
