@@ -47,8 +47,9 @@ export default defineConfig({
     },
   },
   // TODO: If deploying to GitHub pages, enable this line
-  base: process.env.USE_SANDBOX ? '/spec-renderer/' : '/',
+  base: process.env.USE_SANDBOX ? '/' : '/',
   build: {
+    assetsDir: 'spec-renderer/assets',
     lib: process.env.USE_SANDBOX
       ? undefined
       : {
