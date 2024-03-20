@@ -6,7 +6,7 @@ const routes: RouteRecordRaw[] = [
 
     path: '/',
     name: 'root',
-    redirect: { name: 'parser' },
+    redirect: { name: 'home' },
     children: [{
       path: 'spec-renderer',
       name: 'home',

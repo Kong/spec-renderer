@@ -16,7 +16,8 @@
         :json="jsonDocument"
         :path="selectedPath"
       />
-
+    </div>
+    <div>
       <TryMe />
     </div>
   </div>
@@ -67,9 +68,11 @@ aside {
   flex: 1 0 10%;
   height: 100%;
   width: 320px;
+  overflow: visible;
 }
 .doc {
   display: flex;
+  overflow: visible;
 }
 .wrapper {
   display: flex;
