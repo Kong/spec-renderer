@@ -43,10 +43,10 @@ const props = defineProps({
 // TODO: introduce and handle isParsed. show parsing state while parsing
 const { parse, parsedDocument, jsonDocument, tableOfContents, validationResults } = composables.useSchemaParser()
 
-const selectedPath = ref<string>('')
+const selectedPath = ref<string>('/')
 
 const itemSelected = (id: any) => {
-  console.log('itemSelected:', id)
+  //  console.log('itemSelected:', id)
   selectedPath.value = id
 }
 
@@ -73,6 +73,6 @@ aside {
 }
 .wrapper {
   display: flex;
-  height: 100%;
+  height: 100vh;
 }
 </style>
