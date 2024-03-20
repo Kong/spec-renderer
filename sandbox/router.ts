@@ -11,7 +11,7 @@ const routes: RouteRecordRaw[] = [
       path: 'spec-renderer',
       name: 'home',
       children: [{
-        path: 'parser',
+        path: 'parser:afterBase(.*)',
         name: 'parser',
         component: () => import('./pages/SpecRendererPlayground.vue'),
       },

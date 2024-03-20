@@ -1,18 +1,24 @@
 <template>
-  <div>
-    <TableOfContents
-      v-if="tableOfContents"
-      :table-of-contents="tableOfContents"
-      @item-selected="itemSelected"
-    />
-    <DocumentComponent
-      v-if="parsedDocument && selectedPath"
-      :document="parsedDocument"
-      :json="jsonDocument"
-      :path="selectedPath"
-    />
+  <div class="wrapper">
+    <aside>
+      <TableOfContents
+        v-if="tableOfContents"
+        :base-path="basePath"
+        :table-of-contents="tableOfContents"
+        @item-selected="itemSelected"
+      />
+    </aside>
+    <div class="doc">
+      <DocumentComponent
+        v-if="parsedDocument && selectedPath"
+        :base-path="basePath"
+        :document="parsedDocument"
+        :json="jsonDocument"
+        :path="selectedPath"
+      />
 
-    <TryMe />
+      <TryMe />
+    </div>
   </div>
 </template>
 
@@ -27,6 +33,10 @@ const props = defineProps({
   spec: {
     type: String,
     required: true,
+  },
+  basePath: {
+    type: String,
+    default: '',
   },
 })
 
@@ -50,3 +60,19 @@ watch(() => (props.spec), async (unparsedSpecText: string) => {
 }, { immediate: true })
 
 </script>
+
+<style lang="scss" scoped>
+aside {
+  display: flex;
+  flex: 1 0 10%;
+  height: 100%;
+  width: 320px;
+}
+.doc {
+  display: flex;
+}
+.wrapper {
+  display: flex;
+  height: 100%;
+}
+</style>

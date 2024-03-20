@@ -27,6 +27,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  basePath: {
+    type: String,
+    default: '',
+  },
 })
 const serviceNode = ref<ServiceNode| null>(null)
 

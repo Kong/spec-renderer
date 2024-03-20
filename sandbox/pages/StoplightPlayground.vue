@@ -53,7 +53,7 @@ const { load } = useScriptTag(
 const sampleSpecSelected = (sampleSpecUrl : string) => {
   // @ts-ignore
   specRenderer.value.basePath = '/spec-renderer/stoplight'
-  specRenderer.value.router = 'hash'
+  specRenderer.value.router = 'history'
   // specRenderer.value.hideSchemas = true
   specRenderer.value.apiDescriptionUrl = sampleSpecUrl
 }

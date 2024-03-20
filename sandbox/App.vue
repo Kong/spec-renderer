@@ -8,11 +8,6 @@
       <router-link to="/spec-renderer/stoplight">
         Stoplight-Playground
       </router-link>
-
-      <a
-        href="https://github.com/Kong/spec-renderer"
-        target="_blank"
-      >GitHub Docs</a>
     </header>
     <main class="page-main">
       <router-view />

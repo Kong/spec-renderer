@@ -6,6 +6,7 @@
 
     <SpecRenderer
       v-if="specText"
+      base-path="/spec-renderer/parser"
       :spec="specText"
     />
   </div>
