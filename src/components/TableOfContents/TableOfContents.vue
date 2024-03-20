@@ -42,8 +42,8 @@ const selectItem = (id: any) => {
 <style lang="scss" scoped>
 .table-of-contents {
   background-color: lightgray;
-  width: 500px;
   overflow-y: auto;
+  width: 500px;
   ul {
     list-style: none;
   }
