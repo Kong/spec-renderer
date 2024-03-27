@@ -67,8 +67,8 @@ aside {
   display: flex;
   flex: 1 0 10%;
   height: 100%;
-  width: 320px;
   overflow: visible;
+  width: 320px;
 }
 .doc {
   display: flex;
