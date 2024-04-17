@@ -2,6 +2,7 @@
   <div>
     <SampleSpecSelector
       @sample-spec-selected="sampleSpecSelected"
+      @sample-spec-uploaded="sampleSpecUploaded"
     />
 
     <SpecRenderer
@@ -22,6 +23,10 @@ const specText = ref<string>('')
 const sampleSpecSelected = async (sampleSpecUrl: string) => {
   specText.value = await fetch(sampleSpecUrl).then(res => res.text())
   console.log('reading:', sampleSpecUrl)
+}
+
+const sampleSpecUploaded = (sampleSpecText: string) => {
+  specText.value = sampleSpecText
 }
 
 </script>

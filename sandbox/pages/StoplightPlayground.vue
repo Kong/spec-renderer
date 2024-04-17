@@ -1,6 +1,7 @@
 <template>
   <SampleSpecSelector
     @sample-spec-selected="sampleSpecSelected"
+    @sample-spec-uploaded="sampleSpecUploaded"
   />
   Layout:
   <input
@@ -9,19 +10,19 @@
     type="radio"
     value="sidebar"
     @click="layoutChanged"
-  >
+  >sidebar</input>
   <input
     name="layout"
     type="radio"
     value="responsive"
     @click="layoutChanged"
-  >
+  >responsive</input>
   <input
     name="layout"
     type="radio"
     value="stacked"
     @click="layoutChanged"
-  >
+  >stacked</input>
 
   <hr>
   <br>
@@ -54,8 +55,14 @@ const sampleSpecSelected = (sampleSpecUrl : string) => {
   // @ts-ignore
   specRenderer.value.basePath = '/spec-renderer/stoplight'
   specRenderer.value.router = 'history'
-  // specRenderer.value.hideSchemas = true
+  specRenderer.value.apiDescriptionDocument = ''
   specRenderer.value.apiDescriptionUrl = sampleSpecUrl
+}
+
+const sampleSpecUploaded = (sampleSpecText: string) => {
+  specRenderer.value.basePath = '/spec-renderer/stoplight'
+  specRenderer.value.router = 'history'
+  specRenderer.value.apiDescriptionDocument = sampleSpecText
 }
 
 const layoutChanged = (e) => {

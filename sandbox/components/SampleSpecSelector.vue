@@ -1,22 +1,30 @@
 <template>
   <div class="sample-spec-selector">
-    Select spec sample:&nbsp;
+    <div>Select spec sample:&nbsp;</div>
     <select
       ref="specSelector"
       value=""
       @change="specSelected"
     >
       <option
-        selected="selected"
+        disabled
         value=""
       >
         Choose...
       </option>
+
+      <option
+        disabled
+        value=""
+      >
+        ------------------
+      </option>
+
       <option value="/spec-renderer/specs/stoplight.yaml">
         Stoplight ToDo
       </option>
       <option value="/spec-renderer/specs/konnect-api.yaml">
-        Konnect Api Public
+        Konnect Api
       </option>
       <option
         value="https://raw.githubusercontent.com/digitalocean/openapi/main/specification/DigitalOcean-public.v2.yaml"
@@ -41,19 +49,45 @@
         Stripe
       </option>
     </select>
+
+    <div
+      ref="dropZoneRef"
+      class="dropzone"
+    >
+      {{ fName }}
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useDropZone } from '@vueuse/core'
 
 const emit = defineEmits<{
-  (e: 'sample-spec-selected', specUrl: string): void
+  (e: 'sample-spec-selected', specUrl: string): void,
+  (e: 'sample-spec-uploaded', specText: string): void
 }>()
 
 const specSelector = ref<HTMLElement | null>(null)
+const dropZoneRef = ref<HTMLDivElement>()
+
+const fName = ref<string>('Drop your own spec file')
+const onDrop = async (files: File[] | null) => {
+  // called when files are dropped on zone
+  specSelector.value.value = ''
+  fName.value = files[0].name
+  const t = await files[0].text()
+  emit('sample-spec-uploaded', t)
+}
+
+useDropZone(dropZoneRef, {
+  onDrop,
+  dataTypes: ['application/x-yaml', 'application/json'],
+})
 
 const specSelected = () => {
+  fName.value = 'Drop your own spec file'
+
   emit('sample-spec-selected', specSelector.value?.value)
 }
 </script>
@@ -61,8 +95,16 @@ const specSelected = () => {
 <style lang="scss" scoped>
 .sample-spec-selector {
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   select {
     -webkit-appearance: auto;
+  }
+  .dropzone {
+    background: red;
+    margin-left:40px;
+    padding: 20px;
   }
 }
 </style>
