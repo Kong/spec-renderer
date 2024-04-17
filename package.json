@@ -45,7 +45,7 @@
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
-    "@kong/icons": "^1.8.14"
+    "@kong/icons": "^1.9.0"
   },
   "devDependencies": {
     "@babel/types": "^7.23.6",
