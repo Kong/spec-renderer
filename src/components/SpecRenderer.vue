@@ -40,6 +40,7 @@ const props = defineProps({
     default: '',
   },
 })
+import
 
 // TODO: introduce and handle isParsed. show parsing state while parsing
 const { parse, parsedDocument, jsonDocument, tableOfContents, validationResults } = composables.useSchemaParser()

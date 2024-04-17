@@ -10,19 +10,19 @@
     type="radio"
     value="sidebar"
     @click="layoutChanged"
-  >sidebar</input>
+  >sidebar
   <input
     name="layout"
     type="radio"
     value="responsive"
     @click="layoutChanged"
-  >responsive</input>
+  >responsive
   <input
     name="layout"
     type="radio"
     value="stacked"
     @click="layoutChanged"
-  >stacked</input>
+  >stacked
 
   <hr>
   <br>
