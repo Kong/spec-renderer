@@ -50,12 +50,20 @@
       </option>
     </select>
 
-    <div
+    <button
       ref="dropZoneRef"
       class="dropzone"
+      @click="dropzoneClick()"
     >
       {{ fName }}
-    </div>
+    </button>
+
+    <input
+      ref="fileInputRef"
+      style="position: absolute; visibility: hidden;"
+      type="file"
+      @change="finputChange"
+    >
   </div>
 </template>
 
@@ -70,14 +78,30 @@ const emit = defineEmits<{
 
 const specSelector = ref<HTMLElement | null>(null)
 const dropZoneRef = ref<HTMLDivElement>()
+const fileInputRef = ref<HTMLDivElement>()
 
 const fName = ref<string>('Drop your own spec file')
+
 const onDrop = async (files: File[] | null) => {
   // called when files are dropped on zone
   specSelector.value.value = ''
   fName.value = files[0].name
   const t = await files[0].text()
   emit('sample-spec-uploaded', t)
+}
+
+const finputChange = () => {
+  const file = fileInputRef.value.files[0]
+
+  if (file) {
+    const reader = new FileReader()
+    reader.readAsText(file, 'UTF-8')
+    reader.onload = (e) => {
+      emit('sample-spec-uploaded', e.target.result)
+      fName.value = file.name
+      specSelector.value.value = ''
+    }
+  }
 }
 
 useDropZone(dropZoneRef, {
@@ -89,6 +113,10 @@ const specSelected = () => {
   fName.value = 'Drop your own spec file'
 
   emit('sample-spec-selected', specSelector.value?.value)
+}
+
+const dropzoneClick = () => {
+  fileInputRef.value?.click()
 }
 </script>
 
