@@ -17,7 +17,13 @@ const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.startsWith('elements-api'),
+        },
+      },
+    }),
     VueDevTools(),
   ],
   resolve: {

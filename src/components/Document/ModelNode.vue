@@ -1,0 +1,18 @@
+<template>
+  Model
+  <br>
+  {{ data }}
+</template>
+
+<script setup lang="ts">
+import type { PropType } from 'vue'
+import type { INode } from '@stoplight/types'
+
+// TODO: type def is missing for model need to add
+defineProps({
+  data: {
+    type: Object as PropType<INode>,
+    required: true,
+  },
+})
+</script>

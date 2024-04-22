@@ -45,7 +45,22 @@
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
-    "@kong/icons": "^1.8.14"
+    "@kong/icons": "^1.8.14",
+    "@scalar/openapi-parser": "^0.1.0",
+    "@seriousme/openapi-schema-validator": "^2.2.1",
+    "@stoplight/http-spec": "^7.0.3",
+    "@stoplight/json": "^3.21.0",
+    "@stoplight/types": "^14.1.1",
+    "@stoplight/yaml": "^4.2.3",
+    "@vueuse/core": "^10.7.2",
+    "json-schema": "^0.4.0",
+    "lodash": "^4.17.21",
+    "oas": "link:@stoplight/http-spec/oas",
+    "oas-normalize": "^11.0.1",
+    "openapi3-ts": "4.3.1"
+  },
+  "resolutions": {
+    "openapi3-ts": "4.3.1"
   },
   "devDependencies": {
     "@babel/types": "^7.23.6",
@@ -57,6 +72,7 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@types/jsdom": "^21.1.6",
+    "@types/json-schema": "^7.0.15",
     "@types/node": "^20.10.8",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
@@ -89,12 +105,14 @@
     "stylelint-order": "^6.0.4",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.8",
-    "typescript": "^5.3.3",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.4",
     "vite": "^5.0.11",
     "vite-plugin-vue-devtools": "^7.0.13",
     "vitest": "1.2.0",
     "vue": "^3.4.12",
-    "vue-tsc": "^1.8.27"
+    "vue-tsc": "^2.0.14",
+    "vue-router": "4"
   },
   "repository": {
     "type": "git",

@@ -1,5 +1,8 @@
 import type { App } from 'vue'
 import SpecRenderer from '@/components/SpecRenderer.vue'
+import DocumentComponent from './components/Document/DocumentComponent.vue'
+import TableOfContents from './components/TableOfContents/TableOfContents.vue'
+import TryMe from './components/TryMe/TryMe.vue'
 
 // Export Vue plugin as the default
 export default {
@@ -12,4 +15,12 @@ export default {
   },
 }
 
+export * from './utils'
 export * from './types'
+
+export {
+  SpecRenderer,
+  DocumentComponent,
+  TableOfContents,
+  TryMe,
+}
