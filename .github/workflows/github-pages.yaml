@@ -45,7 +45,7 @@ jobs:
         env:
           # Tell the script to use the sandbox directory
           USE_SANDBOX: true
-        run: yarn build:sandbox
+        run: pnpm build:sandbox
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
