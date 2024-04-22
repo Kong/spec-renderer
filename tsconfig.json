@@ -1,11 +1,12 @@
 {
   "extends": "@vue/tsconfig/tsconfig.json",
   "compilerOptions": {
-    "moduleResolution": "Bundler",
+    "moduleResolution": "node",
     "strict": true,
     "jsx": "preserve",
     "importHelpers": true,
     "sourceMap": true,
+    "noEmit": false,
     "baseUrl": ".",
     "lib": [
       "esnext",
@@ -26,8 +27,8 @@
     },
   },
   "include": [
-    "src/**/*",
-    "sandbox/**/*",
+    "src/**/*.ts",
+    "src/**/*.vue"
   ],
   "exclude": [
     "node_modules",
