@@ -36,8 +36,7 @@
     "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,vue}' --fix",
     "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}'",
     "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --fix",
-    "test-real": "cross-env FORCE_COLOR=1 vitest run",
-    "test": "echo 0",
+    "test": "cross-env FORCE_COLOR=1 vitest run",
     "test:open": "cross-env FORCE_COLOR=1 vitest --ui",
     "semantic-release": "semantic-release",
     "commit": "cz"
