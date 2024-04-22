@@ -3,7 +3,6 @@ import VueDevTools from 'vite-plugin-vue-devtools'
 import vue from '@vitejs/plugin-vue'
 import path, { join } from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
-import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 // Include the rollup-plugin-visualizer if the BUILD_VISUALIZER env var is set to "true"
 const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
@@ -25,9 +24,6 @@ export default defineConfig({
         },
       },
     }),
-    nodePolyfills({
-      include: ['process', 'fs'],
-    }),
     VueDevTools(),
   ],
   resolve: {
@@ -47,9 +43,8 @@ export default defineConfig({
     },
   },
   // TODO: If deploying to GitHub pages, enable this line
-  base: process.env.USE_SANDBOX ? '/' : '/',
+  base: process.env.USE_SANDBOX ? '/spec-renderer/' : '/',
   build: {
-    assetsDir: 'spec-renderer/assets',
     lib: process.env.USE_SANDBOX
       ? undefined
       : {
