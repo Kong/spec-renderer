@@ -93,7 +93,6 @@
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^9.20.1",
-    "fs.promises": "^0.1.2",
     "jsdom": "^23.2.0",
     "postcss": "^8.4.33",
     "postcss-html": "^1.6.0",

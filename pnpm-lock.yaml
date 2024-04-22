@@ -136,9 +136,6 @@ devDependencies:
   eslint-plugin-vue:
     specifier: ^9.20.1
     version: 9.25.0(eslint@8.57.0)
-  fs.promises:
-    specifier: ^0.1.2
-    version: 0.1.2
   jsdom:
     specifier: ^23.2.0
     version: 23.2.0
@@ -4215,11 +4212,6 @@ packages:
       graceful-fs: 4.2.11
       jsonfile: 6.1.0
       universalify: 2.0.1
-    dev: true
-
-  /fs.promises@0.1.2:
-    resolution: {integrity: sha512-LNfkXdN6EToumV455EbdJaNxqLmEFqKqNZVIEyI2whtdpIppTsne2fHWgx05s+B2Aif29Lhzdz0AaOXKLvMGsA==}
-    engines: {node: '>=8.9'}
     dev: true
 
   /fs.realpath@1.0.0:
