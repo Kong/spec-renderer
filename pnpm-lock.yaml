@@ -41,6 +41,9 @@ dependencies:
   oas-normalize:
     specifier: ^11.0.1
     version: 11.0.4
+  openapi3-ts:
+    specifier: ^2.0.2
+    version: 2.0.2
   vue-router:
     specifier: '4'
     version: 4.3.2(vue@3.4.23)
