@@ -13,7 +13,7 @@ import { watch, ref } from 'vue'
 import type { PropType } from 'vue'
 import type { ServiceNode } from '../../stoplight/elements/utils/oas/types'
 import { docComponent } from './index'
-import { resolveRefs } from '../../utils/resolveRefs'
+import { resolveRefs } from '../../utils'
 const props = defineProps({
   document: {
     type: Object as PropType<ServiceNode>,
@@ -50,3 +50,4 @@ watch(() => (props.path), (pathname) => {
   background-color: lightblue;
 }
 </style>
+../../utils/resolve-refs
