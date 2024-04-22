@@ -33,10 +33,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node.js
-        uses: actions/setup-node@v4
+      - name: Setup PNPM with Dependencies
+        uses: ./.github/actions/setup-pnpm-with-dependencies/
         with:
-          node-version-file: '.nvmrc'
+          force-install: true
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
