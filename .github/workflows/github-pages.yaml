@@ -3,7 +3,7 @@ name: Deploy Sandbox to GitHub Pages
 on:
   push:
     branches:
-      - feat/KHCP-11551_ksearch-hints
+      - feat/KHCP-10768_validator
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
