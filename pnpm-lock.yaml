@@ -47,9 +47,6 @@ dependencies:
   openapi3-ts:
     specifier: 4.3.1
     version: 4.3.1
-  vue-router:
-    specifier: '4'
-    version: 4.3.2(vue@3.4.23)
 
 devDependencies:
   '@babel/types':
@@ -196,6 +193,9 @@ devDependencies:
   vue:
     specifier: ^3.4.12
     version: 3.4.23(typescript@5.4.5)
+  vue-router:
+    specifier: '4'
+    version: 4.3.2(vue@3.4.23)
   vue-tsc:
     specifier: ^2.0.14
     version: 2.0.14(typescript@5.4.5)
@@ -2230,7 +2230,7 @@ packages:
 
   /@vue/devtools-api@6.6.1:
     resolution: {integrity: sha512-LgPscpE3Vs0x96PzSSB4IGVSZXZBZHpfxs+ZA1d+VEPwHdOXowy/Y2CsvCAIFrf+ssVU1pD1jidj505EpUnfbA==}
-    dev: false
+    dev: true
 
   /@vue/devtools-core@7.0.27(vite@5.2.10)(vue@3.4.23):
     resolution: {integrity: sha512-3rbtNGxFFFPfIObgTAPIw0h0rJy+y1PrbfgM9nXRf3/FIJkthfS19yj31pj9EWIqRsyiqK5u1Ni7SAJZ0vsQOA==}
@@ -8028,7 +8028,7 @@ packages:
     dependencies:
       '@vue/devtools-api': 6.6.1
       vue: 3.4.23(typescript@5.4.5)
-    dev: false
+    dev: true
 
   /vue-template-compiler@2.7.16:
     resolution: {integrity: sha512-AYbUWAJHLGGQM7+cNTELw+KsOG9nl2CnSv467WobS5Cv9uk3wFcnr1Etsz2sEIHEZvw1U+o9mRlEO6QbZvUPGQ==}

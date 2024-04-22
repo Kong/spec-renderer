@@ -57,8 +57,7 @@
     "lodash": "^4.17.21",
     "oas": "link:@stoplight/http-spec/oas",
     "oas-normalize": "^11.0.1",
-    "openapi3-ts": "4.3.1",
-    "vue-router": "4"
+    "openapi3-ts": "4.3.1"
   },
   "resolutions": {
     "openapi3-ts": "4.3.1"
@@ -112,7 +111,8 @@
     "vite-plugin-vue-devtools": "^7.0.13",
     "vitest": "1.2.0",
     "vue": "^3.4.12",
-    "vue-tsc": "^2.0.14"
+    "vue-tsc": "^2.0.14",
+    "vue-router": "4"
   },
   "repository": {
     "type": "git",
