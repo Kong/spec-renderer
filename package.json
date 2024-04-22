@@ -31,7 +31,7 @@
     "build:analyzer": "BUILD_VISUALIZER='true' vite build -m production",
     "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
     "preview": "pnpm run build:sandbox && cross-env USE_SANDBOX=true vite preview",
-    "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
+    "typecheck": "vue-tsc -p './tsconfig.json' --noEmit",
     "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,vue}'",
     "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,vue}' --fix",
     "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}'",
@@ -48,17 +48,20 @@
     "@kong/icons": "^1.8.14",
     "@scalar/openapi-parser": "^0.1.0",
     "@seriousme/openapi-schema-validator": "^2.2.1",
-    "@stoplight/http-spec": "^7.0.2",
+    "@stoplight/http-spec": "^7.0.3",
     "@stoplight/json": "^3.21.0",
     "@stoplight/types": "^14.1.1",
     "@stoplight/yaml": "^4.2.3",
-    "openapi3-ts": "^2.0.2",
     "@vueuse/core": "^10.7.2",
     "json-schema": "^0.4.0",
     "lodash": "^4.17.21",
     "oas": "link:@stoplight/http-spec/oas",
     "oas-normalize": "^11.0.1",
+    "openapi3-ts": "4.3.1",
     "vue-router": "4"
+  },
+  "resolutions": {
+    "openapi3-ts": "4.3.1"
   },
   "devDependencies": {
     "@babel/types": "^7.23.6",
@@ -102,16 +105,16 @@
     "stylelint-config-recommended-scss": "^14.0.0",
     "stylelint-config-recommended-vue": "^1.5.0",
     "stylelint-order": "^6.0.4",
-    "tslib": "^2.6.2",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.8",
-    "typescript": "^5.3.3",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.4",
     "vite": "^5.0.11",
     "vite-plugin-node-polyfills": "^0.21.0",
     "vite-plugin-vue-devtools": "^7.0.13",
     "vitest": "1.2.0",
     "vue": "^3.4.12",
-    "vue-tsc": "^1.8.27"
+    "vue-tsc": "^2.0.14"
   },
   "repository": {
     "type": "git",
