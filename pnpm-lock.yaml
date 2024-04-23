@@ -9,7 +9,7 @@ overrides:
 
 dependencies:
   '@kong/icons':
-    specifier: ^1.8.16
+    specifier: ^1.9.0
     version: 1.9.0(vue@3.4.23)
   '@scalar/openapi-parser':
     specifier: ^0.1.0

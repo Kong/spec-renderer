@@ -45,7 +45,7 @@
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
-    "@kong/icons": "^1.8.16",
+    "@kong/icons": "^1.9.0",
     "@scalar/openapi-parser": "^0.1.0",
     "@seriousme/openapi-schema-validator": "^2.2.1",
     "@stoplight/http-spec": "^7.0.3",
