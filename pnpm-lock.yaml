@@ -9,8 +9,8 @@ overrides:
 
 dependencies:
   '@kong/icons':
-    specifier: ^1.9.0
-    version: 1.9.0(vue@3.4.23)
+    specifier: ^1.9.1
+    version: 1.9.1(vue@3.4.23)
   '@scalar/openapi-parser':
     specifier: ^0.1.0
     version: 0.1.0(sass@1.75.0)
@@ -1210,8 +1210,8 @@ packages:
     resolution: {integrity: sha512-+zgR6Ti4Joj85yD/KJzE3ja6Y0khxh9vapNnkOyGtLAUnCLstkH7WfLLhM22Qi7K5q/J2R1kWuR3X+XMp6U2mQ==}
     dev: true
 
-  /@kong/icons@1.9.0(vue@3.4.23):
-    resolution: {integrity: sha512-fA3gXZrPjhI6gV2ISV10kKG0Y6gsW+ps31ionv/09a7BY+z4K9XqNbRRzUkqZgCoTTCnf3MWYum/CRpzaYcctg==}
+  /@kong/icons@1.9.1(vue@3.4.23):
+    resolution: {integrity: sha512-8V21s7OEXcGAWDfPlcidjLlvAemz1KxgkpNSCWC9BCMGnmYRV/1hF7hzC0Dbjz6Q5uP3jnukI+e2bkKKrxANMQ==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: '>= 3.3.4 < 4'
@@ -2419,9 +2419,6 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependenciesMeta:
-      ajv:
-        optional: true
     dependencies:
       ajv: 8.12.0
     dev: false
