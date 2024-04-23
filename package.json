@@ -45,7 +45,7 @@
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
-    "@kong/icons": "^1.8.14",
+    "@kong/icons": "^1.8.16",
     "@scalar/openapi-parser": "^0.1.0",
     "@seriousme/openapi-schema-validator": "^2.2.1",
     "@stoplight/http-spec": "^7.0.3",
@@ -68,7 +68,7 @@
     "@commitlint/config-conventional": "^18.6.0",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
     "@evilmartians/lefthook": "^1.5.6",
-    "@kong/design-tokens": "^1.12.7",
+    "@kong/design-tokens": "^1.12.11",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@types/jsdom": "^21.1.6",
