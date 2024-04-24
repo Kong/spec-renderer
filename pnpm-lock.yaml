@@ -194,8 +194,8 @@ devDependencies:
     specifier: ^3.4.21
     version: 3.4.23(typescript@5.4.5)
   vue-router:
-    specifier: 4.0.16
-    version: 4.0.16(vue@3.4.23)
+    specifier: ^4.3.2
+    version: 4.3.2(vue@3.4.23)
   vue-tsc:
     specifier: ^2.0.14
     version: 2.0.14(typescript@5.4.5)
@@ -2420,6 +2420,9 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependenciesMeta:
+      ajv:
+        optional: true
     dependencies:
       ajv: 8.12.0
     dev: false
@@ -8041,8 +8044,8 @@ packages:
       - supports-color
     dev: true
 
-  /vue-router@4.0.16(vue@3.4.23):
-    resolution: {integrity: sha512-JcO7cb8QJLBWE+DfxGUL3xUDOae/8nhM1KVdnudadTAORbuxIC/xAydC5Zr/VLHUDQi1ppuTF5/rjBGzgzrJNA==}
+  /vue-router@4.3.2(vue@3.4.23):
+    resolution: {integrity: sha512-hKQJ1vDAZ5LVkKEnHhmm1f9pMiWIBNGF5AwU67PdH7TyXCj/a4hTccuUuYCAMgJK6rO/NVYtQIEN3yL8CECa7Q==}
     peerDependencies:
       vue: ^3.2.0
     dependencies:
