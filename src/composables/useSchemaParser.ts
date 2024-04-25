@@ -8,8 +8,6 @@ import type { TableOfContentsItem } from '../stoplight/elements-core/components/
 import { validate } from '@scalar/openapi-parser'
 import type { ValidateResult } from '@scalar/openapi-parser'
 
-import { Parser } from '@asyncapi/parser'
-import { OpenAPISchemaParser } from '@asyncapi/openapi-schema-parser'
 export default function useSchemaParser():any {
 
   const parsedDocument = ref<ServiceNode | null>()
@@ -48,10 +46,6 @@ export default function useSchemaParser():any {
 
     validationResults.value = await validate(spec)
 
-    const parser = new Parser()
-    parser.registerSchemaParser(OpenAPISchemaParser())
-
-    console.log('AAAA:', await parser.parse(JSON.stringify(jsonDocument.value)))
     try {
       if (parsedDocument.value) {
         tableOfContents.value = computeAPITree(parsedDocument.value, { hideSchemas: false, hideInternal: false })
