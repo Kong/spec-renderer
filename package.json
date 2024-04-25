@@ -109,7 +109,7 @@
     "typescript": "^5.4.5",
     "vite": "^5.2.8",
     "vite-plugin-vue-devtools": "^7.0.27",
-    "vitest": "1.2.2",
+    "vitest": "1.5.0",
     "vue": "^3.4.21",
     "vue-tsc": "^2.0.14",
     "vue-router": "^4.3.2"
@@ -167,8 +167,8 @@
     "node": ">=18.17.0"
   },
   "volta": {
-    "node": "20.11.1",
-    "pnpm": "8.14.3"
+    "node": "20.12.2",
+    "pnpm": "8.15.7"
   },
   "config": {
     "commitizen": {
