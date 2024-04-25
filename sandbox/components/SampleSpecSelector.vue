@@ -1,12 +1,22 @@
 <template>
   <div class="sample-spec-selector">
     <div>Select spec sample:&nbsp;</div>
-    <select ref="specSelector" value="" @change="specSelected">
-      <option disabled value="">
+    <select
+      ref="specSelector"
+      value=""
+      @change="specSelected"
+    >
+      <option
+        disabled
+        value=""
+      >
         Choose...
       </option>
 
-      <option disabled value="">
+      <option
+        disabled
+        value=""
+      >
         ------------------
       </option>
 
@@ -20,14 +30,16 @@
         Callbacks
       </option>
       <option
-        value="https://raw.githubusercontent.com/digitalocean/openapi/main/specification/DigitalOcean-public.v2.yaml">
+        value="https://raw.githubusercontent.com/digitalocean/openapi/main/specification/DigitalOcean-public.v2.yaml"
+      >
         Digital Ocean
       </option>
       <option value="https://raw.githubusercontent.com/stoplightio/Public-APIs/master/reference/zoom/openapi.yaml">
         Zoom
       </option>
       <option
-        value="https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/ghes-3.0/ghes-3.0.json">
+        value="https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/ghes-3.0/ghes-3.0.json"
+      >
         GitHub
       </option>
       <option value="https://raw.githubusercontent.com/stoplightio/Public-APIs/master/reference/netlify/openapi.yaml">
@@ -41,11 +53,20 @@
       </option>
     </select>
 
-    <button ref="dropZoneRef" class="dropzone" @click="dropzoneClick()">
+    <button
+      ref="dropZoneRef"
+      class="dropzone"
+      @click="dropzoneClick()"
+    >
       {{ fName }}
     </button>
 
-    <input ref="fileInputRef" style="position: absolute; visibility: hidden;" type="file" @change="finputChange">
+    <input
+      ref="fileInputRef"
+      style="position: absolute; visibility: hidden;"
+      type="file"
+      @change="finputChange"
+    >
   </div>
 </template>
 
