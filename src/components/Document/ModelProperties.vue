@@ -13,6 +13,7 @@
           class="property-type"
         >
           {{ property.type }}
+          {{ property.format ? `(${property.format})` : '' }}
         </span>
         <span
           v-if="required?.includes(key.toString())"
@@ -24,8 +25,11 @@
       <p v-if="property.description">
         {{ property.description }}
       </p>
-      <p v-if="property.examples">
-        <span>Examples: </span> {{ property.examples }}
+      <p v-if="property.example">
+        <span>Example: </span> {{ property.example }}
+      </p>
+      <p v-if="property.enum">
+        <span>Allowed values: </span> {{ property.enum }}
       </p>
 
       <details v-if="isNestedObj(property)">

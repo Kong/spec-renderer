@@ -8,6 +8,9 @@
   <p v-if="data.examples">
     {{ data.examples }}
   </p>
+  <p v-if="data.enum">
+    <span>Allowed values: </span> {{ data.enum }}
+  </p>
 
   <div v-if="data.properties">
     <ModelProperties
