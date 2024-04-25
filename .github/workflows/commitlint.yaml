@@ -18,4 +18,4 @@ jobs:
 
       - uses: wagoid/commitlint-github-action@v6.0.1
         with:
-          configFile: commitlint.config.cjs
+          configFile: commitlint.config.ts
