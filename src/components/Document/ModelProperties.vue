@@ -4,7 +4,7 @@
     :key="key"
     class="model-property"
   >
-    <template v-if="property && typeof property === 'object'">
+    <template v-if="property && isSchemaObject(property)">
       <div
         class="property-info"
       >
@@ -49,20 +49,22 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import type { JSONSchema7 } from 'json-schema'
+
+import { isSchemaObject } from 'openapi3-ts/oas31'
+import type { SchemaObject } from 'openapi3-ts/oas31'
 
 defineProps({
   properties: {
-    type: Object as PropType<JSONSchema7['properties']>,
+    type: Object as PropType<SchemaObject['properties']>,
     required: true,
   },
   required: {
-    type: Array as PropType<JSONSchema7['required']>,
+    type: Array as PropType<SchemaObject['required']>,
     required: true,
   },
 })
 
-const isNestedObj = (property: JSONSchema7) => property.type === 'object' && property.properties && Reflect.ownKeys(property.properties).length
+const isNestedObj = (property: SchemaObject) => property.type === 'object' && property.properties && Reflect.ownKeys(property.properties).length
 </script>
 
 <style lang="scss" scoped>

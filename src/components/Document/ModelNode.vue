@@ -24,12 +24,11 @@
 import ModelProperties from './ModelProperties.vue'
 
 import type { PropType } from 'vue'
-import type { JSONSchema7 } from 'json-schema'
+import type { SchemaObject } from 'openapi3-ts/oas31'
 
-// TODO: type def is missing for model need to add
 defineProps({
   data: {
-    type: Object as PropType<JSONSchema7>,
+    type: Object as PropType<SchemaObject>,
     required: true,
   },
   title: {
