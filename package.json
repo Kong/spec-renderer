@@ -45,6 +45,8 @@
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
+    "@asyncapi/openapi-schema-parser": "^3.0.22",
+    "@asyncapi/parser": "^3.0.14",
     "@kong/icons": "^1.9.1",
     "@scalar/openapi-parser": "^0.3.2",
     "@seriousme/openapi-schema-validator": "^2.2.1",
@@ -111,8 +113,8 @@
     "vite-plugin-vue-devtools": "^7.0.27",
     "vitest": "1.5.0",
     "vue": "^3.4.21",
-    "vue-tsc": "^2.0.14",
-    "vue-router": "^4.3.2"
+    "vue-router": "^4.3.2",
+    "vue-tsc": "^2.0.14"
   },
   "repository": {
     "type": "git",
