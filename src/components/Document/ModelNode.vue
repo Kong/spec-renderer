@@ -24,7 +24,7 @@
 import ModelProperties from './ModelProperties.vue'
 
 import type { PropType } from 'vue'
-import type { SchemaObject } from 'openapi3-ts/oas31'
+import type { SchemaObject } from '@/types'
 
 defineProps({
   data: {

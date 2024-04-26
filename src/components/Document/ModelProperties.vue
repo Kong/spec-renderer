@@ -4,7 +4,7 @@
     :key="key"
     class="model-property"
   >
-    <template v-if="property && isSchemaObject(property)">
+    <template v-if="isValidSchemaObject(property)">
       <div
         class="property-info"
       >
@@ -13,7 +13,7 @@
           class="property-type"
         >
           {{ property.type ?? '' }}
-          {{ property.items && isSchemaObject(property.items) && property.items.type ? `[${property.items.type}]` : '' }}
+          {{ isValidSchemaObject(property.items) && property.items.type ? `[${property.items.type}]` : '' }}
           {{ property.format ? `(${property.format})` : '' }}
         </span>
         <span
@@ -33,7 +33,7 @@
         Allowed values: {{ property.enum }}
       </p>
 
-      <template v-if="property.items && isSchemaObject(property.items)">
+      <template v-if="isValidSchemaObject(property.items)">
         <p v-if="property.items.type === 'string'">
           <span v-if=" property.items.enum">Allowed values: {{ property.items.enum }}</span>
           <span v-else-if="property.items.pattern">Allowed pattern: <code>{{ property.items.pattern }}</code></span>
@@ -67,8 +67,9 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 
-import { isSchemaObject } from 'openapi3-ts/oas31'
-import type { SchemaObject } from 'openapi3-ts/oas31'
+import { isValidSchemaObject } from '@/utils'
+
+import type { SchemaObject } from '@/types'
 
 defineProps({
   properties: {
