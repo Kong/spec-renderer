@@ -12,7 +12,8 @@
         <span
           class="property-type"
         >
-          {{ property.type }}
+          {{ property.type ?? '' }}
+          {{ property.items && isSchemaObject(property.items) && property.items.type ? `[${property.items.type}]` : '' }}
           {{ property.format ? `(${property.format})` : '' }}
         </span>
         <span
@@ -31,6 +32,22 @@
       <p v-if="property.enum">
         <span>Allowed values: </span> {{ property.enum }}
       </p>
+
+      <template v-if="property.items && isSchemaObject(property.items)">
+        <p v-if="property.items.type === 'string'">
+          <span v-if=" property.items.enum">Allowed values: {{ property.items.enum }}</span>
+          <span v-else-if="property.items.pattern">Allowed pattern: <code>{{ property.items.pattern }}</code></span>
+        </p>
+        <p v-else-if="property.items.type === 'integer'">
+          Max: {{ property.items.maximum || '' }} | Min: {{ property.items.minimum || '' }}
+        </p>
+        <p
+          v-else-if="property.items.type === 'object'"
+          style="color: red; font-size: 64px;"
+        >
+          {{ property.items }}
+        </p>
+      </template>
 
       <details v-if="isNestedObj(property)">
         <summary>Properties of <code>{{ key }}</code></summary>
