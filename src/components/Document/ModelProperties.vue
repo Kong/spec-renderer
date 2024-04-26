@@ -30,7 +30,7 @@
         <span>Example: </span> {{ property.example }}
       </p>
       <p v-if="property.enum">
-        <span>Allowed values: </span> {{ property.enum }}
+        Allowed values: {{ property.enum }}
       </p>
 
       <template v-if="property.items && isSchemaObject(property.items)">
@@ -77,7 +77,7 @@ defineProps({
   },
   required: {
     type: Array as PropType<SchemaObject['required']>,
-    required: true,
+    default: () => [],
   },
 })
 
