@@ -12,21 +12,23 @@
     <span>Allowed values: </span> {{ data.enum }}
   </p>
 
-  <div v-if="data.properties">
-    <ModelProperties
-      :properties="data.properties"
-      :required="data.required"
-    />
-  </div>
+  <ModelProperties
+    v-if="modelPropertiesProps"
+    :properties="modelPropertiesProps.properties"
+    :required="modelPropertiesProps.required"
+  />
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import ModelProperties from './ModelProperties.vue'
 
-import type { PropType } from 'vue'
+import { isValidSchemaObject } from '@/utils'
+
+import type{ PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 
-defineProps({
+const props = defineProps({
   data: {
     type: Object as PropType<SchemaObject>,
     required: true,
@@ -35,5 +37,18 @@ defineProps({
     type: String,
     required: true,
   },
+})
+
+const modelPropertiesProps = computed(() => {
+  const { data: { type, properties, items, required } } = props
+  let computedObj: Partial<SchemaObject> | null = null
+
+  if (type === 'object' && properties && Reflect.ownKeys(properties).length) {
+    computedObj = { properties, required }
+  } else if (type === 'array' && isValidSchemaObject(items)) {
+    computedObj = { properties: items.properties, required: items.required }
+  }
+
+  return computedObj
 })
 </script>
