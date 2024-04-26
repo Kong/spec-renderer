@@ -53,10 +53,10 @@ devDependencies:
     specifier: ^7.24.0
     version: 7.24.0
   '@commitlint/cli':
-    specifier: ^19.2.1
+    specifier: ^19.2.2
     version: 19.3.0(@types/node@20.12.7)(typescript@5.4.5)
   '@commitlint/config-conventional':
-    specifier: ^19.1.0
+    specifier: ^19.2.2
     version: 19.2.2
   '@digitalroute/cz-conventional-changelog-for-jira':
     specifier: ^8.0.1
@@ -83,10 +83,10 @@ devDependencies:
     specifier: ^20.12.7
     version: 20.12.7
   '@typescript-eslint/eslint-plugin':
-    specifier: ^7.6.0
+    specifier: ^7.7.0
     version: 7.7.1(@typescript-eslint/parser@7.7.1)(eslint@8.57.0)(typescript@5.4.5)
   '@typescript-eslint/parser':
-    specifier: ^7.6.0
+    specifier: ^7.7.0
     version: 7.7.1(eslint@8.57.0)(typescript@5.4.5)
   '@vitejs/plugin-vue':
     specifier: ^5.0.4
@@ -125,7 +125,7 @@ devDependencies:
     specifier: ^2.29.1
     version: 2.29.1(@typescript-eslint/parser@7.7.1)(eslint@8.57.0)
   eslint-plugin-n:
-    specifier: ^17.2.0
+    specifier: ^17.2.1
     version: 17.3.1(eslint@8.57.0)
   eslint-plugin-promise:
     specifier: ^6.1.1
@@ -182,7 +182,7 @@ devDependencies:
     specifier: ^5.4.5
     version: 5.4.5
   vite:
-    specifier: ^5.2.8
+    specifier: ^5.2.9
     version: 5.2.10(@types/node@20.12.7)(sass@1.75.0)
   vite-plugin-vue-devtools:
     specifier: ^7.0.27
@@ -191,7 +191,7 @@ devDependencies:
     specifier: 1.5.0
     version: 1.5.0(@types/node@20.12.7)(@vitest/ui@1.5.0)(jsdom@24.0.0)(sass@1.75.0)
   vue:
-    specifier: ^3.4.21
+    specifier: ^3.4.22
     version: 3.4.23(typescript@5.4.5)
   vue-router:
     specifier: ^4.3.2
