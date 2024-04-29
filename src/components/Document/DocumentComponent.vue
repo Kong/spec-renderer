@@ -3,6 +3,7 @@
     :is="docComponent(serviceNode)"
     v-if="serviceNode"
     :data="serviceNode.data"
+    :title="serviceNode.name"
   />
 </template>
 
