@@ -71,7 +71,7 @@ aside {
   width: 320px;
 }
 .doc {
-  display: flex;
+  background-color: lightblue;
   overflow: visible;
 }
 .wrapper {
