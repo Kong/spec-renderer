@@ -1,6 +1,6 @@
 {
   "name": "@kong/spec-renderer-dev",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
   "type": "module",
@@ -13,9 +13,9 @@
   "typings": "dist/types",
   "exports": {
     ".": {
-    "types": "./dist/types/index.d.ts",
-    "import": "./dist/kong-spec-renderer.es.js",
-    "require": "./dist/kong-spec-renderer.umd.js"
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/kong-spec-renderer.es.js",
+      "require": "./dist/kong-spec-renderer.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

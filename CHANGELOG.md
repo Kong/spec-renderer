@@ -1,3 +1,17 @@
+# [1.1.0](https://github.com/Kong/spec-renderer/compare/v1.0.5...v1.1.0) (2024-04-29)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#26](https://github.com/Kong/spec-renderer/issues/26)) ([8ffa619](https://github.com/Kong/spec-renderer/commit/8ffa619f8e96b1853617c15ee326d0812ea9743e))
+* prepare for dev-portal integration [KHCP-11679] ([#29](https://github.com/Kong/spec-renderer/issues/29)) ([3264399](https://github.com/Kong/spec-renderer/commit/3264399f03eb04f669677057b97121d2a75563a4))
+* prevent sidebar growing and causing content to shrink ([#28](https://github.com/Kong/spec-renderer/issues/28)) ([f205141](https://github.com/Kong/spec-renderer/commit/f205141e7c98476ba645780bf691259074f1e001))
+
+
+### Features
+
+* **base.scss:** add base stylesheet for sandbox ([#27](https://github.com/Kong/spec-renderer/issues/27)) ([7d3ad81](https://github.com/Kong/spec-renderer/commit/7d3ad81648e8a5d9ec3d997b3cce824f8a19f2b5))
+
 ## [1.0.5](https://github.com/Kong/spec-renderer/compare/v1.0.4...v1.0.5) (2024-04-24)
 
 
