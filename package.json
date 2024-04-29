@@ -56,7 +56,7 @@
     "json-schema": "^0.4.0",
     "lodash": "^4.17.21",
     "oas": "link:@stoplight/http-spec/oas",
-    "oas-normalize": "^11.0.3",
+    "oas-normalize": "^11.0.4",
     "openapi3-ts": "4.3.1"
   },
   "resolutions": {
@@ -110,7 +110,7 @@
     "vite": "^5.2.9",
     "vite-plugin-vue-devtools": "^7.0.27",
     "vitest": "1.5.0",
-    "vue": "^3.4.22",
+    "vue": "^3.4.23",
     "vue-tsc": "^2.0.14",
     "vue-router": "^4.3.2"
   },
