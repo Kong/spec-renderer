@@ -72,7 +72,9 @@ aside {
 }
 .doc {
   background-color: lightblue;
+  flex: 1;
   overflow: visible;
+  padding-left: $kui-space-60;
 }
 .wrapper {
   display: flex;
