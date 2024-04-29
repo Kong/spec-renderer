@@ -5,13 +5,9 @@
     class="model-property"
   >
     <template v-if="isValidSchemaObject(property)">
-      <div
-        class="property-info"
-      >
+      <div class="property-info">
         <code>{{ key }}</code>
-        <span
-          class="property-type"
-        >
+        <span class="property-type">
           {{ property.type ?? '' }}
           {{ isValidSchemaObject(property.items) && property.items.type ? `[${property.items.type}]` : '' }}
           {{ property.format ? `(${property.format})` : '' }}
@@ -41,9 +37,7 @@
         <p v-else-if="property.items.type === 'integer'">
           Max: {{ property.items.maximum || '' }} | Min: {{ property.items.minimum || '' }}
         </p>
-        <details
-          v-else-if="isNestedObj(property.items)"
-        >
+        <details v-else-if="isNestedObj(property.items)">
           <summary>Properties of items in <code>{{ key }}</code></summary>
           <ModelProperties
             :properties="property.items.properties"
@@ -69,9 +63,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-
 import { isValidSchemaObject } from '@/utils'
-
 import type { SchemaObject } from '@/types'
 
 defineProps({
@@ -89,7 +81,6 @@ const isNestedObj = (property: SchemaObject) => property.type === 'object' && pr
 </script>
 
 <style lang="scss" scoped>
-
 .model-property {
   border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   padding: var(--kui-space-50, $kui-space-50) var(--kui-space-80, $kui-space-80);
