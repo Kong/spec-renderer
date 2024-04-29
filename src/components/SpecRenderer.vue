@@ -65,14 +65,16 @@ watch(() => (props.spec), async (unparsedSpecText: string) => {
 <style lang="scss" scoped>
 aside {
   display: flex;
-  flex: 1 0 10%;
+  flex: 0 0 10%;
   height: 100%;
   overflow: visible;
   width: 320px;
 }
 .doc {
-  display: flex;
+  background-color: lightblue;
+  flex: 1;
   overflow: visible;
+  padding-left: $kui-space-60;
 }
 .wrapper {
   display: flex;

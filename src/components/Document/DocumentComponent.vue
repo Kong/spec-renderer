@@ -1,11 +1,9 @@
 <template>
-  <div class="document-container">
-    <component
-      :is="docComponent(serviceNode)"
-      v-if="serviceNode"
-      :data="serviceNode.data"
-    />
-  </div>
+  <component
+    :is="docComponent(serviceNode)"
+    v-if="serviceNode"
+    :data="serviceNode.data"
+  />
 </template>
 
 <script setup lang="ts">
@@ -44,10 +42,3 @@ watch(() => (props.path), (pathname) => {
   }
 }, { immediate: true })
 </script>
-
-<style lang="scss" scoped>
-.document-container {
-  background-color: lightblue;
-}
-</style>
-../../utils/resolve-refs
