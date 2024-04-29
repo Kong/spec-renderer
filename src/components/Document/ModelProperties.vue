@@ -92,7 +92,7 @@ const isNestedObj = (property: SchemaObject) => property.type === 'object' && pr
 
 .model-property {
   border-bottom: $kui-border-width-10 solid $kui-color-border;
-  padding: $kui-space-50 0;
+  padding: $kui-space-50 $kui-space-80;
 
   &>:not(:first-child) {
     margin-top: var(--kui-space-40, $kui-space-40);
