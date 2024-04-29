@@ -30,12 +30,14 @@
       </p>
 
       <template v-if="isValidSchemaObject(property.items)">
-        <p v-if="property.items.type === 'string'">
-          <span v-if=" property.items.enum">Allowed values: {{ property.items.enum }}</span>
+        <p v-if="property.items.type === 'string' && (property.items.enum || property.items.pattern)">
+          <span v-if="property.items.enum">Allowed values: {{ property.items.enum }}</span>
           <span v-else-if="property.items.pattern">Allowed pattern: <code>{{ property.items.pattern }}</code></span>
         </p>
-        <p v-else-if="property.items.type === 'integer'">
-          Max: {{ property.items.maximum || '' }} | Min: {{ property.items.minimum || '' }}
+        <p v-else-if="property.items.type === 'integer' && (property.items.maximum || property.items.minimum)">
+          <span v-if="property.items.maximum">Max: {{ property.items.maximum }}</span>
+          <span v-if="property.items.maximum && property.items.minimum">|</span>
+          <span v-if="property.items.minimum"> Min: {{ property.items.minimum }}</span>
         </p>
         <details v-else-if="isNestedObj(property.items)">
           <summary>Properties of items in <code>{{ key }}</code></summary>
