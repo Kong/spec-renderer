@@ -91,8 +91,8 @@ const isNestedObj = (property: SchemaObject) => property.type === 'object' && pr
 <style lang="scss" scoped>
 
 .model-property {
-  border-bottom: $kui-border-width-10 solid $kui-color-border;
-  padding: $kui-space-50 $kui-space-80;
+  border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+  padding: var(--kui-space-50, $kui-space-50) var(--kui-space-80, $kui-space-80);
 
   &>:not(:first-child) {
     margin-top: var(--kui-space-40, $kui-space-40);
@@ -104,12 +104,12 @@ const isNestedObj = (property: SchemaObject) => property.type === 'object' && pr
 }
 
 .property-type {
-  color: $kui-color-text-neutral-strong;
-  font-size: $kui-font-size-20;
+  color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
 }
 
 .required-property {
-  color: $kui-color-text-danger;
-  font-size: $kui-font-size-20;
+  color: var(--kui-color-text-danger, $kui-color-text-danger);
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
 }
 </style>
