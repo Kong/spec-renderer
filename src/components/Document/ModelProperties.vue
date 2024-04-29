@@ -17,7 +17,7 @@
           {{ property.format ? `(${property.format})` : '' }}
         </span>
         <span
-          v-if="required?.includes(key.toString())"
+          v-if="requiredFields?.includes(key.toString())"
           class="required-property"
         >
           required
@@ -47,7 +47,7 @@
           <summary>Properties of <code>{{ key }}</code></summary>
           <ModelProperties
             :properties="property.items.properties"
-            :required="property.items.required"
+            :required-fields="property.items.required"
           />
 
           {{ property.items }}
@@ -58,7 +58,7 @@
         <summary>Properties of <code>{{ key }}</code></summary>
         <ModelProperties
           :properties="property.properties"
-          :required="property.required"
+          :required-fields="property.required"
         />
       </details>
     </template>
@@ -81,7 +81,7 @@ defineProps({
     type: Object as PropType<SchemaObject['properties']>,
     required: true,
   },
-  required: {
+  requiredFields: {
     type: Array as PropType<SchemaObject['required']>,
     default: () => [],
   },

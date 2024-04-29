@@ -15,7 +15,7 @@
   <ModelProperties
     v-if="modelPropertiesProps"
     :properties="modelPropertiesProps.properties"
-    :required="modelPropertiesProps.required"
+    :required-fields="modelPropertiesProps.required"
   />
 </template>
 
