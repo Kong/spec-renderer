@@ -5,8 +5,8 @@
   <p v-if="data.description">
     {{ data.description }}
   </p>
-  <p v-if="data.examples">
-    {{ data.examples }}
+  <p v-if="data.example || data.examples">
+    Example: {{ data.example || data.examples }}
   </p>
   <p v-if="data.enum">
     <span>Allowed values: </span> {{ data.enum }}
