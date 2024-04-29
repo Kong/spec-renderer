@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, toRefs } from 'vue'
 import ModelProperties from './ModelProperties.vue'
 
 import { isValidSchemaObject } from '@/utils'
@@ -40,7 +40,7 @@ const props = defineProps({
 })
 
 const modelPropertiesProps = computed(() => {
-  const { data: { type, properties, items, required } } = props
+  const { data: { value: { type, properties, items, required } } } = toRefs(props)
   let computedObj: Partial<SchemaObject> | null = null
 
   if (type === 'object' && properties && Reflect.ownKeys(properties).length) {
