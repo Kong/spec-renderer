@@ -41,17 +41,15 @@
         <p v-else-if="property.items.type === 'integer'">
           Max: {{ property.items.maximum || '' }} | Min: {{ property.items.minimum || '' }}
         </p>
-        <div
+        <details
           v-else-if="isNestedObj(property.items)"
         >
-          <summary>Properties of <code>{{ key }}</code></summary>
+          <summary>Properties of items in <code>{{ key }}</code></summary>
           <ModelProperties
             :properties="property.items.properties"
             :required-fields="property.items.required"
           />
-
-          {{ property.items }}
-        </div>
+        </details>
       </template>
 
       <details v-if="isNestedObj(property)">
