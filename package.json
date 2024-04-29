@@ -13,8 +13,9 @@
   "typings": "dist/types",
   "exports": {
     ".": {
-      "import": "./dist/kong-spec-renderer.es.js",
-      "require": "./dist/kong-spec-renderer.umd.js"
+    "types": "./dist/types/index.d.ts",
+    "import": "./dist/kong-spec-renderer.es.js",
+    "require": "./dist/kong-spec-renderer.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

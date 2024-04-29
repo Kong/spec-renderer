@@ -4,6 +4,7 @@
       <TableOfContents
         v-if="tableOfContents"
         :base-path="basePath"
+        :control-browser-url="false"
         :table-of-contents="tableOfContents"
         @item-selected="itemSelected"
       />

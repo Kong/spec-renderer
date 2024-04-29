@@ -26,6 +26,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  controlBrowserUrl: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -33,7 +37,9 @@ const emit = defineEmits<{
 }>()
 
 const selectItem = (id: any) => {
-  window.history.pushState({}, '', props.basePath + id)
+  if (props.controlBrowserUrl) {
+    window.history.pushState({}, '', props.basePath + id)
+  }
   emit('item-selected', id)
 }
 
