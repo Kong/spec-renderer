@@ -10,7 +10,7 @@ describe('<NodeItem />', () => {
   it('KHCP-11715 renderers a tag with correct href', () => {
     const wrapper = mount(NodeItem, {
       props: {
-        item: <TableOfContentsNode>{ id: 'operation-path', title: 'xxx' },
+        item: <TableOfContentsNode>{ id: '/operation-path/method', title: 'xxx' },
       },
       global: {
         provide: {
@@ -21,6 +21,6 @@ describe('<NodeItem />', () => {
 
     const aTag = wrapper.find('a')
     expect(aTag.exists()).toBe(true)
-    expect(aTag.attributes().href).toEqual('/xxxx/operation-path')
+    expect(aTag.attributes().href).toEqual('/xxxx/operation-path/method')
   })
 })

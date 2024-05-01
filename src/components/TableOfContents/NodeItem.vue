@@ -1,7 +1,7 @@
 <template>
   <li>
     <a
-      :href="`${basePath}/${item.id}`"
+      :href="`${basePath}${item.id}`"
       @click.prevent="selectItem(item.id)"
     >
       {{ item.title }}
