@@ -13,6 +13,7 @@
 </template>
 
 <script setup lang="ts">
+import { provide } from 'vue'
 import type { PropType } from 'vue'
 import type { TableOfContentsItem } from '../../stoplight/elements-core/components/Docs/types'
 import { itemComponent } from './index'
@@ -31,6 +32,9 @@ const props = defineProps({
     default: false,
   },
 })
+
+// to be consumed in multi-level child components
+provide<string>('base-patch', props.basePath)
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void

@@ -1,8 +1,8 @@
 <template>
   <li>
     <a
-      href="#"
-      @click="selectItem(item.id)"
+      :href="`${basePath}/${item.id}`"
+      @click.prevent="selectItem(item.id)"
     >
       {{ item.title }}
     </a>
@@ -10,6 +10,7 @@
 </template>
 
 <script setup lang="ts">
+import { inject } from 'vue'
 import type { PropType } from 'vue'
 import type { TableOfContentsNode } from '../../stoplight/elements-core/components/Docs/types'
 
@@ -19,6 +20,8 @@ defineProps({
     required: true,
   },
 })
+
+const basePath = inject<string>('base-path', '')
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void
