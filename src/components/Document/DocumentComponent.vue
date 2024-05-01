@@ -33,7 +33,7 @@ const props = defineProps({
 const serviceNode = ref<ServiceNode| null>(null)
 
 // to be consumed in multi-level child components
-provide<string>('base-patch', props.basePath)
+provide<string>('base-path', props.basePath)
 
 watch(() => (props.path), (pathname) => {
   const isRootPath = !pathname || pathname === '/'
