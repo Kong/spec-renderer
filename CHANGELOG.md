@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/Kong/spec-renderer/compare/v1.1.0...v1.2.0) (2024-05-01)
+
+
+### Features
+
+* schema model render [KHCP-11676] ([#22](https://github.com/Kong/spec-renderer/issues/22)) ([99a020f](https://github.com/Kong/spec-renderer/commit/99a020fb51aea4153d8231b33b04ff6dd3fe6b46))
+
 # [1.1.0](https://github.com/Kong/spec-renderer/compare/v1.0.5...v1.1.0) (2024-04-29)
 
 
