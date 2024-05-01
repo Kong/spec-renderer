@@ -79,7 +79,7 @@ aside {
   background-color: lightblue;
   flex: 1;
   overflow: visible;
-  padding-left: $kui-space-60;
+  padding-left: var(--kui-space-60, $kui-space-60);
 }
 .wrapper {
   display: flex;
