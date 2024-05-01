@@ -4,7 +4,7 @@
       <TableOfContents
         v-if="tableOfContents"
         :base-path="basePath"
-        :control-browser-url="true"
+        :control-browser-url="props.controlBrowserUrl"
         :table-of-contents="tableOfContents"
         @item-selected="itemSelected"
       />
@@ -39,6 +39,10 @@ const props = defineProps({
   basePath: {
     type: String,
     default: '',
+  },
+  controlBrowserUrl: {
+    type: Boolean,
+    default: true,
   },
 })
 
