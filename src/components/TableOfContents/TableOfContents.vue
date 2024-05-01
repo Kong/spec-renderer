@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 // to be consumed in multi-level child components
-provide<string>('base-path', props.basePath)
+provide<string>('base-path', computed((): string => props.basePath))
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void
