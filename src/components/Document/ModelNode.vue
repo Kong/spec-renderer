@@ -40,13 +40,13 @@ const props = defineProps({
 })
 
 const modelPropertiesProps = computed(() => {
-  const { data: { value: { type, properties, items, required } } } = toRefs(props)
+  const { data } = toRefs(props)
   let computedObj: Partial<SchemaObject> | null = null
 
-  if (type === 'object' && properties && Reflect.ownKeys(properties).length) {
-    computedObj = { properties, required }
-  } else if (type === 'array' && isValidSchemaObject(items)) {
-    computedObj = { properties: items.properties, required: items.required }
+  if (data.value.type === 'object' && data.value.properties && Reflect.ownKeys(data.value.properties).length) {
+    computedObj = { properties: data.value.properties, required: data.value.required }
+  } else if (data.value.type === 'array' && isValidSchemaObject(data.value.items)) {
+    computedObj = { properties: data.value.items.properties, required: data.value.items.required }
   }
 
   return computedObj
