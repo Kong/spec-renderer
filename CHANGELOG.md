@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/Kong/spec-renderer/compare/v1.2.0...v1.2.1) (2024-05-01)
+
+
+### Bug Fixes
+
+* in TOC format links so they are right-clickable [KHCP-11715] ([#32](https://github.com/Kong/spec-renderer/issues/32)) ([d6d45b9](https://github.com/Kong/spec-renderer/commit/d6d45b9b0637b11fe5023fed24c48abf7810e8ed))
+
 # [1.2.0](https://github.com/Kong/spec-renderer/compare/v1.1.0...v1.2.0) (2024-05-01)
 
 
