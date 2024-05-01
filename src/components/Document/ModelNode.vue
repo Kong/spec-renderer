@@ -43,6 +43,12 @@ const modelPropertiesProps = computed(() => {
   const { data } = toRefs(props)
   let computedObj: Partial<SchemaObject> | null = null
 
+  /**
+   * We have to enumerate over the properties of the Schema Model and render them out via `ModelProperties` component.
+   * For this, we need to compute the properties and required fields of the Schema Model.
+   * If the top level Schema Model is an object, we can directly use the `properties` field of the object.
+   * If it's an array, we need to derive the properties from the `items` field of the Schema Model.
+   */
   if (data.value.type === 'object' && data.value.properties && Reflect.ownKeys(data.value.properties).length) {
     computedObj = { properties: data.value.properties, required: data.value.required }
   } else if (data.value.type === 'array' && isValidSchemaObject(data.value.items)) {
