@@ -13,8 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import { provide } from 'vue'
-import type { PropType } from 'vue'
+import { provide, computed } from 'vue'
+import type { PropType, Ref } from 'vue'
 import type { TableOfContentsItem } from '../../stoplight/elements-core/components/Docs/types'
 import { itemComponent } from './index'
 
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 // to be consumed in multi-level child components
-provide<string>('base-path', computed((): string => props.basePath))
+provide<Ref<string>>('base-path', computed((): string => props.basePath))
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void

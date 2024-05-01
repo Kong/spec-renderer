@@ -8,8 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, provide } from 'vue'
-import type { PropType } from 'vue'
+import { watch, ref, provide, computed } from 'vue'
+import type { PropType, Ref } from 'vue'
 import type { ServiceNode } from '../../stoplight/elements/utils/oas/types'
 import { docComponent } from './index'
 import { resolveRefs } from '../../utils'
@@ -34,7 +34,7 @@ const props = defineProps({
 const serviceNode = ref<ServiceNode| null>(null)
 
 // to be consumed in multi-level child components
-provide<string>('base-path', props.basePath)
+provide<Ref<string>>('base-path', computed((): string => props.basePath))
 
 watch(() => (props.path), (pathname) => {
   const isRootPath = !pathname || pathname === '/'
