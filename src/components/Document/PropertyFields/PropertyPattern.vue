@@ -1,6 +1,6 @@
 <template>
   <p v-if="pattern">
-    Allowed pattern: {{ pattern }}
+    Allowed pattern: <code>{{ pattern }}</code>
   </p>
 </template>
 
