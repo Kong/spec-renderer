@@ -12,16 +12,20 @@
     <span>Allowed values: </span> {{ data.enum }}
   </p>
 
-  <ModelProperties
-    v-if="modelPropertiesProps"
-    :properties="modelPropertiesProps.properties"
-    :required-fields="modelPropertiesProps.required"
-  />
+  <template v-if="modelPropertiesProps">
+    <ModelProperty
+      v-for="(property, propertyName) in modelPropertiesProps.properties"
+      :key="propertyName"
+      :property="property"
+      :property-name="propertyName.toString()"
+      :required-fields="modelPropertiesProps.required"
+    />
+  </template>
 </template>
 
 <script setup lang="ts">
 import { computed, toRefs } from 'vue'
-import ModelProperties from './ModelProperties.vue'
+import ModelProperty from './ModelProperty.vue'
 
 import { isValidSchemaObject } from '@/utils'
 
@@ -44,7 +48,7 @@ const modelPropertiesProps = computed(() => {
   let computedObj: Partial<SchemaObject> | null = null
 
   /**
-   * We have to enumerate over the properties of the Schema Model and render them out via `ModelProperties` component.
+   * We have to enumerate over the properties of the Schema Model and render them out via `ModelProperty` component.
    * For this, we need to compute the properties and required fields of the Schema Model.
    * If the top level Schema Model is an object, we can directly use the `properties` field of the object.
    * If it's an array, we need to derive the properties from the `items` field of the Schema Model.

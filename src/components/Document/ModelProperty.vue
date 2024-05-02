@@ -1,15 +1,13 @@
 <template>
   <div
-    v-for="(property, key) in properties"
-    :key="key"
     class="model-property"
   >
     <template v-if="isValidSchemaObject(property)">
       <component
         :is="fieldComponentMap[fieldName]"
-        v-for="fieldName in orderedFieldList(property, key.toString())"
+        v-for="fieldName in orderedFieldList(property, propertyName.toString())"
         :key="fieldName"
-        v-bind="fieldComponentProps({ property, fieldName, requiredFields, propertyTitle: key.toString() })"
+        v-bind="fieldComponentProps({ property, fieldName, requiredFields, propertyTitle: propertyName.toString() })"
       />
 
       <template v-if="isValidSchemaObject(property.items)">
@@ -20,38 +18,48 @@
           v-bind="fieldComponentProps({ property: property.items, fieldName })"
         />
         <details v-if="isNestedObj(property.items)">
-          <summary>Properties of items in <code>{{ key }}</code></summary>
-          <ModelProperties
-            :properties="property.items.properties"
+          <summary>Properties of items in <code>{{ propertyName }}</code></summary>
+          <ModelProperty
+            v-for="(itemProperty, itemPropertyName) in property.items.properties"
+            :key="itemPropertyName"
+            :property="itemProperty"
+            :property-name="itemPropertyName.toString()"
             :required-fields="property.items.required"
           />
         </details>
       </template>
 
       <details v-if="isNestedObj(property)">
-        <summary>Properties of <code>{{ key }}</code></summary>
-        <ModelProperties
-          :properties="property.properties"
+        <summary>Properties of <code>{{ propertyName }}</code></summary>
+        <ModelProperty
+          v-for="(subProperty, subPropertyName) in property.properties"
+          :key="subPropertyName"
+          :property="subProperty"
+          :property-name="subPropertyName.toString()"
           :required-fields="property.required"
         />
       </details>
     </template>
 
     <div v-else>
-      <code>{{ key }}</code>
+      <code>{{ propertyName }}</code>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { fieldComponentProps, fieldComponentMap } from './SchemaProperties'
+import { fieldComponentProps, fieldComponentMap } from './PropertyFields'
 import { isValidSchemaObject } from '@/utils'
-import type { SchemaObject } from '@/types'
+import type { ReferenceObject, SchemaObject } from '@/types'
 
 defineProps({
-  properties: {
-    type: Object as PropType<SchemaObject['properties']>,
+  property: {
+    type: Object as PropType<SchemaObject | ReferenceObject>,
+    required: true,
+  },
+  propertyName: {
+    type: String,
     required: true,
   },
   requiredFields: {
