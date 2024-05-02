@@ -83,6 +83,12 @@ const orderedFieldList = (itemData: SchemaObject, itemName?: string) => {
   if (itemData.enum) {
     fields.push('enum')
   }
+  if (itemData.pattern) {
+    fields.push('pattern')
+  }
+  if (itemData.maximum || itemData.minimum) {
+    fields.push('maximum')
+  }
   if (itemData.example) {
     fields.push('example')
   }

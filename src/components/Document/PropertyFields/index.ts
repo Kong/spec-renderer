@@ -4,6 +4,8 @@ import PropertyDescription from './PropertyDescription.vue'
 import PropertyExample from './PropertyExample.vue'
 import PropertyInfo from './PropertyInfo.vue'
 import PropertyEnum from './PropertyEnum.vue'
+import PropertyPattern from './PropertyPattern.vue'
+import PropertyRange from './PropertyRange.vue'
 
 export interface PropertyComponentArgs {
   property: SchemaObject;
@@ -17,6 +19,8 @@ export const fieldComponentMap: Record<string, unknown> = {
   example: PropertyExample,
   enum: PropertyEnum,
   title: PropertyInfo,
+  pattern: PropertyPattern,
+  maximum: PropertyRange,
 }
 
 /**
@@ -56,6 +60,15 @@ export const fieldComponentProps = ({ property, fieldName, propertyTitle, requir
               ? property.items.type
               : '',
         requiredFields: property.required || requiredFields,
+      }
+    case 'maximum':
+      return {
+        max: property.maximum,
+        min: property.minimum,
+      }
+    case 'pattern':
+      return {
+        pattern: property.pattern,
       }
   }
 }
