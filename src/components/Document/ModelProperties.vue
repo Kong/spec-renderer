@@ -6,18 +6,18 @@
   >
     <template v-if="isValidSchemaObject(property)">
       <component
-        :is="propertyComponentMap[fieldName]"
+        :is="fieldComponentMap[fieldName]"
         v-for="fieldName in orderedFieldList(property, key.toString())"
         :key="fieldName"
-        v-bind="propertyComponentProps({ property, fieldName, requiredFields, propertyTitle: key.toString() })"
+        v-bind="fieldComponentProps({ property, fieldName, requiredFields, propertyTitle: key.toString() })"
       />
 
       <template v-if="isValidSchemaObject(property.items)">
         <component
-          :is="propertyComponentMap[fieldName]"
+          :is="fieldComponentMap[fieldName]"
           v-for="fieldName in orderedFieldList(property.items)"
           :key="fieldName"
-          v-bind="propertyComponentProps({ property: property.items, fieldName })"
+          v-bind="fieldComponentProps({ property: property.items, fieldName })"
         />
         <details v-if="isNestedObj(property.items)">
           <summary>Properties of items in <code>{{ key }}</code></summary>
@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { propertyComponentProps, propertyComponentMap } from './SchemaProperties'
+import { fieldComponentProps, fieldComponentMap } from './SchemaProperties'
 import { isValidSchemaObject } from '@/utils'
 import type { SchemaObject } from '@/types'
 

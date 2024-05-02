@@ -12,7 +12,7 @@ export interface PropertyComponentArgs {
   propertyTitle?: string;
 }
 
-export const propertyComponentMap: Record<string, unknown> = {
+export const fieldComponentMap: Record<string, unknown> = {
   description: PropertyDescription,
   example: PropertyExample,
   enum: PropertyEnum,
@@ -32,7 +32,7 @@ export const propertyComponentMap: Record<string, unknown> = {
  *
  * @param {PropertyComponentArgs} args
  */
-export const propertyComponentProps = ({ property, fieldName, propertyTitle, requiredFields }: PropertyComponentArgs) => {
+export const fieldComponentProps = ({ property, fieldName, propertyTitle, requiredFields }: PropertyComponentArgs) => {
   switch (fieldName) {
     case 'description':
       return {
