@@ -7,7 +7,7 @@
     <template v-if="isValidSchemaObject(property)">
       <component
         :is="propertyComponentMap[fieldName]"
-        v-for="(_, fieldName) in property"
+        v-for="fieldName in orderedFieldList(property, key.toString())"
         :key="fieldName"
         v-bind="propertyComponentProps({ property, fieldName, requiredFields, propertyTitle: key.toString() })"
       />
@@ -15,7 +15,7 @@
       <template v-if="isValidSchemaObject(property.items)">
         <component
           :is="propertyComponentMap[fieldName]"
-          v-for="(_, fieldName) in property.items"
+          v-for="fieldName in orderedFieldList(property.items)"
           :key="fieldName"
           v-bind="propertyComponentProps({ property: property.items, fieldName })"
         />
@@ -61,6 +61,25 @@ defineProps({
 })
 
 const isNestedObj = (property: SchemaObject) => property.type === 'object' && property.properties && Reflect.ownKeys(property.properties).length
+
+// We need to fix the order in which the components for these fields are rendered
+const orderedFieldList = (itemData: SchemaObject, itemName?: string) => {
+  const fields : Array<keyof SchemaObject> = []
+
+  if (itemData.title || itemName) {
+    fields.push('title')
+  }
+  if (itemData.description) {
+    fields.push('description')
+  }
+  if (itemData.enum) {
+    fields.push('enum')
+  }
+  if (itemData.example) {
+    fields.push('example')
+  }
+  return fields
+}
 </script>
 
 <style lang="scss" scoped>

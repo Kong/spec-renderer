@@ -16,9 +16,22 @@ export const propertyComponentMap: Record<string, unknown> = {
   description: PropertyDescription,
   example: PropertyExample,
   enum: PropertyEnum,
-  type: PropertyInfo,
+  title: PropertyInfo,
 }
 
+/**
+ * Returns props for the component to be rendered for a given field.
+ *
+ * property — object of type SchemaObject from which props are extracted
+ *
+ * fieldName — name of the property whose component is to be rendered
+ *
+ * propertyTitle — optional, title of the property from which props are being extracted
+ *
+ * requiredFields — optional, array of required fields
+ *
+ * @param {PropertyComponentArgs} args
+ */
 export const propertyComponentProps = ({ property, fieldName, propertyTitle, requiredFields }: PropertyComponentArgs) => {
   switch (fieldName) {
     case 'description':
@@ -33,7 +46,7 @@ export const propertyComponentProps = ({ property, fieldName, propertyTitle, req
       return {
         enumValue: property.enum,
       }
-    case 'type':
+    case 'title':
       return {
         title: property.title || propertyTitle,
         propertyType: property.type,
@@ -43,10 +56,6 @@ export const propertyComponentProps = ({ property, fieldName, propertyTitle, req
               ? property.items.type
               : '',
         requiredFields: property.required || requiredFields,
-      }
-    default:
-      return {
-        component: PropertyDescription,
       }
   }
 }
