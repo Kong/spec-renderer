@@ -1,5 +1,8 @@
 <template>
-  <p v-if="example">
+  <p
+    v-if="example"
+    data-testid="property-field-example"
+  >
     <span>Example: </span> {{ example }}
   </p>
 </template>

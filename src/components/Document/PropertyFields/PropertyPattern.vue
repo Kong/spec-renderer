@@ -1,5 +1,8 @@
 <template>
-  <p v-if="pattern">
+  <p
+    v-if="pattern"
+    data-testid="property-field-pattern"
+  >
     Allowed pattern: <code>{{ pattern }}</code>
   </p>
 </template>

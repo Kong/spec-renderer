@@ -2,6 +2,7 @@
   <div
     v-if="title"
     class="property-info"
+    data-testid="property-field-info"
   >
     <code>{{ title }}</code>
     <span class="property-type">

@@ -54,8 +54,6 @@ describe('<ModelNode />', () => {
     })
 
     for (const property in data.properties) {
-      console.log({ property })
-
       expect(wrapper.findTestId(`model-property-${property}`).exists()).toBe(true)
     }
   })

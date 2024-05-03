@@ -1,5 +1,8 @@
 <template>
-  <p v-if="max || min">
+  <p
+    v-if="max || min"
+    data-testid="property-field-range"
+  >
     <span v-if="max">Max: {{ max }}</span>
     <span v-if="max && min">|</span>
     <span v-if="min"> Min: {{ min }}</span>

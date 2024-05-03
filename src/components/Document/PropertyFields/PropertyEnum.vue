@@ -1,5 +1,8 @@
 <template>
-  <p v-if="enumValue">
+  <p
+    v-if="enumValue"
+    data-testid="property-field-enum"
+  >
     Allowed values: {{ enumValue }}
   </p>
 </template>
