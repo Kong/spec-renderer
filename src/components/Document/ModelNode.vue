@@ -16,6 +16,7 @@
     <ModelProperty
       v-for="(property, propertyName) in modelPropertiesProps.properties"
       :key="propertyName"
+      :data-testid="`model-property-${propertyName}`"
       :property="property"
       :property-name="propertyName.toString()"
       :required-fields="modelPropertiesProps.required"
