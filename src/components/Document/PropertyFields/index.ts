@@ -52,14 +52,14 @@ export const fieldComponentProps = ({ property, fieldName, propertyTitle, requir
       }
     case 'title':
       return {
-        title: property.title || propertyTitle,
+        title: propertyTitle,
         propertyType: property.type,
         format: property.format,
         propertyItemtype:
             isValidSchemaObject(property.items) && property.items.type
               ? property.items.type
               : '',
-        requiredFields: property.required || requiredFields,
+        requiredFields,
       }
     case 'maximum':
       return {
