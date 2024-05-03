@@ -10,34 +10,17 @@
         v-bind="fieldComponentProps({ property, fieldName, requiredFields, propertyTitle: propertyName.toString() })"
       />
 
-      <template v-if="isValidSchemaObject(property.items)">
-        <component
-          :is="fieldComponentMap[fieldName]"
-          v-for="fieldName in orderedFieldList(property.items)"
-          :key="fieldName"
-          v-bind="fieldComponentProps({ property: property.items, fieldName })"
-        />
-        <details v-if="isNestedObj(property.items)">
-          <summary>Properties of items in <code>{{ propertyName }}</code></summary>
-          <ModelProperty
-            v-for="(itemProperty, itemPropertyName) in property.items.properties"
-            :key="itemPropertyName"
-            :property="itemProperty"
-            :property-name="itemPropertyName.toString()"
-            :required-fields="property.items.required"
-          />
-        </details>
-      </template>
-
-      <details v-if="isNestedObj(property)">
+      <details v-if="modelPropertyProps?.properties">
         <summary>Properties of <code>{{ propertyName }}</code></summary>
-        <ModelProperty
-          v-for="(subProperty, subPropertyName) in property.properties"
-          :key="subPropertyName"
-          :property="subProperty"
-          :property-name="subPropertyName.toString()"
-          :required-fields="property.required"
-        />
+        <template v-if="schemaObjectProperties(property)?.properties">
+          <ModelProperty
+            v-for="(subProperty, subPropertyName) in modelPropertyProps.properties"
+            :key="subPropertyName"
+            :property="subProperty"
+            :property-name="subPropertyName.toString()"
+            :required-fields="modelPropertyProps.required"
+          />
+        </template>
       </details>
     </template>
 
@@ -48,12 +31,12 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType } from 'vue'
+import { computed, type PropType } from 'vue'
 import { fieldComponentProps, fieldComponentMap } from './PropertyFields'
-import { isValidSchemaObject } from '@/utils'
+import { isValidSchemaObject, schemaObjectProperties } from '@/utils'
 import type { ReferenceObject, SchemaObject } from '@/types'
 
-defineProps({
+const props = defineProps({
   property: {
     type: Object as PropType<SchemaObject | ReferenceObject>,
     required: true,
@@ -67,8 +50,6 @@ defineProps({
     default: () => [],
   },
 })
-
-const isNestedObj = (property: SchemaObject) => property.type === 'object' && property.properties && Reflect.ownKeys(property.properties).length
 
 // We need to fix the order in which the components for these fields are rendered
 const orderedFieldList = (itemData: SchemaObject, itemName?: string) => {
@@ -94,6 +75,9 @@ const orderedFieldList = (itemData: SchemaObject, itemName?: string) => {
   }
   return fields
 }
+
+const modelPropertyProps = computed(() => isValidSchemaObject(props.property) ? schemaObjectProperties(props.property) : null)
+
 </script>
 
 <style lang="scss" scoped>
