@@ -1,7 +1,13 @@
-import type { SchemaObject } from '@/types'
-import { isValidSchemaObject } from './schema-parser'
+import type { ReferenceObject, SchemaObject } from '@/types'
 
 const isNestedObj = (property: SchemaObject) => property.type === 'object' && property.properties && Reflect.ownKeys(property.properties).length
+
+/**
+ * Type guard for verifying object is of type SchemaObject
+ */
+export function isValidSchemaObject(candidate?: SchemaObject | ReferenceObject): candidate is SchemaObject {
+  return Boolean(candidate && !Object.prototype.hasOwnProperty.call(candidate, '$ref'))
+}
 
 export const schemaObjectProperties = (candidate: SchemaObject) => {
   let computedObj: Partial<SchemaObject> | null = null
