@@ -60,7 +60,7 @@ const modelPropertyProps = computed(() => isValidSchemaObject(props.property) ? 
   border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   padding: var(--kui-space-50, $kui-space-50) var(--kui-space-80, $kui-space-80);
 
-  &>:not(:first-child) {
+  &> :not(:first-child) {
     margin-top: var(--kui-space-40, $kui-space-40);
   }
 }

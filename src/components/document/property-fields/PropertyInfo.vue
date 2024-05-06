@@ -64,7 +64,7 @@ defineProps({
 
 <style lang="scss" scoped>
 .property-info {
-  &>:not(:first-child) {
+  &> :not(:first-child) {
     margin-left: var(--kui-space-40, $kui-space-40);
   }
   .property-type {
@@ -76,5 +76,4 @@ defineProps({
     font-size: var(--kui-font-size-20, $kui-font-size-20);
   }
 }
-
 </style>
