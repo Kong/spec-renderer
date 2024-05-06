@@ -20,7 +20,7 @@ export const schemaObjectProperties = (candidate: SchemaObject) => {
    */
   if (isNestedObj(candidate)) {
     computedObj = { properties: candidate.properties, required: candidate.required }
-  } else if (candidate.type === 'array' && isValidSchemaObject(candidate.items)) {
+  } else if (candidate.type === 'array' && isValidSchemaObject(candidate.items) && isNestedObj(candidate.items)) {
     computedObj = { properties: candidate.items.properties, required: candidate.items.required }
   }
 
