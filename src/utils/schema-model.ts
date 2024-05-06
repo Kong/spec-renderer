@@ -1,6 +1,6 @@
 import type { ReferenceObject, SchemaObject } from '@/types'
 
-const isNestedObj = (property: SchemaObject) => property.type === 'object' && property.properties && Reflect.ownKeys(property.properties).length
+export const isNestedObj = (property: SchemaObject) => Boolean(property.type === 'object' && property.properties && Reflect.ownKeys(property.properties).length)
 
 /**
  * Type guard for verifying object is of type SchemaObject
