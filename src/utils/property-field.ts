@@ -1,11 +1,11 @@
 import type { SchemaObject } from '@/types'
 import { isValidSchemaObject } from '@/utils'
-import PropertyDescription from './PropertyDescription.vue'
-import PropertyExample from './PropertyExample.vue'
-import PropertyInfo from './PropertyInfo.vue'
-import PropertyEnum from './PropertyEnum.vue'
-import PropertyPattern from './PropertyPattern.vue'
-import PropertyRange from './PropertyRange.vue'
+import PropertyDescription from '@/components/document/property-fields/PropertyDescription.vue'
+import PropertyExample from '@/components/document/property-fields/PropertyExample.vue'
+import PropertyInfo from '@/components/document/property-fields/PropertyInfo.vue'
+import PropertyEnum from '@/components/document/property-fields/PropertyEnum.vue'
+import PropertyPattern from '@/components/document/property-fields/PropertyPattern.vue'
+import PropertyRange from '@/components/document/property-fields/PropertyRange.vue'
 
 interface PropertyComponentArgs {
   property: SchemaObject;

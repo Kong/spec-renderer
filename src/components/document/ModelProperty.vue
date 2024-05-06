@@ -33,8 +33,7 @@
 
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
-import { fieldComponentProps, fieldComponentMap } from './property-fields'
-import { isValidSchemaObject, schemaObjectProperties, orderedFieldList } from '@/utils'
+import { isValidSchemaObject, schemaObjectProperties, orderedFieldList, fieldComponentProps, fieldComponentMap } from '@/utils'
 import type { ReferenceObject, SchemaObject } from '@/types'
 
 const props = defineProps({
