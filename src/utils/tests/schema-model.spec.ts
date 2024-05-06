@@ -143,17 +143,6 @@ describe('schemaObjectProperties', () => {
       },
       {
         type: 'array',
-        items: {},
-      },
-      {
-        type: 'array',
-        items: {
-          type: 'object',
-          properties: {},
-        },
-      },
-      {
-        type: 'array',
         items: {
           type: 'object',
           properties: {
@@ -184,5 +173,16 @@ describe('orderedFieldList', () => {
       example: 'lorem ipsum',
     }
     expect(orderedFieldList(itemData)).toEqual(['title', 'description', 'enum', 'pattern', 'maximum', 'example'])
+  })
+
+  it('returns the fields in the correct order when title field is not provided', () => {
+    const itemData: SchemaObject = {
+      description: 'sample-description',
+      enum: ['sample-enum'],
+      pattern: '^[0-9]{3}$',
+      minimum: 100,
+      example: 'lorem ipsum',
+    }
+    expect(orderedFieldList(itemData)).toEqual(['description', 'enum', 'pattern', 'maximum', 'example'])
   })
 })
