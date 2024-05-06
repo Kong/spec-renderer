@@ -1,6 +1,6 @@
 <template>
   <p data-testid="property-field-enum">
-    Allowed values: {{ enumValue }}
+    Allowed values: {{ enumValue?.join(', ') }}
   </p>
 </template>
 
