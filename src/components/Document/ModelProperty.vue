@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
 import { fieldComponentProps, fieldComponentMap } from './PropertyFields'
-import { isValidSchemaObject, schemaObjectProperties } from '@/utils'
+import { isValidSchemaObject, schemaObjectProperties, orderedFieldList } from '@/utils'
 import type { ReferenceObject, SchemaObject } from '@/types'
 
 const props = defineProps({
@@ -52,33 +52,7 @@ const props = defineProps({
   },
 })
 
-// We need to fix the order in which the components for these fields are rendered
-const orderedFieldList = (itemData: SchemaObject, itemName?: string) => {
-  const fields : Array<keyof SchemaObject> = []
-
-  if (itemData.title || itemName) {
-    fields.push('title')
-  }
-  if (itemData.description) {
-    fields.push('description')
-  }
-  if (itemData.enum) {
-    fields.push('enum')
-  }
-  if (itemData.pattern) {
-    fields.push('pattern')
-  }
-  if (itemData.maximum || itemData.minimum) {
-    fields.push('maximum')
-  }
-  if (itemData.example) {
-    fields.push('example')
-  }
-  return fields
-}
-
 const modelPropertyProps = computed(() => isValidSchemaObject(props.property) ? schemaObjectProperties(props.property) : null)
-
 </script>
 
 <style lang="scss" scoped>
