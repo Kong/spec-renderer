@@ -1,11 +1,8 @@
 <template>
-  <p
-    v-if="max || min"
-    data-testid="property-field-range"
-  >
-    <span v-if="max">Max: {{ max }}</span>
-    <span v-if="max && min">|</span>
-    <span v-if="min"> Min: {{ min }}</span>
+  <p data-testid="property-field-range">
+    <span v-if="Number.isFinite(max)">Max: {{ max }}</span>
+    <span v-if="Number.isFinite(max) && Number.isFinite(min)"> | </span>
+    <span v-if="Number.isFinite(min)">Min: {{ min }}</span>
   </p>
 </template>
 
