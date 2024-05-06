@@ -1,6 +1,7 @@
 <template>
   <div
     class="model-property"
+    :data-testid="`model-property-${propertyName}`"
   >
     <template v-if="isValidSchemaObject(property)">
       <component

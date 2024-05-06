@@ -37,4 +37,81 @@ describe('<ModelProperty />', () => {
       expect(wrapper.findTestId(component).exists()).toBe(true)
     }
   })
+
+  it('renders all fields of a nested property', () => {
+    const wrapper = mount(ModelProperty, {
+      props: {
+        property: {
+          type: 'object',
+          description: 'Period of time data is returned for.',
+          properties: {
+            start: {
+              type: 'string',
+              format: 'date-time',
+              description:
+                "Timestamp specifying the lower bound of the query's time range.",
+            },
+            end: {
+              type: 'string',
+              format: 'date-time',
+              description:
+                "Timestamp specifying the upper bound of the query's time range.",
+            },
+          },
+        },
+        propertyName: 'time-range',
+        requiredFields: ['time_range', 'query_id', 'size', 'offset'],
+      },
+    })
+
+    const componentList = [
+      // top level property
+      'model-property-time-range',
+      // nested properties
+      'model-property-start',
+      'model-property-end',
+    ]
+
+    for (const component of componentList) {
+      expect(wrapper.findTestId(component).exists()).toBe(true)
+    }
+  })
+
+  it('renders all fields of items of an array property', () => {
+    const wrapper = mount(ModelProperty, {
+      props: {
+        property: {
+          type: 'array',
+          description: 'A sample array description',
+          items: {
+            properties: {
+              'sample-item-1': {
+                type: 'integer',
+                format: 'int32',
+                example: '34',
+              },
+              'sample-item-2': {
+                type: 'string',
+                example: 'abc',
+              },
+            },
+            required: ['sample-item-1'],
+          },
+        },
+        propertyName: 'sample-property',
+      },
+    })
+
+    const componentList = [
+      // top level property
+      'model-property-sample-property',
+      // nested item properties
+      'model-property-sample-item-1',
+      'model-property-sample-item-2',
+    ]
+
+    for (const component of componentList) {
+      expect(wrapper.findTestId(component).exists()).toBe(true)
+    }
+  })
 })
