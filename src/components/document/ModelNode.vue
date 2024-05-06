@@ -12,21 +12,25 @@
     <span>Allowed values: </span> {{ data.enum }}
   </p>
 
-  <ModelProperties
-    v-if="modelPropertiesProps"
-    :properties="modelPropertiesProps.properties"
-    :required-fields="modelPropertiesProps.required"
-  />
+  <template v-if="modelPropertyProps">
+    <ModelProperty
+      v-for="(property, propertyName) in modelPropertyProps.properties"
+      :key="propertyName"
+      :data-testid="`model-property-${propertyName}`"
+      :property="property"
+      :property-name="propertyName.toString()"
+      :required-fields="modelPropertyProps.required"
+    />
+  </template>
 </template>
 
 <script setup lang="ts">
-import { computed, toRefs } from 'vue'
-import ModelProperties from './ModelProperties.vue'
-
-import { isValidSchemaObject } from '@/utils'
+import { computed } from 'vue'
+import ModelProperty from './ModelProperty.vue'
 
 import type{ PropType } from 'vue'
 import type { SchemaObject } from '@/types'
+import { schemaObjectProperties } from '@/utils'
 
 const props = defineProps({
   data: {
@@ -39,22 +43,5 @@ const props = defineProps({
   },
 })
 
-const modelPropertiesProps = computed(() => {
-  const { data } = toRefs(props)
-  let computedObj: Partial<SchemaObject> | null = null
-
-  /**
-   * We have to enumerate over the properties of the Schema Model and render them out via `ModelProperties` component.
-   * For this, we need to compute the properties and required fields of the Schema Model.
-   * If the top level Schema Model is an object, we can directly use the `properties` field of the object.
-   * If it's an array, we need to derive the properties from the `items` field of the Schema Model.
-   */
-  if (data.value.type === 'object' && data.value.properties && Reflect.ownKeys(data.value.properties).length) {
-    computedObj = { properties: data.value.properties, required: data.value.required }
-  } else if (data.value.type === 'array' && isValidSchemaObject(data.value.items)) {
-    computedObj = { properties: data.value.items.properties, required: data.value.items.required }
-  }
-
-  return computedObj
-})
+const modelPropertyProps = computed(() => schemaObjectProperties(props.data))
 </script>
