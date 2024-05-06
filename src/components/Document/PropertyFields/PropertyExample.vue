@@ -1,6 +1,6 @@
 <template>
   <p data-testid="property-field-example">
-    <span>Example: </span> {{ example }}
+    <span>Example:</span> {{ example }}
   </p>
 </template>
 
