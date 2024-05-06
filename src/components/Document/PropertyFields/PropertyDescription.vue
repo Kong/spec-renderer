@@ -1,8 +1,5 @@
 <template>
-  <p
-    v-if="description"
-    data-testid="property-field-description"
-  >
+  <p data-testid="property-field-description">
     {{ description }}
   </p>
 </template>
@@ -11,7 +8,7 @@
 defineProps({
   description: {
     type: String,
-    default: '',
+    required: true,
   },
 })
 </script>

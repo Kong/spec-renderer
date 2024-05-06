@@ -1,8 +1,5 @@
 <template>
-  <p
-    v-if="example"
-    data-testid="property-field-example"
-  >
+  <p data-testid="property-field-example">
     <span>Example: </span> {{ example }}
   </p>
 </template>
@@ -12,7 +9,7 @@ defineProps({
   example: {
     // allow any type since typeof example is unknown
     type: null,
-    default: '',
+    required: true,
   },
 })
 </script>

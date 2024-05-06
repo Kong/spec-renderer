@@ -1,6 +1,5 @@
 <template>
   <div
-    v-if="title"
     class="property-info"
     data-testid="property-field-info"
   >

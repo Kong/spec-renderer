@@ -1,8 +1,5 @@
 <template>
-  <p
-    v-if="pattern"
-    data-testid="property-field-pattern"
-  >
+  <p data-testid="property-field-pattern">
     Allowed pattern: <code>{{ pattern }}</code>
   </p>
 </template>
@@ -14,7 +11,7 @@ import type { SchemaObject } from '@/types'
 defineProps({
   pattern: {
     type: String as PropType<SchemaObject['pattern']>,
-    default: '',
+    required: true,
   },
 })
 </script>

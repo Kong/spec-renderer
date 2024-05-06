@@ -1,8 +1,5 @@
 <template>
-  <p
-    v-if="enumValue"
-    data-testid="property-field-enum"
-  >
+  <p data-testid="property-field-enum">
     Allowed values: {{ enumValue }}
   </p>
 </template>
@@ -14,7 +11,7 @@ import type { SchemaObject } from '@/types'
 defineProps({
   enumValue: {
     type: Array as PropType<SchemaObject['enum']>,
-    default: () => [],
+    required: true,
   },
 })
 </script>
