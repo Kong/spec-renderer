@@ -27,9 +27,9 @@
 <script setup lang="ts">
 import { watch, ref } from 'vue'
 import composables from '../composables'
-import TableOfContents from './TableOfContents/TableOfContents.vue'
-import DocumentComponent from './Document/DocumentComponent.vue'
-import TryMe from './TryMe/TryMe.vue'
+import TableOfContents from './table-of-contents/TableOfContents.vue'
+import DocumentComponent from './document/DocumentComponent.vue'
+import TryMe from './try-me/TryMe.vue'
 
 const props = defineProps({
   spec: {
