@@ -26,3 +26,28 @@ export const schemaObjectProperties = (candidate: SchemaObject) => {
 
   return computedObj
 }
+
+// We need to fix the order in which the components for these fields are rendered
+export const orderedFieldList = (itemData: SchemaObject, itemName?: string) => {
+  const fields : Array<keyof SchemaObject> = []
+
+  if (itemData.title || itemName) {
+    fields.push('title')
+  }
+  if (itemData.description) {
+    fields.push('description')
+  }
+  if (itemData.enum) {
+    fields.push('enum')
+  }
+  if (itemData.pattern) {
+    fields.push('pattern')
+  }
+  if (itemData.maximum || itemData.minimum) {
+    fields.push('maximum')
+  }
+  if (itemData.example) {
+    fields.push('example')
+  }
+  return fields
+}
