@@ -1,8 +1,8 @@
 import type { App } from 'vue'
 import SpecRenderer from '@/components/SpecRenderer.vue'
-import DocumentComponent from './components/Document/DocumentComponent.vue'
-import TableOfContents from './components/TableOfContents/TableOfContents.vue'
-import TryMe from './components/TryMe/TryMe.vue'
+import DocumentComponent from './components/document/DocumentComponent.vue'
+import TableOfContents from './components/table-of-contents/TableOfContents.vue'
+import TryMe from './components/try-me/TryMe.vue'
 
 // Export Vue plugin as the default
 export default {
