@@ -3,15 +3,31 @@
     class="property-info"
     data-testid="property-field-info"
   >
-    <code>{{ title }}</code>
+    <code data-testid="property-field-title">{{ title }}</code>
     <span class="property-type">
-      <span v-if="propertyType">{{ propertyType }}</span>
-      <span v-if="propertyItemType">{{ `[${propertyItemType}]` }}</span>
-      <span v-if="format">{{ `(${format})` }}</span>
+      <span
+        v-if="propertyType"
+        data-testid="property-field-type"
+      >
+        {{ propertyType }}
+      </span>
+      <span
+        v-if="propertyItemType"
+        data-testid="property-field-item-type"
+      >
+        {{ `[${propertyItemType}]` }}
+      </span>
+      <span
+        v-if="format"
+        data-testid="property-field-format"
+      >
+        {{ `(${format})` }}
+      </span>
     </span>
     <span
       v-if="requiredFields?.includes(title)"
       class="required-property"
+      data-testid="property-field-required"
     >
       required
     </span>
