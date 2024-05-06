@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { shallowMount } from '@vue/test-utils'
-import ModelNode from '../ModelNode.vue'
+import ModelNode from './ModelNode.vue'
 import type { SchemaObject } from '@/types'
 
 const data: SchemaObject = {

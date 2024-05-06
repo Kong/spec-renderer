@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import ModelProperty from '../ModelProperty.vue'
+import ModelProperty from './ModelProperty.vue'
 
 describe('<ModelProperty />', () => {
   it('renders all fields of a property', () => {

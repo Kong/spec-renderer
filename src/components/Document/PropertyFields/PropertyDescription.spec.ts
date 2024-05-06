@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { shallowMount } from '@vue/test-utils'
-import PropertyDescription from '../PropertyDescription.vue'
+import PropertyDescription from './PropertyDescription.vue'
 
 const description = 'sample description'
 

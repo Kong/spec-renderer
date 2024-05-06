@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { shallowMount } from '@vue/test-utils'
-import PropertyEnum from '../PropertyEnum.vue'
+import PropertyEnum from './PropertyEnum.vue'
 
 const enumValue = ['dropdown', 'numeric', 'text']
 

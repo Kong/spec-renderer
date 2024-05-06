@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { shallowMount } from '@vue/test-utils'
-import PropertyRange from '../PropertyRange.vue'
+import PropertyRange from './PropertyRange.vue'
 
 describe('<PropertyRange />', () => {
   it('renders with both max and min', () => {

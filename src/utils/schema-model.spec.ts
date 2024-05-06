@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isNestedObj, isValidSchemaObject, orderedFieldList, schemaObjectProperties } from '../schema-model'
+import { isNestedObj, isValidSchemaObject, orderedFieldList, schemaObjectProperties } from './schema-model'
 import type { ReferenceObject, SchemaObject } from '@/types'
 
 describe('isNestedObj', () => {

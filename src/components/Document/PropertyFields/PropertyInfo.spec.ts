@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { shallowMount } from '@vue/test-utils'
-import PropertyInfo from '../PropertyInfo.vue'
+import PropertyInfo from './PropertyInfo.vue'
 
 describe('<PropertyInfo />', () => {
   it('correctly renders all data provided as props', () => {

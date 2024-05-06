@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { shallowMount } from '@vue/test-utils'
-import PropertyPattern from '../PropertyPattern.vue'
+import PropertyPattern from './PropertyPattern.vue'
 
 const pattern = '^[0-9]{3}$'
 
