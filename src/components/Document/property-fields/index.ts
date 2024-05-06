@@ -7,7 +7,7 @@ import PropertyEnum from './PropertyEnum.vue'
 import PropertyPattern from './PropertyPattern.vue'
 import PropertyRange from './PropertyRange.vue'
 
-export interface PropertyComponentArgs {
+interface PropertyComponentArgs {
   property: SchemaObject;
   fieldName: keyof SchemaObject;
   requiredFields?: string[];
