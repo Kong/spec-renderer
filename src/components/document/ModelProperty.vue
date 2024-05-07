@@ -5,10 +5,10 @@
   >
     <template v-if="isValidSchemaObject(property)">
       <component
-        :is="fieldComponentMap[fieldName]"
-        v-for="fieldName in orderedFieldList(property, propertyName.toString())"
-        :key="fieldName"
-        v-bind="fieldComponentProps({ property, fieldName, requiredFields, propertyTitle: propertyName.toString() })"
+        :is="field.component"
+        v-for="field in orderedFieldList"
+        :key="field.key"
+        v-bind="field.props"
       />
 
       <details v-if="modelPropertyProps?.properties">
@@ -31,8 +31,15 @@
 
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
-import { isValidSchemaObject, schemaObjectProperties, orderedFieldList, fieldComponentProps, fieldComponentMap } from '@/utils'
+import { isValidSchemaObject, schemaObjectProperties } from '@/utils'
 import type { ReferenceObject, SchemaObject } from '@/types'
+
+import PropertyDescription from '@/components/document/property-fields/PropertyDescription.vue'
+import PropertyExample from '@/components/document/property-fields/PropertyExample.vue'
+import PropertyInfo from '@/components/document/property-fields/PropertyInfo.vue'
+import PropertyEnum from '@/components/document/property-fields/PropertyEnum.vue'
+import PropertyPattern from '@/components/document/property-fields/PropertyPattern.vue'
+import PropertyRange from '@/components/document/property-fields/PropertyRange.vue'
 
 const props = defineProps({
   property: {
@@ -50,6 +57,76 @@ const props = defineProps({
 })
 
 const modelPropertyProps = computed(() => isValidSchemaObject(props.property) ? schemaObjectProperties(props.property) : null)
+
+const orderedFieldList = computed(() => {
+  const fields = []
+
+  if (!isValidSchemaObject(props.property)) return []
+
+  if (props.property.title || props.propertyName) {
+    fields.push({
+      component: PropertyInfo,
+      props: {
+        title: props.propertyName || props.property.title,
+        propertyType: props.property.type,
+        format: props.property.format,
+        propertyItemtype:
+            isValidSchemaObject(props.property.items) && props.property.items.type
+              ? props.property.items.type
+              : '',
+        requiredFields: props.requiredFields,
+      },
+      key: 'property-info',
+    })
+  }
+  if (props.property.description) {
+    fields.push({
+      component: PropertyDescription,
+      props: {
+        description: props.property.description,
+      },
+      key: 'property-description',
+    })
+  }
+  if (props.property.enum) {
+    fields.push({
+      component: PropertyEnum,
+      props: {
+        enumValue: props.property.enum,
+      },
+      key: 'property-enum',
+    })
+  }
+  if (props.property.pattern) {
+    fields.push({
+      component: PropertyPattern,
+      props: {
+        pattern: props.property.pattern,
+      },
+      key: 'property-pattern',
+    })
+  }
+  if (props.property.maximum || props.property.minimum) {
+    fields.push({
+      component: PropertyRange,
+      props: {
+        max: props.property.maximum,
+        min: props.property.minimum,
+      },
+      key: 'property-range',
+    })
+  }
+  if (props.property.example || props.property.examples) {
+    fields.push({
+      component: PropertyExample,
+      props: {
+        example: props.property.example || props.property.examples,
+      },
+      key: 'property-example',
+    })
+  }
+  return fields
+})
 </script>
 
 <style lang="scss" scoped>
