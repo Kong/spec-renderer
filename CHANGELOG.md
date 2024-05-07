@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/Kong/spec-renderer/compare/v1.2.1...v1.3.0) (2024-05-07)
+
+
+### Features
+
+* add components for individual schema properties [KHCP-11732] ([#38](https://github.com/Kong/spec-renderer/issues/38)) ([c11b469](https://github.com/Kong/spec-renderer/commit/c11b4695d54a3ea092c76ea88bff2f59cf3491e8))
+
 ## [1.2.1](https://github.com/Kong/spec-renderer/compare/v1.2.0...v1.2.1) (2024-05-01)
 
 
