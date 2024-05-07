@@ -13,15 +13,13 @@
 
       <details v-if="modelPropertyProps?.properties">
         <summary>Properties of <code>{{ propertyName }}</code></summary>
-        <template v-if="schemaObjectProperties(property)?.properties">
-          <ModelProperty
-            v-for="(subProperty, subPropertyName) in modelPropertyProps.properties"
-            :key="subPropertyName"
-            :property="subProperty"
-            :property-name="subPropertyName.toString()"
-            :required-fields="modelPropertyProps.required"
-          />
-        </template>
+        <ModelProperty
+          v-for="(subProperty, subPropertyName) in modelPropertyProps.properties"
+          :key="subPropertyName"
+          :property="subProperty"
+          :property-name="subPropertyName.toString()"
+          :required-fields="modelPropertyProps.required"
+        />
       </details>
     </template>
 
