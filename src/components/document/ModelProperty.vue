@@ -1,7 +1,7 @@
 <template>
   <div
     class="model-property"
-    :data-testid="`model-property-${propertyName}`"
+    :data-testid="dataTestId"
   >
     <template v-if="isValidSchemaObject(property)">
       <component
@@ -139,6 +139,8 @@ const orderedFieldList = computed(() => {
   }
   return fields
 })
+
+const dataTestId = computed(() => `model-property-${props.propertyName.replaceAll(' ', '-')}`)
 </script>
 
 <style lang="scss" scoped>
