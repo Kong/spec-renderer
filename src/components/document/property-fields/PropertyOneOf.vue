@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div data-testid="property-field-one-of">
     <div>One of</div>
     <template
       v-for="(oneOfObject, index) in oneOfList"
