@@ -41,7 +41,6 @@ describe('<PropertyOneOf />', () => {
     ]
 
     for (const component of componentList) {
-      console.log(component + ': ' + wrapper.findTestId(component).exists())
       expect(wrapper.findTestId(component).exists()).toBe(true)
     }
   })
