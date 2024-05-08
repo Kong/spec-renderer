@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div data-testid="property-field-any-of">
     <div>anyOf: </div>
     <template
       v-for="(anyOfObject, index) in anyOfList"
