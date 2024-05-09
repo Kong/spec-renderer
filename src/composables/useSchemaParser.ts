@@ -4,14 +4,9 @@ import type { ServiceNode } from '../stoplight/elements/utils/oas/types'
 import { parse as parseYaml } from '@stoplight/yaml'
 import { computeAPITree } from '../stoplight/elements/components/API/utils'
 import type { TableOfContentsItem } from '../stoplight/elements-core/components/Docs/types'
-import type { ParseOptions } from '../types'
+
 import { validate } from '@scalar/openapi-parser'
 import type { ValidateResult } from '@scalar/openapi-parser'
-import $RefParser from '@stoplight/json-schema-ref-parser'
-// import $RefParser from '@apidevtools/json-schema-ref-parser'
-
-import refRes from '@json-schema-tools/reference-resolver'
-import { parse, stringify, toJSON, fromJSON } from 'flatted'
 
 export default function useSchemaParser():any {
 
