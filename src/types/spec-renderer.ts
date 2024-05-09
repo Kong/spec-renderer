@@ -11,3 +11,7 @@ export interface SpecRendererProps {
  */
 export interface SchemaObject extends OAS31SchemaObject {}
 export interface ReferenceObject extends OAS31ReferenceObject {}
+
+export interface ParseOptions {
+  specUrl?: string
+}

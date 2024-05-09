@@ -4,9 +4,14 @@ import type { ServiceNode } from '../stoplight/elements/utils/oas/types'
 import { parse as parseYaml } from '@stoplight/yaml'
 import { computeAPITree } from '../stoplight/elements/components/API/utils'
 import type { TableOfContentsItem } from '../stoplight/elements-core/components/Docs/types'
-
+import type { ParseOptions } from '../types'
 import { validate } from '@scalar/openapi-parser'
 import type { ValidateResult } from '@scalar/openapi-parser'
+import $RefParser from '@stoplight/json-schema-ref-parser'
+// import $RefParser from '@apidevtools/json-schema-ref-parser'
+
+import refRes from '@json-schema-tools/reference-resolver'
+import { parse, stringify, toJSON, fromJSON } from 'flatted'
 
 export default function useSchemaParser():any {
 
@@ -36,24 +41,56 @@ export default function useSchemaParser():any {
     return undefined
   }
 
-  const parse = async (spec: string) => {
-    jsonDocument.value = tryParseYamlOrObject(spec)
+  const parse = async (spec: string, options: ParseOptions) => {
+    console.log('parsing:', spec, options)
+    if (options?.specUrl) {
+      jsonDocument.value = await $RefParser.bundle(options?.specUrl, { continueOnError: true })
+    } else {
+      jsonDocument.value = tryParseYamlOrObject(spec)
+    }
+
     if (!jsonDocument.value) {
+      console.error('empty jsonDocument initial processing')
       return
     }
 
-    parsedDocument.value = transformOasToServiceNode(jsonDocument.value)
+    // console.log('resolved:', JSON.stringify(await refRes.resolve('#/components/schemas/HeadingBlock', jsonDocument.value)))
 
-    validationResults.value = await validate(spec)
+    console.log('before dereferencing:', jsonDocument.value)
+
+    try {
+      const dereferenced = await $RefParser.dereference(jsonDocument.value, {
+        continueOnError: true,
+        dereference: {
+          circular: true,
+        },
+      })
+      jsonDocument.value = dereferenced
+      console.log('!!!!!!json: ', jsonDocument.value)
+    } catch (err) {
+      console.error('error deferencing', err)
+    }
+    console.log('!!!!!!json: ', jsonDocument.value)
+
+    try {
+      parsedDocument.value = transformOasToServiceNode(jsonDocument.value)
+    } catch (err) {
+      console.error('error in transformOasToServiceNode', err)
+    }
+
+    try {
+      validationResults.value = await validate(spec)
+    } catch (err) {
+      console.error('error in validate', err)
+    }
 
     try {
       if (parsedDocument.value) {
         tableOfContents.value = computeAPITree(parsedDocument.value, { hideSchemas: false, hideInternal: false })
       }
-    } catch (e) {
-      console.error(e)
+    } catch (err) {
+      console.error('error in computeAPITree', err)
     }
-
   }
 
   return {
