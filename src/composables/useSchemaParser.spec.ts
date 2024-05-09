@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import composables from '../composables'
+import composables from '.'
 
-describe('resolve-refs', () => {
+describe('useSchemaParser', () => {
   describe('inline-refs', () => {
     it('should handle invalid  local refs', async () => {
       const specText = `
@@ -21,12 +21,12 @@ components:
         message:
           type: string
 `
-      const { parse, parsedDocument, jsonDocument } = composables.useSchemaParser()
+      const { parse, parsedDocument } = composables.useSchemaParser()
       await parse(specText)
 
       const node = parsedDocument.value.children.find((child: any) => child.uri === '/schemas/ApiResponse')
       console.log('!!!!!!!', node)
-      expect(resolved.properties.type.example).toEqual('#default')
+      expect(node.data.properties.type.example).toEqual('#default')
     })
 
     it('should handle unresolvable local refs', async () => {
@@ -47,12 +47,11 @@ components:
         message:
           type: string
 `
-      const { parse, parsedDocument, jsonDocument } = composables.useSchemaParser()
+      const { parse, parsedDocument } = composables.useSchemaParser()
       await parse(specText)
 
       const node = parsedDocument.value.children.find((child: any) => child.uri === '/schemas/ApiResponse')
-      const resolved = resolveRefs(node.data, jsonDocument.value)
-      expect(resolved.properties.type.example).toEqual('#/default')
+      expect(node.data.properties.type.example).toEqual('#/default')
     })
 
     it('should resolve nested refs', async () => {
@@ -78,13 +77,11 @@ components:
       $ref: "#/components/schemas/Middle"
 
           `
-      const { parse, parsedDocument, jsonDocument } = composables.useSchemaParser()
+      const { parse, parsedDocument } = composables.useSchemaParser()
       await parse(specText)
 
       const node = parsedDocument.value.children.find((child: any) => child.uri === '/schemas/Top')
-      const resolved = resolveRefs(node.data, jsonDocument.value)
-      console.log('resolved:', JSON.stringify(resolved, null, 2))
-      expect(resolved).toEqual({
+      expect(node.data).toEqual({
         type: 'object',
         example: 'Middle',
         title: 'MiddleTitle',
@@ -119,12 +116,11 @@ components:
       $ref: "#/components/schemas/Middle"
 
           `
-    const { parse, parsedDocument, jsonDocument } = composables.useSchemaParser()
+    const { parse, parsedDocument } = composables.useSchemaParser()
     await parse(specText)
 
     const node = parsedDocument.value.children.find((child: any) => child.uri === '/schemas/Top')
-    const resolved = resolveRefs(node.data, jsonDocument.value)
-    expect(resolved).toEqual({
+    expect(node.data).toEqual({
       type: 'object',
       example: 'Middle',
       title: 'Middle',
