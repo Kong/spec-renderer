@@ -1,7 +1,7 @@
 <template>
   <div
     class="model-property"
-    :data-testid="`model-property-${propertyName}`"
+    :data-testid="dataTestId"
   >
     <template v-if="isValidSchemaObject(property)">
       <component
@@ -21,6 +21,16 @@
           :required-fields="modelPropertyProps.required"
         />
       </details>
+
+      <PropertyOneOf
+        v-if="Array.isArray(property.oneOf) && property.oneOf?.length"
+        :one-of-list="property.oneOf"
+      />
+
+      <PropertyAnyOf
+        v-if="Array.isArray(property.anyOf) && property.anyOf?.length"
+        :any-of-list="property.anyOf"
+      />
     </template>
 
     <div v-else>
@@ -40,6 +50,8 @@ import PropertyInfo from '@/components/document/property-fields/PropertyInfo.vue
 import PropertyEnum from '@/components/document/property-fields/PropertyEnum.vue'
 import PropertyPattern from '@/components/document/property-fields/PropertyPattern.vue'
 import PropertyRange from '@/components/document/property-fields/PropertyRange.vue'
+import PropertyOneOf from '@/components/document/property-fields/PropertyOneOf.vue'
+import PropertyAnyOf from '@/components/document/property-fields/PropertyAnyOf.vue'
 
 const props = defineProps({
   property: {
@@ -127,6 +139,8 @@ const orderedFieldList = computed(() => {
   }
   return fields
 })
+
+const dataTestId = computed(() => `model-property-${props.propertyName.replaceAll(' ', '-')}`)
 </script>
 
 <style lang="scss" scoped>

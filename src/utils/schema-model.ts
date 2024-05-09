@@ -51,3 +51,6 @@ export const orderedFieldList = (itemData: SchemaObject, itemName?: string) => {
   }
   return fields
 }
+
+// only needed till we figure out how to add title field to anyOf/oneOf objects while parsing
+export const inheritedPropertyName = (itemIndex: number, itemName?: string) => itemName ?? `Variant ${itemIndex + 1}`
