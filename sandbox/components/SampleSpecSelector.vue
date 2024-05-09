@@ -20,13 +20,13 @@
         ------------------
       </option>
 
-      <option value="/spec-renderer/specs/stoplight.yaml">
+      <option value="specs/stoplight.yaml">
         Stoplight ToDo
       </option>
-      <option value="/spec-renderer/specs/konnect-api.yaml">
+      <option value="specs/konnect-api.yaml">
         Konnect Api
       </option>
-      <option value="/spec-renderer/specs/callback.yaml">
+      <option value="specs/callback.yaml">
         Callbacks
       </option>
       <option

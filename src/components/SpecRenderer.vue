@@ -40,10 +40,6 @@ const props = defineProps({
     type: String,
     default: '',
   },
-  specUrl: {
-    type: String,
-    default: '',
-  },
   controlBrowserUrl: {
     type: Boolean,
     default: true,
@@ -60,8 +56,8 @@ const itemSelected = (id: any) => {
   selectedPath.value = id
 }
 
-watch(() => ({ spec: props.spec, url: props.specUrl }), async (changed) => {
-  await parse(changed.spec, changed.url ? { specUrl: changed.url } : null)
+watch(() => (props.spec), async (unparsedSpecText: string) => {
+  await parse(unparsedSpecText)
 
   console.log('parsedDocument:', parsedDocument)
   console.log('tableOfContents:', tableOfContents.value)

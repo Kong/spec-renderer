@@ -36,56 +36,24 @@ export default function useSchemaParser():any {
     return undefined
   }
 
-  const parse = async (spec: string, options: ParseOptions) => {
-    console.log('parsing:', spec, options)
-    if (options?.specUrl) {
-      jsonDocument.value = await $RefParser.bundle(options?.specUrl, { continueOnError: true })
-    } else {
-      jsonDocument.value = tryParseYamlOrObject(spec)
-    }
-
+  const parse = async (spec: string) => {
+    jsonDocument.value = tryParseYamlOrObject(spec)
     if (!jsonDocument.value) {
-      console.error('empty jsonDocument initial processing')
       return
     }
 
-    // console.log('resolved:', JSON.stringify(await refRes.resolve('#/components/schemas/HeadingBlock', jsonDocument.value)))
+    parsedDocument.value = transformOasToServiceNode(jsonDocument.value)
 
-    console.log('before dereferencing:', jsonDocument.value)
-
-    try {
-      const dereferenced = await $RefParser.dereference(jsonDocument.value, {
-        continueOnError: true,
-        dereference: {
-          circular: true,
-        },
-      })
-      jsonDocument.value = dereferenced
-      console.log('!!!!!!json: ', jsonDocument.value)
-    } catch (err) {
-      console.error('error deferencing', err)
-    }
-    console.log('!!!!!!json: ', jsonDocument.value)
-
-    try {
-      parsedDocument.value = transformOasToServiceNode(jsonDocument.value)
-    } catch (err) {
-      console.error('error in transformOasToServiceNode', err)
-    }
-
-    try {
-      validationResults.value = await validate(spec)
-    } catch (err) {
-      console.error('error in validate', err)
-    }
+    validationResults.value = await validate(spec)
 
     try {
       if (parsedDocument.value) {
         tableOfContents.value = computeAPITree(parsedDocument.value, { hideSchemas: false, hideInternal: false })
       }
-    } catch (err) {
-      console.error('error in computeAPITree', err)
+    } catch (e) {
+      console.error(e)
     }
+
   }
 
   return {

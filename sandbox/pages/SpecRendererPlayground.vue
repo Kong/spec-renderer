@@ -6,10 +6,9 @@
     />
 
     <SpecRenderer
-      v-if="specText || specUrl"
+      v-if="specText"
       base-path="/spec-renderer/parser"
       :spec="specText"
-      :spec-url="specUrl"
     />
   </div>
 </template>
@@ -20,11 +19,10 @@ import SampleSpecSelector from '../components/SampleSpecSelector.vue'
 import SpecRenderer from '../../src/components/SpecRenderer.vue'
 
 const specText = ref<string>('')
-const specUrl = ref<string>('')
 
 const sampleSpecSelected = async (sampleSpecUrl: string) => {
-  console.log('aaaa:', sampleSpecUrl)
-  specUrl.value = sampleSpecUrl
+  specText.value = await fetch(sampleSpecUrl).then(res => res.text())
+  console.log('reading:', sampleSpecUrl)
 }
 
 const sampleSpecUploaded = (sampleSpecText: string) => {
