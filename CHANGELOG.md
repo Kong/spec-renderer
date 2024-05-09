@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/Kong/spec-renderer/compare/v1.3.0...v1.4.0) (2024-05-09)
+
+
+### Features
+
+* add support for anyOf and oneOf fields [KHCP-11677] ([#40](https://github.com/Kong/spec-renderer/issues/40)) ([40882ad](https://github.com/Kong/spec-renderer/commit/40882ad62f6ef59e87da9bfe7d73f30195009e22))
+
 # [1.3.0](https://github.com/Kong/spec-renderer/compare/v1.2.1...v1.3.0) (2024-05-07)
 
 
