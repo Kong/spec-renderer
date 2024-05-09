@@ -22,7 +22,6 @@
 </style>
 
 <style lang="scss" scoped>
-
 .sandbox-container {
   font-family: $kui-font-family-text;
 }

@@ -44,7 +44,7 @@ watch(() => (props.path), (pathname) => {
   serviceNode.value = isRootPath ? props.document : props.document.children.find((child:any) => child.uri === pathname)
   if (serviceNode.value) {
     // @ts-ignore
-    serviceNode.value.data = resolveRefs(resolveRefs(serviceNode.value.data, props.json))
+    serviceNode.value.data = resolveRefs(serviceNode.value.data, props.json)
   }
 }, { immediate: true })
 </script>
