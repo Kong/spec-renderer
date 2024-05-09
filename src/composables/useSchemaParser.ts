@@ -8,6 +8,7 @@ import type { ParseOptions } from '../types'
 import { validate } from '@scalar/openapi-parser'
 import type { ValidateResult } from '@scalar/openapi-parser'
 import $RefParser from '@stoplight/json-schema-ref-parser'
+import { isLocalRef } from '@stoplight/json'
 
 export default function useSchemaParser():any {
 
@@ -37,19 +38,36 @@ export default function useSchemaParser():any {
     return undefined
   }
 
+  const titleResolve = (json: Record<string, any>): Record<string, any> => {
+
+    const refsSet = new Set()
+
+    const deepGet = (obj:Record<string, any>, keys:Array<string>) => keys.reduce((xs, x) => xs?.[x] ?? null, obj)
+
+    const doResolve = (fragment: Record<string, any>): Record<string, any> => {
+      Object.keys(fragment).forEach(key => {
+        if (typeof fragment[key] === 'object' && fragment[key] !== null) {
+          fragment[key] = doResolve(fragment[key])
+        } else if (fragment[key] && isLocalRef(fragment[key]) && !refsSet.has(fragment[key])) {
+          console.log('processing:', fragment[key], fragment[key].replace('#/', '').split('/'))
+          const resovedRef = deepGet(json, fragment[key].replace('#/', '').split('/'))
+          if (resovedRef) {
+            resovedRef.title = resovedRef.title || fragment[key].split('/').pop()
+          }
+          refsSet.add(fragment[key])
+        }
+      })
+      return fragment
+    }
+
+    return doResolve(json)
+  }
+
   const parse = async (spec: string, options: ParseOptions) => {
-    console.log('parsing:', spec, options)
+
     if (options?.specUrl) {
-      // @ts-ignore
       jsonDocument.value = await $RefParser.bundle(options?.specUrl, {
         continueOnError: true,
-        resolve: {
-          file: false,
-          http: {
-            timeout: 2000, // 2 second timeout
-            withCredentials: true, // Include auth credentials when resolving HTTP references
-          },
-        },
       })
     } else {
       jsonDocument.value = tryParseYamlOrObject(spec)
@@ -66,9 +84,11 @@ export default function useSchemaParser():any {
       console.error('error in validate', err)
     }
 
-    console.log('before dereferencing:', jsonDocument.value)
+    jsonDocument.value = titleResolve(jsonDocument.value)
 
+    console.log('before dereferencing:', jsonDocument.value)
     try {
+
       const dereferenced = await $RefParser.dereference(jsonDocument.value, {
         continueOnError: true,
         dereference: {
