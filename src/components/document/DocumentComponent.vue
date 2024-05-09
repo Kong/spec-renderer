@@ -14,7 +14,7 @@ import { watch, ref, provide, computed } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { ServiceNode } from '../../stoplight/elements/utils/oas/types'
 import { docComponent } from './index'
-import { getCircularReplacer } from '../../utils'
+import { resolveRefs } from '../../utils'
 const props = defineProps({
   document: {
     type: Object as PropType<ServiceNode>,
