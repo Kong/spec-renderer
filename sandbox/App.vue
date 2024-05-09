@@ -15,6 +15,12 @@
   </div>
 </template>
 
+<style lang="scss">
+.spec-render-doc {
+  --kui-color-background-transparent: lightgreen;
+}
+</style>
+
 <style lang="scss" scoped>
 .sandbox-container {
   font-family: $kui-font-family-text;

@@ -76,7 +76,6 @@ aside {
   width: 320px;
 }
 .doc {
-  background-color: lightblue;
   flex: 1;
   overflow: visible;
   padding-left: var(--kui-space-60, $kui-space-60);
