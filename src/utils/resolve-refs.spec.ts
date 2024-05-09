@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest'
-import { resolveRefs } from './circular-replacer'
 import composables from '../composables'
 
 describe('resolve-refs', () => {
@@ -26,7 +25,7 @@ components:
       await parse(specText)
 
       const node = parsedDocument.value.children.find((child: any) => child.uri === '/schemas/ApiResponse')
-      const resolved = resolveRefs(node.data, jsonDocument.value)
+      console.log('!!!!!!!', node)
       expect(resolved.properties.type.example).toEqual('#default')
     })
 

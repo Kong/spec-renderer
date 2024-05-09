@@ -54,7 +54,11 @@ export default function useSchemaParser():any {
       return
     }
 
-    // console.log('resolved:', JSON.stringify(await refRes.resolve('#/components/schemas/HeadingBlock', jsonDocument.value)))
+    try {
+      validationResults.value = await validate(spec || jsonDocument.value)
+    } catch (err) {
+      console.error('error in validate', err)
+    }
 
     console.log('before dereferencing:', jsonDocument.value)
 
@@ -76,12 +80,6 @@ export default function useSchemaParser():any {
       parsedDocument.value = transformOasToServiceNode(jsonDocument.value)
     } catch (err) {
       console.error('error in transformOasToServiceNode', err)
-    }
-
-    try {
-      validationResults.value = await validate(spec)
-    } catch (err) {
-      console.error('error in validate', err)
     }
 
     try {

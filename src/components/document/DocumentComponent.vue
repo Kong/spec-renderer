@@ -1,10 +1,12 @@
 <template>
-  <component
-    :is="docComponent(serviceNode)"
-    v-if="serviceNode"
-    :data="serviceNode.data"
-    :title="serviceNode.name"
-  />
+  <div class="spec-render-doc">
+    <component
+      :is="docComponent(serviceNode)"
+      v-if="serviceNode"
+      :data="serviceNode.data"
+      :title="serviceNode.name"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -48,3 +50,9 @@ watch(() => (props.path), (pathname) => {
   }
 }, { immediate: true })
 </script>
+
+<style lang="scss" scoped>
+.spec-render-doc {
+    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent)
+}
+</style>

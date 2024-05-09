@@ -19,5 +19,10 @@
   "scss.scannerExclude": [
     "**/.git",
     "**/bower_components",
+  ],
+  "cssVariables.lookupFiles": [
+    "**/*.css",
+    "**/*.scss",
+    "node_modules/@kong/design-tokens/dist/tokens/css/custom-properties.css"
   ]
 }
