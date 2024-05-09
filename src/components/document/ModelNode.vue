@@ -22,6 +22,16 @@
       :required-fields="modelPropertyProps.required"
     />
   </template>
+
+  <PropertyOneOf
+    v-if="Array.isArray(data.oneOf) && data.oneOf?.length"
+    :one-of-list="data.oneOf"
+  />
+
+  <PropertyAnyOf
+    v-if="Array.isArray(data.anyOf) && data.anyOf?.length"
+    :any-of-list="data.anyOf"
+  />
 </template>
 
 <script setup lang="ts">
@@ -31,6 +41,8 @@ import ModelProperty from './ModelProperty.vue'
 import type{ PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 import { schemaObjectProperties } from '@/utils'
+import PropertyAnyOf from './property-fields/PropertyAnyOf.vue'
+import PropertyOneOf from './property-fields/PropertyOneOf.vue'
 
 const props = defineProps({
   data: {
