@@ -23,25 +23,25 @@ const anyOfList: Array<SchemaObject | ReferenceObject> = [
 ]
 
 describe('<PropertyAnyOf />', () => {
-  it('renders properties of all anyOf objects correctly', () => {
-    const wrapper = mount(PropertyAnyOf, {
-      props: {
-        anyOfList,
-      },
-    })
-
-    const componentList = [
-      // Check if PropertyAnyOf component itself renders
-      'property-field-any-of',
-      // Check if ModelProperty component renders for both anyOf objects
-      'model-property-anyof-first-item',
-      'model-property-anyof-second-item',
-      // Check if PropertyTitle component renders for both anyOf objects
-      'property-field-title',
-    ]
-
-    for (const component of componentList) {
-      expect(wrapper.findTestId(component).exists()).toBe(true)
-    }
+  const wrapper = mount(PropertyAnyOf, {
+    props: {
+      anyOfList,
+    },
   })
+
+  const componentList = [
+    // Check if PropertyAnyOf component itself renders
+    'property-field-any-of',
+    // Check if ModelProperty component renders for both anyOf objects
+    'model-property-anyof-first-item',
+    'model-property-anyof-second-item',
+    // Check if PropertyTitle component renders for both anyOf objects
+    'property-field-title',
+  ]
+
+  for (const component of componentList) {
+    it(`renders ${component} correctly`, () => {
+      expect(wrapper.findTestId(component).exists()).toBe(true)
+    })
+  }
 })
