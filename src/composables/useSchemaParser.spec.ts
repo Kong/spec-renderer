@@ -21,8 +21,8 @@ components:
         message:
           type: string
 `
-      const { parse, parsedDocument } = composables.useSchemaParser()
-      await parse(specText)
+      const { parseSpecDocument, parsedDocument } = composables.useSchemaParser()
+      await parseSpecDocument(specText)
 
       const node = parsedDocument.value.children.find((child: any) => child.uri === '/schemas/ApiResponse')
       expect(node.data.properties.type.example).toEqual('#default')
@@ -46,8 +46,8 @@ components:
         message:
           type: string
 `
-      const { parse, parsedDocument } = composables.useSchemaParser()
-      await parse(specText)
+      const { parseSpecDocument, parsedDocument } = composables.useSchemaParser()
+      await parseSpecDocument(specText)
 
       const node = parsedDocument.value.children.find((child: any) => child.uri === '/schemas/ApiResponse')
       expect(node.data.properties.type.example).toEqual('#/default')
@@ -76,8 +76,8 @@ components:
       $ref: "#/components/schemas/Middle"
 
           `
-      const { parse, parsedDocument } = composables.useSchemaParser()
-      await parse(specText)
+      const { parseSpecDocument, parsedDocument } = composables.useSchemaParser()
+      await parseSpecDocument(specText)
 
       const node = parsedDocument.value.children.find((child: any) => child.uri === '/schemas/Top')
       expect(node.data).toEqual({
@@ -115,8 +115,8 @@ components:
       $ref: "#/components/schemas/Middle"
 
           `
-    const { parse, parsedDocument } = composables.useSchemaParser()
-    await parse(specText)
+    const { parseSpecDocument, parsedDocument } = composables.useSchemaParser()
+    await parseSpecDocument(specText)
 
     const node = parsedDocument.value.children.find((child: any) => child.uri === '/schemas/Top')
     expect(node.data).toEqual({
