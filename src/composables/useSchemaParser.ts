@@ -65,7 +65,7 @@ export default function useSchemaParser():any {
   const parse = async (spec: string, options: ParseOptions) => {
 
     if (options?.specUrl) {
-      jsonDocument.value = await $RefParser.bundle(options?.specUrl, {
+      jsonDocument.value = await $RefParser.bundle(options.specUrl, {
         continueOnError: true,
       })
     } else {
