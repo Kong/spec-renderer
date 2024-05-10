@@ -1,4 +1,4 @@
 // Only export external utilities
-export * from './resolve-refs'
+export * from './circular-replacer'
 export * from './schema-parser'
 export * from './schema-model'

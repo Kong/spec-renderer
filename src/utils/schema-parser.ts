@@ -1,7 +1,7 @@
 import composables from '../composables'
 
 const {
-  parse,
+  parseSpecDocument,
   parsedDocument,
   jsonDocument,
   tableOfContents,
@@ -9,7 +9,7 @@ const {
 } = composables.useSchemaParser()
 
 export {
-  parse,
+  parseSpecDocument,
   parsedDocument,
   jsonDocument,
   tableOfContents,

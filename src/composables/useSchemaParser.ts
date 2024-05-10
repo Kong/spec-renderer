@@ -4,9 +4,11 @@ import type { ServiceNode } from '../stoplight/elements/utils/oas/types'
 import { parse as parseYaml } from '@stoplight/yaml'
 import { computeAPITree } from '../stoplight/elements/components/API/utils'
 import type { TableOfContentsItem } from '../stoplight/elements-core/components/Docs/types'
-
+import type { ParseOptions } from '../types'
 import { validate } from '@scalar/openapi-parser'
 import type { ValidateResult } from '@scalar/openapi-parser'
+import refParser from '@stoplight/json-schema-ref-parser'
+import { isLocalRef } from '@stoplight/json'
 
 export default function useSchemaParser():any {
 
@@ -36,28 +38,98 @@ export default function useSchemaParser():any {
     return undefined
   }
 
-  const parse = async (spec: string) => {
-    jsonDocument.value = tryParseYamlOrObject(spec)
+  /*
+    This is for the case when we point to the referecnce, and reference block
+    doesn't have title. In this case we want to use 'key' (last element of the path) as a tilte,
+    so our UI representation of the referenced object is more meaningful
+  / */
+  const titleResolve = (json: Record<string, any>): Record<string, any> => {
+
+    const refsSet = new Set()
+
+    const deepGet = (obj:Record<string, any>, keys:Array<string>) => keys.reduce((xs, x) => xs?.[x] ?? null, obj)
+
+    const doResolve = (fragment: Record<string, any>): Record<string, any> => {
+      Object.keys(fragment).forEach(key => {
+        if (typeof fragment[key] === 'object' && fragment[key] !== null) {
+          fragment[key] = doResolve(fragment[key])
+        } else if (fragment[key] && isLocalRef(fragment[key]) && !refsSet.has(fragment[key])) {
+          const resolvedRef = deepGet(json, fragment[key].replace('#/', '').split('/'))
+          if (resolvedRef) {
+            resolvedRef.title = resolvedRef.title || fragment[key].split('/').pop()
+          }
+          refsSet.add(fragment[key])
+        }
+      })
+      return fragment
+    }
+
+    return doResolve(json)
+  }
+
+  /**
+    Parsing spec (sepcText) or by URL prodiced in  ParseOptions
+  */
+  const parseSpecDocument = async (spec: string, options: ParseOptions) => {
+
+    if (options?.specUrl) {
+      // fetches spec by URL provided and resolves all external references
+      jsonDocument.value = await refParser.bundle(options.specUrl, {
+        continueOnError: true,
+      })
+    } else {
+      // parse document. also do yaml to json
+      jsonDocument.value = tryParseYamlOrObject(spec)
+    }
+
     if (!jsonDocument.value) {
+      // was it even a spec or even something that could be converted to json?
+      console.error('empty jsonDocument initial processing')
       return
     }
 
-    parsedDocument.value = transformOasToServiceNode(jsonDocument.value)
+    try {
+      // let's see if we can detect some validation errors here
+      validationResults.value = await validate(spec || jsonDocument.value)
+    } catch (err) {
+      console.error('error in validate', err)
+    }
 
-    validationResults.value = await validate(spec)
+    // resolve the titles for internal refs
+    jsonDocument.value = titleResolve(jsonDocument.value)
+
+    try {
+      // resolve the internal refs
+      const dereferenced = await refParser.dereference(jsonDocument.value, {
+        continueOnError: true,
+        dereference: {
+          circular: true,
+        },
+      })
+      jsonDocument.value = dereferenced
+    } catch (err) {
+      console.error('error deferencing', err)
+    }
+
+    try {
+      // convert to AST for ui layer to use
+      parsedDocument.value = transformOasToServiceNode(jsonDocument.value)
+    } catch (err) {
+      console.error('error in transformOasToServiceNode', err)
+    }
 
     try {
       if (parsedDocument.value) {
+        // generate table of contents
         tableOfContents.value = computeAPITree(parsedDocument.value, { hideSchemas: false, hideInternal: false })
       }
-    } catch (e) {
-      console.error(e)
+    } catch (err) {
+      console.error('error in computeAPITree', err)
     }
-
   }
 
   return {
-    parse,
+    parseSpecDocument,
     parsedDocument,
     jsonDocument,
     tableOfContents,

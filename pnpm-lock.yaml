@@ -26,6 +26,9 @@ importers:
       '@stoplight/json':
         specifier: ^3.21.0
         version: 3.21.0
+      '@stoplight/json-schema-ref-parser':
+        specifier: ^10.0.0
+        version: 10.0.0
       '@stoplight/types':
         specifier: ^14.1.1
         version: 14.1.1
@@ -999,6 +1002,9 @@ packages:
   '@stoplight/json-schema-generator@1.0.2':
     resolution: {integrity: sha512-FzSLFoIZc6Lmw3oRE7kU6YUrl5gBmUs//rY59jdFipBoSyTPv5NyqeyTg5mvT6rY1F3qTLU3xgzRi/9Pb9eZpA==}
     hasBin: true
+
+  '@stoplight/json-schema-ref-parser@10.0.0':
+    resolution: {integrity: sha512-EibmayoGsMCIJOEKNvmsrAq37/M7A/rceY8ZAKX8rhwPThgkJ4QTPF0VhgGyfuq9P6i0EQQXM/x6nL7S2uPGsQ==}
 
   '@stoplight/json@3.21.0':
     resolution: {integrity: sha512-5O0apqJ/t4sIevXCO3SBN9AHCEKKR/Zb4gaj7wYe5863jme9g02Q0n/GhM7ZCALkL+vGPTe4ZzTETP8TFtsw3g==}
@@ -3544,9 +3550,16 @@ packages:
   psl@1.9.0:
     resolution: {integrity: sha512-E/ZsdU4HLs/68gYzgGTkMicWTLPdAftJLfJFlLUAAKZGkStNU72sZjT66SnMDVOfOWY/YAoiD7Jxa9iHvngcag==}
 
+  punycode@1.4.1:
+    resolution: {integrity: sha512-jmYNElW7yvO7TV33CjSmvSiE2yco3bV2czu/OzDKdMNVZQWfxCblURLhf+47syQRBntjfLdd/H0egrzIG+oaFQ==}
+
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
+
+  qs@6.12.1:
+    resolution: {integrity: sha512-zWmv4RSuB9r2mYQw3zxQuHWeU+42aKi1wWig/j4ele4ygELZ7PEO6MM7rim9oAQH2A5MWfsAVf/jPvTPgCbvUQ==}
+    engines: {node: '>=0.6'}
 
   querystringify@2.2.0:
     resolution: {integrity: sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==}
@@ -4226,6 +4239,9 @@ packages:
 
   url-parse@1.5.10:
     resolution: {integrity: sha512-WypcfiRhfeUP9vvF0j6rw0J3hrWrw6iZv3+22h6iRMJ/8z1Tj6XfLP4DsUix5MhMPnXpiHDoKyoZ/bdCkwBCiQ==}
+
+  url@0.11.3:
+    resolution: {integrity: sha512-6hxOLGfZASQK/cijlZnZJTq8OXAkt/3YGfQX45vvMYXpZoo8NdWZcY73K108Jf759lS1Bv/8wXnHDTSz17dSRw==}
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
@@ -5411,6 +5427,14 @@ snapshots:
       pretty-data: 0.40.0
     transitivePeerDependencies:
       - encoding
+
+  '@stoplight/json-schema-ref-parser@10.0.0':
+    dependencies:
+      '@jsdevtools/ono': 7.1.3
+      '@stoplight/path': 1.3.2
+      '@stoplight/yaml': 4.3.0
+      call-me-maybe: 1.0.2
+      url: 0.11.3
 
   '@stoplight/json@3.21.0':
     dependencies:
@@ -8119,7 +8143,13 @@ snapshots:
 
   psl@1.9.0: {}
 
+  punycode@1.4.1: {}
+
   punycode@2.3.1: {}
+
+  qs@6.12.1:
+    dependencies:
+      side-channel: 1.0.6
 
   querystringify@2.2.0: {}
 
@@ -8908,6 +8938,11 @@ snapshots:
     dependencies:
       querystringify: 2.2.0
       requires-port: 1.0.0
+
+  url@0.11.3:
+    dependencies:
+      punycode: 1.4.1
+      qs: 6.12.1
 
   util-deprecate@1.0.2: {}
 

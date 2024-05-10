@@ -32,14 +32,30 @@ import DocumentComponent from './document/DocumentComponent.vue'
 import TryMe from './try-me/TryMe.vue'
 
 const props = defineProps({
+  /**
+   * Text of the specification.
+   */
   spec: {
     type: String,
     required: true,
   },
+  /**
+   * Path of the page where spec-renderer is loaded on. This is needed to compute path to individual specification details
+   */
   basePath: {
     type: String,
     default: '',
   },
+  /**
+   * URL to fech spec document from
+   */
+  specUrl: {
+    type: String,
+    default: '',
+  },
+  /**
+   * Allow component itelf to control browser URL. When false it becomes the responsibility of consuming app
+   */
   controlBrowserUrl: {
     type: Boolean,
     default: true,
@@ -47,17 +63,16 @@ const props = defineProps({
 })
 
 // TODO: introduce and handle isParsed. show parsing state while parsing
-const { parse, parsedDocument, jsonDocument, tableOfContents, validationResults } = composables.useSchemaParser()
+const { parseSpecDocument, parsedDocument, jsonDocument, tableOfContents, validationResults } = composables.useSchemaParser()
 
 const selectedPath = ref<string>('/')
 
 const itemSelected = (id: any) => {
-  //  console.log('itemSelected:', id)
   selectedPath.value = id
 }
 
-watch(() => (props.spec), async (unparsedSpecText: string) => {
-  await parse(unparsedSpecText)
+watch(() => ({ spec: props.spec, url: props.specUrl }), async (changed) => {
+  await parseSpecDocument(changed.spec, changed.url ? { specUrl: changed.url } : null)
 
   console.log('parsedDocument:', parsedDocument)
   console.log('tableOfContents:', tableOfContents.value)
