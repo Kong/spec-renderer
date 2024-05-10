@@ -43,9 +43,7 @@ watch(() => (props.path), (pathname) => {
   // @ts-ignore
   serviceNode.value = isRootPath ? props.document : props.document.children.find((child:any) => child.uri === pathname)
   if (serviceNode.value) {
-    // @ts-ignore
-    // serviceNode.value.data = resolveRefs(resolveRefs(serviceNode.value.data, props.json))
-
+    // removing circular references
     serviceNode.value.data = JSON.parse(JSON.stringify(serviceNode.value.data, getCircularReplacer()))
   }
 }, { immediate: true })
