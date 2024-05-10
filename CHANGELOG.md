@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/Kong/spec-renderer/compare/v1.4.1...v1.4.2) (2024-05-10)
+
+
+### Bug Fixes
+
+* document nodes need a single root element ([#46](https://github.com/Kong/spec-renderer/issues/46)) ([246b44c](https://github.com/Kong/spec-renderer/commit/246b44cea1c7a649fa09309630fcdc3c43e6fe3a))
+
 ## [1.4.1](https://github.com/Kong/spec-renderer/compare/v1.4.0...v1.4.1) (2024-05-10)
 
 
