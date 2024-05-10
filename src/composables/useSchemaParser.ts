@@ -38,6 +38,11 @@ export default function useSchemaParser():any {
     return undefined
   }
 
+  /*
+    This is for the case when we point to the referecnce, and reference block
+    doesn't have title. In this case we want to use 'key' (last element of the path) as a tilte,
+    so our UI representation of the referenced object is more meaningful
+  / */
   const titleResolve = (json: Record<string, any>): Record<string, any> => {
 
     const refsSet = new Set()
@@ -62,31 +67,39 @@ export default function useSchemaParser():any {
     return doResolve(json)
   }
 
-  const parse = async (spec: string, options: ParseOptions) => {
+  /**
+    Parsing spec (sepcText) or by URL prodiced in  ParseOptions
+  */
+  const parseSpecDocument = async (spec: string, options: ParseOptions) => {
 
     if (options?.specUrl) {
+      // fetches spec by URL provided and resolves all external references
       jsonDocument.value = await refParser.bundle(options.specUrl, {
         continueOnError: true,
       })
     } else {
+      // parse document. also do yaml to json
       jsonDocument.value = tryParseYamlOrObject(spec)
     }
 
     if (!jsonDocument.value) {
+      // was it even a spec or even something that could be converted to json?
       console.error('empty jsonDocument initial processing')
       return
     }
 
     try {
+      // let's see if we can detect some validation errors here
       validationResults.value = await validate(spec || jsonDocument.value)
     } catch (err) {
       console.error('error in validate', err)
     }
 
+    // resolve the titles for internal refs
     jsonDocument.value = titleResolve(jsonDocument.value)
 
     try {
-
+      // resolve the internal refs
       const dereferenced = await refParser.dereference(jsonDocument.value, {
         continueOnError: true,
         dereference: {
@@ -99,6 +112,7 @@ export default function useSchemaParser():any {
     }
 
     try {
+      // convert to AST for ui layer to use
       parsedDocument.value = transformOasToServiceNode(jsonDocument.value)
     } catch (err) {
       console.error('error in transformOasToServiceNode', err)
@@ -106,6 +120,7 @@ export default function useSchemaParser():any {
 
     try {
       if (parsedDocument.value) {
+        // generate table of contents
         tableOfContents.value = computeAPITree(parsedDocument.value, { hideSchemas: false, hideInternal: false })
       }
     } catch (err) {
@@ -114,7 +129,7 @@ export default function useSchemaParser():any {
   }
 
   return {
-    parse,
+    parseSpecDocument,
     parsedDocument,
     jsonDocument,
     tableOfContents,
