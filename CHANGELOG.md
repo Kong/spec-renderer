@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/Kong/spec-renderer/compare/v1.4.0...v1.4.1) (2024-05-10)
+
+
+### Bug Fixes
+
+* references (inline and external) [KHCP-11660, KHCP-11783, KHCP-11814] ([#43](https://github.com/Kong/spec-renderer/issues/43)) ([ab73f89](https://github.com/Kong/spec-renderer/commit/ab73f894ff598e54db08e7d2228fc5298d6f8a69))
+
 # [1.4.0](https://github.com/Kong/spec-renderer/compare/v1.3.0...v1.4.0) (2024-05-09)
 
 
