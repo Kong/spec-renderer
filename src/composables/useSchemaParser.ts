@@ -7,7 +7,7 @@ import type { TableOfContentsItem } from '../stoplight/elements-core/components/
 import type { ParseOptions } from '../types'
 import { validate } from '@scalar/openapi-parser'
 import type { ValidateResult } from '@scalar/openapi-parser'
-import $RefParser from '@stoplight/json-schema-ref-parser'
+import refParser from '@stoplight/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
 
 export default function useSchemaParser():any {
@@ -65,7 +65,7 @@ export default function useSchemaParser():any {
   const parse = async (spec: string, options: ParseOptions) => {
 
     if (options?.specUrl) {
-      jsonDocument.value = await $RefParser.bundle(options.specUrl, {
+      jsonDocument.value = await refParser.bundle(options.specUrl, {
         continueOnError: true,
       })
     } else {
@@ -87,7 +87,7 @@ export default function useSchemaParser():any {
 
     try {
 
-      const dereferenced = await $RefParser.dereference(jsonDocument.value, {
+      const dereferenced = await refParser.dereference(jsonDocument.value, {
         continueOnError: true,
         dereference: {
           circular: true,
