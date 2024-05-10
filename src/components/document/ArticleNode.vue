@@ -1,7 +1,9 @@
 <template>
-  Article
-  <br>
-  {{ data }}
+  <div>
+    Article
+    <br>
+    {{ data }}
+  </div>
 </template>
 
 <script setup lang="ts">

@@ -1,7 +1,9 @@
 <template>
-  IHttpWebhookOperation
-  <br>
-  {{ data }}
+  <div>
+    IHttpWebhookOperation
+    <br>
+    {{ data }}
+  </div>
 </template>
 
 <script setup lang="ts">
