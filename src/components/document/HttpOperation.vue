@@ -1,7 +1,9 @@
 <template>
-  IHttpOperation
-  <br>
-  {{ data }}
+  <div>
+    IHttpOperation
+    <br>
+    {{ data }}
+  </div>
 </template>
 
 <script setup lang="ts">

@@ -1,7 +1,9 @@
 <template>
-  HttpService
-  <br>
-  {{ data }}
+  <div>
+    HttpService
+    <br>
+    {{ data }}
+  </div>
 </template>
 
 <script setup lang="ts">
