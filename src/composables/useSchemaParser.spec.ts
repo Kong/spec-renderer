@@ -25,7 +25,6 @@ components:
       await parse(specText)
 
       const node = parsedDocument.value.children.find((child: any) => child.uri === '/schemas/ApiResponse')
-      console.log('!!!!!!!', node)
       expect(node.data.properties.type.example).toEqual('#default')
     })
 

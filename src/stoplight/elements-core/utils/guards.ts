@@ -28,7 +28,6 @@ function isStoplightNode(maybeNode: unknown): maybeNode is INode {
 }
 
 export function isHttpService(maybeHttpService: unknown): maybeHttpService is IHttpService {
-  console.log(isStoplightNode(maybeHttpService))
   return isStoplightNode(maybeHttpService) && 'name' in maybeHttpService && 'version' in maybeHttpService
 }
 

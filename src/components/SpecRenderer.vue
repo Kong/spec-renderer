@@ -56,7 +56,6 @@ const { parse, parsedDocument, jsonDocument, tableOfContents, validationResults 
 const selectedPath = ref<string>('/')
 
 const itemSelected = (id: any) => {
-  //  console.log('itemSelected:', id)
   selectedPath.value = id
 }
 

@@ -49,10 +49,9 @@ export default function useSchemaParser():any {
         if (typeof fragment[key] === 'object' && fragment[key] !== null) {
           fragment[key] = doResolve(fragment[key])
         } else if (fragment[key] && isLocalRef(fragment[key]) && !refsSet.has(fragment[key])) {
-          console.log('processing:', fragment[key], fragment[key].replace('#/', '').split('/'))
-          const resovedRef = deepGet(json, fragment[key].replace('#/', '').split('/'))
-          if (resovedRef) {
-            resovedRef.title = resovedRef.title || fragment[key].split('/').pop()
+          const resolvedRef = deepGet(json, fragment[key].replace('#/', '').split('/'))
+          if (resolvedRef) {
+            resolvedRef.title = resolvedRef.title || fragment[key].split('/').pop()
           }
           refsSet.add(fragment[key])
         }
@@ -86,7 +85,6 @@ export default function useSchemaParser():any {
 
     jsonDocument.value = titleResolve(jsonDocument.value)
 
-    console.log('before dereferencing:', jsonDocument.value)
     try {
 
       const dereferenced = await $RefParser.dereference(jsonDocument.value, {
@@ -96,11 +94,9 @@ export default function useSchemaParser():any {
         },
       })
       jsonDocument.value = dereferenced
-      console.log('!!!!!!json: ', jsonDocument.value)
     } catch (err) {
       console.error('error deferencing', err)
     }
-    console.log('!!!!!!json: ', jsonDocument.value)
 
     try {
       parsedDocument.value = transformOasToServiceNode(jsonDocument.value)

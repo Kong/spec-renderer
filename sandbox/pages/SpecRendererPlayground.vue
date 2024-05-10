@@ -23,7 +23,6 @@ const specText = ref<string>('')
 const specUrl = ref<string>('')
 
 const sampleSpecSelected = async (sampleSpecUrl: string) => {
-  console.log('aaaa:', sampleSpecUrl)
   specUrl.value = sampleSpecUrl
 }
 
