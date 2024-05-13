@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/Kong/spec-renderer/compare/v1.5.0...v1.5.1) (2024-05-13)
+
+
+### Bug Fixes
+
+* component rename for exported ([#54](https://github.com/Kong/spec-renderer/issues/54)) ([ff44104](https://github.com/Kong/spec-renderer/commit/ff44104d868fc33cea74bb780de4873c1d1557d2))
+
 # [1.5.0](https://github.com/Kong/spec-renderer/compare/v1.4.2...v1.5.0) (2024-05-13)
 
 
