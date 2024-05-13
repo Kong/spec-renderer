@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/Kong/spec-renderer/compare/v1.4.2...v1.5.0) (2024-05-13)
+
+
+### Features
+
+* trigger release ([221e13a](https://github.com/Kong/spec-renderer/commit/221e13a37d9171379900fcb2280a9567511c4992))
+
 ## [1.4.2](https://github.com/Kong/spec-renderer/compare/v1.4.1...v1.4.2) (2024-05-10)
 
 
