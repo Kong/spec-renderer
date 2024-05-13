@@ -116,16 +116,10 @@ describe('schemaObjectProperties', () => {
     expect(schemaObjectProperties(schemaObject)?.required).toEqual(itemRequiredFields)
   })
   it('returns null for invalid Schema Object', () => {
-    const invalidSchemaObjectList: Array<SchemaObject> = [
-      {
-        type: 'string',
-      },
+    const invalidSchemaObjectList = [
       {
         type: 'object',
-        properties: {},
-      },
-      {
-        type: 'object',
+        $ref: '#/components/schemas/Pet',
       },
     ]
 
@@ -134,12 +128,10 @@ describe('schemaObjectProperties', () => {
     }
   })
   it('returns null for invalid Schema Object from array', () => {
-    const invalidSchemaObjectList: Array<SchemaObject> = [
+    const invalidSchemaObjectList = [
       {
         type: 'string',
-      },
-      {
-        type: 'array',
+        $ref: '#/components/schemas/Pet',
       },
       {
         type: 'array',

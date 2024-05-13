@@ -68,7 +68,7 @@ const props = defineProps({
   },
 })
 
-const modelPropertyProps = computed(() => isValidSchemaObject(props.property) ? schemaObjectProperties(props.property) : null)
+const modelPropertyProps = computed(() => schemaObjectProperties(props.property))
 
 const orderedFieldList = computed(() => {
   const fields = []
