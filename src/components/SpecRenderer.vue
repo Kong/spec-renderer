@@ -60,6 +60,21 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  /**
+   * hide schemas from TOC
+   */
+  hideSchemas: {
+    type: Boolean,
+    default: false,
+  },
+
+  /**
+   * hide internal endpoints from TOC
+   */
+  hideInternal: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 // TODO: introduce and handle isParsed. show parsing state while parsing
@@ -71,14 +86,18 @@ const itemSelected = (id: any) => {
   selectedPath.value = id
 }
 
-watch(() => ({ spec: props.spec, url: props.specUrl }), async (changed) => {
-  await parseSpecDocument(changed.spec, changed.url ? { specUrl: changed.url } : null)
+watch(() => (props), async (changed) => {
+  await parseSpecDocument(changed.spec, {
+    hideSchemas: changed.hideSchemas,
+    hideInternal: changed.hideInternal,
+    ...(changed.specUrl ? { specUrl: changed.specUrl } : null),
+  })
 
   console.log('parsedDocument:', parsedDocument)
   console.log('tableOfContents:', tableOfContents.value)
   console.log('validationResults:', validationResults)
 
-}, { immediate: true })
+}, { deep: true, immediate: true })
 
 </script>
 

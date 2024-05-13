@@ -130,4 +130,75 @@ components:
       },
     })
   })
+
+  describe('parsing properties', () => {
+    const specText = `
+openapi: 3.0.0
+servers: []
+info:
+  version: "1.0.0"
+  title: home-iot-api
+  description: The API
+paths:
+  /devices:
+    get:
+      description: here we go
+      x-internal: true
+components:
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+      `
+
+    it('should include schemas by default', async () => {
+
+      const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
+      await parseSpecDocument(specText)
+
+      expect(tableOfContents.value).toEqual(
+        expect.arrayContaining([{ title: 'Schemas' }]),
+      )
+    })
+
+    it('should exclude schemas when param passed', async () => {
+      const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
+      await parseSpecDocument(specText, { hideSchemas: true })
+
+      expect(tableOfContents.value).not.toEqual(
+        expect.arrayContaining([{ title: 'Schemas' }]),
+      )
+    })
+
+    it('should include internal endpoints by default', async () => {
+      const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
+      await parseSpecDocument(specText)
+      expect(tableOfContents.value).toEqual(
+        expect.arrayContaining([{
+          id: '/paths/devices/get',
+          meta: 'get',
+          slug: '/paths/devices/get',
+          title: '/devices',
+          type: 'http_operation',
+        }],
+        ))
+    })
+
+    it('should exclude internal endpoints when param passed', async () => {
+      const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
+      await parseSpecDocument(specText, { hideInternal: true })
+      expect(tableOfContents.value).not.toEqual(
+        expect.arrayContaining([{
+          id: '/paths/devices/get',
+          meta: 'get',
+          slug: '/paths/devices/get',
+          title: '/devices',
+          type: 'http_operation',
+        }],
+        ))
+    })
+  })
 })
