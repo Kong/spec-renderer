@@ -44,14 +44,14 @@ import { computed, type PropType } from 'vue'
 import { isValidSchemaObject, schemaObjectProperties } from '@/utils'
 import type { ReferenceObject, SchemaObject } from '@/types'
 
-import PropertyDescription from '@/components/document/property-fields/PropertyDescription.vue'
-import PropertyExample from '@/components/document/property-fields/PropertyExample.vue'
-import PropertyInfo from '@/components/document/property-fields/PropertyInfo.vue'
-import PropertyEnum from '@/components/document/property-fields/PropertyEnum.vue'
-import PropertyPattern from '@/components/document/property-fields/PropertyPattern.vue'
-import PropertyRange from '@/components/document/property-fields/PropertyRange.vue'
-import PropertyOneOf from '@/components/document/property-fields/PropertyOneOf.vue'
-import PropertyAnyOf from '@/components/document/property-fields/PropertyAnyOf.vue'
+import PropertyDescription from './property-fields/PropertyDescription.vue'
+import PropertyExample from './property-fields/PropertyExample.vue'
+import PropertyInfo from './property-fields/PropertyInfo.vue'
+import PropertyEnum from './property-fields/PropertyEnum.vue'
+import PropertyPattern from './property-fields/PropertyPattern.vue'
+import PropertyRange from './property-fields/PropertyRange.vue'
+import PropertyOneOf from './property-fields/PropertyOneOf.vue'
+import PropertyAnyOf from './property-fields/PropertyAnyOf.vue'
 
 const props = defineProps({
   property: {

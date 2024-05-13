@@ -27,9 +27,9 @@
 <script setup lang="ts">
 import { watch, ref } from 'vue'
 import composables from '../composables'
-import TableOfContents from './table-of-contents/TableOfContents.vue'
-import DocumentComponent from './document/DocumentComponent.vue'
-import TryMe from './try-me/TryMe.vue'
+import TableOfContents from './spec-renderer-toc/SpecRendererToc.vue'
+import DocumentComponent from './spec-document/SpecDocument.vue'
+import TryMe from './spec-renderer-try-me/SpecRendererTryMe.vue'
 
 const props = defineProps({
   /**
@@ -100,3 +100,4 @@ aside {
   height: 100vh;
 }
 </style>
+./spec-document/DocumentComponent.vue
