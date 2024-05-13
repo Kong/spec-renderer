@@ -126,4 +126,3 @@ Additionally, CI will use `commitlint` to validate the commits associated with a
 ### Package Publishing
 
 This repository utilizes [Semantic Release](https://github.com/semantic-release/semantic-release) for automated package publishing and version updates.
-

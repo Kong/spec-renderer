@@ -18,6 +18,7 @@ export default {
 export * from './utils'
 export * from './types'
 
+// exporting components
 export {
   SpecRenderer,
   DocumentComponent,
