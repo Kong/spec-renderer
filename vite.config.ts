@@ -34,6 +34,20 @@ export default defineConfig({
           from: /if\s\(typeof module\s===\s"object"\s&&\stypeof\smodule\.exports\s===\s"object"\)\s\{\n.*;\n\}/m,
           to: '',
         },
+        /**
+         * prevent error in ssr
+         *
+         * error deferencing Cannot read properties of undefined (reading 'origin')
+         *
+         * due to location is not defined in this code:
+         * https://github.com/stoplightio/json-schema-ref-parser/blob/master/lib/environment/browser.js#L5
+         *
+         */
+        {
+          from: 'exports.getCwd = () => location.origin + location.pathname;',
+          to: 'exports.getCwd = () => location ? location.origin + location.pathname:"";',
+        },
+
       ],
     }),
     /**
