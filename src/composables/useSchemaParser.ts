@@ -121,7 +121,7 @@ export default function useSchemaParser():any {
     try {
       if (parsedDocument.value) {
         // generate table of contents
-        tableOfContents.value = computeAPITree(parsedDocument.value, { hideSchemas: false, hideInternal: false })
+        tableOfContents.value = computeAPITree(parsedDocument.value, { hideSchemas: options?.hideSchemas, hideInternal: options?.hideInternal })
       }
     } catch (err) {
       console.error('error in computeAPITree', err)

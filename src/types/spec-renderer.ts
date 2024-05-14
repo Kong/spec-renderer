@@ -14,4 +14,6 @@ export interface ReferenceObject extends OAS31ReferenceObject {}
 
 export interface ParseOptions {
   specUrl?: string
+  hideSchemas: boolean
+  hideInternal: boolean
 }
