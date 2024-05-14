@@ -72,9 +72,6 @@ importers:
       '@kong/design-tokens':
         specifier: ^1.12.12
         version: 1.12.12
-      '@rollup/plugin-replace':
-        specifier: ^5.0.5
-        version: 5.0.5(rollup@4.16.1)
       '@semantic-release/changelog':
         specifier: ^6.0.3
         version: 6.0.3(semantic-release@23.0.8(typescript@5.4.5))
@@ -854,15 +851,6 @@ packages:
 
   '@rollup/plugin-inject@5.0.5':
     resolution: {integrity: sha512-2+DEJbNBoPROPkgTDNe8/1YXWcqxbN5DTjASVIOx8HS+pITXushyNiBV56RB08zuptzz8gT3YfkqriTBVycepg==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-
-  '@rollup/plugin-replace@5.0.5':
-    resolution: {integrity: sha512-rYO4fOi8lMaTg/z5Jb+hKnrHHVn8j2lwkqwyS4kTRhKyWOLf2wST2sWXr4WzWiTcoHTp2sTjqUbqIj2E39slKQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
@@ -5459,13 +5447,6 @@ snapshots:
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.16.1)
       estree-walker: 2.0.2
-      magic-string: 0.30.10
-    optionalDependencies:
-      rollup: 4.16.1
-
-  '@rollup/plugin-replace@5.0.5(rollup@4.16.1)':
-    dependencies:
-      '@rollup/pluginutils': 5.1.0(rollup@4.16.1)
       magic-string: 0.30.10
     optionalDependencies:
       rollup: 4.16.1
