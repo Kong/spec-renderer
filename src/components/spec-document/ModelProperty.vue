@@ -11,24 +11,24 @@
         v-bind="field.props"
       />
 
-      <template v-if="modelPropertyProps">
-        <details v-if="modelPropertyProps.properties">
+      <template v-if="resolvedModelProperty">
+        <details v-if="resolvedModelProperty.properties">
           <summary>Properties of <code>{{ propertyName }}</code></summary>
           <ModelProperty
-            v-for="(subProperty, subPropertyName) in modelPropertyProps.properties"
+            v-for="(subProperty, subPropertyName) in resolvedModelProperty.properties"
             :key="subPropertyName"
             :property="subProperty"
             :property-name="subPropertyName.toString()"
-            :required-fields="modelPropertyProps.required"
+            :required-fields="resolvedModelProperty.required"
           />
         </details>
         <PropertyOneOf
-          v-if="Array.isArray(modelPropertyProps.oneOf) && modelPropertyProps.oneOf?.length"
-          :one-of-list="modelPropertyProps.oneOf"
+          v-if="Array.isArray(resolvedModelProperty.oneOf) && resolvedModelProperty.oneOf?.length"
+          :one-of-list="resolvedModelProperty.oneOf"
         />
         <PropertyAnyOf
-          v-if="Array.isArray(modelPropertyProps.anyOf) && modelPropertyProps.anyOf?.length"
-          :any-of-list="modelPropertyProps.anyOf"
+          v-if="Array.isArray(resolvedModelProperty.anyOf) && resolvedModelProperty.anyOf?.length"
+          :any-of-list="resolvedModelProperty.anyOf"
         />
       </template>
     </template>
@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
-import { isValidSchemaObject, schemaObjectProperties } from '@/utils'
+import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 import type { ReferenceObject, SchemaObject } from '@/types'
 
 import PropertyDescription from './property-fields/PropertyDescription.vue'
@@ -68,7 +68,7 @@ const props = defineProps({
   },
 })
 
-const modelPropertyProps = computed(() => isValidSchemaObject(props.property) ? schemaObjectProperties(props.property) : null)
+const resolvedModelProperty = computed(() => resolveSchemaObjectFields(props.property))
 
 const orderedFieldList = computed(() => {
   const fields = []

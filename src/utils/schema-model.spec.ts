@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isNestedObj, isValidSchemaObject, orderedFieldList, schemaObjectProperties } from './schema-model'
+import { isNestedObj, isValidSchemaObject, orderedFieldList, resolveSchemaObjectFields } from './schema-model'
 import type { ReferenceObject, SchemaObject } from '@/types'
 
 describe('isNestedObj', () => {
@@ -93,8 +93,8 @@ describe('schemaObjectProperties', () => {
       },
       required: ['name'],
     }
-    expect(schemaObjectProperties(nestedSchemaObject)?.properties).toEqual(nestedSchemaObject.properties)
-    expect(schemaObjectProperties(nestedSchemaObject)?.required).toEqual(nestedSchemaObject.required)
+    expect(resolveSchemaObjectFields(nestedSchemaObject)?.properties).toEqual(nestedSchemaObject.properties)
+    expect(resolveSchemaObjectFields(nestedSchemaObject)?.required).toEqual(nestedSchemaObject.required)
   })
   it('returns properties and required fields of a Schema Object of type array', () => {
     const itemProperties: Record<string, SchemaObject> = {
@@ -112,34 +112,26 @@ describe('schemaObjectProperties', () => {
         required: itemRequiredFields,
       },
     }
-    expect(schemaObjectProperties(schemaObject)?.properties).toEqual(itemProperties)
-    expect(schemaObjectProperties(schemaObject)?.required).toEqual(itemRequiredFields)
+    expect(resolveSchemaObjectFields(schemaObject)?.properties).toEqual(itemProperties)
+    expect(resolveSchemaObjectFields(schemaObject)?.required).toEqual(itemRequiredFields)
   })
   it('returns null for invalid Schema Object', () => {
-    const invalidSchemaObjectList: Array<SchemaObject> = [
-      {
-        type: 'string',
-      },
+    const invalidSchemaObjectList = [
       {
         type: 'object',
-        properties: {},
-      },
-      {
-        type: 'object',
+        $ref: '#/components/schemas/Pet',
       },
     ]
 
     for (const invalidSchemaObject of invalidSchemaObjectList) {
-      expect(schemaObjectProperties(invalidSchemaObject)).toBe(null)
+      expect(resolveSchemaObjectFields(invalidSchemaObject)).toBe(null)
     }
   })
   it('returns null for invalid Schema Object from array', () => {
-    const invalidSchemaObjectList: Array<SchemaObject> = [
+    const invalidSchemaObjectList = [
       {
         type: 'string',
-      },
-      {
-        type: 'array',
+        $ref: '#/components/schemas/Pet',
       },
       {
         type: 'array',
@@ -156,7 +148,7 @@ describe('schemaObjectProperties', () => {
     ]
 
     for (const invalidSchemaObject of invalidSchemaObjectList) {
-      expect(schemaObjectProperties(invalidSchemaObject)).toBe(null)
+      expect(resolveSchemaObjectFields(invalidSchemaObject)).toBe(null)
     }
   })
 })

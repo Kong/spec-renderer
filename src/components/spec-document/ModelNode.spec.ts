@@ -59,17 +59,18 @@ describe('<ModelNode />', () => {
   })
 
   describe('renders oneOf', () => {
+    const oneOfList: Array<SchemaObject> = [
+      {
+        type: 'object',
+        title: 'HeadingBlock',
+      },
+      {
+        type: 'object',
+        title: 'BlockQuoteBlock',
+      },
+    ]
+
     it('when schema model is an array', () => {
-      const oneOfList: Array<SchemaObject> = [
-        {
-          type: 'object',
-          title: 'HeadingBlock',
-        },
-        {
-          type: 'object',
-          title: 'BlockQuoteBlock',
-        },
-      ]
       const arrayWithOneOf: SchemaObject = {
         description: 'List of children nodes of the current node',
         type: 'array',
@@ -95,20 +96,42 @@ describe('<ModelNode />', () => {
         expect(wrapper.findTestId(`model-property-${oneOfItem.title}`).exists()).toBe(true)
       }
     })
+
+    it('when schema model is a simple object', () => {
+      const wrapper = mount(ModelNode, {
+        props: {
+          data: {
+            description: 'List of children nodes of the current node',
+            type: 'object',
+            oneOf: oneOfList,
+          },
+          title: 'NodeChildren',
+        },
+      })
+
+      // Check if PropertyOneOf component renders
+      expect(wrapper.findTestId('property-field-one-of').exists()).toBe(true)
+
+      // Check if ModelProperty component renders for both oneOf objects
+      for (const oneOfItem of oneOfList) {
+        expect(wrapper.findTestId(`model-property-${oneOfItem.title}`).exists()).toBe(true)
+      }
+    })
   })
 
   describe('renders anyOf', () => {
+    const anyOfList: Array<SchemaObject> = [
+      {
+        type: 'object',
+        title: 'HeadingBlock',
+      },
+      {
+        type: 'object',
+        title: 'BlockQuoteBlock',
+      },
+    ]
+
     it('when schema model is an array', () => {
-      const anyOfList: Array<SchemaObject> = [
-        {
-          type: 'object',
-          title: 'HeadingBlock',
-        },
-        {
-          type: 'object',
-          title: 'BlockQuoteBlock',
-        },
-      ]
       const arrayWithanyOf: SchemaObject = {
         description: 'List of children nodes of the current node',
         type: 'array',
@@ -127,6 +150,27 @@ describe('<ModelNode />', () => {
       })
 
       // Check if PropertyanyOf component renders
+      expect(wrapper.findTestId('property-field-any-of').exists()).toBe(true)
+
+      // Check if ModelProperty component renders for both anyOf objects
+      for (const anyOfItem of anyOfList) {
+        expect(wrapper.findTestId(`model-property-${anyOfItem.title}`).exists()).toBe(true)
+      }
+    })
+
+    it('when schema model is a simple object', () => {
+      const wrapper = mount(ModelNode, {
+        props: {
+          data: {
+            description: 'List of children nodes of the current node',
+            type: 'object',
+            anyOf: anyOfList,
+          },
+          title: 'NodeChildren',
+        },
+      })
+
+      // Check if PropertyAnyOf component renders
       expect(wrapper.findTestId('property-field-any-of').exists()).toBe(true)
 
       // Check if ModelProperty component renders for both anyOf objects
