@@ -22,17 +22,16 @@
         :property-name="propertyName.toString()"
         :required-fields="modelPropertyProps.required"
       />
+      <PropertyOneOf
+        v-if="Array.isArray(modelPropertyProps.oneOf) && modelPropertyProps.oneOf?.length"
+        :one-of-list="modelPropertyProps.oneOf"
+      />
+
+      <PropertyAnyOf
+        v-if="Array.isArray(modelPropertyProps.anyOf) && modelPropertyProps.anyOf?.length"
+        :any-of-list="modelPropertyProps.anyOf"
+      />
     </template>
-
-    <PropertyOneOf
-      v-if="Array.isArray(data.oneOf) && data.oneOf?.length"
-      :one-of-list="data.oneOf"
-    />
-
-    <PropertyAnyOf
-      v-if="Array.isArray(data.anyOf) && data.anyOf?.length"
-      :any-of-list="data.anyOf"
-    />
   </div>
 </template>
 

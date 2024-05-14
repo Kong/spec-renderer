@@ -19,9 +19,19 @@ export const schemaObjectProperties = (candidate: SchemaObject) => {
    * If it's an array, we need to derive the properties from the `items` field of the Schema Model.
    */
   if (isNestedObj(candidate)) {
-    computedObj = { properties: candidate.properties, required: candidate.required }
+    computedObj = {
+      properties: candidate.properties,
+      required: candidate.required,
+      oneOf: candidate.oneOf,
+      anyOf: candidate.anyOf,
+    }
   } else if (candidate.type === 'array' && isValidSchemaObject(candidate.items)) {
-    computedObj = { properties: candidate.items.properties, required: candidate.items.required }
+    computedObj = {
+      properties: candidate.items.properties,
+      required: candidate.items.required,
+      oneOf: candidate.items.oneOf,
+      anyOf: candidate.items.anyOf,
+    }
   }
 
   return computedObj

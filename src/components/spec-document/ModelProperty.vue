@@ -11,26 +11,26 @@
         v-bind="field.props"
       />
 
-      <details v-if="modelPropertyProps?.properties">
-        <summary>Properties of <code>{{ propertyName }}</code></summary>
-        <ModelProperty
-          v-for="(subProperty, subPropertyName) in modelPropertyProps.properties"
-          :key="subPropertyName"
-          :property="subProperty"
-          :property-name="subPropertyName.toString()"
-          :required-fields="modelPropertyProps.required"
+      <template v-if="modelPropertyProps">
+        <details v-if="modelPropertyProps.properties">
+          <summary>Properties of <code>{{ propertyName }}</code></summary>
+          <ModelProperty
+            v-for="(subProperty, subPropertyName) in modelPropertyProps.properties"
+            :key="subPropertyName"
+            :property="subProperty"
+            :property-name="subPropertyName.toString()"
+            :required-fields="modelPropertyProps.required"
+          />
+        </details>
+        <PropertyOneOf
+          v-if="Array.isArray(modelPropertyProps.oneOf) && modelPropertyProps.oneOf?.length"
+          :one-of-list="modelPropertyProps.oneOf"
         />
-      </details>
-
-      <PropertyOneOf
-        v-if="Array.isArray(property.oneOf) && property.oneOf?.length"
-        :one-of-list="property.oneOf"
-      />
-
-      <PropertyAnyOf
-        v-if="Array.isArray(property.anyOf) && property.anyOf?.length"
-        :any-of-list="property.anyOf"
-      />
+        <PropertyAnyOf
+          v-if="Array.isArray(modelPropertyProps.anyOf) && modelPropertyProps.anyOf?.length"
+          :any-of-list="modelPropertyProps.anyOf"
+        />
+      </template>
     </template>
 
     <div v-else>
@@ -82,7 +82,7 @@ const orderedFieldList = computed(() => {
         title: props.propertyName || props.property.title,
         propertyType: props.property.type,
         format: props.property.format,
-        propertyItemtype:
+        propertyItemType:
             isValidSchemaObject(props.property.items) && props.property.items.type
               ? props.property.items.type
               : '',
