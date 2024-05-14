@@ -10,19 +10,19 @@ export function isValidSchemaObject(candidate?: unknown): candidate is SchemaObj
 }
 
 /**
- * util to compute whether to
- * - directly use a schema object as it is if it's a valid Schem Object
- * - or extract the properties from items field if candidate is an array
+ * util to compute from where to extract the fields of the candidate object
+ * - if it's a valid Schema Object, we can directly use it, as it is
+ * - if candidate is of type array, we can extract the fields from items field
  * @param candidate
  * @returns {SchemaObject | null}
  */
-export const schemaObjectProperties = (candidate: unknown) => {
+export const resolveSchemaObjectFields = (candidate: unknown) => {
 
   // if the candidate is not a valid schema object, we return null
   if (!isValidSchemaObject(candidate)) return null
 
   /**
-   * If the candidate is an array, we need to derive the properties from the `items` field of the Schema Model.
+   * If the candidate is an array, we need to derive the fields from its `items` field.
    * Else, we can directly use the fields from the candidate.
   */
   if (candidate.type === 'array') {

@@ -41,7 +41,7 @@ import ModelProperty from './ModelProperty.vue'
 
 import type{ PropType } from 'vue'
 import type { SchemaObject } from '@/types'
-import { schemaObjectProperties } from '@/utils'
+import { resolveSchemaObjectFields } from '@/utils'
 import PropertyAnyOf from './property-fields/PropertyAnyOf.vue'
 import PropertyOneOf from './property-fields/PropertyOneOf.vue'
 
@@ -56,5 +56,5 @@ const props = defineProps({
   },
 })
 
-const modelPropertyProps = computed(() => schemaObjectProperties(props.data))
+const modelPropertyProps = computed(() => resolveSchemaObjectFields(props.data))
 </script>
