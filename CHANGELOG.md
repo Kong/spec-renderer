@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/Kong/spec-renderer/compare/v1.6.0...v1.6.1) (2024-05-14)
+
+
+### Bug Fixes
+
+* support oneOf/anyOf for arrays [KHCP-11892] ([#51](https://github.com/Kong/spec-renderer/issues/51)) ([4125fcf](https://github.com/Kong/spec-renderer/commit/4125fcf965ecadcc3b0010994cb46f85f20146d0))
+
 # [1.6.0](https://github.com/Kong/spec-renderer/compare/v1.5.1...v1.6.0) (2024-05-14)
 
 
