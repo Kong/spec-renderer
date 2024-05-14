@@ -121,7 +121,7 @@ export default defineConfig({
     open: !!process.env.USE_SANDBOX,
     fs: {
       // Allow serving files from one level up from the package root - IMPORTANT - to support the sandbox
-      allow: [join(__dirname, '..')],/
+      allow: [join(__dirname, '..')],
     },
   },
   // Change the root when utilizing the sandbox via USE_SANDBOX=true to use the `/sandbox/*` files
