@@ -1,8 +1,10 @@
 import { defineConfig } from 'vite'
 import VueDevTools from 'vite-plugin-vue-devtools'
 import vue from '@vitejs/plugin-vue'
+import { replaceCodePlugin } from 'vite-plugin-replace'
 import path, { join } from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 // Include the rollup-plugin-visualizer if the BUILD_VISUALIZER env var is set to "true"
 const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
@@ -17,6 +19,45 @@ const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    replaceCodePlugin({
+      /**
+       *  This is to avoid warning:
+       *
+       * The CommonJS "module" variable is treated as a global variable in an ECMAScript module and may not work as expected [commonjs-variable-in-esm]
+       *
+       *  due to presence of the invalid code in one @jsdevtools/ono dependency
+       *
+       *  https://github.com/JS-DevTools/ono/blob/master/src/index.ts#L12
+       */
+      replacements: [
+        {
+          from: /if\s\(typeof module\s===\s"object"\s&&\stypeof\smodule\.exports\s===\s"object"\)\s\{\n.*;\n\}/m,
+          to: '',
+        },
+        /**
+         * prevent error in ssr
+         *
+         * error deferencing Cannot read properties of undefined (reading 'origin')
+         *
+         * due to location is not defined in this code:
+         * https://github.com/stoplightio/json-schema-ref-parser/blob/master/lib/environment/browser.js#L5
+         *
+         */
+        {
+          from: 'exports.getCwd = () => location.origin + location.pathname;',
+          to: 'exports.getCwd = () => location ? location.origin + location.pathname:"";',
+        },
+
+      ],
+    }),
+    /**
+     * this is to avoid warning
+     * [plugin:vite:resolve] [plugin vite:resolve] Module "util" has been externalized for browser compatibility, imported by "/Users/val.gorodnichev@konghq.com/Code/Kong/ui/spec-renderer/node_modules/.pnpm/@jsdevtools+ono@7.1.3/node_modules/@jsdevtools/ono/esm/types.js". See https://vitejs.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+     * during the build
+     */
+    nodePolyfills({
+      include: ['util'],
+    }),
     vue({
       template: {
         compilerOptions: {
