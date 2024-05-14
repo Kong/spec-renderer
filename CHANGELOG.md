@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/Kong/spec-renderer/compare/v1.6.1...v1.6.2) (2024-05-14)
+
+
+### Bug Fixes
+
+* breakage when null present in oneOf/anyOf lists [KHCP-11931] ([#58](https://github.com/Kong/spec-renderer/issues/58)) ([01ad993](https://github.com/Kong/spec-renderer/commit/01ad993ae4e8788aa05d649e886d96468977dbbc))
+
 ## [1.6.1](https://github.com/Kong/spec-renderer/compare/v1.6.0...v1.6.1) (2024-05-14)
 
 
