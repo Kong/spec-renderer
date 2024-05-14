@@ -44,4 +44,30 @@ describe('<PropertyOneOf />', () => {
       expect(wrapper.findTestId(component).exists()).toBe(true)
     })
   }
+
+  it('renders correctly when oneOfList has nulls', () => {
+    const oneOfListWithNulls = [
+      {
+        title: 'oneof-first-item',
+      },
+      null,
+      {
+        title: 'oneof-second-item',
+      },
+      null,
+    ]
+
+    // Even if the oneOfList prop has nulls, the component should render correctly
+    const wrapper = mount(PropertyOneOf, {
+      props: {
+        // types for oneOfList prop don't allow nulls, so we assert it to do a check
+        oneOfList: oneOfListWithNulls as Array<SchemaObject>,
+      },
+    })
+
+    // Check if PropertyOneOf component itself renders
+    expect(wrapper.findTestId('property-field-one-of').exists()).toBe(true)
+    // Check if ModelProperty component renders only for the 2 valid oneOf objects and skips nulls
+    expect(wrapper.findAllComponents({ name: 'ModelProperty' }).length).toBe(2)
+  })
 })
