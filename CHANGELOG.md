@@ -1,3 +1,11 @@
+## [1.6.3](https://github.com/Kong/spec-renderer/compare/v1.6.2...v1.6.3) (2024-05-14)
+
+
+### Bug Fixes
+
+* render anyOf/oneOf when they are present as top level fields  [khcp 11893] ([#57](https://github.com/Kong/spec-renderer/issues/57)) ([2f043c6](https://github.com/Kong/spec-renderer/commit/2f043c65085f8ad94cebf8f095f4619e6d08b4c1))
+* ssr (clodfarew worker) related issues [KHCP-11923] ([#59](https://github.com/Kong/spec-renderer/issues/59)) ([bec9ab5](https://github.com/Kong/spec-renderer/commit/bec9ab50c18a2e5c4703ce10165c818a08a2d1de))
+
 ## [1.6.2](https://github.com/Kong/spec-renderer/compare/v1.6.1...v1.6.2) (2024-05-14)
 
 
