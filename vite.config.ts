@@ -20,6 +20,15 @@ const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
 export default defineConfig({
   plugins: [
     replaceCodePlugin({
+      /**
+       *  This is to avoid warning:
+       *
+       * The CommonJS "module" variable is treated as a global variable in an ECMAScript module and may not work as expected [commonjs-variable-in-esm]
+       *
+       *  due to presence of the invalid code in one @jsdevtools/ono dependency
+       *
+       *  https://github.com/JS-DevTools/ono/blob/master/src/index.ts#L12
+       */
       replacements: [
         {
           from: /if\s\(typeof module\s===\s"object"\s&&\stypeof\smodule\.exports\s===\s"object"\)\s\{\n.*;\n\}/m,
@@ -27,6 +36,11 @@ export default defineConfig({
         },
       ],
     }),
+    /**
+     * this is to avoid warning
+     * [plugin:vite:resolve] [plugin vite:resolve] Module "util" has been externalized for browser compatibility, imported by "/Users/val.gorodnichev@konghq.com/Code/Kong/ui/spec-renderer/node_modules/.pnpm/@jsdevtools+ono@7.1.3/node_modules/@jsdevtools/ono/esm/types.js". See https://vitejs.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+     * during the build
+     */
     nodePolyfills({
       // To add only specific polyfills, add them here. If no option is passed, adds all polyfills
       include: ['util'],
