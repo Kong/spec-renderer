@@ -97,7 +97,7 @@ importers:
         specifier: ^5.0.4
         version: 5.0.4(vite@5.2.11(@types/node@20.12.11)(sass@1.77.1))(vue@3.4.26(typescript@5.4.5))
       '@vitest/ui':
-        specifier: ^1.5.3
+        specifier: ^1.6.0
         version: 1.6.0(vitest@1.5.3)
       '@vue/test-utils':
         specifier: ^2.4.5
