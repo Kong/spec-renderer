@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import VueDevTools from 'vite-plugin-vue-devtools'
 import vue from '@vitejs/plugin-vue'
-import replace from '@rollup/plugin-replace'
+import { replaceCodePlugin } from 'vite-plugin-replace'
 import path, { join } from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
@@ -19,6 +19,14 @@ const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    replaceCodePlugin({
+      replacements: [
+        {
+          from: /if\s\(typeof module\s===\s"object"\s&&\stypeof\smodule\.exports\s===\s"object"\)\s\{\n.*;\n\}/m,
+          to: '',
+        },
+      ],
+    }),
     nodePolyfills({
       // To add only specific polyfills, add them here. If no option is passed, adds all polyfills
       include: ['util'],
@@ -72,14 +80,13 @@ export default defineConfig({
           exports: 'named',
         },
       plugins: [
-        replace({
-          delimiters: ['', ''],
-          preventAssignment: true,
-          values: {
-            'if (typeof module === "object" && typeof module.exports === "object") {':
-              'if (typeof module === "object" && typeof module.exports === "object" && typeof module.exports.default === "object") {',
-          },
-        }),
+        //         replace({
+        //           delimiters: ['', ''],
+        //           preventAssignment: true,
+        //           values: {
+        // 'if (typeof module === "object" && typeof module.exports === "object") {\nmodule.exports = Object.assign(module.exports.default, module.exports)\n}': '',
+        //           },
+        //         }),
         // visualizer must remain last in the list of plugins
         buildVisualizerPlugin,
       ],
