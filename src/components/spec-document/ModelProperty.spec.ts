@@ -153,6 +153,51 @@ describe('<ModelProperty />', () => {
         expect(wrapper.findTestId(`model-property-${oneOfItem.title}`).exists()).toBe(true)
       }
     })
+
+    it('when schema model is a simple object', () => {
+      const wrapper = mount(ModelProperty, {
+        props: {
+          property: {
+            type: 'object',
+            oneOf: oneOfList,
+          },
+          propertyName: 'sample-property',
+        },
+      })
+
+      // Check if PropertyOneOf component renders
+      expect(wrapper.findTestId('property-field-one-of').exists()).toBe(true)
+      // Check if ModelProperty component renders for both oneOf objects
+      for (const oneOfItem of oneOfList) {
+        expect(wrapper.findTestId(`model-property-${oneOfItem.title}`).exists()).toBe(true)
+      }
+    })
+
+    it('when schema model is a nested object', () => {
+      const wrapper = mount(ModelProperty, {
+        props: {
+          property: {
+            type: 'object',
+            properties: {
+              'nested-property': {
+                type: 'string',
+                oneOf: oneOfList,
+              },
+            },
+          },
+          propertyName: 'sample-property',
+        },
+      })
+
+      // Check if ModelProperty component renders for the nested property
+      expect(wrapper.findTestId('model-property-nested-property').exists()).toBe(true)
+      // Check if PropertyOneOf component renders
+      expect(wrapper.findTestId('property-field-one-of').exists()).toBe(true)
+      // Check if ModelProperty component renders for both oneOf objects
+      for (const oneOfItem of oneOfList) {
+        expect(wrapper.findTestId(`model-property-${oneOfItem.title}`).exists()).toBe(true)
+      }
+    })
   })
 
   describe('renders anyOf', () => {
