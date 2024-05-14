@@ -1,8 +1,10 @@
 import { defineConfig } from 'vite'
 import VueDevTools from 'vite-plugin-vue-devtools'
 import vue from '@vitejs/plugin-vue'
+import replace from '@rollup/plugin-replace'
 import path, { join } from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 // Include the rollup-plugin-visualizer if the BUILD_VISUALIZER env var is set to "true"
 const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
@@ -17,6 +19,10 @@ const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    nodePolyfills({
+      // To add only specific polyfills, add them here. If no option is passed, adds all polyfills
+      include: ['util'],
+    }),
     vue({
       template: {
         compilerOptions: {
@@ -66,6 +72,14 @@ export default defineConfig({
           exports: 'named',
         },
       plugins: [
+        replace({
+          delimiters: ['', ''],
+          preventAssignment: true,
+          values: {
+            'if (typeof module === "object" && typeof module.exports === "object") {':
+              'if (typeof module === "object" && typeof module.exports === "object" && typeof module.exports.default === "object") {',
+          },
+        }),
         // visualizer must remain last in the list of plugins
         buildVisualizerPlugin,
       ],
