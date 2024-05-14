@@ -44,4 +44,30 @@ describe('<PropertyAnyOf />', () => {
       expect(wrapper.findTestId(component).exists()).toBe(true)
     })
   }
+
+  it('renders correctly when anyOfList has nulls', () => {
+    const anyOfListWithNulls = [
+      {
+        title: 'anyOf-first-item',
+      },
+      null,
+      {
+        title: 'anyOf-second-item',
+      },
+      null,
+    ]
+
+    // Even if the anyOfList prop has nulls, the component should render correctly
+    const wrapper = mount(PropertyAnyOf, {
+      props: {
+        // types for anyOfList prop don't allow nulls, so we assert it to do a check
+        anyOfList: anyOfListWithNulls as Array<SchemaObject>,
+      },
+    })
+
+    // Check if PropertyAnyOf component itself renders
+    expect(wrapper.findTestId('property-field-any-of').exists()).toBe(true)
+    // Check if ModelProperty component renders only for the 2 valid anyOf objects and skips nulls
+    expect(wrapper.findAllComponents({ name: 'ModelProperty' }).length).toBe(2)
+  })
 })
