@@ -38,10 +38,10 @@ const serviceNode = ref<ServiceNode| null>(null)
 // to be consumed in multi-level child components
 provide<Ref<string>>('base-path', computed((): string => props.basePath))
 
-watch(() => (props.path), (pathname) => {
+watch(() => ({pathname: props.path, document: props.document}), ({pathname, document}) => {
   const isRootPath = !pathname || pathname === '/'
   // @ts-ignore
-  serviceNode.value = isRootPath ? props.document : props.document.children.find((child:any) => child.uri === pathname)
+  serviceNode.value = isRootPath ? document : document.children.find((child:any) => child.uri === pathname)
   if (serviceNode.value) {
     // removing circular references
     serviceNode.value.data = JSON.parse(JSON.stringify(serviceNode.value.data, getCircularReplacer()))

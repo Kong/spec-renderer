@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <aside>
-      <TableOfContents
+      <SpecRendererToc
         v-if="tableOfContents"
         :base-path="basePath"
         :control-browser-url="props.controlBrowserUrl"
@@ -10,7 +10,7 @@
       />
     </aside>
     <div class="doc">
-      <DocumentComponent
+      <SpecDocument
         v-if="parsedDocument && selectedPath"
         :base-path="basePath"
         :document="parsedDocument"
@@ -19,7 +19,7 @@
       />
     </div>
     <div>
-      <TryMe />
+      <SpecRendererTryMe />
     </div>
   </div>
 </template>
@@ -27,9 +27,9 @@
 <script setup lang="ts">
 import { watch, ref } from 'vue'
 import composables from '../composables'
-import TableOfContents from './spec-renderer-toc/SpecRendererToc.vue'
-import DocumentComponent from './spec-document/SpecDocument.vue'
-import TryMe from './spec-renderer-try-me/SpecRendererTryMe.vue'
+import SpecRendererToc from './spec-renderer-toc/SpecRendererToc.vue'
+import SpecDocument from './spec-document/SpecDocument.vue'
+import SpecRendererTryMe from './spec-renderer-try-me/SpecRendererTryMe.vue'
 
 const props = defineProps({
   /**
@@ -86,18 +86,23 @@ const itemSelected = (id: any) => {
   selectedPath.value = id
 }
 
-watch(() => (props), async (changed) => {
+watch(() => ({
+  specUrl: props.specUrl,
+  spec: props.spec,
+  hideSchemas: props.hideSchemas,
+  hideInternal: props.hideInternal,
+}), async (changed) => {
   await parseSpecDocument(changed.spec, {
     hideSchemas: changed.hideSchemas,
     hideInternal: changed.hideInternal,
     ...(changed.specUrl ? { specUrl: changed.specUrl } : null),
   })
 
-  console.log('parsedDocument:', parsedDocument)
+  console.log('parsedDocument:', parsedDocument.value)
   console.log('tableOfContents:', tableOfContents.value)
-  console.log('validationResults:', validationResults)
+  console.log('validationResults:', validationResults.value)
 
-}, { deep: true, immediate: true })
+}, { immediate: true })
 
 </script>
 
