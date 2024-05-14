@@ -42,7 +42,6 @@ export default defineConfig({
      * during the build
      */
     nodePolyfills({
-      // To add only specific polyfills, add them here. If no option is passed, adds all polyfills
       include: ['util'],
     }),
     vue({
@@ -94,14 +93,6 @@ export default defineConfig({
           exports: 'named',
         },
       plugins: [
-        //         replace({
-        //           delimiters: ['', ''],
-        //           preventAssignment: true,
-        //           values: {
-        // 'if (typeof module === "object" && typeof module.exports === "object") {\nmodule.exports = Object.assign(module.exports.default, module.exports)\n}': '',
-        //           },
-        //         }),
-        // visualizer must remain last in the list of plugins
         buildVisualizerPlugin,
       ],
     },
