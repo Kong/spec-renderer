@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/Kong/spec-renderer/compare/v1.5.1...v1.6.0) (2024-05-14)
+
+
+### Features
+
+* passing props into parsing [KHCP-11900] ([#53](https://github.com/Kong/spec-renderer/issues/53)) ([62b7c1c](https://github.com/Kong/spec-renderer/commit/62b7c1c56fcd23708dd32a9619622a6b4ff0fd67))
+
 ## [1.5.1](https://github.com/Kong/spec-renderer/compare/v1.5.0...v1.5.1) (2024-05-13)
 
 
