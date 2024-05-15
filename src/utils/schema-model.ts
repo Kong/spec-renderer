@@ -6,7 +6,9 @@ export const isNestedObj = (property: SchemaObject) => Boolean(property.type ===
  * Type guard for verifying object is of type SchemaObject
  */
 export function isValidSchemaObject(candidate?: unknown): candidate is SchemaObject {
-  return Boolean(candidate && !Object.prototype.hasOwnProperty.call(candidate, '$ref'))
+  // the only check for SchemaObject is that it should be a valid object
+  // even {} is a valid SchemaObject
+  return Boolean(typeof candidate === 'object' && candidate !== null && !Array.isArray(candidate))
 }
 
 /**
