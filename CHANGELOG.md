@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/Kong/spec-renderer/compare/v1.7.0...v1.7.1) (2024-05-15)
+
+
+### Bug Fixes
+
+* location usage in ssr [KHCP-11923] ([#61](https://github.com/Kong/spec-renderer/issues/61)) ([9938178](https://github.com/Kong/spec-renderer/commit/9938178ae3492de8af1f233db2824363ee99f263))
+
 # [1.7.0](https://github.com/Kong/spec-renderer/compare/v1.6.3...v1.7.0) (2024-05-15)
 
 
