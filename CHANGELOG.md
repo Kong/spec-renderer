@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/Kong/spec-renderer/compare/v1.6.3...v1.7.0) (2024-05-15)
+
+
+### Features
+
+* use JSON Schema for Schema Model type definitions [KHCP-11932] ([#60](https://github.com/Kong/spec-renderer/issues/60)) ([772aff3](https://github.com/Kong/spec-renderer/commit/772aff370dc62e67a8ca519c7780aa3c521a40f1))
+
 ## [1.6.3](https://github.com/Kong/spec-renderer/compare/v1.6.2...v1.6.3) (2024-05-14)
 
 
