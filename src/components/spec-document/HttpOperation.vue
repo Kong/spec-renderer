@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import type { IHttpOperation } from '@stoplight/types'
-import QueryParamList from '@/components/document/endpoint/QueryParamList.vue'
+import QueryParamList from '@/components/spec-document/endpoint/QueryParamList.vue'
 
 defineProps({
   data: {

@@ -24,8 +24,8 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import type { IHttpQueryParam } from '@stoplight/types'
-import PropertyInfo from '@/components/document/property-fields/PropertyInfo.vue'
-import PropertyDescription from '@/components/document/property-fields/PropertyDescription.vue'
+import PropertyInfo from '../property-fields/PropertyInfo.vue'
+import PropertyDescription from '../property-fields/PropertyDescription.vue'
 
 defineProps({
   queryParamList: {
