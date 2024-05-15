@@ -1,4 +1,4 @@
-import type { SchemaObject as OAS31SchemaObject, ReferenceObject as OAS31ReferenceObject } from 'openapi3-ts/oas31'
+import type { JSONSchema7 } from 'json-schema'
 
 export interface SpecRendererProps {
   modelValue: string
@@ -9,8 +9,7 @@ export interface SpecRendererProps {
  * This way it'll be easy to replace out this library with some other library, or even our own implementation,
  * without requiring major refactoring.
  */
-export interface SchemaObject extends OAS31SchemaObject {}
-export interface ReferenceObject extends OAS31ReferenceObject {}
+export interface SchemaObject extends JSONSchema7 {}
 
 export interface ParseOptions {
   specUrl?: string
