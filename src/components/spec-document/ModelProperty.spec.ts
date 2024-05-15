@@ -11,7 +11,7 @@ describe('<ModelProperty />', () => {
           type: 'integer',
           format: 'int32',
           description: 'sample description',
-          example: 'lorem ipsum',
+          examples: 'lorem ipsum',
           enum: [100, 200, 300],
           pattern: '^[0-9]{3}$',
           maximum: 999,
@@ -89,11 +89,11 @@ describe('<ModelProperty />', () => {
               'sample-item-1': {
                 type: 'integer',
                 format: 'int32',
-                example: '34',
+                examples: '34',
               },
               'sample-item-2': {
                 type: 'string',
-                example: 'abc',
+                examples: 'abc',
               },
             },
             required: ['sample-item-1'],

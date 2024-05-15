@@ -10,7 +10,7 @@ describe('<ModelNode />', () => {
       description: "I'm a model's description.",
       type: 'object',
       title: 'Todo',
-      example: {
+      examples: {
         id: 1,
         name: 'Buy milk',
         completed: true,

@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import PropertyAnyOf from './PropertyAnyOf.vue'
-import type { ReferenceObject, SchemaObject } from '@/types'
+import type { SchemaObject } from '@/types'
 
-const anyOfList: Array<SchemaObject | ReferenceObject> = [
+const anyOfList: Array<SchemaObject> = [
   {
     title: 'anyof-first-item',
     properties: {

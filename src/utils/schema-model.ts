@@ -1,12 +1,20 @@
 import type { SchemaObject } from '@/types'
 
-export const isNestedObj = (property: SchemaObject) => Boolean(property.type === 'object' && property.properties && Reflect.ownKeys(property.properties).length)
-
 /**
  * Type guard for verifying object is of type SchemaObject
  */
 export function isValidSchemaObject(candidate?: unknown): candidate is SchemaObject {
-  return Boolean(candidate && !Object.prototype.hasOwnProperty.call(candidate, '$ref'))
+  // the only check for SchemaObject is that it should be a valid object
+  // even {} is a valid SchemaObject
+  return Boolean(typeof candidate === 'object' && candidate !== null && !Array.isArray(candidate))
+}
+
+/**
+ * Filter util for filtering out invalid schema objects from an array of schema objects
+ * Useful for infering correct types and filtering arrays of type Array<JSONSchema7Definition>
+ */
+export function filterSchemaObjectArray(candidate: unknown): Array<SchemaObject> {
+  return Array.isArray(candidate) ? candidate.filter(isValidSchemaObject) : []
 }
 
 /**
@@ -34,31 +42,6 @@ export const resolveSchemaObjectFields = (candidate: unknown) => {
     }
   }
   return candidate
-}
-
-// We need to fix the order in which the components for these fields are rendered
-export const orderedFieldList = (itemData: SchemaObject, itemName?: string) => {
-  const fields : Array<keyof SchemaObject> = []
-
-  if (itemData.title || itemName) {
-    fields.push('title')
-  }
-  if (itemData.description) {
-    fields.push('description')
-  }
-  if (itemData.enum) {
-    fields.push('enum')
-  }
-  if (itemData.pattern) {
-    fields.push('pattern')
-  }
-  if (itemData.maximum || itemData.minimum) {
-    fields.push('maximum')
-  }
-  if (itemData.example) {
-    fields.push('example')
-  }
-  return fields
 }
 
 // only needed till we figure out how to add title field to anyOf/oneOf objects while parsing

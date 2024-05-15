@@ -1,33 +1,29 @@
 <template>
   <div data-testid="property-field-one-of">
     <div>One of</div>
-    <template
+    <ModelProperty
       v-for="(oneOfObject, index) in filteredOneOfList"
       :key="oneOfObject.title || index"
-    >
-      <ModelProperty
-        v-if="isValidSchemaObject(oneOfObject)"
-        :property="oneOfObject"
-        :property-name="inheritedPropertyName(index, oneOfObject.title)"
-        :required-fields="oneOfObject.required"
-      />
-    </template>
+      :property="oneOfObject"
+      :property-name="inheritedPropertyName(index, oneOfObject.title)"
+      :required-fields="oneOfObject.required"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { PropType } from 'vue'
-import type { SchemaObject, ReferenceObject } from '@/types'
+import type { SchemaObject } from '@/types'
 import ModelProperty from '../ModelProperty.vue'
-import { isValidSchemaObject, inheritedPropertyName } from '@/utils'
+import { inheritedPropertyName, filterSchemaObjectArray } from '@/utils'
 
 const props = defineProps({
   oneOfList: {
-    type: Array as PropType<Array<SchemaObject | ReferenceObject>>,
+    type: Array as PropType<SchemaObject['oneOf']>,
     required: true,
   },
 })
 
-const filteredOneOfList = computed(() => props.oneOfList.filter(item => Boolean(item)))
+const filteredOneOfList = computed(() => filterSchemaObjectArray(props.oneOfList))
 </script>

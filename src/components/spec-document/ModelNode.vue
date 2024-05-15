@@ -6,22 +6,26 @@
     <p v-if="data.description">
       {{ data.description }}
     </p>
-    <p v-if="data.example || data.examples">
-      Example: {{ data.example || data.examples }}
+    <p v-if="data.examples">
+      Example: {{ data.examples }}
     </p>
     <p v-if="data.enum">
       <span>Allowed values: </span> {{ data.enum }}
     </p>
 
     <template v-if="modelPropertyProps">
-      <ModelProperty
+      <template
         v-for="(property, propertyName) in modelPropertyProps.properties"
         :key="propertyName"
-        :data-testid="`model-property-${propertyName}`"
-        :property="property"
-        :property-name="propertyName.toString()"
-        :required-fields="modelPropertyProps.required"
-      />
+      >
+        <ModelProperty
+          v-if="isValidSchemaObject(property)"
+          :data-testid="`model-property-${propertyName}`"
+          :property="property"
+          :property-name="propertyName.toString()"
+          :required-fields="modelPropertyProps.required"
+        />
+      </template>
       <PropertyOneOf
         v-if="Array.isArray(modelPropertyProps.oneOf) && modelPropertyProps.oneOf?.length"
         :one-of-list="modelPropertyProps.oneOf"
@@ -41,7 +45,7 @@ import ModelProperty from './ModelProperty.vue'
 
 import type{ PropType } from 'vue'
 import type { SchemaObject } from '@/types'
-import { resolveSchemaObjectFields } from '@/utils'
+import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 import PropertyAnyOf from './property-fields/PropertyAnyOf.vue'
 import PropertyOneOf from './property-fields/PropertyOneOf.vue'
 
