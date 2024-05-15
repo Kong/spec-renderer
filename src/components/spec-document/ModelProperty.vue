@@ -3,46 +3,44 @@
     class="model-property"
     :data-testid="dataTestId"
   >
-    <template v-if="isValidSchemaObject(property)">
-      <component
-        :is="field.component"
-        v-for="field in orderedFieldList"
-        :key="field.key"
-        v-bind="field.props"
-      />
+    <component
+      :is="field.component"
+      v-for="field in orderedFieldList"
+      :key="field.key"
+      v-bind="field.props"
+    />
 
-      <template v-if="resolvedModelProperty">
-        <details v-if="resolvedModelProperty.properties">
-          <summary>Properties of <code>{{ propertyName }}</code></summary>
+    <template v-if="resolvedModelProperty">
+      <details v-if="resolvedModelProperty.properties">
+        <summary>Properties of <code>{{ propertyName }}</code></summary>
+        <template
+          v-for="(subProperty, subPropertyName) in resolvedModelProperty.properties"
+          :key="subPropertyName"
+        >
           <ModelProperty
-            v-for="(subProperty, subPropertyName) in resolvedModelProperty.properties"
-            :key="subPropertyName"
+            v-if="isValidSchemaObject(subProperty)"
             :property="subProperty"
             :property-name="subPropertyName.toString()"
             :required-fields="resolvedModelProperty.required"
           />
-        </details>
-        <PropertyOneOf
-          v-if="Array.isArray(resolvedModelProperty.oneOf) && resolvedModelProperty.oneOf?.length"
-          :one-of-list="resolvedModelProperty.oneOf"
-        />
-        <PropertyAnyOf
-          v-if="Array.isArray(resolvedModelProperty.anyOf) && resolvedModelProperty.anyOf?.length"
-          :any-of-list="resolvedModelProperty.anyOf"
-        />
-      </template>
+        </template>
+      </details>
+      <PropertyOneOf
+        v-if="Array.isArray(resolvedModelProperty.oneOf) && resolvedModelProperty.oneOf?.length"
+        :one-of-list="resolvedModelProperty.oneOf"
+      />
+      <PropertyAnyOf
+        v-if="Array.isArray(resolvedModelProperty.anyOf) && resolvedModelProperty.anyOf?.length"
+        :any-of-list="resolvedModelProperty.anyOf"
+      />
     </template>
-
-    <div v-else>
-      <code>{{ propertyName }}</code>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
 import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
-import type { ReferenceObject, SchemaObject } from '@/types'
+import type { SchemaObject } from '@/types'
 
 import PropertyDescription from './property-fields/PropertyDescription.vue'
 import PropertyExample from './property-fields/PropertyExample.vue'
@@ -55,7 +53,7 @@ import PropertyAnyOf from './property-fields/PropertyAnyOf.vue'
 
 const props = defineProps({
   property: {
-    type: Object as PropType<SchemaObject | ReferenceObject>,
+    type: Object as PropType<SchemaObject>,
     required: true,
   },
   propertyName: {
@@ -128,11 +126,11 @@ const orderedFieldList = computed(() => {
       key: 'property-range',
     })
   }
-  if (props.property.example || props.property.examples) {
+  if (props.property.examples) {
     fields.push({
       component: PropertyExample,
       props: {
-        example: props.property.example || props.property.examples,
+        example: props.property.examples,
       },
       key: 'property-example',
     })
