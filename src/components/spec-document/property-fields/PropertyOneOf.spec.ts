@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import PropertyOneOf from './PropertyOneOf.vue'
-import type { ReferenceObject, SchemaObject } from '@/types'
+import type { SchemaObject } from '@/types'
 
-const oneOfList: Array<SchemaObject | ReferenceObject> = [
+const oneOfList: Array<SchemaObject> = [
   {
     title: 'oneof-first-item',
     properties: {
