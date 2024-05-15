@@ -51,9 +51,8 @@ const selectItem = (id: any) => {
 
 <style lang="scss" scoped>
 .table-of-contents {
-  background-color: lightgray;
+  background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
   overflow-y: auto;
-  width: 500px;
   ul {
     list-style: none;
   }
