@@ -11,6 +11,10 @@
         v-if="data.request.query?.length"
         :query-param-list="data.request.query"
       />
+      <PathParamList
+        v-if="data.request.path?.length"
+        :path-param-list="data.request.path"
+      />
 
       <RequestBody
         v-if="data.request.body"
@@ -25,6 +29,7 @@ import type { PropType } from 'vue'
 import type { IHttpOperation } from '@stoplight/types'
 import QueryParamList from '@/components/spec-document/endpoint/QueryParamList.vue'
 import RequestBody from './endpoint/RequestBody.vue'
+import PathParamList from './endpoint/PathParamList.vue'
 
 defineProps({
   data: {
