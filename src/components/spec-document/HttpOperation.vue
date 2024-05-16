@@ -11,6 +11,11 @@
         v-if="data.request.query?.length"
         :query-param-list="data.request.query"
       />
+
+      <RequestBody
+        v-if="data.request.body"
+        :request-body="data.request.body"
+      />
     </section>
   </div>
 </template>
@@ -19,6 +24,7 @@
 import type { PropType } from 'vue'
 import type { IHttpOperation } from '@stoplight/types'
 import QueryParamList from '@/components/spec-document/endpoint/QueryParamList.vue'
+import RequestBody from './endpoint/RequestBody.vue'
 
 defineProps({
   data: {
