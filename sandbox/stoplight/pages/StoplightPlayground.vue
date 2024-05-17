@@ -33,10 +33,9 @@
 </template>
 
 <script setup lang="ts">
-
+import { ref, onBeforeMount } from 'vue'
 import { useScriptTag } from '@vueuse/core'
-import { onBeforeMount, ref } from 'vue'
-import SampleSpecSelector from '../components/SampleSpecSelector.vue'
+import SampleSpecSelector from '../../components/SampleSpecSelector.vue'
 
 const specRenderer = ref<HTMLElement | null>(null)
 

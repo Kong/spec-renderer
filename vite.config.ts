@@ -5,6 +5,7 @@ import { replaceCodePlugin } from 'vite-plugin-replace'
 import path, { join } from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
+import { fileURLToPath } from 'url'
 
 // Include the rollup-plugin-visualizer if the BUILD_VISUALIZER env var is set to "true"
 const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
@@ -84,7 +85,7 @@ export default defineConfig({
     },
   },
   // TODO: If deploying to GitHub pages, enable this line
-  base: process.env.USE_SANDBOX ? '/spec-renderer/' : '/',
+  base: process.env.USE_SANDBOX ? '/spec-renderer' : '/',
   build: {
     lib: process.env.USE_SANDBOX
       ? undefined
@@ -97,6 +98,12 @@ export default defineConfig({
     minify: true,
     sourcemap: true,
     rollupOptions: {
+      input: process.env.USE_SANDBOX
+        ? {
+          kong: path.resolve(__dirname, './sandbox/index.html'),
+          stopZlight: path.resolve(__dirname, './sandbox/stoplight/index.html'),
+        }
+        : path.resolve(__dirname, './src/index.ts'),
       external: process.env.USE_SANDBOX ? undefined : ['vue'],
       output: process.env.USE_SANDBOX
         ? undefined

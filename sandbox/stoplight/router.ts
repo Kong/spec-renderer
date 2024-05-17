@@ -6,12 +6,12 @@ const routes: RouteRecordRaw[] = [
 
     path: '/:pathMatch(.*)*',
     name: 'root',
-    component: () => import('./pages/SpecRendererPlayground.vue'),
-  },
-]
+    //    alias: '',
+    component: () => import('./pages/StoplightPlayground.vue'),
+  }]
 
 const router = createRouter({
-  history: createWebHistory('/spec-renderer'),
+  history: createWebHistory('/spec-renderer/stoplight'),
   routes,
 })
 

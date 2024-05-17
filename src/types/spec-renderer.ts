@@ -15,4 +15,5 @@ export interface ParseOptions {
   specUrl?: string
   hideSchemas: boolean
   hideInternal: boolean
+  traceParsing: boolean
 }

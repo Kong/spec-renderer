@@ -10,6 +10,12 @@ import type { ValidateResult } from '@scalar/openapi-parser'
 import refParser from '@stoplight/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
 
+const trace = (doTrace: boolean, ...args: any) => {
+  if (doTrace) {
+    console.log(args)
+  }
+}
+
 export default function useSchemaParser():any {
 
   const parsedDocument = ref<ServiceNode | null>()
@@ -72,14 +78,18 @@ export default function useSchemaParser():any {
   */
   const parseSpecDocument = async (spec: string, options: ParseOptions) => {
 
+    // we want to leave console.logs for parsing
     if (options?.specUrl) {
       // fetches spec by URL provided and resolves all external references
       jsonDocument.value = await refParser.bundle(options.specUrl, {
         continueOnError: true,
       })
+      console.log(options.traceParsing)
+      trace(options.traceParsing, 'external referenced bundled')
     } else {
       // parse document. also do yaml to json
       jsonDocument.value = tryParseYamlOrObject(spec)
+      trace(options.traceParsing, 'parsed')
     }
 
     if (!jsonDocument.value) {
@@ -88,15 +98,19 @@ export default function useSchemaParser():any {
       return
     }
 
+    trace(options.traceParsing, 'json document available')
     try {
       // let's see if we can detect some validation errors here
       validationResults.value = await validate(spec || jsonDocument.value)
     } catch (err) {
-      console.error('error in validate', err)
+      console.error('error in validate:', err)
     }
+    trace(options.traceParsing, 'validated')
 
     // resolve the titles for internal refs
     jsonDocument.value = titleResolve(jsonDocument.value)
+
+    trace(options.traceParsing, 'title resolved')
 
     try {
       // resolve the internal refs
@@ -108,15 +122,18 @@ export default function useSchemaParser():any {
       })
       jsonDocument.value = dereferenced
     } catch (err) {
-      console.error('error deferencing', err)
+      console.error('error dereferencing:', err)
     }
+    trace(options.traceParsing, 'dereferenced')
 
     try {
       // convert to AST for ui layer to use
       parsedDocument.value = transformOasToServiceNode(jsonDocument.value)
     } catch (err) {
-      console.error('error in transformOasToServiceNode', err)
+      console.error('error in transformOasToServiceNode:', err)
     }
+
+    trace(options.traceParsing, 'transformed')
 
     try {
       if (parsedDocument.value) {
@@ -124,8 +141,9 @@ export default function useSchemaParser():any {
         tableOfContents.value = computeAPITree(parsedDocument.value, { hideSchemas: options?.hideSchemas, hideInternal: options?.hideInternal })
       }
     } catch (err) {
-      console.error('error in computeAPITree', err)
+      console.error('error in computeAPITree:', err)
     }
+    trace(options.traceParsing, 'APITree computed')
   }
 
   return {
