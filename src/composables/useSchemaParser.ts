@@ -76,10 +76,10 @@ export default function useSchemaParser():any {
   /**
     Parsing spec (sepcText) or by URL prodiced in  ParseOptions
   */
-  const parseSpecDocument = async (spec: string, options: ParseOptions) => {
+  const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}) => {
 
     // we want to leave console.logs for parsing
-    if (options?.specUrl) {
+    if (options.specUrl) {
       // fetches spec by URL provided and resolves all external references
       jsonDocument.value = await refParser.bundle(options.specUrl, {
         continueOnError: true,
