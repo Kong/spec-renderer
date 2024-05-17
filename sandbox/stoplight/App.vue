@@ -2,7 +2,7 @@
   <div class="sandbox-container">
     <header class="page-header">
       <h1><code>@kong/spec-renderer-dev</code></h1>
-      <a href="/">
+      <a href="/spec-renderer">
         Kong Spec-Renderer
       </a>
       <router-link to="/stoplight">
