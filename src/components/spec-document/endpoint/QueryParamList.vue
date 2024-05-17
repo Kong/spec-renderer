@@ -1,5 +1,8 @@
 <template>
-  <div class="query-param-list">
+  <div
+    class="query-param-list"
+    data-testid="endpoint-query-param-list"
+  >
     <h5>Query Parameters</h5>
     <div
       v-for="queryParam in queryParamList"

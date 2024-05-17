@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :data-testid="dataTestId">
     <h3>
       {{ title }} <code v-if="data.type">{{ data.type }}</code>
     </h3>
@@ -61,4 +61,5 @@ const props = defineProps({
 })
 
 const modelPropertyProps = computed(() => resolveSchemaObjectFields(props.data))
+const dataTestId = computed(() => `model-node-${props.title.replaceAll(' ', '-')}`)
 </script>

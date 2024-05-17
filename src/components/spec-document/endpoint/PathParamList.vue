@@ -1,5 +1,8 @@
 <template>
-  <div class="path-param-list">
+  <div
+    class="path-param-list"
+    data-testid="endpoint-path-param-list"
+  >
     <h5>Path Parameters</h5>
     <div
       v-for="pathParam in pathParamList"

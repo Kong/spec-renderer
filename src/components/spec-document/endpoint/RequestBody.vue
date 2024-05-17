@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div data-testid="endpoint-request-body">
     <h4>Body</h4>
 
     <div>{{ requestBody.description }}</div>

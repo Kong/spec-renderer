@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section data-testid="endpoint-http-request">
     <h4>Request</h4>
     <template
       v-for="{ component, componentProps, key } in componentList"
