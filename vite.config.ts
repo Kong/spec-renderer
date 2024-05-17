@@ -100,7 +100,7 @@ export default defineConfig({
       input: process.env.USE_SANDBOX
         ? {
           kong: path.resolve(__dirname, './sandbox/index.html'),
-          stopZlight: path.resolve(__dirname, './sandbox/stoplight/index.html'),
+          stoplight: path.resolve(__dirname, './sandbox/stoplight/index.html'),
         }
         : path.resolve(__dirname, './src/index.ts'),
       external: process.env.USE_SANDBOX ? undefined : ['vue'],
