@@ -20,36 +20,12 @@
         ------------------
       </option>
 
-      <option value="/spec-renderer/specs/stoplight.yaml">
-        Stoplight ToDo
-      </option>
-      <option value="/spec-renderer/specs/konnect-api.yaml">
-        Konnect Api
-      </option>
-      <option value="/spec-renderer/specs/callback.yaml">
-        Callbacks
-      </option>
       <option
-        value="https://raw.githubusercontent.com/digitalocean/openapi/main/specification/DigitalOcean-public.v2.yaml"
+        v-for="(o) in optionsArray"
+        :key="o.url"
+        :value="o.url"
       >
-        Digital Ocean
-      </option>
-      <option value="https://raw.githubusercontent.com/stoplightio/Public-APIs/master/reference/zoom/openapi.yaml">
-        Zoom
-      </option>
-      <option
-        value="https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/ghes-3.0/ghes-3.0.json"
-      >
-        GitHub
-      </option>
-      <option value="https://raw.githubusercontent.com/stoplightio/Public-APIs/master/reference/netlify/openapi.yaml">
-        Netlify
-      </option>
-      <option value="https://api.apis.guru/v2/specs/instagram.com/1.0.0/swagger.yaml">
-        Instagram
-      </option>
-      <option value="https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.json">
-        Stripe
+        {{ o.label }}
       </option>
     </select>
 
@@ -71,38 +47,63 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useDropZone } from '@vueuse/core'
 
 const emit = defineEmits<{
-  (e: 'sample-spec-selected', specUrl: string): void,
-  (e: 'sample-spec-uploaded', specText: string): void
+  (e: 'sample-spec-selected', specUrl: string, resetPath: boolean): void,
+  (e: 'sample-spec-uploaded', specText: string, resetPath: boolean): void
 }>()
 
-const specSelector = ref<HTMLElement | null>(null)
+const specSelector = ref<HTMLSelectElement | null>(null)
 const dropZoneRef = ref<HTMLDivElement>()
-const fileInputRef = ref<HTMLDivElement>()
+const fileInputRef = ref<HTMLInputElement>()
+const savedSpec = ref()
 
 const fName = ref<string>('Drop your own spec file')
 
+const optionsArray = [
+  { url: '/spec-renderer/specs/stoplight.yaml', label: 'Stoplight ToDo' },
+  { url: '/spec-renderer/specs/konnect-api.yaml', label: 'Konnect Api' },
+  { url: '/spec-renderer/specs/callback.yaml', label: 'Callbacks' },
+  { url: 'https://raw.githubusercontent.com/digitalocean/openapi/main/specification/DigitalOcean-public.v2.yaml', label: 'Digital Ocean' },
+  { url: 'https://raw.githubusercontent.com/stoplightio/Public-APIs/master/reference/zoom/openapi.yaml', label: 'Zoom' },
+  { url: 'https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/ghes-3.0/ghes-3.0.json', label: 'GitHub' },
+  { url: 'https://raw.githubusercontent.com/stoplightio/Public-APIs/master/reference/netlify/openapi.yaml', label: 'Netlify' },
+  { url: 'https://api.apis.guru/v2/specs/instagram.com/1.0.0/swagger.yaml', label: 'Instagram' },
+  { url: 'https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.json', label: 'Stripe' },
+]
+
 const onDrop = async (files: File[] | null) => {
   // called when files are dropped on zone
-  specSelector.value.value = ''
-  fName.value = files[0].name
-  const t = await files[0].text()
-  emit('sample-spec-uploaded', t)
+  if (specSelector.value) {
+    specSelector.value.value = ''
+  }
+  if (files) {
+    fName.value = files[0].name
+    const t = await files[0].text()
+    window.sessionStorage.setItem('spec-renderer-playground', JSON.stringify({ spec: t, fName: fName.value }))
+
+    emit('sample-spec-uploaded', t, true)
+  }
 }
 
 const finputChange = () => {
-  const file = fileInputRef.value.files[0]
+  if (fileInputRef.value?.files) {
+    const file = fileInputRef.value?.files[0]
 
-  if (file) {
-    const reader = new FileReader()
-    reader.readAsText(file, 'UTF-8')
-    reader.onload = (e) => {
-      emit('sample-spec-uploaded', e.target.result)
-      fName.value = file.name
-      specSelector.value.value = ''
+    if (file) {
+      const reader = new FileReader()
+      reader.readAsText(file, 'UTF-8')
+      reader.onload = (e) => {
+        emit('sample-spec-uploaded', e.target?.result?.toString(), true)
+
+        fName.value = file.name
+        window.sessionStorage.setItem('spec-renderer-playground', JSON.stringify({ spec: e.target.result, fName: fName.value }))
+        if (specSelector.value) {
+          specSelector.value.value = ''
+        }
+      }
     }
   }
 }
@@ -112,15 +113,37 @@ useDropZone(dropZoneRef, {
   dataTypes: ['application/x-yaml', 'application/json'],
 })
 
-const specSelected = () => {
+const specSelected = async () => {
   fName.value = 'Drop your own spec file'
 
-  emit('sample-spec-selected', specSelector.value?.value)
+  window.sessionStorage.setItem('spec-renderer-playground', JSON.stringify({ url: specSelector.value?.value }))
+  window.history.pushState({}, '', '/spec-renderer/')
+
+  emit('sample-spec-selected', specSelector.value?.value, true)
+
 }
 
 const dropzoneClick = () => {
   fileInputRef.value?.click()
 }
+
+onMounted(() => {
+  try {
+    savedSpec.value = JSON.parse(window.sessionStorage.getItem('spec-renderer-playground') || '{}')
+    if (savedSpec.value?.spec) {
+      fName.value = savedSpec.value?.fName
+      emit('sample-spec-uploaded', savedSpec.value?.spec, false)
+
+    } else if (savedSpec.value?.url) {
+      if (specSelector.value) {
+        specSelector.value.value = savedSpec.value?.url
+      }
+
+      emit('sample-spec-selected', savedSpec.value?.url, false)
+    }
+  } catch (e) { console.error(e) }
+})
+
 </script>
 
 <style lang="scss" scoped>

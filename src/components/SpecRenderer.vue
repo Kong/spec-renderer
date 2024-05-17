@@ -4,7 +4,8 @@
       <SpecRendererToc
         v-if="tableOfContents"
         :base-path="basePath"
-        :control-browser-url="props.controlBrowserUrl"
+        :control-browser-url="controlBrowserUrl"
+        :path="currentPath"
         :table-of-contents="tableOfContents"
         @item-selected="itemSelected"
       />
@@ -15,7 +16,7 @@
         :base-path="basePath"
         :document="parsedDocument"
         :json="jsonDocument"
-        :path="selectedPath"
+        :path="currentPath"
       />
     </div>
     <div>
@@ -47,14 +48,21 @@ const props = defineProps({
     default: '',
   },
   /**
-   * URL to fech spec document from
+   * selected path to load document with
+   */
+  selectedPath: {
+    type: String,
+    default: '/',
+  },
+  /**
+   * URL to fetch spec document from
    */
   specUrl: {
     type: String,
     default: '',
   },
   /**
-   * Allow component itelf to control browser URL. When false it becomes the responsibility of consuming app
+   * Allow component itself to control browser URL. When false it becomes the responsibility of consuming app
    */
   controlBrowserUrl: {
     type: Boolean,
@@ -75,15 +83,22 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * console out parsing process and stages
+   */
+  traceParsing: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 // TODO: introduce and handle isParsed. show parsing state while parsing
 const { parseSpecDocument, parsedDocument, jsonDocument, tableOfContents, validationResults } = composables.useSchemaParser()
 
-const selectedPath = ref<string>('/')
+const currentPath = ref<string>(props.selectedPath)
 
 const itemSelected = (id: any) => {
-  selectedPath.value = id
+  currentPath.value = id
 }
 
 watch(() => ({
@@ -91,17 +106,24 @@ watch(() => ({
   spec: props.spec,
   hideSchemas: props.hideSchemas,
   hideInternal: props.hideInternal,
-}), async (changed) => {
+}), async (changed, prev) => {
+
+  // we want to reset currentPath if document changed. if new document is getting loadedm we want to keep the path
+  if (prev && (changed.spec !== prev?.spec || changed.specUrl !== prev?.specUrl)) {
+    currentPath.value = '/'
+  }
+
   await parseSpecDocument(changed.spec, {
     hideSchemas: changed.hideSchemas,
     hideInternal: changed.hideInternal,
+    traceParsing: props.traceParsing,
     ...(changed.specUrl ? { specUrl: changed.specUrl } : null),
   })
-
-  console.log('parsedDocument:', parsedDocument.value)
-  console.log('tableOfContents:', tableOfContents.value)
-  console.log('validationResults:', validationResults.value)
-
+  if (props.traceParsing) {
+    console.log('parsedDocument:', parsedDocument.value)
+    console.log('tableOfContents:', tableOfContents.value)
+    console.log('validationResults:', validationResults.value)
+  }
 }, { immediate: true })
 
 </script>

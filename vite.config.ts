@@ -84,7 +84,7 @@ export default defineConfig({
     },
   },
   // TODO: If deploying to GitHub pages, enable this line
-  base: process.env.USE_SANDBOX ? '/spec-renderer/' : '/',
+  base: process.env.USE_SANDBOX ? '/spec-renderer' : '/',
   build: {
     lib: process.env.USE_SANDBOX
       ? undefined
@@ -97,6 +97,12 @@ export default defineConfig({
     minify: true,
     sourcemap: true,
     rollupOptions: {
+      input: process.env.USE_SANDBOX
+        ? {
+          kong: path.resolve(__dirname, './sandbox/index.html'),
+          stoplight: path.resolve(__dirname, './sandbox/stoplight/index.html'),
+        }
+        : path.resolve(__dirname, './src/index.ts'),
       external: process.env.USE_SANDBOX ? undefined : ['vue'],
       output: process.env.USE_SANDBOX
         ? undefined
