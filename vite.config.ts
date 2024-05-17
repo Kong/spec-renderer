@@ -5,7 +5,6 @@ import { replaceCodePlugin } from 'vite-plugin-replace'
 import path, { join } from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
-import { fileURLToPath } from 'url'
 
 // Include the rollup-plugin-visualizer if the BUILD_VISUALIZER env var is set to "true"
 const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
