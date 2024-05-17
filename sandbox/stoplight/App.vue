@@ -5,7 +5,7 @@
       <a href="/spec-renderer">
         Kong Spec-Renderer
       </a>
-      <router-link to="/stoplight">
+      <router-link to="/">
         Stoplight-Playground
       </router-link>
     </header>
