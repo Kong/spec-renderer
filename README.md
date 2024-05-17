@@ -7,7 +7,7 @@
 
 Kong's open-source spec renderer.
 
-Url for sandbox https://kong.github.io/spec-renderer/stoplight (deployed from main branch)
+Url for sandbox https://kong.github.io/spec-renderer (deployed from main branch)
 
 - [Usage](#usage)
   - [Installation](#installation)
