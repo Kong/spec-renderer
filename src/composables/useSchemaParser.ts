@@ -12,7 +12,7 @@ import { isLocalRef } from '@stoplight/json'
 
 const trace = (doTrace: boolean, ...args: any) => {
   if (doTrace) {
-    console.log(args)
+    console.log(...args)
   }
 }
 
@@ -84,7 +84,6 @@ export default function useSchemaParser():any {
       jsonDocument.value = await refParser.bundle(options.specUrl, {
         continueOnError: true,
       })
-      console.log(options.traceParsing)
       trace(options.traceParsing, 'external referenced bundled')
     } else {
       // parse document. also do yaml to json
