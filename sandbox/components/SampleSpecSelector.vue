@@ -82,9 +82,7 @@ const onDrop = async (files: File[] | null) => {
   if (files) {
     fName.value = files[0].name
     const t = await files[0].text()
-    console.log('aaa')
     window.sessionStorage.setItem('spec-renderer-playground', JSON.stringify({ spec: t, fName: fName.value }))
-    console.log('bbb')
 
     emit('sample-spec-uploaded', t, true)
   }
@@ -133,12 +131,10 @@ onMounted(() => {
   try {
     savedSpec.value = JSON.parse(window.sessionStorage.getItem('spec-renderer-playground') || '{}')
     if (savedSpec.value?.spec) {
-      console.log('emitted sample-spec-uploaded')
       fName.value = savedSpec.value?.fName
       emit('sample-spec-uploaded', savedSpec.value?.spec, false)
 
     } else if (savedSpec.value?.url) {
-      console.log('emmitted sample-spec-selected')
       if (specSelector.value) {
         specSelector.value.value = savedSpec.value?.url
       }
