@@ -45,7 +45,7 @@ export default defineConfig({
          */
         {
           from: 'exports.getCwd = () => location.origin + location.pathname;',
-          to: 'exports.getCwd = () => location ? location.origin + location.pathname:"";',
+          to: 'exports.getCwd = () => typeof location !== "undefined" ? location.origin + location.pathname:"";',
         },
 
       ],

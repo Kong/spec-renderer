@@ -21,6 +21,9 @@
 .spec-render-doc {
   --kui-color-background-transparent: lightgreen;
 }
+.table-of-contents {
+   --kui-color-background-transparent: lightgray;
+}
 </style>
 
 <style lang="scss" scoped>

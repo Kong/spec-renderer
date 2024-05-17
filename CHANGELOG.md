@@ -1,3 +1,17 @@
+## [1.7.2](https://github.com/Kong/spec-renderer/compare/v1.7.1...v1.7.2) (2024-05-15)
+
+
+### Bug Fixes
+
+* do not hardcode background color in TOC ([#62](https://github.com/Kong/spec-renderer/issues/62)) ([e728e10](https://github.com/Kong/spec-renderer/commit/e728e106c323f5d358eeca9f46fb3105404257c4))
+
+## [1.7.1](https://github.com/Kong/spec-renderer/compare/v1.7.0...v1.7.1) (2024-05-15)
+
+
+### Bug Fixes
+
+* location usage in ssr [KHCP-11923] ([#61](https://github.com/Kong/spec-renderer/issues/61)) ([9938178](https://github.com/Kong/spec-renderer/commit/9938178ae3492de8af1f233db2824363ee99f263))
+
 # [1.7.0](https://github.com/Kong/spec-renderer/compare/v1.6.3...v1.7.0) (2024-05-15)
 
 
