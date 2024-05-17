@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/Kong/spec-renderer/compare/v1.8.0...v1.8.1) (2024-05-17)
+
+
+### Bug Fixes
+
+* make SPA working on sandbox deployed to gh-pages ([#67](https://github.com/Kong/spec-renderer/issues/67)) ([f57703c](https://github.com/Kong/spec-renderer/commit/f57703cdaa0cebcdfb48a91f4c29f5109c21ef15))
+
 # [1.8.0](https://github.com/Kong/spec-renderer/compare/v1.7.2...v1.8.0) (2024-05-17)
 
 
