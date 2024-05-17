@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/Kong/spec-renderer/compare/v1.7.2...v1.8.0) (2024-05-17)
+
+
+### Features
+
+* making sandbox more useful ([#66](https://github.com/Kong/spec-renderer/issues/66)) ([bd90c73](https://github.com/Kong/spec-renderer/commit/bd90c73ec30496faa67653db93229dbee7433158))
+
 ## [1.7.2](https://github.com/Kong/spec-renderer/compare/v1.7.1...v1.7.2) (2024-05-15)
 
 
