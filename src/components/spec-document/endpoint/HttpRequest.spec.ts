@@ -62,7 +62,7 @@ describe('<HttpRequest />', () => {
     // the child componentes are rendered
     'endpoint-path-param-list',
     'endpoint-query-param-list',
-    'endpoint-request-body',
+    'endpoint-body-content-list',
   ]
 
   for (const component of componentList) {
