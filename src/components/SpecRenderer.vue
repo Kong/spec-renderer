@@ -90,6 +90,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * use withCredential instructions when fetching external (http) references during parsing
+   */
+  withCredentials: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 // TODO: introduce and handle isParsed. show parsing state while parsing
@@ -118,6 +125,7 @@ watch(() => ({
     hideInternal: changed.hideInternal,
     traceParsing: props.traceParsing,
     ...(changed.specUrl ? { specUrl: changed.specUrl } : null),
+    withCredentials: props.withCredentials,
   })
   if (props.traceParsing) {
     console.log('parsedDocument:', parsedDocument.value)

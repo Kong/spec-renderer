@@ -46,12 +46,12 @@
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
+    "@apidevtools/json-schema-ref-parser": "^11.6.2",
     "@kong/icons": "^1.9.1",
     "@scalar/openapi-parser": "^0.3.2",
     "@seriousme/openapi-schema-validator": "^2.2.1",
     "@stoplight/http-spec": "^7.0.3",
     "@stoplight/json": "^3.21.0",
-    "@stoplight/json-schema-ref-parser": "^10.0.0",
     "@stoplight/types": "^14.1.1",
     "@stoplight/yaml": "^4.3.0",
     "@vueuse/core": "^10.9.0",

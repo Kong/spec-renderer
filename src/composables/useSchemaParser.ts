@@ -7,7 +7,7 @@ import type { TableOfContentsItem } from '../stoplight/elements-core/components/
 import type { ParseOptions } from '../types'
 import { validate } from '@scalar/openapi-parser'
 import type { ValidateResult } from '@scalar/openapi-parser'
-import refParser from '@stoplight/json-schema-ref-parser'
+import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
 
 const trace = (doTrace: boolean, ...args: any) => {
@@ -82,6 +82,17 @@ export default function useSchemaParser():any {
     if (options.specUrl) {
       // fetches spec by URL provided and resolves all external references
       jsonDocument.value = await refParser.bundle(options.specUrl, {
+        resolve: {
+          file: false,
+          external: true,
+          http: {
+            timeout: 2000,
+            withCredentials: options.withCredentials,
+          },
+        },
+        dereference: {
+          circular: true,
+        },
         continueOnError: true,
       })
       trace(options.traceParsing, 'external referenced bundled')
@@ -117,6 +128,12 @@ export default function useSchemaParser():any {
         continueOnError: true,
         dereference: {
           circular: true,
+        },
+        external: false,
+        resolve: {
+          file: false,
+          // http references resolved during bundle call above
+          http: false,
         },
       })
       jsonDocument.value = dereferenced
