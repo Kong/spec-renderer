@@ -58,7 +58,7 @@
     "json-schema": "^0.4.0",
     "lodash": "^4.17.21",
     "oas": "link:@stoplight/http-spec/oas",
-    "oas-normalize": "^11.0.4",
+    "oas-normalize": "^11.0.5",
     "openapi3-ts": "4.3.1"
   },
   "resolutions": {
@@ -75,7 +75,7 @@
     "@semantic-release/git": "^10.0.1",
     "@types/jsdom": "^21.1.6",
     "@types/json-schema": "^7.0.15",
-    "@types/node": "^20.12.10",
+    "@types/node": "^20.12.11",
     "@typescript-eslint/eslint-plugin": "^7.8.0",
     "@typescript-eslint/parser": "^7.8.0",
     "@vitejs/plugin-vue": "^5.0.4",
@@ -90,7 +90,7 @@
     "eslint": "^8.57.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-n": "^17.5.0",
+    "eslint-plugin-n": "^17.5.1",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^9.25.0",
     "jsdom": "^24.0.0",
@@ -106,7 +106,7 @@
     "stylelint-config-recommended-vue": "^1.5.0",
     "stylelint-order": "^6.0.4",
     "ts-node": "^10.9.2",
-    "tsc-alias": "^1.8.8",
+    "tsc-alias": "^1.8.9",
     "tslib": "^2.6.2",
     "typescript": "^5.4.5",
     "vite": "^5.2.11",
@@ -171,7 +171,7 @@
     "node": ">=18.17.0"
   },
   "volta": {
-    "node": "20.13.0",
+    "node": "20.13.1",
     "pnpm": "9.1.0"
   },
   "config": {
