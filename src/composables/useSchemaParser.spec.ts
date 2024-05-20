@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import composables from '.'
+import stripeSpec from '../../sandbox/public/specs/stripe.json'
 
 describe('useSchemaParser', () => {
   describe('inline-refs', () => {
@@ -200,5 +201,11 @@ components:
         }],
         ))
     })
+  })
+
+  it('should not hangup on de-referencing large file (stripe) [KHCP-11974]', async () => {
+    const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
+    await parseSpecDocument(stripeSpec)
+    expect(tableOfContents.value.length).toEqual(1515)
   })
 })
