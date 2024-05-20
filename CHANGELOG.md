@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/Kong/spec-renderer/compare/v1.9.0...v1.10.0) (2024-05-20)
+
+
+### Features
+
+* endpoint response [KHCP-11842] ([#70](https://github.com/Kong/spec-renderer/issues/70)) ([a2b4f08](https://github.com/Kong/spec-renderer/commit/a2b4f08c810bfc8eea6e90936c716619efebdc01))
+
 # [1.9.0](https://github.com/Kong/spec-renderer/compare/v1.8.1...v1.9.0) (2024-05-20)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@kong/spec-renderer-dev",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
   "type": "module",
