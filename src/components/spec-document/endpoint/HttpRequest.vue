@@ -20,7 +20,7 @@ import type { PropType } from 'vue'
 import type { IHttpOperationRequestBody, IHttpPathParam, IHttpQueryParam } from '@stoplight/types'
 import QueryParamList from './QueryParamList.vue'
 import PathParamList from './PathParamList.vue'
-import RequestBody from './RequestBody.vue'
+import BodyContentList from './BodyContentList.vue'
 
 const props = defineProps({
   query: {
@@ -60,11 +60,13 @@ const componentList = computed(() => {
       key: 'path',
     })
   }
-  if (body.value?.id) {
+  if (body.value?.contents?.length) {
     list.push({
-      component: RequestBody,
+      component: BodyContentList,
       componentProps: {
-        requestBody: body.value,
+        description: body.value.description,
+        contents: body.value.contents,
+        defaultModelTitle: 'Request Body Schema Model',
       },
       key: 'body',
     })
