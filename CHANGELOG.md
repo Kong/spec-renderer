@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/Kong/spec-renderer/compare/v1.8.1...v1.9.0) (2024-05-20)
+
+
+### Features
+
+* endpoint requests component [KHCP-11841] ([#63](https://github.com/Kong/spec-renderer/issues/63)) ([58991cf](https://github.com/Kong/spec-renderer/commit/58991cf1ca0b7f06a7d072eac4770921750b49d0))
+
 ## [1.8.1](https://github.com/Kong/spec-renderer/compare/v1.8.0...v1.8.1) (2024-05-17)
 
 
