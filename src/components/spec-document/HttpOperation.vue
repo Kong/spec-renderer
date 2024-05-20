@@ -11,7 +11,7 @@
     />
 
     <section v-if="Array.isArray(data.responses) && data.responses.length">
-      <h4>Response</h4>
+      <h4>Responses</h4>
       <HttpResponse
         v-for="response in data.responses"
         :key="response.code"

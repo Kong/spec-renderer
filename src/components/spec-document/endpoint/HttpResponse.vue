@@ -1,5 +1,5 @@
 <template>
-  <details>
+  <details data-testid="endpoint-http-response">
     <summary>
       <span>{{ response.code }}</span>
       <p>{{ response.description }}</p>
