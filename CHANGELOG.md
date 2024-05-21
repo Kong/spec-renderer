@@ -1,3 +1,10 @@
+## [1.10.2](https://github.com/Kong/spec-renderer/compare/v1.10.1...v1.10.2) (2024-05-21)
+
+
+### Bug Fixes
+
+* exclude spec files from tsconfig.builld [KHCP-11974] ([#72](https://github.com/Kong/spec-renderer/issues/72)) ([7716b4a](https://github.com/Kong/spec-renderer/commit/7716b4a03e17af936f5e2e55d1f01ebcfc58430e))
+
 ## [1.10.1](https://github.com/Kong/spec-renderer/compare/v1.10.0...v1.10.1) (2024-05-21)
 
 
