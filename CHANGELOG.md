@@ -1,3 +1,10 @@
+## [1.10.1](https://github.com/Kong/spec-renderer/compare/v1.10.0...v1.10.1) (2024-05-21)
+
+
+### Bug Fixes
+
+* use dereferncer that is not hanging on large specs [KHCP-11974] ([#71](https://github.com/Kong/spec-renderer/issues/71)) ([1b148ca](https://github.com/Kong/spec-renderer/commit/1b148cac60c00d28b8de1e32983f707f3393b149))
+
 # [1.10.0](https://github.com/Kong/spec-renderer/compare/v1.9.0...v1.10.0) (2024-05-20)
 
 
