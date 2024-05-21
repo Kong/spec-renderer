@@ -12,8 +12,24 @@ export interface SpecRendererProps {
 export interface SchemaObject extends JSONSchema7 {}
 
 export interface ParseOptions {
+  /**
+   * Url to fetch spec (if not defined by spec blob (text))
+   */
   specUrl?: string
+  /**
+   * Do not include schemas (models) into parsing results
+   */
   hideSchemas: boolean
+  /**
+   * do not include internal methods into parsing results
+   */
   hideInternal: boolean
+  /**
+   * console.logs the progress of parsing steps
+   */
   traceParsing: boolean
+  /**
+   * when fetching http reference - using withCredentials directive
+   */
+  withCredentials: boolean
 }
