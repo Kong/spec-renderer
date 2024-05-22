@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest'
 import { removeCircularReferences } from './circular-remover'
-import test from 'node:test'
 
 describe('circular-remover', () => {
   it('should detect no circular references in object', () => {

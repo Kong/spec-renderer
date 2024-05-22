@@ -31,7 +31,6 @@ export const removeCircularReferences = (obj: any): any => {
   const seen = new WeakMap() // object to path mappings
 
   const doRemove = (value: Record<string, any>, path: string): Record<string, any> | null => {
-    console.log('path:', path, value)
     if (
       typeof value === 'object' &&
       value !== null &&
