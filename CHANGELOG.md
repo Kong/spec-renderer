@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/Kong/spec-renderer/compare/v1.11.0...v1.12.0) (2024-05-22)
+
+
+### Features
+
+* layout changes to support two columns in HttpOperation [KHCP-12062] ([#75](https://github.com/Kong/spec-renderer/issues/75)) ([d08c732](https://github.com/Kong/spec-renderer/commit/d08c73263cbff4a7d43843a5399e9ec9487268ee))
+
 # [1.11.0](https://github.com/Kong/spec-renderer/compare/v1.10.3...v1.11.0) (2024-05-22)
 
 
