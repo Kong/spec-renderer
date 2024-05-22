@@ -78,8 +78,8 @@ const showTryIt = computed((): boolean => {
     width: 60%;
   }
   .right {
-    width:40%;
-    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent)
+    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+    width:40%
   }
 }
 
