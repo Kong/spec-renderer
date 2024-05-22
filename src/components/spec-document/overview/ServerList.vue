@@ -4,7 +4,8 @@
     <ul>
       <li
         v-for="(server, index) in serverList"
-        :key="server.url"
+        :key="server.id"
+        :data-testid="`overview-server-list-item-${server.id}`"
       >
         Server {{ index + 1 }}:
         <a
