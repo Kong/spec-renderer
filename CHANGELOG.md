@@ -1,3 +1,10 @@
+## [1.10.3](https://github.com/Kong/spec-renderer/compare/v1.10.2...v1.10.3) (2024-05-22)
+
+
+### Bug Fixes
+
+* remove circular-references [KHCP-12008] ([#73](https://github.com/Kong/spec-renderer/issues/73)) ([0caaa2a](https://github.com/Kong/spec-renderer/commit/0caaa2a183e9f5964c2326dbba26110cebe6c216))
+
 ## [1.10.2](https://github.com/Kong/spec-renderer/compare/v1.10.1...v1.10.2) (2024-05-21)
 
 
