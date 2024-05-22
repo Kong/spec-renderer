@@ -1,9 +1,10 @@
 <template>
-  <div class="spec-render-doc">
+  <div class="spec-renderer-document">
     <component
       :is="docComponent(serviceNode)"
       v-if="serviceNode"
       :data="serviceNode.data"
+      :overview-data="document.data"
       :title="serviceNode.name"
     />
   </div>
@@ -13,6 +14,7 @@
 import { watch, ref, provide, computed } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { ServiceNode } from '../../stoplight/elements/utils/oas/types'
+
 import { docComponent } from './index'
 import { removeCircularReferences } from '../../utils'
 const props = defineProps({
@@ -32,11 +34,21 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  /**
+   * Do not show TryIt section
+  */
+  hideTryIt: {
+    type: Boolean,
+    default: false,
+  },
 })
 const serviceNode = ref<ServiceNode| null>(null)
 
 // to be consumed in multi-level child components
 provide<Ref<string>>('base-path', computed((): string => props.basePath))
+provide<Ref<boolean>>('hide-tryit', computed((): boolean => props.hideTryIt))
+
+/** we show tryIt section when it's requested to be hidden and when node */
 
 watch(() => ({ pathname: props.path, document: props.document }), ({ pathname, document }) => {
   const isRootPath = !pathname || pathname === '/'
@@ -45,13 +57,13 @@ watch(() => ({ pathname: props.path, document: props.document }), ({ pathname, d
   if (serviceNode.value) {
     // removing circular references
     serviceNode.value.data = removeCircularReferences(serviceNode.value.data)
-
   }
 }, { immediate: true })
 </script>
 
 <style lang="scss" scoped>
-.spec-render-doc {
-    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent)
+.spec-renderer-document {
+    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+    padding: $kui-space-60;
 }
 </style>

@@ -18,8 +18,14 @@
 </template>
 
 <style lang="scss">
-.spec-render-doc {
+.spec-renderer-document {
   --kui-color-background-transparent: lightgreen;
+
+  .http-operation-container {
+    .right {
+      --kui-color-background-transparent: pink;
+    }
+  }
 }
 .table-of-contents {
    --kui-color-background-transparent: lightgray;

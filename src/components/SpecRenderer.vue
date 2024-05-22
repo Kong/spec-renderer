@@ -19,9 +19,6 @@
         :path="currentPath"
       />
     </div>
-    <div>
-      <SpecRendererTryMe />
-    </div>
   </div>
 </template>
 
@@ -30,7 +27,6 @@ import { watch, ref } from 'vue'
 import composables from '../composables'
 import SpecRendererToc from './spec-renderer-toc/SpecRendererToc.vue'
 import SpecDocument from './spec-document/SpecDocument.vue'
-import SpecRendererTryMe from './spec-renderer-try-me/SpecRendererTryMe.vue'
 
 const props = defineProps({
   /**
@@ -80,6 +76,13 @@ const props = defineProps({
    * hide internal endpoints from TOC
    */
   hideInternal: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Do not show TryIt section
+  */
+  hideTryIt: {
     type: Boolean,
     default: false,
   },
@@ -137,6 +140,7 @@ watch(() => ({
 </script>
 
 <style lang="scss" scoped>
+// TODO: change when implementing generic(responsive) SpecRender layout
 aside {
   display: flex;
   flex: 0 0 10%;
@@ -147,11 +151,9 @@ aside {
 .doc {
   flex: 1;
   overflow: visible;
-  padding-left: var(--kui-space-60, $kui-space-60);
 }
 .wrapper {
   display: flex;
   height: 100vh;
 }
 </style>
-./spec-document/DocumentComponent.vue
