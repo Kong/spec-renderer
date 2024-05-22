@@ -26,24 +26,26 @@
         ({{ contact.email }})
       </a>
     </div>
-    <component
-      :is="license?.url ? 'a': 'p'"
-      v-if="license?.name"
-      data-testid="overview-additional-info-license"
-      :href="license.url"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      {{ license.name }} License
-    </component>
-    <a
-      v-if="externalDocs?.url"
-      :href="externalDocs.url"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      {{ externalDocs.description || externalDocs.url }}
-    </a>
+    <div v-if="license?.name">
+      <component
+        :is="license?.url ? 'a': 'p'"
+        data-testid="overview-additional-info-license"
+        :href="license.url"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        {{ license.name }} License
+      </component>
+    </div>
+    <div v-if="externalDocs?.url">
+      <a
+        :href="externalDocs.url"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        {{ externalDocs.description || externalDocs.url }}
+      </a>
+    </div>
   </div>
 </template>
 
@@ -66,11 +68,3 @@ defineProps({
   },
 })
 </script>
-
-<style lang="scss" scoped>
-.overview-additional-info {
-  display: flex;
-  flex-direction: column;
-  gap: var(--kui-space-50, $kui-space-50);
-}
-</style>
