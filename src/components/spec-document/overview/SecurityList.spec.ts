@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import SecurityList from './SecurityList.vue'
 
 describe('<SecurityList />', () => {
   it('renders', () => {
-    const wrapper = mount(SecurityList, {
+    const wrapper = shallowMount(SecurityList, {
       props: {
         securitySchemeList: [
           {
