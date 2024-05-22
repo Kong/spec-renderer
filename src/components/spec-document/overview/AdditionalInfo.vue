@@ -4,7 +4,10 @@
     data-testid="overview-additional-info"
   >
     <h4>Additional Information</h4>
-    <div v-if="contact?.url || contact?.email">
+    <div
+      v-if="contact?.url || contact?.email"
+      data-testid="overview-additional-info-contact"
+    >
       Contact
       <a
         v-if="contact?.url"
@@ -26,13 +29,18 @@
     <component
       :is="license?.url ? 'a': 'p'"
       v-if="license?.name"
+      data-testid="overview-additional-info-license"
       :href="license.url"
+      rel="noopener noreferrer"
+      target="_blank"
     >
       {{ license.name }} License
     </component>
     <a
       v-if="externalDocs?.url"
       :href="externalDocs.url"
+      rel="noopener noreferrer"
+      target="_blank"
     >
       {{ externalDocs.description || externalDocs.url }}
     </a>
