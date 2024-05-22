@@ -4,6 +4,7 @@
     <details
       v-for="scheme in securitySchemeList"
       :key="scheme.id"
+      :data-testid="`overview-security-scheme-${scheme.id}`"
     >
       <summary>{{ scheme.type }} ({{ scheme.key }})</summary>
       <p>
