@@ -1,20 +1,12 @@
 <template>
-  <div :class="{ 'spec-renderer-document': true, 'with-try-it': showTryIt }">
+  <div class="spec-renderer-document">
     <component
       :is="docComponent(serviceNode)"
       v-if="serviceNode"
       :data="serviceNode.data"
+      :overview-data="document.data"
       :title="serviceNode.name"
     />
-    <div
-      v-if="showTryIt"
-    >
-      <SpecRendererTryIt
-        v-if="serviceNode"
-        :data="serviceNode.data"
-        :document="document"
-      />
-    </div>
   </div>
 </template>
 
@@ -22,8 +14,6 @@
 import { watch, ref, provide, computed } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { ServiceNode } from '../../stoplight/elements/utils/oas/types'
-import { NodeType } from '@stoplight/types'
-import SpecRendererTryIt from '../spec-renderer-try-it/SpecRendererTryIt.vue'
 
 import { docComponent } from './index'
 import { removeCircularReferences } from '../../utils'
@@ -56,8 +46,7 @@ const serviceNode = ref<ServiceNode| null>(null)
 
 // to be consumed in multi-level child components
 provide<Ref<string>>('base-path', computed((): string => props.basePath))
-
-const showTryIt = ref<Boolean>(!props.hideTryIt)
+provide<Ref<boolean>>('hide-tryit', computed((): boolean => props.hideTryIt))
 
 /** we show tryIt section when it's requested to be hidden and when node */
 
@@ -68,13 +57,13 @@ watch(() => ({ pathname: props.path, document: props.document }), ({ pathname, d
   if (serviceNode.value) {
     // removing circular references
     serviceNode.value.data = removeCircularReferences(serviceNode.value.data)
-    showTryIt.value = !props.hideTryIt && [NodeType.HttpOperation].includes(serviceNode.value.type as NodeType)
   }
 }, { immediate: true })
 </script>
 
 <style lang="scss" scoped>
 .spec-renderer-document {
-    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent)
+    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+    padding: $kui-space-60;
 }
 </style>
