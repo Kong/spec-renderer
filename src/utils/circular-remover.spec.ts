@@ -26,7 +26,6 @@ describe('circular-remover', () => {
       a: { b: childObj },
     }
     testObj.a.b.c3 = { z: childObj }
-    // console.log(JSON.stringify(testObj, null, 2))
     const resObj = removeCircularReferences(testObj)
     expect(resObj).toEqual({ a: { b: { c1: 10, c2: 20, c3: {} } } })
   })
