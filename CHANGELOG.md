@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/Kong/spec-renderer/compare/v1.10.3...v1.11.0) (2024-05-22)
+
+
+### Features
+
+* spec overview page [KHCP-11840] ([#74](https://github.com/Kong/spec-renderer/issues/74)) ([bbf5db4](https://github.com/Kong/spec-renderer/commit/bbf5db4661cef7b8b520da19b47e9aede8c50ee5))
+
 ## [1.10.3](https://github.com/Kong/spec-renderer/compare/v1.10.2...v1.10.3) (2024-05-22)
 
 
