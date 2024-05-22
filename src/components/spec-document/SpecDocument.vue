@@ -14,7 +14,7 @@ import { watch, ref, provide, computed } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { ServiceNode } from '../../stoplight/elements/utils/oas/types'
 import { docComponent } from './index'
-import { getCircularReplacer } from '../../utils'
+import { removeCircularReferences } from '../../utils'
 const props = defineProps({
   document: {
     type: Object as PropType<ServiceNode>,
@@ -44,7 +44,8 @@ watch(() => ({ pathname: props.path, document: props.document }), ({ pathname, d
   serviceNode.value = isRootPath ? document : document.children.find((child:any) => child.uri === pathname)
   if (serviceNode.value) {
     // removing circular references
-    serviceNode.value.data = JSON.parse(JSON.stringify(serviceNode.value.data, getCircularReplacer()))
+    serviceNode.value.data = removeCircularReferences(serviceNode.value.data)
+
   }
 }, { immediate: true })
 </script>
