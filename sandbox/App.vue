@@ -18,7 +18,7 @@
 </template>
 
 <style lang="scss">
-.spec-render-doc {
+.spec-renderer-document {
   --kui-color-background-transparent: lightgreen;
 }
 .table-of-contents {
