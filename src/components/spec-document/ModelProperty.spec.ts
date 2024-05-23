@@ -116,6 +116,38 @@ describe('<ModelProperty />', () => {
     }
   })
 
+  it('does not render readonly fields if readonlyVisible is false', () => {
+    const wrapper = mount(ModelProperty, {
+      props: {
+        property: {
+          type: 'string',
+          properties: {
+            start: {
+              type: 'string',
+              readOnly: false,
+            },
+            end: {
+              type: 'string',
+              readOnly: true,
+            },
+          },
+        },
+        propertyName: 'time-range',
+        readonlyVisible: false,
+      },
+    })
+
+    console.log(wrapper.html())
+
+    // Verify if the parent model property is rendered
+    expect(wrapper.findTestId('model-property-time-range').exists()).toBe(true)
+
+    // the nested property with `readOnly = false` should render
+    expect(wrapper.findTestId('model-property-start').exists()).toBe(true)
+    // the nested property with `readOnly = true` should not render
+    expect(wrapper.findTestId('model-property-end').exists()).toBe(false)
+  })
+
   describe('renders oneOf', () => {
     const oneOfList: Array<SchemaObject> = [
       {
