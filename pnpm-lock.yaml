@@ -67,8 +67,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1(@types/node@20.12.11)(typescript@5.4.5)
       '@evilmartians/lefthook':
-        specifier: ^1.6.10
-        version: 1.6.10
+        specifier: ^1.6.11
+        version: 1.6.12
       '@kong/design-tokens':
         specifier: ^1.12.12
         version: 1.12.12
@@ -673,8 +673,8 @@ packages:
     resolution: {integrity: sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@evilmartians/lefthook@1.6.10':
-    resolution: {integrity: sha512-4qhV1QAuROrxUAifXzhNZAcHOiPPLJnBl+XwSHRB/PdkoFbEa5bh4d5drO5pLjknKy7XXAXOTK/49Ew3ipuo7w==}
+  '@evilmartians/lefthook@1.6.12':
+    resolution: {integrity: sha512-/XPEl3ivb8JpvpXOooSumdYTKb8T4iUGh9l3Vpo5vDH+7h8Nk54Dzw+clT5ubXFSQNOV8BchDn5omVfcr0+15g==}
     cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
@@ -5263,7 +5263,7 @@ snapshots:
 
   '@eslint/js@8.57.0': {}
 
-  '@evilmartians/lefthook@1.6.10': {}
+  '@evilmartians/lefthook@1.6.12': {}
 
   '@exodus/schemasafe@1.3.0': {}
 
