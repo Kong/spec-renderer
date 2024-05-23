@@ -82,9 +82,9 @@ defineProps({
       margin: $kui-space-50 $kui-space-40;
     }
     input, select {
-      box-sizing:border-box;
       border: 1px solid $kui-color-border;
       border-radius: $kui-border-radius-30;
+      box-sizing:border-box;
       padding: $kui-space-40 $kui-space-50;
     }
     label {
