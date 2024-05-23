@@ -86,6 +86,7 @@ defineProps({
       border-radius: $kui-border-radius-30;
       box-sizing:border-box;
       padding: $kui-space-40 $kui-space-50;
+      width: 100%;
     }
     label {
       font-size: $kui-font-size-30;
