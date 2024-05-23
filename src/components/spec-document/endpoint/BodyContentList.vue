@@ -13,6 +13,7 @@
       <ModelNode
         v-if="content.schema"
         :data="content.schema"
+        :readonly-visible="readonlyVisible"
         :title="content.schema.title ?? defaultModelTitle"
       />
     </template>
@@ -36,6 +37,10 @@ defineProps({
   defaultModelTitle: {
     type: String,
     default: 'Request Body Schema Model',
+  },
+  readonlyVisible: {
+    type: Boolean,
+    default: true,
   },
 })
 </script>

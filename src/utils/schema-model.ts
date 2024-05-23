@@ -46,3 +46,7 @@ export const resolveSchemaObjectFields = (candidate: unknown) => {
 
 // only needed till we figure out how to add title field to anyOf/oneOf objects while parsing
 export const inheritedPropertyName = (itemIndex: number, itemName?: string) => itemName ?? `Variant ${itemIndex + 1}`
+
+export function isModelPropertyVisible(property: SchemaObject, readonlyVisible = true): boolean {
+  return readonlyVisible ? true : !property.readOnly
+}
