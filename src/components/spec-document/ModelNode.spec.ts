@@ -58,6 +58,47 @@ describe('<ModelNode />', () => {
     }
   })
 
+  it('does not render readonly property if readonlyVisible is false', () => {
+    const data: SchemaObject = {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'number',
+          readOnly: true,
+        },
+        name: {
+          type: 'string',
+        },
+        completed: {
+          type: 'boolean',
+        },
+        completed_at: {
+          type: 'string',
+          format: 'date-time',
+          description: 'Time when the task was completed',
+          readOnly: true,
+        },
+      },
+    }
+
+    const wrapper = shallowMount(ModelNode, {
+      props: {
+        data,
+        title: 'Todo',
+        readonlyVisible: false,
+      },
+    })
+
+    const readonlyFields = ['id', 'completed_at']
+    for (const property in data.properties) {
+      if (readonlyFields.includes(property)) {
+        expect(wrapper.findTestId(`model-property-${property}`).exists()).toBe(false)
+      } else {
+        expect(wrapper.findTestId(`model-property-${property}`).exists()).toBe(true)
+      }
+    }
+  })
+
   describe('renders oneOf', () => {
     const oneOfList: Array<SchemaObject> = [
       {
