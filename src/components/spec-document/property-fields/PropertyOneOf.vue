@@ -9,6 +9,7 @@
         v-if="isModelPropertyVisible(oneOfObject, readonlyVisible)"
         :property="oneOfObject"
         :property-name="inheritedPropertyName(index, oneOfObject.title)"
+        :readonly-visible="readonlyVisible"
         :required-fields="oneOfObject.required"
       />
     </template>
