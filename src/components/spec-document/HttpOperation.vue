@@ -41,8 +41,8 @@
 </template>
 
 <script setup lang="ts">
-import { inject, computed } from 'vue'
-import type { PropType } from 'vue'
+import { inject, computed, ref } from 'vue'
+import type { PropType, Ref } from 'vue'
 import type { IHttpOperation, IHttpService } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpResponse from './endpoint/HttpResponse.vue'
@@ -60,41 +60,37 @@ const props = defineProps({
 })
 
 // this is tryout state requested by property passed
-const hideTryIt = inject<string>('hide', '')
+const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 // there is more logic that drives do we show tryouts or not
 const showTryIt = computed((): boolean => {
   // if there are no services defined in overView we do not show tryIt
-  return !hideTryIt && Array.isArray(props.data.servers) && props.data.servers.length > 0
+  return !hideTryIt.value && Array.isArray(props.overviewData.servers) && props.overviewData.servers.length > 0
 })
 
 </script>
 
 <style lang="scss" scoped>
 .http-operation-container  {
-  display: flex;
+  display: grid;
+  gap: $kui-space-10;
+  grid-template-columns: 1.2fr 0.8fr;
   width: 100%;
   .left {
-    width: 60%;
+    padding: $kui-space-30;
   }
   .right {
     background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-    width:40%
+    padding: $kui-space-40;
   }
 }
 
 // TODO change when we have floating TOC for smaller width
 @media (max-width: $kui-breakpoint-laptop) {
   .http-operation-container {
-    display: block;
-
-    .left {
-      width: 100%;
-    }
-
+    grid-template-columns: 1fr;
     .right {
-      margin-top: $kui-space-80;
-      width: 100%;
+      margin-top: $kui-space-40;
     }
   }
 }
