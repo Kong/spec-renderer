@@ -46,13 +46,13 @@ const selectItem = (id: any) => {
   }
   emit('item-selected', id)
 }
-
 </script>
 
 <style lang="scss" scoped>
 .table-of-contents {
   background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
   overflow-y: auto;
+
   ul {
     list-style: none;
   }
