@@ -5,6 +5,12 @@
       @click.prevent="selectItem(item.id)"
     >
       {{ item.title }}
+
+      <NodeItemBadge
+        v-if="item.type === 'http_operation'"
+        class="http-operation-badge"
+        :method="item.meta"
+      />
     </a>
   </li>
 </template>
@@ -13,6 +19,7 @@
 import { inject } from 'vue'
 import type { PropType } from 'vue'
 import type { TableOfContentsNode } from '../../stoplight/elements-core/components/Docs/types'
+import NodeItemBadge from './NodeItemBadge.vue'
 
 defineProps({
   item: {
@@ -40,6 +47,11 @@ const selectItem = (id: string): void => {
 
   a {
     @include toc-item;
+
+    .http-operation-badge {
+      margin-left: var(--kui-space-auto, $kui-space-auto);
+      pointer-events: none;
+    }
   }
 }
 </style>
