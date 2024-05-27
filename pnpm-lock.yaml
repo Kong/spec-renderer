@@ -15,8 +15,8 @@ importers:
         specifier: ^11.6.2
         version: 11.6.2
       '@kong/icons':
-        specifier: ^1.9.1
-        version: 1.9.1(vue@3.4.27(typescript@5.4.5))
+        specifier: ^1.9.2
+        version: 1.9.2(vue@3.4.27(typescript@5.4.5))
       '@scalar/openapi-parser':
         specifier: ^0.3.2
         version: 0.3.2(sass@1.77.2)
@@ -743,8 +743,8 @@ packages:
   '@kong/design-tokens@1.12.12':
     resolution: {integrity: sha512-2efq8GaNUBweF5tp2hd4iQG22TfbGdDBfRgTzWvYCixdtEI0MjacLsBTl/iiQEdsekxb5dmC3Dq4qy/bWpCrnQ==}
 
-  '@kong/icons@1.9.1':
-    resolution: {integrity: sha512-8V21s7OEXcGAWDfPlcidjLlvAemz1KxgkpNSCWC9BCMGnmYRV/1hF7hzC0Dbjz6Q5uP3jnukI+e2bkKKrxANMQ==}
+  '@kong/icons@1.9.2':
+    resolution: {integrity: sha512-XMLnCyaBE0xrrnY7DOLXVy2Q1F76AEsfi4mxEdVKfSGOkgV0dqVIHL34aqxo8OoSKUllcCKn/WW25X+YI65nCw==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: '>= 3.3.4 < 4'
@@ -5368,7 +5368,7 @@ snapshots:
 
   '@kong/design-tokens@1.12.12': {}
 
-  '@kong/icons@1.9.1(vue@3.4.27(typescript@5.4.5))':
+  '@kong/icons@1.9.2(vue@3.4.27(typescript@5.4.5))':
     dependencies:
       vue: 3.4.27(typescript@5.4.5)
 
