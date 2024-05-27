@@ -1,22 +1,16 @@
 import type {
   TableOfContentsItem,
-  TableOfContentsDivider,
   TableOfContentsNode,
   TableOfContentsNodeGroup,
   TableOfContentsGroup,
   TableOfContentsExternalLink,
 } from '../../stoplight/elements-core/components/Docs/types'
 
-import DividerItem from './DividerItem.vue'
 import UnknownItem from './UnknownItem.vue'
 import NodeItem from './NodeItem.vue'
 import GroupItem from './GroupItem.vue'
 import NodeGroupItem from './NodeGroupItem.vue'
 import ExternalLinkItem from './ExternalLinkItem.vue'
-
-export function isDivider(item: TableOfContentsItem): item is TableOfContentsDivider {
-  return Object.keys(item).length === 1 && 'title' in item
-}
 
 export function isGroup(item: TableOfContentsItem): item is TableOfContentsGroup {
   return Object.keys(item).length >= 2 && 'title' in item && 'items' in item
@@ -35,10 +29,6 @@ export function isExternalLink(item: TableOfContentsItem): item is TableOfConten
 }
 
 export const itemComponent = (tableOfContentsItem: TableOfContentsItem) => {
-  if (isDivider(tableOfContentsItem)) {
-    return DividerItem
-  }
-
   if (isNodeGroup(tableOfContentsItem)) {
     return NodeGroupItem
   }
