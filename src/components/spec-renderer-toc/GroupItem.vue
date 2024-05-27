@@ -85,8 +85,8 @@ const onClick = (event: Event) => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/styles/styles.scss';
-@import 'src/styles/mixins/mixins.scss';
+@import 'src/styles/styles';
+@import 'src/styles/mixins/mixins';
 
 @mixin group-spacing {
   display: flex;
@@ -123,9 +123,9 @@ const onClick = (event: Event) => {
 
     > button {
       color: var(--kui-color-text, $kui-color-text);
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       line-height: var(--kui-line-height-20, $kui-line-height-20);
-      font-size: var(--kui-font-size-20, $kui-font-size-20);
       text-transform: uppercase;
     }
 

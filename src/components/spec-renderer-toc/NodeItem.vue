@@ -40,7 +40,7 @@ const selectItem = (id: string): void => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/styles/mixins/mixins.scss';
+@import 'src/styles/mixins/mixins';
 
 .node-item {
   list-style-type: none;

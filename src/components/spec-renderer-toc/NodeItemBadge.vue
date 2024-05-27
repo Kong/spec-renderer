@@ -31,13 +31,13 @@ defineProps({
 
 .node-item-badge {
   @include badge-appearance;
-
-  padding: var(--kui-space-0, $kui-space-0) var(--kui-space-30, $kui-space-30);
   border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
   font-size: var(--kui-font-size-10, $kui-font-size-10);
   font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-  line-height: var(--kui-line-height-20, $kui-line-height-20);
   letter-spacing: var(--kui-letter-spacing-minus-30, $kui-letter-spacing-minus-30);
+  line-height: var(--kui-line-height-20, $kui-line-height-20);
+
+  padding: var(--kui-space-0, $kui-space-0) var(--kui-space-30, $kui-space-30);
   text-transform: uppercase;
 
   &.connect {

@@ -21,29 +21,29 @@
 }
 
 @mixin toc-item {
+  align-items: center;
   background-color: var(--kui-color-background, $kui-color-background);
-  display: flex;
-  justify-content: space-between;
-  gap: var(--kui-space-30, $kui-space-30);
-  padding: var(--kui-space-30, $kui-space-30);
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
-  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+  display: flex;
   font-size: var(--kui-font-size-30, $kui-font-size-30);
+  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+  gap: var(--kui-space-30, $kui-space-30);
+  justify-content: space-between;
   line-height: var(--kui-line-height-30, $kui-line-height-30);
-  align-items: center;
+  padding: var(--kui-space-30, $kui-space-30);
 
   &:hover {
     color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
   }
 
   .chevron-icon {
-    // TODO: decide how we want to set icon size and clor (JS token vs. style block)
-    width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
-    height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
     color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
+    height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
     pointer-events: none;
     transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
+    // TODO: decide how we want to set icon size and clor (JS token vs. style block)
+    width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
 
     &.expanded {
       transform: rotate(90deg);
