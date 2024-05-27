@@ -1,0 +1,52 @@
+@mixin truncate($lines: 0) {
+  // if lines is 0, truncate with ellipsis, otherwise truncate with line clamp
+  @if $lines == 0 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    overflow: hidden;
+  }
+}
+
+@mixin default-button-reset {
+  background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: var(--kui-space-0, $kui-space-0);
+}
+
+@mixin toc-item {
+  background-color: var(--kui-color-background, $kui-color-background);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--kui-space-30, $kui-space-30);
+  padding: var(--kui-space-30, $kui-space-30);
+  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+  color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+  font-size: var(--kui-font-size-30, $kui-font-size-30);
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
+  align-items: center;
+
+  &:hover {
+    color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
+  }
+
+  .chevron-icon {
+    // TODO: decide how we want to set icon size and clor (JS token vs. style block)
+    width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
+    height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
+    color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
+    pointer-events: none;
+    transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
+
+    &.expanded {
+      transform: rotate(90deg);
+    }
+  }
+}

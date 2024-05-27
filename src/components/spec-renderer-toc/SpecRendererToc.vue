@@ -50,11 +50,25 @@ const selectItem = (id: any) => {
 
 <style lang="scss" scoped>
 .table-of-contents {
-  background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+  background-color: var(--kui-color-background, $kui-color-background);
   overflow-y: auto;
+  width: 100%;
 
-  ul {
-    list-style: none;
+  > ul {
+    padding-left: var(--kui-space-0, $kui-space-0);
+
+    > * {
+      &:first-child {
+        // overview item
+        padding: var(--kui-space-70, $kui-space-70);
+        padding-bottom: var(--kui-space-0, $kui-space-0);
+
+        & + * {
+          // very first group item following overview
+          padding-top: var(--kui-space-50, $kui-space-50);
+        }
+      }
+    }
   }
 }
 </style>

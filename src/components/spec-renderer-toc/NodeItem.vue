@@ -1,5 +1,5 @@
 <template>
-  <li>
+  <li class="node-item">
     <a
       :href="`${basePath}${item.id}`"
       @click.prevent="selectItem(item.id)"
@@ -30,5 +30,16 @@ const emit = defineEmits<{
 const selectItem = (id: string): void => {
   emit('item-selected', id)
 }
-
 </script>
+
+<style lang="scss" scoped>
+@import 'src/styles/mixins/mixins.scss';
+
+.node-item {
+  list-style-type: none;
+
+  a {
+    @include toc-item;
+  }
+}
+</style>
