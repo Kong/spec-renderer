@@ -66,6 +66,8 @@ const emit = defineEmits<{
 }>()
 
 const selectItem = (id: any) => {
+  isCollapsed.value = false
+
   emit('item-selected', id)
 }
 

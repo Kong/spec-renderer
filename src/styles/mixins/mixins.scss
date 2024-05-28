@@ -32,8 +32,12 @@
   justify-content: space-between;
   line-height: var(--kui-line-height-30, $kui-line-height-30);
   padding: var(--kui-space-30, $kui-space-30);
+  text-align: left;
+  transition:
+    color background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease,
+    background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
 
-  &:hover {
+  &:hover:not(.selected) {
     color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
   }
 
@@ -48,5 +52,10 @@
     &.expanded {
       transform: rotate(90deg);
     }
+  }
+
+  &.selected {
+    background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
+    color: var(--kui-color-text-primary, $kui-color-text-primary);
   }
 }

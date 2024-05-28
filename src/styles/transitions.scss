@@ -4,7 +4,7 @@
 
 .spec-renderer-fade-enter-active,
 .spec-renderer-fade-leave-active {
-  transition: opacity var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
+  transition: opacity var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
 }
 
 .spec-renderer-fade-enter-from,

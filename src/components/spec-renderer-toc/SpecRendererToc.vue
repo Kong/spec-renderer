@@ -32,10 +32,18 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * Selected path to load document with
+   */
+  currentPath: {
+    type: String,
+    default: '/',
+  },
 })
 
 // to be consumed in multi-level child components
 provide<Ref<string>>('base-path', computed((): string => props.basePath))
+provide<Ref<string>>('current-path', computed((): string => props.currentPath))
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void

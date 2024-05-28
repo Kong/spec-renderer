@@ -1,7 +1,7 @@
 <template>
   <li class="node-item">
     <a
-      :class="{ 'single-word': isSingleWord }"
+      :class="{ 'single-word': isSingleWord, 'selected': currentPath === item.id }"
       :href="`${basePath}${item.id}`"
       @click.prevent="selectItem(item.id)"
     >
@@ -17,8 +17,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject } from 'vue'
-import type { PropType } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
+import type { PropType, Ref } from 'vue'
 import type { TableOfContentsNode } from '../../stoplight/elements-core/components/Docs/types'
 import NodeItemBadge from './NodeItemBadge.vue'
 
@@ -29,7 +29,8 @@ const props = defineProps({
   },
 })
 
-const basePath = inject<string>('base-path', '')
+const basePath = inject<Ref<string>>('base-path', ref<string>(''))
+const currentPath = inject<Ref<string>>('current-path', ref<string>(''))
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void
@@ -40,6 +41,13 @@ const selectItem = (id: string): void => {
 }
 
 const isSingleWord = computed(() => !props.item.title?.trim()?.includes(' '))
+
+watch(currentPath, (val) => {
+  if (val && val === props.item.id) {
+    selectItem(props.item.id)
+  }
+
+}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

@@ -5,6 +5,7 @@
         v-if="tableOfContents"
         :base-path="basePath"
         :control-browser-url="controlBrowserUrl"
+        :current-path="currentPath"
         :path="currentPath"
         :table-of-contents="tableOfContents"
         @item-selected="itemSelected"
