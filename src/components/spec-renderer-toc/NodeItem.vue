@@ -43,7 +43,7 @@ const isSingleWord = computed(() => !props.item.title?.trim()?.includes(' '))
 </script>
 
 <style lang="scss" scoped>
-@import 'src/styles/mixins/mixins';
+@import '@/styles/mixins/mixins';
 
 .node-item {
   list-style-type: none;
