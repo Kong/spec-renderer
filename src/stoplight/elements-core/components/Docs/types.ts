@@ -8,10 +8,6 @@ export type TableOfContentsProps = {
   onLinkClick?(): void;
 };
 
-export type TableOfContentsDivider = {
-  title: string;
-};
-
 export type TableOfContentsExternalLink = {
   title: string;
   url: string;
@@ -44,4 +40,4 @@ export type TableOfContentsGroupItem =
   | TableOfContentsNode
   | TableOfContentsExternalLink;
 
-export type TableOfContentsItem = TableOfContentsDivider | TableOfContentsGroupItem;
+export type TableOfContentsItem = TableOfContentsGroupItem;

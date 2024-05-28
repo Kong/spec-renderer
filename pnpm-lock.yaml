@@ -678,7 +678,6 @@ packages:
 
   '@evilmartians/lefthook@1.6.12':
     resolution: {integrity: sha512-/XPEl3ivb8JpvpXOooSumdYTKb8T4iUGh9l3Vpo5vDH+7h8Nk54Dzw+clT5ubXFSQNOV8BchDn5omVfcr0+15g==}
-    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 

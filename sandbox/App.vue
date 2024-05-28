@@ -27,9 +27,6 @@
     }
   }
 }
-.table-of-contents {
-   --kui-color-background-transparent: lightgray;
-}
 </style>
 
 <style lang="scss" scoped>
