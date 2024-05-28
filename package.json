@@ -56,6 +56,7 @@
     "@stoplight/yaml": "^4.3.0",
     "@vueuse/core": "^10.9.0",
     "httpsnippet": "^3.0.1",
+    "httpsnippet-lite": "^3.0.5",
     "json-schema": "^0.4.0",
     "lodash": "^4.17.21",
     "oas": "link:@stoplight/http-spec/oas",
