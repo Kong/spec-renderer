@@ -24,7 +24,7 @@ import type { PropType } from 'vue'
 import type { IMediaTypeContent } from '@stoplight/types'
 import ModelNode from '../ModelNode.vue'
 import type { SchemaObject } from '@/types'
-import { removeReadonlyFields } from '@/utils'
+import { removeFieldsFromSchemaObject } from '@/utils'
 
 const props = defineProps({
   description: {
@@ -46,6 +46,6 @@ const props = defineProps({
 })
 
 function parseSchema(schema: SchemaObject) {
-  return props.readonlyVisible ? schema : removeReadonlyFields(schema)
+  return props.readonlyVisible ? schema : removeFieldsFromSchemaObject(schema)
 }
 </script>
