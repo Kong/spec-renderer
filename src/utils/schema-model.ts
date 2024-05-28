@@ -50,3 +50,78 @@ export const inheritedPropertyName = (itemIndex: number, itemName?: string) => i
 export function isModelPropertyVisible(property: SchemaObject, readonlyVisible = true): boolean {
   return readonlyVisible ? true : !property.readOnly
 }
+
+/**
+ * Utility to filter out readOnly properties from a properties object
+ */
+function filterReadonlyProperties(propertiesObject: SchemaObject['properties']): SchemaObject['properties'] {
+  if (!propertiesObject) return
+
+  const filteredObj: SchemaObject['properties'] = {}
+
+  Object.keys(propertiesObject).forEach((key) => {
+    const currentItem = propertiesObject[key]
+    // we only need to operate on valid schema objects
+    if (!isValidSchemaObject(currentItem)) return
+
+    // If the current object is readOnly, we need to remove it
+    if (currentItem.readOnly) {
+      return
+    }
+
+    /**
+     * If the current object is not readOnly, we need to filter:
+     * - properties of the current object
+     * - properties under items object, if currentItem is an array
+     * - properties under oneOf/anyOf, if present
+     */
+    filteredObj[key] = removeReadonlyFields(currentItem)
+  })
+
+  return filteredObj
+}
+
+/**
+ * Utility to remove readOnly fields from a schema object
+ *
+ * It removes:
+ * - readOnly properties of the current object
+ * - readOnly fields under items object
+ * - properties under oneOf/anyOf, if present
+ */
+export function removeReadonlyFields(schemaObject: SchemaObject): SchemaObject {
+  const newObj: SchemaObject = JSON.parse(JSON.stringify(schemaObject))
+
+  if (schemaObject.properties) {
+    const filteredProperties = filterReadonlyProperties(schemaObject.properties)
+    newObj.properties = filteredProperties
+  }
+  if (isValidSchemaObject(schemaObject.items)) {
+    // items itself is a valid schema object, so we need to filter its properties, oneOf and anyOf
+    const filteredItemsObject = removeReadonlyFields(schemaObject.items)
+    newObj.items = filteredItemsObject
+  }
+  if (schemaObject.oneOf?.length) {
+    const newOneOfList: SchemaObject['oneOf'] = []
+    schemaObject.oneOf.forEach((item) => {
+      // if the item is not a valid schema object or is readOnly, we skip it
+      if (!isValidSchemaObject(item) || item.readOnly) return
+
+      // if the item is valid, we remove its readOnly properties
+      const filteredProperties = filterReadonlyProperties(item.properties)
+      newOneOfList.push({ ...item, properties: filteredProperties })
+    })
+    newObj.oneOf = newOneOfList
+  }
+  if (schemaObject.anyOf?.length) {
+    const newAnyOfList: SchemaObject['anyOf'] = []
+    schemaObject.anyOf.forEach((item) => {
+      if (!isValidSchemaObject(item) || item.readOnly) return
+      const filteredProperties = filterReadonlyProperties(item.properties)
+      newAnyOfList.push({ ...item, properties: filteredProperties })
+    })
+    newObj.anyOf = newAnyOfList
+  }
+
+  return newObj
+}
