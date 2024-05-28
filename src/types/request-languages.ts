@@ -1,11 +1,13 @@
+import type { TargetId, ClientId } from 'httpsnippet-lite'
+type TargetIdEx = TargetId | 'json'
 interface LibraryConfig {
   label: string
-  httpSnippetLibrary: string
+  httpSnippetLibrary: ClientId
 }
 
 interface LanguageConfig {
   label: string
-  httpSnippetLanguage: string
+  httpSnippetLanguage: TargetIdEx
   libraries?: Array<LibraryConfig>
 }
 

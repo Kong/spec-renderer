@@ -45,7 +45,7 @@ import type { IHttpOperation } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet-lite'
 import { requestSampleConfigs } from '../../../constants'
 
-import type { HarRequest, HTTPSnippet as HTTPSnippetType } from 'httpsnippet-lite'
+import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet-lite'
 
 const props = defineProps({
   data: {
@@ -82,7 +82,7 @@ watch(() => ({ lang: selectedLang.value, lib: selectedLangLibrary.value }), asyn
     if (lang === 'json') {
       requestCode.value = JSON.stringify({})
     } else {
-      requestCode.value = await snippet.value.convert(lang, lib)
+      requestCode.value = await snippet.value.convert(lang as TargetId, lib)
     }
   }
 }, { immediate: true })
