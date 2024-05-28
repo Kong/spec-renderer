@@ -32,7 +32,6 @@
       :data-testid="`http-operation-right-${data.id}`"
     >
       <TryIt
-        v-if="showTryIt"
         :data="data"
         :overview-data="overviewData"
       />
@@ -41,14 +40,13 @@
 </template>
 
 <script setup lang="ts">
-import { inject, computed, ref } from 'vue'
-import type { PropType, Ref } from 'vue'
+import type { PropType } from 'vue'
 import type { IHttpOperation, IHttpService } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpResponse from './endpoint/HttpResponse.vue'
 import TryIt from './try-it/TryIt.vue'
 
-const props = defineProps({
+defineProps({
   data: {
     type: Object as PropType<IHttpOperation>,
     required: true,
@@ -57,15 +55,6 @@ const props = defineProps({
     type: Object as PropType<IHttpService>,
     default: () => ({}),
   },
-})
-
-// this is tryout state requested by property passed
-const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
-
-// there is more logic that drives do we show tryouts or not
-const showTryIt = computed((): boolean => {
-  // if there are no services defined in overView we do not show tryIt
-  return !hideTryIt.value && Array.isArray(props.overviewData.servers) && props.overviewData.servers.length > 0
 })
 
 </script>
