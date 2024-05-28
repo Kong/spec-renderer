@@ -1,5 +1,5 @@
 <template>
-  <div class="table-of-contents">
+  <nav class="table-of-contents">
     <ul>
       <component
         :is="itemComponent(item)"
@@ -9,7 +9,7 @@
         @item-selected="selectItem"
       />
     </ul>
-  </div>
+  </nav>
 </template>
 
 <script setup lang="ts">
