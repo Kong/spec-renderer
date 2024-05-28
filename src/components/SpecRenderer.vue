@@ -143,7 +143,6 @@ watch(() => ({
 // TODO: change when implementing generic(responsive) SpecRender layout
 aside {
   display: flex;
-  flex: 0 0 10%;
   height: 100%;
   overflow: visible;
   width: 320px;

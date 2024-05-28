@@ -96,20 +96,22 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
   if (hasOperationNodes) {
     tree.push({
       title: 'Endpoints',
+      items: [],
     })
 
     const { groups, ungrouped } = computeTagGroups<OperationNode>(serviceNode, NodeType.HttpOperation)
-    addTagGroupsToTree(groups, ungrouped, tree, NodeType.HttpOperation, mergedConfig.hideInternal)
+    addTagGroupsToTree(groups, ungrouped, tree.at(-1).items, NodeType.HttpOperation, mergedConfig.hideInternal)
   }
 
   const hasWebhookNodes = serviceNode.children.some(node => node.type === NodeType.HttpWebhook)
   if (hasWebhookNodes) {
     tree.push({
       title: 'Webhooks',
+      items: [],
     })
 
     const { groups, ungrouped } = computeTagGroups<WebhookNode>(serviceNode, NodeType.HttpWebhook)
-    addTagGroupsToTree(groups, ungrouped, tree, NodeType.HttpWebhook, mergedConfig.hideInternal)
+    addTagGroupsToTree(groups, ungrouped, tree.at(-1).items, NodeType.HttpWebhook, mergedConfig.hideInternal)
   }
 
   let schemaNodes = serviceNode.children.filter(node => node.type === NodeType.Model)
@@ -120,10 +122,11 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
   if (!mergedConfig.hideSchemas && schemaNodes.length) {
     tree.push({
       title: 'Schemas',
+      items: [],
     })
 
     const { groups, ungrouped } = computeTagGroups<SchemaNode>(serviceNode, NodeType.Model)
-    addTagGroupsToTree(groups, ungrouped, tree, NodeType.Model, mergedConfig.hideInternal)
+    addTagGroupsToTree(groups, ungrouped, tree.at(-1).items, NodeType.Model, mergedConfig.hideInternal)
   }
   return tree
 }
