@@ -63,7 +63,8 @@ a {
 
   // Add external link icons
   &[href^="http://"],
-  &[href^="https://"] {
+  &[href^="https://"]
+  {
     background-image: url("data:image/svg+xml;base64,PHN2ZyBjbGFzcz0iaWNvbiBvdXRib3VuZCIKICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGFyaWEtaGlkZGVuPSJ0cnVlIiBhcmlhLWxhYmVsPSIob3BlbnMgbmV3IHdpbmRvdykiIGZvY3VzYWJsZT0iZmFsc2UiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgd2lkdGg9IjE1IiBoZWlnaHQ9IjE1Ij4KICA8cGF0aCBmaWxsPSIjYWFhIiBkPSJNMTguOCw4NS4xaDU2bDAsMGMyLjIsMCw0LTEuOCw0LTR2LTMyaC04djI4aC00OHYtNDhoMjh2LThoLTMybDAsMGMtMi4yLDAtNCwxLjgtNCw0djU2QzE0LjgsODMuMywxNi42LDg1LjEsMTguOCw4NS4xeiIgLz4KICA8cG9seWdvbiBmaWxsPSIjYWFhIiBwb2ludHM9IjQ1LjcsNDguNyA1MS4zLDU0LjMgNzcuMiwyOC41IDc3LjIsMzcuMiA4NS4yLDM3LjIgODUuMiwxNC45IDYyLjgsMTQuOSA2Mi44LDIyLjkgNzEuNSwyMi45IiAvPgo8L3N2Zz4K");
     background-position: right center;
     background-repeat: no-repeat;
@@ -80,8 +81,7 @@ article p {
   margin: var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0) var(--kui-space-70, $kui-space-70);
 }
 
-p+ {
-
+p + {
   p,
   img,
   pre,
@@ -94,10 +94,10 @@ p+ {
   }
 }
 
-pre+pre,
-pre+p,
-pre+div,
-table+table {
+pre + pre,
+pre + p,
+pre + div,
+table + table {
   margin: var(--kui-space-70, $kui-space-70) var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0);
 }
 
@@ -110,22 +110,6 @@ hr {
   border-bottom: none;
   border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   margin: var(--kui-space-70, $kui-space-70) var(--kui-space-0, $kui-space-0);
-}
-
-ul,
-ol {
-  margin: var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0) var(--kui-space-70, $kui-space-70);
-
-  // Remove the margin for a nested list
-  ul,
-  ol {
-    margin: var(--kui-space-20, $kui-space-20) var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0);
-    padding-left: var(--kui-space-90, $kui-space-90); // to prevent being cut off
-  }
-
-  li {
-    margin-bottom: var(--kui-space-20, $kui-space-20);
-  }
 }
 
 ul {
@@ -189,7 +173,8 @@ table {
 
   thead th {
     background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid
+      var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker);
     font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     padding: var(--kui-space-40, $kui-space-40);
     vertical-align: text-top;

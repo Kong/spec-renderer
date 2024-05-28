@@ -1,0 +1,13 @@
+/**
+ * All transitions must be prefixed with 'spec-renderer' so that they don't conflict with host app transitions.
+ */
+
+.spec-renderer-fade-enter-active,
+.spec-renderer-fade-leave-active {
+  transition: opacity var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
+}
+
+.spec-renderer-fade-enter-from,
+.spec-renderer-fade-leave-to {
+  opacity: 0;
+}
