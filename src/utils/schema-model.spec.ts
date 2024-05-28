@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { filterSchemaObjectArray, isValidSchemaObject, resolveSchemaObjectFields } from './schema-model'
+import { filterSchemaObjectArray, isValidSchemaObject, removeReadonlyFields, resolveSchemaObjectFields } from './schema-model'
 import type { SchemaObject } from '@/types'
 
 describe('isValidSchemaObject', () => {
@@ -166,5 +166,197 @@ describe('filterSchemaObjectArray', () => {
       ...validItems,
     ]
     expect(filterSchemaObjectArray(invalidSchemaObjectList)).toEqual(validItems)
+  })
+})
+
+describe('removeReadonlyFields', () => {
+  it('removes readOnly fields from a simple schema object', () => {
+    const schemaObject: SchemaObject = {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+          readOnly: true,
+        },
+        age: {
+          type: 'number',
+        },
+      },
+      required: ['age'],
+    }
+    const expectedSchemaObject: SchemaObject = {
+      type: 'object',
+      properties: {
+        age: {
+          type: 'number',
+        },
+      },
+      required: ['age'],
+    }
+    expect(removeReadonlyFields(schemaObject)).toEqual(expectedSchemaObject)
+  })
+
+  it('removes readOnly fields from a schema object with array items', () => {
+    const schemaObject: SchemaObject = {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            readOnly: true,
+          },
+          age: {
+            type: 'number',
+          },
+        },
+        required: ['age'],
+      },
+    }
+    const expectedSchemaObject: SchemaObject = {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          age: {
+            type: 'number',
+          },
+        },
+        required: ['age'],
+      },
+    }
+    expect(removeReadonlyFields(schemaObject)).toEqual(expectedSchemaObject)
+  })
+
+  it('removes readOnly fields from a schema object with oneOf', () => {
+    const schemaObject: SchemaObject = {
+      type: 'object',
+      oneOf: [{
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            readOnly: true,
+          },
+          age: {
+            type: 'number',
+          },
+        },
+        required: ['age'],
+      },
+      // this object is readOnly, so it should be removed
+      {
+        type: 'object',
+        readOnly: true,
+        properties: {
+          field1: {
+            type: 'string',
+          },
+          field2: {
+            type: 'number',
+          },
+        },
+        required: ['field1'],
+      }],
+    }
+    const expectedSchemaObject: SchemaObject = {
+      type: 'object',
+      oneOf: [{
+        type: 'object',
+        properties: {
+          age: {
+            type: 'number',
+          },
+        },
+        required: ['age'],
+      }],
+    }
+    expect(removeReadonlyFields(schemaObject)).toEqual(expectedSchemaObject)
+  })
+
+  it('removes readOnly fields from a schema object with anyOf', () => {
+    const schemaObject: SchemaObject = {
+      type: 'object',
+      anyOf: [{
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            readOnly: true,
+          },
+          age: {
+            type: 'number',
+          },
+        },
+        required: ['age'],
+      },
+      // this object is readOnly, so it should be removed
+      {
+        type: 'object',
+        readOnly: true,
+        properties: {
+          field1: {
+            type: 'string',
+          },
+          field2: {
+            type: 'number',
+          },
+        },
+        required: ['field1'],
+      }],
+    }
+    const expectedSchemaObject: SchemaObject = {
+      type: 'object',
+      anyOf: [{
+        type: 'object',
+        properties: {
+          age: {
+            type: 'number',
+          },
+        },
+        required: ['age'],
+      }],
+    }
+    expect(removeReadonlyFields(schemaObject)).toEqual(expectedSchemaObject)
+  })
+
+  it('removes readonly fields from a deeply nested schema object', () => {
+    const schemaObject: SchemaObject = {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+          readOnly: true,
+        },
+        age: {
+          type: 'object',
+          properties: {
+            year: {
+              type: 'string',
+              readOnly: true,
+            },
+            month: {
+              type: 'number',
+            },
+          },
+        },
+      },
+      required: ['age'],
+    }
+    const expectedSchemaObject: SchemaObject = {
+      type: 'object',
+      properties: {
+        age: {
+          type: 'object',
+          properties: {
+            month: {
+              type: 'number',
+            },
+          },
+        },
+      },
+      required: ['age'],
+    }
+    expect(removeReadonlyFields(schemaObject)).toEqual(expectedSchemaObject)
   })
 })
