@@ -1,18 +1,13 @@
 <template>
   <div data-testid="property-field-one-of">
     <div>One of</div>
-    <template
+    <ModelProperty
       v-for="(oneOfObject, index) in filteredOneOfList"
       :key="oneOfObject.title || index"
-    >
-      <ModelProperty
-        v-if="isModelPropertyVisible(oneOfObject, readonlyVisible)"
-        :property="oneOfObject"
-        :property-name="inheritedPropertyName(index, oneOfObject.title)"
-        :readonly-visible="readonlyVisible"
-        :required-fields="oneOfObject.required"
-      />
-    </template>
+      :property="oneOfObject"
+      :property-name="inheritedPropertyName(index, oneOfObject.title)"
+      :required-fields="oneOfObject.required"
+    />
   </div>
 </template>
 
@@ -21,16 +16,12 @@ import { computed } from 'vue'
 import type { PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 import ModelProperty from '../ModelProperty.vue'
-import { inheritedPropertyName, filterSchemaObjectArray, isModelPropertyVisible } from '@/utils'
+import { inheritedPropertyName, filterSchemaObjectArray } from '@/utils'
 
 const props = defineProps({
   oneOfList: {
     type: Array as PropType<SchemaObject['oneOf']>,
     required: true,
-  },
-  readonlyVisible: {
-    type: Boolean,
-    default: true,
   },
 })
 

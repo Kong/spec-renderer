@@ -13,7 +13,6 @@
       <ModelNode
         v-if="content.schema"
         :data="content.schema"
-        :readonly-visible="readonlyVisible"
         :title="content.schema.title ?? defaultModelTitle"
       />
     </template>

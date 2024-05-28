@@ -19,24 +19,21 @@
         :key="propertyName"
       >
         <ModelProperty
-          v-if="isValidSchemaObject(property) && isModelPropertyVisible(property, readonlyVisible)"
+          v-if="isValidSchemaObject(property)"
           :data-testid="`model-property-${propertyName}`"
           :property="property"
           :property-name="propertyName.toString()"
-          :readonly-visible="readonlyVisible"
           :required-fields="modelPropertyProps.required"
         />
       </template>
       <PropertyOneOf
         v-if="Array.isArray(modelPropertyProps.oneOf) && modelPropertyProps.oneOf?.length"
         :one-of-list="modelPropertyProps.oneOf"
-        :readonly-visible="readonlyVisible"
       />
 
       <PropertyAnyOf
         v-if="Array.isArray(modelPropertyProps.anyOf) && modelPropertyProps.anyOf?.length"
         :any-of-list="modelPropertyProps.anyOf"
-        :readonly-visible="readonlyVisible"
       />
     </template>
   </div>
@@ -48,7 +45,7 @@ import ModelProperty from './ModelProperty.vue'
 
 import type{ PropType } from 'vue'
 import type { SchemaObject } from '@/types'
-import { isValidSchemaObject, resolveSchemaObjectFields, isModelPropertyVisible } from '@/utils'
+import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 import PropertyAnyOf from './property-fields/PropertyAnyOf.vue'
 import PropertyOneOf from './property-fields/PropertyOneOf.vue'
 
@@ -60,10 +57,6 @@ const props = defineProps({
   title: {
     type: String,
     required: true,
-  },
-  readonlyVisible: {
-    type: Boolean,
-    default: true,
   },
 })
 

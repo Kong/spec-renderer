@@ -18,10 +18,9 @@
           :key="subPropertyName"
         >
           <ModelProperty
-            v-if="isValidSchemaObject(subProperty) && isModelPropertyVisible(subProperty, readonlyVisible)"
+            v-if="isValidSchemaObject(subProperty)"
             :property="subProperty"
             :property-name="subPropertyName.toString()"
-            :readonly-visible="readonlyVisible"
             :required-fields="resolvedModelProperty.required"
           />
         </template>
@@ -29,12 +28,10 @@
       <PropertyOneOf
         v-if="Array.isArray(resolvedModelProperty.oneOf) && resolvedModelProperty.oneOf?.length"
         :one-of-list="resolvedModelProperty.oneOf"
-        :readonly-visible="readonlyVisible"
       />
       <PropertyAnyOf
         v-if="Array.isArray(resolvedModelProperty.anyOf) && resolvedModelProperty.anyOf?.length"
         :any-of-list="resolvedModelProperty.anyOf"
-        :readonly-visible="readonlyVisible"
       />
     </template>
   </div>
@@ -42,7 +39,7 @@
 
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
-import { isValidSchemaObject, resolveSchemaObjectFields, isModelPropertyVisible } from '@/utils'
+import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 import type { SchemaObject } from '@/types'
 
 import PropertyDescription from './property-fields/PropertyDescription.vue'
@@ -66,10 +63,6 @@ const props = defineProps({
   requiredFields: {
     type: Array as PropType<SchemaObject['required']>,
     default: () => [],
-  },
-  readonlyVisible: {
-    type: Boolean,
-    default: true,
   },
 })
 
