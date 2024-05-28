@@ -154,6 +154,21 @@ components:
           type: integer
           format: int32
       `
+    const endpoints = [{
+      id: '/paths/devices/get',
+      meta: 'get',
+      slug: '/paths/devices/get',
+      title: '/devices',
+      type: 'http_operation',
+    }]
+
+    const schemas = [{
+      id: '/schemas/ApiResponse',
+      meta: '',
+      slug: '/schemas/ApiResponse',
+      title: 'ApiResponse',
+      type: 'model',
+    }]
 
     it('should include schemas by default', async () => {
 
@@ -161,7 +176,7 @@ components:
       await parseSpecDocument(specText)
 
       expect(tableOfContents.value).toEqual(
-        expect.arrayContaining([{ title: 'Schemas' }]),
+        expect.arrayContaining([{ title: 'Schemas', items: schemas }]),
       )
     })
 
@@ -170,7 +185,7 @@ components:
       await parseSpecDocument(specText, { hideSchemas: true })
 
       expect(tableOfContents.value).not.toEqual(
-        expect.arrayContaining([{ title: 'Schemas' }]),
+        expect.arrayContaining([{ title: 'Schemas', items: schemas }]),
       )
     })
 
@@ -178,34 +193,21 @@ components:
       const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
       await parseSpecDocument(specText)
       expect(tableOfContents.value).toEqual(
-        expect.arrayContaining([{
-          id: '/paths/devices/get',
-          meta: 'get',
-          slug: '/paths/devices/get',
-          title: '/devices',
-          type: 'http_operation',
-        }],
-        ))
+        expect.arrayContaining([{ title: 'Endpoints', items: endpoints }]))
     })
 
     it('should exclude internal endpoints when param passed', async () => {
       const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
       await parseSpecDocument(specText, { hideInternal: true })
-      expect(tableOfContents.value).not.toEqual(
-        expect.arrayContaining([{
-          id: '/paths/devices/get',
-          meta: 'get',
-          slug: '/paths/devices/get',
-          title: '/devices',
-          type: 'http_operation',
-        }],
-        ))
+      expect(tableOfContents.value).not.toEqual([{ title: 'Endpoints', items: endpoints }])
     })
   })
 
   it('should not hangup on de-referencing large file (stripe) [KHCP-11974]', async () => {
     const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
     await parseSpecDocument(stripeSpec)
-    expect(tableOfContents.value.length).toEqual(1515)
+    expect(tableOfContents.value.length).toEqual(3)
+    expect(tableOfContents.value[1].items.length).toEqual(533) // endpoints
+    expect(tableOfContents.value[2].items.length).toEqual(979) // schemas
   })
 })
