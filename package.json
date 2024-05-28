@@ -59,8 +59,7 @@
     "lodash": "^4.17.21",
     "oas": "link:@stoplight/http-spec/oas",
     "oas-normalize": "^11.0.7",
-    "openapi3-ts": "4.3.1",
-    "uncrypto": "^0.1.3"
+    "openapi3-ts": "4.3.1"
   },
   "resolutions": {
     "openapi3-ts": "4.3.1"

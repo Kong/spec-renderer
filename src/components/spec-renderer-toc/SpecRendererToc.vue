@@ -52,6 +52,7 @@ const selectItem = (id: any) => {
 .table-of-contents {
   background-color: var(--kui-color-background, $kui-color-background);
   overflow-y: auto;
+  overflow-x: hidden;
   width: 100%;
 
   > ul {

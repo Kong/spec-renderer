@@ -1,6 +1,7 @@
 <template>
   <li class="node-item">
     <a
+      :class="{ 'single-word': !item.title?.trim()?.includes(' ') }"
       :href="`${basePath}${item.id}`"
       @click.prevent="selectItem(item.id)"
     >
@@ -47,6 +48,12 @@ const selectItem = (id: string): void => {
 
   a {
     @include toc-item;
+
+    &.single-word {
+      @include truncate;
+
+      display: block;
+    }
 
     .http-operation-badge {
       margin-left: var(--kui-space-auto, $kui-space-auto);

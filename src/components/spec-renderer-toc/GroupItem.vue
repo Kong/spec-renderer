@@ -3,9 +3,9 @@
     class="group-item"
     :class="{ root: root }"
   >
+    <!-- TODO: a11y aria-controls -->
     <button
       ref="collapseTriggerRef"
-      :aria-controls="collapseGroupId"
       :aria-expanded="!isCollapsed"
       type="button"
       @click="onClick"
@@ -19,10 +19,8 @@
     </button>
 
     <Transition name="spec-renderer-fade">
-      <ul
-        v-show="!isCollapsed"
-        :id="collapseGroupId"
-      >
+      <!-- TODO: a11y id (aria-controls) -->
+      <ul v-show="!isCollapsed">
         <component
           :is="itemComponent(child)"
           v-for="(child, idx) in item.items"
@@ -40,7 +38,6 @@
 import { ref, type PropType } from 'vue'
 import type { TableOfContentsGroup } from '../../stoplight/elements-core/components/Docs/types'
 import { itemComponent } from './index'
-import { randomUUID } from 'uncrypto'
 import { ChevronRightIcon } from '@kong/icons'
 
 const props = defineProps({
@@ -71,8 +68,6 @@ const emit = defineEmits<{
 const selectItem = (id: any) => {
   emit('item-selected', id)
 }
-
-const collapseGroupId = randomUUID()
 
 const isCollapsed = ref<boolean>(props.collapsed)
 const collapseTriggerRef = ref<HTMLElement | null>(null)
