@@ -34,7 +34,6 @@ const sampleSpecSelected = async (sampleSpecUrl: string, resetPath: boolean) => 
   if (resetPath) {
     selectedPath.value = '/'
   }
-
 }
 
 const sampleSpecUploaded = (sampleSpecText: string, resetPath: boolean) => {
@@ -44,5 +43,4 @@ const sampleSpecUploaded = (sampleSpecText: string, resetPath: boolean) => {
     selectedPath.value = '/'
   }
 }
-
 </script>

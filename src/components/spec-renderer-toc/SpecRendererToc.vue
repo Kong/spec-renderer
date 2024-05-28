@@ -5,6 +5,7 @@
         :is="itemComponent(item)"
         v-for="(item, idx) in tableOfContents"
         :key="idx+'_'+item.title"
+        :collapsed="itemCollapsed(item)"
         :item="item"
         @item-selected="selectItem"
       />
@@ -13,10 +14,10 @@
 </template>
 
 <script setup lang="ts">
-import { provide, computed } from 'vue'
+import { provide, computed, ref } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { TableOfContentsItem } from '../../stoplight/elements-core/components/Docs/types'
-import { itemComponent } from './index'
+import { itemComponent, isGroup } from './index'
 
 const props = defineProps({
   tableOfContents: {
@@ -44,7 +45,22 @@ const selectItem = (id: any) => {
   if (props.controlBrowserUrl) {
     window.history.pushState({}, '', props.basePath + id)
   }
+
   emit('item-selected', id)
+}
+
+const firstGroupItemExpanded = ref<boolean>(false)
+const itemCollapsed = (item: TableOfContentsItem): boolean | undefined => {
+  if (isGroup(item)) {
+    if (firstGroupItemExpanded.value) {
+      return true
+    }
+
+    firstGroupItemExpanded.value = true
+    return false
+  }
+
+  return undefined
 }
 </script>
 
