@@ -1,3 +1,10 @@
+## [1.12.3](https://github.com/Kong/spec-renderer/compare/v1.12.2...v1.12.3) (2024-05-28)
+
+
+### Bug Fixes
+
+* styles import ([#88](https://github.com/Kong/spec-renderer/issues/88)) ([8b69b99](https://github.com/Kong/spec-renderer/commit/8b69b992fabd5fe102efd2836b4778ed41bf23c4))
+
 ## [1.12.2](https://github.com/Kong/spec-renderer/compare/v1.12.1...v1.12.2) (2024-05-28)
 
 
