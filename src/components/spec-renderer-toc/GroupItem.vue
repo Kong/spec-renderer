@@ -26,8 +26,10 @@
           v-for="(child, idx) in item.items"
           :key="idx + ' ' + child.title+child"
           :item="child"
-          :root="false"
+          :root="isGroup(child) ? false : undefined"
+          @expand="onExpand"
           @item-selected="selectItem"
+          @trigger-scroll="($event) => emitElement($event as HTMLElement)"
         />
       </ul>
     </Transition>
@@ -37,7 +39,7 @@
 <script setup lang="ts">
 import { ref, type PropType } from 'vue'
 import type { TableOfContentsGroup } from '../../stoplight/elements-core/components/Docs/types'
-import { itemComponent } from './index'
+import { itemComponent, isGroup } from './index'
 import { ChevronRightIcon } from '@kong/icons'
 
 const props = defineProps({
@@ -62,11 +64,19 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'item-selected', id: string): void
+  (e: 'item-selected', id: string): void,
+  (e: 'trigger-scroll', element: HTMLElement): void,
+  (e: 'expand'): void,
 }>()
 
 const selectItem = (id: any) => {
+  isCollapsed.value = false
+
   emit('item-selected', id)
+}
+
+const emitElement = (element: HTMLElement) => {
+  emit('trigger-scroll', element)
 }
 
 const isCollapsed = ref<boolean>(props.collapsed)
@@ -76,6 +86,12 @@ const onClick = (event: Event) => {
   if (collapseTriggerRef.value === event.target) {
     isCollapsed.value = !isCollapsed.value
   }
+}
+
+const onExpand = () => {
+  isCollapsed.value = false
+
+  emit('expand')
 }
 </script>
 

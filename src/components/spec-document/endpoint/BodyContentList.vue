@@ -12,7 +12,7 @@
     >
       <ModelNode
         v-if="content.schema"
-        :data="content.schema"
+        :data="parseSchema(content.schema)"
         :title="content.schema.title ?? defaultModelTitle"
       />
     </template>
@@ -21,10 +21,12 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import ModelNode from '../ModelNode.vue'
 import type { IMediaTypeContent } from '@stoplight/types'
+import ModelNode from '../ModelNode.vue'
+import type { SchemaObject } from '@/types'
+import { removeFieldsFromSchemaObject } from '@/utils'
 
-defineProps({
+const props = defineProps({
   description: {
     type: String,
     default: '',
@@ -37,5 +39,13 @@ defineProps({
     type: String,
     default: 'Request Body Schema Model',
   },
+  readonlyVisible: {
+    type: Boolean,
+    default: true,
+  },
 })
+
+function parseSchema(schema: SchemaObject) {
+  return props.readonlyVisible ? schema : removeFieldsFromSchemaObject(schema)
+}
 </script>

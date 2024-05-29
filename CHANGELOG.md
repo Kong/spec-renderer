@@ -1,3 +1,17 @@
+## [1.12.5](https://github.com/Kong/spec-renderer/compare/v1.12.4...v1.12.5) (2024-05-29)
+
+
+### Bug Fixes
+
+* **spec-renderer-toc:** active item styling and state [KHCP-12098] ([#89](https://github.com/Kong/spec-renderer/issues/89)) ([ee1be2c](https://github.com/Kong/spec-renderer/commit/ee1be2ca4bfdc96a7d27abfdcf3026a7823c92b0))
+
+## [1.12.4](https://github.com/Kong/spec-renderer/compare/v1.12.3...v1.12.4) (2024-05-29)
+
+
+### Bug Fixes
+
+* hide readonly fields in request body [KHCP-12061] ([#79](https://github.com/Kong/spec-renderer/issues/79)) ([01f5007](https://github.com/Kong/spec-renderer/commit/01f5007ba35dcfde618820dc409788d79ca52999))
+
 ## [1.12.3](https://github.com/Kong/spec-renderer/compare/v1.12.2...v1.12.3) (2024-05-28)
 
 

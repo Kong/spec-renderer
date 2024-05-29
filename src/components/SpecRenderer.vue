@@ -5,7 +5,7 @@
         v-if="tableOfContents"
         :base-path="basePath"
         :control-browser-url="controlBrowserUrl"
-        :path="currentPath"
+        :current-path="currentPath"
         :table-of-contents="tableOfContents"
         @item-selected="itemSelected"
       />
@@ -14,9 +14,9 @@
       <SpecDocument
         v-if="parsedDocument && selectedPath"
         :base-path="basePath"
+        :current-path="currentPath"
         :document="parsedDocument"
         :json="jsonDocument"
-        :path="currentPath"
       />
     </div>
   </div>

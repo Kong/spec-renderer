@@ -41,11 +41,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import ModelProperty from './ModelProperty.vue'
-
 import type{ PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
+import ModelProperty from './ModelProperty.vue'
 import PropertyAnyOf from './property-fields/PropertyAnyOf.vue'
 import PropertyOneOf from './property-fields/PropertyOneOf.vue'
 
