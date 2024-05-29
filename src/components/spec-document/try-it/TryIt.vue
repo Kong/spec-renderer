@@ -33,4 +33,3 @@ const showTryItPanel = computed((): boolean => {
 })
 
 </script>
-

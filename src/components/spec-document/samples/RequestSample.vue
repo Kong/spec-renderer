@@ -102,7 +102,7 @@ watch(() => (requestSamples.value), (newValue: INodeExample[]) => {
   selectedRequestSample.value = getFirstSampleKey(newValue)
 })
 
-const acceptHeader = computed (():string => {
+const acceptHeader = computed(():string => {
   const headers = new Set()
   props.data.responses.forEach(response => {
     (response.contents || []).forEach(content => {
@@ -141,9 +141,9 @@ watch(() => ({
         },
         {
           name: 'Accept',
-          value: acceptHeader.value
+          value: acceptHeader.value,
 
-        }
+        },
       ],
       postData: {
         mimeType: 'application/json',

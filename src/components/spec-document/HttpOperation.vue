@@ -41,7 +41,6 @@
       <RequestSample
         :data="data"
       />
-
     </div>
   </div>
 </template>
