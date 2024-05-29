@@ -7,6 +7,9 @@
       class="left"
       :data-testid="`http-operation-left-${data.id}`"
     >
+      <pre>
+  {{ JSON.stringify(data, null, 2) }}
+  </pre>
       <section>
         <h3>{{ data.summary }}</h3>
         <p>{{ data.description }}</p>
@@ -46,7 +49,7 @@ import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpResponse from './endpoint/HttpResponse.vue'
 import TryIt from './try-it/TryIt.vue'
 
-defineProps({
+const p = defineProps({
   data: {
     type: Object as PropType<IHttpOperation>,
     required: true,
@@ -56,7 +59,7 @@ defineProps({
     default: () => ({}),
   },
 })
-
+console.log(p.data)
 </script>
 
 <style lang="scss" scoped>

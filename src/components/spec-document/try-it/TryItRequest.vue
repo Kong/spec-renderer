@@ -28,6 +28,20 @@
             {{ lib.label }}
           </option>
         </select>
+
+        <select
+          v-if="requestSamples && requestSamples.length > 0"
+          v-model="selectedRequestSample"
+          class="request-sample-selector"
+        >
+          <option
+            v-for="sample in requestSamples "
+            :key="sample.key"
+            :value="sample.key"
+          >
+            {{ sample.key }}
+          </option>
+        </select>
       </div>
       <div class="tryit-card-body">
         <div v-if="requestCode">
@@ -41,7 +55,7 @@
 <script setup lang="ts">
 import { watch, ref, computed } from 'vue'
 import type { PropType } from 'vue'
-import type { IHttpOperation } from '@stoplight/types'
+import type { IHttpOperation, INodeExample, INodeExternalExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet-lite'
 import { requestSampleConfigs } from '../../../constants'
 
@@ -66,9 +80,39 @@ const selectedLangLibraries = computed(() => {
   }
 })
 
+const getFirstSampleKey = (examples: INodeExample[]): string|null => {
+  if (Array.isArray(examples) && examples.length > 0) {
+    return examples[0].key
+  } else {
+    return null
+  }
+}
+
+const getFirstSampleBody = (examples: INodeExample[]): Record<string, any>|null => {
+  if (Array.isArray(examples) && examples.length > 0) {
+    return examples[0].value
+  } else {
+    return null
+  }
+}
+
+const selectedRequestSample = ref<string | null>(props.data?.request?.body?.contents && props.data.request.body.contents.length > 0 ? getFirstSampleKey(props.data.request.body.contents[0].examples as INodeExample[]) : null)
+
+const requestSamples = computed((): INodeExample[] => {
+  if (props.data?.request?.body?.contents && props.data.request.body.contents.length > 0 && Array.isArray(props.data.request.body.contents[0].examples) && props.data.request.body.contents[0].examples.length > 0) {
+    return props.data.request.body.contents[0].examples as INodeExample[]
+  } else {
+    return []
+  }
+})
+
+watch(() => (requestSamples.value), (newValue: INodeExample[]) => {
+  selectedRequestSample.value = getFirstSampleKey(newValue)
+})
+
 const snippet = ref<HTTPSnippetType>()
 
-const requestCode = ref<string|string[]|null>(JSON.stringify({}))
+const requestCode = ref<string | string[] | null>(JSON.stringify(props.data?.request?.body?.contents && props.data.request.body.contents.length > 0 ? getFirstSampleBody(props.data.request.body.contents[0].examples as INodeExample[]) : null, null, 2))
 
 watch(() => (selectedLang.value), (newLang, oldLang) => {
   if (newLang !== oldLang) {
@@ -78,28 +122,39 @@ watch(() => (selectedLang.value), (newLang, oldLang) => {
 
 watch(() => ({ lang: selectedLang.value, lib: selectedLangLibrary.value }), async ({ lang, lib }) => {
   if (snippet.value) {
-    console.log({ lang, lib })
     if (lang === 'json') {
-      requestCode.value = JSON.stringify({})
+      requestCode.value = JSON.stringify((requestSamples.value as INodeExample[]).find(s => s.key === selectedRequestSample.value)?.value)
     } else {
       requestCode.value = await snippet.value.convert(lang as TargetId, lib)
     }
   }
 }, { immediate: true })
 
-watch(() => (props.data), () => {
-
+watch(() => ({
+  method: props.data.method,
+  requestBodyKey: selectedRequestSample.value,
+}), (newValue) => {
+  const jsonObj = (requestSamples.value as INodeExample[]).find(s => s.key === newValue.requestBodyKey)?.value
+  console.log('aaaa', jsonObj)
   snippet.value = new HTTPSnippet({
-    method: 'GET',
+    method: newValue.method,
     url: 'http://www.example.com/path/?param=value',
-  } as HarRequest)
+    postData: {
+      mimeType: 'application/json',
+      jsonObj,
+    },
+  } as unknown as HarRequest)
 
-}, { immediate: true })
+}, { immediate: true, deep: true })
 </script>
 
 <style lang="scss" scoped>
 pre {
   margin: 0;
   white-space: pre-wrap;
+}
+
+.request-sample-selector {
+  margin-left: auto;
 }
 </style>
