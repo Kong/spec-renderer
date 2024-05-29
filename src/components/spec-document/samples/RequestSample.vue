@@ -64,6 +64,7 @@ import json from 'highlight.js/lib/languages/json'
 import java from 'highlight.js/lib/languages/java'
 import bash from 'highlight.js/lib/languages/bash'
 import python from 'highlight.js/lib/languages/python'
+import go from 'highlight.js/lib/languages/go'
 
 import 'highlight.js/styles/atom-one-dark.css'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet-lite'
@@ -73,6 +74,7 @@ hljs.registerLanguage('json', json)
 hljs.registerLanguage('java', java)
 hljs.registerLanguage('bash', bash)
 hljs.registerLanguage('python', python)
+hljs.registerLanguage('go', go)
 
 const props = defineProps({
   data: {
@@ -155,6 +157,7 @@ watch(() => ({
   lib: selectedLangLibrary.value,
   serverUrl: props.baseServerUrl,
 }), async (newValue, oldValue) => {
+  console.log(props.data)
   const jsonObj = (requestSamples.value as INodeExample[]).find(s => s.key === newValue.requestBodyKey)?.value
 
   if (newValue.method !== oldValue?.method) {
@@ -192,7 +195,7 @@ watch(() => ({
   // if our we do not have requestCode generated, or our lanf or lib are changed - we need to re-generate requestCode
   if (!requestCode.value || newValue.lang !== oldValue?.lang || newValue.lib !== oldValue?.lib || newValue.requestBodyKey !== oldValue?.requestBodyKey) {
     if (newValue.lang === 'json') {
-      requestCode.value = hljs.highlight(JSON.stringify(jsonObj, null, 2), { language: 'json' }).value
+      requestCode.value = jsonObj ? hljs.highlight(JSON.stringify(jsonObj, null, 2), { language: 'json' }).value : null
     } else {
       const code = await snippet.value.convert(newValue.lang as TargetId, newValue.lib)
       const hightLightLang = getHighlightLanguage(newValue.lang)
@@ -208,11 +211,46 @@ watch(() => ({
 
 <style lang="scss" scoped>
 pre {
-  margin: 0;
-  white-space: pre-wrap;
 }
 
 .request-sample-selector {
   margin-left: auto;
+}
+
+.pre {
+  font-size: 16px;
+  font-family: monospace;
+  background-color: #303030;
+  color: #e6be49;
+  padding: 15px 20px;
+  border-radius: 3px;
+  counter-reset: line;
+  position: relative;
+  line-height: 1.3;
+  text-align: left !important;
+  margin: 0 !important;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 15px;
+    bottom: 15px;
+    left: 40px;
+    border-right: 1px solid #5e5e5e;
+  }
+
+  span {
+    display: block;
+    counter-increment: line;
+    padding-left: 35px;
+
+    &::before {
+      content: counter(line);
+      display: inline-block;
+      margin-left: -34px;
+      margin-right: 25px;
+      color: #a0a0a0;
+    }
+  }
 }
 </style>
