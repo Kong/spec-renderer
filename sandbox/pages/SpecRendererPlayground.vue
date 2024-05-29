@@ -5,10 +5,14 @@
         @sample-spec-selected="sampleSpecSelected"
         @sample-spec-uploaded="sampleSpecUploaded"
       />
-      <KInputSwitch
-        v-model="hideSchemas"
-        label="Hide schema"
-      />
+      <div>
+        <input
+          id="hide-schemas"
+          v-model="hideSchemas"
+          type="checkbox"
+        >
+        <label for="hide-schemas">Hide schemas</label>
+      </div>
     </div>
     <SpecRenderer
       v-if="specText || specUrl"
