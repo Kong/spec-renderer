@@ -99,8 +99,8 @@ const itemCollapsed = (item: TableOfContentsItem): boolean | undefined => {
   background-color: var(--kui-color-background, $kui-color-background);
   overflow-x: hidden;
   overflow-y: auto;
-  width: 100%;
   position: relative; // important, need this for scrolling to selected item
+  width: 100%;
 
   > ul {
     padding-left: var(--kui-space-0, $kui-space-0);
