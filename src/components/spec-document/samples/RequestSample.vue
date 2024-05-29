@@ -8,7 +8,7 @@
       <div class="right-card-header">
         <select v-model="selectedLang">
           <option
-            v-for="lang in requestSampleConfigs"
+            v-for="lang in requestConfigs"
             :key="lang.httpSnippetLanguage"
             :value="lang.httpSnippetLanguage"
           >
@@ -66,9 +66,25 @@ const props = defineProps({
     type: Object as PropType<IHttpOperation>,
     required: true,
   },
+  /**
+   * server url+path selected by user on endpoints detail page
+   */
+  baseServerUrl: {
+    type: String,
+    required: true,
+  }
 })
 
-const selectedLang = ref<string>('json')
+
+const requestConfigs = computed(() => {
+  if (['get', 'delete'].includes(props.data.method)) {
+    return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
+  } else {
+    return requestSampleConfigs
+  }
+})
+
+const selectedLang = ref<string>()
 
 const selectedLangLibrary = ref<string>()
 
@@ -121,19 +137,24 @@ watch(() => ({
   requestBodyKey: selectedRequestSample.value,
   lang: selectedLang.value,
   lib: selectedLangLibrary.value,
+  serverUrl: props.baseServerUrl,
 }), async (newValue, oldValue) => {
-  console.log(1)
   const jsonObj = (requestSamples.value as INodeExample[]).find(s => s.key === newValue.requestBodyKey)?.value
+
+  if (newValue.method !== oldValue?.method) {
+    selectedLang.value = requestConfigs.value[0].httpSnippetLanguage
+    newValue.lang = selectedLang.value
+  }
 
   if (newValue.lang !== oldValue?.lang) {
     selectedLangLibrary.value = selectedLangLibraries.value?.length > 0 ? selectedLangLibraries.value[0].httpSnippetLibrary : undefined
   }
   // if we selected new requestBody or if we do not have httpSNippet yet, we need to re-init it
-  if (!snippet.value || newValue.requestBodyKey !== oldValue?.requestBodyKey) {
+  if (!snippet.value || newValue.requestBodyKey !== oldValue?.requestBodyKey || newValue.serverUrl !== oldValue.serverUrl) {
 
     snippet.value = new HTTPSnippet({
       method: newValue.method,
-      url: 'http://www.example.com/path/?param=value',
+      url: newValue.serverUrl,
       headers: [
         {
           name: 'Content-Type',
