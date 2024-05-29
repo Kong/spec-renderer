@@ -4,8 +4,8 @@
     :data-testid="`request-sample-${data.id}`"
   >
     <h5>REQUEST SAMPLE</h5>
-    <div class="tryit-card">
-      <div class="tryit-card-header">
+    <div class="right-card">
+      <div class="right-card-header">
         <select v-model="selectedLang">
           <option
             v-for="lang in requestSampleConfigs"
@@ -43,7 +43,7 @@
           </option>
         </select>
       </div>
-      <div class="tryit-card-body">
+      <div class="right-card-body">
         <div v-if="requestCode">
           <pre>{{ requestCode }}</pre>
         </div>
@@ -98,11 +98,19 @@ const requestSamples = computed((): INodeExample[] => {
   }
 })
 
-// const contentTypes = computed((): string[] => {
-// })
 
 watch(() => (requestSamples.value), (newValue: INodeExample[]) => {
   selectedRequestSample.value = getFirstSampleKey(newValue)
+})
+
+const acceptHeader = computed (():string => {
+  const headers = new Set()
+  props.data.responses.forEach(response => {
+    (response.contents || []).forEach(content => {
+      headers.add(content.mediaType)
+    })
+  })
+  return [...headers].join(', ')
 })
 
 const snippet = ref<HTTPSnippetType>()
@@ -132,6 +140,11 @@ watch(() => ({
           name: 'Content-Type',
           value: 'application/json',
         },
+        {
+          name: 'Accept',
+          value: acceptHeader.value
+
+        }
       ],
       postData: {
         mimeType: 'application/json',

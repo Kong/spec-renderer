@@ -37,6 +37,11 @@
       <TryIt
         :data="data"
       />
+
+      <RequestSample
+        :data="data"
+      />
+
     </div>
   </div>
 </template>
@@ -47,6 +52,7 @@ import type { IHttpOperation } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpResponse from './endpoint/HttpResponse.vue'
 import TryIt from './try-it/TryIt.vue'
+import RequestSample from './samples/RequestSample.vue'
 
 defineProps({
   data: {
@@ -77,6 +83,34 @@ defineProps({
     grid-template-columns: 1fr;
     .right {
       margin-top: $kui-space-40;
+    }
+  }
+}
+:deep(.right-card) {
+  border: 1px solid $kui-color-border;
+  border-radius: $kui-border-radius-30;
+
+  .right-card-header {
+    background-color: $kui-color-background;
+    display: flex;
+    padding: 10px;
+
+    h5 {
+      color: $kui-color-text;
+      margin: 0 0 0 $kui-space-30;
+      padding: 0;
+    }
+  }
+
+  .right-card-body {
+    background-color: $kui-color-background-neutral-weakest;
+    border-top: 1px solid $kui-color-border;
+    width: 100%;
+  }
+
+  @media (max-width: $kui-breakpoint-mobile) {
+    .right-card-body {
+      grid-template-columns: 1fr;
     }
   }
 }
