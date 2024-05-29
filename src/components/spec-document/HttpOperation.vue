@@ -39,7 +39,7 @@
       />
 
       <RequestSample
-        :base-server-url="data.servers?[0].url"
+        :base-server-url="data.servers ? data.servers[0].url: ''"
         :data="data"
       />
     </div>
