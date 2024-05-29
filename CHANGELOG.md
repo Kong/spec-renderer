@@ -1,3 +1,10 @@
+## [1.12.5](https://github.com/Kong/spec-renderer/compare/v1.12.4...v1.12.5) (2024-05-29)
+
+
+### Bug Fixes
+
+* **spec-renderer-toc:** active item styling and state [KHCP-12098] ([#89](https://github.com/Kong/spec-renderer/issues/89)) ([ee1be2c](https://github.com/Kong/spec-renderer/commit/ee1be2ca4bfdc96a7d27abfdcf3026a7823c92b0))
+
 ## [1.12.4](https://github.com/Kong/spec-renderer/compare/v1.12.3...v1.12.4) (2024-05-29)
 
 
