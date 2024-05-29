@@ -4,7 +4,7 @@
     class="node-item"
   >
     <a
-      :class="{ 'single-word': isSingleWord, 'selected': isActive }"
+      :class="{ 'single-word': isSingleWord, 'active': isActive }"
       :href="`${basePath}${item.id}`"
       @click.prevent="selectItem(item.id)"
     >

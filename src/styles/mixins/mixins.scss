@@ -37,7 +37,7 @@
     color background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease,
     background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
 
-  &:hover:not(.selected) {
+  &:hover:not(.active) {
     color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
   }
 
@@ -54,7 +54,7 @@
     }
   }
 
-  &.selected {
+  &.active {
     background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
     color: var(--kui-color-text-primary, $kui-color-text-primary);
   }
