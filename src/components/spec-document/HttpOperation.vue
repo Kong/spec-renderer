@@ -48,7 +48,7 @@ import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpResponse from './endpoint/HttpResponse.vue'
 import TryIt from './try-it/TryIt.vue'
 
-const p = defineProps({
+defineProps({
   data: {
     type: Object as PropType<IHttpOperation>,
     required: true,

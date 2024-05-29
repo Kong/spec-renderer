@@ -98,9 +98,8 @@ const requestSamples = computed((): INodeExample[] => {
   }
 })
 
-const contentTypes = computed((): string[] => {
-
-})
+// const contentTypes = computed((): string[] => {
+// })
 
 watch(() => (requestSamples.value), (newValue: INodeExample[]) => {
   selectedRequestSample.value = getFirstSampleKey(newValue)
