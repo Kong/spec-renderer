@@ -46,7 +46,7 @@
     height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
     pointer-events: none;
     transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
-    // TODO: decide how we want to set icon size and clor (JS token vs. style block)
+    flex-shrink: 0;
     width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
 
     &.expanded {
