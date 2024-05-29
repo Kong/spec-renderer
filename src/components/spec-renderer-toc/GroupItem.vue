@@ -74,7 +74,9 @@ const selectItem = (id: any) => {
 }
 
 const emitElement = (element: any) => {
-  emit('element-selected', element)
+  if (element instanceof HTMLElement) {
+    emit('element-selected', element)
+  }
 }
 
 const isCollapsed = ref<boolean>(props.collapsed)

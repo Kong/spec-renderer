@@ -52,13 +52,18 @@ const selectItem = (id: string): void => {
 
 const isSingleWord = computed(() => !props.item.title?.trim()?.includes(' '))
 
+/**
+ * Watch current path and emit the event if the current path matches the item.
+ */
 watch(currentPath, (val) => {
   if (val && val === props.item.id) {
     selectItem(props.item.id)
   }
-
 }, { immediate: true })
 
+/**
+ * Once element is in the DOM, check if it's the selected element and emit the event.
+ */
 watch(nodeItemRef, (val) => {
   if (val) {
     if (currentPath.value === props.item.id) {
