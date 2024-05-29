@@ -29,6 +29,7 @@ export type TableOfContentsNodeGroup = TableOfContentsNode<'http_service'> & Tab
 
 export type TableOfContentsGroup = {
   title: string;
+  hideTitle?: boolean;
   // eslint-disable-next-line no-use-before-define
   items: TableOfContentsGroupItem[];
   itemsType?: 'article' | 'http_operation' | 'http_webhook' | 'model';

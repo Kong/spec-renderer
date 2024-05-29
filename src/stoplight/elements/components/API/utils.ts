@@ -97,7 +97,10 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
     tree.push({
       title: 'Endpoints',
       items: [],
+      ...(mergedConfig.hideSchemas && { hideTitle: true }),
     })
+
+    console.log('hideSchemas', mergedConfig.hideSchemas)
 
     const { groups, ungrouped } = computeTagGroups<OperationNode>(serviceNode, NodeType.HttpOperation)
     addTagGroupsToTree(groups, ungrouped, tree.at(-1).items, NodeType.HttpOperation, mergedConfig.hideInternal)
