@@ -39,8 +39,8 @@
       />
 
       <RequestSample
+        :base-server-url="data.servers?[0].url"
         :data="data"
-        :base-server-url="data.servers[0].url"
       />
     </div>
   </div>

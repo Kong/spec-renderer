@@ -63,11 +63,10 @@ import javascript from 'highlight.js/lib/languages/javascript'
 import json from 'highlight.js/lib/languages/json'
 import java from 'highlight.js/lib/languages/java'
 import bash from 'highlight.js/lib/languages/bash'
-import python from 'highlight.js/lib/languages/bash'
+import python from 'highlight.js/lib/languages/python'
 
 import 'highlight.js/styles/atom-one-dark.css'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet-lite'
-
 
 hljs.registerLanguage('javascript', javascript)
 hljs.registerLanguage('json', json)
@@ -86,9 +85,8 @@ const props = defineProps({
   baseServerUrl: {
     type: String,
     required: true,
-  }
+  },
 })
-
 
 const requestConfigs = computed(() => {
   if (['get', 'delete'].includes(props.data.method)) {
@@ -147,7 +145,7 @@ const snippet = ref<HTTPSnippetType>()
 const requestCode = ref<string | string[] | null>()
 
 const getHighlightLanguage = (snippetLang: string | null | undefined): string | null | undefined => {
-  return requestConfigs.value.find(c => c.httpSnippetLanguage == snippetLang)?.highlightLanguage
+  return requestConfigs.value.find(c => c.httpSnippetLanguage === snippetLang)?.highlightLanguage
 }
 
 watch(() => ({
