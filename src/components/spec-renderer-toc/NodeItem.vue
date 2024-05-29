@@ -1,5 +1,8 @@
 <template>
-  <li class="node-item">
+  <li
+    ref="nodeItemRef"
+    class="node-item"
+  >
     <a
       :class="{ 'single-word': isSingleWord, 'selected': currentPath === item.id }"
       :href="`${basePath}${item.id}`"
@@ -33,8 +36,15 @@ const basePath = inject<Ref<string>>('base-path', ref<string>(''))
 const currentPath = inject<Ref<string>>('current-path', ref<string>(''))
 
 const emit = defineEmits<{
-  (e: 'item-selected', id: string): void
+  (e: 'item-selected', id: string): void,
+  /**
+   * Fires when an element is selected, used for scrolling to the element.
+   * We want a separate event for this because element might not be there in the DOM sometimes - so we don't want to hang 'item-selected' on that.
+   */
+  (e: 'element-selected', element: HTMLElement): void,
 }>()
+
+const nodeItemRef = ref<HTMLElement | null>(null)
 
 const selectItem = (id: string): void => {
   emit('item-selected', id)
@@ -48,6 +58,14 @@ watch(currentPath, (val) => {
   }
 
 }, { immediate: true })
+
+watch(nodeItemRef, (val) => {
+  if (val) {
+    if (currentPath.value === props.item.id) {
+      emit('element-selected', val)
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>

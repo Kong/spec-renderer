@@ -27,6 +27,7 @@
           :key="idx + ' ' + child.title+child"
           :item="child"
           :root="false"
+          @element-selected="emitElement"
           @item-selected="selectItem"
         />
       </ul>
@@ -62,13 +63,18 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'item-selected', id: string): void
+  (e: 'item-selected', id: string): void,
+  (e: 'element-selected', element: HTMLElement): void,
 }>()
 
 const selectItem = (id: any) => {
   isCollapsed.value = false
 
   emit('item-selected', id)
+}
+
+const emitElement = (element: any) => {
+  emit('element-selected', element)
 }
 
 const isCollapsed = ref<boolean>(props.collapsed)

@@ -1,5 +1,8 @@
 <template>
-  <nav class="table-of-contents">
+  <nav
+    ref="tocNavRef"
+    class="table-of-contents"
+  >
     <ul>
       <component
         :is="itemComponent(item)"
@@ -7,6 +10,7 @@
         :key="idx+'_'+item.title"
         :collapsed="itemCollapsed(item)"
         :item="item"
+        @element-selected="scrollToElement"
         @item-selected="selectItem"
       />
     </ul>
@@ -14,10 +18,11 @@
 </template>
 
 <script setup lang="ts">
-import { provide, computed, ref } from 'vue'
+import { provide, computed, ref, nextTick } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { TableOfContentsItem } from '../../stoplight/elements-core/components/Docs/types'
 import { itemComponent, isGroup } from './index'
+import { getOffsetTopRelativeToParent } from '@/utils'
 
 const props = defineProps({
   tableOfContents: {
@@ -57,6 +62,23 @@ const selectItem = (id: any) => {
   emit('item-selected', id)
 }
 
+const tocNavRef = ref<HTMLElement | null>(null)
+
+const scrollToElement = async (element: any) => {
+  if (tocNavRef.value) {
+    await nextTick() // wait for all parent groups to expand
+
+    const offsetTop = getOffsetTopRelativeToParent(element, tocNavRef.value)
+
+    if (offsetTop !== null) {
+      tocNavRef.value.scrollTo({
+        top: offsetTop - 50, // offset 50 so it doesn't stick to the top
+        behavior: 'smooth',
+      })
+    }
+  }
+}
+
 const firstGroupItemExpanded = ref<boolean>(false)
 const itemCollapsed = (item: TableOfContentsItem): boolean | undefined => {
   if (isGroup(item)) {
@@ -78,6 +100,7 @@ const itemCollapsed = (item: TableOfContentsItem): boolean | undefined => {
   overflow-x: hidden;
   overflow-y: auto;
   width: 100%;
+  position: relative; // important, need this for scrolling to selected item
 
   > ul {
     padding-left: var(--kui-space-0, $kui-space-0);
