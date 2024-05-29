@@ -211,46 +211,11 @@ watch(() => ({
 
 <style lang="scss" scoped>
 pre {
+  margin: 0;
+  white-space: pre-wrap;
 }
 
 .request-sample-selector {
   margin-left: auto;
-}
-
-.pre {
-  font-size: 16px;
-  font-family: monospace;
-  background-color: #303030;
-  color: #e6be49;
-  padding: 15px 20px;
-  border-radius: 3px;
-  counter-reset: line;
-  position: relative;
-  line-height: 1.3;
-  text-align: left !important;
-  margin: 0 !important;
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: 15px;
-    bottom: 15px;
-    left: 40px;
-    border-right: 1px solid #5e5e5e;
-  }
-
-  span {
-    display: block;
-    counter-increment: line;
-    padding-left: 35px;
-
-    &::before {
-      content: counter(line);
-      display: inline-block;
-      margin-left: -34px;
-      margin-right: 25px;
-      color: #a0a0a0;
-    }
-  }
 }
 </style>
