@@ -26,7 +26,7 @@ const props = defineProps({
     type: Object as PropType<Record<string, any>>,
     required: true,
   },
-  path: {
+  currentPath: {
     type: String,
     required: true,
   },
@@ -50,7 +50,7 @@ provide<Ref<boolean>>('hide-tryit', computed((): boolean => props.hideTryIt))
 
 /** we show tryIt section when it's requested to be hidden and when node */
 
-watch(() => ({ pathname: props.path, document: props.document }), ({ pathname, document }) => {
+watch(() => ({ pathname: props.currentPath, document: props.document }), ({ pathname, document }) => {
   const isRootPath = !pathname || pathname === '/'
   // @ts-ignore
   serviceNode.value = isRootPath ? document : document.children.find((child:any) => child.uri === pathname)

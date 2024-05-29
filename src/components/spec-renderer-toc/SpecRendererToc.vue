@@ -1,22 +1,28 @@
 <template>
-  <nav class="table-of-contents">
+  <nav
+    ref="tocNavRef"
+    class="table-of-contents"
+  >
     <ul>
       <component
         :is="itemComponent(item)"
         v-for="(item, idx) in tableOfContents"
         :key="idx+'_'+item.title"
+        :collapsed="itemCollapsed(item)"
         :item="item"
         @item-selected="selectItem"
+        @trigger-scroll="($event) => scrollToElement($event as HTMLElement)"
       />
     </ul>
   </nav>
 </template>
 
 <script setup lang="ts">
-import { provide, computed } from 'vue'
+import { provide, computed, ref, nextTick } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { TableOfContentsItem } from '../../stoplight/elements-core/components/Docs/types'
-import { itemComponent } from './index'
+import { itemComponent, isGroup } from './index'
+import { getOffsetTopRelativeToParent } from '@/utils'
 
 const props = defineProps({
   tableOfContents: {
@@ -31,10 +37,18 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * Selected path to load document with
+   */
+  currentPath: {
+    type: String,
+    default: '/',
+  },
 })
 
 // to be consumed in multi-level child components
 provide<Ref<string>>('base-path', computed((): string => props.basePath))
+provide<Ref<string>>('current-path', computed((): string => props.currentPath))
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void
@@ -44,7 +58,40 @@ const selectItem = (id: any) => {
   if (props.controlBrowserUrl) {
     window.history.pushState({}, '', props.basePath + id)
   }
+
   emit('item-selected', id)
+}
+
+const tocNavRef = ref<HTMLElement | null>(null)
+
+const scrollToElement = async (element: HTMLElement) => {
+  if (tocNavRef.value) {
+    await nextTick() // wait for all parent groups to expand
+
+    const offsetTop = getOffsetTopRelativeToParent(element, tocNavRef.value)
+
+    if (offsetTop !== null) {
+      tocNavRef.value.scrollTo({
+        top: offsetTop - 50, // offset 50 so it doesn't stick to the top
+        behavior: 'smooth',
+      })
+    }
+  }
+}
+
+const firstGroupItemExpanded = ref<boolean>(false)
+const itemCollapsed = (item: TableOfContentsItem): boolean | undefined => {
+  if (isGroup(item)) {
+    if (firstGroupItemExpanded.value) {
+      return true
+    }
+
+    firstGroupItemExpanded.value = true
+    return false
+  }
+
+  // return undefined for non-group items (which don't accept `collapsed` prop)
+  return undefined
 }
 </script>
 
@@ -53,6 +100,7 @@ const selectItem = (id: any) => {
   background-color: var(--kui-color-background, $kui-color-background);
   overflow-x: hidden;
   overflow-y: auto;
+  position: relative; // important, need this for scrolling to selected item
   width: 100%;
 
   > ul {
