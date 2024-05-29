@@ -4,7 +4,6 @@
       :is="docComponent(serviceNode)"
       v-if="serviceNode"
       :data="serviceNode.data"
-      :overview-data="document.data"
       :title="serviceNode.name"
     />
   </div>

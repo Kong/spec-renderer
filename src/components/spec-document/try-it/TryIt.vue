@@ -6,7 +6,6 @@
     <TryItAuth
       v-if="showTryItPanel"
       :data="data"
-      :overview-data="overviewData"
     />
     <TryItRequest
       :data="data"
@@ -17,17 +16,13 @@
 <script setup lang="ts">
 import { inject, computed, ref } from 'vue'
 import type { PropType, Ref } from 'vue'
-import type { IHttpOperation, IHttpService } from '@stoplight/types'
+import type { IHttpOperation } from '@stoplight/types'
 import TryItAuth from './TryItAuth.vue'
 import TryItRequest from './TryItRequest.vue'
 
 const props = defineProps({
   data: {
     type: Object as PropType<IHttpOperation>,
-    required: true,
-  },
-  overviewData: {
-    type: Object as PropType<IHttpService>,
     required: true,
   },
 })
@@ -38,7 +33,7 @@ const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 // there is more logic that drives do we show tryouts or not
 const showTryItPanel = computed((): boolean => {
   // if there are no services defined in overView we do not show tryIt
-  return !hideTryIt.value && Array.isArray(props.overviewData.servers) && props.overviewData.servers.length > 0
+  return !hideTryIt.value && Array.isArray(props.data.servers) && props.data.servers.length > 0
 })
 
 </script>

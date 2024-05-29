@@ -7,7 +7,7 @@
       class="left"
       :data-testid="`http-operation-left-${data.id}`"
     >
-      <pre>
+      <pre style="display:none">
   {{ JSON.stringify(data, null, 2) }}
   </pre>
       <section>
@@ -36,7 +36,6 @@
     >
       <TryIt
         :data="data"
-        :overview-data="overviewData"
       />
     </div>
   </div>
@@ -44,7 +43,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import type { IHttpOperation, IHttpService } from '@stoplight/types'
+import type { IHttpOperation } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpResponse from './endpoint/HttpResponse.vue'
 import TryIt from './try-it/TryIt.vue'
@@ -54,12 +53,7 @@ const p = defineProps({
     type: Object as PropType<IHttpOperation>,
     required: true,
   },
-  overviewData: {
-    type: Object as PropType<IHttpService>,
-    default: () => ({}),
-  },
 })
-console.log(p.data)
 </script>
 
 <style lang="scss" scoped>

@@ -16,7 +16,7 @@
         <label>Method</label>
         <select>
           <option
-            v-for="sec in overviewData.securitySchemes"
+            v-for="sec in security"
             :key="sec.id"
           >
             {{ sec.key }} ({{ sec.type }})
@@ -32,21 +32,26 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { PropType } from 'vue'
-import type { IHttpOperation, IHttpService } from '@stoplight/types'
+import type { IHttpOperation, HttpSecurityScheme } from '@stoplight/types'
 import { LockIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import TryItButton from './TryItButton.vue'
 
-defineProps({
+const props = defineProps({
   data: {
     type: Object as PropType<IHttpOperation>,
     required: true,
   },
-  overviewData: {
-    type: Object as PropType<IHttpService>,
-    required: true,
-  },
+})
+
+const security = computed((): HttpSecurityScheme[]|undefined => {
+  if (Array.isArray(props.data.security) && props.data.security.length > 0) {
+    return props.data.security[0]
+  } else {
+    return []
+  }
 })
 </script>
 

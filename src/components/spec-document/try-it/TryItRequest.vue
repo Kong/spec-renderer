@@ -55,7 +55,7 @@
 <script setup lang="ts">
 import { watch, ref, computed } from 'vue'
 import type { PropType } from 'vue'
-import type { IHttpOperation, INodeExample, INodeExternalExample } from '@stoplight/types'
+import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet-lite'
 import { requestSampleConfigs } from '../../../constants'
 
@@ -88,14 +88,6 @@ const getFirstSampleKey = (examples: INodeExample[]): string|null => {
   }
 }
 
-const getFirstSampleBody = (examples: INodeExample[]): Record<string, any>|null => {
-  if (Array.isArray(examples) && examples.length > 0) {
-    return examples[0].value
-  } else {
-    return null
-  }
-}
-
 const selectedRequestSample = ref<string | null>(props.data?.request?.body?.contents && props.data.request.body.contents.length > 0 ? getFirstSampleKey(props.data.request.body.contents[0].examples as INodeExample[]) : null)
 
 const requestSamples = computed((): INodeExample[] => {
@@ -112,39 +104,52 @@ watch(() => (requestSamples.value), (newValue: INodeExample[]) => {
 
 const snippet = ref<HTTPSnippetType>()
 
-const requestCode = ref<string | string[] | null>(JSON.stringify(props.data?.request?.body?.contents && props.data.request.body.contents.length > 0 ? getFirstSampleBody(props.data.request.body.contents[0].examples as INodeExample[]) : null, null, 2))
-
-watch(() => (selectedLang.value), (newLang, oldLang) => {
-  if (newLang !== oldLang) {
-    selectedLangLibrary.value = selectedLangLibraries.value?.length > 0 ? selectedLangLibraries.value[0].httpSnippetLibrary : undefined
-  }
-})
-
-watch(() => ({ lang: selectedLang.value, lib: selectedLangLibrary.value }), async ({ lang, lib }) => {
-  if (snippet.value) {
-    if (lang === 'json') {
-      requestCode.value = JSON.stringify((requestSamples.value as INodeExample[]).find(s => s.key === selectedRequestSample.value)?.value)
-    } else {
-      requestCode.value = await snippet.value.convert(lang as TargetId, lib)
-    }
-  }
-}, { immediate: true })
+const requestCode = ref<string | string[] | null>()
 
 watch(() => ({
   method: props.data.method,
   requestBodyKey: selectedRequestSample.value,
-}), (newValue) => {
+  lang: selectedLang.value,
+  lib: selectedLangLibrary.value,
+}), async (newValue, oldValue) => {
+  console.log(1)
   const jsonObj = (requestSamples.value as INodeExample[]).find(s => s.key === newValue.requestBodyKey)?.value
-  console.log('aaaa', jsonObj)
-  snippet.value = new HTTPSnippet({
-    method: newValue.method,
-    url: 'http://www.example.com/path/?param=value',
-    postData: {
-      mimeType: 'application/json',
-      jsonObj,
-    },
-  } as unknown as HarRequest)
 
+  if (newValue.lang !== oldValue?.lang) {
+    selectedLangLibrary.value = selectedLangLibraries.value?.length > 0 ? selectedLangLibraries.value[0].httpSnippetLibrary : undefined
+  }
+  // if we selected new requestBody or if we do not have httpSNippet yet, we need to re-init it
+  if (!snippet.value || newValue.requestBodyKey !== oldValue?.requestBodyKey) {
+    console.log(2, jsonObj)
+    snippet.value = new HTTPSnippet({
+      method: newValue.method,
+      url: 'http://www.example.com/path/?param=value',
+      postData: {
+        mimeType: 'application/json',
+        text: JSON.stringify(jsonObj),
+        jsonObj,
+      },
+      postDZata: {
+        mimeType: 'application/json',
+        text: '{\n  "name": "Docs Module",\n  "completed": false\n}',
+        jsonObj: {
+          name: 'Docs Module',
+          completed: false,
+        },
+      },
+    } as unknown as HarRequest)
+  }
+
+  // if our we do not have requestCode generated, or our lanf or lib are changed - we need to re-generate requestCode
+  if (!requestCode.value || newValue.lang !== oldValue?.lang || newValue.lib !== oldValue.lib || newValue.requestBodyKey !== oldValue?.requestBodyKey) {
+    if (newValue.lang === 'json') {
+      console.log('3 json')
+      requestCode.value = JSON.stringify(jsonObj, null, 2)
+    } else {
+      console.log('3 snippet')
+      requestCode.value = await snippet.value.convert(newValue.lang as TargetId, newValue.lib)
+    }
+  }
 }, { immediate: true, deep: true })
 </script>
 
