@@ -98,6 +98,10 @@ const requestSamples = computed((): INodeExample[] => {
   }
 })
 
+const contentTypes = computed((): string[] => {
+
+})
+
 watch(() => (requestSamples.value), (newValue: INodeExample[]) => {
   selectedRequestSample.value = getFirstSampleKey(newValue)
 })
@@ -120,22 +124,19 @@ watch(() => ({
   }
   // if we selected new requestBody or if we do not have httpSNippet yet, we need to re-init it
   if (!snippet.value || newValue.requestBodyKey !== oldValue?.requestBodyKey) {
-    console.log(2, jsonObj)
+
     snippet.value = new HTTPSnippet({
       method: newValue.method,
       url: 'http://www.example.com/path/?param=value',
+      headers: [
+        {
+          name: 'Content-Type',
+          value: 'application/json',
+        },
+      ],
       postData: {
         mimeType: 'application/json',
-        text: JSON.stringify(jsonObj),
-        jsonObj,
-      },
-      postDZata: {
-        mimeType: 'application/json',
-        text: '{\n  "name": "Docs Module",\n  "completed": false\n}',
-        jsonObj: {
-          name: 'Docs Module',
-          completed: false,
-        },
+        text: JSON.stringify(jsonObj, null, 2),
       },
     } as unknown as HarRequest)
   }
@@ -143,10 +144,8 @@ watch(() => ({
   // if our we do not have requestCode generated, or our lanf or lib are changed - we need to re-generate requestCode
   if (!requestCode.value || newValue.lang !== oldValue?.lang || newValue.lib !== oldValue.lib || newValue.requestBodyKey !== oldValue?.requestBodyKey) {
     if (newValue.lang === 'json') {
-      console.log('3 json')
       requestCode.value = JSON.stringify(jsonObj, null, 2)
     } else {
-      console.log('3 snippet')
       requestCode.value = await snippet.value.convert(newValue.lang as TargetId, newValue.lib)
     }
   }
