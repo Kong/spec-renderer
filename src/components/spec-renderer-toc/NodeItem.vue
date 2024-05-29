@@ -38,7 +38,7 @@ const currentPath = inject<Ref<string>>('current-path', ref<string>(''))
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
   /**
-   * Fires when an element is selected, used for scrolling to the element.
+   * Fires when an element is selected passively (e.g. page load), used for scrolling to the element.
    * We want a separate event for this because element might not be there in the DOM sometimes - so we don't want to hang 'item-selected' event on that.
    */
   (e: 'trigger-scroll', element: HTMLElement): void,
