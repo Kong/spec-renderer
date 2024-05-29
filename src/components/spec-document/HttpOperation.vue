@@ -12,6 +12,12 @@
         <p>{{ data.description }}</p>
       </section>
 
+      <ServerEndpoint
+        :method="data.method"
+        :path="data.path"
+        :server-list="data.servers"
+      />
+
       <HttpRequest
         v-if="data.request"
         v-bind="data.request"
@@ -47,6 +53,7 @@ import type { IHttpOperation, IHttpService } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpResponse from './endpoint/HttpResponse.vue'
 import TryIt from './try-it/TryIt.vue'
+import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 
 const props = defineProps({
   data: {
