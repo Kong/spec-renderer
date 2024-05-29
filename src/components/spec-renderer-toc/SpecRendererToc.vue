@@ -10,8 +10,8 @@
         :key="idx+'_'+item.title"
         :collapsed="itemCollapsed(item)"
         :item="item"
-        @element-selected="scrollToElement"
         @item-selected="selectItem"
+        @trigger-scroll="($event) => scrollToElement($event as HTMLElement)"
       />
     </ul>
   </nav>
@@ -64,8 +64,8 @@ const selectItem = (id: any) => {
 
 const tocNavRef = ref<HTMLElement | null>(null)
 
-const scrollToElement = async (element: any) => {
-  if (element instanceof HTMLElement && tocNavRef.value) {
+const scrollToElement = async (element: HTMLElement) => {
+  if (tocNavRef.value) {
     await nextTick() // wait for all parent groups to expand
 
     const offsetTop = getOffsetTopRelativeToParent(element, tocNavRef.value)

@@ -27,8 +27,8 @@
           :key="idx + ' ' + child.title+child"
           :item="child"
           :root="isGroup(child) ? false : undefined"
-          @element-selected="emitElement"
           @item-selected="selectItem"
+          @trigger-scroll="($event) => emitElement($event as HTMLElement)"
         />
       </ul>
     </Transition>
@@ -64,7 +64,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
-  (e: 'element-selected', element: HTMLElement): void,
+  (e: 'trigger-scroll', element: HTMLElement): void,
 }>()
 
 const selectItem = (id: any) => {
@@ -73,10 +73,8 @@ const selectItem = (id: any) => {
   emit('item-selected', id)
 }
 
-const emitElement = (element: any) => {
-  if (element instanceof HTMLElement) {
-    emit('element-selected', element)
-  }
+const emitElement = (element: HTMLElement) => {
+  emit('trigger-scroll', element)
 }
 
 const isCollapsed = ref<boolean>(props.collapsed)
