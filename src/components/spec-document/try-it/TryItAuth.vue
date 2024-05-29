@@ -47,12 +47,17 @@ const props = defineProps({
 })
 
 const security = computed((): HttpSecurityScheme[]|undefined => {
-  if (Array.isArray(props.data.security) && props.data.security.length > 0) {
-    return props.data.security[0]
-  } else {
-    return []
+  const secArray:Array<HttpSecurityScheme> = []
+  if (props.data.security) {
+    props.data.security.forEach((secGroup: HttpSecurityScheme[]) => {
+      (secGroup || []).forEach((sec: HttpSecurityScheme) => {
+        secArray.push(sec)
+      })
+    })
   }
+  return secArray
 })
+
 </script>
 
 <style lang="scss" scoped>
