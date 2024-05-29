@@ -23,4 +23,22 @@ describe('<NodeItem />', () => {
     expect(aTag.exists()).toBe(true)
     expect(aTag.attributes().href).toEqual('/xxxx/operation-path/method')
   })
+
+  it('renders active item correctly', () => {
+    const currentPath = '/operation-path/method'
+
+    const wrapper = mount(NodeItem, {
+      props: {
+        item: <TableOfContentsNode>{ id: currentPath, title: 'xxx' },
+      },
+      global: {
+        provide: {
+          'current-path': currentPath,
+        },
+      },
+    })
+
+    const aTag = wrapper.find('a')
+    expect(aTag.classes()).toContain('active')
+  })
 })
