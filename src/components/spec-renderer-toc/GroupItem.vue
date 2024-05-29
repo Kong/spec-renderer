@@ -27,6 +27,7 @@
           :key="idx + ' ' + child.title+child"
           :item="child"
           :root="isGroup(child) ? false : undefined"
+          @expand="onExpand"
           @item-selected="selectItem"
           @trigger-scroll="($event) => emitElement($event as HTMLElement)"
         />
@@ -65,6 +66,7 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
   (e: 'trigger-scroll', element: HTMLElement): void,
+  (e: 'expand'): void,
 }>()
 
 const selectItem = (id: any) => {
@@ -84,6 +86,12 @@ const onClick = (event: Event) => {
   if (collapseTriggerRef.value === event.target) {
     isCollapsed.value = !isCollapsed.value
   }
+}
+
+const onExpand = () => {
+  isCollapsed.value = false
+
+  emit('expand')
 }
 </script>
 
