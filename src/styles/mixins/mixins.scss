@@ -43,10 +43,10 @@
 
   .chevron-icon {
     color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
+    flex-shrink: 0;
     height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
     pointer-events: none;
     transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
-    flex-shrink: 0;
     width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
 
     &.expanded {
