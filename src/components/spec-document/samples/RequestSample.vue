@@ -45,7 +45,7 @@
       </div>
       <div class="right-card-body">
         <div v-if="requestCode">
-          <pre>{{ requestCode }}</pre>
+          <pre v-html="requestCode" />
         </div>
       </div>
     </div>
@@ -58,8 +58,22 @@ import type { PropType } from 'vue'
 import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet-lite'
 import { requestSampleConfigs } from '../../../constants'
+import hljs from 'highlight.js/lib/core'
+import javascript from 'highlight.js/lib/languages/javascript'
+import json from 'highlight.js/lib/languages/json'
+import java from 'highlight.js/lib/languages/java'
+import bash from 'highlight.js/lib/languages/bash'
+import python from 'highlight.js/lib/languages/bash'
 
+import 'highlight.js/styles/atom-one-dark.css'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet-lite'
+
+
+hljs.registerLanguage('javascript', javascript)
+hljs.registerLanguage('json', json)
+hljs.registerLanguage('java', java)
+hljs.registerLanguage('bash', bash)
+hljs.registerLanguage('python', python)
 
 const props = defineProps({
   data: {
@@ -132,6 +146,10 @@ const snippet = ref<HTTPSnippetType>()
 
 const requestCode = ref<string | string[] | null>()
 
+const getHighlightLanguage = (snippetLang: string | null | undefined): string | null | undefined => {
+  return requestConfigs.value.find(c => c.httpSnippetLanguage == snippetLang)?.highlightLanguage
+}
+
 watch(() => ({
   method: props.data.method,
   requestBodyKey: selectedRequestSample.value,
@@ -174,11 +192,17 @@ watch(() => ({
   }
 
   // if our we do not have requestCode generated, or our lanf or lib are changed - we need to re-generate requestCode
-  if (!requestCode.value || newValue.lang !== oldValue?.lang || newValue.lib !== oldValue.lib || newValue.requestBodyKey !== oldValue?.requestBodyKey) {
+  if (!requestCode.value || newValue.lang !== oldValue?.lang || newValue.lib !== oldValue?.lib || newValue.requestBodyKey !== oldValue?.requestBodyKey) {
     if (newValue.lang === 'json') {
-      requestCode.value = JSON.stringify(jsonObj, null, 2)
+      requestCode.value = hljs.highlight(JSON.stringify(jsonObj, null, 2), { language: 'json' }).value
     } else {
-      requestCode.value = await snippet.value.convert(newValue.lang as TargetId, newValue.lib)
+      const code = await snippet.value.convert(newValue.lang as TargetId, newValue.lib)
+      const hightLightLang = getHighlightLanguage(newValue.lang)
+      if (hightLightLang) {
+        requestCode.value = hljs.highlight(code as string, { language: hightLightLang }).value
+      } else {
+        requestCode.value = code
+      }
     }
   }
 }, { immediate: true, deep: true })

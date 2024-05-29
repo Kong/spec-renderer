@@ -8,6 +8,7 @@ interface LibraryConfig {
 interface LanguageConfig {
   label: string
   httpSnippetLanguage: TargetIdEx
+  highlightLanguage: string
   libraries?: Array<LibraryConfig>
 }
 

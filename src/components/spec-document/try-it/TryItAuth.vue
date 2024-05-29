@@ -9,7 +9,7 @@
         :size="20"
       />
       <h5>Authentication</h5>
-      <TryItButton class="tryit-btn" />
+      <TryItButton />
     </div>
     <div class="right-card-body">
       <div class="left">

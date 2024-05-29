@@ -8,10 +8,12 @@ export const requestSampleConfigs: RequestSampleConfigs = [
   {
     label: 'JSON (body)',
     httpSnippetLanguage: 'json',
+    highlightLanguage: 'json',
   },
   {
     label: 'Shell',
     httpSnippetLanguage: 'shell',
+    highlightLanguage: 'bash',
     // libraries: [
     //   {
     //     label: 'cURL',
@@ -26,6 +28,7 @@ export const requestSampleConfigs: RequestSampleConfigs = [
   {
     label: 'Python',
     httpSnippetLanguage: 'python',
+    highlightLanguage: 'python',
     // libraries: [
     //   {
     //     label: 'Python 3',
@@ -40,6 +43,7 @@ export const requestSampleConfigs: RequestSampleConfigs = [
   {
     label: 'Node',
     httpSnippetLanguage: 'node',
+    highlightLanguage: 'javascript',
     // libraries: [
     //   {
     //     label: 'Native',
@@ -66,6 +70,7 @@ export const requestSampleConfigs: RequestSampleConfigs = [
   {
     label: 'JavaScript',
     httpSnippetLanguage: 'javascript',
+    highlightLanguage: 'javascript',
     // libraries: [
     //   {
     //     label: 'Fetch',
@@ -84,10 +89,12 @@ export const requestSampleConfigs: RequestSampleConfigs = [
   {
     label: 'Go',
     httpSnippetLanguage: 'go',
+    highlightLanguage: 'go',
   },
   {
     label: 'Java',
     httpSnippetLanguage: 'java',
+    highlightLanguage: 'java',
     // libraries: [
     //   {
     //     label: 'AsyncHttp',
@@ -110,5 +117,6 @@ export const requestSampleConfigs: RequestSampleConfigs = [
   {
     label: 'Ruby',
     httpSnippetLanguage: 'ruby',
+    highlightLanguage: 'java',
   },
 ]
