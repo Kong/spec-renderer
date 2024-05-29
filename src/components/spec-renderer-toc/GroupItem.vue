@@ -26,7 +26,7 @@
           v-for="(child, idx) in item.items"
           :key="idx + ' ' + child.title+child"
           :item="child"
-          :root="false"
+          :root="isGroup(child) ? false : undefined"
           @element-selected="emitElement"
           @item-selected="selectItem"
         />
@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { ref, type PropType } from 'vue'
 import type { TableOfContentsGroup } from '../../stoplight/elements-core/components/Docs/types'
-import { itemComponent } from './index'
+import { itemComponent, isGroup } from './index'
 import { ChevronRightIcon } from '@kong/icons'
 
 const props = defineProps({

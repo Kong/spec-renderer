@@ -4,7 +4,7 @@
     class="node-item"
   >
     <a
-      :class="{ 'single-word': isSingleWord, 'selected': currentPath === item.id }"
+      :class="{ 'single-word': isSingleWord, 'selected': isActive }"
       :href="`${basePath}${item.id}`"
       @click.prevent="selectItem(item.id)"
     >
@@ -51,6 +51,7 @@ const selectItem = (id: string): void => {
 }
 
 const isSingleWord = computed(() => !props.item.title?.trim()?.includes(' '))
+const isActive = computed(() => currentPath.value === props.item.id)
 
 /**
  * Watch current path and emit the event if the current path matches the item.
@@ -66,7 +67,7 @@ watch(currentPath, (val) => {
  */
 watch(nodeItemRef, (val) => {
   if (val) {
-    if (currentPath.value === props.item.id) {
+    if (isActive.value) {
       emit('element-selected', val)
     }
   }

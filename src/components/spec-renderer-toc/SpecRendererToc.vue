@@ -40,7 +40,7 @@ const props = defineProps({
   /**
    * Selected path to load document with
    */
-  path: {
+  currentPath: {
     type: String,
     default: '/',
   },
@@ -48,7 +48,7 @@ const props = defineProps({
 
 // to be consumed in multi-level child components
 provide<Ref<string>>('base-path', computed((): string => props.basePath))
-provide<Ref<string>>('current-path', computed((): string => props.path))
+provide<Ref<string>>('current-path', computed((): string => props.currentPath))
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void
@@ -65,7 +65,7 @@ const selectItem = (id: any) => {
 const tocNavRef = ref<HTMLElement | null>(null)
 
 const scrollToElement = async (element: any) => {
-  if (typeof window !== 'undefined' && element instanceof HTMLElement && tocNavRef.value) {
+  if (element instanceof HTMLElement && tocNavRef.value) {
     await nextTick() // wait for all parent groups to expand
 
     const offsetTop = getOffsetTopRelativeToParent(element, tocNavRef.value)
@@ -90,7 +90,7 @@ const itemCollapsed = (item: TableOfContentsItem): boolean | undefined => {
     return false
   }
 
-  // return undefined for non-group items (which don't have accept `collapsed` prop)
+  // return undefined for non-group items (which don't accept `collapsed` prop)
   return undefined
 }
 </script>
