@@ -13,6 +13,7 @@
       </section>
 
       <ServerEndpoint
+        v-if="serverList.length"
         :method="data.method"
         :path="data.path"
         :selected-server-url="selectedServerURL"
