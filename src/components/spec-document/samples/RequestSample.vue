@@ -133,7 +133,7 @@ const requestSamples = computed((): INodeExample[] => {
   }
 })
 
-watch(() => (requestSamples.value), (newValue: INodeExample[]) => {
+watch(requestSamples, (newValue: INodeExample[]) => {
   selectedRequestSample.value = getFirstSampleKey(newValue)
 })
 
