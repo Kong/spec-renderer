@@ -111,7 +111,7 @@ export default function useSchemaParser():any {
     trace(options.traceParsing, 'json document available')
     try {
       // let's see if we can detect some validation errors here
-      validationResults.value = await validate(spec || jsonDocument.value)
+      // validationResults.value = await validate(spec || jsonDocument.value)
     } catch (err) {
       console.error('error in validate:', err)
     }
