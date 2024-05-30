@@ -6,6 +6,6 @@
 
 <style lang="scss" scoped>
 .tryit-btn {
-  border: 1px solid $kui-color-border;
+  border: $kui-border-width-10 solid $kui-color-border;
 }
 </style>

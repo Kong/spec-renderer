@@ -118,7 +118,7 @@ const showTryItPanel = computed((): boolean => {
 
     input,
     select {
-      border: 1px solid $kui-color-border;
+      border: $kui-border-width-10 solid $kui-color-border;
       border-radius: $kui-border-radius-30;
       box-sizing: border-box;
       padding: $kui-space-40 $kui-space-50;

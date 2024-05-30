@@ -114,7 +114,7 @@ function updateSelectedServerURL(url: string) {
   }
 }
 :deep(.right-card) {
-  border: 1px solid $kui-color-border;
+  border: $kui-border-width-10 solid $kui-color-border;
   border-radius: $kui-border-radius-30;
 
   .right-card-header {
@@ -131,7 +131,7 @@ function updateSelectedServerURL(url: string) {
 
   .right-card-body {
     background-color: $kui-color-background-neutral-weakest;
-    border-top: 1px solid $kui-color-border;
+    border-top: $kui-border-width-10 solid $kui-color-border;
     width: 100%;
   }
 
