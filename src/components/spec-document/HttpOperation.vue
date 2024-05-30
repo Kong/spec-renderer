@@ -41,7 +41,7 @@
 
       <RequestSample
         :auth-headers="authHeaders"
-        :base-server-url="data.servers ? data.servers[0].url: ''"
+        :base-server-url="data.servers ? `${data.servers[0].url}${data.path}`: ''"
         :data="data"
       />
     </div>
