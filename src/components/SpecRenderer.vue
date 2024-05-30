@@ -5,6 +5,7 @@
         v-if="tableOfContents"
         ref="specRendererTocRef"
         :base-path="basePath"
+        class="spec-renderer-toc"
         :control-browser-url="controlBrowserUrl"
         :current-path="currentPath"
         :table-of-contents="tableOfContents"
@@ -165,5 +166,29 @@ aside {
 .wrapper {
   display: flex;
   height: 100vh;
+}
+
+/*
+Styles for SpecRendererToc that need to live here so that they apply to the TOC
+when it's rendered in the context of the SpecRenderer.
+Otherwise host app should have control over these styles.
+*/
+.spec-renderer-toc {
+  background-color: var(--kui-color-background, $kui-color-background);
+
+  :deep(>) {
+    ul > *:first-child {
+      // overview item
+      padding: var(--kui-space-70, $kui-space-70);
+      padding-bottom: var(--kui-space-0, $kui-space-0);
+    }
+  }
+
+  :deep(.group-item) {
+    &.root {
+      padding-left: var(--kui-space-70, $kui-space-70);
+      padding-right: var(--kui-space-70, $kui-space-70);
+    }
+  }
 }
 </style>

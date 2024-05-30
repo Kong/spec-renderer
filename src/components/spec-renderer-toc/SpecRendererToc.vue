@@ -104,7 +104,7 @@ const itemCollapsed = (item: TableOfContentsItem): boolean | undefined => {
 
 <style lang="scss" scoped>
 .table-of-contents {
-  background-color: var(--kui-color-background, $kui-color-background);
+  background-color: var(--kui-color-background-transparent, $kui-color-background-transparent); // transparent so that it doesn't interfere with the parent's background
   overflow-x: hidden;
   overflow-y: auto;
   position: relative; // important, need this for scrolling to selected item
@@ -112,19 +112,6 @@ const itemCollapsed = (item: TableOfContentsItem): boolean | undefined => {
 
   > ul {
     padding-left: var(--kui-space-0, $kui-space-0);
-
-    > * {
-      &:first-child {
-        // overview item
-        padding: var(--kui-space-70, $kui-space-70);
-        padding-bottom: var(--kui-space-0, $kui-space-0);
-
-        & + * {
-          // very first group item following overview
-          padding-top: var(--kui-space-50, $kui-space-50);
-        }
-      }
-    }
   }
 }
 </style>
