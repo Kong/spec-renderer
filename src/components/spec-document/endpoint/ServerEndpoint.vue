@@ -8,19 +8,23 @@
         :method="method"
         size="large"
       />
-      <div class="server-endpoint-url">
+      <div
+        class="server-endpoint-url"
+        data-testid="server-endpoint-url-with-path"
+      >
         <span>{{ selectedServerUrl }}</span><span>{{ path }}</span>
       </div>
     </div>
     <div class="right">
       <select
-        id="endpoint-server-select"
+        data-testid="endpoint-server-select"
         name="endpoint-server"
         @change="changeEndpointServer"
       >
         <option
           v-for="serverURL in serverUrlList"
           :key="serverURL"
+          :data-testid="`server-endpoint-option-${serverURL}`"
           :selected="serverURL === selectedServerUrl"
           :value="serverURL"
         >
