@@ -1,7 +1,7 @@
 <template>
   <li
     class="node-item"
-    :data-testid="`${isActive ? 'node-item-active' : 'node-item'}`"
+    :data-active-node="isActive ? true : undefined"
   >
     <a
       :class="{ 'single-word': isSingleWord, 'active': isActive }"

@@ -144,9 +144,13 @@ watch(() => ({
 /**
  * Once element is in the DOM, trigger scroll to active item in TOC.
  */
-watch(specRendererTocRef, (val) => {
+watch(specRendererTocRef, async (val) => {
   if (val) {
-    val.scrollToActiveItem()
+    const scrollPosition = await val.getActiveItemScrollPosition()
+
+    val.$el.scrollTo({
+      top: scrollPosition - 50, // offset 50 so it doesn't stick to the top
+    })
   }
 })
 </script>

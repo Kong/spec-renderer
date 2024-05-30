@@ -53,34 +53,31 @@ const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
 }>()
 
-const scrollToActiveItem = async (scrollableAncestor: HTMLElement = tocNavRef.value as HTMLElement): Promise<void> => {
-  if (parent) {
+/**
+ * @description Get the scroll position of the active item within the scrollable ancestor.
+ * Relies on the `data-active-node` attribute to determine the active item.
+ * Because it uses HTMLElement: offsetParent property - it relies on the parent element to have a `position` other than `static` (ideally `relative`).
+ * @param scrollableAncestor - the element to scroll within
+ * @returns the scroll position of the active item
+ */
+const getActiveItemScrollPosition = async (scrollableAncestor: HTMLElement = tocNavRef.value as HTMLElement): Promise<number> => {
+  if (scrollableAncestor) {
     await nextTick() // wait for all parent groups to expand
 
-    const activeItem = scrollableAncestor.querySelector('li[data-testid="node-item-active"]') as HTMLElement || null
+    const activeItem = scrollableAncestor.querySelector('li[data-active-node="true"]') as HTMLElement || null
 
-    if (activeItem) {
-      const offsetTop = getOffsetTopRelativeToParent(activeItem, scrollableAncestor)
-
-      if (offsetTop !== null) {
-        console.log('offsetTop', offsetTop)
-
-        parent.scrollTo({
-          top: offsetTop - 50, // offset 50 so it doesn't stick to the top
-          behavior: 'auto', // determined by the computed value of 'scroll-behavior' CSS property - so that host app has control over it
-        })
-      }
+    if (!activeItem) {
+      return 0
     }
+
+    return getOffsetTopRelativeToParent(activeItem, scrollableAncestor) || 0
   }
+
+  return 0
 }
 
 defineExpose({
-  /**
-   * Allow parent component to trigger scroll to active item.
-   * Delegate triggering of scroll to parent component so that it doesn't happen automatically.
-   * Depending on how this component is used (rendered in context of SpecRenderer or standalone), parent component can decide when/how to trigger scroll.
-   */
-  scrollToActiveItem,
+  getActiveItemScrollPosition,
 })
 
 const selectItem = (id: any) => {
