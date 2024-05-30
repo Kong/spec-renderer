@@ -65,7 +65,7 @@ const scrollToActiveItem = async () => {
       if (offsetTop !== null) {
         tocNavRef.value.scrollTo({
           top: offsetTop - 50, // offset 50 so it doesn't stick to the top
-          behavior: 'smooth',
+          behavior: 'auto', // determined by the computed value of 'scroll-behavior' CSS property - so that host app has control over it
         })
       }
     }
