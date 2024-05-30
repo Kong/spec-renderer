@@ -53,13 +53,6 @@ const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
 }>()
 
-/**
- * @description Get the scroll position of the active item within the scrollable ancestor.
- * Relies on the `data-active-node` attribute to determine the active item.
- * Because it uses HTMLElement: offsetParent property - it relies on the parent element to have a `position` other than `static` (ideally `relative`).
- * @param scrollableAncestor - the element to scroll within
- * @returns the scroll position of the active item
- */
 const getActiveItemScrollPosition = async (scrollableAncestor: HTMLElement = tocNavRef.value as HTMLElement): Promise<number> => {
   if (scrollableAncestor) {
     await nextTick() // wait for all parent groups to expand
@@ -77,6 +70,13 @@ const getActiveItemScrollPosition = async (scrollableAncestor: HTMLElement = toc
 }
 
 defineExpose({
+  /**
+   * @description Get the scroll position of the active item within the scrollable ancestor.
+   * Relies on the `data-active-node` attribute to determine the active item.
+   * Because it uses HTMLElement: offsetParent property - it relies on the parent element to have a `position` other than `static` (ideally `relative`).
+   * @param scrollableAncestor - the element to scroll within
+   * @returns the scroll position of the active item
+   */
   getActiveItemScrollPosition,
 })
 
