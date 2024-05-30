@@ -112,6 +112,11 @@ const itemCollapsed = (item: TableOfContentsItem): boolean | undefined => {
 
   > ul {
     padding-left: var(--kui-space-0, $kui-space-0);
+
+    > *:first-child + * {
+      // reduce spacing to very first group item following the overview
+      padding-top: var(--kui-space-50, $kui-space-50);
+    }
   }
 }
 </style>
