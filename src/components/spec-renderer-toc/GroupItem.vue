@@ -44,7 +44,7 @@ import { ref, type PropType } from 'vue'
 import type { TableOfContentsGroup } from '../../stoplight/elements-core/components/Docs/types'
 import { itemComponent, isGroup } from './index'
 import { ChevronRightIcon } from '@kong/icons'
-import { v1 as uuidv1 } from 'uuid'
+import { v5 as uuidv5 } from 'uuid'
 
 const props = defineProps({
   item: {
@@ -73,7 +73,7 @@ const emit = defineEmits<{
   (e: 'expand'): void,
 }>()
 
-const collapseGroupId = uuidv1()
+const collapseGroupId = uuidv5('GroupItem', '490495a2-c20a-4653-9a4c-364ce2887cc8')
 
 const selectItem = (id: any) => {
   isCollapsed.value = false
