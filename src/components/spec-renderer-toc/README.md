@@ -16,10 +16,11 @@
 
 ## Exposes
 
-* `getActiveItemScrollPosition`
-  * type: `Function`
-  * param: `scrollableAncestor?: HTMLElement`
-  * returns: `number`
+### `getActiveItemScrollPosition`
+
+* type: `Function`
+* param: `scrollableAncestor?: HTMLElement`
+* returns: `number`
 
 On passive item selection (page load) sometimes we want TOC component to scroll the active item into the view within it's scrollable parent (so that main page scroll bar remains unaffected but scrollable aside element scrolls to display the active item). To achieve that, SpecRendererToc component exposes `getActiveItemScrollPosition` method that returns active item scroll position within the scrollable parent.
 
