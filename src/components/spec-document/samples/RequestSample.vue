@@ -177,7 +177,8 @@ watch(() => ({
   if (newValue.serverUrl && (!snippet.value || newValue.requestBodyKey !== oldValue?.requestBodyKey || newValue.serverUrl !== oldValue.serverUrl || newValue.authHeaders !== oldValue?.authHeaders)) {
     snippet.value = new HTTPSnippet({
       method: newValue.method,
-      url: newValue.serverUrl,
+      // TODO: handle parameter / query change in url gracefully
+      url: newValue.serverUrl.replace('{', '').replace('}', ''),
       headers: [
         ...newValue.authHeaders,
         {

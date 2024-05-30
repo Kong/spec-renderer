@@ -50,7 +50,7 @@
 
       <RequestSample
         :auth-headers="authHeaders"
-        :base-server-url="data.servers ? `${data.servers[0].url}${data.path}`: ''"
+        :base-server-url="`${selectedServerURL}${data.path}`"
         :data="data"
       />
     </div>
@@ -80,7 +80,6 @@ const setAuthHeaders = (newHeaders: Array<Record<string, string>>) => {
 }
 // this is the server selected by user, defaults to first server in the list
 const selectedServerURL = ref<string>(props.data.servers?.[0].url ?? '')
-
 
 const serverList = computed(() => props.data.servers?.map(server => server.url) ?? [])
 

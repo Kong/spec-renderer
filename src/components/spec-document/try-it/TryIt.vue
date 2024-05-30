@@ -66,6 +66,7 @@ const accessTokenChanged = (e: Event) => {
   if (tokenValue) {
     authHeaders.push({
       name: 'Authorization',
+      // TODO: this migh be a query string, not a header, handle this case
       value: `Bearer ${(e.target as HTMLInputElement).value}`,
     })
   }
