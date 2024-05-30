@@ -53,17 +53,17 @@ const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
 }>()
 
-const scrollToActiveItem = async () => {
-  if (tocNavRef.value) {
+const scrollToActiveItem = async (scrollableAncestor: HTMLElement = tocNavRef.value as HTMLElement) => {
+  if (parent) {
     await nextTick() // wait for all parent groups to expand
 
-    const activeItem = tocNavRef.value.querySelector('li[data-testid="node-item-active"]') as HTMLElement || null
+    const activeItem = scrollableAncestor.querySelector('li[data-testid="node-item-active"]') as HTMLElement || null
 
     if (activeItem) {
-      const offsetTop = getOffsetTopRelativeToParent(activeItem, tocNavRef.value)
+      const offsetTop = getOffsetTopRelativeToParent(activeItem, scrollableAncestor)
 
       if (offsetTop !== null) {
-        tocNavRef.value.scrollTo({
+        parent.scrollTo({
           top: offsetTop - 50, // offset 50 so it doesn't stick to the top
           behavior: 'auto', // determined by the computed value of 'scroll-behavior' CSS property - so that host app has control over it
         })
