@@ -17,7 +17,7 @@
         </select>
         &nbsp;
         <select
-          v-if="selectedLangLibraries.length > 0"
+          v-if="selectedLangLibraries.length"
           v-model="selectedLangLibrary"
         >
           <option
@@ -30,7 +30,7 @@
         </select>
 
         <select
-          v-if="requestSamples && requestSamples.length > 0"
+          v-if="requestSamples && requestSamples.length"
           v-model="selectedRequestSample"
           class="request-sample-selector"
         >
@@ -45,6 +45,7 @@
       </div>
       <div class="right-card-body">
         <div v-if="requestCode">
+          <!-- eslint-disable vue/no-v-html -->
           <pre v-html="requestCode" />
         </div>
       </div>
@@ -114,17 +115,17 @@ const selectedLangLibraries = computed(() => {
 })
 
 const getFirstSampleKey = (examples: INodeExample[]): string|null => {
-  if (Array.isArray(examples) && examples.length > 0) {
+  if (Array.isArray(examples) && examples.length) {
     return examples[0].key
   } else {
     return null
   }
 }
 
-const selectedRequestSample = ref<string | null>(props.data?.request?.body?.contents && props.data.request.body.contents.length > 0 ? getFirstSampleKey(props.data.request.body.contents[0].examples as INodeExample[]) : null)
+const selectedRequestSample = ref<string | null>(props.data?.request?.body?.contents && props.data.request.body.contents.length ? getFirstSampleKey(props.data.request.body.contents[0].examples as INodeExample[]) : null)
 
 const requestSamples = computed((): INodeExample[] => {
-  if (props.data?.request?.body?.contents && props.data.request.body.contents.length > 0 && Array.isArray(props.data.request.body.contents[0].examples) && props.data.request.body.contents[0].examples.length > 0) {
+  if (props.data?.request?.body?.contents && props.data.request.body.contents.length && Array.isArray(props.data.request.body.contents[0].examples) && props.data.request.body.contents[0].examples.length) {
     return props.data.request.body.contents[0].examples as INodeExample[]
   } else {
     return []
@@ -169,7 +170,7 @@ watch(() => ({
   }
 
   if (newValue.lang !== oldValue?.lang) {
-    selectedLangLibrary.value = selectedLangLibraries.value?.length > 0 ? selectedLangLibraries.value[0].httpSnippetLibrary : undefined
+    selectedLangLibrary.value = selectedLangLibraries.value?.length ? selectedLangLibraries.value[0].httpSnippetLibrary : undefined
   }
   let snippedChanged = false
 

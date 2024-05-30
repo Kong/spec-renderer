@@ -91,7 +91,7 @@ const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 // there is more logic that drives do we show tryouts or not
 const showTryItPanel = computed((): boolean => {
   // if there are no services defined in overView we do not show tryIt
-  return !hideTryIt.value && Array.isArray(props.data.servers) && props.data.servers.length > 0
+  return !hideTryIt.value && Array.isArray(props.data.servers) && !!props.data.servers.length
 })
 
 </script>
