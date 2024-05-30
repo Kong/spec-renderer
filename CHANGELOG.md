@@ -1,3 +1,10 @@
+## [1.12.7](https://github.com/Kong/spec-renderer/compare/v1.12.6...v1.12.7) (2024-05-30)
+
+
+### Bug Fixes
+
+* **spec-renderer-toc:** hide endpoints title when schemas are hidden [KHCP-12097] ([#90](https://github.com/Kong/spec-renderer/issues/90)) ([3ba8452](https://github.com/Kong/spec-renderer/commit/3ba8452ab3459a12f9801e4fe27f3e061169778d))
+
 ## [1.12.6](https://github.com/Kong/spec-renderer/compare/v1.12.5...v1.12.6) (2024-05-30)
 
 
