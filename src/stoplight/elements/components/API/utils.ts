@@ -97,6 +97,7 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
     tree.push({
       title: 'Endpoints',
       items: [],
+      hideTitle: mergedConfig.hideSchemas,
     })
 
     const { groups, ungrouped } = computeTagGroups<OperationNode>(serviceNode, NodeType.HttpOperation)
