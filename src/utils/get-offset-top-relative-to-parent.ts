@@ -15,7 +15,6 @@ export function getOffsetTopRelativeToParent(child: HTMLElement, parent: HTMLEle
   let currentElement: HTMLElement | null = child
 
   while (currentElement && currentElement !== parent && currentElement.offsetParent !== document.body) {
-    console.log('here2')
     offsetTop += currentElement.offsetTop
     currentElement = currentElement.offsetParent as HTMLElement
   }
