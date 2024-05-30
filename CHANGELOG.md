@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/Kong/spec-renderer/compare/v1.12.7...v1.13.0) (2024-05-30)
+
+
+### Features
+
+* endpoint component [KHCP-11973] ([#93](https://github.com/Kong/spec-renderer/issues/93)) ([18ac6c8](https://github.com/Kong/spec-renderer/commit/18ac6c8811eddf97b04f35eefdf7055199412234))
+
 ## [1.12.7](https://github.com/Kong/spec-renderer/compare/v1.12.6...v1.12.7) (2024-05-30)
 
 
