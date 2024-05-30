@@ -22,7 +22,6 @@ import type { PropType, Ref } from 'vue'
 import type { TableOfContentsItem } from '../../stoplight/elements-core/components/Docs/types'
 import { itemComponent, isGroup } from './index'
 import { getOffsetTopRelativeToParent } from '@/utils'
-import console from 'console'
 
 const props = defineProps({
   tableOfContents: {
@@ -54,7 +53,7 @@ const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
 }>()
 
-const scrollToActiveItem = async (scrollableAncestor: HTMLElement = tocNavRef.value as HTMLElement) => {
+const scrollToActiveItem = async (scrollableAncestor: HTMLElement = tocNavRef.value as HTMLElement): Promise<void> => {
   if (parent) {
     await nextTick() // wait for all parent groups to expand
 
@@ -63,9 +62,9 @@ const scrollToActiveItem = async (scrollableAncestor: HTMLElement = tocNavRef.va
     if (activeItem) {
       const offsetTop = getOffsetTopRelativeToParent(activeItem, scrollableAncestor)
 
-      console.log('here1')
-
       if (offsetTop !== null) {
+        console.log('here1')
+
         parent.scrollTo({
           top: offsetTop - 50, // offset 50 so it doesn't stick to the top
           behavior: 'auto', // determined by the computed value of 'scroll-behavior' CSS property - so that host app has control over it
