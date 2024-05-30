@@ -68,6 +68,7 @@ import go from 'highlight.js/lib/languages/go'
 
 import 'highlight.js/styles/atom-one-dark.css'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet-lite'
+import { UrlPostKindEnum } from 'launchdarkly-api-typescript'
 
 hljs.registerLanguage('javascript', javascript)
 hljs.registerLanguage('json', json)
@@ -173,29 +174,42 @@ watch(() => ({
     selectedLangLibrary.value = selectedLangLibraries.value?.length > 0 ? selectedLangLibraries.value[0].httpSnippetLibrary : undefined
   }
   let snippedChanged = false
+
   // if we selected new requestBody or if we do not have httpSNippet yet, we need to re-init it
-  if (newValue.serverUrl && (!snippet.value || newValue.requestBodyKey !== oldValue?.requestBodyKey || newValue.serverUrl !== oldValue.serverUrl || newValue.authHeaders !== oldValue?.authHeaders)) {
-    snippet.value = new HTTPSnippet({
-      method: newValue.method,
-      // TODO: handle parameter / query change in url gracefully
-      url: newValue.serverUrl.replace('{', '').replace('}', ''),
-      headers: [
-        ...newValue.authHeaders,
-        {
-          name: 'Content-Type',
-          value: 'application/json',
+  if (!snippet.value || newValue.requestBodyKey !== oldValue?.requestBodyKey || newValue.serverUrl !== oldValue.serverUrl || newValue.authHeaders !== oldValue?.authHeaders) {
+
+    // TODO: handle parameter / query change in url gracefully
+    let serverUrl = newValue.serverUrl.replace(/[{}]/g, '')
+    let serverUrlValid = true
+    try {
+      new URL(serverUrl)
+    } catch (e) {
+      serverUrlValid = false
+    }
+
+    if (serverUrlValid) {
+      snippet.value = new HTTPSnippet({
+        method: newValue.method,
+        url: serverUrl,
+        headers: [
+          ...newValue.authHeaders,
+          {
+            name: 'Content-Type',
+            value: 'application/json',
+          },
+          {
+            name: 'Accept',
+            value: acceptHeader.value,
+          },
+        ],
+        postData: {
+          mimeType: 'application/json',
+          text: JSON.stringify(jsonObj, null, 2),
         },
-        {
-          name: 'Accept',
-          value: acceptHeader.value,
-        },
-      ],
-      postData: {
-        mimeType: 'application/json',
-        text: JSON.stringify(jsonObj, null, 2),
-      },
-    } as unknown as HarRequest)
-    snippedChanged = true
+      } as unknown as HarRequest)
+
+      snippedChanged = true
+    }
   }
 
   // if our we do not have requestCode generated, or our lanf or lib are changed - we need to re-generate requestCode
