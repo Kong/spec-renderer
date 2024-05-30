@@ -15,6 +15,15 @@
         <p>{{ data.description }}</p>
       </section>
 
+      <ServerEndpoint
+        v-if="serverList.length"
+        :method="data.method"
+        :path="data.path"
+        :selected-server-url="selectedServerURL"
+        :server-url-list="serverList"
+        @selected-server-changed="updateSelectedServerURL"
+      />
+
       <HttpRequest
         v-if="data.request"
         v-bind="data.request"
@@ -49,15 +58,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpOperation } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpResponse from './endpoint/HttpResponse.vue'
 import TryIt from './try-it/TryIt.vue'
 import RequestSample from './samples/RequestSample.vue'
+import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 
-defineProps({
+const props = defineProps({
   data: {
     type: Object as PropType<IHttpOperation>,
     required: true,
@@ -67,6 +77,15 @@ const authHeaders = ref<Array<Record<string, string>>>()
 
 const setAuthHeaders = (newHeaders: Array<Record<string, string>>) => {
   authHeaders.value = newHeaders
+}
+// this is the server selected by user, defaults to first server in the list
+const selectedServerURL = ref<string>(props.data.servers?.[0].url ?? '')
+
+
+const serverList = computed(() => props.data.servers?.map(server => server.url) ?? [])
+
+function updateSelectedServerURL(url: string) {
+  selectedServerURL.value = url
 }
 
 </script>

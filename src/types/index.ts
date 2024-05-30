@@ -3,3 +3,4 @@
 
 export * from './spec-renderer'
 export * from './request-languages'
+export * from './method-badge'

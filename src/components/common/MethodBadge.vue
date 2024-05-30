@@ -1,25 +1,33 @@
 <template>
   <span
-    class="node-item-badge"
-    :class="method"
+    class="method-badge"
+    :class="[method, size]"
+    data-testid="method-badge"
   >
     {{ method }}
   </span>
 </template>
 
 <script setup lang="ts">
+import { BadgeSizeVariants } from '@/types'
+import type { BadgeSize, Method } from '@/types'
 import type { PropType } from 'vue'
-
-/**
- * This is more of a helper type to help keep track of the methods we define styles for (a method that doesn't match any of these will just use the default styling).
- * Because method comes from the spec, it can be any string.
- */
-type Method = 'get' | 'post' | 'put' | 'delete' | 'patch' | 'options' | 'head' | 'connect' | 'trace'
 
 defineProps({
   method: {
     type: String as PropType<Method | String>,
     default: '',
+  },
+  /**
+  * Size variations
+  * One of ['small', 'large' ]
+  */
+  size: {
+    type: String as PropType<BadgeSize>,
+    default: 'small',
+    validator: (value: BadgeSize): boolean => {
+      return BadgeSizeVariants.includes(value)
+    },
   },
 })
 </script>
@@ -33,15 +41,13 @@ defineProps({
   color: $textColor;
 }
 
-.node-item-badge {
+.method-badge {
   @include badge-appearance;
 
   border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
-  font-size: var(--kui-font-size-10, $kui-font-size-10);
   font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
   letter-spacing: var(--kui-letter-spacing-minus-30, $kui-letter-spacing-minus-30);
   line-height: var(--kui-line-height-20, $kui-line-height-20);
-  padding: var(--kui-space-0, $kui-space-0) var(--kui-space-30, $kui-space-30);
   text-transform: uppercase;
 
   &.get {
@@ -87,6 +93,16 @@ defineProps({
   &.trace {
     @include badge-appearance(var(--kui-method-color-background-trace, $kui-method-color-background-trace),
       var(--kui-method-color-text-trace, $kui-method-color-text-trace));
+  }
+
+  /* Sizes */
+  &.small {
+    font-size: var(--kui-font-size-10, $kui-font-size-10);
+    padding: var(--kui-space-0, $kui-space-0) var(--kui-space-30, $kui-space-30);
+  }
+  &.large {
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
   }
 }
 </style>
