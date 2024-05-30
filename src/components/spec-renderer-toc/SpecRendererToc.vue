@@ -73,6 +73,11 @@ const scrollToActiveItem = async () => {
 }
 
 defineExpose({
+  /**
+   * Allow parent component to trigger scroll to active item.
+   * Delegate triggering of scroll to parent component so that it doesn't happen automatically.
+   * Depending on how this component is used (rendered in context of SpecRenderer or standalone), parent component can decide when/how to trigger scroll.
+   */
   scrollToActiveItem,
 })
 
