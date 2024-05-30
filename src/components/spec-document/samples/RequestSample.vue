@@ -65,10 +65,8 @@ import java from 'highlight.js/lib/languages/java'
 import bash from 'highlight.js/lib/languages/bash'
 import python from 'highlight.js/lib/languages/python'
 import go from 'highlight.js/lib/languages/go'
-
 import 'highlight.js/styles/atom-one-dark.css'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet-lite'
-import { UrlPostKindEnum } from 'launchdarkly-api-typescript'
 
 hljs.registerLanguage('javascript', javascript)
 hljs.registerLanguage('json', json)
@@ -179,9 +177,10 @@ watch(() => ({
   if (!snippet.value || newValue.requestBodyKey !== oldValue?.requestBodyKey || newValue.serverUrl !== oldValue.serverUrl || newValue.authHeaders !== oldValue?.authHeaders) {
 
     // TODO: handle parameter / query change in url gracefully
-    let serverUrl = newValue.serverUrl.replace(/[{}]/g, '')
+    const serverUrl = newValue.serverUrl.replace(/[{}]/g, '')
     let serverUrlValid = true
     try {
+      // eslint-disable-next-line no-new
       new URL(serverUrl)
     } catch (e) {
       serverUrlValid = false
