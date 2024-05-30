@@ -1,5 +1,7 @@
 /**
  * @description Get the offset top of an element relative to its parent.
+ * Parent is the first ancestor that has a position other than static.
+ * offsetParent documentation: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetParent
  * @param child
  * @param parent
  * @returns number | null

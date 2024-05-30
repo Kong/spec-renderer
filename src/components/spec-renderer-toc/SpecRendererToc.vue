@@ -11,7 +11,6 @@
         :collapsed="itemCollapsed(item)"
         :item="item"
         @item-selected="selectItem"
-        @trigger-scroll="($event) => scrollToElement($event as HTMLElement)"
       />
     </ul>
   </nav>
@@ -51,8 +50,31 @@ provide<Ref<string>>('base-path', computed((): string => props.basePath))
 provide<Ref<string>>('current-path', computed((): string => props.currentPath))
 
 const emit = defineEmits<{
-  (e: 'item-selected', id: string): void
+  (e: 'item-selected', id: string): void,
 }>()
+
+const scrollToActiveItem = async () => {
+  if (tocNavRef.value) {
+    await nextTick() // wait for all parent groups to expand
+
+    const activeItem = tocNavRef.value.querySelector('li[data-testid="node-item-active"]') as HTMLElement || null
+
+    if (activeItem) {
+      const offsetTop = getOffsetTopRelativeToParent(activeItem, tocNavRef.value)
+
+      if (offsetTop !== null) {
+        tocNavRef.value.scrollTo({
+          top: offsetTop - 50, // offset 50 so it doesn't stick to the top
+          behavior: 'smooth',
+        })
+      }
+    }
+  }
+}
+
+defineExpose({
+  scrollToActiveItem,
+})
 
 const selectItem = (id: any) => {
   if (props.controlBrowserUrl) {
@@ -63,21 +85,6 @@ const selectItem = (id: any) => {
 }
 
 const tocNavRef = ref<HTMLElement | null>(null)
-
-const scrollToElement = async (element: HTMLElement) => {
-  if (tocNavRef.value) {
-    await nextTick() // wait for all parent groups to expand
-
-    const offsetTop = getOffsetTopRelativeToParent(element, tocNavRef.value)
-
-    if (offsetTop !== null) {
-      tocNavRef.value.scrollTo({
-        top: offsetTop - 50, // offset 50 so it doesn't stick to the top
-        behavior: 'smooth',
-      })
-    }
-  }
-}
 
 const firstGroupItemExpanded = ref<boolean>(false)
 const itemCollapsed = (item: TableOfContentsItem): boolean | undefined => {

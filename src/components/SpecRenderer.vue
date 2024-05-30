@@ -3,6 +3,7 @@
     <aside>
       <SpecRendererToc
         v-if="tableOfContents"
+        ref="specRendererTocRef"
         :base-path="basePath"
         :control-browser-url="controlBrowserUrl"
         :current-path="currentPath"
@@ -111,6 +112,8 @@ const itemSelected = (id: any) => {
   currentPath.value = id
 }
 
+const specRendererTocRef = ref<InstanceType<typeof SpecRendererToc> | null>(null)
+
 watch(() => ({
   specUrl: props.specUrl,
   spec: props.spec,
@@ -137,6 +140,14 @@ watch(() => ({
   }
 }, { immediate: true })
 
+/**
+ * Once element is in the DOM, trigger scroll to active item in TOC.
+ */
+watch(specRendererTocRef, (val) => {
+  if (val) {
+    val.scrollToActiveItem()
+  }
+})
 </script>
 
 <style lang="scss" scoped>

@@ -29,7 +29,6 @@
           :root="isGroup(child) ? false : undefined"
           @expand="onExpand"
           @item-selected="selectItem"
-          @trigger-scroll="($event) => emitElement($event as HTMLElement)"
         />
       </ul>
     </Transition>
@@ -65,7 +64,6 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
-  (e: 'trigger-scroll', element: HTMLElement): void,
   (e: 'expand'): void,
 }>()
 
@@ -73,10 +71,6 @@ const selectItem = (id: any) => {
   isCollapsed.value = false
 
   emit('item-selected', id)
-}
-
-const emitElement = (element: HTMLElement) => {
-  emit('trigger-scroll', element)
 }
 
 const isCollapsed = ref<boolean>(props.collapsed)
