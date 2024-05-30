@@ -88,10 +88,14 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  authHeaders: {
+    type: Array<Record<string, string>>,
+    default: [],
+  },
 })
 
 const requestConfigs = computed(() => {
-  if (['get', 'delete'].includes(props.data.method)) {
+  if (['get', 'delete'].includes(props.data.method) || requestSamples.value.length === 0) {
     return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
   } else {
     return requestSampleConfigs
@@ -156,8 +160,8 @@ watch(() => ({
   lang: selectedLang.value,
   lib: selectedLangLibrary.value,
   serverUrl: props.baseServerUrl,
+  authHeaders: props.authHeaders,
 }), async (newValue, oldValue) => {
-  console.log(props.data)
   const jsonObj = (requestSamples.value as INodeExample[]).find(s => s.key === newValue.requestBodyKey)?.value
 
   if (newValue.method !== oldValue?.method) {
@@ -168,13 +172,14 @@ watch(() => ({
   if (newValue.lang !== oldValue?.lang) {
     selectedLangLibrary.value = selectedLangLibraries.value?.length > 0 ? selectedLangLibraries.value[0].httpSnippetLibrary : undefined
   }
+  let snippedChanged = false
   // if we selected new requestBody or if we do not have httpSNippet yet, we need to re-init it
-  if (!snippet.value || newValue.requestBodyKey !== oldValue?.requestBodyKey || newValue.serverUrl !== oldValue.serverUrl) {
-
+  if (!snippet.value || newValue.requestBodyKey !== oldValue?.requestBodyKey || newValue.serverUrl !== oldValue.serverUrl || newValue.authHeaders !== oldValue?.authHeaders) {
     snippet.value = new HTTPSnippet({
       method: newValue.method,
       url: newValue.serverUrl,
       headers: [
+        ...newValue.authHeaders,
         {
           name: 'Content-Type',
           value: 'application/json',
@@ -182,7 +187,6 @@ watch(() => ({
         {
           name: 'Accept',
           value: acceptHeader.value,
-
         },
       ],
       postData: {
@@ -190,10 +194,11 @@ watch(() => ({
         text: JSON.stringify(jsonObj, null, 2),
       },
     } as unknown as HarRequest)
+    snippedChanged = true
   }
 
   // if our we do not have requestCode generated, or our lanf or lib are changed - we need to re-generate requestCode
-  if (!requestCode.value || newValue.lang !== oldValue?.lang || newValue.lib !== oldValue?.lib || newValue.requestBodyKey !== oldValue?.requestBodyKey) {
+  if (!requestCode.value || snippedChanged || newValue.lang !== oldValue?.lang || newValue.lib !== oldValue?.lib) {
     if (newValue.lang === 'json') {
       requestCode.value = jsonObj ? hljs.highlight(JSON.stringify(jsonObj, null, 2), { language: 'json' }).value : null
     } else {

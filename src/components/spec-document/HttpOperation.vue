@@ -36,9 +36,11 @@
     >
       <TryIt
         :data="data"
+        @access-tokens-changed="setAuthHeaders"
       />
 
       <RequestSample
+        :auth-headers="authHeaders"
         :base-server-url="data.servers ? data.servers[0].url: ''"
         :data="data"
       />
@@ -47,6 +49,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpOperation } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
@@ -60,6 +63,12 @@ defineProps({
     required: true,
   },
 })
+const authHeaders = ref<Array<Record<string, string>>>()
+
+const setAuthHeaders = (newHeaders: Array<Record<string, string>>) => {
+  authHeaders.value = newHeaders
+}
+
 </script>
 
 <style lang="scss" scoped>
