@@ -175,6 +175,7 @@ Otherwise host app should have control over these styles.
 */
 .spec-renderer-toc {
   background-color: var(--kui-color-background, $kui-color-background);
+  position: relative; // important, need this for scrolling to selected item
 
   :deep(>) {
     ul > *:first-child {
