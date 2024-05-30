@@ -47,6 +47,7 @@
         <div v-if="requestCode">
           <!-- eslint-disable vue/no-v-html -->
           <pre v-html="requestCode" />
+          <!-- eslint-enable vue/no-v-html -->
         </div>
       </div>
     </div>
