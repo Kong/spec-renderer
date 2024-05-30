@@ -22,6 +22,7 @@ import type { PropType, Ref } from 'vue'
 import type { TableOfContentsItem } from '../../stoplight/elements-core/components/Docs/types'
 import { itemComponent, isGroup } from './index'
 import { getOffsetTopRelativeToParent } from '@/utils'
+import console from 'console'
 
 const props = defineProps({
   tableOfContents: {
@@ -59,8 +60,12 @@ const scrollToActiveItem = async (scrollableAncestor: HTMLElement = tocNavRef.va
 
     const activeItem = scrollableAncestor.querySelector('li[data-testid="node-item-active"]') as HTMLElement || null
 
+    console.log('here', activeItem)
+
     if (activeItem) {
       const offsetTop = getOffsetTopRelativeToParent(activeItem, scrollableAncestor)
+
+      console.log('here1', offsetTop)
 
       if (offsetTop !== null) {
         parent.scrollTo({

@@ -11,8 +11,6 @@ export function getOffsetTopRelativeToParent(child: HTMLElement, parent: HTMLEle
     return null
   }
 
-  console.log('here1')
-
   let offsetTop = 0
   let currentElement: HTMLElement | null = child
 
@@ -22,16 +20,12 @@ export function getOffsetTopRelativeToParent(child: HTMLElement, parent: HTMLEle
     currentElement = currentElement.offsetParent as HTMLElement
   }
 
-  console.log('here3')
-
   // Calculate the scroll top of all ancestors up to the parent
   let ancestor = child
   while (ancestor && ancestor !== parent) {
     offsetTop -= ancestor.scrollTop
     ancestor = ancestor.parentNode as HTMLElement
   }
-
-  console.log('here4')
 
   return offsetTop
 }
