@@ -10,7 +10,7 @@
     >
       {{ item.title }}
 
-      <NodeItemBadge
+      <MethodBadge
         v-if="item.type === NodeType.HttpOperation"
         class="http-operation-badge"
         :method="item.meta"
@@ -23,7 +23,7 @@
 import { computed, inject, ref, watch } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { TableOfContentsNode } from '../../stoplight/elements-core/components/Docs/types'
-import NodeItemBadge from './NodeItemBadge.vue'
+import MethodBadge from '../common/MethodBadge.vue'
 import { NodeType } from '@stoplight/types'
 
 const props = defineProps({
