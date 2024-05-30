@@ -60,8 +60,6 @@ const scrollToActiveItem = async (scrollableAncestor: HTMLElement = tocNavRef.va
 
     const activeItem = scrollableAncestor.querySelector('li[data-testid="node-item-active"]') as HTMLElement || null
 
-    console.log('here', activeItem)
-
     if (activeItem) {
       const offsetTop = getOffsetTopRelativeToParent(activeItem, scrollableAncestor)
 
