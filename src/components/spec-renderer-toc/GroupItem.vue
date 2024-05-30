@@ -44,7 +44,7 @@ import { ref, type PropType } from 'vue'
 import type { TableOfContentsGroup } from '../../stoplight/elements-core/components/Docs/types'
 import { itemComponent, isGroup } from './index'
 import { ChevronRightIcon } from '@kong/icons'
-import { useId } from 'radix-vue'
+import { nanoid } from 'nanoid'
 
 const props = defineProps({
   item: {
@@ -73,7 +73,7 @@ const emit = defineEmits<{
   (e: 'expand'): void,
 }>()
 
-const collapseGroupId = useId()
+const collapseGroupId = nanoid()
 
 const selectItem = (id: any) => {
   isCollapsed.value = false
