@@ -10,7 +10,20 @@
       </div>
     </div>
     <div class="right">
-      {{ serverURL }}
+      <select
+        id="endpoint-server-select"
+        name="endpoint-server"
+        @change="changeEndpointServer"
+      >
+        <option
+          v-for="server in serverList"
+          :key="server.id"
+          :selected="server.id === selectedServerId"
+          :value="server.id"
+        >
+          {{ server.url }}
+        </option>
+      </select>
     </div>
   </div>
 </template>
@@ -34,16 +47,24 @@ const props = defineProps({
     type: Array as PropType<Array<IServer>>,
     default: () => [],
   },
-  selectedServerID: {
+  selectedServerId: {
     type: String,
     default: '',
   },
 })
 
 const serverURL = computed(() => {
-  const selectedServer = props.serverList.find(server => server.id === props.selectedServerID)
-  return selectedServer?.url || props.serverList[0]?.url || ''
+  const selectedServer = props.serverList.find(server => server.id === props.selectedServerId)
+  return selectedServer?.url || ''
 })
+
+const emit = defineEmits<{
+  (e: 'selected-server-changed', id: string): void
+}>()
+
+function changeEndpointServer(event: Event) {
+  emit('selected-server-changed', (event.target as HTMLSelectElement).value)
+}
 </script>
 
 <style lang="scss" scoped>
