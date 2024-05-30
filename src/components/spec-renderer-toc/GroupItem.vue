@@ -117,8 +117,8 @@ const onExpand = () => {
   }
 
   &.root {
-    padding-top: var(--kui-space-70, $kui-space-70);
     padding-bottom: var(--kui-space-70, $kui-space-70);
+    padding-top: var(--kui-space-70, $kui-space-70);
 
     & + .group-item.root {
       border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
