@@ -138,7 +138,7 @@ watch(() => (requestSamples.value), (newValue: INodeExample[]) => {
 
 const acceptHeader = computed(():string => {
   const headers = new Set()
-  props.data.responses.forEach(response => {
+  props.data.responses?.forEach(response => {
     (response.contents || []).forEach(content => {
       headers.add(content.mediaType)
     })
@@ -174,7 +174,7 @@ watch(() => ({
   }
   let snippedChanged = false
   // if we selected new requestBody or if we do not have httpSNippet yet, we need to re-init it
-  if (!snippet.value || newValue.requestBodyKey !== oldValue?.requestBodyKey || newValue.serverUrl !== oldValue.serverUrl || newValue.authHeaders !== oldValue?.authHeaders) {
+  if (newValue.serverUrl && (!snippet.value || newValue.requestBodyKey !== oldValue?.requestBodyKey || newValue.serverUrl !== oldValue.serverUrl || newValue.authHeaders !== oldValue?.authHeaders)) {
     snippet.value = new HTTPSnippet({
       method: newValue.method,
       url: newValue.serverUrl,
@@ -201,7 +201,7 @@ watch(() => ({
   if (!requestCode.value || snippedChanged || newValue.lang !== oldValue?.lang || newValue.lib !== oldValue?.lib) {
     if (newValue.lang === 'json') {
       requestCode.value = jsonObj ? hljs.highlight(JSON.stringify(jsonObj, null, 2), { language: 'json' }).value : null
-    } else {
+    } else if (snippet.value) {
       const code = await snippet.value.convert(newValue.lang as TargetId, newValue.lib)
       const hightLightLang = getHighlightLanguage(newValue.lang)
       if (hightLightLang) {
