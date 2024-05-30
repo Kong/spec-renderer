@@ -20,11 +20,13 @@
     </button>
 
     <Transition name="spec-renderer-fade">
-      <ul v-show="!isCollapsed">
+      <ul
+        v-show="!isCollapsed"
+        :id="collapseGroupId"
+      >
         <component
           :is="itemComponent(child)"
           v-for="(child, idx) in item.items"
-          :id="collapseGroupId"
           :key="idx + ' ' + child.title+child"
           :item="child"
           :root="isGroup(child) ? false : undefined"
