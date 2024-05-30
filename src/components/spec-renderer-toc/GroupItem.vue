@@ -20,9 +20,9 @@
     </button>
 
     <Transition name="spec-renderer-fade">
-      <!-- TODO: a11y id (aria-controls) -->
       <ul v-show="!isCollapsed">
         <component
+          :id="collapseGroupId"
           :is="itemComponent(child)"
           v-for="(child, idx) in item.items"
           :key="idx + ' ' + child.title+child"
@@ -42,6 +42,7 @@ import { ref, type PropType } from 'vue'
 import type { TableOfContentsGroup } from '../../stoplight/elements-core/components/Docs/types'
 import { itemComponent, isGroup } from './index'
 import { ChevronRightIcon } from '@kong/icons'
+import { useId } from 'radix-vue'
 
 const props = defineProps({
   item: {
@@ -69,6 +70,8 @@ const emit = defineEmits<{
   (e: 'trigger-scroll', element: HTMLElement): void,
   (e: 'expand'): void,
 }>()
+
+const collapseGroupId = useId()
 
 const selectItem = (id: any) => {
   isCollapsed.value = false
