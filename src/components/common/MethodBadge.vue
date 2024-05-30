@@ -1,6 +1,6 @@
 <template>
   <span
-    class="node-item-badge"
+    class="method-badge"
     :class="[method, size]"
   >
     {{ method }}
@@ -8,14 +8,9 @@
 </template>
 
 <script setup lang="ts">
+import { BadgeSizeVariants } from '@/types'
+import type { BadgeSize, Method } from '@/types'
 import type { PropType } from 'vue'
-
-/**
- * This is more of a helper type to help keep track of the methods we define styles for (a method that doesn't match any of these will just use the default styling).
- * Because method comes from the spec, it can be any string.
- */
-type Method = 'get' | 'post' | 'put' | 'delete' | 'patch' | 'options' | 'head' | 'connect' | 'trace'
-type BadgeSize = 'small' | 'large'
 
 defineProps({
   method: {
@@ -29,8 +24,8 @@ defineProps({
   size: {
     type: String as PropType<BadgeSize>,
     default: 'small',
-    validator: (value: string): boolean => {
-      return ['small', 'large'].includes(value)
+    validator: (value: BadgeSize): boolean => {
+      return BadgeSizeVariants.includes(value)
     },
   },
 })
@@ -45,7 +40,7 @@ defineProps({
   color: $textColor;
 }
 
-.node-item-badge {
+.method-badge {
   @include badge-appearance;
 
   border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
