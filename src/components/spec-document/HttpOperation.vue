@@ -15,9 +15,9 @@
       <ServerEndpoint
         :method="data.method"
         :path="data.path"
-        :selected-server-id="selectedServerID"
-        :server-list="data.servers"
-        @selected-server-changed="updateSelectedServerID"
+        :selected-server-url="selectedServerURL"
+        :server-url-list="serverList"
+        @selected-server-changed="updateSelectedServerURL"
       />
 
       <HttpRequest
@@ -69,7 +69,7 @@ const props = defineProps({
 })
 
 // this is the server selected by user, defaults to first server in the list
-const selectedServerID = ref<string>(props.data.servers?.[0].id ?? '')
+const selectedServerURL = ref<string>(props.data.servers?.[0].url ?? '')
 
 // this is tryout state requested by property passed
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
@@ -80,8 +80,10 @@ const showTryIt = computed((): boolean => {
   return !hideTryIt.value && Array.isArray(props.overviewData.servers) && props.overviewData.servers.length > 0
 })
 
-function updateSelectedServerID(id: string) {
-  selectedServerID.value = id
+const serverList = computed(() => props.data.servers?.map(server => server.url) ?? [])
+
+function updateSelectedServerURL(url: string) {
+  selectedServerURL.value = url
 }
 
 </script>

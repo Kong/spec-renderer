@@ -6,7 +6,7 @@
         size="large"
       />
       <div class="server-endpoint-url">
-        <span>{{ serverURL }}</span><span>{{ path }}</span>
+        <span>{{ selectedServerUrl }}</span><span>{{ path }}</span>
       </div>
     </div>
     <div class="right">
@@ -16,12 +16,12 @@
         @change="changeEndpointServer"
       >
         <option
-          v-for="server in serverList"
-          :key="server.id"
-          :selected="server.id === selectedServerId"
-          :value="server.id"
+          v-for="serverURL in serverUrlList"
+          :key="serverURL"
+          :selected="serverURL === selectedServerUrl"
+          :value="serverURL"
         >
-          {{ server.url }}
+          {{ serverURL }}
         </option>
       </select>
     </div>
@@ -29,12 +29,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { PropType } from 'vue'
-import type { IServer } from '@stoplight/types'
 import MethodBadge from '@/components/common/MethodBadge.vue'
 
-const props = defineProps({
+defineProps({
   method: {
     type: String,
     required: true,
@@ -43,23 +41,18 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  serverList: {
-    type: Array as PropType<Array<IServer>>,
+  serverUrlList: {
+    type: Array as PropType <Array<string>>,
     default: () => [],
   },
-  selectedServerId: {
+  selectedServerUrl: {
     type: String,
     default: '',
   },
 })
 
-const serverURL = computed(() => {
-  const selectedServer = props.serverList.find(server => server.id === props.selectedServerId)
-  return selectedServer?.url || ''
-})
-
 const emit = defineEmits<{
-  (e: 'selected-server-changed', id: string): void
+  (e: 'selected-server-changed', url: string): void
 }>()
 
 function changeEndpointServer(event: Event) {
