@@ -2,6 +2,7 @@
   <span
     class="method-badge"
     :class="[method, size]"
+    data-testid="method-badge"
   >
     {{ method }}
   </span>
