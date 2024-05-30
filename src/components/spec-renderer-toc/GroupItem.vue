@@ -5,6 +5,7 @@
   >
     <!-- TODO: a11y aria-controls -->
     <button
+      v-if="!item.hideTitle"
       ref="collapseTriggerRef"
       :aria-expanded="!isCollapsed"
       type="button"
@@ -73,7 +74,7 @@ const selectItem = (id: any) => {
   emit('item-selected', id)
 }
 
-const isCollapsed = ref<boolean>(props.collapsed)
+const isCollapsed = ref<boolean>(props.item.hideTitle ? false : props.collapsed)
 const collapseTriggerRef = ref<HTMLElement | null>(null)
 
 const onClick = (event: Event) => {

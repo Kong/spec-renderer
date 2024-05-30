@@ -40,16 +40,16 @@
     color background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease,
     background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
 
-  &:hover:not(.selected) {
+  &:hover:not(.active) {
     color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
   }
 
   .chevron-icon {
     color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
+    flex-shrink: 0;
     height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
     pointer-events: none;
     transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
-    // TODO: decide how we want to set icon size and clor (JS token vs. style block)
     width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
 
     &.expanded {
@@ -57,7 +57,7 @@
     }
   }
 
-  &.selected {
+  &.active {
     background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
     color: var(--kui-color-text-primary, $kui-color-text-primary);
   }

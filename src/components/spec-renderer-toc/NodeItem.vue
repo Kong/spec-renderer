@@ -4,14 +4,14 @@
     :data-testid="`${isActive ? 'node-item-active' : 'node-item'}`"
   >
     <a
-      :class="{ 'single-word': isSingleWord, 'selected': isActive }"
+      :class="{ 'single-word': isSingleWord, 'active': isActive }"
       :href="`${basePath}${item.id}`"
       @click.prevent="selectItem(item.id)"
     >
       {{ item.title }}
 
       <NodeItemBadge
-        v-if="item.type === 'http_operation'"
+        v-if="item.type === NodeType.HttpOperation"
         class="http-operation-badge"
         :method="item.meta"
       />
@@ -24,6 +24,7 @@ import { computed, inject, ref, watch } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { TableOfContentsNode } from '../../stoplight/elements-core/components/Docs/types'
 import NodeItemBadge from './NodeItemBadge.vue'
+import { NodeType } from '@stoplight/types'
 
 const props = defineProps({
   item: {
