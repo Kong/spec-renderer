@@ -1,5 +1,8 @@
 <template>
-  <div class="server-endpoint">
+  <div
+    class="server-endpoint"
+    data-testid="server-endpoint"
+  >
     <div class="current-endpoint">
       <MethodBadge
         :method="method"
@@ -43,11 +46,11 @@ defineProps({
   },
   serverUrlList: {
     type: Array as PropType <Array<string>>,
-    default: () => [],
+    required: true,
   },
   selectedServerUrl: {
     type: String,
-    default: '',
+    required: true,
   },
 })
 
