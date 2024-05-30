@@ -63,7 +63,7 @@ const scrollToActiveItem = async (scrollableAncestor: HTMLElement = tocNavRef.va
     if (activeItem) {
       const offsetTop = getOffsetTopRelativeToParent(activeItem, scrollableAncestor)
 
-      console.log('here1', offsetTop)
+      console.log('here1')
 
       if (offsetTop !== null) {
         parent.scrollTo({
