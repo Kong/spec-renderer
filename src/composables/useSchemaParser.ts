@@ -5,7 +5,7 @@ import { parse as parseYaml } from '@stoplight/yaml'
 import { computeAPITree } from '../stoplight/elements/components/API/utils'
 import type { TableOfContentsItem } from '../stoplight/elements-core/components/Docs/types'
 import type { ParseOptions } from '../types'
-import { validate } from '@scalar/openapi-parser'
+// import { validate } from '@scalar/openapi-parser'
 import type { ValidateResult } from '@scalar/openapi-parser'
 import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
@@ -111,7 +111,7 @@ export default function useSchemaParser():any {
     trace(options.traceParsing, 'json document available')
     try {
       // let's see if we can detect some validation errors here
-      validationResults.value = await validate(spec || jsonDocument.value)
+      // validationResults.value = await validate(spec || jsonDocument.value)
     } catch (err) {
       console.error('error in validate:', err)
     }
