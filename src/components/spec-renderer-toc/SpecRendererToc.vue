@@ -63,7 +63,7 @@ const scrollToActiveItem = async (scrollableAncestor: HTMLElement = tocNavRef.va
       const offsetTop = getOffsetTopRelativeToParent(activeItem, scrollableAncestor)
 
       if (offsetTop !== null) {
-        console.log(offsetTop, 'offsetTop')
+        console.log('offsetTop', offsetTop)
 
         parent.scrollTo({
           top: offsetTop - 50, // offset 50 so it doesn't stick to the top
