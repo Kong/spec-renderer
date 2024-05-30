@@ -1,3 +1,10 @@
+## [1.12.6](https://github.com/Kong/spec-renderer/compare/v1.12.5...v1.12.6) (2024-05-30)
+
+
+### Bug Fixes
+
+* disable validation to temporarily ([#92](https://github.com/Kong/spec-renderer/issues/92)) ([ad59d07](https://github.com/Kong/spec-renderer/commit/ad59d074490f36fa7b908e05b06649949db81baf))
+
 ## [1.12.5](https://github.com/Kong/spec-renderer/compare/v1.12.4...v1.12.5) (2024-05-29)
 
 
