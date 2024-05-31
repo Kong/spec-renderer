@@ -25,7 +25,7 @@ export default function useShiki() {
           // @ts-ignore - in client, use the wasm loader
           return import('shiki/wasm?init')
         } else {
-          // @ts-ignore - Use externalized import to support rendering via SSR
+          // @ts-ignore - Use externalized import to support rendering via SSR. The Vite Ignore comment is to prevent Vite from trying to resolve the import in the standalone spec renderer
           return import(/* @vite-ignore */ 'shiki/onig.wasm')
         }
       },
