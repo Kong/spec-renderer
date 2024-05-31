@@ -1,3 +1,10 @@
+## [1.14.1](https://github.com/Kong/spec-renderer/compare/v1.14.0...v1.14.1) (2024-05-31)
+
+
+### Bug Fixes
+
+* **toc:** spec renderer component toc styles [KHCP-12122] ([#91](https://github.com/Kong/spec-renderer/issues/91)) ([3a9ffe9](https://github.com/Kong/spec-renderer/commit/3a9ffe91c8b8bec57973c11eddd9b87bb3620b01))
+
 # [1.14.0](https://github.com/Kong/spec-renderer/compare/v1.13.0...v1.14.0) (2024-05-31)
 
 
