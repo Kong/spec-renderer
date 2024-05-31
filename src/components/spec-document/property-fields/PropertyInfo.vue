@@ -67,14 +67,16 @@ defineProps({
 
 <style lang="scss" scoped>
 .property-info {
+  align-items: center;
+  display: flex;
   font-family: monospace, serif;
+  gap: var(--kui-space-60, $kui-space-60);
 
   .property-title {
     color: var(--kui-color-text, $kui-color-text);
     font-size:var(--kui-font-size-30, $kui-font-size-30);
     font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     line-height: var(--kui-line-height-30, $kui-line-height-30);
-    margin-right: var(--kui-space-60, $kui-space-60);
   }
 
   .property-type {
