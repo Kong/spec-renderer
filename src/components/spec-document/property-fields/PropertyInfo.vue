@@ -3,7 +3,12 @@
     class="property-info"
     data-testid="property-field-info"
   >
-    <code data-testid="property-field-title">{{ title }}</code>
+    <span
+      class="property-title"
+      data-testid="property-field-title"
+    >
+      {{ title }}
+    </span>
     <span class="property-type">
       <span
         v-if="propertyType"
@@ -23,13 +28,11 @@
       >
         {{ `(${format})` }}
       </span>
-    </span>
-    <span
-      v-if="requiredFields?.includes(title)"
-      class="required-property"
-      data-testid="property-field-required"
-    >
-      required
+      <span
+        v-if="requiredFields?.includes(title)"
+        class="required-property"
+        data-testid="property-field-required"
+      >required</span>
     </span>
   </div>
 </template>
@@ -64,16 +67,29 @@ defineProps({
 
 <style lang="scss" scoped>
 .property-info {
-  &> :not(:first-child) {
-    margin-left: var(--kui-space-40, $kui-space-40);
+  font-family: monospace, serif;
+
+  .property-title {
+    color: var(--kui-color-text, $kui-color-text);
+    font-size:var(--kui-font-size-30, $kui-font-size-30);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
+    margin-right: var(--kui-space-60, $kui-space-60);
   }
+
   .property-type {
     color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
     font-size: var(--kui-font-size-20, $kui-font-size-20);
-  }
-  .required-property {
-    color: var(--kui-color-text-danger, $kui-color-text-danger);
-    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    line-height: var(--kui-line-height-20, $kui-line-height-20);
+
+    &> :not(:first-child) {
+      margin-left: var(--kui-space-40, $kui-space-40);
+    }
+
+    .required-property {
+      color: var(--kui-color-text-danger, $kui-color-text-danger);
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
+    }
   }
 }
 </style>
