@@ -16,6 +16,7 @@ const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
   })
   : undefined
 
+// !Important: always externalize `shiki/onig.wasm`
 const externalDependencies: string[] = ['shiki/onig.wasm']
 // If not loading sandbox, externalize vue
 if (!process.env.USE_SANDBOX) {
