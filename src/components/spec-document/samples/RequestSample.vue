@@ -61,6 +61,7 @@ import type { PropType } from 'vue'
 import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet-lite'
 import { requestSampleConfigs } from '../../../constants'
+import { getRequestHeaders } from '../../../utils'
 import composables from '@/composables'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet-lite'
 
@@ -77,7 +78,7 @@ const props = defineProps({
     required: true,
   },
   authHeaders: {
-    type: Array<Record<string, string>>,
+    type: Array as PropType<Record<string, string>[]>,
     default: [],
   },
 })
@@ -182,15 +183,8 @@ watch(() => ({
         method: newValue.method,
         url: serverUrl,
         headers: [
-          ...newValue.authHeaders,
-          {
-            name: 'Content-Type',
-            value: props.data.responses?.[0].contents?.[0].mediaType ?? 'application/json',
-          },
-          {
-            name: 'Accept',
-            value: acceptHeader.value,
-          },
+         ...newValue.authHeaders,
+        ...getRequestHeaders(props.data),
         ],
         postData: {
           mimeType: 'application/json',
@@ -209,6 +203,7 @@ watch(() => ({
       requestCode.value = jsonObj ? highlighter.codeToHtml(JSON.stringify(jsonObj, null, 2), { lang: 'json', theme: 'material-theme-palenight' }) : null
     } else if (snippet.value) {
       const code = await snippet.value.convert(newValue.lang as TargetId, newValue.lib)
+      console.log(`>${code}<`)
       const hightLightLang = getHighlightLanguage(newValue.lang)
       if (hightLightLang) {
         requestCode.value = highlighter.codeToHtml(code as string, { lang: hightLightLang, theme: 'material-theme-palenight' })
@@ -227,6 +222,7 @@ watch(() => ({
 
   code {
     background: transparent!important;
+    padding: 0;
   }
 }
 

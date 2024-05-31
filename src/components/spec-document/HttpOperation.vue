@@ -7,9 +7,6 @@
       class="left"
       :data-testid="`http-operation-left-${data.id}`"
     >
-      <pre>
-  {{ JSON.stringify(data, null, 2) }}
-  </pre>
       <section>
         <h3>{{ data.summary }}</h3>
         <p>{{ data.description }}</p>
