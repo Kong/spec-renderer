@@ -103,11 +103,13 @@ export default defineConfig({
           stoplight: path.resolve(__dirname, './sandbox/stoplight/index.html'),
         }
         : path.resolve(__dirname, './src/index.ts'),
-      external: process.env.USE_SANDBOX ? undefined : [
-        'vue',
-         // !Important: externalize the wasm import
-        'shiki/onig.wasm',
-      ],
+      external: process.env.USE_SANDBOX
+        ? undefined
+        : [
+          'vue',
+          // !Important: externalize the wasm import
+          'shiki/onig.wasm',
+        ],
       output: process.env.USE_SANDBOX
         ? undefined
         : {

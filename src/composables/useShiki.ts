@@ -21,7 +21,7 @@ export default function useShiki() {
       ],
       // @ts-ignore - These imports are in place to support rendering via SSR
       // Important: If running in SSR, the host application must have a `shiki/onig.wasm` file available at the root of the assets. If in new Konnect Dev Portal, this is already handled.
-      loadWasm: () => import.meta.client || window?.location?.hostname?.includes('localhost') ? import('shiki/wasm?init') : import('shiki/onig.wasm')
+      loadWasm: () => import.meta.client || window?.location?.hostname?.includes('localhost') ? import('shiki/wasm?init') : import('shiki/onig.wasm'),
     })
   }
 
