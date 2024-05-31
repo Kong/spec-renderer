@@ -160,10 +160,10 @@ watch(specRendererTocRef, async (val) => {
 // TODO: change when implementing generic(responsive) SpecRender layout
 aside {
   display: flex;
+  flex-shrink: 0;
   height: 100%;
   overflow: visible;
   width: 320px;
-  flex-shrink: 0;
 }
 .doc {
   flex: 1;
