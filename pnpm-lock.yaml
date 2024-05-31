@@ -88,10 +88,10 @@ importers:
         specifier: ^20.12.12
         version: 20.12.12
       '@typescript-eslint/eslint-plugin':
-        specifier: ^7.9.0
+        specifier: ^7.10.0
         version: 7.10.0(@typescript-eslint/parser@7.10.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)(typescript@5.4.5)
       '@typescript-eslint/parser':
-        specifier: ^7.9.0
+        specifier: ^7.10.0
         version: 7.10.0(eslint@8.57.0)(typescript@5.4.5)
       '@vitejs/plugin-vue':
         specifier: ^5.0.4
@@ -196,7 +196,7 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1(vite@5.2.11(@types/node@20.12.12)(sass@1.77.2))
       vite-plugin-vue-devtools:
-        specifier: ^7.2.0
+        specifier: ^7.2.1
         version: 7.2.1(rollup@4.16.1)(vite@5.2.11(@types/node@20.12.12)(sass@1.77.2))(vue@3.4.27(typescript@5.4.5))
       vitest:
         specifier: 1.6.0
@@ -675,6 +675,7 @@ packages:
 
   '@evilmartians/lefthook@1.6.12':
     resolution: {integrity: sha512-/XPEl3ivb8JpvpXOooSumdYTKb8T4iUGh9l3Vpo5vDH+7h8Nk54Dzw+clT5ubXFSQNOV8BchDn5omVfcr0+15g==}
+    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
