@@ -63,6 +63,10 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), ({ path
 <style lang="scss" scoped>
 .spec-renderer-document {
     background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-    padding: $kui-space-60;
+    padding: var(--kui-space-60, $kui-space-60);
+
+    * {
+      margin: var(--kui-space-0, $kui-space-0);
+    }
 }
 </style>

@@ -1,6 +1,5 @@
 import { getHighlighterCore } from 'shiki/core'
 import type { HighlighterCore } from 'shiki/core'
-import getWasm from 'shiki/wasm'
 
 export default function useShiki() {
 
@@ -19,7 +18,17 @@ export default function useShiki() {
         import('shiki/langs/ruby.mjs'),
         import('shiki/langs/fish.mjs'),
       ],
-      loadWasm: getWasm,
+      // Important: If running in SSR, the host application must have a `shiki/onig.wasm` file available at the root of the assets. If in new Konnect Dev Portal, this is already handled.
+      loadWasm: () => {
+        // @ts-ignore - Checking for SSR
+        if (!import.meta.server) {
+          // @ts-ignore - in client, use the wasm loader
+          return import('shiki/wasm?init')
+        } else {
+          // @ts-ignore - Use externalized import to support rendering via SSR. The Vite Ignore comment is to prevent Vite from trying to resolve the import in the standalone spec renderer
+          return import(/* @vite-ignore */ 'shiki/onig.wasm')
+        }
+      },
     })
   }
 

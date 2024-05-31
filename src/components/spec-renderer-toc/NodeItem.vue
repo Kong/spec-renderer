@@ -1,7 +1,7 @@
 <template>
   <li
-    ref="nodeItemRef"
     class="node-item"
+    :data-spec-renderer-toc-active="isActive ? true : undefined"
   >
     <a
       :class="{ 'single-word': isSingleWord, 'active': isActive }"
@@ -38,15 +38,8 @@ const currentPath = inject<Ref<string>>('current-path', ref<string>(''))
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
-  /**
-   * Fires when an element is selected passively (e.g. page load), used for scrolling to the element.
-   * We want a separate event for this because element might not be there in the DOM sometimes - so we don't want to hang 'item-selected' event on that.
-   */
-  (e: 'trigger-scroll', element: HTMLElement): void,
   (e: 'expand'): void,
 }>()
-
-const nodeItemRef = ref<HTMLElement | null>(null)
 
 const selectItem = (id: string): void => {
   emit('item-selected', id)
@@ -63,17 +56,6 @@ watch(currentPath, (val) => {
     emit('expand')
   }
 }, { immediate: true })
-
-/**
- * Once element is in the DOM, check if it's the selected element and emit the event.
- */
-watch(nodeItemRef, (val) => {
-  if (val) {
-    if (isActive.value) {
-      emit('trigger-scroll', val)
-    }
-  }
-})
 </script>
 
 <style lang="scss" scoped>

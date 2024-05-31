@@ -1,3 +1,31 @@
+## [1.15.1](https://github.com/Kong/spec-renderer/compare/v1.15.0...v1.15.1) (2024-05-31)
+
+
+### Bug Fixes
+
+* **wasm:** enable ssr wasm support [KHCP-12146] ([#97](https://github.com/Kong/spec-renderer/issues/97)) ([1049d5f](https://github.com/Kong/spec-renderer/commit/1049d5f59b4b77c1b1185626f045ee62db715a3e))
+
+# [1.15.0](https://github.com/Kong/spec-renderer/compare/v1.14.1...v1.15.0) (2024-05-31)
+
+
+### Features
+
+* schema section base styling [KHCP-12131, KHCP-12130] ([#96](https://github.com/Kong/spec-renderer/issues/96)) ([79246cc](https://github.com/Kong/spec-renderer/commit/79246cc376d4da630b6a95deb9e42dc467610b19))
+
+## [1.14.1](https://github.com/Kong/spec-renderer/compare/v1.14.0...v1.14.1) (2024-05-31)
+
+
+### Bug Fixes
+
+* **toc:** spec renderer component toc styles [KHCP-12122] ([#91](https://github.com/Kong/spec-renderer/issues/91)) ([3a9ffe9](https://github.com/Kong/spec-renderer/commit/3a9ffe91c8b8bec57973c11eddd9b87bb3620b01))
+
+# [1.14.0](https://github.com/Kong/spec-renderer/compare/v1.13.0...v1.14.0) (2024-05-31)
+
+
+### Features
+
+* tryIt code snippet [KHCP-12068] ([#87](https://github.com/Kong/spec-renderer/issues/87)) ([b578248](https://github.com/Kong/spec-renderer/commit/b578248454b8cf3416c6547b65d7572f9179b9b2))
+
 # [1.13.0](https://github.com/Kong/spec-renderer/compare/v1.12.7...v1.13.0) (2024-05-30)
 
 

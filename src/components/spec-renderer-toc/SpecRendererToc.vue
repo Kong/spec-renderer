@@ -11,14 +11,13 @@
         :collapsed="itemCollapsed(item)"
         :item="item"
         @item-selected="selectItem"
-        @trigger-scroll="($event) => scrollToElement($event as HTMLElement)"
       />
     </ul>
   </nav>
 </template>
 
 <script setup lang="ts">
-import { provide, computed, ref, nextTick } from 'vue'
+import { provide, computed, ref } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { TableOfContentsItem } from '../../stoplight/elements-core/components/Docs/types'
 import { itemComponent, isGroup } from './index'
@@ -51,8 +50,34 @@ provide<Ref<string>>('base-path', computed((): string => props.basePath))
 provide<Ref<string>>('current-path', computed((): string => props.currentPath))
 
 const emit = defineEmits<{
-  (e: 'item-selected', id: string): void
+  (e: 'item-selected', id: string): void,
 }>()
+
+const getActiveItemScrollPosition = (scrollableAncestor: HTMLElement = tocNavRef.value as HTMLElement): number => {
+  if (scrollableAncestor) {
+    const activeItem = scrollableAncestor.querySelector('li[data-spec-renderer-toc-active="true"]') as HTMLElement || null
+
+    if (!activeItem) {
+      return 0
+    }
+
+    return getOffsetTopRelativeToParent(activeItem, scrollableAncestor) || 0
+  }
+
+  return 0
+}
+
+defineExpose({
+  // comment has to stay here for intellisense to work
+  /**
+   * @description Get the scroll position of the active item within the scrollable ancestor.
+   * Relies on the `data-spec-renderer-toc-active` attribute to determine the active item.
+   * Because it uses HTMLElement: offsetParent property - it relies on the parent element to have a `position` other than `static` (ideally `relative`).
+   * @param scrollableAncestor - the element to scroll within (optional, defaults to the root element of the component)
+   * @returns the scroll position of the active item
+   */
+  getActiveItemScrollPosition,
+})
 
 const selectItem = (id: any) => {
   if (props.controlBrowserUrl) {
@@ -63,21 +88,6 @@ const selectItem = (id: any) => {
 }
 
 const tocNavRef = ref<HTMLElement | null>(null)
-
-const scrollToElement = async (element: HTMLElement) => {
-  if (tocNavRef.value) {
-    await nextTick() // wait for all parent groups to expand
-
-    const offsetTop = getOffsetTopRelativeToParent(element, tocNavRef.value)
-
-    if (offsetTop !== null) {
-      tocNavRef.value.scrollTo({
-        top: offsetTop - 50, // offset 50 so it doesn't stick to the top
-        behavior: 'smooth',
-      })
-    }
-  }
-}
 
 const firstGroupItemExpanded = ref<boolean>(false)
 const itemCollapsed = (item: TableOfContentsItem): boolean | undefined => {
@@ -97,26 +107,17 @@ const itemCollapsed = (item: TableOfContentsItem): boolean | undefined => {
 
 <style lang="scss" scoped>
 .table-of-contents {
-  background-color: var(--kui-color-background, $kui-color-background);
+  background-color: var(--kui-color-background-transparent, $kui-color-background-transparent); // transparent so that it doesn't interfere with the parent's background
   overflow-x: hidden;
   overflow-y: auto;
-  position: relative; // important, need this for scrolling to selected item
   width: 100%;
 
   > ul {
     padding-left: var(--kui-space-0, $kui-space-0);
 
-    > * {
-      &:first-child {
-        // overview item
-        padding: var(--kui-space-70, $kui-space-70);
-        padding-bottom: var(--kui-space-0, $kui-space-0);
-
-        & + * {
-          // very first group item following overview
-          padding-top: var(--kui-space-50, $kui-space-50);
-        }
-      }
+    > *:first-child + * {
+      // reduce spacing to very first group item following the overview
+      padding-top: var(--kui-space-50, $kui-space-50);
     }
   }
 }

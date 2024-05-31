@@ -102,7 +102,7 @@ const orderedFieldList = computed(() => {
     fields.push({
       component: PropertyEnum,
       props: {
-        enumValue: props.property.enum,
+        enumValueList: props.property.enum,
       },
       key: 'property-enum',
     })
@@ -143,11 +143,10 @@ const dataTestId = computed(() => `model-property-${props.propertyName.replaceAl
 
 <style lang="scss" scoped>
 .model-property {
-  border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-  padding: var(--kui-space-50, $kui-space-50) var(--kui-space-80, $kui-space-80);
+  padding: var(--kui-space-40, $kui-space-40);
 
   &> :not(:first-child) {
-    margin-top: var(--kui-space-40, $kui-space-40);
+    margin-top: var(--kui-space-20, $kui-space-20);
   }
 }
 </style>

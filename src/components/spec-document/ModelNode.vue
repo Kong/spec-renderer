@@ -1,16 +1,16 @@
 <template>
-  <div :data-testid="dataTestId">
-    <h3>
-      {{ title }} <code v-if="data.type">{{ data.type }}</code>
+  <div
+    class="spec-model-node"
+    :data-testid="dataTestId"
+  >
+    <h3 class="spec-model-node-title">
+      {{ title }}
     </h3>
-    <p v-if="data.description">
+    <p
+      v-if="data.description"
+      class="spec-model-node-description"
+    >
       {{ data.description }}
-    </p>
-    <p v-if="data.examples">
-      Example: {{ data.examples }}
-    </p>
-    <p v-if="data.enum">
-      <span>Allowed values: </span> {{ data.enum }}
     </p>
 
     <template v-if="modelPropertyProps">
@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type{ PropType } from 'vue'
+import type { PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 import ModelProperty from './ModelProperty.vue'
@@ -62,3 +62,19 @@ const props = defineProps({
 const modelPropertyProps = computed(() => resolveSchemaObjectFields(props.data))
 const dataTestId = computed(() => `model-node-${props.title.replaceAll(' ', '-')}`)
 </script>
+
+<style lang="scss" scoped>
+.spec-model-node {
+  .spec-model-node-title {
+    color: var(--kui-color-text, $kui-color-text);
+    font-size: var(--kui-font-size-80, $kui-font-size-80);
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+    line-height: var(--kui-line-height-70, $kui-line-height-70);
+    margin-bottom: var(--kui-space-60, $kui-space-60);
+  }
+  .spec-model-node-description {
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    line-height: var(--kui-line-height-40, $kui-line-height-40);
+  }
+}
+</style>
