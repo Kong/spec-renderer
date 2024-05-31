@@ -1,6 +1,10 @@
 <template>
-  <p data-testid="property-field-pattern">
-    Allowed pattern: <code>{{ pattern }}</code>
+  <p
+    class="property-field-pattern"
+    data-testid="property-field-pattern"
+  >
+    <span class="field-title">Match pattern:</span>
+    <span class="property-field-pattern-value">{{ pattern }}</span>
   </p>
 </template>
 
@@ -15,3 +19,15 @@ defineProps({
   },
 })
 </script>
+
+<style lang="scss" scoped>
+@import '@/styles/mixins/mixins';
+
+.property-field-pattern {
+  @include model-property-additional-field;
+
+  .property-field-pattern-value {
+    @include model-property-field-value;
+  }
+}
+</style>
