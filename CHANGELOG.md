@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/Kong/spec-renderer/compare/v1.14.1...v1.15.0) (2024-05-31)
+
+
+### Features
+
+* schema section base styling [KHCP-12131, KHCP-12130] ([#96](https://github.com/Kong/spec-renderer/issues/96)) ([79246cc](https://github.com/Kong/spec-renderer/commit/79246cc376d4da630b6a95deb9e42dc467610b19))
+
 ## [1.14.1](https://github.com/Kong/spec-renderer/compare/v1.14.0...v1.14.1) (2024-05-31)
 
 
