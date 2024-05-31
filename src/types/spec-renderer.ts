@@ -9,13 +9,17 @@ export interface SpecRendererProps {
  * This way it'll be easy to replace out this library with some other library, or even our own implementation,
  * without requiring major refactoring.
  */
-export interface SchemaObject extends JSONSchema7 {}
+export interface SchemaObject extends JSONSchema7 { }
 
 export interface ParseOptions {
   /**
    * Url to fetch spec (if not defined by spec blob (text))
    */
   specUrl?: string
+  /**
+   * Selected path to load document with
+   */
+  selectedPath?: string
   /**
    * Do not include schemas (models) into parsing results
    */

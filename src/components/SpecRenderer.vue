@@ -133,6 +133,7 @@ watch(() => ({
     traceParsing: props.traceParsing,
     ...(changed.specUrl ? { specUrl: changed.specUrl } : null),
     withCredentials: props.withCredentials,
+    selectedPath: currentPath.value,
   })
   if (props.traceParsing) {
     console.log('parsedDocument:', parsedDocument.value)
@@ -162,6 +163,7 @@ aside {
   height: 100%;
   overflow: visible;
   width: 320px;
+  flex-shrink: 0;
 }
 .doc {
   flex: 1;
