@@ -8,7 +8,6 @@
         :is="itemComponent(item)"
         v-for="(item, idx) in tableOfContents"
         :key="idx+'_'+item.title"
-        :collapsed="itemCollapsed(item)"
         :item="item"
         @item-selected="selectItem"
       />
@@ -20,7 +19,7 @@
 import { provide, computed, ref } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { TableOfContentsItem } from '../../stoplight/elements-core/components/Docs/types'
-import { itemComponent, isGroup } from './index'
+import { itemComponent } from './index'
 import { getOffsetTopRelativeToParent } from '@/utils'
 
 const props = defineProps({
@@ -88,21 +87,6 @@ const selectItem = (id: any) => {
 }
 
 const tocNavRef = ref<HTMLElement | null>(null)
-
-const firstGroupItemExpanded = ref<boolean>(false)
-const itemCollapsed = (item: TableOfContentsItem): boolean | undefined => {
-  if (isGroup(item)) {
-    if (firstGroupItemExpanded.value) {
-      return true
-    }
-
-    firstGroupItemExpanded.value = true
-    return false
-  }
-
-  // return undefined for non-group items (which don't accept `collapsed` prop)
-  return undefined
-}
 </script>
 
 <style lang="scss" scoped>

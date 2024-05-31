@@ -98,6 +98,7 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
       title: 'Endpoints',
       items: [],
       hideTitle: mergedConfig.hideSchemas,
+      expanded: true, // Endpoints are always expanded by default
     })
 
     const { groups, ungrouped } = computeTagGroups<OperationNode>(serviceNode, NodeType.HttpOperation)
@@ -109,6 +110,7 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
     tree.push({
       title: 'Webhooks',
       items: [],
+      expanded: false,
     })
 
     const { groups, ungrouped } = computeTagGroups<WebhookNode>(serviceNode, NodeType.HttpWebhook)
@@ -124,11 +126,13 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
     tree.push({
       title: 'Schemas',
       items: [],
+      expanded: false,
     })
 
     const { groups, ungrouped } = computeTagGroups<SchemaNode>(serviceNode, NodeType.Model)
     addTagGroupsToTree(groups, ungrouped, tree.at(-1).items, NodeType.Model, mergedConfig.hideInternal)
   }
+
   return tree
 }
 
@@ -174,6 +178,7 @@ const addTagGroupsToTree = <T extends GroupableNode>(
     if (hideInternal && isInternal(node)) {
       return
     }
+
     tree.push({
       id: node.uri,
       slug: node.uri,
@@ -196,11 +201,13 @@ const addTagGroupsToTree = <T extends GroupableNode>(
         meta: isHttpOperation(node.data) || isHttpWebhookOperation(node.data) ? node.data.method : '',
       }
     })
+
     if (items.length) {
       tree.push({
         title: group.title,
         items,
         itemsType,
+        expanded: false,
       })
     }
   })

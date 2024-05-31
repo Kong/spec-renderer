@@ -7,7 +7,7 @@
     <button
       v-if="!item.hideTitle"
       ref="collapseTriggerRef"
-      :aria-expanded="!isCollapsed"
+      :aria-expanded="isExpanded"
       type="button"
       @click="onClick"
     >
@@ -15,20 +15,19 @@
 
       <ChevronRightIcon
         class="chevron-icon"
-        :class="{ 'expanded': !isCollapsed }"
+        :class="{ 'expanded': isExpanded }"
       />
     </button>
 
     <Transition name="spec-renderer-fade">
       <!-- TODO: a11y id (aria-controls) -->
-      <ul v-show="!isCollapsed">
+      <ul v-show="isExpanded">
         <component
           :is="itemComponent(child)"
           v-for="(child, idx) in item.items"
           :key="idx + ' ' + child.title+child"
           :item="child"
           :root="isGroup(child) ? false : undefined"
-          @expand="onExpand"
           @item-selected="selectItem"
         />
       </ul>
@@ -54,39 +53,23 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  /**
-   * Initial state of collapse
-   */
-  collapsed: {
-    type: Boolean,
-    default: true,
-  },
 })
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
-  (e: 'expand'): void,
 }>()
 
 const selectItem = (id: any) => {
-  isCollapsed.value = false
-
   emit('item-selected', id)
 }
 
-const isCollapsed = ref<boolean>(props.item.hideTitle ? false : props.collapsed)
+const isExpanded = ref<boolean>(props.item.hideTitle || props.item.expanded)
 const collapseTriggerRef = ref<HTMLElement | null>(null)
 
 const onClick = (event: Event) => {
   if (collapseTriggerRef.value === event.target) {
-    isCollapsed.value = !isCollapsed.value
+    isExpanded.value = !isExpanded.value
   }
-}
-
-const onExpand = () => {
-  isCollapsed.value = false
-
-  emit('expand')
 }
 </script>
 

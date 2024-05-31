@@ -33,6 +33,7 @@ export type TableOfContentsGroup = {
   // eslint-disable-next-line no-use-before-define
   items: TableOfContentsGroupItem[];
   itemsType?: 'article' | 'http_operation' | 'http_webhook' | 'model';
+  expanded: boolean;
 };
 
 export type TableOfContentsGroupItem =
