@@ -216,7 +216,7 @@ watch(() => ({
 
   code {
     background: transparent !important;
-    padding: 0;
+    padding: var(--kui-space-0, $kui-space-0);
   }
 }
 </style>
