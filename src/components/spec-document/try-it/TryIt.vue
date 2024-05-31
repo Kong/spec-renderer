@@ -1,10 +1,21 @@
 <template>
-  <div class="tryit-wrapper" :data-testid="`tryit-wrapper-${data.id}`">
-    <div v-if="showTryItPanel" class="right-card" :data-testid="`tryit-${data.id}`">
+  <div
+    class="tryit-wrapper"
+    :data-testid="`tryit-wrapper-${data.id}`"
+  >
+    <div
+      v-if="showTryItPanel"
+      class="right-card"
+      :data-testid="`tryit-${data.id}`"
+    >
       <div class="right-card-header">
-        <LockIcon v-if="security?.length" :color="KUI_COLOR_TEXT_NEUTRAL" :size="20" />
+        <LockIcon
+          v-if="security?.length"
+          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :size="20"
+        />
         <h5>
-          {{ security?.length ? 'Authentication' : 'Try It'}}
+          {{ security?.length ? 'Authentication' : 'Try It' }}
         </h5>
         <TryItButton @tryit-api-call="doApiCall" />
       </div>
@@ -13,20 +24,30 @@
           <div class="left">
             <label>Method</label>
             <select>
-              <option v-for="sec in security" :key="sec.id">
+              <option
+                v-for="sec in security"
+                :key="sec.id"
+              >
                 {{ sec.key }} ({{ sec.type }})
               </option>
             </select>
           </div>
           <div class="right">
             <label>Access Token</label>
-            <input placeholder="App credential" @keyup="accessTokenChanged">
+            <input
+              placeholder="App credential"
+              @keyup="accessTokenChanged"
+            >
           </div>
         </div>
       </div>
     </div>
 
-    <div v-if="response" class="right-card" :data-testid="`tryit-response-${data.id}`">
+    <div
+      v-if="response"
+      class="right-card"
+      :data-testid="`tryit-response-${data.id}`"
+    >
       <div class="right-card-header">
         <h5>
           Response
@@ -34,12 +55,14 @@
       </div>
       <div class="right-card-body">
         <!-- eslint-disable vue/no-v-html -->
-        <div class="one-column" v-if="responseText" v-html="responseText" />
+        <div
+          v-if="responseText"
+          class="one-column"
+          v-html="responseText"
+        />
         <!-- eslint-enable vue/no-v-html -->
       </div>
     </div>
-
-
   </div>
 </template>
 
@@ -69,7 +92,6 @@ const emit = defineEmits<{
 }>()
 const { getHighlighter } = composables.useShiki()
 
-
 const response = ref<Response>()
 const responseText = ref<string>()
 
@@ -82,14 +104,14 @@ const doApiCall = async () => {
       headers: [
         ...(authHeaders?.value || []),
         ...getRequestHeaders(props.data),
-      ].reduce((acc, current)=> { acc[current.name] = current.value; return acc }, { })
+      ].reduce((acc, current) => { acc[current.name] = current.value; return acc }, { }),
     })
-    console.log(response.value);
+    console.log(response.value)
     const highlighter = await getHighlighter()
     responseText.value = highlighter.codeToHtml(JSON.stringify((await response.value.json()), null, 2), { lang: 'json', theme: 'material-theme-palenight' })
 
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
 }
 
@@ -132,8 +154,8 @@ const showTryItPanel = computed((): boolean => {
 
 watch(() => ({
   data: props.data,
-  baseServerUrl: props.baseServerUrl
-}), ()=> {
+  baseServerUrl: props.baseServerUrl,
+}), () => {
   responseText.value = ''
   response.value = undefined
 

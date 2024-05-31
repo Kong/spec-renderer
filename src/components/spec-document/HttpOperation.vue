@@ -41,8 +41,8 @@
       :data-testid="`http-operation-right-${data.id}`"
     >
       <TryIt
-        :data="data"
         :base-server-url="`${selectedServerURL}${data.path}`"
+        :data="data"
         @access-tokens-changed="setAuthHeaders"
       />
 

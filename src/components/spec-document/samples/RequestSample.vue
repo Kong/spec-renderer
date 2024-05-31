@@ -79,7 +79,7 @@ const props = defineProps({
   },
   authHeaders: {
     type: Array as PropType<Record<string, string>[]>,
-    default: [],
+    default: () => {},
   },
 })
 
@@ -125,16 +125,6 @@ const requestSamples = computed((): INodeExample[] => {
 
 watch(requestSamples, (newValue: INodeExample[]) => {
   selectedRequestSample.value = getFirstSampleKey(newValue)
-})
-
-const acceptHeader = computed(():string => {
-  const headers = new Set()
-  props.data.responses?.forEach(response => {
-    (response.contents || []).forEach(content => {
-      headers.add(content.mediaType)
-    })
-  })
-  return [...headers].join(', ')
 })
 
 const snippet = ref<HTTPSnippetType>()
@@ -183,8 +173,8 @@ watch(() => ({
         method: newValue.method,
         url: serverUrl,
         headers: [
-         ...newValue.authHeaders,
-        ...getRequestHeaders(props.data),
+          ...newValue.authHeaders,
+          ...getRequestHeaders(props.data),
         ],
         postData: {
           mimeType: 'application/json',
