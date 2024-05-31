@@ -1,0 +1,81 @@
+  {
+    "id": "f8afe63ca8a36",
+    "method": "get",
+    "path": "/beers/ale",
+    "tags": [],
+    "extensions": {},
+    "summary": "Get list of beers",
+    "securityDeclarationType": "inheritedFromService",
+    "responses": [
+      {
+        "id": "176163b305cab",
+        "code": "200",
+        "headers": [],
+        "contents": [
+          {
+            "id": "5d060627c8337",
+            "mediaType": "application/json",
+            "examples": [],
+            "encodings": [],
+            "schema": {
+              "$schema": "http://json-schema.org/draft-07/schema#",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "price": {
+                    "type": "string",
+                    "example": "$16.99"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Founders All Day IPA"
+                  },
+                  "rating": {
+                    "type": "object",
+                    "properties": {
+                      "average": {
+                        "type": "number",
+                        "example": 4.411243509154233
+                      },
+                      "reviews": {
+                        "type": "integer",
+                        "example": 453
+                      }
+                    }
+                  },
+                  "image": {
+                    "type": "string",
+                    "example": "https://www.totalwine.com/media/sys_master/twmmedia/h00/h94/11891416367134.png"
+                  },
+                  "id": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                },
+                "title": "Beer"
+              },
+              "x-stoplight": {
+                "id": "6521356c60264"
+              }
+            }
+          }
+        ],
+        "description": "A list of beers"
+      }
+    ],
+    "request": {
+      "headers": [],
+      "query": [],
+      "cookie": [],
+      "path": []
+    },
+    "security": [],
+    "servers": [
+      {
+        "id": "b42f87a470a78",
+        "url": "https://ff90af76a1.gateways.konghq.tech",
+        "name": "Beer API"
+      }
+    ]
+  }

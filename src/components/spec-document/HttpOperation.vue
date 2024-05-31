@@ -7,7 +7,7 @@
       class="left"
       :data-testid="`http-operation-left-${data.id}`"
     >
-      <pre style="display:none">
+      <pre>
   {{ JSON.stringify(data, null, 2) }}
   </pre>
       <section>
@@ -45,6 +45,7 @@
     >
       <TryIt
         :data="data"
+        :base-server-url="`${selectedServerURL}${data.path}`"
         @access-tokens-changed="setAuthHeaders"
       />
 

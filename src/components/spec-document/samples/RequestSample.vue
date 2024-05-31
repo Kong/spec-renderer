@@ -185,7 +185,7 @@ watch(() => ({
           ...newValue.authHeaders,
           {
             name: 'Content-Type',
-            value: 'application/json',
+            value: props.data.responses?.[0].contents?.[0].mediaType ?? 'application/json',
           },
           {
             name: 'Accept',

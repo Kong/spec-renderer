@@ -66,6 +66,7 @@ const optionsArray = [
   { url: '/spec-renderer/specs/stoplight.yaml', label: 'Stoplight ToDo' },
   { url: '/spec-renderer/specs/konnect-api.yaml', label: 'Konnect Api' },
   { url: '/spec-renderer/specs/callback.yaml', label: 'Callbacks' },
+  { url: '/spec-renderer/specs/beer-and-coffee.yaml', label: 'Beer-and-coffee (e50ca83c443b.us)' },
   { url: 'https://raw.githubusercontent.com/digitalocean/openapi/main/specification/DigitalOcean-public.v2.yaml', label: 'Digital Ocean' },
   { url: 'https://raw.githubusercontent.com/stoplightio/Public-APIs/master/reference/zoom/openapi.yaml', label: 'Zoom' },
   { url: 'https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/ghes-3.0/ghes-3.0.json', label: 'GitHub' },

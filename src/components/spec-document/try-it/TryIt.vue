@@ -10,33 +10,42 @@
     >
       <div class="right-card-header">
         <LockIcon
+          v-if="security?.length"
           :color="KUI_COLOR_TEXT_NEUTRAL"
           :size="20"
         />
-        <h5>Authentication</h5>
-        <TryItButton />
+        <h5
+        >
+          {{ security?.length ? 'Authentication' : 'Try It'}}
+        </h5>
+        <TryItButton
+          @tryit-api-call="doApiCall"
+        />
       </div>
       <div class="right-card-body">
-        <div class="left">
-          <label>Method</label>
-          <select>
-            <option
-              v-for="sec in security"
-              :key="sec.id"
+        <div v-if="security?.length">
+          <div class="left">
+            <label>Method</label>
+            <select>
+              <option
+                v-for="sec in security"
+                :key="sec.id"
+              >
+                {{ sec.key }} ({{ sec.type }})
+              </option>
+            </select>
+          </div>
+          <div class="right">
+            <label>Access Token</label>
+            <input
+              placeholder="App credential"
+              @keyup="accessTokenChanged"
             >
-              {{ sec.key }} ({{ sec.type }})
-            </option>
-          </select>
-        </div>
-        <div class="right">
-          <label>Access Token</label>
-          <input
-            placeholder="App credential"
-            @keyup="accessTokenChanged"
-          >
+          </div>
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -53,11 +62,30 @@ const props = defineProps({
     type: Object as PropType<IHttpOperation>,
     required: true,
   },
+  baseServerUrl: {
+    type: String,
+    required: true,
+  },
 })
 
 const emit = defineEmits<{
   (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>): void
 }>()
+
+
+const doApiCall = async () => {
+  console.log('here: ', 'doApiCall')
+  try {
+    const response = await fetch(`{props.baseServerUrl}/${props.data.path}`, {
+      method: props.data.method,
+      headers: {},
+    })
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 
 /* for now we only have one header so we will return is as 1 element array */
 const accessTokenChanged = (e: Event) => {
@@ -105,7 +133,7 @@ const showTryItPanel = computed((): boolean => {
     }
   }
 
-  .right-card-body {
+  .right-card-body>div {
     display: grid;
     grid-template-columns: 1fr 1fr;
 
@@ -133,7 +161,7 @@ const showTryItPanel = computed((): boolean => {
   }
 
   @media (max-width: $kui-breakpoint-mobile) {
-    .right-card-body {
+    .right-card-body>div {
       grid-template-columns: 1fr;
     }
   }
