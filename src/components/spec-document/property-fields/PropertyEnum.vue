@@ -9,6 +9,7 @@
         v-for="value in enumValueList"
         :key="value?.toString()"
         class="property-field-enum-value"
+        :data-testid="`property-field-enum-value-${value}`"
       >
         {{ value }}
       </span>
