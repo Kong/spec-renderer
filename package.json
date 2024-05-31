@@ -48,7 +48,6 @@
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "^11.6.2",
     "@kong/icons": "^1.9.2",
-    "@paralleldrive/cuid2": "^2.2.2",
     "@scalar/openapi-parser": "^0.3.2",
     "@seriousme/openapi-schema-validator": "^2.2.1",
     "@stoplight/http-spec": "^7.0.3",

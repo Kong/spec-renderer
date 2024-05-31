@@ -3,10 +3,10 @@
     class="group-item"
     :class="{ root: root }"
   >
-    <!-- TODO: a11y aria-controls -->
     <button
       v-if="!item.hideTitle"
       ref="collapseTriggerRef"
+      :aria-controls="collapseGroupId"
       :aria-expanded="!isCollapsed"
       type="button"
       @click="onClick"
@@ -44,7 +44,7 @@ import { ref, type PropType } from 'vue'
 import type { TableOfContentsGroup } from '../../stoplight/elements-core/components/Docs/types'
 import { itemComponent, isGroup } from './index'
 import { ChevronRightIcon } from '@kong/icons'
-import { createId } from '@paralleldrive/cuid2'
+import { slugify } from '@/utils'
 
 const props = defineProps({
   item: {
@@ -73,7 +73,7 @@ const emit = defineEmits<{
   (e: 'expand'): void,
 }>()
 
-const collapseGroupId = createId()
+const collapseGroupId = `${slugify(props.item.title)}-toc-group-item-${props.item.items.length}`
 
 const selectItem = (id: any) => {
   isCollapsed.value = false
