@@ -17,8 +17,8 @@
     <SpecRenderer
       v-if="specText || specUrl"
       base-path="/spec-renderer"
+      :current-path="currentPath"
       :hide-schemas="hideSchemas"
-      :selected-path="selectedPath"
       :spec="specText"
       :spec-url="specUrl"
       :trace-parsing="true"
@@ -37,14 +37,14 @@ const route = useVueRoute()
 
 const specText = ref<string>('')
 const specUrl = ref<string>('')
-const selectedPath = ref<string>(route.path)
+const currentPath = ref<string>(route.path)
 const hideSchemas = ref<boolean>(false)
 
 const sampleSpecSelected = async (sampleSpecUrl: string, resetPath: boolean) => {
   specText.value = ''
   specUrl.value = sampleSpecUrl
   if (resetPath) {
-    selectedPath.value = '/'
+    currentPath.value = '/'
   }
 }
 
@@ -52,7 +52,7 @@ const sampleSpecUploaded = (sampleSpecText: string, resetPath: boolean) => {
   specUrl.value = ''
   specText.value = sampleSpecText
   if (resetPath) {
-    selectedPath.value = '/'
+    currentPath.value = '/'
   }
 }
 </script>

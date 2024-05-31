@@ -19,7 +19,7 @@ export interface ParseOptions {
   /**
    * Selected path to load document with
    */
-  selectedPath?: string
+  currentPath?: string
   /**
    * Do not include schemas (models) into parsing results
    */
