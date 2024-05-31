@@ -1,7 +1,9 @@
 /**
  * @description Get the offset top of an element relative to its parent.
- * @param child
- * @param parent
+ * Parent is the first ancestor that has a `position` other than `static`.
+ * offsetParent: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetParent
+ * @param child - The child element
+ * @param parent - The scrollable parent element
  * @returns number | null
  */
 export function getOffsetTopRelativeToParent(child: HTMLElement, parent: HTMLElement): number | null {

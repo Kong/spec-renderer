@@ -3,7 +3,9 @@
     <aside>
       <SpecRendererToc
         v-if="tableOfContents"
+        ref="specRendererTocRef"
         :base-path="basePath"
+        class="spec-renderer-toc"
         :control-browser-url="controlBrowserUrl"
         :current-path="currentPath"
         :table-of-contents="tableOfContents"
@@ -111,6 +113,8 @@ const itemSelected = (id: any) => {
   currentPath.value = id
 }
 
+const specRendererTocRef = ref<InstanceType<typeof SpecRendererToc> | null>(null)
+
 watch(() => ({
   specUrl: props.specUrl,
   spec: props.spec,
@@ -137,6 +141,18 @@ watch(() => ({
   }
 }, { immediate: true })
 
+/**
+ * Once element is in the DOM, trigger scroll to active item in TOC.
+ */
+watch(specRendererTocRef, async (val) => {
+  if (val) {
+    const scrollPosition = await val.getActiveItemScrollPosition()
+
+    val.$el.scrollTo({
+      top: scrollPosition - 50, // offset 50 so it doesn't stick to the top
+    })
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -154,5 +170,30 @@ aside {
 .wrapper {
   display: flex;
   height: 100vh;
+}
+
+/*
+Styles for SpecRendererToc that need to live here so that they apply to the TOC
+when it's rendered in the context of the SpecRenderer.
+Otherwise host app should have control over these styles.
+*/
+.spec-renderer-toc {
+  background-color: var(--kui-color-background, $kui-color-background);
+  position: relative; // important, need this for scrolling to selected item
+
+  :deep(>) {
+    ul > *:first-child {
+      // overview item
+      padding: var(--kui-space-70, $kui-space-70);
+      padding-bottom: var(--kui-space-0, $kui-space-0);
+    }
+  }
+
+  :deep(.group-item) {
+    &.root {
+      padding-left: var(--kui-space-70, $kui-space-70);
+      padding-right: var(--kui-space-70, $kui-space-70);
+    }
+  }
 }
 </style>
