@@ -10,7 +10,7 @@ TODO
 
 ## Attributes
 
-* `data-active-node` attribute is used for logic determining active item within the TOC.
+* `data-spec-renderer-toc-active` attribute is used for logic determining active item within the TOC.
 
 ## Exposes
 

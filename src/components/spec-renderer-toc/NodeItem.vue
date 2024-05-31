@@ -1,7 +1,7 @@
 <template>
   <li
     class="node-item"
-    :data-active-node="isActive ? true : undefined"
+    :data-spec-renderer-toc-active="isActive ? true : undefined"
   >
     <a
       :class="{ 'single-word': isSingleWord, 'active': isActive }"

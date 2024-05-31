@@ -55,7 +55,7 @@ const emit = defineEmits<{
 
 const getActiveItemScrollPosition = (scrollableAncestor: HTMLElement = tocNavRef.value as HTMLElement): number => {
   if (scrollableAncestor) {
-    const activeItem = scrollableAncestor.querySelector('li[data-active-node="true"]') as HTMLElement || null
+    const activeItem = scrollableAncestor.querySelector('li[data-spec-renderer-toc-active="true"]') as HTMLElement || null
 
     if (!activeItem) {
       return 0
@@ -71,7 +71,7 @@ defineExpose({
   // comment has to stay here for intellisense to work
   /**
    * @description Get the scroll position of the active item within the scrollable ancestor.
-   * Relies on the `data-active-node` attribute to determine the active item.
+   * Relies on the `data-spec-renderer-toc-active` attribute to determine the active item.
    * Because it uses HTMLElement: offsetParent property - it relies on the parent element to have a `position` other than `static` (ideally `relative`).
    * @param scrollableAncestor - the element to scroll within (optional, defaults to the root element of the component)
    * @returns the scroll position of the active item

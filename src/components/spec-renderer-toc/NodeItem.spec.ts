@@ -39,7 +39,7 @@ describe('<NodeItem />', () => {
       },
     })
 
-    const aTag = wrapper.find('a')
+    const aTag = wrapper.find('li[data-spec-renderer-toc-active="true"] a')
     expect(aTag.classes()).toContain('active')
   })
 })
