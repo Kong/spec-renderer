@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { provide, computed, ref, nextTick } from 'vue'
+import { provide, computed, ref } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { TableOfContentsItem } from '../../stoplight/elements-core/components/Docs/types'
 import { itemComponent, isGroup } from './index'
