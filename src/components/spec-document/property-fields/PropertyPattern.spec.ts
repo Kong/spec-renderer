@@ -13,6 +13,6 @@ describe('<PropertyPattern />', () => {
     })
 
     expect(wrapper.findTestId('property-field-pattern').exists()).toBe(true)
-    expect(wrapper.text()).toEqual(`Allowed pattern: ${pattern}`)
+    expect(wrapper.text()).toEqual(`Match pattern:${pattern}`)
   })
 })
