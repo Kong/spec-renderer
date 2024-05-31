@@ -53,10 +53,8 @@ const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
 }>()
 
-const getActiveItemScrollPosition = async (scrollableAncestor: HTMLElement = tocNavRef.value as HTMLElement): Promise<number> => {
+const getActiveItemScrollPosition = (scrollableAncestor: HTMLElement = tocNavRef.value as HTMLElement): number => {
   if (scrollableAncestor) {
-    await nextTick() // wait for all parent groups to expand
-
     const activeItem = scrollableAncestor.querySelector('li[data-active-node="true"]') as HTMLElement || null
 
     if (!activeItem) {
