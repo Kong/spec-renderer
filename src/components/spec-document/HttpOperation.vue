@@ -7,6 +7,9 @@
       class="left"
       :data-testid="`http-operation-left-${data.id}`"
     >
+      <pre style="display:none">
+  {{ JSON.stringify(data, null, 2) }}
+  </pre>
       <section>
         <h3>{{ data.summary }}</h3>
         <p>{{ data.description }}</p>
@@ -41,21 +44,27 @@
       :data-testid="`http-operation-right-${data.id}`"
     >
       <TryIt
-        v-if="showTryIt"
         :data="data"
-        :overview-data="overviewData"
+        @access-tokens-changed="setAuthHeaders"
+      />
+
+      <RequestSample
+        :auth-headers="authHeaders"
+        :base-server-url="`${selectedServerURL}${data.path}`"
+        :data="data"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { inject, computed, ref } from 'vue'
-import type { PropType, Ref } from 'vue'
-import type { IHttpOperation, IHttpService } from '@stoplight/types'
+import { ref, computed } from 'vue'
+import type { PropType } from 'vue'
+import type { IHttpOperation } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpResponse from './endpoint/HttpResponse.vue'
 import TryIt from './try-it/TryIt.vue'
+import RequestSample from './samples/RequestSample.vue'
 import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 
 const props = defineProps({
@@ -63,23 +72,14 @@ const props = defineProps({
     type: Object as PropType<IHttpOperation>,
     required: true,
   },
-  overviewData: {
-    type: Object as PropType<IHttpService>,
-    default: () => ({}),
-  },
 })
+const authHeaders = ref<Array<Record<string, string>>>()
 
+const setAuthHeaders = (newHeaders: Array<Record<string, string>>) => {
+  authHeaders.value = newHeaders
+}
 // this is the server selected by user, defaults to first server in the list
 const selectedServerURL = ref<string>(props.data.servers?.[0].url ?? '')
-
-// this is tryout state requested by property passed
-const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
-
-// there is more logic that drives do we show tryouts or not
-const showTryIt = computed((): boolean => {
-  // if there are no services defined in overView we do not show tryIt
-  return !hideTryIt.value && Array.isArray(props.overviewData.servers) && props.overviewData.servers.length > 0
-})
 
 const serverList = computed(() => props.data.servers?.map(server => server.url) ?? [])
 
@@ -110,6 +110,34 @@ function updateSelectedServerURL(url: string) {
     grid-template-columns: 1fr;
     .right {
       margin-top: $kui-space-40;
+    }
+  }
+}
+:deep(.right-card) {
+  border: $kui-border-width-10 solid $kui-color-border;
+  border-radius: $kui-border-radius-30;
+
+  .right-card-header {
+    background-color: $kui-color-background;
+    display: flex;
+    padding: 10px;
+
+    h5 {
+      color: $kui-color-text;
+      margin: 0 0 0 $kui-space-30;
+      padding: 0;
+    }
+  }
+
+  .right-card-body {
+    background-color: $kui-color-background-neutral-weakest;
+    border-top: $kui-border-width-10 solid $kui-color-border;
+    width: 100%;
+  }
+
+  @media (max-width: $kui-breakpoint-mobile) {
+    .right-card-body {
+      grid-template-columns: 1fr;
     }
   }
 }

@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import HttpOperation from './HttpOperation.vue'
-import type { IHttpOperation, IHttpService, IServer } from '@stoplight/types'
+import type { IHttpOperation, IServer } from '@stoplight/types'
 
 describe('<HttpOperation />', () => {
   describe('TryIt section', () => {
@@ -12,8 +12,6 @@ describe('<HttpOperation />', () => {
         props: {
           data: <IHttpOperation>{
             id: '123',
-          },
-          overviewData: <IHttpService>{
             servers: <Array<IServer>>[{
               id: 'sample-server-id',
               url: 'https://stoplight.io/api',
@@ -30,8 +28,6 @@ describe('<HttpOperation />', () => {
         props: {
           data: <IHttpOperation>{
             id: '123',
-          },
-          overviewData: <IHttpService>{
             servers: <Array<IServer>>[{
               id: 'sample-server-id',
               url: 'https://stoplight.io/api',
@@ -54,8 +50,6 @@ describe('<HttpOperation />', () => {
         props: {
           data: <IHttpOperation>{
             id: '123',
-          },
-          overviewData: <IHttpService>{
           },
         },
       })

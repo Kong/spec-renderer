@@ -196,7 +196,7 @@ const addTagGroupsToTree = <T extends GroupableNode>(
         meta: isHttpOperation(node.data) || isHttpWebhookOperation(node.data) ? node.data.method : '',
       }
     })
-    if (items.length > 0) {
+    if (items.length) {
       tree.push({
         title: group.title,
         items,

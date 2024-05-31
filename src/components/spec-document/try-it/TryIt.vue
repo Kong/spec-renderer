@@ -1,101 +1,139 @@
 <template>
   <div
-    class="tryit-card"
-    :data-testid="`tryit-${data.id}`"
+    class="tryit-wrapper"
+    :data-testid="`tryit-wrapper-${data.id}`"
   >
-    <div class="tryit-card-header">
-      <LockIcon
-        :color="KUI_COLOR_TEXT_NEUTRAL"
-        :size="20"
-      />
-      <h5>Authentication</h5>
-      <button class="tryit-btn">
-        Try It!
-      </button>
-    </div>
-    <div class="tryit-card-body">
-      <div class="left">
-        <label>Method</label>
-        <select>
-          <option
-            v-for="sec in overviewData.securitySchemes"
-            :key="sec.id"
-          >
-            {{ sec.key }} ({{ sec.type }})
-          </option>
-        </select>
+    <div
+      v-if="showTryItPanel"
+      class="right-card"
+      :data-testid="`tryit-${data.id}`"
+    >
+      <div class="right-card-header">
+        <LockIcon
+          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :size="20"
+        />
+        <h5>Authentication</h5>
+        <TryItButton />
       </div>
-      <div class="right">
-        <label>Access Token</label>
-        <input placeholder="App credential">
+      <div class="right-card-body">
+        <div class="left">
+          <label>Method</label>
+          <select>
+            <option
+              v-for="sec in security"
+              :key="sec.id"
+            >
+              {{ sec.key }} ({{ sec.type }})
+            </option>
+          </select>
+        </div>
+        <div class="right">
+          <label>Access Token</label>
+          <input
+            placeholder="App credential"
+            @keyup="accessTokenChanged"
+          >
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { PropType } from 'vue'
-import type { IHttpOperation, IHttpService } from '@stoplight/types'
+import { inject, computed, ref } from 'vue'
+import type { PropType, Ref } from 'vue'
 import { LockIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
+import TryItButton from './TryItButton.vue'
+import type { IHttpOperation, HttpSecurityScheme } from '@stoplight/types'
 
-defineProps({
+const props = defineProps({
   data: {
     type: Object as PropType<IHttpOperation>,
     required: true,
   },
-  overviewData: {
-    type: Object as PropType<IHttpService>,
-    required: true,
-  },
 })
+
+const emit = defineEmits<{
+  (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>): void
+}>()
+
+/* for now we only have one header so we will return is as 1 element array */
+const accessTokenChanged = (e: Event) => {
+  const tokenValue = (e.target as HTMLInputElement).value
+  const authHeaders = []
+  if (tokenValue) {
+    authHeaders.push({
+      name: 'Authorization',
+      // TODO: this migh be a query string, not a header, handle this case
+      value: `Bearer ${(e.target as HTMLInputElement).value}`,
+    })
+  }
+  emit('access-tokens-changed', authHeaders)
+}
+
+const security = computed((): HttpSecurityScheme[]|undefined => {
+  const secArray:Array<HttpSecurityScheme> = []
+  if (props.data.security) {
+    props.data.security.forEach((secGroup: HttpSecurityScheme[]) => {
+      (secGroup || []).forEach((sec: HttpSecurityScheme) => {
+        secArray.push(sec)
+      })
+    })
+  }
+  return secArray
+})
+
+// this is tryout state requested by property passed
+const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
+
+// there is more logic that drives do we show tryouts or not
+const showTryItPanel = computed((): boolean => {
+  // if there are no services defined in overView we do not show tryIt
+  return !hideTryIt.value && Array.isArray(props.data.servers) && !!props.data.servers.length
+})
+
 </script>
 
 <style lang="scss" scoped>
+.right-card {
 
-.tryit-card {
-  border: 1px solid $kui-color-border;
-  border-radius: $kui-border-radius-30;
-
-  .tryit-card-header {
-    background-color: $kui-color-background;
-    display: flex;
-    padding: 10px;
-    h5 {
-      color: $kui-color-text;
-      margin: 0 0 0 $kui-space-30;
-      padding: 0;
-    }
+  .right-card-header {
     .tryit-btn {
       margin-left: auto;
     }
   }
-  .tryit-card-body {
-    background-color: $kui-color-background-neutral-weakest;
-    border-top: 1px solid $kui-color-border;
+
+  .right-card-body {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    width: 100%;
-    .left, .right {
+
+    .left,
+    .right {
       display: flex;
       flex-direction: column;
       margin: $kui-space-50 $kui-space-40;
     }
-    input, select {
-      border: 1px solid $kui-color-border;
+
+    input,
+    select {
+      border: $kui-border-width-10 solid $kui-color-border;
       border-radius: $kui-border-radius-30;
-      box-sizing:border-box;
+      box-sizing: border-box;
       padding: $kui-space-40 $kui-space-50;
       width: 100%;
     }
+
     label {
       font-size: $kui-font-size-30;
       font-weight: $kui-font-weight-medium;
       line-height: $kui-line-height-30;
     }
   }
+
   @media (max-width: $kui-breakpoint-mobile) {
-    .tryit-card-body {
+    .right-card-body {
       grid-template-columns: 1fr;
     }
   }

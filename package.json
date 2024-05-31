@@ -55,11 +55,13 @@
     "@stoplight/types": "^14.1.1",
     "@stoplight/yaml": "^4.3.0",
     "@vueuse/core": "^10.9.0",
+    "httpsnippet-lite": "^3.0.5",
     "json-schema": "^0.4.0",
     "lodash": "^4.17.21",
     "oas": "link:@stoplight/http-spec/oas",
     "oas-normalize": "^11.0.7",
-    "openapi3-ts": "4.3.1"
+    "openapi3-ts": "4.3.1",
+    "shiki": "^1.6.1"
   },
   "resolutions": {
     "openapi3-ts": "4.3.1"
