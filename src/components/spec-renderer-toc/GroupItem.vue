@@ -73,7 +73,8 @@ const emit = defineEmits<{
   (e: 'expand'): void,
 }>()
 
-const collapseGroupId = `${slugify(props.item.title)}-toc-group-item-${props.item.items.length}`
+// make sure the collapse group id is unique
+const collapseGroupId = `spec-renderer-toc-group-${slugify(props.item.title)}-${slugify(props.item.items[0].title)}`
 
 const selectItem = (id: any) => {
   isCollapsed.value = false
