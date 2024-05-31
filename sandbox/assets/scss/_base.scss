@@ -1,58 +1,5 @@
 // ToDo: Temporary stylesheet, move styles to component level & scoped
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: var(--kui-color-text, $kui-color-text);
-  font-family: var(--kui-font-family-text, $kui-font-family-text);
-  font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
-  margin-top: var(--kui-space-70, $kui-space-70);
-}
-
-h1 {
-  font-size: var(--kui-font-size-70, $kui-font-size-70);
-  letter-spacing: var(--kui-letter-spacing-minus-50, $kui-letter-spacing-minus-50);
-  line-height: var(--kui-line-height-60, $kui-line-height-60);
-  margin-bottom: var(--kui-space-70, $kui-space-70);
-
-  &:first-of-type {
-    // Exclude h1 from the default margin-top rule
-    margin-top: var(--kui-space-0, $kui-space-0);
-  }
-}
-
-h2 {
-  font-size: var(--kui-font-size-60, $kui-font-size-60);
-  letter-spacing: var(--kui-letter-spacing-minus-40, $kui-letter-spacing-minus-40);
-  line-height: var(--kui-line-height-50, $kui-line-height-50);
-  margin-bottom: var(--kui-space-60, $kui-space-60);
-}
-
-h3 {
-  font-size: var(--kui-font-size-50, $kui-font-size-50);
-  letter-spacing: var(--kui-letter-spacing-minus-30, $kui-letter-spacing-minus-30);
-  line-height: var(--kui-line-height-40, $kui-line-height-40);
-  margin-bottom: var(--kui-space-50, $kui-space-50);
-}
-
-h4 {
-  font-size: var(--kui-font-size-40, $kui-font-size-40);
-  letter-spacing: var(--kui-letter-spacing-minus-20, $kui-letter-spacing-minus-20);
-  line-height: var(--kui-line-height-30, $kui-line-height-30);
-  margin-bottom: var(--kui-space-40, $kui-space-40);
-}
-
-h5,
-h6 {
-  font-size: var(--kui-font-size-30, $kui-font-size-30);
-  letter-spacing: var(--kui-letter-spacing-minus-10, $kui-letter-spacing-minus-10);
-  line-height: var(--kui-line-height-30, $kui-line-height-30);
-  margin-bottom: var(--kui-space-30, $kui-space-30);
-}
-
 a {
   color: var(--kui-color-text-primary, $kui-color-text-primary);
   text-decoration: none;
@@ -73,58 +20,10 @@ a {
   }
 }
 
-p {
-  margin: var(--kui-space-0, $kui-space-0);
-}
-
-article p {
-  margin: var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0) var(--kui-space-70, $kui-space-70);
-}
-
-p + {
-  p,
-  img,
-  pre,
-  table,
-  div,
-  ol,
-  ul,
-  dl {
-    margin: var(--kui-space-70, $kui-space-70) var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0);
-  }
-}
-
-pre + pre,
-pre + p,
-pre + div,
-table + table {
-  margin: var(--kui-space-70, $kui-space-70) var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0);
-}
-
-small {
-  font-size: var(--kui-font-size-20, $kui-font-size-20);
-  line-height: var(--kui-line-height-20, $kui-line-height-20);
-}
-
 hr {
   border-bottom: none;
   border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   margin: var(--kui-space-70, $kui-space-70) var(--kui-space-0, $kui-space-0);
-}
-
-ul {
-  list-style: disc;
-}
-
-ol {
-  list-style: decimal;
-}
-
-blockquote {
-  border-left: var(--kui-border-width-30, $kui-border-width-30) solid var(--kui-color-border, $kui-color-border);
-  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
-  margin: var(--kui-space-70, $kui-space-70) var(--kui-space-0, $kui-space-0);
-  padding: var(--kui-space-0, $kui-space-0) var(--kui-space-70, $kui-space-70);
 }
 
 // inline code
@@ -139,55 +38,6 @@ code {
   word-wrap: break-word;
 }
 
-pre {
-  background-color: $kui-color-background-neutral-strongest;
-  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-  border-radius: var(--kui-border-radius-40, $kui-border-radius-40);
-  // Default to white on the dark background; syntax highlighting should override by default
-  color: var(--kui-color-text-inverse, $kui-color-text-inverse);
-  font-family: var(--kui-font-family-code, $kui-font-family-code);
-  font-size: var(--kui-font-size-30, $kui-font-size-30);
-  line-height: var(--kui-line-height-30, $kui-line-height-30);
-  margin: var(--kui-space-0, $kui-space-0);
-  margin-bottom: var(--kui-space-70, $kui-space-70);
-  overflow-wrap: break-word;
-  overflow-x: auto;
-  padding: var(--kui-space-70, $kui-space-70);
-  white-space: pre;
-  word-break: normal;
-  word-spacing: normal;
-  word-wrap: normal;
-}
-
 img {
   max-width: 100%;
-}
-
-table {
-  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-  border-collapse: collapse;
-  border-spacing: 0;
-  color: var(--kui-color-text, $kui-color-text);
-  font-size: var(--kui-font-size-30, $kui-font-size-30);
-  margin-bottom: var(--kui-space-70, $kui-space-70);
-
-  thead th {
-    background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
-    border: var(--kui-border-width-10, $kui-border-width-10) solid
-      var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker);
-    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-    padding: var(--kui-space-40, $kui-space-40);
-    vertical-align: text-top;
-    white-space: nowrap;
-
-    &:not(:last-of-type) {
-      border-right-color: var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak);
-    }
-  }
-
-  tbody td {
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    padding: var(--kui-space-40, $kui-space-40);
-    vertical-align: text-top;
-  }
 }

@@ -13,6 +13,6 @@ describe('<PropertyExample />', () => {
     })
 
     expect(wrapper.findTestId('property-field-example').exists()).toBe(true)
-    expect(wrapper.text()).toEqual(`Example: ${example}`)
+    expect(wrapper.text()).toEqual(`Example:${example}`)
   })
 })

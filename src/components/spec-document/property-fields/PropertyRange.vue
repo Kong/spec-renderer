@@ -1,8 +1,16 @@
 <template>
-  <p data-testid="property-field-range">
-    <span v-if="Number.isFinite(max)">Max: {{ max }}</span>
-    <span v-if="Number.isFinite(max) && Number.isFinite(min)"> | </span>
-    <span v-if="Number.isFinite(min)">Min: {{ min }}</span>
+  <p
+    class="property-field-range"
+    data-testid="property-field-range"
+  >
+    <span
+      v-if="Number.isFinite(max)"
+      class="property-field-range-value"
+    >&gt;&equals; {{ max }}</span>
+    <span
+      v-if="Number.isFinite(min)"
+      class="property-field-range-value"
+    >&lt;&equals; {{ min }}</span>
   </p>
 </template>
 
@@ -21,3 +29,19 @@ defineProps({
   },
 })
 </script>
+
+<style lang="scss" scoped>
+@import '@/styles/mixins/mixins';
+
+.property-field-range {
+  @include model-property-additional-field;
+
+  &> :first-child {
+    margin-right: var(--kui-space-40, $kui-space-40);
+  }
+
+  .property-field-range-value {
+    @include model-property-field-value;
+  }
+}
+</style>

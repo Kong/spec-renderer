@@ -16,6 +16,13 @@ const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
   })
   : undefined
 
+// !Important: always externalize `shiki/onig.wasm`
+const externalDependencies: string[] = ['shiki/onig.wasm']
+// If not loading sandbox, externalize vue
+if (!process.env.USE_SANDBOX) {
+  externalDependencies.push('vue')
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -103,7 +110,7 @@ export default defineConfig({
           stoplight: path.resolve(__dirname, './sandbox/stoplight/index.html'),
         }
         : path.resolve(__dirname, './src/index.ts'),
-      external: process.env.USE_SANDBOX ? undefined : ['vue'],
+      external: externalDependencies,
       output: process.env.USE_SANDBOX
         ? undefined
         : {

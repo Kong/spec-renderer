@@ -11,7 +11,7 @@ describe('<PropertyRange />', () => {
       },
     })
     expect(wrapper.findTestId('property-field-range').exists()).toBe(true)
-    expect(wrapper.text()).toEqual('Max: 100 | Min: 10')
+    expect(wrapper.text()).toEqual('>= 100<= 10')
   })
   it('renders with only max', () => {
     const wrapper = shallowMount(PropertyRange, {
@@ -20,7 +20,7 @@ describe('<PropertyRange />', () => {
       },
     })
     expect(wrapper.findTestId('property-field-range').exists()).toBe(true)
-    expect(wrapper.text()).toEqual('Max: 100')
+    expect(wrapper.text()).toEqual('>= 100')
   })
   it('renders with both max and min', () => {
     const wrapper = shallowMount(PropertyRange, {
@@ -29,6 +29,6 @@ describe('<PropertyRange />', () => {
       },
     })
     expect(wrapper.findTestId('property-field-range').exists()).toBe(true)
-    expect(wrapper.text()).toEqual('Min: 10')
+    expect(wrapper.text()).toEqual('<= 10')
   })
 })
