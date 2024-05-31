@@ -1,6 +1,5 @@
 import { getHighlighterCore } from 'shiki/core'
 import type { HighlighterCore } from 'shiki/core'
-// import getWasm from 'shiki/wasm'
 
 export default function useShiki() {
 
