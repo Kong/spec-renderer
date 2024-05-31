@@ -13,7 +13,7 @@ export const requestSampleConfigs: RequestSampleConfigs = [
   {
     label: 'Shell',
     httpSnippetLanguage: 'shell',
-    highlightLanguage: 'bash',
+    highlightLanguage: 'fish',
     // libraries: [
     //   {
     //     label: 'cURL',
@@ -117,6 +117,6 @@ export const requestSampleConfigs: RequestSampleConfigs = [
   {
     label: 'Ruby',
     httpSnippetLanguage: 'ruby',
-    highlightLanguage: 'java',
+    highlightLanguage: 'ruby',
   },
 ]

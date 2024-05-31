@@ -44,11 +44,12 @@
         </select>
       </div>
       <div class="right-card-body">
-        <div v-if="requestCode">
-          <!-- eslint-disable vue/no-v-html -->
-          <pre v-html="requestCode" />
-          <!-- eslint-enable vue/no-v-html -->
-        </div>
+        <!-- eslint-disable vue/no-v-html -->
+        <div
+          v-if="requestCode"
+          v-html="requestCode"
+        />
+        <!-- eslint-enable vue/no-v-html -->
       </div>
     </div>
   </div>
@@ -60,22 +61,8 @@ import type { PropType } from 'vue'
 import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet-lite'
 import { requestSampleConfigs } from '../../../constants'
-import hljs from 'highlight.js/lib/core'
-import javascript from 'highlight.js/lib/languages/javascript'
-import json from 'highlight.js/lib/languages/json'
-import java from 'highlight.js/lib/languages/java'
-import bash from 'highlight.js/lib/languages/bash'
-import python from 'highlight.js/lib/languages/python'
-import go from 'highlight.js/lib/languages/go'
-import 'highlight.js/styles/atom-one-dark.css'
+import composables from '@/composables'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet-lite'
-
-hljs.registerLanguage('javascript', javascript)
-hljs.registerLanguage('json', json)
-hljs.registerLanguage('java', java)
-hljs.registerLanguage('bash', bash)
-hljs.registerLanguage('python', python)
-hljs.registerLanguage('go', go)
 
 const props = defineProps({
   data: {
@@ -94,6 +81,8 @@ const props = defineProps({
     default: [],
   },
 })
+
+const { getHighlighter } = composables.useShiki()
 
 const requestConfigs = computed(() => {
   if (['get', 'delete'].includes(props.data.method) || requestSamples.value.length === 0) {
@@ -215,13 +204,14 @@ watch(() => ({
 
   // if our we do not have requestCode generated, or our lanf or lib are changed - we need to re-generate requestCode
   if (!requestCode.value || snippedChanged || newValue.lang !== oldValue?.lang || newValue.lib !== oldValue?.lib) {
+    const highlighter = await getHighlighter()
     if (newValue.lang === 'json') {
-      requestCode.value = jsonObj ? hljs.highlight(JSON.stringify(jsonObj, null, 2), { language: 'json' }).value : null
+      requestCode.value = jsonObj ? highlighter.codeToHtml(JSON.stringify(jsonObj, null, 2), { lang: 'json', theme: 'material-theme-palenight' }) : null
     } else if (snippet.value) {
       const code = await snippet.value.convert(newValue.lang as TargetId, newValue.lib)
       const hightLightLang = getHighlightLanguage(newValue.lang)
       if (hightLightLang) {
-        requestCode.value = hljs.highlight(code as string, { language: hightLightLang }).value
+        requestCode.value = highlighter.codeToHtml(code as string, { lang: hightLightLang, theme: 'material-theme-palenight' })
       } else {
         requestCode.value = code
       }
@@ -231,9 +221,13 @@ watch(() => ({
 </script>
 
 <style lang="scss" scoped>
-pre {
+:deep(pre) {
   margin: 0;
   white-space: pre-wrap;
+
+  code {
+    background: transparent!important;
+  }
 }
 
 .request-sample-selector {

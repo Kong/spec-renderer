@@ -38,9 +38,6 @@ importers:
       '@vueuse/core':
         specifier: ^10.9.0
         version: 10.9.0(vue@3.4.27(typescript@5.4.5))
-      highlight.js:
-        specifier: ^11.9.0
-        version: 11.9.0
       httpsnippet-lite:
         specifier: ^3.0.5
         version: 3.0.5
@@ -59,6 +56,9 @@ importers:
       openapi3-ts:
         specifier: 4.3.1
         version: 4.3.1
+      shiki:
+        specifier: ^1.6.1
+        version: 1.6.1
     devDependencies:
       '@babel/types':
         specifier: ^7.24.5
@@ -1010,6 +1010,9 @@ packages:
   '@seriousme/openapi-schema-validator@2.2.1':
     resolution: {integrity: sha512-I+6l2vZ4qx+RyUo8GNnIbeqbv5ao1enSdNFPJ7x3slIVLU8aSBf228qpo+6iNWbRMK4ktF91jsv5KN7PpaJQtg==}
     hasBin: true
+
+  '@shikijs/core@1.6.1':
+    resolution: {integrity: sha512-CqYyepN4SnBopaoXYwng4NO8riB5ask/LTCkhOFq+GNGtr2X+aKeD767eYdqYukeixEUvv4bXdyTYVaogj7KBw==}
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -2541,10 +2544,6 @@ packages:
   highlight.js@10.7.3:
     resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==}
 
-  highlight.js@11.9.0:
-    resolution: {integrity: sha512-fJ7cW7fQGCYAkgv4CPfwFHrfd/cLS4Hau96JuJ+ZTOWhjnhoeN1ub1tFmALm/+lW5z4WCAuAV9bm05AP0mS6Gw==}
-    engines: {node: '>=12.0.0'}
-
   hmac-drbg@1.0.1:
     resolution: {integrity: sha512-Tti3gMqLdZfhOQY1Mzf/AanLiqh1WTiJgEj26ZuYQ9fbkLomzGchCws4FyrSd4VkpBfiNhaE1On+lOz894jvXg==}
 
@@ -4037,6 +4036,9 @@ packages:
   shebang-regex@3.0.0:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
+
+  shiki@1.6.1:
+    resolution: {integrity: sha512-1Pu/A1rtsG6HZvQm4W0NExQ45e02og+rPog7PDaFDiMumZgOYnZIu4JtGQeAIfMwdbKSjJQoCUr79vDLKUUxWA==}
 
   should-equal@2.0.0:
     resolution: {integrity: sha512-ZP36TMrK9euEuWQYBig9W55WPC7uo37qzAEmbjHz4gfyuXrEUgF8cUvQVO+w+d3OMfPvSRQJ22lSm8MQJ43LTA==}
@@ -5718,6 +5720,8 @@ snapshots:
       ajv-formats: 2.1.1
       js-yaml: 4.1.0
       minimist: 1.2.8
+
+  '@shikijs/core@1.6.1': {}
 
   '@sinclair/typebox@0.27.8': {}
 
@@ -7631,8 +7635,6 @@ snapshots:
 
   highlight.js@10.7.3: {}
 
-  highlight.js@11.9.0: {}
-
   hmac-drbg@1.0.1:
     dependencies:
       hash.js: 1.1.7
@@ -9064,6 +9066,10 @@ snapshots:
       shebang-regex: 3.0.0
 
   shebang-regex@3.0.0: {}
+
+  shiki@1.6.1:
+    dependencies:
+      '@shikijs/core': 1.6.1
 
   should-equal@2.0.0:
     dependencies:
