@@ -193,7 +193,6 @@ watch(() => ({
       requestCode.value = jsonObj ? highlighter.codeToHtml(JSON.stringify(jsonObj, null, 2), { lang: 'json', theme: 'material-theme-palenight' }) : null
     } else if (snippet.value) {
       const code = await snippet.value.convert(newValue.lang as TargetId, newValue.lib)
-      console.log(`>${code}<`)
       const hightLightLang = getHighlightLanguage(newValue.lang)
       if (hightLightLang) {
         requestCode.value = highlighter.codeToHtml(code as string, { lang: hightLightLang, theme: 'material-theme-palenight' })
