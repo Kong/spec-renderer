@@ -8,7 +8,7 @@ $border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-
   >* {
     position: relative;
 
-    &:before {
+    &::before {
       border-bottom: $border;
       border-left: $border;
       content: "";
@@ -19,7 +19,7 @@ $border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-
       width: $branch-width;
     }
 
-    &:after {
+    &::after {
       border-left: $border;
       content: "";
       height: 100%;

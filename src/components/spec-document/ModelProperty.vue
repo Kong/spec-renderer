@@ -1,16 +1,21 @@
 <template>
-  <div
+  <component
+    :is="resolvedModelProperty?.properties ? 'details' : 'div'"
     class="model-property"
     :data-testid="dataTestId"
+    @toggle="() => nestedPropertiesExpanded = !nestedPropertiesExpanded"
   >
-    <div class="model-property-fields">
+    <component
+      :is="resolvedModelProperty?.properties ? 'summary' : 'div'"
+      class="model-property-fields"
+    >
       <component
         :is="field.component"
         v-for="field in orderedFieldList"
         :key="field.key"
         v-bind="field.props"
       />
-    </div>
+    </component>
 
     <template v-if="resolvedModelProperty">
       <div
@@ -38,12 +43,13 @@
         :any-of-list="resolvedModelProperty.anyOf"
       />
     </template>
-  </div>
+  </component>
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue'
+import { computed, ref } from 'vue'
 import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
+import type { PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 
 import PropertyDescription from './property-fields/PropertyDescription.vue'
@@ -69,6 +75,7 @@ const props = defineProps({
     default: () => [],
   },
 })
+const nestedPropertiesExpanded = ref(false)
 
 const resolvedModelProperty = computed(() => resolveSchemaObjectFields(props.property))
 
@@ -89,6 +96,8 @@ const orderedFieldList = computed(() => {
               ? props.property.items.type
               : '',
         requiredFields: props.requiredFields,
+        collapsableProperty: Boolean(resolvedModelProperty.value?.properties),
+        itemsExpanded: nestedPropertiesExpanded.value,
       },
       key: 'property-info',
     })
@@ -159,6 +168,11 @@ const dataTestId = computed(() => `model-property-${props.propertyName.replaceAl
     > * {
       margin: 0;
     }
+  }
+
+  summary.model-property-fields {
+    cursor: pointer;
+    list-style: none;
   }
 
   > :not(:first-child) {

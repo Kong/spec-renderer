@@ -43,16 +43,7 @@
   }
 
   .chevron-icon {
-    color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
-    flex-shrink: 0;
-    height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
-    pointer-events: none;
-    transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
-    width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
-
-    &.expanded {
-      transform: rotate(90deg);
-    }
+    @include chevron-toggle;
   }
 
   &.active {
@@ -81,4 +72,17 @@
   font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
   line-height: var(--kui-line-height-20, $kui-line-height-20);
   padding: var(--kui-space-10, $kui-space-10) var(--kui-space-20, $kui-space-20);
+}
+
+@mixin chevron-toggle {
+  color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
+  flex-shrink: 0;
+  height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
+  pointer-events: none;
+  transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
+  width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
+
+  &.expanded {
+    transform: rotate(90deg);
+  }
 }
