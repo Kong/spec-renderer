@@ -79,7 +79,7 @@ const props = defineProps({
   },
   authHeaders: {
     type: Array as PropType<Record<string, string>[]>,
-    default: () => {},
+    default: () => [],
   },
 })
 
