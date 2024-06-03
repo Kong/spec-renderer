@@ -162,11 +162,11 @@ const dataTestId = computed(() => `model-property-${props.propertyName.replaceAl
 
   // reset margins for nested fields
   > * {
-    margin: 0;
+    margin: var(--kui-space-0, $kui-space-0);
   }
   .model-property-fields {
     > * {
-      margin: 0;
+    margin: var(--kui-space-0, $kui-space-0);
     }
   }
 
