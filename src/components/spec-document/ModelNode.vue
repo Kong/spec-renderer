@@ -13,7 +13,10 @@
       {{ data.description }}
     </p>
 
-    <template v-if="modelPropertyProps">
+    <div
+      v-if="modelPropertyProps"
+      class="spec-model-node-properties"
+    >
       <template
         v-for="(property, propertyName) in modelPropertyProps.properties"
         :key="propertyName"
@@ -35,7 +38,7 @@
         v-if="Array.isArray(modelPropertyProps.anyOf) && modelPropertyProps.anyOf?.length"
         :any-of-list="modelPropertyProps.anyOf"
       />
-    </template>
+    </div>
   </div>
 </template>
 
@@ -64,17 +67,24 @@ const dataTestId = computed(() => `model-node-${props.title.replaceAll(' ', '-')
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/mixins/tree';
+
 .spec-model-node {
   .spec-model-node-title {
     color: var(--kui-color-text, $kui-color-text);
     font-size: var(--kui-font-size-80, $kui-font-size-80);
     font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
     line-height: var(--kui-line-height-70, $kui-line-height-70);
+    margin: var(--kui-space-0, $kui-space-0);
     margin-bottom: var(--kui-space-60, $kui-space-60);
   }
   .spec-model-node-description {
     font-size: var(--kui-font-size-30, $kui-font-size-30);
     line-height: var(--kui-line-height-40, $kui-line-height-40);
+  }
+
+  .spec-model-node-properties {
+    @include tree-nesting
   }
 }
 </style>

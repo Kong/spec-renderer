@@ -3,16 +3,20 @@
     class="model-property"
     :data-testid="dataTestId"
   >
-    <component
-      :is="field.component"
-      v-for="field in orderedFieldList"
-      :key="field.key"
-      v-bind="field.props"
-    />
+    <div class="model-property-fields">
+      <component
+        :is="field.component"
+        v-for="field in orderedFieldList"
+        :key="field.key"
+        v-bind="field.props"
+      />
+    </div>
 
     <template v-if="resolvedModelProperty">
-      <details v-if="resolvedModelProperty.properties">
-        <summary>Properties of <code>{{ propertyName }}</code></summary>
+      <div
+        v-if="resolvedModelProperty.properties"
+        class="model-property-nested-fields"
+      >
         <template
           v-for="(subProperty, subPropertyName) in resolvedModelProperty.properties"
           :key="subPropertyName"
@@ -24,7 +28,7 @@
             :required-fields="resolvedModelProperty.required"
           />
         </template>
-      </details>
+      </div>
       <PropertyOneOf
         v-if="Array.isArray(resolvedModelProperty.oneOf) && resolvedModelProperty.oneOf?.length"
         :one-of-list="resolvedModelProperty.oneOf"
@@ -142,11 +146,28 @@ const dataTestId = computed(() => `model-property-${props.propertyName.replaceAl
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/mixins/tree';
+
 .model-property {
   padding: var(--kui-space-40, $kui-space-40);
 
-  &> :not(:first-child) {
+  // reset margins for nested fields
+  > * {
+    margin: 0;
+  }
+  .model-property-fields {
+    > * {
+      margin: 0;
+    }
+  }
+
+  > :not(:first-child) {
     margin-top: var(--kui-space-20, $kui-space-20);
   }
+
+  .model-property-nested-fields {
+    @include tree-nesting
+  }
+
 }
 </style>
