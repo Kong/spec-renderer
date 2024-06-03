@@ -41,15 +41,15 @@
       :data-testid="`http-operation-right-${data.id}`"
     >
       <TryIt
-        :base-server-url="`${selectedServerURL}${data.path}`"
         :data="data"
+        :request-url="`${selectedServerURL}${data.path}`"
         @access-tokens-changed="setAuthHeaders"
       />
 
       <RequestSample
         :auth-headers="authHeaders"
-        :base-server-url="`${selectedServerURL}${data.path}`"
         :data="data"
+        :request-url="`${selectedServerURL}${data.path}`"
       />
     </div>
   </div>

@@ -73,7 +73,7 @@ const props = defineProps({
   /**
    * server url+path selected by user on endpoints detail page
    */
-  baseServerUrl: {
+  requestUrl: {
     type: String,
     required: true,
   },
@@ -140,7 +140,7 @@ watch(() => ({
   requestBodyKey: selectedRequestSample.value,
   lang: selectedLang.value,
   lib: selectedLangLibrary.value,
-  serverUrl: props.baseServerUrl,
+  requestUrl: props.requestUrl,
   authHeaders: props.authHeaders,
 }), async (newValue, oldValue) => {
   const jsonObj = (requestSamples.value as INodeExample[]).find(s => s.key === newValue.requestBodyKey)?.value
@@ -156,10 +156,10 @@ watch(() => ({
   let snippedChanged = false
 
   // if we selected new requestBody or if we do not have httpSNippet yet, we need to re-init it
-  if (!snippet.value || newValue.requestBodyKey !== oldValue?.requestBodyKey || newValue.serverUrl !== oldValue.serverUrl || newValue.authHeaders !== oldValue?.authHeaders) {
+  if (!snippet.value || newValue.requestBodyKey !== oldValue?.requestBodyKey || newValue.requestUrl !== oldValue.requestUrl || newValue.authHeaders !== oldValue?.authHeaders) {
 
     // TODO: handle parameter / query change in url gracefully
-    const serverUrl = newValue.serverUrl.replace(/[{}]/g, '')
+    const serverUrl = newValue.requestUrl.replace(/[{}]/g, '')
     let serverUrlValid = true
     try {
       // eslint-disable-next-line no-new

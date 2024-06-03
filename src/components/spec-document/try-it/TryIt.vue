@@ -81,7 +81,7 @@ const props = defineProps({
     type: Object as PropType<IHttpOperation>,
     required: true,
   },
-  baseServerUrl: {
+  requestUrl: {
     type: String,
     required: true,
   },
@@ -98,7 +98,7 @@ const responseText = ref<string>()
 const doApiCall = async () => {
   try {
     // Todo - deal with params and body
-    response.value = await fetch(`${props.baseServerUrl}/${props.data.path}`, {
+    response.value = await fetch(`${props.requestUrl}`, {
       method: props.data.method,
       headers: [
         ...(authHeaders?.value || []),
@@ -152,7 +152,7 @@ const showTryItPanel = computed((): boolean => {
 
 watch(() => ({
   data: props.data,
-  baseServerUrl: props.baseServerUrl,
+  requestUrl: props.requestUrl,
 }), () => {
   responseText.value = ''
   response.value = undefined
