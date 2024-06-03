@@ -1,3 +1,10 @@
+## [1.15.3](https://github.com/Kong/spec-renderer/compare/v1.15.2...v1.15.3) (2024-05-31)
+
+
+### Bug Fixes
+
+* **spec-document:** we cannot remove margin for every element in container ([#101](https://github.com/Kong/spec-renderer/issues/101)) ([df398b8](https://github.com/Kong/spec-renderer/commit/df398b886206dccf78d6710c0c3736b8c8b17863))
+
 ## [1.15.2](https://github.com/Kong/spec-renderer/compare/v1.15.1...v1.15.2) (2024-05-31)
 
 
