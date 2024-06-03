@@ -96,7 +96,6 @@ const response = ref<Response>()
 const responseText = ref<string>()
 
 const doApiCall = async () => {
-  console.log('here: ', 'doApiCall')
   try {
     // Todo - deal with params and body
     response.value = await fetch(`${props.baseServerUrl}/${props.data.path}`, {
@@ -106,7 +105,6 @@ const doApiCall = async () => {
         ...getRequestHeaders(props.data),
       ].reduce((acc, current) => { acc[current.name] = current.value; return acc }, { }),
     })
-    console.log(response.value)
     const highlighter = await getHighlighter()
     responseText.value = highlighter.codeToHtml(JSON.stringify((await response.value.json()), null, 2), { lang: 'json', theme: 'material-theme-palenight' })
 
