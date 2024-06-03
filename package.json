@@ -1,6 +1,6 @@
 {
   "name": "@kong/spec-renderer-dev",
-  "version": "1.15.1",
+  "version": "1.15.3",
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
   "type": "module",
@@ -60,11 +60,11 @@
     "lodash": "^4.17.21",
     "oas": "link:@stoplight/http-spec/oas",
     "oas-normalize": "^11.0.7",
-    "openapi3-ts": "4.3.1",
+    "openapi3-ts": "4.3.2",
     "shiki": "^1.6.1"
   },
   "resolutions": {
-    "openapi3-ts": "4.3.1"
+    "openapi3-ts": "4.3.2"
   },
   "devDependencies": {
     "@babel/types": "^7.24.5",
@@ -112,7 +112,7 @@
     "tslib": "^2.6.2",
     "typescript": "^5.4.5",
     "vite": "^5.2.11",
-    "vite-plugin-node-polyfills": "^0.21.0",
+    "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-replace": "^0.1.1",
     "vite-plugin-vue-devtools": "^7.2.1",
     "vitest": "1.6.0",
