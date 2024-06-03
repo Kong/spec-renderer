@@ -1,6 +1,7 @@
 <template>
   <button
     class="tryit-btn"
+    data-testid="tryit-btn"
     @click="startApiCall"
   >
     Try It!

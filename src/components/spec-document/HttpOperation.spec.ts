@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import HttpOperation from './HttpOperation.vue'
 import type { IHttpOperation, IServer } from '@stoplight/types'
@@ -88,6 +88,33 @@ describe('<HttpOperation />', () => {
         },
       })
       expect(wrapper.findTestId('server-endpoint').exists()).toBe(false)
+    })
+  })
+
+  describe('TryIt', () => {
+    it('KHCP-12161 - should call fetch with correct url', async () => {
+      const wrapper = mount(HttpOperation, {
+        props: {
+          data: {
+            id: '123',
+            method: 'get',
+            path: '/sample-path',
+            responses: [],
+            servers: [{
+              id: 'sample-server-id',
+              url: 'https://global.api.konghq.com/v2',
+            }],
+          },
+        },
+      })
+      global.fetch = vi.fn()
+      await wrapper.findTestId('tryit-btn').trigger('click')
+      expect(fetch).toHaveBeenCalledWith('https://global.api.konghq.com/v2/sample-path', {
+        headers: {
+        'Content-Type': 'application/json',
+        },
+        method: 'get',
+      })
     })
   })
 })
