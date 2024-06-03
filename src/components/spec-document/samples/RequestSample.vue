@@ -61,6 +61,7 @@ import type { PropType } from 'vue'
 import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet-lite'
 import { requestSampleConfigs } from '../../../constants'
+import { getRequestHeaders } from '../../../utils'
 import composables from '@/composables'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet-lite'
 
@@ -77,8 +78,8 @@ const props = defineProps({
     required: true,
   },
   authHeaders: {
-    type: Array<Record<string, string>>,
-    default: [],
+    type: Array as PropType<Record<string, string>[]>,
+    default: () => [],
   },
 })
 
@@ -124,16 +125,6 @@ const requestSamples = computed((): INodeExample[] => {
 
 watch(requestSamples, (newValue: INodeExample[]) => {
   selectedRequestSample.value = getFirstSampleKey(newValue)
-})
-
-const acceptHeader = computed(():string => {
-  const headers = new Set()
-  props.data.responses?.forEach(response => {
-    (response.contents || []).forEach(content => {
-      headers.add(content.mediaType)
-    })
-  })
-  return [...headers].join(', ')
 })
 
 const snippet = ref<HTTPSnippetType>()
@@ -183,14 +174,7 @@ watch(() => ({
         url: serverUrl,
         headers: [
           ...newValue.authHeaders,
-          {
-            name: 'Content-Type',
-            value: 'application/json',
-          },
-          {
-            name: 'Accept',
-            value: acceptHeader.value,
-          },
+          ...getRequestHeaders(props.data),
         ],
         postData: {
           mimeType: 'application/json',
@@ -221,15 +205,6 @@ watch(() => ({
 </script>
 
 <style lang="scss" scoped>
-:deep(pre) {
-  margin: 0;
-  white-space: pre-wrap;
-
-  code {
-    background: transparent!important;
-    padding: var(--kui-space-0, $kui-space-0);
-  }
-}
 
 .request-sample-selector {
   margin-left: auto;

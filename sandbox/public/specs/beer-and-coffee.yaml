@@ -1,0 +1,91 @@
+openapi: 3.1.0
+info:
+  title: Beer API
+  description: API for managing beers
+  version: 1.0.0
+servers:
+  - url: https://ff90af76a1.gateways.konghq.tech
+paths:
+  /beers/ale:
+    get:
+      summary: Get list of beers
+      responses:
+        '200':
+          description: A list of beers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Beer'
+    post:
+      summary: Add a new beer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Beer'
+      responses:
+        '201':
+          description: Beer created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Beer'
+    delete:
+      summary: Delete a beer
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the beer to delete
+      responses:
+        '200':
+          description: Beer deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Beer deleted successfully"
+        '404':
+          description: Beer not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Beer not found"
+components:
+  schemas:
+    Beer:
+      type: object
+      properties:
+        price:
+          type: string
+          example: "$16.99"
+        name:
+          type: string
+          example: "Founders All Day IPA"
+        rating:
+          type: object
+          properties:
+            average:
+              type: number
+              example: 4.411243509154233
+            reviews:
+              type: integer
+              example: 453
+        image:
+          type: string
+          example: "https://www.totalwine.com/media/sys_master/twmmedia/h00/h94/11891416367134.png"
+        id:
+          type: integer
+          example: 1

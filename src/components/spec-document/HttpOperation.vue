@@ -7,9 +7,6 @@
       class="left"
       :data-testid="`http-operation-left-${data.id}`"
     >
-      <pre style="display:none">
-  {{ JSON.stringify(data, null, 2) }}
-  </pre>
       <section>
         <h3>{{ data.summary }}</h3>
         <p>{{ data.description }}</p>
@@ -44,6 +41,7 @@
       :data-testid="`http-operation-right-${data.id}`"
     >
       <TryIt
+        :base-server-url="`${selectedServerURL}${data.path}`"
         :data="data"
         @access-tokens-changed="setAuthHeaders"
       />
@@ -139,6 +137,15 @@ function updateSelectedServerURL(url: string) {
     .right-card-body {
       grid-template-columns: 1fr;
     }
+  }
+}
+:deep(pre) {
+  margin: 0;
+  white-space: pre-wrap;
+
+  code {
+    background: transparent !important;
+    padding: var(--kui-space-0, $kui-space-0);
   }
 }
 </style>
