@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/Kong/spec-renderer/compare/v1.15.3...v1.16.0) (2024-06-03)
+
+
+### Features
+
+* tryIt call [KHCP-12138] ([#99](https://github.com/Kong/spec-renderer/issues/99)) ([dd580d8](https://github.com/Kong/spec-renderer/commit/dd580d84b1dbc4e16b253e0dd49380a1ce6f66b1))
+
 ## [1.15.3](https://github.com/Kong/spec-renderer/compare/v1.15.2...v1.15.3) (2024-05-31)
 
 
