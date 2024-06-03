@@ -111,7 +111,7 @@ describe('<HttpOperation />', () => {
       await wrapper.findTestId('tryit-btn').trigger('click')
       expect(fetch).toHaveBeenCalledWith('https://global.api.konghq.com/v2/sample-path', {
         headers: {
-        'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         method: 'get',
       })
