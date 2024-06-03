@@ -20,9 +20,9 @@ const defaults = (...args) =>
 
 type GroupableNode = OperationNode | WebhookNode | SchemaNode;
 
-export type TagGroup<T extends GroupableNode> = { title: string; items: T[] };
+export type TagGroup<T extends GroupableNode> = { title: string; items: T[], expanded: boolean };
 
-export function computeTagGroups<T extends GroupableNode>(serviceNode: ServiceNode, nodeType: T['type']) {
+export function computeTagGroups<T extends GroupableNode>(serviceNode: ServiceNode, nodeType: T['type'], currentPath: string) {
   const groupsByTagId: { [tagId: string]: TagGroup<T> } = {}
   const ungrouped: T[] = []
 
@@ -37,12 +37,14 @@ export function computeTagGroups<T extends GroupableNode>(serviceNode: ServiceNo
       const tagId = tagName.toLowerCase()
       if (groupsByTagId[tagId]) {
         groupsByTagId[tagId].items.push(node)
+        groupsByTagId[tagId].expanded = groupsByTagId[tagId].expanded ? true : node.uri === currentPath
       } else {
         const serviceTagIndex = lowerCaseServiceTags.findIndex(tn => tn === tagId)
         const serviceTagName = serviceNode.tags[serviceTagIndex]
         groupsByTagId[tagId] = {
           title: serviceTagName || tagName,
           items: [node],
+          expanded: node.uri === currentPath,
         }
       }
     } else {
@@ -73,11 +75,13 @@ export function computeTagGroups<T extends GroupableNode>(serviceNode: ServiceNo
 interface ComputeAPITreeConfig {
   hideSchemas?: boolean;
   hideInternal?: boolean;
+  currentPath?: string;
 }
 
 const defaultComputerAPITreeConfig = {
   hideSchemas: false,
   hideInternal: false,
+  currentPath: '',
 }
 
 export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeConfig = {}) => {
@@ -94,24 +98,28 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
 
   const hasOperationNodes = serviceNode.children.some(node => node.type === NodeType.HttpOperation)
   if (hasOperationNodes) {
+    const { groups, ungrouped } = computeTagGroups<OperationNode>(serviceNode, NodeType.HttpOperation, mergedConfig.currentPath)
+
     tree.push({
       title: 'Endpoints',
       items: [],
       hideTitle: mergedConfig.hideSchemas,
+      expanded: true, // Endpoints are always expanded by default
     })
 
-    const { groups, ungrouped } = computeTagGroups<OperationNode>(serviceNode, NodeType.HttpOperation)
     addTagGroupsToTree(groups, ungrouped, tree.at(-1).items, NodeType.HttpOperation, mergedConfig.hideInternal)
   }
 
   const hasWebhookNodes = serviceNode.children.some(node => node.type === NodeType.HttpWebhook)
+  const { groups, ungrouped } = computeTagGroups<WebhookNode>(serviceNode, NodeType.HttpWebhook, mergedConfig.currentPath)
+
   if (hasWebhookNodes) {
     tree.push({
       title: 'Webhooks',
       items: [],
+      expanded: groups.some(group => group.expanded) || ungrouped.some(node => node.uri === mergedConfig.currentPath),
     })
 
-    const { groups, ungrouped } = computeTagGroups<WebhookNode>(serviceNode, NodeType.HttpWebhook)
     addTagGroupsToTree(groups, ungrouped, tree.at(-1).items, NodeType.HttpWebhook, mergedConfig.hideInternal)
   }
 
@@ -121,14 +129,17 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
   }
 
   if (!mergedConfig.hideSchemas && schemaNodes.length) {
+    const { groups, ungrouped } = computeTagGroups<SchemaNode>(serviceNode, NodeType.Model, mergedConfig.currentPath)
+
     tree.push({
       title: 'Schemas',
       items: [],
+      expanded: groups.some(group => group.expanded) || ungrouped.some(node => node.uri === mergedConfig.currentPath),
     })
 
-    const { groups, ungrouped } = computeTagGroups<SchemaNode>(serviceNode, NodeType.Model)
     addTagGroupsToTree(groups, ungrouped, tree.at(-1).items, NodeType.Model, mergedConfig.hideInternal)
   }
+
   return tree
 }
 
@@ -174,6 +185,7 @@ const addTagGroupsToTree = <T extends GroupableNode>(
     if (hideInternal && isInternal(node)) {
       return
     }
+
     tree.push({
       id: node.uri,
       slug: node.uri,
@@ -188,6 +200,7 @@ const addTagGroupsToTree = <T extends GroupableNode>(
       if (hideInternal && isInternal(node)) {
         return []
       }
+
       return {
         id: node.uri,
         slug: node.uri,
@@ -196,11 +209,13 @@ const addTagGroupsToTree = <T extends GroupableNode>(
         meta: isHttpOperation(node.data) || isHttpWebhookOperation(node.data) ? node.data.method : '',
       }
     })
+
     if (items.length) {
       tree.push({
         title: group.title,
         items,
         itemsType,
+        expanded: group.expanded,
       })
     }
   })

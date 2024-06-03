@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, ref } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { TableOfContentsNode } from '../../stoplight/elements-core/components/Docs/types'
 import MethodBadge from '../common/MethodBadge.vue'
@@ -38,7 +38,6 @@ const currentPath = inject<Ref<string>>('current-path', ref<string>(''))
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
-  (e: 'expand'): void,
 }>()
 
 const selectItem = (id: string): void => {
@@ -47,15 +46,6 @@ const selectItem = (id: string): void => {
 
 const isSingleWord = computed(() => !props.item.title?.trim()?.includes(' '))
 const isActive = computed(() => currentPath.value === props.item.id)
-
-/**
- * Watch current path and emit the event if the current path matches the item.
- */
-watch(currentPath, (val) => {
-  if (val && val === props.item.id) {
-    emit('expand')
-  }
-}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

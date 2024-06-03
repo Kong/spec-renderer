@@ -162,21 +162,22 @@ components:
       type: 'http_operation',
     }]
 
+    const schemaId = '/schemas/ApiResponse'
+
     const schemas = [{
-      id: '/schemas/ApiResponse',
+      id: schemaId,
       meta: '',
-      slug: '/schemas/ApiResponse',
+      slug: schemaId,
       title: 'ApiResponse',
       type: 'model',
     }]
 
     it('should include schemas by default', async () => {
-
       const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
       await parseSpecDocument(specText)
 
       expect(tableOfContents.value).toEqual(
-        expect.arrayContaining([{ title: 'Schemas', items: schemas }]),
+        expect.arrayContaining([{ title: 'Schemas', items: schemas, expanded: false }]),
       )
     })
 
@@ -185,21 +186,27 @@ components:
       await parseSpecDocument(specText, { hideSchemas: true })
 
       expect(tableOfContents.value).not.toEqual(
-        expect.arrayContaining([{ title: 'Schemas', items: schemas }]),
-      )
+        expect.arrayContaining([{ title: 'Schemas', items: schemas, expanded: false }]))
     })
 
     it('should include internal endpoints by default', async () => {
       const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
       await parseSpecDocument(specText)
       expect(tableOfContents.value).toEqual(
-        expect.arrayContaining([{ title: 'Endpoints', items: endpoints }]))
+        expect.arrayContaining([{ title: 'Endpoints', items: endpoints, expanded: true }]))
     })
 
     it('should exclude internal endpoints when param passed', async () => {
       const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
       await parseSpecDocument(specText, { hideInternal: true })
-      expect(tableOfContents.value).not.toEqual([{ title: 'Endpoints', items: endpoints }])
+      expect(tableOfContents.value).not.toEqual([{ title: 'Endpoints', items: endpoints, expanded: true }])
+    })
+
+    it('should render groups containing active item in expanded state', async () => {
+      const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
+      await parseSpecDocument(specText, { currentPath: schemaId })
+      expect(tableOfContents.value).toEqual(
+        expect.arrayContaining([{ title: 'Schemas', items: schemas, expanded: true }]))
     })
   })
 

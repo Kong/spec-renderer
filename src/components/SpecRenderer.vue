@@ -14,7 +14,7 @@
     </aside>
     <div class="doc">
       <SpecDocument
-        v-if="parsedDocument && selectedPath"
+        v-if="parsedDocument && currentPath"
         :base-path="basePath"
         :current-path="currentPath"
         :document="parsedDocument"
@@ -48,7 +48,7 @@ const props = defineProps({
   /**
    * selected path to load document with
    */
-  selectedPath: {
+  currentPath: {
     type: String,
     default: '/',
   },
@@ -107,7 +107,7 @@ const props = defineProps({
 // TODO: introduce and handle isParsed. show parsing state while parsing
 const { parseSpecDocument, parsedDocument, jsonDocument, tableOfContents, validationResults } = composables.useSchemaParser()
 
-const currentPath = ref<string>(props.selectedPath)
+const currentPath = ref<string>(props.currentPath)
 
 const itemSelected = (id: any) => {
   currentPath.value = id
@@ -133,6 +133,7 @@ watch(() => ({
     traceParsing: props.traceParsing,
     ...(changed.specUrl ? { specUrl: changed.specUrl } : null),
     withCredentials: props.withCredentials,
+    currentPath: currentPath.value,
   })
   if (props.traceParsing) {
     console.log('parsedDocument:', parsedDocument.value)
@@ -159,6 +160,7 @@ watch(specRendererTocRef, async (val) => {
 // TODO: change when implementing generic(responsive) SpecRender layout
 aside {
   display: flex;
+  flex-shrink: 0;
   height: 100%;
   overflow: visible;
   width: 320px;
