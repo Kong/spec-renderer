@@ -1,3 +1,11 @@
+## [1.16.1](https://github.com/Kong/spec-renderer/compare/v1.16.0...v1.16.1) (2024-06-03)
+
+
+### Bug Fixes
+
+* expand toc groups with active item [KHCP-12139] ([#98](https://github.com/Kong/spec-renderer/issues/98)) ([983cb6b](https://github.com/Kong/spec-renderer/commit/983cb6bf0557d32e4dfb3d17fda4080d75637c3b))
+* using correct url in tryIt call [KHCP-12161] ([#105](https://github.com/Kong/spec-renderer/issues/105)) ([672f30d](https://github.com/Kong/spec-renderer/commit/672f30d6b237d7985c8da1c3e5300a65b45a28bd))
+
 # [1.16.0](https://github.com/Kong/spec-renderer/compare/v1.15.3...v1.16.0) (2024-06-03)
 
 
