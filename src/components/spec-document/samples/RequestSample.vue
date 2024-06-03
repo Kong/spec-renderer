@@ -206,15 +206,6 @@ watch(() => ({
 </script>
 
 <style lang="scss" scoped>
-:deep(pre) {
-  margin: 0;
-  white-space: pre-wrap;
-
-  code {
-    background: transparent!important;
-    padding: var(--kui-space-0, $kui-space-0);
-  }
-}
 
 .request-sample-selector {
   margin-left: auto;

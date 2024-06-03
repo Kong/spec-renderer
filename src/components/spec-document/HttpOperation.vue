@@ -139,4 +139,13 @@ function updateSelectedServerURL(url: string) {
     }
   }
 }
+:deep(pre) {
+  margin: 0;
+  white-space: pre-wrap;
+
+  code {
+    background: transparent !important;
+    padding: var(--kui-space-0, $kui-space-0);
+  }
+}
 </style>
