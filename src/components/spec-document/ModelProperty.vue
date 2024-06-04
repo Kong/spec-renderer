@@ -159,23 +159,21 @@ const dataTestId = computed(() => `model-property-${props.propertyName.replaceAl
 
 .model-property {
   // reset margins for nested fields
-  > * {
+  * {
     margin: var(--kui-space-0, $kui-space-0);
   }
+
+  > :not(:first-child) {
+    margin-top: var(--kui-space-20, $kui-space-20);
+  }
+
   .model-property-fields {
-    > * {
-    margin: var(--kui-space-0, $kui-space-0);
-    }
     padding: var(--kui-space-40, $kui-space-40);
   }
 
   summary.model-property-fields {
     cursor: pointer;
     list-style: none;
-  }
-
-  > :not(:first-child) {
-    margin-top: var(--kui-space-20, $kui-space-20);
   }
 
   .model-property-nested-fields {
