@@ -12,10 +12,10 @@ $border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-
       border-bottom: $border;
       border-left: $border;
       content: "";
-      height: 20px;
+      height: var(--kui-icon-size-30, $kui-icon-size-30);
       left: $left;
       position: absolute;
-      top: -2px;
+      top: 2px;
       width: $branch-width;
     }
 
