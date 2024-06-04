@@ -158,8 +158,6 @@ const dataTestId = computed(() => `model-property-${props.propertyName.replaceAl
 @import '@/styles/mixins/tree';
 
 .model-property {
-  padding: var(--kui-space-40, $kui-space-40);
-
   // reset margins for nested fields
   > * {
     margin: var(--kui-space-0, $kui-space-0);
@@ -168,6 +166,7 @@ const dataTestId = computed(() => `model-property-${props.propertyName.replaceAl
     > * {
     margin: var(--kui-space-0, $kui-space-0);
     }
+    padding: var(--kui-space-40, $kui-space-40);
   }
 
   summary.model-property-fields {
@@ -180,7 +179,10 @@ const dataTestId = computed(() => `model-property-${props.propertyName.replaceAl
   }
 
   .model-property-nested-fields {
-    @include tree-nesting
+    @include tree-nesting;
+
+    // only nested fields should have a left padding
+    padding-left: var(--kui-space-60, $kui-space-60);
   }
 
 }
