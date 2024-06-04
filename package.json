@@ -67,7 +67,7 @@
     "openapi3-ts": "4.3.2"
   },
   "devDependencies": {
-    "@babel/types": "^7.24.5",
+    "@babel/types": "^7.24.6",
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
