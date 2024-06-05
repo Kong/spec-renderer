@@ -1,57 +1,60 @@
 <template>
   <div
-    class="http-operation-container"
+    class="http-operation"
     :data-testid="`http-operation-${data.id}`"
   >
-    <div
-      class="left"
-      :data-testid="`http-operation-left-${data.id}`"
-    >
-      <section>
-        <h3>{{ data.summary }}</h3>
-        <p>{{ data.description }}</p>
-      </section>
-
+    <section class="http-operation-header">
+      <h1 class="title">
+        {{ data.summary }}
+      </h1>
+      <p class="description">
+        {{ data.description }}
+      </p>
       <ServerEndpoint
         v-if="serverList.length"
+        class="http-operation-server-endpoint"
         :method="data.method"
         :path="data.path"
         :selected-server-url="selectedServerURL"
         :server-url-list="serverList"
         @selected-server-changed="updateSelectedServerURL"
       />
+    </section>
 
-      <HttpRequest
-        v-if="data.request"
-        v-bind="data.request"
-      />
-
-      <section v-if="Array.isArray(data.responses) && data.responses.length">
-        <h4>Responses</h4>
-        <HttpResponse
-          v-for="response in data.responses"
-          :key="response.code"
-          :response="response"
+    <section class="http-operation-container">
+      <div
+        class="left"
+        :data-testid="`http-operation-left-${data.id}`"
+      >
+        <HttpRequest
+          v-if="data.request"
+          v-bind="data.request"
         />
-      </section>
-    </div>
-
-    <div
-      class="right"
-      :data-testid="`http-operation-right-${data.id}`"
-    >
-      <TryIt
-        :data="data"
-        :request-url="`${selectedServerURL}${data.path}`"
-        @access-tokens-changed="setAuthHeaders"
-      />
-
-      <RequestSample
-        :auth-headers="authHeaders"
-        :data="data"
-        :request-url="`${selectedServerURL}${data.path}`"
-      />
-    </div>
+        <section v-if="Array.isArray(data.responses) && data.responses.length">
+          <h4>Responses</h4>
+          <HttpResponse
+            v-for="response in data.responses"
+            :key="response.code"
+            :response="response"
+          />
+        </section>
+      </div>
+      <div
+        class="right"
+        :data-testid="`http-operation-right-${data.id}`"
+      >
+        <TryIt
+          :data="data"
+          :request-url="`${selectedServerURL}${data.path}`"
+          @access-tokens-changed="setAuthHeaders"
+        />
+        <RequestSample
+          :auth-headers="authHeaders"
+          :data="data"
+          :request-url="`${selectedServerURL}${data.path}`"
+        />
+      </div>
+    </section>
   </div>
 </template>
 
@@ -88,17 +91,34 @@ function updateSelectedServerURL(url: string) {
 </script>
 
 <style lang="scss" scoped>
-.http-operation-container  {
-  display: grid;
-  gap: $kui-space-10;
-  grid-template-columns: 1.2fr 0.8fr;
-  width: 100%;
-  .left {
-    padding: $kui-space-30;
+.http-operation {
+  * {
+    margin: var(--kui-space-0, $kui-space-0);
   }
-  .right {
-    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-    padding: $kui-space-40;
+
+  .http-operation-header {
+    @include page-header;
+
+    .http-operation-server-endpoint {
+      margin-top: var(--kui-space-80, $kui-space-80);
+    }
+    margin-bottom: var(--kui-space-90, $kui-space-90);
+  }
+
+  .http-operation-container  {
+    display: grid;
+    gap: $kui-space-10;
+    grid-template-columns: 1.2fr 0.8fr;
+    width: 100%;
+
+    .left {
+      color: var(--kui-color-text, $kui-color-text);
+      padding-right: var(--kui-space-50, $kui-space-50);
+    }
+    .right {
+      background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+      padding: $kui-space-40;
+    }
   }
 }
 
