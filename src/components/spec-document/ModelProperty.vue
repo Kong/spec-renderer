@@ -1,13 +1,14 @@
 <template>
   <component
-    :is="resolvedModelProperty?.properties ? 'details' : 'div'"
+    :is="nestedPropertiesPresent ? 'details' : 'div'"
     class="model-property"
     :data-testid="dataTestId"
     @toggle="() => nestedPropertiesExpanded = !nestedPropertiesExpanded"
   >
     <component
-      :is="resolvedModelProperty?.properties ? 'summary' : 'div'"
+      :is="nestedPropertiesPresent ? 'summary' : 'div'"
       class="model-property-fields"
+      :class="{ 'nested-properties-present': nestedPropertiesPresent }"
     >
       <component
         :is="field.component"
@@ -19,7 +20,7 @@
 
     <template v-if="resolvedModelProperty">
       <div
-        v-if="resolvedModelProperty.properties"
+        v-if="nestedPropertiesPresent"
         class="model-property-nested-fields"
       >
         <template
@@ -152,6 +153,7 @@ const orderedFieldList = computed(() => {
 })
 
 const dataTestId = computed(() => `model-property-${props.propertyName.replaceAll(' ', '-')}`)
+const nestedPropertiesPresent = computed(() => Object.keys(resolvedModelProperty.value?.properties || {}).length > 0)
 </script>
 
 <style lang="scss" scoped>
@@ -167,6 +169,12 @@ const dataTestId = computed(() => `model-property-${props.propertyName.replaceAl
 
   .model-property-fields {
     padding: var(--kui-space-40, $kui-space-40);
+    padding-left: var(--kui-space-60, $kui-space-60);
+
+    // if the property is expandable we need zero padding to accomodate the chevron icon
+    &.nested-properties-present {
+      padding-left: var(--kui-space-0, $kui-space-0);
+    }
   }
 
   summary.model-property-fields {
@@ -178,7 +186,7 @@ const dataTestId = computed(() => `model-property-${props.propertyName.replaceAl
     @include tree-nesting;
 
     // only nested fields should have a left padding
-    padding-left: var(--kui-space-60, $kui-space-60);
+    padding-left: var(--kui-space-70, $kui-space-70);
   }
 
 }
