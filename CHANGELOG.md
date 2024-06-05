@@ -1,3 +1,10 @@
+# [1.17.0](https://github.com/Kong/spec-renderer/compare/v1.16.1...v1.17.0) (2024-06-05)
+
+
+### Features
+
+* model properties tree [KHCP-12129] ([#104](https://github.com/Kong/spec-renderer/issues/104)) ([f6c57ee](https://github.com/Kong/spec-renderer/commit/f6c57ee4070ab11d62a9d4cf7b23e9c4bbca86d5))
+
 ## [1.16.1](https://github.com/Kong/spec-renderer/compare/v1.16.0...v1.16.1) (2024-06-03)
 
 
