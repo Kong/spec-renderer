@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/Kong/spec-renderer/compare/v1.17.0...v1.18.0) (2024-06-05)
+
+
+### Features
+
+* **eslint:** eslint v9 and shared configs [KHCP-11627] ([#109](https://github.com/Kong/spec-renderer/issues/109)) ([76a723d](https://github.com/Kong/spec-renderer/commit/76a723d1a3dcbcf6cac0a663c4e5b0343793d592))
+
 # [1.17.0](https://github.com/Kong/spec-renderer/compare/v1.16.1...v1.17.0) (2024-06-05)
 
 
