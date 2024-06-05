@@ -5,8 +5,14 @@
   >
     <span
       class="property-title"
+      :class="{ 'collapsible-property': collapsableProperty }"
       data-testid="property-field-title"
     >
+      <ChevronRightIcon
+        v-if="collapsableProperty"
+        class="chevron-icon"
+        :class="{ 'expanded': itemsExpanded }"
+      />
       {{ title }}
     </span>
     <span class="property-type">
@@ -38,6 +44,7 @@
 </template>
 
 <script setup lang="ts">
+import { ChevronRightIcon } from '@kong/icons'
 import type { SchemaObject } from '@/types'
 import type { PropType } from 'vue'
 
@@ -62,6 +69,14 @@ defineProps({
     type: Array as PropType<string[]>,
     default: () => [],
   },
+  collapsableProperty: {
+    type: Boolean,
+    default: false,
+  },
+  itemsExpanded: {
+    type: Boolean,
+    default: false,
+  },
 })
 </script>
 
@@ -77,6 +92,17 @@ defineProps({
     font-size:var(--kui-font-size-30, $kui-font-size-30);
     font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     line-height: var(--kui-line-height-30, $kui-line-height-30);
+
+    // if property is collapsable, need flex for the chevron icon
+    &.collapsible-property {
+      align-items: center;
+      display: inline-flex;
+
+      .chevron-icon {
+        @include chevron-toggle;
+      }
+    }
+
   }
 
   .property-type {

@@ -75,7 +75,6 @@ const onClick = (event: Event) => {
 
 <style lang="scss" scoped>
 @import '@/styles/styles';
-@import '@/styles/mixins/mixins';
 
 @mixin group-spacing {
   display: flex;

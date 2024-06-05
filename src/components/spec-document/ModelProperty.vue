@@ -1,18 +1,28 @@
 <template>
-  <div
+  <component
+    :is="nestedPropertiesPresent ? 'details' : 'div'"
     class="model-property"
     :data-testid="dataTestId"
+    @toggle="() => nestedPropertiesExpanded = !nestedPropertiesExpanded"
   >
     <component
-      :is="field.component"
-      v-for="field in orderedFieldList"
-      :key="field.key"
-      v-bind="field.props"
-    />
+      :is="nestedPropertiesPresent ? 'summary' : 'div'"
+      class="model-property-fields"
+      :class="{ 'nested-properties-present': nestedPropertiesPresent }"
+    >
+      <component
+        :is="field.component"
+        v-for="field in orderedFieldList"
+        :key="field.key"
+        v-bind="field.props"
+      />
+    </component>
 
     <template v-if="resolvedModelProperty">
-      <details v-if="resolvedModelProperty.properties">
-        <summary>Properties of <code>{{ propertyName }}</code></summary>
+      <div
+        v-if="nestedPropertiesPresent"
+        class="model-property-nested-fields"
+      >
         <template
           v-for="(subProperty, subPropertyName) in resolvedModelProperty.properties"
           :key="subPropertyName"
@@ -24,7 +34,7 @@
             :required-fields="resolvedModelProperty.required"
           />
         </template>
-      </details>
+      </div>
       <PropertyOneOf
         v-if="Array.isArray(resolvedModelProperty.oneOf) && resolvedModelProperty.oneOf?.length"
         :one-of-list="resolvedModelProperty.oneOf"
@@ -34,12 +44,13 @@
         :any-of-list="resolvedModelProperty.anyOf"
       />
     </template>
-  </div>
+  </component>
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue'
+import { computed, ref } from 'vue'
 import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
+import type { PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 
 import PropertyDescription from './property-fields/PropertyDescription.vue'
@@ -65,6 +76,7 @@ const props = defineProps({
     default: () => [],
   },
 })
+const nestedPropertiesExpanded = ref(false)
 
 const resolvedModelProperty = computed(() => resolveSchemaObjectFields(props.property))
 
@@ -85,6 +97,8 @@ const orderedFieldList = computed(() => {
               ? props.property.items.type
               : '',
         requiredFields: props.requiredFields,
+        collapsableProperty: Boolean(resolvedModelProperty.value?.properties),
+        itemsExpanded: nestedPropertiesExpanded.value,
       },
       key: 'property-info',
     })
@@ -139,14 +153,41 @@ const orderedFieldList = computed(() => {
 })
 
 const dataTestId = computed(() => `model-property-${props.propertyName.replaceAll(' ', '-')}`)
+const nestedPropertiesPresent = computed(() => Object.keys(resolvedModelProperty.value?.properties || {}).length > 0)
 </script>
 
 <style lang="scss" scoped>
 .model-property {
-  padding: var(--kui-space-40, $kui-space-40);
+  // reset margins for nested fields
+  * {
+    margin: var(--kui-space-0, $kui-space-0);
+  }
 
-  &> :not(:first-child) {
+  > :not(:first-child) {
     margin-top: var(--kui-space-20, $kui-space-20);
   }
+
+  .model-property-fields {
+    padding: var(--kui-space-40, $kui-space-40);
+    padding-left: var(--kui-space-60, $kui-space-60);
+
+    // if the property is expandable we need zero padding to accomodate the chevron icon
+    &.nested-properties-present {
+      padding-left: var(--kui-space-0, $kui-space-0);
+    }
+  }
+
+  summary.model-property-fields {
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .model-property-nested-fields {
+    @include tree-nesting;
+
+    // only nested fields should have a left padding
+    padding-left: var(--kui-space-70, $kui-space-70);
+  }
+
 }
 </style>
