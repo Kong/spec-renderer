@@ -103,7 +103,9 @@ const doApiCall = async () => {
       headers: [
         ...(authHeaders?.value || []),
         ...getRequestHeaders(props.data),
-      ].reduce((acc, current) => { acc[current.name] = current.value; return acc }, { }),
+      ].reduce((acc, current) => {
+        acc[current.name] = current.value; return acc
+      }, { }),
     })
     const highlighter = await getHighlighter()
     responseText.value = highlighter.codeToHtml(JSON.stringify((await response.value.json()), null, 2), { lang: 'json', theme: 'material-theme-palenight' })

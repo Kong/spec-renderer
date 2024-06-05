@@ -30,7 +30,7 @@ import type { ISourceNodeMap, ServiceChildNode, ServiceNode } from './types'
 import { NodeTypes } from './types'
 type OpenAPIObject = _OpenAPIObject & {
   webhooks?: PathObject;
-};
+}
 
 const isOas2 = (parsed: unknown): parsed is Spec =>
   isObject(parsed) &&
@@ -181,7 +181,7 @@ function findMapMatch(key: string | number, map: ISourceNodeMap[]): ISourceNodeM
   if (typeof key === 'number') return
   for (const entry of map) {
     const escapedKey = key.replace(/[\\^$*+?.()|[\]{}]/g, '\\$&')
-    // eslint-disable-next-line
+
     if (!!entry.match?.match(escapedKey) || (entry.notMatch !== void 0 && !entry.notMatch.match(escapedKey))) {
       return entry
     }

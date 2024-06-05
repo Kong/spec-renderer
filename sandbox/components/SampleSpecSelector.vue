@@ -142,7 +142,9 @@ onMounted(() => {
 
       emit('sample-spec-selected', savedSpec.value?.url, false)
     }
-  } catch (e) { console.error(e) }
+  } catch (e) {
+    console.error(e)
+  }
 })
 
 </script>
