@@ -1,5 +1,6 @@
-@import './tree';
+@import 'tree';
 
+// todo: move mixins to separate partial files
 @mixin truncate($lines: 0) {
   // if lines is 0, truncate with ellipsis, otherwise truncate with line clamp
   @if $lines == 0 {
