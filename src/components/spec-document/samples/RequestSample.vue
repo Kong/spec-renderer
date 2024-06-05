@@ -162,7 +162,7 @@ watch(() => ({
     const serverUrl = newValue.requestUrl.replace(/[{}]/g, '')
     let serverUrlValid = true
     try {
-      // eslint-disable-next-line no-new
+
       new URL(serverUrl)
     } catch (e) {
       serverUrlValid = false

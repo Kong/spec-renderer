@@ -15,7 +15,7 @@ import type { PropType } from 'vue'
 
 defineProps({
   method: {
-    type: String as PropType<Method | String>,
+    type: String as PropType<Method | string>,
     default: '',
   },
   /**

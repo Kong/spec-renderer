@@ -18,9 +18,9 @@ import type { OperationNode, SchemaNode, ServiceChildNode, ServiceNode, WebhookN
 const defaults = (...args) =>
   args.reverse().reduce((acc, obj) => ({ ...acc, ...obj }), {})
 
-type GroupableNode = OperationNode | WebhookNode | SchemaNode;
+type GroupableNode = OperationNode | WebhookNode | SchemaNode
 
-export type TagGroup<T extends GroupableNode> = { title: string; items: T[], expanded: boolean };
+export type TagGroup<T extends GroupableNode> = { title: string; items: T[], expanded: boolean }
 
 export function computeTagGroups<T extends GroupableNode>(serviceNode: ServiceNode, nodeType: T['type'], currentPath: string) {
   const groupsByTagId: { [tagId: string]: TagGroup<T> } = {}
