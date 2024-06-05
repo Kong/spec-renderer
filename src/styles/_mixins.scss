@@ -1,4 +1,4 @@
-@import 'tree';
+@import '@/styles/mixins/tree';
 
 // todo: move mixins to separate partial files
 @mixin truncate($lines: 0) {
