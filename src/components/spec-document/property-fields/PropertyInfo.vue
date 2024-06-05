@@ -81,8 +81,6 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/mixins/mixins';
-
 .property-info {
   align-items: center;
   display: flex;

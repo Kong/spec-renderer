@@ -86,7 +86,7 @@ export default defineConfig({
       scss: {
         // Inject the @kong/design-tokens SCSS variables to make them available for all components.
         // This is not needed in host applications.
-        additionalData: '@use "sass:color";@import "@kong/design-tokens/tokens/scss/variables";',
+        additionalData: '@use "sass:color";@import "@kong/design-tokens/tokens/scss/variables";@import "@/styles/mixins/mixins";',
       },
     },
   },

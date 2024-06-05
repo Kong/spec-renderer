@@ -67,8 +67,6 @@ const dataTestId = computed(() => `model-node-${props.title.replaceAll(' ', '-')
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/mixins/tree';
-
 .spec-model-node {
   .spec-model-node-title {
     color: var(--kui-color-text, $kui-color-text);

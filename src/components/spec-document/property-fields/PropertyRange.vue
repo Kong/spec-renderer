@@ -31,8 +31,6 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/mixins/mixins';
-
 .property-field-range {
   @include model-property-additional-field;
 

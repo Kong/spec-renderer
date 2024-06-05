@@ -155,8 +155,6 @@ const dataTestId = computed(() => `model-property-${props.propertyName.replaceAl
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/mixins/tree';
-
 .model-property {
   // reset margins for nested fields
   * {

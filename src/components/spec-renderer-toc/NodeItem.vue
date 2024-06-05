@@ -49,8 +49,6 @@ const isActive = computed(() => currentPath.value === props.item.id)
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/mixins/mixins';
-
 .node-item {
   list-style-type: none;
 
