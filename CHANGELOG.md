@@ -1,3 +1,10 @@
+## [1.18.1](https://github.com/Kong/spec-renderer/compare/v1.18.0...v1.18.1) (2024-06-06)
+
+
+### Bug Fixes
+
+* **http-operation:** acess URL on server if server present ([#111](https://github.com/Kong/spec-renderer/issues/111)) ([c36ad3a](https://github.com/Kong/spec-renderer/commit/c36ad3a14557c1f85033d7ff372437bafa7ee25e))
+
 # [1.18.0](https://github.com/Kong/spec-renderer/compare/v1.17.0...v1.18.0) (2024-06-05)
 
 
