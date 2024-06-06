@@ -1,10 +1,9 @@
 <template>
   <div class="spec-renderer-document">
     <component
-      :is="docComponent(serviceNode)"
-      v-if="serviceNode"
-      :data="serviceNode.data"
-      :title="serviceNode.name"
+      :is="docComponent.component"
+      v-if="docComponent.component"
+      v-bind="docComponent.props"
     />
   </div>
 </template>
@@ -12,10 +11,15 @@
 <script setup lang="ts">
 import { watch, ref, provide, computed } from 'vue'
 import type { PropType, Ref } from 'vue'
+import { NodeType } from '@stoplight/types'
 import type { ServiceNode } from '../../stoplight/elements/utils/oas/types'
-
-import { docComponent } from './index'
 import { removeCircularReferences } from '../../utils'
+import HttpService from './HttpService.vue'
+import HttpOperation from './HttpOperation.vue'
+import ModelNode from './ModelNode.vue'
+import ArticleNode from './ArticleNode.vue'
+import UnknownNode from './UnknownNode.vue'
+
 const props = defineProps({
   document: {
     type: Object as PropType<ServiceNode>,
@@ -58,6 +62,28 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), ({ path
     serviceNode.value.data = removeCircularReferences(serviceNode.value.data)
   }
 }, { immediate: true })
+
+const docComponent = computed(() => {
+  if (!serviceNode.value) return {}
+
+  const defaultProps = {
+    data: serviceNode.value.data,
+  }
+
+  switch (serviceNode.value.type as NodeType) {
+    case NodeType.Article:
+      return { component: ArticleNode, props: defaultProps }
+    case NodeType.HttpOperation:
+    case NodeType.HttpWebhook:
+      return { component: HttpOperation, props: defaultProps }
+    case NodeType.HttpService:
+      return { component: HttpService, props: defaultProps }
+    case NodeType.Model:
+      return { component: ModelNode, props: { ...defaultProps, title: serviceNode.value.name } }
+    default:
+      return { component: UnknownNode, props: defaultProps }
+  }
+})
 </script>
 
 <style lang="scss" scoped>
