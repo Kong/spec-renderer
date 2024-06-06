@@ -1,3 +1,10 @@
+# [1.19.0](https://github.com/Kong/spec-renderer/compare/v1.18.1...v1.19.0) (2024-06-06)
+
+
+### Features
+
+* **spec-document:** compute props based on component type ([#112](https://github.com/Kong/spec-renderer/issues/112)) ([710daf9](https://github.com/Kong/spec-renderer/commit/710daf9f2d6e7f574cbfea74ad18e51aa4966980))
+
 ## [1.18.1](https://github.com/Kong/spec-renderer/compare/v1.18.0...v1.18.1) (2024-06-06)
 
 
