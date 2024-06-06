@@ -77,7 +77,7 @@ const setAuthHeaders = (newHeaders: Array<Record<string, string>>) => {
   authHeaders.value = newHeaders
 }
 // this is the server selected by user, defaults to first server in the list
-const selectedServerURL = ref<string>(props.data.servers?.[0].url ?? '')
+const selectedServerURL = ref<string>(props.data.servers?.[0]?.url ?? '')
 
 const serverList = computed(() => props.data.servers?.map(server => server.url) ?? [])
 
