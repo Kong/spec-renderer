@@ -1,3 +1,10 @@
+## [1.19.1](https://github.com/Kong/spec-renderer/compare/v1.19.0...v1.19.1) (2024-06-07)
+
+
+### Bug Fixes
+
+* semantic release action version ([bbe6752](https://github.com/Kong/spec-renderer/commit/bbe67523c021eedf960ea6e55f798f5b1a24e053))
+
 # [1.19.0](https://github.com/Kong/spec-renderer/compare/v1.18.1...v1.19.0) (2024-06-06)
 
 
