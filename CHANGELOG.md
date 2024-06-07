@@ -1,3 +1,10 @@
+## [1.20.1](https://github.com/Kong/spec-renderer/compare/v1.20.0...v1.20.1) (2024-06-07)
+
+
+### Bug Fixes
+
+* handle circular dependency in nested properties [KHCP-12226] ([#115](https://github.com/Kong/spec-renderer/issues/115)) ([c4fe2c6](https://github.com/Kong/spec-renderer/commit/c4fe2c629092c9a7643ca7238dae58149e47518e))
+
 # [1.20.0](https://github.com/Kong/spec-renderer/compare/v1.19.1...v1.20.0) (2024-06-07)
 
 
