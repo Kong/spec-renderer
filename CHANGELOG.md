@@ -1,3 +1,10 @@
+# [1.20.0](https://github.com/Kong/spec-renderer/compare/v1.19.1...v1.20.0) (2024-06-07)
+
+
+### Features
+
+* endpoint page header styling [KHCP-12164] ([#108](https://github.com/Kong/spec-renderer/issues/108)) ([83f9f89](https://github.com/Kong/spec-renderer/commit/83f9f89aed51d335b60068a38dee6386fce2abfa))
+
 ## [1.19.1](https://github.com/Kong/spec-renderer/compare/v1.19.0...v1.19.1) (2024-06-07)
 
 
