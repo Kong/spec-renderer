@@ -20,7 +20,7 @@
 
     <template v-if="resolvedModelProperty">
       <div
-        v-if="nestedPropertiesPresent"
+        v-if="nestedPropertiesPresent && nestedPropertiesExpanded"
         class="model-property-nested-fields"
       >
         <template

@@ -57,10 +57,6 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), ({ path
   const isRootPath = !pathname || pathname === '/'
   // @ts-ignore
   serviceNode.value = isRootPath ? document : document.children.find((child:any) => child.uri === pathname)
-  if (serviceNode.value) {
-    // removing circular references
-    serviceNode.value.data = removeCircularReferences(serviceNode.value.data)
-  }
 }, { immediate: true })
 
 const docComponent = computed(() => {
