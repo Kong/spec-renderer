@@ -3,15 +3,17 @@
     class="spec-model-node"
     :data-testid="dataTestId"
   >
-    <h3 class="spec-model-node-title">
-      {{ title }}
-    </h3>
-    <p
-      v-if="data.description"
-      class="spec-model-node-description"
-    >
-      {{ data.description }}
-    </p>
+    <div class="spec-model-node-header">
+      <h3 class="title">
+        {{ title }}
+      </h3>
+      <p
+        v-if="data.description"
+        class="description"
+      >
+        {{ data.description }}
+      </p>
+    </div>
 
     <div
       v-if="modelPropertyProps"
@@ -68,17 +70,8 @@ const dataTestId = computed(() => `model-node-${props.title.replaceAll(' ', '-')
 
 <style lang="scss" scoped>
 .spec-model-node {
-  .spec-model-node-title {
-    color: var(--kui-color-text, $kui-color-text);
-    font-size: var(--kui-font-size-80, $kui-font-size-80);
-    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
-    line-height: var(--kui-line-height-70, $kui-line-height-70);
-    margin: var(--kui-space-0, $kui-space-0);
-    margin-bottom: var(--kui-space-60, $kui-space-60);
-  }
-  .spec-model-node-description {
-    font-size: var(--kui-font-size-30, $kui-font-size-30);
-    line-height: var(--kui-line-height-40, $kui-line-height-40);
+  .spec-model-node-header {
+    @include page-header;
   }
 
   .spec-model-node-properties {
