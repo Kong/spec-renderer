@@ -13,7 +13,6 @@ import { watch, ref, provide, computed } from 'vue'
 import type { PropType, Ref } from 'vue'
 import { NodeType } from '@stoplight/types'
 import type { ServiceNode } from '../../stoplight/elements/utils/oas/types'
-import { removeCircularReferences } from '../../utils'
 import HttpService from './HttpService.vue'
 import HttpOperation from './HttpOperation.vue'
 import ModelNode from './ModelNode.vue'
@@ -57,10 +56,6 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), ({ path
   const isRootPath = !pathname || pathname === '/'
   // @ts-ignore
   serviceNode.value = isRootPath ? document : document.children.find((child:any) => child.uri === pathname)
-  if (serviceNode.value) {
-    // removing circular references
-    serviceNode.value.data = removeCircularReferences(serviceNode.value.data)
-  }
 }, { immediate: true })
 
 const docComponent = computed(() => {
