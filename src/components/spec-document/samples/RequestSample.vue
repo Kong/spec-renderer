@@ -4,8 +4,8 @@
     :data-testid="`request-sample-${data.id}`"
   >
     <h5>REQUEST SAMPLE</h5>
-    <div class="right-card">
-      <div class="right-card-header">
+    <CollapsablePanel>
+      <template #header>
         <select v-model="selectedLang">
           <option
             v-for="lang in requestConfigs"
@@ -42,16 +42,12 @@
             {{ sample.key }}
           </option>
         </select>
-      </div>
-      <div class="right-card-body">
-        <!-- eslint-disable vue/no-v-html -->
-        <div
-          v-if="requestCode"
-          v-html="requestCode"
-        />
-        <!-- eslint-enable vue/no-v-html -->
-      </div>
-    </div>
+      </template>
+      <CodeBlock
+        v-if="requestCode"
+        :code="requestCode as string"
+      />
+    </CollapsablePanel>
   </div>
 </template>
 
@@ -60,9 +56,12 @@ import { watch, ref, computed } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet-lite'
-import { requestSampleConfigs } from '../../../constants'
-import { getRequestHeaders } from '../../../utils'
+import { requestSampleConfigs } from '@/constants'
+import { getRequestHeaders } from '@/utils'
 import composables from '@/composables'
+import CodeBlock from '@/components/common/CodeBlock.vue'
+import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
+
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet-lite'
 
 const props = defineProps({
@@ -206,7 +205,13 @@ watch(() => ({
 
 <style lang="scss" scoped>
 
-.request-sample-selector {
-  margin-left: auto;
+.request-sample-wrapper {
+  h5 {
+    margin: $kui-space-60 $kui-space-30 $kui-space-30;
+  }
+  .request-sample-selector {
+    margin-left: auto;
+  }
 }
+
 </style>

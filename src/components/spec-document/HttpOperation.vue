@@ -120,52 +120,16 @@ function updateSelectedServerURL(url: string) {
       padding: $kui-space-40;
     }
   }
-}
-
-// TODO change when we have floating TOC for smaller width
-@media (max-width: $kui-breakpoint-laptop) {
-  .http-operation-container {
-    grid-template-columns: 1fr;
-    .right {
-      margin-top: $kui-space-40;
-    }
-  }
-}
-:deep(.right-card) {
-  border: $kui-border-width-10 solid $kui-color-border;
-  border-radius: $kui-border-radius-30;
-
-  .right-card-header {
-    background-color: $kui-color-background;
-    display: flex;
-    padding: 10px;
-
-    h5 {
-      color: $kui-color-text;
-      margin: 0 0 0 $kui-space-30;
-      padding: 0;
-    }
-  }
-
-  .right-card-body {
-    background-color: $kui-color-background-neutral-weakest;
-    border-top: $kui-border-width-10 solid $kui-color-border;
-    width: 100%;
-  }
-
-  @media (max-width: $kui-breakpoint-mobile) {
-    .right-card-body {
+  // TODO change when we have floating TOC for smaller width
+  @media (max-width: $kui-breakpoint-laptop) {
+    .http-operation-container {
       grid-template-columns: 1fr;
+
+      .right {
+        margin-top: $kui-space-40;
+      }
     }
   }
 }
-:deep(pre) {
-  margin: 0;
-  white-space: pre-wrap;
 
-  code {
-    background: transparent !important;
-    padding: var(--kui-space-0, $kui-space-0);
-  }
-}
 </style>
