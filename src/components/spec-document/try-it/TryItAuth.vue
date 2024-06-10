@@ -83,10 +83,5 @@ const security = computed((): HttpSecurityScheme[]|undefined => {
   }
   return secArray
 })
-
-
-
 </script>
 
-<style lang="scss" scoped>
-</style>
