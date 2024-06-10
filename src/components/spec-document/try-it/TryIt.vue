@@ -114,7 +114,7 @@ const showTryIt = computed((): boolean => {
 
 watch(() => ({
   data: props.data,
-  requestUrl: props.requestUrl,
+  serverUrl: serverUrl,
 }), () => {
   responseText.value = ''
   response.value = undefined
