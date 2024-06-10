@@ -3,23 +3,25 @@
     class="http-operation"
     :data-testid="`http-operation-${data.id}`"
   >
-    <section class="http-operation-header">
-      <h1 class="title">
-        {{ data.summary }}
-      </h1>
-      <p class="description">
-        {{ data.description }}
-      </p>
-      <ServerEndpoint
-        v-if="serverList.length"
-        class="http-operation-server-endpoint"
-        :method="data.method"
-        :path="data.path"
-        :selected-server-url="selectedServerURL"
-        :server-url-list="serverList"
-        @selected-server-changed="updateSelectedServerURL"
-      />
-    </section>
+    <PageHeader
+      v-if="data.summary"
+      class="http-operation-header"
+      :description="data.description"
+      :title="data.summary"
+    >
+      <template #footer>
+        <ServerEndpoint
+          v-if="serverList.length"
+          class="http-operation-server-endpoint"
+          :method="data.method"
+          :path="data.path"
+          :selected-server-url="selectedServerURL"
+          :server-url-list="serverList"
+          @selected-server-changed="updateSelectedServerURL"
+        />
+      </template>
+    </PageHeader>
+
 
     <section class="http-operation-container">
       <div
@@ -68,6 +70,7 @@ import HttpResponse from './endpoint/HttpResponse.vue'
 import TryIt from './try-it/TryIt.vue'
 import RequestSample from './samples/RequestSample.vue'
 import ServerEndpoint from './endpoint/ServerEndpoint.vue'
+import PageHeader from '../common/PageHeader.vue'
 
 const props = defineProps({
   data: {
@@ -104,11 +107,6 @@ function updateSelectedServerURL(url: string) {
   }
 
   .http-operation-header {
-    @include page-header;
-
-    .http-operation-server-endpoint {
-      margin-top: var(--kui-space-80, $kui-space-80);
-    }
     margin-bottom: var(--kui-space-90, $kui-space-90);
   }
 

@@ -1,16 +1,18 @@
 <template>
   <div class="overview-page">
-    <h1 class="overview-page-title">
-      {{ data.name }}
-    </h1>
-    <p class="overview-page-versions">
-      <VersionBadge type="primary">
-        v{{ data.version }}
-      </VersionBadge>
-      <VersionBadge type="neutral">
-        OAS {{ openApiVersion }}
-      </VersionBadge>
-    </p>
+    <PageHeader :title="data.name">
+      <template #footer>
+        <p class="overview-page-versions">
+          <VersionBadge type="primary">
+            v{{ data.version }}
+          </VersionBadge>
+          <VersionBadge type="neutral">
+            OAS {{ openApiVersion }}
+          </VersionBadge>
+        </p>
+      </template>
+    </PageHeader>
+
     <p v-if="data.description">
       {{ data.description }}
     </p>
@@ -39,6 +41,7 @@ import ServerList from './overview/ServerList.vue'
 import SecurityList from './overview/SecurityList.vue'
 import AdditionalInfo from './overview/AdditionalInfo.vue'
 import VersionBadge from '../common/VersionBadge.vue'
+import PageHeader from '../common/PageHeader.vue'
 
 defineProps({
   data: {
@@ -56,11 +59,6 @@ defineProps({
 .overview-page {
   * {
     margin: 0;
-  }
-  .overview-page-title {
-    font-size: var(--kui-font-size-80, $kui-font-size-80);
-    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
-    line-height: var(--kui-line-height-80, $kui-line-height-80);
   }
   .overview-page-versions {
     align-items: center;
