@@ -24,10 +24,6 @@ const props = defineProps({
     type: Object as PropType<ServiceNode>,
     required: true,
   },
-  json: {
-    type: Object as PropType<Record<string, any>>,
-    required: true,
-  },
   currentPath: {
     type: String,
     required: true,
