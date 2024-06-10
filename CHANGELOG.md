@@ -1,3 +1,10 @@
+## [1.20.4](https://github.com/Kong/spec-renderer/compare/v1.20.3...v1.20.4) (2024-06-10)
+
+
+### Bug Fixes
+
+* remove json property from SpecDOcument ([#121](https://github.com/Kong/spec-renderer/issues/121)) ([912cac4](https://github.com/Kong/spec-renderer/commit/912cac400f70f294e437ba005a170b571795a14d))
+
 ## [1.20.3](https://github.com/Kong/spec-renderer/compare/v1.20.2...v1.20.3) (2024-06-10)
 
 
