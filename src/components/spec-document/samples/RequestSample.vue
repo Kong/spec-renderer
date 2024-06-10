@@ -72,7 +72,7 @@ const props = defineProps({
   /**
    * server url+path selected by user on endpoints detail page
    */
-  requestUrl: {
+  serverUrl: {
     type: String,
     required: true,
   },
@@ -139,8 +139,9 @@ watch(() => ({
   requestBodyKey: selectedRequestSample.value,
   lang: selectedLang.value,
   lib: selectedLangLibrary.value,
-  requestUrl: props.requestUrl,
+  serverUrl: props.serverUrl,
   authHeaders: props.authHeaders,
+  requestPath: props.data.path,
 }), async (newValue, oldValue) => {
   const jsonObj = (requestSamples.value as INodeExample[]).find(s => s.key === newValue.requestBodyKey)?.value
 
@@ -155,10 +156,14 @@ watch(() => ({
   let snippedChanged = false
 
   // if we selected new requestBody or if we do not have httpSNippet yet, we need to re-init it
-  if (!snippet.value || newValue.requestBodyKey !== oldValue?.requestBodyKey || newValue.requestUrl !== oldValue.requestUrl || newValue.authHeaders !== oldValue?.authHeaders) {
+  if (!snippet.value ||
+    newValue.requestBodyKey !== oldValue?.requestBodyKey ||
+    newValue.serverUrl !== oldValue.serverUrl ||
+    newValue.requestPath !== oldValue.requestPath ||
+    newValue.authHeaders !== oldValue?.authHeaders) {
 
     // TODO: handle parameter / query change in url gracefully
-    const serverUrl = newValue.requestUrl.replace(/[{}]/g, '')
+    const serverUrl = (newValue.serverUrl + newValue.requestPath).replace(/[{}]/g, '')
     let serverUrlValid = true
     try {
 

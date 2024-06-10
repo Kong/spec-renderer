@@ -59,7 +59,7 @@ const props = defineProps({
     type: Object as PropType<IHttpOperation>,
     required: true,
   },
-  requestUrl: {
+  serverUrl: {
     type: String,
     required: true,
   },
@@ -75,13 +75,15 @@ const responseText = ref<string>()
 
 const authHeaders = ref<Array<Record<string, string>>>()
 
+const serverUrl = ref<string>(props.serverUrl)
+
 // this is tryout state requested by property passed
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 const doApiCall = async () => {
   try {
     // Todo - deal with params and body
-    response.value = await fetch(`${props.requestUrl}`, {
+    response.value = await fetch(`${serverUrl.value}${props.data.path}`, {
       method: props.data.method,
       headers: [
         ...(authHeaders?.value || []),
@@ -125,8 +127,7 @@ watch(() => ({
 .tryit-header {
   align-items: center;
   display: flex;
-  padding: $kui-space-40;
-  padding-right: $kui-space-0!important;
+  padding: $kui-space-40 0;
   .path {
     margin-left: $kui-space-20;
   }

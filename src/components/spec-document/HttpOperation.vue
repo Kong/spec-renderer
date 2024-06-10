@@ -45,13 +45,13 @@
       >
         <TryIt
           :data="data"
-          :request-url="`${selectedServerURL}${data.path}`"
+          :server-url="selectedServerURL"
           @access-tokens-changed="setAuthHeaders"
         />
         <RequestSample
           :auth-headers="authHeaders"
           :data="data"
-          :request-url="`${selectedServerURL}${data.path}`"
+          :server-url="selectedServerURL"
         />
       </div>
     </section>
