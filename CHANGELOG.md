@@ -1,3 +1,24 @@
+## [1.20.4](https://github.com/Kong/spec-renderer/compare/v1.20.3...v1.20.4) (2024-06-10)
+
+
+### Bug Fixes
+
+* remove json property from SpecDOcument ([#121](https://github.com/Kong/spec-renderer/issues/121)) ([912cac4](https://github.com/Kong/spec-renderer/commit/912cac400f70f294e437ba005a170b571795a14d))
+
+## [1.20.3](https://github.com/Kong/spec-renderer/compare/v1.20.2...v1.20.3) (2024-06-10)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @scalar/openapi-parser to ^0.4.1 ([#119](https://github.com/Kong/spec-renderer/issues/119)) ([1511753](https://github.com/Kong/spec-renderer/commit/15117530e8e05b45f15832a0f31410840ef563cd))
+
+## [1.20.2](https://github.com/Kong/spec-renderer/compare/v1.20.1...v1.20.2) (2024-06-10)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#114](https://github.com/Kong/spec-renderer/issues/114)) ([dbb276f](https://github.com/Kong/spec-renderer/commit/dbb276fff5c81915baf533287d56450ff61c5f6d))
+
 ## [1.20.1](https://github.com/Kong/spec-renderer/compare/v1.20.0...v1.20.1) (2024-06-07)
 
 
