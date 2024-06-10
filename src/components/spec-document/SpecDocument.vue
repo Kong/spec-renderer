@@ -61,7 +61,7 @@ const docComponent = computed(() => {
     data: serviceNode.value.data,
   }
 
-  const openApiVersion = props.json.openapi as string
+  const openApiVersion = (props.json.openapi || props.json.swagger) as string
 
   switch (serviceNode.value.type as NodeType) {
     case NodeType.Article:
