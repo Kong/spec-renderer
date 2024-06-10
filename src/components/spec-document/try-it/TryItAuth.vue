@@ -1,7 +1,7 @@
 <template>
   <CollapsablePanel
     v-if="security?.length"
-    :data-testid="`tryit-${data.id}`"
+    :data-testid="`tryit-auth-${data.id}`"
   >
     <template #header>
       <LockIcon
