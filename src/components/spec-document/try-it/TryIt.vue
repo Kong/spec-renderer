@@ -102,8 +102,8 @@ const emit = defineEmits<{
 }>()
 const { getHighlighter } = composables.useShiki()
 
-const response = ref<Response>('aaa')
-const responseText = ref<string>('bbbb')
+const response = ref<Response | undefined>()
+const responseText = ref<string>()
 
 const doApiCall = async () => {
   try {
