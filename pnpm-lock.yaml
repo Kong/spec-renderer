@@ -18,8 +18,8 @@ importers:
         specifier: ^1.13.0
         version: 1.13.0(vue@3.4.27(typescript@5.4.5))
       '@scalar/openapi-parser':
-        specifier: ^0.3.2
-        version: 0.3.2(sass@1.77.4)
+        specifier: ^0.4.1
+        version: 0.4.1
       '@seriousme/openapi-schema-validator':
         specifier: ^2.2.1
         version: 2.2.1
@@ -693,10 +693,6 @@ packages:
     resolution: {integrity: sha512-RE815I4arJFtt+FVeU1Tgp9/Xvecacji8w/V6XtXsWWH/wz/eNkNbhb+ny/+PlVZjV0rxQpRSQKNKE3lcktHEA==}
     engines: {node: '>=10.10.0'}
 
-  '@humanwhocodes/momoa@3.0.2':
-    resolution: {integrity: sha512-YrVdm6ntzi49kj/YlFQF5MClnOeZJv2d34tZqdrMKzVCOi0EC6pD/0z9SWb8fU9bTPkmUNPsYVJ1wFd4QamBBQ==}
-    engines: {node: '>=18'}
-
   '@humanwhocodes/retry@0.3.0':
     resolution: {integrity: sha512-d2CGZR2o7fS6sWB7DG/3a95bGKQyHMACZ5aW8qGkkqQpUoZV6C0X7Pc7l4ZNMZkfNBf4VWNe9E1jRsf0G146Ew==}
     engines: {node: '>=18.18'}
@@ -958,8 +954,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@scalar/openapi-parser@0.3.2':
-    resolution: {integrity: sha512-o38wF1rKqCc7R0zFMta5rPTiY4cWwVcZPJkV1OCcnPsF2eE79uPkhYU2j/kdocJXVwMqqAe9a6+0o4R8YjgPVw==}
+  '@scalar/openapi-parser@0.4.1':
+    resolution: {integrity: sha512-y9LxZhJTB2VofTvurcJ5/0RPcVDUR+qrCIxWOQGNwt66GNLAlUyXMY+A65A9TItptAfjC+YNco5mTTTZLJAntg==}
     engines: {node: '>=18'}
 
   '@sec-ant/readable-stream@0.4.1':
@@ -1373,6 +1369,9 @@ packages:
 
   ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+
+  ajv-formats@3.0.1:
+    resolution: {integrity: sha512-8iUql50EUR+uUcdRQ3HDqa6EVyo3docL8g5WJ3FNcWmu62IbkGUue/pEyLBW8VGKKucTPgqeks4fIU1DA4yowQ==}
 
   ajv@6.12.4:
     resolution: {integrity: sha512-eienB2c9qVQs2KWexhkrdMLVDoIQCz5KSeLxwg9Lzk4DOfBtIK9PQwwufcsn1jjGuf9WZmqPMbGxOzfcuphJCQ==}
@@ -4825,11 +4824,6 @@ packages:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
 
-  yaml@2.4.1:
-    resolution: {integrity: sha512-pIXzoImaqmfOrL7teGUBt/T7ZDnyeGBWyXQBvOVhLkWLN37GXv8NMLK406UY6dS51JfcQHsmcW5cJ441bHg6Lg==}
-    engines: {node: '>= 14'}
-    hasBin: true
-
   yaml@2.4.3:
     resolution: {integrity: sha512-sntgmxj8o7DE7g/Qi60cqpLBA3HG3STcDA0kO+WfB05jEKhZMbY7umNm2rBpQvsmZ16/lPXCJGW2672dgOUkrg==}
     engines: {node: '>= 14'}
@@ -5370,8 +5364,6 @@ snapshots:
 
   '@humanwhocodes/momoa@2.0.4': {}
 
-  '@humanwhocodes/momoa@3.0.2': {}
-
   '@humanwhocodes/retry@0.3.0': {}
 
   '@isaacs/cliui@8.0.2':
@@ -5635,26 +5627,14 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.16.1':
     optional: true
 
-  '@scalar/openapi-parser@0.3.2(sass@1.77.4)':
+  '@scalar/openapi-parser@0.4.1':
     dependencies:
-      '@humanwhocodes/momoa': 3.0.2
-      '@types/node': 20.14.2
       ajv: 8.14.0
       ajv-draft-04: 1.0.0(ajv@8.14.0)
-      ajv-formats: 2.1.1
-      js-yaml: 4.1.0
+      ajv-formats: 3.0.1
       jsonpointer: 5.0.1
       leven: 4.0.0
-      openapi-types: 12.1.3
-      vite: 5.2.13(@types/node@20.14.2)(sass@1.77.4)
-      yaml: 2.4.1
-    transitivePeerDependencies:
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
-      - terser
+      yaml: 2.4.3
 
   '@sec-ant/readable-stream@0.4.1': {}
 
@@ -6252,6 +6232,10 @@ snapshots:
       ajv: 8.14.0
 
   ajv-formats@2.1.1:
+    dependencies:
+      ajv: 8.14.0
+
+  ajv-formats@3.0.1:
     dependencies:
       ajv: 8.14.0
 
@@ -9967,8 +9951,6 @@ snapshots:
   yallist@4.0.0: {}
 
   yaml@1.10.2: {}
-
-  yaml@2.4.1: {}
 
   yaml@2.4.3: {}
 
