@@ -17,42 +17,11 @@
       />
     </div>
 
-
-    <CollapsablePanel
-      v-if="showTryIt && security?.length"
-      :data-testid="`tryit-${data.id}`"
-    >
-      <template #header>
-        <LockIcon
-          v-if="security?.length"
-          :color="KUI_COLOR_TEXT_NEUTRAL"
-          :size="20"
-        />
-        <h5>
-          Authentication
-        </h5>
-      </template>
-
-      <template #left>
-        <label>Method</label>
-        <select>
-          <option
-            v-for="sec in security"
-            :key="sec.id"
-          >
-            {{ sec.key }} ({{ sec.type }})
-          </option>
-        </select>
-      </template>
-
-      <template #right>
-        <label>Access Token</label>
-        <input
-          placeholder="App credential"
-          @keyup="accessTokenChanged"
-        >
-      </template>
-    </CollapsablePanel>
+    <TryItAuth
+      v-if="showTryIt"
+      :data="data"
+      @access-tokens-changed="accessTokenChanged"
+    />
 
     <CollapsablePanel
       v-if="response"
@@ -75,15 +44,14 @@
 <script setup lang="ts">
 import { inject, computed, ref, watch } from 'vue'
 import type { PropType, Ref } from 'vue'
-import { LockIcon } from '@kong/icons'
-import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import TryItButton from './TryItButton.vue'
 import { getRequestHeaders } from '@/utils'
 import composables from '@/composables'
-import type { IHttpOperation, HttpSecurityScheme } from '@stoplight/types'
+import type { IHttpOperation } from '@stoplight/types'
 import MethodBadge from '@/components/common/MethodBadge.vue'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
+import TryItAuth from './TryItAuth.vue'
 
 
 const props = defineProps({
@@ -105,6 +73,11 @@ const { getHighlighter } = composables.useShiki()
 const response = ref<Response | undefined>()
 const responseText = ref<string>()
 
+const authHeaders = ref<Array<Record<string, string>>>()
+
+// this is tryout state requested by property passed
+const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
+
 const doApiCall = async () => {
   try {
     // Todo - deal with params and body
@@ -125,36 +98,11 @@ const doApiCall = async () => {
   }
 }
 
-const authHeaders = ref<Array<Record<string, string>>>()
-
-/* for now we only have one header so we will return is as 1 element array */
-const accessTokenChanged = (e: Event) => {
-  const tokenValue = (e.target as HTMLInputElement).value
-  authHeaders.value = []
-  if (tokenValue) {
-    authHeaders.value.push({
-      name: 'Authorization',
-      // TODO: this migh be a query string, not a header, handle this case
-      value: `Bearer ${(e.target as HTMLInputElement).value}`,
-    })
-  }
-  emit('access-tokens-changed', authHeaders.value)
+/* pass trough one level up as it needs to change Request sample */
+const accessTokenChanged = (newHeaders: Array<Record<string, string>>) => {
+  emit('access-tokens-changed', newHeaders)
+  authHeaders.value = newHeaders
 }
-
-const security = computed((): HttpSecurityScheme[]|undefined => {
-  const secArray:Array<HttpSecurityScheme> = []
-  if (props.data.security) {
-    props.data.security.forEach((secGroup: HttpSecurityScheme[]) => {
-      (secGroup || []).forEach((sec: HttpSecurityScheme) => {
-        secArray.push(sec)
-      })
-    })
-  }
-  return secArray
-})
-
-// this is tryout state requested by property passed
-const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 // there is more logic that drives do we show tryouts or not
 const showTryIt = computed((): boolean => {
@@ -168,7 +116,6 @@ watch(() => ({
 }), () => {
   responseText.value = ''
   response.value = undefined
-
 })
 
 </script>
@@ -188,9 +135,8 @@ watch(() => ({
   }
 }
 
-
-input,
-select {
+/* using deep as this thing is used in multiple child components */
+:deep(input), :deep(select) {
   border: $kui-border-width-10 solid $kui-color-border;
   border-radius: $kui-border-radius-30;
   box-sizing: border-box;
@@ -198,7 +144,7 @@ select {
   width: 100%;
 }
 
-label {
+:deep(label) {
   font-size: $kui-font-size-30;
   font-weight: $kui-font-weight-medium;
   line-height: $kui-line-height-30;
