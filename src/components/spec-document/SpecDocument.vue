@@ -61,6 +61,8 @@ const docComponent = computed(() => {
     data: serviceNode.value.data,
   }
 
+  const openApiVersion = props.json.openapi as string
+
   switch (serviceNode.value.type as NodeType) {
     case NodeType.Article:
       return { component: ArticleNode, props: defaultProps }
@@ -68,7 +70,7 @@ const docComponent = computed(() => {
     case NodeType.HttpWebhook:
       return { component: HttpOperation, props: defaultProps }
     case NodeType.HttpService:
-      return { component: HttpService, props: defaultProps }
+      return { component: HttpService, props: { ...defaultProps, openApiVersion } }
     case NodeType.Model:
       return { component: ModelNode, props: { ...defaultProps, title: serviceNode.value.name } }
     default:
