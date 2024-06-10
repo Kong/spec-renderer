@@ -176,8 +176,9 @@ watch(() => ({
 <style lang="scss" scoped>
 
 .tryit-header {
-  display: flex;
   align-items: center;
+  display: flex;
+  padding: $kui-space-40;
   padding-right: $kui-space-0!important;
   .path {
     margin-left: $kui-space-20;
@@ -185,7 +186,6 @@ watch(() => ({
   .tryit-btn {
     margin-left: auto;
   }
-  padding: $kui-space-40;
 }
 
 

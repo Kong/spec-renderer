@@ -41,9 +41,9 @@ const isCollapsed = ref<boolean>(false)
   margin-top: $kui-space-40!important;
 
   .panel-header {
+    align-items: center;
     background-color: $kui-color-background;
     display: flex;
-    align-items: center;
     padding: $kui-space-40;
 
     :deep(>h5) {
