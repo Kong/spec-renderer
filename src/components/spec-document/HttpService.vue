@@ -9,7 +9,10 @@
           <VersionBadge type="primary">
             v{{ data.version }}
           </VersionBadge>
-          <VersionBadge type="neutral">
+          <VersionBadge
+            v-if="openApiVersion"
+            type="neutral"
+          >
             OAS {{ openApiVersion }}
           </VersionBadge>
         </p>
@@ -57,7 +60,7 @@ defineProps({
   },
   openApiVersion: {
     type: String,
-    required: true,
+    default: '',
   },
 })
 </script>
