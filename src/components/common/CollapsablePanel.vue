@@ -69,7 +69,7 @@ const isCollapsed = ref<boolean>(false)
     }
   }
 
-  @media (max-width: $kui-breakpoint-mobile) {
+  @media (max-width: ($kui-breakpoint-mobile - 1px)) {
     .panel-body {
       &.two-columns {
         grid-template-columns: 1fr;
