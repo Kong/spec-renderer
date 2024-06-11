@@ -128,7 +128,7 @@ function updateSelectedServerURL(url: string) {
     }
   }
   // TODO change when we have floating TOC for smaller width
-  @media (max-width: $kui-breakpoint-laptop) {
+  @media (max-width: ($kui-breakpoint-laptop - 1px)) {
     .http-operation-container {
       grid-template-columns: 1fr;
 
