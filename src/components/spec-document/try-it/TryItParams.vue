@@ -1,12 +1,27 @@
 <template>
-  <CollapsablePanel
-    :data-testid="`tryit-params-${data.id}`"
-  >
+  <CollapsablePanel :data-testid="`tryit-params-${data.id}`">
     <template #header>
       <h5>
         Parameters
       </h5>
     </template>
+    <div class="wide">
+      <h6>
+        Path
+      </h6>
+    </div>
+
+    <div class="wide">
+      <h6>
+        Query
+      </h6>
+    </div>
+
+    <div class="wide">
+      <h6>
+        Body
+      </h6>
+    </div>
   </CollapsablePanel>
 </template>
 

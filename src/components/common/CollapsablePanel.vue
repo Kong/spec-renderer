@@ -33,7 +33,6 @@ const isCollapsed = ref<boolean>(false)
 
     :deep(>h5) {
       color: var(--kui-color-text, $kui-color-text);
-      margin-left: var(--kui-space-30, $kui-space-30);
       padding: var(--kui-space-0, $kui-space-0);
     }
   }

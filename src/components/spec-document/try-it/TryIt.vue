@@ -30,6 +30,10 @@
       @server-url-changed="serverUrlChanged"
     />
 
+    <TryItParams
+      :data="data"
+    />
+
     <CollapsablePanel
       v-if="response"
       :data-testid="`tryit-response-${data.id}`"
@@ -60,6 +64,7 @@ import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import TryItAuth from './TryItAuth.vue'
 import TryItServer from './TryItServer.vue'
+import TryItParams from './TryItParams.vue'
 
 
 const props = defineProps({
