@@ -6,7 +6,10 @@
       />
     </template>
     <template #content>
-      <div class="security-list">
+      <div
+        class="security-list"
+        data-testid="overview-security-list"
+      >
         <OverviewCollapsiblePanel
           v-for="scheme in securitySchemeList"
           :key="scheme.id"

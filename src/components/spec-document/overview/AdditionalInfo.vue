@@ -6,7 +6,10 @@
       />
     </template>
     <template #content>
-      <div class="overview-additional-info">
+      <div
+        class="overview-additional-info"
+        data-testid="overview-additional-info"
+      >
         <div
           v-if="contact?.url || contact?.email"
           class="overview-additional-info-contact"

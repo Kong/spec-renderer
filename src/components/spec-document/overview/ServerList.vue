@@ -6,7 +6,10 @@
       />
     </template>
     <template #content>
-      <ul class="overview-server-list">
+      <ul
+        class="overview-server-list"
+        data-testid="overview-server-list"
+      >
         <li
           v-for="(server, index) in serverList"
           :key="server.id"

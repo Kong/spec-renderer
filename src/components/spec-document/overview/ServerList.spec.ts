@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import ServerList from './ServerList.vue'
 
 describe('<ServerList />', () => {
@@ -17,7 +17,7 @@ describe('<ServerList />', () => {
       },
     ]
 
-    const wrapper = shallowMount(ServerList, {
+    const wrapper = mount(ServerList, {
       props: {
         serverList,
       },
