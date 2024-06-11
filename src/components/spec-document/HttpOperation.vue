@@ -45,13 +45,14 @@
       >
         <TryIt
           :data="data"
-          :request-url="`${selectedServerURL}${data.path}`"
+          :server-url="selectedServerURL"
           @access-tokens-changed="setAuthHeaders"
+          @server-url-changed="setServerUrl"
         />
         <RequestSample
           :auth-headers="authHeaders"
           :data="data"
-          :request-url="`${selectedServerURL}${data.path}`"
+          :server-url="currentServerUrl"
         />
       </div>
     </section>
@@ -81,11 +82,17 @@ const setAuthHeaders = (newHeaders: Array<Record<string, string>>) => {
 }
 // this is the server selected by user, defaults to first server in the list
 const selectedServerURL = ref<string>(props.data.servers?.[0]?.url ?? '')
+const currentServerUrl = ref<string>(props.data.servers?.[0]?.url ?? '')
 
+// this is fired when server url paramters in tryIt section getting changed
+const setServerUrl = (newServerUrl: string) => {
+  currentServerUrl.value = newServerUrl
+}
 const serverList = computed(() => props.data.servers?.map(server => server.url) ?? [])
 
 function updateSelectedServerURL(url: string) {
   selectedServerURL.value = url
+  currentServerUrl.value = url
 }
 
 </script>
@@ -107,7 +114,7 @@ function updateSelectedServerURL(url: string) {
 
   .http-operation-container  {
     display: grid;
-    gap: $kui-space-10;
+    gap: var(--kui-space-10, $kui-space-10);
     grid-template-columns: 1.2fr 0.8fr;
     width: 100%;
 
@@ -117,55 +124,18 @@ function updateSelectedServerURL(url: string) {
     }
     .right {
       background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-      padding: $kui-space-40;
+      padding: var(--kui-space-40, $kui-space-40);
     }
   }
-}
-
-// TODO change when we have floating TOC for smaller width
-@media (max-width: $kui-breakpoint-laptop) {
-  .http-operation-container {
-    grid-template-columns: 1fr;
-    .right {
-      margin-top: $kui-space-40;
-    }
-  }
-}
-:deep(.right-card) {
-  border: $kui-border-width-10 solid $kui-color-border;
-  border-radius: $kui-border-radius-30;
-
-  .right-card-header {
-    background-color: $kui-color-background;
-    display: flex;
-    padding: 10px;
-
-    h5 {
-      color: $kui-color-text;
-      margin: 0 0 0 $kui-space-30;
-      padding: 0;
-    }
-  }
-
-  .right-card-body {
-    background-color: $kui-color-background-neutral-weakest;
-    border-top: $kui-border-width-10 solid $kui-color-border;
-    width: 100%;
-  }
-
-  @media (max-width: $kui-breakpoint-mobile) {
-    .right-card-body {
+  // TODO change when we have floating TOC for smaller width
+  @media (max-width: ($kui-breakpoint-laptop - 1px)) {
+    .http-operation-container {
       grid-template-columns: 1fr;
-    }
-  }
-}
-:deep(pre) {
-  margin: 0;
-  white-space: pre-wrap;
 
-  code {
-    background: transparent !important;
-    padding: var(--kui-space-0, $kui-space-0);
+      .right {
+        margin-top: var(--kui-space-40, $kui-space-40);
+      }
+    }
   }
 }
 </style>

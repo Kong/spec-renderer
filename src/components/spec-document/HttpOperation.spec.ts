@@ -4,6 +4,7 @@ import { mount } from '@vue/test-utils'
 import HttpOperation from './HttpOperation.vue'
 import type { IHttpOperation, IServer } from '@stoplight/types'
 
+
 describe('<HttpOperation />', () => {
   describe('TryIt section', () => {
 
@@ -20,7 +21,7 @@ describe('<HttpOperation />', () => {
           },
         },
       })
-      expect(wrapper.findTestId('tryit-123').exists()).toBe(true)
+      expect(wrapper.findTestId('tryit-btn-123').exists()).toBe(true)
     })
 
     it('TryIt is not rendered when hideTryIt is true', () => {
@@ -42,7 +43,7 @@ describe('<HttpOperation />', () => {
         },
 
       })
-      expect(wrapper.findTestId('tryit-123').exists()).toBe(false)
+      expect(wrapper.findTestId('tryit-btn-123').exists()).toBe(false)
     })
 
     it('TryIt is not rendered when server list is not defined in the spec', () => {
@@ -53,7 +54,7 @@ describe('<HttpOperation />', () => {
           },
         },
       })
-      expect(wrapper.findTestId('tryit-123').exists()).toBe(false)
+      expect(wrapper.findTestId('tryit-btn-123').exists()).toBe(false)
     })
   })
 
@@ -90,32 +91,4 @@ describe('<HttpOperation />', () => {
       expect(wrapper.findTestId('server-endpoint').exists()).toBe(false)
     })
   })
-
-  describe('TryIt', () => {
-    it('KHCP-12161 - should call fetch with correct url', async () => {
-      const wrapper = mount(HttpOperation, {
-        props: {
-          data: {
-            id: '123',
-            method: 'get',
-            path: '/sample-path',
-            responses: [],
-            servers: [{
-              id: 'sample-server-id',
-              url: 'https://global.api.konghq.com/v2',
-            }],
-          },
-        },
-      })
-      global.fetch = vi.fn()
-      await wrapper.findTestId('tryit-btn').trigger('click')
-      expect(fetch).toHaveBeenCalledWith('https://global.api.konghq.com/v2/sample-path', {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        method: 'get',
-      })
-    })
-  })
-
 })

@@ -1,7 +1,7 @@
 <template>
   <button
     class="tryit-btn"
-    data-testid="tryit-btn"
+    :data-testid="`tryit-btn-${data.id}`"
     @click="startApiCall"
   >
     Try It!
@@ -9,6 +9,15 @@
 </template>
 
 <script setup lang="ts">
+import type { PropType } from 'vue'
+import type { IHttpOperation } from '@stoplight/types'
+
+defineProps({
+  data: {
+    type: Object as PropType<IHttpOperation>,
+    required: true,
+  },
+})
 
 const emit = defineEmits<{
   (e: 'tryit-api-call'): void,
@@ -21,6 +30,6 @@ const startApiCall = () => {
 
 <style lang="scss" scoped>
 .tryit-btn {
-  border: $kui-border-width-10 solid $kui-color-border;
+  border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
 }
 </style>

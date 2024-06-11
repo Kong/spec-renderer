@@ -1,0 +1,80 @@
+<template>
+  <div class="collapsable-panel">
+    <div class="panel-header">
+      <slot name="header" />
+    </div>
+    <!-- TODO ADD expand/collapse/copy content-->
+    <div
+      v-if="$slots.default"
+      v-show="!isCollapsed"
+      class="panel-body"
+    >
+      <slot name="default" />
+    </div>
+
+    <div
+      v-if="$slots.left && $slots.right"
+      v-show="!isCollapsed"
+      class="panel-body two-columns"
+    >
+      <div class="left">
+        <slot name="left" />
+      </div>
+      <div class="right">
+        <slot name="right" />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const isCollapsed = ref<boolean>(false)
+</script>
+
+<style lang="scss" scoped>
+.collapsable-panel {
+  border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+  margin-top: var(--kui-space-40, $kui-space-40)!important;
+
+  .panel-header {
+    align-items: center;
+    background-color: var(--kui-color-background, $kui-color-background);
+    display: flex;
+    padding: var(--kui-space-40, $kui-space-40);
+
+    :deep(>h5) {
+      color: var(--kui-color-text, $kui-color-text);
+      margin-left: var(--kui-space-30, $kui-space-30);
+      padding: var(--kui-space-0, $kui-space-0);
+    }
+  }
+
+  .panel-body {
+    background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+    border-top: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+    width: 100%;
+    &.two-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+
+      .left,
+      .right {
+        display: flex;
+        flex-direction: column;
+        margin: var(--kui-space-50, $kui-space-50) var(--kui-space-40, $kui-space-40);
+      }
+    }
+  }
+
+  @media (max-width: ($kui-breakpoint-mobile - 1px)) {
+    .panel-body {
+      &.two-columns {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}
+</style>

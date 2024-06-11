@@ -3,85 +3,71 @@
     class="tryit-wrapper"
     :data-testid="`tryit-wrapper-${data.id}`"
   >
-    <div
-      v-if="showTryItPanel"
-      class="right-card"
-      :data-testid="`tryit-${data.id}`"
-    >
-      <div class="right-card-header">
-        <LockIcon
-          v-if="security?.length"
-          :color="KUI_COLOR_TEXT_NEUTRAL"
-          :size="20"
-        />
-        <h5>
-          {{ security?.length ? 'Authentication' : 'Try It' }}
-        </h5>
-        <TryItButton @tryit-api-call="doApiCall" />
-      </div>
-      <div class="right-card-body">
-        <div v-if="security?.length">
-          <div class="left">
-            <label>Method</label>
-            <select>
-              <option
-                v-for="sec in security"
-                :key="sec.id"
-              >
-                {{ sec.key }} ({{ sec.type }})
-              </option>
-            </select>
-          </div>
-          <div class="right">
-            <label>Access Token</label>
-            <input
-              placeholder="App credential"
-              @keyup="accessTokenChanged"
-            >
-          </div>
-        </div>
-      </div>
+    <div class="tryit-header">
+      <MethodBadge
+        :method="data.method"
+        size="small"
+      />
+      <span class="path">{{ data.path }}</span>
+
+      <TryItButton
+        v-if="showTryIt"
+        class="tryit-btn"
+        :data="data"
+        @tryit-api-call="doApiCall"
+      />
     </div>
 
-    <div
+    <TryItAuth
+      v-if="showTryIt"
+      :data="data"
+      @access-tokens-changed="accessTokenChanged"
+    />
+
+    <TryItServer
+      :data="data"
+      :server-url="serverUrl"
+      @server-url-changed="serverUrlChanged"
+    />
+
+    <CollapsablePanel
       v-if="response"
-      class="right-card"
       :data-testid="`tryit-response-${data.id}`"
     >
-      <div class="right-card-header">
+      <template #header>
         <h5>
           Response
         </h5>
-      </div>
-      <div class="right-card-body">
-        <!-- eslint-disable vue/no-v-html -->
-        <div
-          v-if="responseText"
-          class="one-column"
-          v-html="responseText"
-        />
-        <!-- eslint-enable vue/no-v-html -->
-      </div>
-    </div>
+      </template>
+
+      <CodeBlock
+        v-if="responseText"
+        :code="responseText"
+      />
+    </CollapsablePanel>
   </div>
 </template>
 
 <script setup lang="ts">
 import { inject, computed, ref, watch } from 'vue'
 import type { PropType, Ref } from 'vue'
-import { LockIcon } from '@kong/icons'
-import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import TryItButton from './TryItButton.vue'
-import { getRequestHeaders } from '../../../utils'
+import { getRequestHeaders } from '@/utils'
 import composables from '@/composables'
-import type { IHttpOperation, HttpSecurityScheme } from '@stoplight/types'
+import type { IHttpOperation } from '@stoplight/types'
+import MethodBadge from '@/components/common/MethodBadge.vue'
+import CodeBlock from '@/components/common/CodeBlock.vue'
+import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
+import TryItAuth from './TryItAuth.vue'
+import TryItServer from './TryItServer.vue'
+
 
 const props = defineProps({
   data: {
     type: Object as PropType<IHttpOperation>,
     required: true,
   },
-  requestUrl: {
+  serverUrl: {
     type: String,
     required: true,
   },
@@ -89,16 +75,35 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>): void
+  (e: 'server-url-changed', serverUrl: string): void
 }>()
+
 const { getHighlighter } = composables.useShiki()
 
-const response = ref<Response>()
+const response = ref<Response | undefined>()
 const responseText = ref<string>()
+
+const authHeaders = ref<Array<Record<string, string>>>()
+
+const currentServerUrl = ref<string>(props.serverUrl)
+
+/*
+this is the result of emitting an event inside of TryItServer, when user changes server variables
+as a result of this we need to set new value for currentServerUrl in this component to use in actual fetch
+and promote it one level up so RequestSample component has correct Url.
+*/
+const serverUrlChanged = (newServerUrl: string) => {
+  currentServerUrl.value = newServerUrl
+  emit('server-url-changed', newServerUrl)
+}
+
+// this is tryout state requested by property passed
+const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 const doApiCall = async () => {
   try {
     // Todo - deal with params and body
-    response.value = await fetch(`${props.requestUrl}`, {
+    response.value = await fetch(`${currentServerUrl.value}${props.data.path}`, {
       method: props.data.method,
       headers: [
         ...(authHeaders?.value || []),
@@ -115,98 +120,58 @@ const doApiCall = async () => {
   }
 }
 
-const authHeaders = ref<Array<Record<string, string>>>()
-
-/* for now we only have one header so we will return is as 1 element array */
-const accessTokenChanged = (e: Event) => {
-  const tokenValue = (e.target as HTMLInputElement).value
-  authHeaders.value = []
-  if (tokenValue) {
-    authHeaders.value.push({
-      name: 'Authorization',
-      // TODO: this migh be a query string, not a header, handle this case
-      value: `Bearer ${(e.target as HTMLInputElement).value}`,
-    })
-  }
-  emit('access-tokens-changed', authHeaders.value)
+/* pass trough one level up as it needs to change Request sample */
+const accessTokenChanged = (newHeaders: Array<Record<string, string>>) => {
+  emit('access-tokens-changed', newHeaders)
+  authHeaders.value = newHeaders
 }
 
-const security = computed((): HttpSecurityScheme[]|undefined => {
-  const secArray:Array<HttpSecurityScheme> = []
-  if (props.data.security) {
-    props.data.security.forEach((secGroup: HttpSecurityScheme[]) => {
-      (secGroup || []).forEach((sec: HttpSecurityScheme) => {
-        secArray.push(sec)
-      })
-    })
-  }
-  return secArray
-})
-
-// this is tryout state requested by property passed
-const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
-
 // there is more logic that drives do we show tryouts or not
-const showTryItPanel = computed((): boolean => {
+const showTryIt = computed((): boolean => {
   // if there are no services defined in overView we do not show tryIt
   return !hideTryIt.value && Array.isArray(props.data.servers) && !!props.data.servers.length
 })
 
+watch(() => props.serverUrl, () => {
+  currentServerUrl.value = props.serverUrl
+})
+
 watch(() => ({
   data: props.data,
-  requestUrl: props.requestUrl,
+  serverUrl: currentServerUrl,
 }), () => {
   responseText.value = ''
   response.value = undefined
-
 })
 
 </script>
 
 <style lang="scss" scoped>
-.right-card {
 
-  .right-card-header {
-    .tryit-btn {
-      margin-left: auto;
-    }
+.tryit-header {
+  align-items: center;
+  display: flex;
+  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
+  .path {
+    margin-left: var(--kui-space-20, $kui-space-20);
   }
-
-  .right-card-body>div {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-
-    &.one-column {
-      grid-template-columns: 1fr;
-    }
-
-    .left,
-    .right {
-      display: flex;
-      flex-direction: column;
-      margin: $kui-space-50 $kui-space-40;
-    }
-
-    input,
-    select {
-      border: $kui-border-width-10 solid $kui-color-border;
-      border-radius: $kui-border-radius-30;
-      box-sizing: border-box;
-      padding: $kui-space-40 $kui-space-50;
-      width: 100%;
-    }
-
-    label {
-      font-size: $kui-font-size-30;
-      font-weight: $kui-font-weight-medium;
-      line-height: $kui-line-height-30;
-    }
+  .tryit-btn {
+    margin-left: auto;
   }
+}
 
-  @media (max-width: $kui-breakpoint-mobile) {
-    .right-card-body>div {
-      grid-template-columns: 1fr;
-    }
-  }
+/* using deep as this thing is used in multiple child components */
+:deep(input), :deep(select) {
+  border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+  box-sizing: border-box;
+  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
+  width: 100%;
+}
+
+:deep(label) {
+  font-size: var(--kui-font-size-30, $kui-font-size-30);
+  font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
 }
 </style>

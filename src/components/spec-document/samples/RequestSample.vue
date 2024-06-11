@@ -4,8 +4,8 @@
     :data-testid="`request-sample-${data.id}`"
   >
     <h5>REQUEST SAMPLE</h5>
-    <div class="right-card">
-      <div class="right-card-header">
+    <CollapsablePanel>
+      <template #header>
         <select v-model="selectedLang">
           <option
             v-for="lang in requestConfigs"
@@ -42,16 +42,12 @@
             {{ sample.key }}
           </option>
         </select>
-      </div>
-      <div class="right-card-body">
-        <!-- eslint-disable vue/no-v-html -->
-        <div
-          v-if="requestCode"
-          v-html="requestCode"
-        />
-        <!-- eslint-enable vue/no-v-html -->
-      </div>
-    </div>
+      </template>
+      <CodeBlock
+        v-if="requestCode"
+        :code="requestCode as string"
+      />
+    </CollapsablePanel>
   </div>
 </template>
 
@@ -60,9 +56,12 @@ import { watch, ref, computed } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet-lite'
-import { requestSampleConfigs } from '../../../constants'
-import { getRequestHeaders } from '../../../utils'
+import { requestSampleConfigs } from '@/constants'
+import { getRequestHeaders } from '@/utils'
 import composables from '@/composables'
+import CodeBlock from '@/components/common/CodeBlock.vue'
+import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
+
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet-lite'
 
 const props = defineProps({
@@ -73,7 +72,7 @@ const props = defineProps({
   /**
    * server url+path selected by user on endpoints detail page
    */
-  requestUrl: {
+  serverUrl: {
     type: String,
     required: true,
   },
@@ -140,8 +139,9 @@ watch(() => ({
   requestBodyKey: selectedRequestSample.value,
   lang: selectedLang.value,
   lib: selectedLangLibrary.value,
-  requestUrl: props.requestUrl,
+  serverUrl: props.serverUrl,
   authHeaders: props.authHeaders,
+  requestPath: props.data.path,
 }), async (newValue, oldValue) => {
   const jsonObj = (requestSamples.value as INodeExample[]).find(s => s.key === newValue.requestBodyKey)?.value
 
@@ -156,10 +156,14 @@ watch(() => ({
   let snippedChanged = false
 
   // if we selected new requestBody or if we do not have httpSNippet yet, we need to re-init it
-  if (!snippet.value || newValue.requestBodyKey !== oldValue?.requestBodyKey || newValue.requestUrl !== oldValue.requestUrl || newValue.authHeaders !== oldValue?.authHeaders) {
+  if (!snippet.value ||
+    newValue.requestBodyKey !== oldValue?.requestBodyKey ||
+    newValue.serverUrl !== oldValue.serverUrl ||
+    newValue.requestPath !== oldValue.requestPath ||
+    newValue.authHeaders !== oldValue?.authHeaders) {
 
     // TODO: handle parameter / query change in url gracefully
-    const serverUrl = newValue.requestUrl.replace(/[{}]/g, '')
+    const serverUrl = (newValue.serverUrl + newValue.requestPath).replace(/[{}]/g, '')
     let serverUrlValid = true
     try {
 
@@ -206,7 +210,12 @@ watch(() => ({
 
 <style lang="scss" scoped>
 
-.request-sample-selector {
-  margin-left: auto;
+.request-sample-wrapper {
+  h5 {
+    margin: var(--kui-space-60, $kui-space-60) var(--kui-space-30, $kui-space-30) var(--kui-space-30, $kui-space-30);
+  }
+  .request-sample-selector {
+    margin-left: auto;
+  }
 }
 </style>
