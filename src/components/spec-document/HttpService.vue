@@ -58,6 +58,7 @@ defineProps({
     type: Object as PropType<IHttpService>,
     required: true,
   },
+  // todo: pass value for this prop from SpecDocument
   openApiVersion: {
     type: String,
     default: '',
