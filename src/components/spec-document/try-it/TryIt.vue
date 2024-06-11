@@ -87,6 +87,11 @@ const authHeaders = ref<Array<Record<string, string>>>()
 
 const currentServerUrl = ref<string>(props.serverUrl)
 
+/*
+this is the result of emitting an event inside of TryItServer, when user changes server variables
+as a result of this we need to set new value for currentServerUrl in this component to use in actual fetch
+and promote it one level up so RequestSample component has correct Url.
+*/
 const serverUrlChanged = (newServerUrl: string) => {
   currentServerUrl.value = newServerUrl
   emit('server-url-changed', newServerUrl)
