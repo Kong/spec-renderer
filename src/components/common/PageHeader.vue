@@ -1,18 +1,34 @@
 <template>
-  <div class="spec-renderer-page-header">
-    <div :class="{ 'page-header-with-footer': $slots.footer }">
-      <h1 class="page-header-title">
+  <div
+    class="spec-renderer-page-header"
+    data-testid="spec-renderer-page-header"
+  >
+    <div
+      :class="{ 'page-header-with-footer': $slots.footer || footerText }"
+      data-testid="spec-renderer-page-header-content"
+    >
+      <h1
+        class="page-header-title"
+        data-testid="spec-renderer-page-header-title"
+      >
         {{ title }}
       </h1>
       <p
         v-if="description"
         class="page-header-description"
+        data-testid="spec-renderer-page-header-description"
       >
         {{ description }}
       </p>
     </div>
     <slot name="footer">
-      {{ footerText }}
+      <div
+        v-if="footerText"
+        class="spec-renderer-page-header-footer"
+        data-testid="spec-renderer-page-header-footer"
+      >
+        {{ footerText }}
+      </div>
     </slot>
   </div>
 </template>
