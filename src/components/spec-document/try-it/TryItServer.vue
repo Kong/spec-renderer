@@ -20,7 +20,6 @@
           :data-testid="`tryit-server-${v.key}-${data.id}`"
           :placeholder="v.value.default"
           :title="v.value.description"
-          @keyup="serverUrlChanged"
         >
       </div>
     </template>
@@ -36,7 +35,6 @@
           :data-testid="`tryit-server-${v.key}-${data.id}`"
           :placeholder="v.value.default"
           :title="v.value.description"
-          @keyup="serverUrlChanged"
         >
       </div>
     </template>
@@ -44,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpOperation, INodeVariable } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
@@ -96,17 +94,17 @@ const rightVars = computed(() => {
 const fieldValues = ref<Record<string,string>>({})
 
 
-const serverUrlChanged = () => {
 
+watch(fieldValues, () => {
   let newServerUrl = props.serverUrl
 
-  Object.keys(fieldValues.value).forEach(key => {
+  Object.keys(serverVariables.value || {}).forEach(key => {
 
     const fieldValue = fieldValues.value[key] || serverVariables.value?.[key]?.default || ''
     newServerUrl = newServerUrl.replaceAll(`{${key}}`, fieldValue)
   })
   emit('server-url-changed', newServerUrl)
-}
+}, { deep: true })
 
 </script>
 
