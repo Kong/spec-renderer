@@ -14,7 +14,7 @@
           v-for="scheme in securitySchemeList"
           :key="scheme.id"
           :data-testid="`overview-security-scheme-${scheme.id}`"
-          :title="scheme.type"
+          :title="`${scheme.key} (${scheme.type})`"
         >
           <p>
             {{ scheme.description }}
