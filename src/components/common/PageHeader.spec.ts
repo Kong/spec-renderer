@@ -14,10 +14,8 @@ describe('<PageHeader />', () => {
     expect(wrapper.findTestId('spec-renderer-page-header').exists()).toBe(true)
     // the title is rendered
     expect(wrapper.findTestId('spec-renderer-page-header-title').exists()).toBe(true)
-
-    // the content is not rendered with footer
+    // the page-header-with-footer class is not applied to content in absence of footer
     expect(wrapper.findTestId('spec-renderer-page-header-content').classes('page-header-with-footer')).toBe(false)
-    expect(wrapper.findTestId('spec-renderer-page-header-footer').exists()).toBe(false)
   })
 
   it('renders with all props', () => {
@@ -25,20 +23,15 @@ describe('<PageHeader />', () => {
       props: {
         title: 'sample title',
         description: 'sample content',
-        footerText: 'sample footer',
       },
     })
 
-    // the component itself is rendered
-    expect(wrapper.findTestId('spec-renderer-page-header').exists()).toBe(true)
-
-    // the title and description are rendered
+    // the title and description, both are rendered
     expect(wrapper.findTestId('spec-renderer-page-header-title').exists()).toBe(true)
     expect(wrapper.findTestId('spec-renderer-page-header-description').exists()).toBe(true)
 
-    // the footer is rendered
-    expect(wrapper.findTestId('spec-renderer-page-header-content').classes('page-header-with-footer')).toBe(true)
-    expect(wrapper.findTestId('spec-renderer-page-header-footer').exists()).toBe(true)
+    // the page-header-with-footer class is not applied to content in absence of footer
+    expect(wrapper.findTestId('spec-renderer-page-header-content').classes('page-header-with-footer')).toBe(false)
   })
 
   it('renders slots correctly', () => {
@@ -47,7 +40,7 @@ describe('<PageHeader />', () => {
         title: 'sample title',
       },
       slots: {
-        footer: '<div data-testid="footer-slot-content">Footer</div>',
+        default: '<div data-testid="footer-slot-content">Footer</div>',
       },
     })
 

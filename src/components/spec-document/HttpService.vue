@@ -4,19 +4,17 @@
       class="overview-page-header"
       :title="data.name"
     >
-      <template #footer>
-        <p class="overview-page-versions">
-          <VersionBadge type="primary">
-            v{{ data.version }}
-          </VersionBadge>
-          <VersionBadge
-            v-if="openApiVersion"
-            type="neutral"
-          >
-            OAS {{ openApiVersion }}
-          </VersionBadge>
-        </p>
-      </template>
+      <p class="overview-page-versions">
+        <VersionBadge type="primary">
+          v{{ data.version }}
+        </VersionBadge>
+        <VersionBadge
+          v-if="openApiVersion"
+          type="neutral"
+        >
+          OAS {{ openApiVersion }}
+        </VersionBadge>
+      </p>
     </PageHeader>
 
     <section class="overview-page-content">

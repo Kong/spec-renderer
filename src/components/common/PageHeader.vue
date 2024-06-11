@@ -4,7 +4,7 @@
     data-testid="spec-renderer-page-header"
   >
     <div
-      :class="{ 'page-header-with-footer': $slots.footer || footerText }"
+      :class="{ 'page-header-with-footer': $slots.default }"
       data-testid="spec-renderer-page-header-content"
     >
       <h1
@@ -21,15 +21,7 @@
         {{ description }}
       </p>
     </div>
-    <slot name="footer">
-      <div
-        v-if="footerText"
-        class="spec-renderer-page-header-footer"
-        data-testid="spec-renderer-page-header-footer"
-      >
-        {{ footerText }}
-      </div>
-    </slot>
+    <slot />
   </div>
 </template>
 
@@ -40,10 +32,6 @@ defineProps({
     required: true,
   },
   description: {
-    type: String,
-    default: '',
-  },
-  footerText: {
     type: String,
     default: '',
   },

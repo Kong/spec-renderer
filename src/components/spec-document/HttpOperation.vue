@@ -9,17 +9,15 @@
       :description="data.description"
       :title="data.summary"
     >
-      <template #footer>
-        <ServerEndpoint
-          v-if="serverList.length"
-          class="http-operation-server-endpoint"
-          :method="data.method"
-          :path="data.path"
-          :selected-server-url="selectedServerURL"
-          :server-url-list="serverList"
-          @selected-server-changed="updateSelectedServerURL"
-        />
-      </template>
+      <ServerEndpoint
+        v-if="serverList.length"
+        class="http-operation-server-endpoint"
+        :method="data.method"
+        :path="data.path"
+        :selected-server-url="selectedServerURL"
+        :server-url-list="serverList"
+        @selected-server-changed="updateSelectedServerURL"
+      />
     </PageHeader>
 
 
