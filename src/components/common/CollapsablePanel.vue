@@ -5,24 +5,10 @@
     </div>
     <!-- TODO ADD expand/collapse/copy content-->
     <div
-      v-if="$slots.default"
       v-show="!isCollapsed"
       class="panel-body"
     >
-      <slot name="default" />
-    </div>
-
-    <div
-      v-if="$slots.left && $slots.right"
-      v-show="!isCollapsed"
-      class="panel-body two-columns"
-    >
-      <div class="left">
-        <slot name="left" />
-      </div>
-      <div class="right">
-        <slot name="right" />
-      </div>
+      <slot />
     </div>
   </div>
 </template>
@@ -56,23 +42,28 @@ const isCollapsed = ref<boolean>(false)
     background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     border-top: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
     width: 100%;
-    &.two-columns {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 
-      .left,
-      .right {
-        display: flex;
-        flex-direction: column;
-        margin: var(--kui-space-50, $kui-space-50) var(--kui-space-40, $kui-space-40);
-      }
+    :deep(.short) {
+      display: flex;
+      flex-direction: column;
+      margin: var(--kui-space-50, $kui-space-50) var(--kui-space-40, $kui-space-40);
+    }
+
+    :deep(.wide) {
+      display: flex;
+      grid-column: 1 / 3;
+      flex-direction: column;
+      margin: var(--kui-space-50, $kui-space-50) var(--kui-space-40, $kui-space-40);
     }
   }
 
   @media (max-width: ($kui-breakpoint-mobile - 1px)) {
     .panel-body {
-      &.two-columns {
-        grid-template-columns: 1fr;
+      grid-template-columns: 1fr;
+      :deep(.wide) {
+        grid-column: 1;
       }
     }
   }

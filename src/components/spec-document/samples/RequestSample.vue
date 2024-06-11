@@ -43,10 +43,13 @@
           </option>
         </select>
       </template>
-      <CodeBlock
-        v-if="requestCode"
-        :code="requestCode as string"
-      />
+      <!-- body -->
+      <div class="wide">
+        <CodeBlock
+          v-if="requestCode"
+          :code="requestCode as string"
+        />
+      </div>
     </CollapsablePanel>
   </div>
 </template>

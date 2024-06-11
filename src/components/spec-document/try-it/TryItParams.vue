@@ -1,21 +1,15 @@
 <template>
   <CollapsablePanel
     v-if="security?.length"
-    :data-testid="`tryit-auth-${data.id}`"
+    :data-testid="`tryit-params-${data.id}`"
   >
     <template #header>
-      <LockIcon
-        v-if="security?.length"
-        :color="KUI_COLOR_TEXT_NEUTRAL"
-        :size="20"
-      />
       <h5>
-        Authentication
+        Parameters
       </h5>
     </template>
 
-    <!-- body -->
-    <div class="short">
+    <template #left>
       <label>Method</label>
       <select>
         <option
@@ -25,27 +19,29 @@
           {{ sec.key }} ({{ sec.type }})
         </option>
       </select>
-    </div>
+    </template>
 
-    <div class="short">
+    <template #right>
       <label>Access Token</label>
       <input
         placeholder="App credential"
         @keyup="accessTokenChanged"
       >
-    </div>
+    </template>
   </CollapsablePanel>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { PropType } from 'vue'
-import { LockIcon } from '@kong/icons'
-import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import type { IHttpOperation, HttpSecurityScheme } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 
 
+/**
+ * This components handles path paramters, query paramters and body.
+ * only parts of
+ */
 const props = defineProps({
   data: {
     type: Object as PropType<IHttpOperation>,
@@ -54,7 +50,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>): void
+  (e: 'request-params-changed'): void
 }>()
 
 const authHeaders = ref<Array<Record<string, string>>>()
