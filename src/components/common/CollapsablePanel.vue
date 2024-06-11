@@ -35,26 +35,26 @@ const isCollapsed = ref<boolean>(false)
 
 <style lang="scss" scoped>
 .collapsable-panel {
-  border: $kui-border-width-10 solid $kui-color-border;
-  border-radius: $kui-border-radius-30;
-  margin-top: $kui-space-40!important;
+  border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+  margin-top: var(--kui-space-40, $kui-space-40)!important;
 
   .panel-header {
     align-items: center;
-    background-color: $kui-color-background;
+    background-color: var(--kui-color-background, $kui-color-background);
     display: flex;
-    padding: $kui-space-40;
+    padding: var(--kui-space-40, $kui-space-40);
 
     :deep(>h5) {
-      color: $kui-color-text;
-      margin-left: $kui-space-30;
-      padding: 0;
+      color: var(--kui-color-text, $kui-color-text);
+      margin-left: var(--kui-space-30, $kui-space-30);
+      padding: var(--kui-space-0, $kui-space-0);
     }
   }
 
   .panel-body {
-    background-color: $kui-color-background-neutral-weakest;
-    border-top: $kui-border-width-10 solid $kui-color-border;
+    background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+    border-top: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
     width: 100%;
     &.two-columns {
       display: grid;
@@ -64,7 +64,7 @@ const isCollapsed = ref<boolean>(false)
       .right {
         display: flex;
         flex-direction: column;
-        margin: $kui-space-50 $kui-space-40;
+        margin: var(--kui-space-50, $kui-space-50) var(--kui-space-40, $kui-space-40);
       }
     }
   }

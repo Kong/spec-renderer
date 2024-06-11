@@ -114,7 +114,7 @@ function updateSelectedServerURL(url: string) {
 
   .http-operation-container  {
     display: grid;
-    gap: $kui-space-10;
+    gap: var(--kui-space-10, $kui-space-10);
     grid-template-columns: 1.2fr 0.8fr;
     width: 100%;
 
@@ -124,7 +124,7 @@ function updateSelectedServerURL(url: string) {
     }
     .right {
       background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-      padding: $kui-space-40;
+      padding: var(--kui-space-40, $kui-space-40);
     }
   }
   // TODO change when we have floating TOC for smaller width
@@ -133,10 +133,9 @@ function updateSelectedServerURL(url: string) {
       grid-template-columns: 1fr;
 
       .right {
-        margin-top: $kui-space-40;
+        margin-top: var(--kui-space-40, $kui-space-40);
       }
     }
   }
 }
-
 </style>

@@ -151,9 +151,9 @@ watch(() => ({
 .tryit-header {
   align-items: center;
   display: flex;
-  padding: $kui-space-40 0;
+  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
   .path {
-    margin-left: $kui-space-20;
+    margin-left: var(--kui-space-20, $kui-space-20);
   }
   .tryit-btn {
     margin-left: auto;
@@ -162,16 +162,16 @@ watch(() => ({
 
 /* using deep as this thing is used in multiple child components */
 :deep(input), :deep(select) {
-  border: $kui-border-width-10 solid $kui-color-border;
-  border-radius: $kui-border-radius-30;
+  border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   box-sizing: border-box;
-  padding: $kui-space-40 $kui-space-50;
+  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
   width: 100%;
 }
 
 :deep(label) {
-  font-size: $kui-font-size-30;
-  font-weight: $kui-font-weight-medium;
-  line-height: $kui-line-height-30;
+  font-size: var(--kui-font-size-30, $kui-font-size-30);
+  font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
 }
 </style>

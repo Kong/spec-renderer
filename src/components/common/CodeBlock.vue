@@ -20,7 +20,7 @@ defineProps({
 
 <style lang="scss" scoped>
 :deep(pre) {
-  margin: 0;
+  margin: var(--kui-space-0, $kui-space-0);
   padding: var(--kui-space-40, $kui-space-40);
   white-space: pre-wrap;
 
