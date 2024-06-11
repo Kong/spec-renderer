@@ -2,6 +2,7 @@
   <div
     class="version-badge"
     :class="type"
+    data-testid="version-badge"
   >
     <slot>{{ version }}</slot>
   </div>
