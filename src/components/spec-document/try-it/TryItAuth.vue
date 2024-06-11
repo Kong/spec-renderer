@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { PropType, Ref } from 'vue'
+import type { PropType } from 'vue'
 import { LockIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import type { IHttpOperation, HttpSecurityScheme } from '@stoplight/types'
