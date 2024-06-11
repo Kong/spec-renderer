@@ -41,9 +41,9 @@ const isCollapsed = ref<boolean>(false)
   .panel-body {
     background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     border-top: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
-    width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    width: 100%;
 
     :deep(.short) {
       display: flex;
@@ -53,8 +53,8 @@ const isCollapsed = ref<boolean>(false)
 
     :deep(.wide) {
       display: flex;
-      grid-column: 1 / 3;
       flex-direction: column;
+      grid-column: 1 / 3;
       margin: var(--kui-space-50, $kui-space-50) var(--kui-space-40, $kui-space-40);
     }
   }
