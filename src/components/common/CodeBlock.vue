@@ -1,10 +1,12 @@
 <template>
-  <!-- eslint-disable vue/no-v-html -->
-  <div
-    class="code-block"
-    v-html="code"
-  />
-  <!-- eslint-enable vue/no-v-html -->
+  <div>
+    <!-- eslint-disable vue/no-v-html -->
+    <div
+      class="code-block"
+      v-html="code"
+    />
+    <!-- eslint-enable vue/no-v-html -->
+  </div>
 </template>
 
 <script setup lang="ts">
