@@ -17,6 +17,7 @@
         <label>{{ v.key }}</label>
         <input
           v-model="fieldValues[v.key]"
+          :data-testid="`tryit-server-${v.key}`"
           :placeholder="v.value.default"
           :title="v.value.description"
           @keyup="serverUrlChanged"
@@ -32,6 +33,7 @@
         <label>{{ v.key }}</label>
         <input
           v-model="fieldValues[v.key]"
+          :data-testid="`tryit-server-${v.key}`"
           :placeholder="v.value.default"
           :title="v.value.description"
           @keyup="serverUrlChanged"
