@@ -1,3 +1,10 @@
+# [1.21.0](https://github.com/Kong/spec-renderer/compare/v1.20.4...v1.21.0) (2024-06-11)
+
+
+### Features
+
+* servers collapsible panel in TryIt section [KHCP-12158] ([#120](https://github.com/Kong/spec-renderer/issues/120)) ([62cb4cc](https://github.com/Kong/spec-renderer/commit/62cb4ccb482a03ef2896840f982398605deabb27))
+
 ## [1.20.4](https://github.com/Kong/spec-renderer/compare/v1.20.3...v1.20.4) (2024-06-10)
 
 
