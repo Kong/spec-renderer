@@ -30,7 +30,20 @@
       @server-url-changed="serverUrlChanged"
     />
 
-    <TryItParams :data="data" />
+    <TryItParams
+      :data="data"
+      param-type="path"
+    />
+
+    <TryItParams
+      :data="data"
+      param-type="query"
+    />
+
+    <TryItParams
+      :data="data"
+      param-type="body"
+    />
 
     <CollapsablePanel
       v-if="response"
@@ -170,6 +183,10 @@ watch(() => ({
   box-sizing: border-box;
   padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
   width: 100%;
+}
+// required label
+:deep(label>span) {
+  color: var(--kui-color-text-danger, $kui-color-text-danger);
 }
 
 :deep(label) {

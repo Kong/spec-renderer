@@ -86,3 +86,8 @@ const security = computed((): HttpSecurityScheme[]|undefined => {
 })
 </script>
 
+<style lang="scss" scoped>
+.kui-icon {
+  margin-right: var(--kui-space-30, $kui-space-30);
+}
+</style>

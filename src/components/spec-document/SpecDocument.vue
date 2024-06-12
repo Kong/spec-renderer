@@ -51,7 +51,6 @@ provide<Ref<boolean>>('hide-tryit', computed((): boolean => props.hideTryIt))
 watch(() => ({ pathname: props.currentPath, document: props.document }), ({ pathname, document }) => {
   const isRootPath = !pathname || pathname === '/'
   serviceNode.value = <ServiceNode>(isRootPath ? document : document.children.find((child:any) => child.uri === pathname))
-  console.log('zzzz:', serviceNode.value)
 }, { immediate: true })
 
 const docComponent = computed(() => {
