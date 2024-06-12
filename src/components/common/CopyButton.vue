@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { CopyIcon } from '@kong/icons'
-import { copyTextToClipboard } from '@/utils/copyTextToClipboard'
+import { useClipboard } from '@vueuse/core'
 
 const props = defineProps({
   content:{
@@ -35,7 +35,8 @@ const copyButton = ref<HTMLButtonElement>()
 
 async function copyCode(): Promise<void> {
   // todo: show a message if copied successfully
-  await copyTextToClipboard(props.content)
+  const { copy } = useClipboard({ source: props.content, legacy: true })
+  await copy(props.content)
 }
 </script>
 
