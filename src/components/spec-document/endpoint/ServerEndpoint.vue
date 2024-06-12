@@ -8,13 +8,26 @@
         :method="method"
         size="large"
       />
-      <div
-        class="server-endpoint-url-with-path"
-        data-testid="server-endpoint-url-with-path"
+
+      <SelectDropdown
+        v-if="serverUrlList.length > 1"
+        class="server-select-dropdown"
+        data-testid="server-select-dropdown"
+        dynamic-width
+        :option-list="serverUrlList"
+        :selected-option="selectedServerUrl"
+        @selected-option-changed="changeEndpointServer"
       >
-        <span class="selected-server-url">{{ selectedServerUrl }}</span>
         <span class="endpoint-path">{{ path }}</span>
         <ChevronDownIcon size="20px" />
+      </SelectDropdown>
+
+      <div
+        v-else
+        class="server-url-with-path"
+      >
+        <span>{{ selectedServerUrl }}</span>
+        <span class="endpoint-path">{{ path }}</span>
       </div>
     </div>
 
@@ -27,6 +40,7 @@ import type { PropType } from 'vue'
 import { ChevronDownIcon } from '@kong/icons'
 import MethodBadge from '@/components/common/MethodBadge.vue'
 import CopyButton from '@/components/common/CopyButton.vue'
+import SelectDropdown from '@/components/common/SelectDropdown.vue'
 
 defineProps({
   method: {
@@ -51,8 +65,8 @@ const emit = defineEmits<{
   (e: 'selected-server-changed', url: string): void
 }>()
 
-function changeEndpointServer(event: Event) {
-  emit('selected-server-changed', (event.target as HTMLSelectElement).value)
+function changeEndpointServer(url: string) {
+  emit('selected-server-changed', url)
 }
 </script>
 
@@ -70,21 +84,25 @@ function changeEndpointServer(event: Event) {
     display: flex;
     gap: var(--kui-space-20, $kui-space-20);
 
-    .server-endpoint-url-with-path {
-      align-items: center;
-      display: flex;
-      font-family: var(--kui-font-family-code, $kui-font-family-code);
-      font-size: var(--kui-font-size-30, $kui-font-size-30);
+    .server-select-dropdown, .server-url-with-path {
       gap: var(--kui-space-20, $kui-space-20);
-      line-height: var(--kui-line-height-40, $kui-line-height-40);
 
-      .selected-server-url {
+      // to target the select and options elements
+      >* {
         color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+        font-family: var(--kui-font-family-code, $kui-font-family-code);
+        font-size: var(--kui-font-size-30, $kui-font-size-30);
       }
+
       .endpoint-path {
         color: var(--kui-color-text, $kui-color-text);
         font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       }
+    }
+
+    .server-url-with-path {
+      align-items: center;
+      display: flex;
     }
   }
 }
