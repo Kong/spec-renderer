@@ -2,10 +2,12 @@
   <button
     ref="copyButton"
     class="copy-button"
+    :title="copied ? 'Copied!' : 'Copy'"
     @click="copyCode"
   >
-    <CopyIcon
-      :color="iconColor"
+    <component
+      :is="copied ? CheckIcon : CopyIcon"
+      :color="copied ? 'green' : iconColor"
       :size="iconsSize"
     />
   </button>
@@ -13,7 +15,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { CopyIcon } from '@kong/icons'
+import { CopyIcon, CheckIcon } from '@kong/icons'
 import { useClipboard } from '@vueuse/core'
 
 const props = defineProps({
@@ -32,10 +34,9 @@ const props = defineProps({
 })
 
 const copyButton = ref<HTMLButtonElement>()
+const { copy, copied } = useClipboard({ source: props.content, legacy: true })
 
 async function copyCode(): Promise<void> {
-  // todo: show a message if copied successfully
-  const { copy } = useClipboard({ source: props.content, legacy: true })
   await copy(props.content)
 }
 </script>
