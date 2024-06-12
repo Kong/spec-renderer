@@ -3,17 +3,11 @@
     class="spec-model-node"
     :data-testid="dataTestId"
   >
-    <div class="spec-model-node-header">
-      <h3 class="title">
-        {{ title }}
-      </h3>
-      <p
-        v-if="data.description"
-        class="description"
-      >
-        {{ data.description }}
-      </p>
-    </div>
+    <PageHeader
+      class="spec-model-node-header"
+      :description="data.description"
+      :title="title"
+    />
 
     <div
       v-if="modelPropertyProps"
@@ -52,6 +46,7 @@ import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 import ModelProperty from './ModelProperty.vue'
 import PropertyAnyOf from './property-fields/PropertyAnyOf.vue'
 import PropertyOneOf from './property-fields/PropertyOneOf.vue'
+import PageHeader from '../common/PageHeader.vue'
 
 const props = defineProps({
   data: {
@@ -70,8 +65,12 @@ const dataTestId = computed(() => `model-node-${props.title.replaceAll(' ', '-')
 
 <style lang="scss" scoped>
 .spec-model-node {
+  * {
+    margin: var(--kui-space-0, $kui-space-0);
+  }
+
   .spec-model-node-header {
-    @include page-header;
+    margin-bottom: var(--kui-space-80, $kui-space-80);
   }
 
   .spec-model-node-properties {

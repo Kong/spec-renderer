@@ -65,6 +65,7 @@ describe('<HttpOperation />', () => {
           data: {
             id: '123',
             method: 'get',
+            summary: 'sample endpoint name',
             path: '/sample-path',
             responses: [],
             servers: [{

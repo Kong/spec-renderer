@@ -1,22 +1,36 @@
 <template>
-  <div data-testid="overview-security-list">
-    <h4>Security</h4>
-    <details
-      v-for="scheme in securitySchemeList"
-      :key="scheme.id"
-      :data-testid="`overview-security-scheme-${scheme.id}`"
-    >
-      <summary>{{ scheme.type }} ({{ scheme.key }})</summary>
-      <p>
-        {{ scheme.description }}
-      </p>
-    </details>
-  </div>
+  <OverviewPanel title="Security">
+    <template #header-icon>
+      <LockIcon
+        :size="20"
+      />
+    </template>
+    <template #content>
+      <div
+        class="security-list"
+        data-testid="overview-security-list"
+      >
+        <OverviewCollapsiblePanel
+          v-for="scheme in securitySchemeList"
+          :key="scheme.id"
+          :data-testid="`overview-security-scheme-${scheme.id}`"
+          :title="`${scheme.key} (${scheme.type})`"
+        >
+          <p>
+            {{ scheme.description }}
+          </p>
+        </OverviewCollapsiblePanel>
+      </div>
+    </template>
+  </OverviewPanel>
 </template>
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import type { HttpSecurityScheme } from '@stoplight/types'
+import { LockIcon } from '@kong/icons'
+import OverviewPanel from './OverviewPanel.vue'
+import OverviewCollapsiblePanel from './OverviewCollapsiblePanel.vue'
 
 defineProps({
   securitySchemeList: {
@@ -25,3 +39,11 @@ defineProps({
   },
 })
 </script>
+
+<style lang="scss" scoped>
+.security-list {
+  > :not(:first-child) {
+    margin-top: var(--kui-space-50, $kui-space-50);
+  }
+}
+</style>

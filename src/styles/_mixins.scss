@@ -1,4 +1,5 @@
 @import '@/styles/mixins/buttons';
+@import '@/styles/mixins/badges';
 @import '@/styles/mixins/schema-model';
 @import '@/styles/mixins/toc';
 @import '@/styles/mixins/tree';
@@ -28,19 +29,5 @@
 
   &.expanded {
     transform: rotate(90deg);
-  }
-}
-
-@mixin page-header {
-  >.title {
-    font-size: var(--kui-font-size-80, $kui-font-size-80);
-    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
-    line-height: var(--kui-line-height-70, $kui-line-height-70);
-    margin: var(--kui-space-0, $kui-space-0);
-    margin-bottom: var(--kui-space-60, $kui-space-60);
-  }
-  >.description {
-    font-size: var(--kui-font-size-30, $kui-font-size-30);
-    line-height: var(--kui-line-height-40, $kui-line-height-40);
   }
 }

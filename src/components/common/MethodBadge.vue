@@ -33,14 +33,6 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-@mixin badge-appearance(
-  $bgColor: var(--kui-color-background-neutral-weak, $kui-color-background-neutral-weak),
-  $textColor: var(--kui-color-text, $kui-color-text)
-) {
-  background-color: $bgColor;
-  color: $textColor;
-}
-
 .method-badge {
   @include badge-appearance;
 
