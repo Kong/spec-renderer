@@ -54,7 +54,7 @@ const isCollapsed = ref<boolean>(false)
       display: flex;
       flex-direction: column;
       grid-column: 1 / 3;
-      margin: var(--kui-space-50, $kui-space-50) var(--kui-space-40, $kui-space-40);
+      margin: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
     }
   }
 
