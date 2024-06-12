@@ -30,9 +30,7 @@
       @server-url-changed="serverUrlChanged"
     />
 
-    <TryItParams
-      :data="data"
-    />
+    <TryItParams :data="data" />
 
     <CollapsablePanel
       v-if="response"
@@ -44,10 +42,13 @@
         </h5>
       </template>
 
-      <CodeBlock
-        v-if="responseText"
-        :code="responseText"
-      />
+      <div class="wide">
+        <CodeBlock
+          v-if="responseText"
+          :code="responseText"
+          lang="json"
+        />
+      </div>
     </CollapsablePanel>
   </div>
 </template>
@@ -57,7 +58,6 @@ import { inject, computed, ref, watch } from 'vue'
 import type { PropType, Ref } from 'vue'
 import TryItButton from './TryItButton.vue'
 import { getRequestHeaders } from '@/utils'
-import composables from '@/composables'
 import type { IHttpOperation } from '@stoplight/types'
 import MethodBadge from '@/components/common/MethodBadge.vue'
 import CodeBlock from '@/components/common/CodeBlock.vue'
@@ -83,7 +83,6 @@ const emit = defineEmits<{
   (e: 'server-url-changed', serverUrl: string): void
 }>()
 
-const { getHighlighter } = composables.useShiki()
 
 const response = ref<Response | undefined>()
 const responseText = ref<string>()
@@ -117,8 +116,7 @@ const doApiCall = async () => {
         acc[current.name] = current.value; return acc
       }, { }),
     })
-    const highlighter = await getHighlighter()
-    responseText.value = highlighter.codeToHtml(JSON.stringify((await response.value.json()), null, 2), { lang: 'json', theme: 'material-theme-palenight' })
+    responseText.value = JSON.stringify((await response.value.json()), null, 2)
 
   } catch (error) {
     console.error(error)
