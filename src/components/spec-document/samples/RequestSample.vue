@@ -79,6 +79,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  requestPath: {
+    type: String,
+    required: true,
+  },
   authHeaders: {
     type: Array as PropType<Record<string, string>[]>,
     default: () => [],
@@ -139,7 +143,7 @@ watch(() => ({
   lib: selectedLangLibrary.value,
   serverUrl: props.serverUrl,
   authHeaders: props.authHeaders,
-  requestPath: props.data.path,
+  requestPath: props.requestPath,
 }), async (newValue, oldValue) => {
   const jsonObj = (requestSamples.value as INodeExample[]).find(s => s.key === newValue.requestBodyKey)?.value
 

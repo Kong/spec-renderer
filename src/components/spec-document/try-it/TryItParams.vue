@@ -21,8 +21,7 @@
         {{ p.name }}
       </label>
       <input
-        :v-model="fieldValues[p.name]"
-        :value="fieldValues[p.name]"
+        v-model="fieldValues[p.name]"
       >
     </div>
   </CollapsablePanel>
@@ -51,7 +50,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'request-params-changed'): void
+  (e: 'request-path-changed', newPath: string): void
 }>()
 
 const compTitles = {
@@ -59,9 +58,6 @@ const compTitles = {
   query: 'Query Parameters',
   body: 'Body',
 }
-
-//@ts-ignore
-console.log('zzzz:', props.data?.request?.path)
 
 const params = computed((): IHttpPathParam[] | undefined => {
   console.log('qqqq', props.paramType)
@@ -92,8 +88,16 @@ watch(params, () => {
 
 // this is to fire event when fieldValues changed
 watch(fieldValues, () => {
+  if (props.paramType === 'path') {
+    let newPath = props.data.path
+    Object.keys(fieldValues.value || {}).forEach(key => {
 
-})
+      const fieldValue = fieldValues.value[key]
+      newPath = newPath.replaceAll(`{${key}}`, fieldValue)
+    })
+    emit('request-path-changed', newPath)
+  }
+}, { immediate: true, deep: true })
 
 </script>
 

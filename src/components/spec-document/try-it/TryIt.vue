@@ -33,6 +33,7 @@
     <TryItParams
       :data="data"
       param-type="path"
+      @request-path-changed="requestPathChanged"
     />
 
     <TryItParams
@@ -94,6 +95,8 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>): void
   (e: 'server-url-changed', serverUrl: string): void
+  (e: 'request-path-changed', newPath: string): void
+
 }>()
 
 
@@ -103,6 +106,13 @@ const responseText = ref<string>()
 const authHeaders = ref<Array<Record<string, string>>>()
 
 const currentServerUrl = ref<string>(props.serverUrl)
+
+const currentRequestPath = ref<string>(props.data.path)
+
+const requestPathChanged = (newPath: string) => {
+  currentRequestPath.value = newPath
+  emit('request-path-changed', newPath)
+}
 
 /*
 this is the result of emitting an event inside of TryItServer, when user changes server variables
@@ -120,7 +130,7 @@ const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 const doApiCall = async () => {
   try {
     // Todo - deal with params and body
-    response.value = await fetch(`${currentServerUrl.value}${props.data.path}`, {
+    response.value = await fetch(`${currentServerUrl.value}${currentRequestPath.value}`, {
       method: props.data.method,
       headers: [
         ...(authHeaders?.value || []),

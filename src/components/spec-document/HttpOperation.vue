@@ -47,11 +47,13 @@
           :data="data"
           :server-url="selectedServerURL"
           @access-tokens-changed="setAuthHeaders"
+          @request-path-changed="setRequestPath"
           @server-url-changed="setServerUrl"
         />
         <RequestSample
           :auth-headers="authHeaders"
           :data="data"
+          :request-path="currentRequestPath"
           :server-url="currentServerUrl"
         />
       </div>
@@ -84,11 +86,18 @@ const setAuthHeaders = (newHeaders: Array<Record<string, string>>) => {
 // this is the server selected by user, defaults to first server in the list
 const selectedServerURL = ref<string>(props.data.servers?.[0]?.url ?? '')
 const currentServerUrl = ref<string>(props.data.servers?.[0]?.url ?? '')
+const currentRequestPath = ref<string>(props.data.path ?? '')
 
 // this is fired when server url paramters in tryIt section getting changed
 const setServerUrl = (newServerUrl: string) => {
   currentServerUrl.value = newServerUrl
 }
+
+const setRequestPath = (newPath: string) => {
+  console.log('!!!!!', newPath)
+  currentRequestPath.value = newPath
+}
+
 const serverList = computed(() => props.data.servers?.map(server => server.url) ?? [])
 
 function updateSelectedServerURL(url: string) {
