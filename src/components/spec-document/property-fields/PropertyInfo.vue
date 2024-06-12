@@ -84,7 +84,7 @@ defineProps({
 .property-info {
   align-items: center;
   display: flex;
-  font-family: monospace, serif;
+  font-family: var(--kui-font-family-code, $kui-font-family-code);
   gap: var(--kui-space-60, $kui-space-60);
 
   .property-title {

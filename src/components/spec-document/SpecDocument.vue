@@ -68,6 +68,7 @@ const docComponent = computed(() => {
     case NodeType.HttpWebhook:
       return { component: HttpOperation, props: defaultProps }
     case NodeType.HttpService:
+      // todo: add openApiVersion to props
       return { component: HttpService, props: defaultProps }
     case NodeType.Model:
       return { component: ModelNode, props: { ...defaultProps, title: serviceNode.value.name } }
