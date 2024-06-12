@@ -18,16 +18,23 @@
         :selected-option="selectedServerUrl"
         @selected-option-changed="changeEndpointServer"
       >
-        <span class="endpoint-path">{{ path }}</span>
+        <span
+          class="endpoint-path"
+          data-testid="endpoint-path"
+        >{{ path }}</span>
         <ChevronDownIcon size="20px" />
       </SelectDropdown>
 
       <div
         v-else
         class="server-url-with-path"
+        data-testid="server-url-with-path"
       >
         <span>{{ selectedServerUrl }}</span>
-        <span class="endpoint-path">{{ path }}</span>
+        <span
+          class="endpoint-path"
+          data-testid="endpoint-path"
+        >{{ path }}</span>
       </div>
     </div>
 
