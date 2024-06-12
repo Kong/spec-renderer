@@ -1,3 +1,10 @@
+# [1.22.0](https://github.com/Kong/spec-renderer/compare/v1.21.1...v1.22.0) (2024-06-12)
+
+
+### Features
+
+* overview page styling [KHCP-12227] ([#124](https://github.com/Kong/spec-renderer/issues/124)) ([26c663c](https://github.com/Kong/spec-renderer/commit/26c663ce91a6b3f35e62ce6aca477f577a77b7bc))
+
 ## [1.21.1](https://github.com/Kong/spec-renderer/compare/v1.21.0...v1.21.1) (2024-06-12)
 
 
