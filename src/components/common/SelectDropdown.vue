@@ -1,7 +1,6 @@
 <template>
   <div
     class="select-dropdown-container"
-    :class="$attrs.class"
     data-testid="select-dropdown-container"
     @click="selectDropdown?.showPicker()"
   >
