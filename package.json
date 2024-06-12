@@ -58,7 +58,6 @@
     "httpsnippet-lite": "^3.0.5",
     "json-schema": "^0.4.0",
     "lodash": "^4.17.21",
-    "oas": "link:@stoplight/http-spec/oas",
     "oas-normalize": "^11.1.0",
     "openapi3-ts": "4.3.2",
     "shiki": "^1.6.1"
