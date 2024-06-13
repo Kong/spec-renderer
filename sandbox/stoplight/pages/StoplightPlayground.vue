@@ -51,7 +51,6 @@ const { load } = useScriptTag(
 )
 
 const sampleSpecSelected = (sampleSpecUrl : string) => {
-  // @ts-ignore
   specRenderer.value.basePath = '/spec-renderer/stoplight'
   specRenderer.value.router = 'history'
   specRenderer.value.apiDescriptionDocument = ''
@@ -66,7 +65,6 @@ const sampleSpecUploaded = (sampleSpecText: string) => {
 
 const layoutChanged = (e) => {
   if (specRenderer.value) {
-    // @ts-ignore
     specRenderer.value.layout = e.target.value
   }
 }

@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck external file
 import { slugify } from '../../../elements-core/utils/string'
 import type {
   Oas2HttpOperationTransformer,

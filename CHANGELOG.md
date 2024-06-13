@@ -1,3 +1,17 @@
+## [1.23.1](https://github.com/Kong/spec-renderer/compare/v1.23.0...v1.23.1) (2024-06-13)
+
+
+### Bug Fixes
+
+* lint and typecheck warnings ([#131](https://github.com/Kong/spec-renderer/issues/131)) ([82ba8d4](https://github.com/Kong/spec-renderer/commit/82ba8d401e8fe6ff356aebd7c29bb7073510c412))
+
+# [1.23.0](https://github.com/Kong/spec-renderer/compare/v1.22.1...v1.23.0) (2024-06-13)
+
+
+### Features
+
+* server endpoint styling [KHCP-12132] ([#127](https://github.com/Kong/spec-renderer/issues/127)) ([ce49f2a](https://github.com/Kong/spec-renderer/commit/ce49f2ac264b5fd2dda6d41d7e84bfd3432458f4))
+
 ## [1.22.1](https://github.com/Kong/spec-renderer/compare/v1.22.0...v1.22.1) (2024-06-12)
 
 

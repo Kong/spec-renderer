@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck external file
 import type {
   TableOfContentsGroup,
   TableOfContentsItem,
@@ -14,7 +14,6 @@ import { NodeType } from '@stoplight/types'
 
 import type { OperationNode, SchemaNode, ServiceChildNode, ServiceNode, WebhookNode } from '../../utils/oas/types'
 
-// @ts-ignore
 const defaults = (...args) =>
   args.reverse().reduce((acc, obj) => ({ ...acc, ...obj }), {})
 
