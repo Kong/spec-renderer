@@ -59,7 +59,7 @@ export const extractSample = (paramData: IHttpPathParam[] | undefined): Record<s
  * @param data
  * @returns
  */
-export const getSamplePath = (data: IHttpOperation, fieldValues?: Record<string, string>|undefined) : string => {
+export const getSamplePath = (data: IHttpOperation, fieldValues?: Record<string, string> | undefined) : string => {
   if (!data.path) {
     return ''
   }

@@ -109,7 +109,7 @@ const selectedLangLibraries = computed(() => {
   }
 })
 
-const getFirstSampleKey = (examples: INodeExample[]): string|null => {
+const getFirstSampleKey = (examples: INodeExample[]): string | null => {
   if (Array.isArray(examples) && examples.length) {
     return examples[0].key
   } else {

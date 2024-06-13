@@ -73,7 +73,7 @@ const accessTokenChanged = (e: Event) => {
   emit('access-tokens-changed', authHeaders.value)
 }
 
-const security = computed((): HttpSecurityScheme[]|undefined => {
+const security = computed((): HttpSecurityScheme[] | undefined => {
   const secArray:Array<HttpSecurityScheme> = []
   if (props.data.security) {
     props.data.security.forEach((secGroup: HttpSecurityScheme[]) => {

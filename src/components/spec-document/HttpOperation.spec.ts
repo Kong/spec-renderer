@@ -82,7 +82,7 @@ describe('<HttpOperation />', () => {
     })
 
     it('is not rendered when server list is not defined in the spec', () => {
-      const data= {
+      const data = {
         id: '123',
         method: 'get',
         path: '/sample-path',

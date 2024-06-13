@@ -40,7 +40,7 @@ const props = defineProps({
     default: false,
   },
 })
-const serviceNode = ref<ServiceNode| null>(null)
+const serviceNode = ref<ServiceNode | null>(null)
 
 // to be consumed in multi-level child components
 provide<Ref<string>>('base-path', computed((): string => props.basePath))

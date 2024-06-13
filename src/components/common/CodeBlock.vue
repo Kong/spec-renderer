@@ -30,7 +30,7 @@ const props = defineProps({
   },
 })
 const { getHighlighter } = composables.useShiki()
-const highlighter =ref<HighlighterCore>()
+const highlighter = ref<HighlighterCore>()
 
 const getHighlightLanguage = (snippetLang: LanguageCode | null | undefined): string | null | undefined => {
   return requestSampleConfigs.find(c => c.httpSnippetLanguage === snippetLang)?.highlightLanguage
