@@ -39,6 +39,7 @@
             <ModelNode
               :data="parseSchema(content.schema)"
               :header-visible="false"
+              :title="content.schema.title"
             />
           </div>
         </CollapsibleSection>
