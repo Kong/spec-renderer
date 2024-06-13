@@ -1,3 +1,10 @@
+# [1.24.0](https://github.com/Kong/spec-renderer/compare/v1.23.1...v1.24.0) (2024-06-13)
+
+
+### Features
+
+* tryIt path parameters [KHCP-12157] ([#125](https://github.com/Kong/spec-renderer/issues/125)) ([750a707](https://github.com/Kong/spec-renderer/commit/750a7071269dcd611d1aff7ef31a53405a1ba6c5))
+
 ## [1.23.1](https://github.com/Kong/spec-renderer/compare/v1.23.0...v1.23.1) (2024-06-13)
 
 
