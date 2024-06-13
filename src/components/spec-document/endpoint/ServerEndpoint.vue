@@ -1,7 +1,7 @@
 <template>
   <div
     class="server-endpoint"
-    data-testid="server-endpoint"
+    :data-testid="`server-endpoint-${dataTestId}`"
   >
     <div class="current-endpoint">
       <MethodBadge
@@ -12,7 +12,7 @@
       <SelectDropdown
         v-if="serverUrlList.length > 1"
         class="server-select-dropdown"
-        data-testid="server-select-dropdown"
+        :data-testid="`server-dropdown-${dataTestId}`"
         dynamic-width
         :option-list="serverUrlList"
         :selected-option="selectedServerUrl"
@@ -28,7 +28,7 @@
       <div
         v-else
         class="server-url-with-path"
-        data-testid="server-url-with-path"
+        :data-testid="`server-url-${dataTestId}`"
       >
         <span>{{ selectedServerUrl }}</span>
         <span
@@ -43,13 +43,14 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { PropType } from 'vue'
 import { ChevronDownIcon } from '@kong/icons'
 import MethodBadge from '@/components/common/MethodBadge.vue'
 import CopyButton from '@/components/common/CopyButton.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 
-defineProps({
+const props = defineProps({
   method: {
     type: String,
     required: true,
@@ -71,6 +72,9 @@ defineProps({
 const emit = defineEmits<{
   (e: 'selected-server-changed', url: string): void
 }>()
+
+// unique id for a server-endpoint component
+const dataTestId = computed(() => `${props.method}-${props.serverUrlList[0]}-${props.path}`)
 
 function changeEndpointServer(url: string) {
   emit('selected-server-changed', url)

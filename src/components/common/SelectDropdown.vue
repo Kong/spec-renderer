@@ -1,7 +1,7 @@
 <template>
   <div
     class="select-dropdown-container"
-    data-testid="select-dropdown-container"
+    :data-testid="dataTestId"
     @click="selectDropdown?.showPicker()"
   >
     <select
@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import type { PropType } from 'vue'
 
 const props = defineProps({
@@ -45,6 +45,7 @@ const props = defineProps({
 })
 
 const selectDropdown = ref<HTMLSelectElement>()
+const dataTestId = computed(() => `select-dropdown-container-${props.optionList[0]}`)
 
 const emit = defineEmits<{
   (e: 'selected-option-changed', option: string): void
