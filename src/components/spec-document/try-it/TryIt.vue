@@ -130,7 +130,6 @@ const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 const doApiCall = async () => {
   try {
-    console.log('qqqqq',currentRequestPath.value)
     // Todo - deal with params and body
     response.value = await fetch(`${currentServerUrl.value}${currentRequestPath.value}`, {
       method: props.data.method,
