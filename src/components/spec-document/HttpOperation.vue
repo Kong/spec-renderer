@@ -12,6 +12,7 @@
       <ServerEndpoint
         v-if="serverList.length"
         class="http-operation-server-endpoint"
+        :data-testid="`server-endpoint-${data.id}`"
         :method="data.method"
         :path="data.path"
         :selected-server-url="selectedServerURL"

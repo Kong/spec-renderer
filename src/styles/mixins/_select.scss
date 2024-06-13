@@ -1,0 +1,12 @@
+@mixin default-select-reset {
+  /* for Firefox */
+  -moz-appearance: none;
+  /* for Chrome */
+  -webkit-appearance: none;
+  background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  outline: none;
+  padding: var(--kui-space-0, $kui-space-0);
+}
