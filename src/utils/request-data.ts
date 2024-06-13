@@ -49,7 +49,7 @@ export const extractSample = (paramData: IHttpPathParam[] | undefined): Record<s
         return
       }
     }
-
+    samples[d.name] = d.name
   })
   return samples
 }
