@@ -8,7 +8,9 @@
       :href="`${basePath}${item.id}`"
       @click.prevent="selectItem(item.id)"
     >
-      {{ item.title }}
+      <span class="node-item-title">
+        {{ item.title }}
+      </span>
 
       <MethodBadge
         v-if="item.type === NodeType.HttpOperation"
@@ -56,9 +58,11 @@ const isActive = computed(() => currentPath.value === props.item.id)
     @include toc-item;
 
     &.single-word {
-      @include truncate;
+      .node-item-title {
+        @include truncate;
 
-      display: block;
+        display: block;
+      }
     }
 
     .http-operation-badge {
