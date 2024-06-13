@@ -165,10 +165,9 @@ watch(() => ({
     newValue.authHeaders !== oldValue?.authHeaders) {
 
     // TODO: handle parameter / query change in url gracefully
-    const serverUrl = (newValue.serverUrl + newValue.requestPath).replace(/[{}]/g, '')
+    let serverUrl = (newValue.serverUrl + newValue.requestPath)
     let serverUrlValid = true
     try {
-
       new URL(serverUrl)
     } catch (e) {
       serverUrlValid = false

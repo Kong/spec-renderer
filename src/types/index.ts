@@ -4,3 +4,4 @@
 export * from './spec-renderer'
 export * from './request-languages'
 export * from './badges'
+export * from './request-param-types'

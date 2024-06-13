@@ -31,6 +31,7 @@ describe('<RequestSample />', () => {
           }],
         },
         serverUrl: 'https://global.api.konghq.com/v2',
+        requestPath: '/path',
       },
     })
     await flushPromises()

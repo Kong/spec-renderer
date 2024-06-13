@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="showTryIt"
     class="tryit-wrapper"
     :data-testid="`tryit-wrapper-${data.id}`"
   >
@@ -11,7 +12,6 @@
       <span class="path">{{ data.path }}</span>
 
       <TryItButton
-        v-if="showTryIt"
         class="tryit-btn"
         :data="data"
         @tryit-api-call="doApiCall"
@@ -79,6 +79,7 @@ import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import TryItAuth from './TryItAuth.vue'
 import TryItServer from './TryItServer.vue'
 import TryItParams from './TryItParams.vue'
+import { getSamplePath } from '@/utils'
 
 
 const props = defineProps({
@@ -107,7 +108,7 @@ const authHeaders = ref<Array<Record<string, string>>>()
 
 const currentServerUrl = ref<string>(props.serverUrl)
 
-const currentRequestPath = ref<string>(props.data.path)
+const currentRequestPath = ref<string>(getSamplePath(props.data))
 
 const requestPathChanged = (newPath: string) => {
   currentRequestPath.value = newPath
@@ -129,6 +130,7 @@ const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 const doApiCall = async () => {
   try {
+    console.log('qqqqq',currentRequestPath.value)
     // Todo - deal with params and body
     response.value = await fetch(`${currentServerUrl.value}${currentRequestPath.value}`, {
       method: props.data.method,
@@ -139,7 +141,7 @@ const doApiCall = async () => {
         acc[current.name] = current.value; return acc
       }, { }),
     })
-    responseText.value = JSON.stringify((await response.value.json()), null, 2)
+    responseText.value = JSON.stringify((await response.value?.json()), null, 2)
 
   } catch (error) {
     console.error(error)

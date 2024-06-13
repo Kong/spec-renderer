@@ -22,6 +22,7 @@
       </label>
       <input
         v-model="fieldValues[p.name]"
+        :data-testid="`tryit-path-param-${p.name}-${data.id}`"
       >
     </div>
   </CollapsablePanel>
@@ -32,7 +33,8 @@ import { computed, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpOperation, IHttpPathParam } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
-import { extractSample } from '@/utils'
+import { extractSample, getSamplePath } from '@/utils'
+import type { RequestParamTypes } from '@/types'
 
 /**
  * This components handles path parameters, query parameters and body.
@@ -44,7 +46,7 @@ const props = defineProps({
     required: true,
   },
   paramType: {
-    type: String as PropType<'path' | 'body' | 'query'>,
+    type: String as PropType<RequestParamTypes>,
     required: true,
   },
 })
@@ -60,13 +62,10 @@ const compTitles = {
 }
 
 const params = computed((): IHttpPathParam[] | undefined => {
-  console.log('qqqq', props.paramType)
   if (props.paramType === 'query') {
-
     return []
   }
   if (props.paramType === 'path') {
-    console.log('setting to ', props.data.request?.path)
     return props.data.request?.path
   }
   // this is for 'body'
@@ -79,25 +78,17 @@ const fieldValues = ref<Record<string, string>>({})
 // this is to calculate initial values for the fields
 watch(params, () => {
   const samples = extractSample(params.value)
-  console.log('aaaaaaa', params.value, samples)
   params.value?.forEach((p) => {
     fieldValues.value[p.name] = samples[p.name]
   })
-  console.log('final:', fieldValues.value)
 }, { immediate: true })
 
 // this is to fire event when fieldValues changed
 watch(fieldValues, () => {
   if (props.paramType === 'path') {
-    let newPath = props.data.path
-    Object.keys(fieldValues.value || {}).forEach(key => {
-
-      const fieldValue = fieldValues.value[key]
-      newPath = newPath.replaceAll(`{${key}}`, fieldValue)
-    })
-    emit('request-path-changed', newPath)
+    emit('request-path-changed', getSamplePath(props.data, fieldValues.value))
   }
-}, { immediate: true, deep: true })
+}, { deep: true })
 
 </script>
 

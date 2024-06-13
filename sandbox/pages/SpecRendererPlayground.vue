@@ -12,6 +12,13 @@
           type="checkbox"
         >
         <label for="hide-schemas">Hide schemas</label>
+        |
+        <input
+          id="hide-tryit"
+          v-model="hideTryIt"
+          type="checkbox"
+        >
+        <label for="hide-schemas">Hide TryIt</label>
       </div>
     </div>
     <SpecRenderer
@@ -19,6 +26,7 @@
       base-path="/spec-renderer"
       :current-path="currentPath"
       :hide-schemas="hideSchemas"
+      :hide-try-it="hideTryIt"
       :spec="specText"
       :spec-url="specUrl"
       :trace-parsing="true"
@@ -39,6 +47,7 @@ const specText = ref<string>('')
 const specUrl = ref<string>('')
 const currentPath = ref<string>(route.path)
 const hideSchemas = ref<boolean>(false)
+const hideTryIt = ref<boolean>(false)
 
 const sampleSpecSelected = async (sampleSpecUrl: string, resetPath: boolean) => {
   specText.value = ''
