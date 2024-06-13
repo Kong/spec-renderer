@@ -1,6 +1,6 @@
 <template>
   <div data-testid="endpoint-body-content-list">
-    <h4>Body</h4>
+    <h2>Body</h2>
 
     <p v-if="description">
       {{ description }}
@@ -14,7 +14,16 @@
         v-if="content.schema"
         :data="parseSchema(content.schema)"
         :title="content.schema.title ?? defaultModelTitle"
-      />
+      >
+        <div>
+          <h3 v-if="content.schema.title">
+            {{ content.schema.title }}
+          </h3>
+          <p v-if="content.schema.description">
+            {{ content.schema.description }}
+          </p>
+        </div>
+      </ModelNode>
     </template>
   </div>
 </template>

@@ -3,11 +3,13 @@
     class="spec-model-node"
     :data-testid="dataTestId"
   >
-    <PageHeader
-      class="spec-model-node-header"
-      :description="data.description"
-      :title="title"
-    />
+    <slot>
+      <PageHeader
+        class="spec-model-node-header"
+        :description="data.description"
+        :title="title"
+      />
+    </slot>
 
     <div
       v-if="modelPropertyProps"
