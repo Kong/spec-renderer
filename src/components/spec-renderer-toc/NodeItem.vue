@@ -15,6 +15,7 @@
       <MethodBadge
         v-if="item.type === NodeType.HttpOperation"
         class="http-operation-badge"
+        :inverted="isActive"
         :method="item.meta"
       />
     </a>

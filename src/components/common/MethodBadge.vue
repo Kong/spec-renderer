@@ -1,7 +1,7 @@
 <template>
   <span
     class="method-badge"
-    :class="[method, size]"
+    :class="[method, size, { inverted: inverted }]"
     data-testid="method-badge"
   >
     {{ method }}
@@ -28,6 +28,13 @@ defineProps({
     validator: (value: BadgeSize): boolean => {
       return BadgeSizeVariants.includes(value)
     },
+  },
+  /**
+   * Invert the badge colors
+   */
+  inverted: {
+    type: Boolean,
+    default: false,
   },
 })
 </script>
@@ -88,10 +95,12 @@ defineProps({
   }
 
   /* Sizes */
+
   &.small {
     font-size: var(--kui-font-size-10, $kui-font-size-10);
     padding: var(--kui-space-0, $kui-space-0) var(--kui-space-30, $kui-space-30);
   }
+
   &.large {
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
