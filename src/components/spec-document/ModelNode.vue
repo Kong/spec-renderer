@@ -58,6 +58,8 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  // used when only properties, oneOf and anyOf are to be rendered, without title or description
+  // e.g. in request body
   headerVisible: {
     type: Boolean,
     default: true,
