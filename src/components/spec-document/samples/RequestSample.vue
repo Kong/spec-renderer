@@ -165,7 +165,7 @@ watch(() => ({
     newValue.authHeaders !== oldValue?.authHeaders) {
 
     // TODO: handle parameter / query change in url gracefully
-    let serverUrl = (newValue.serverUrl + newValue.requestPath)
+    let serverUrl = (newValue.serverUrl + newValue.requestPath).replaceAll('{', '').replaceAll('}', '')
     let serverUrlValid = true
     try {
       new URL(serverUrl)

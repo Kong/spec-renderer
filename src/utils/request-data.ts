@@ -74,5 +74,5 @@ export const getSamplePath = (data: IHttpOperation, fieldValues?: Record<string,
     const fieldValue = myFieldValues[key]
     newPath = newPath.replaceAll(`{${key}}`, fieldValue)
   })
-  return newPath
+  return newPath.replaceAll('{', '').replaceAll('}', '')
 }
