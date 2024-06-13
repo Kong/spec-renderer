@@ -169,12 +169,7 @@ const nestedPropertiesPresent = computed(() => Object.keys(resolvedModelProperty
 
   .model-property-fields {
     padding: var(--kui-space-40, $kui-space-40);
-    padding-left: var(--kui-space-60, $kui-space-60);
-
-    // if the property is expandable we need zero padding to accomodate the chevron icon
-    &.nested-properties-present {
-      padding-left: var(--kui-space-0, $kui-space-0);
-    }
+    padding-left: var(--kui-space-0, $kui-space-0);
   }
 
   summary.model-property-fields {

@@ -72,9 +72,5 @@ const dataTestId = computed(() => `model-node-${props.title.replaceAll(' ', '-')
   .spec-model-node-header {
     margin-bottom: var(--kui-space-80, $kui-space-80);
   }
-
-  .spec-model-node-properties {
-    @include tree-nesting
-  }
 }
 </style>
