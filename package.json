@@ -60,7 +60,7 @@
     "lodash": "^4.17.21",
     "oas-normalize": "^11.1.0",
     "openapi3-ts": "4.3.2",
-    "shiki": "^1.6.1"
+    "shiki": "^1.6.2"
   },
   "resolutions": {
     "openapi3-ts": "4.3.2"
@@ -70,14 +70,14 @@
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
-    "@evilmartians/lefthook": "^1.6.14",
+    "@evilmartians/lefthook": "^1.6.15",
     "@kong/design-tokens": "^1.13.2",
     "@kong/eslint-config-kong-ui": "1.0.3",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@types/jsdom": "^21.1.7",
     "@types/json-schema": "^7.0.15",
-    "@types/node": "^20.13.0",
+    "@types/node": "^20.14.0",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vitest/ui": "^1.6.0",
     "@vue/test-utils": "^2.4.6",
