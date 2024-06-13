@@ -48,11 +48,13 @@
           :data="data"
           :server-url="selectedServerURL"
           @access-tokens-changed="setAuthHeaders"
+          @request-path-changed="setRequestPath"
           @server-url-changed="setServerUrl"
         />
         <RequestSample
           :auth-headers="authHeaders"
           :data="data"
+          :request-path="currentRequestPath"
           :server-url="currentServerUrl"
         />
       </div>
@@ -70,6 +72,7 @@ import TryIt from './try-it/TryIt.vue'
 import RequestSample from './samples/RequestSample.vue'
 import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import PageHeader from '../common/PageHeader.vue'
+import { getSamplePath } from '@/utils'
 
 const props = defineProps({
   data: {
@@ -85,11 +88,17 @@ const setAuthHeaders = (newHeaders: Array<Record<string, string>>) => {
 // this is the server selected by user, defaults to first server in the list
 const selectedServerURL = ref<string>(props.data.servers?.[0]?.url ?? '')
 const currentServerUrl = ref<string>(props.data.servers?.[0]?.url ?? '')
+const currentRequestPath = ref<string>(getSamplePath(props.data))
 
-// this is fired when server url paramters in tryIt section getting changed
+// this is fired when server url parameters in tryIt section getting changed
 const setServerUrl = (newServerUrl: string) => {
   currentServerUrl.value = newServerUrl
 }
+
+const setRequestPath = (newPath: string) => {
+  currentRequestPath.value = newPath
+}
+
 const serverList = computed(() => props.data.servers?.map(server => server.url) ?? [])
 
 function updateSelectedServerURL(url: string) {

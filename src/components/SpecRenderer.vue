@@ -18,6 +18,7 @@
         :base-path="basePath"
         :current-path="currentPath"
         :document="parsedDocument"
+        :hide-try-it="hideTryIt"
         :json="jsonDocument"
       />
     </div>

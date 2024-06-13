@@ -43,10 +43,14 @@
           </option>
         </select>
       </template>
-      <CodeBlock
-        v-if="requestCode"
-        :code="requestCode as string"
-      />
+      <!-- body -->
+      <div class="wide">
+        <CodeBlock
+          v-if="requestCode && selectedLang"
+          :code="requestCode as string"
+          :lang="selectedLang"
+        />
+      </div>
     </CollapsablePanel>
   </div>
 </template>
@@ -58,10 +62,9 @@ import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet-lite'
 import { requestSampleConfigs } from '@/constants'
 import { getRequestHeaders } from '@/utils'
-import composables from '@/composables'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
-
+import type { LanguageCode } from '@/types/request-languages'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet-lite'
 
 const props = defineProps({
@@ -76,13 +79,15 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  requestPath: {
+    type: String,
+    required: true,
+  },
   authHeaders: {
     type: Array as PropType<Record<string, string>[]>,
     default: () => [],
   },
 })
-
-const { getHighlighter } = composables.useShiki()
 
 const requestConfigs = computed(() => {
   if (['get', 'delete'].includes(props.data.method) || requestSamples.value.length === 0) {
@@ -92,7 +97,7 @@ const requestConfigs = computed(() => {
   }
 })
 
-const selectedLang = ref<string>()
+const selectedLang = ref<LanguageCode>()
 
 const selectedLangLibrary = ref<string>()
 
@@ -104,7 +109,7 @@ const selectedLangLibraries = computed(() => {
   }
 })
 
-const getFirstSampleKey = (examples: INodeExample[]): string|null => {
+const getFirstSampleKey = (examples: INodeExample[]): string | null => {
   if (Array.isArray(examples) && examples.length) {
     return examples[0].key
   } else {
@@ -130,9 +135,6 @@ const snippet = ref<HTTPSnippetType>()
 
 const requestCode = ref<string | string[] | null>()
 
-const getHighlightLanguage = (snippetLang: string | null | undefined): string | null | undefined => {
-  return requestConfigs.value.find(c => c.httpSnippetLanguage === snippetLang)?.highlightLanguage
-}
 
 watch(() => ({
   method: props.data.method,
@@ -141,7 +143,7 @@ watch(() => ({
   lib: selectedLangLibrary.value,
   serverUrl: props.serverUrl,
   authHeaders: props.authHeaders,
-  requestPath: props.data.path,
+  requestPath: props.requestPath,
 }), async (newValue, oldValue) => {
   const jsonObj = (requestSamples.value as INodeExample[]).find(s => s.key === newValue.requestBodyKey)?.value
 
@@ -163,17 +165,16 @@ watch(() => ({
     newValue.authHeaders !== oldValue?.authHeaders) {
 
     // TODO: handle parameter / query change in url gracefully
-    const serverUrl = (newValue.serverUrl + newValue.requestPath).replace(/[{}]/g, '')
+    let serverUrl = (newValue.serverUrl + newValue.requestPath).replaceAll('{', '').replaceAll('}', '')
     let serverUrlValid = true
     try {
-
       new URL(serverUrl)
     } catch (e) {
       serverUrlValid = false
     }
 
     if (serverUrlValid) {
-      snippet.value = new HTTPSnippet({
+      const reqData: HarRequest = ({
         method: newValue.method,
         url: serverUrl,
         headers: [
@@ -186,26 +187,22 @@ watch(() => ({
         },
       } as unknown as HarRequest)
 
+      snippet.value = new HTTPSnippet(reqData)
+
       snippedChanged = true
     }
   }
 
-  // if our we do not have requestCode generated, or our lanf or lib are changed - we need to re-generate requestCode
+  // if we do not have requestCode generated, or our lanf or lib are changed - we need to re-generate requestCode
   if (!requestCode.value || snippedChanged || newValue.lang !== oldValue?.lang || newValue.lib !== oldValue?.lib) {
-    const highlighter = await getHighlighter()
     if (newValue.lang === 'json') {
-      requestCode.value = jsonObj ? highlighter.codeToHtml(JSON.stringify(jsonObj, null, 2), { lang: 'json', theme: 'material-theme-palenight' }) : null
+      requestCode.value = jsonObj ? JSON.stringify(jsonObj, null, 2) : null
     } else if (snippet.value) {
-      const code = await snippet.value.convert(newValue.lang as TargetId, newValue.lib)
-      const hightLightLang = getHighlightLanguage(newValue.lang)
-      if (hightLightLang) {
-        requestCode.value = highlighter.codeToHtml(code as string, { lang: hightLightLang, theme: 'material-theme-palenight' })
-      } else {
-        requestCode.value = code
-      }
+      requestCode.value = await snippet.value.convert((newValue.lang as TargetId), newValue.lib)
     }
   }
 }, { immediate: true, deep: true })
+
 </script>
 
 <style lang="scss" scoped>

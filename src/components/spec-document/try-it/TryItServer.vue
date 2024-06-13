@@ -9,35 +9,19 @@
       </h5>
     </template>
 
-    <template #left>
-      <div
-        v-for="v in leftVars"
-        :key="v.key"
+    <div
+      v-for="key in Object.keys(serverVariables)"
+      :key="key"
+      class="short"
+    >
+      <label>{{ key }}</label>
+      <input
+        v-model="fieldValues[key]"
+        :data-testid="`tryit-server-${key}-${data.id}`"
+        :placeholder="serverVariables[key].default"
+        :title="serverVariables[key].description"
       >
-        <label>{{ v.key }}</label>
-        <input
-          v-model="fieldValues[v.key]"
-          :data-testid="`tryit-server-${v.key}-${data.id}`"
-          :placeholder="v.value.default"
-          :title="v.value.description"
-        >
-      </div>
-    </template>
-
-    <template #right>
-      <div
-        v-for="v in rightVars"
-        :key="v.key"
-      >
-        <label>{{ v.key }}</label>
-        <input
-          v-model="fieldValues[v.key]"
-          :data-testid="`tryit-server-${v.key}-${data.id}`"
-          :placeholder="v.value.default"
-          :title="v.value.description"
-        >
-      </div>
-    </template>
+    </div>
   </CollapsablePanel>
 </template>
 
@@ -67,33 +51,7 @@ const serverVariables = computed((): Record<string, INodeVariable> | undefined =
   return props.data.servers?.find(s => s.url === props.serverUrl)?.variables
 })
 
-const leftVars = computed(() => {
-  const vArray = []
-  if (serverVariables.value) {
-    for (let i = 0; i< Object.keys(serverVariables.value).length; i+=2) {
-      const key = Object.keys(serverVariables.value)[i]
-      vArray.push({ key, value: serverVariables.value[key] })
-
-    }
-  }
-  return vArray
-})
-
-const rightVars = computed(() => {
-  const vArray = []
-  if (serverVariables.value) {
-    for (let i = 1; i < Object.keys(serverVariables.value).length; i += 2) {
-      const key = Object.keys(serverVariables.value)[i]
-      vArray.push({ key, value: serverVariables.value[key] })
-
-    }
-  }
-  return vArray
-})
-
 const fieldValues = ref<Record<string,string>>({})
-
-
 
 watch(fieldValues, () => {
   let newServerUrl = props.serverUrl

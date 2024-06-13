@@ -40,7 +40,7 @@ const props = defineProps({
     default: false,
   },
 })
-const serviceNode = ref<ServiceNode| null>(null)
+const serviceNode = ref<ServiceNode | null>(null)
 
 // to be consumed in multi-level child components
 provide<Ref<string>>('base-path', computed((): string => props.basePath))
@@ -50,7 +50,7 @@ provide<Ref<boolean>>('hide-tryit', computed((): boolean => props.hideTryIt))
 
 watch(() => ({ pathname: props.currentPath, document: props.document }), ({ pathname, document }) => {
   const isRootPath = !pathname || pathname === '/'
-  serviceNode.value = (isRootPath ? document : document.children.find((child:any) => child.uri === pathname)) as ServiceNode
+  serviceNode.value = <ServiceNode>(isRootPath ? document : document.children.find((child:any) => child.uri === pathname))
 }, { immediate: true })
 
 const docComponent = computed(() => {

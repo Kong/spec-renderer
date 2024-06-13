@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="showTryIt"
     class="tryit-wrapper"
     :data-testid="`tryit-wrapper-${data.id}`"
   >
@@ -11,7 +12,6 @@
       <span class="path">{{ data.path }}</span>
 
       <TryItButton
-        v-if="showTryIt"
         class="tryit-btn"
         :data="data"
         @tryit-api-call="doApiCall"
@@ -30,6 +30,22 @@
       @server-url-changed="serverUrlChanged"
     />
 
+    <TryItParams
+      :data="data"
+      param-type="path"
+      @request-path-changed="requestPathChanged"
+    />
+
+    <TryItParams
+      :data="data"
+      param-type="query"
+    />
+
+    <TryItParams
+      :data="data"
+      param-type="body"
+    />
+
     <CollapsablePanel
       v-if="response"
       :data-testid="`tryit-response-${data.id}`"
@@ -40,10 +56,13 @@
         </h5>
       </template>
 
-      <CodeBlock
-        v-if="responseText"
-        :code="responseText"
-      />
+      <div class="wide">
+        <CodeBlock
+          v-if="responseText"
+          :code="responseText"
+          lang="json"
+        />
+      </div>
     </CollapsablePanel>
   </div>
 </template>
@@ -53,13 +72,14 @@ import { inject, computed, ref, watch } from 'vue'
 import type { PropType, Ref } from 'vue'
 import TryItButton from './TryItButton.vue'
 import { getRequestHeaders } from '@/utils'
-import composables from '@/composables'
 import type { IHttpOperation } from '@stoplight/types'
 import MethodBadge from '@/components/common/MethodBadge.vue'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import TryItAuth from './TryItAuth.vue'
 import TryItServer from './TryItServer.vue'
+import TryItParams from './TryItParams.vue'
+import { getSamplePath } from '@/utils'
 
 
 const props = defineProps({
@@ -76,9 +96,10 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>): void
   (e: 'server-url-changed', serverUrl: string): void
+  (e: 'request-path-changed', newPath: string): void
+
 }>()
 
-const { getHighlighter } = composables.useShiki()
 
 const response = ref<Response | undefined>()
 const responseText = ref<string>()
@@ -86,6 +107,13 @@ const responseText = ref<string>()
 const authHeaders = ref<Array<Record<string, string>>>()
 
 const currentServerUrl = ref<string>(props.serverUrl)
+
+const currentRequestPath = ref<string>(getSamplePath(props.data))
+
+const requestPathChanged = (newPath: string) => {
+  currentRequestPath.value = newPath
+  emit('request-path-changed', newPath)
+}
 
 /*
 this is the result of emitting an event inside of TryItServer, when user changes server variables
@@ -103,7 +131,7 @@ const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 const doApiCall = async () => {
   try {
     // Todo - deal with params and body
-    response.value = await fetch(`${currentServerUrl.value}${props.data.path}`, {
+    response.value = await fetch(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''), {
       method: props.data.method,
       headers: [
         ...(authHeaders?.value || []),
@@ -112,8 +140,7 @@ const doApiCall = async () => {
         acc[current.name] = current.value; return acc
       }, { }),
     })
-    const highlighter = await getHighlighter()
-    responseText.value = highlighter.codeToHtml(JSON.stringify((await response.value.json()), null, 2), { lang: 'json', theme: 'material-theme-palenight' })
+    responseText.value = JSON.stringify((await response.value?.json()), null, 2)
 
   } catch (error) {
     console.error(error)
@@ -167,6 +194,10 @@ watch(() => ({
   box-sizing: border-box;
   padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
   width: 100%;
+}
+// required label
+:deep(label>span) {
+  color: var(--kui-color-text-danger, $kui-color-text-danger);
 }
 
 :deep(label) {

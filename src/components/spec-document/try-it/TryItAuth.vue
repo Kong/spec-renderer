@@ -14,7 +14,8 @@
       </h5>
     </template>
 
-    <template #left>
+    <!-- body -->
+    <div class="short">
       <label>Method</label>
       <select>
         <option
@@ -24,15 +25,15 @@
           {{ sec.key }} ({{ sec.type }})
         </option>
       </select>
-    </template>
+    </div>
 
-    <template #right>
+    <div class="short">
       <label>Access Token</label>
       <input
         placeholder="App credential"
         @keyup="accessTokenChanged"
       >
-    </template>
+    </div>
   </CollapsablePanel>
 </template>
 
@@ -72,7 +73,7 @@ const accessTokenChanged = (e: Event) => {
   emit('access-tokens-changed', authHeaders.value)
 }
 
-const security = computed((): HttpSecurityScheme[]|undefined => {
+const security = computed((): HttpSecurityScheme[] | undefined => {
   const secArray:Array<HttpSecurityScheme> = []
   if (props.data.security) {
     props.data.security.forEach((secGroup: HttpSecurityScheme[]) => {
@@ -85,3 +86,8 @@ const security = computed((): HttpSecurityScheme[]|undefined => {
 })
 </script>
 
+<style lang="scss" scoped>
+.kui-icon {
+  margin-right: var(--kui-space-30, $kui-space-30);
+}
+</style>
