@@ -8,38 +8,49 @@
         :method="method"
         size="large"
       />
-      <div
-        class="server-endpoint-url"
-        data-testid="server-endpoint-url-with-path"
+
+      <SelectDropdown
+        v-if="serverUrlList.length > 1"
+        class="server-select-dropdown"
+        :data-testid="`server-dropdown-${dataTestId}`"
+        dynamic-width
+        :option-list="serverUrlList"
+        :selected-option="selectedServerUrl"
+        @selected-option-changed="changeEndpointServer"
       >
-        <span>{{ selectedServerUrl }}</span><span>{{ path }}</span>
+        <span
+          class="endpoint-path"
+          data-testid="endpoint-path"
+        >{{ path }}</span>
+        <ChevronDownIcon size="20px" />
+      </SelectDropdown>
+
+      <div
+        v-else
+        class="server-url-with-path"
+        :data-testid="`server-url-${dataTestId}`"
+      >
+        <span>{{ selectedServerUrl }}</span>
+        <span
+          class="endpoint-path"
+          data-testid="endpoint-path"
+        >{{ path }}</span>
       </div>
     </div>
-    <div class="right">
-      <select
-        data-testid="endpoint-server-select"
-        name="endpoint-server"
-        @change="changeEndpointServer"
-      >
-        <option
-          v-for="serverURL in serverUrlList"
-          :key="serverURL"
-          :data-testid="`server-endpoint-option-${serverURL}`"
-          :selected="serverURL === selectedServerUrl"
-          :value="serverURL"
-        >
-          {{ serverURL }}
-        </option>
-      </select>
-    </div>
+
+    <CopyButton :content="selectedServerUrl+path" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { PropType } from 'vue'
+import { ChevronDownIcon } from '@kong/icons'
 import MethodBadge from '@/components/common/MethodBadge.vue'
+import CopyButton from '@/components/common/CopyButton.vue'
+import SelectDropdown from '@/components/common/SelectDropdown.vue'
 
-defineProps({
+const props = defineProps({
   method: {
     type: String,
     required: true,
@@ -62,8 +73,11 @@ const emit = defineEmits<{
   (e: 'selected-server-changed', url: string): void
 }>()
 
-function changeEndpointServer(event: Event) {
-  emit('selected-server-changed', (event.target as HTMLSelectElement).value)
+// unique id for a server-endpoint component
+const dataTestId = computed(() => `${props.method}-${props.serverUrlList[0]}-${props.path}`)
+
+function changeEndpointServer(url: string) {
+  emit('selected-server-changed', url)
 }
 </script>
 
@@ -76,10 +90,31 @@ function changeEndpointServer(event: Event) {
   justify-content: space-between;
   padding: var(--kui-space-50, $kui-space-50);
 
-  &>.current-endpoint {
+  >.current-endpoint {
     align-items: center;
     display: flex;
     gap: var(--kui-space-20, $kui-space-20);
+
+    .server-select-dropdown, .server-url-with-path {
+      gap: var(--kui-space-20, $kui-space-20);
+
+      // to target the select and options elements
+      >* {
+        color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+        font-family: var(--kui-font-family-code, $kui-font-family-code);
+        font-size: var(--kui-font-size-30, $kui-font-size-30);
+      }
+
+      .endpoint-path {
+        color: var(--kui-color-text, $kui-color-text);
+        font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+      }
+    }
+
+    .server-url-with-path {
+      align-items: center;
+      display: flex;
+    }
   }
 }
 </style>
