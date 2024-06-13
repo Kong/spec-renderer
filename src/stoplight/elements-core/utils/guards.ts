@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck external file
 import type { IHttpOperation, IHttpService, IHttpWebhookOperation, INode } from '@stoplight/types'
 import type { JSONSchema7 } from 'json-schema'
 import { isObject, isPlainObject } from 'lodash'
