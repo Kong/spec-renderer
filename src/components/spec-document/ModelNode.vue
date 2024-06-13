@@ -3,13 +3,12 @@
     class="spec-model-node"
     :data-testid="dataTestId"
   >
-    <slot>
-      <PageHeader
-        class="spec-model-node-header"
-        :description="data.description"
-        :title="title"
-      />
-    </slot>
+    <PageHeader
+      v-if="headerVisible"
+      class="spec-model-node-header"
+      :description="data.description"
+      :title="title"
+    />
 
     <div
       v-if="modelPropertyProps"
@@ -57,7 +56,11 @@ const props = defineProps({
   },
   title: {
     type: String,
-    required: true,
+    default: '',
+  },
+  headerVisible: {
+    type: Boolean,
+    default: true,
   },
 })
 

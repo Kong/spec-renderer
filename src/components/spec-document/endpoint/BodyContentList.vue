@@ -20,23 +20,28 @@
         v-for="content in contents"
         :key="content.id"
       >
-        <ModelNode
-          v-if="content.schema"
-          :data="parseSchema(content.schema)"
-          :title="content.schema.title ?? defaultModelTitle"
-        >
-          <div>
-            <h3
-              v-if="content.schema.title"
-              class="model-title"
-            >
-              {{ content.schema.title }}
+        <CollapsibleSection v-if="content.schema">
+          <template
+            v-if="content.schema?.title"
+            #title
+          >
+            <h3 class="request-body-model-title">
+              {{ content.schema?.title }}
             </h3>
-            <p v-if="content.schema.description">
-              {{ content.schema.description }}
+          </template>
+          <div class="request-body-model-content">
+            <p
+              v-if="content.schema?.description"
+              class="request-body-model-description"
+            >
+              {{ content.schema?.description }}
             </p>
+            <ModelNode
+              :data="parseSchema(content.schema)"
+              :header-visible="false"
+            />
           </div>
-        </ModelNode>
+        </CollapsibleSection>
       </template>
     </div>
   </CollapsibleSection>
@@ -92,9 +97,16 @@ function parseSchema(schema: SchemaObject) {
       margin-bottom: var(--kui-space-40, $kui-space-40);
     }
 
-    .model-title {
+    .request-body-model-title {
       font-size: var(--kui-font-size-30, $kui-font-size-30);
       line-height: var(--kui-line-height-30, $kui-line-height-30);
+    }
+
+    .request-body-model-content {
+      margin-top: var(--kui-space-50, $kui-space-50);
+      .request-body-model-description {
+        margin-bottom: var(--kui-space-40, $kui-space-40);
+      }
     }
   }
 
