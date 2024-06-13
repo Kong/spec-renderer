@@ -44,21 +44,22 @@ describe('<ServerEndpoint />', () => {
   describe('for single server', () => {
     const serverUrl = 'https://global.api.konghq.com/v2'
     const path = '/sample-path'
-    const wrapper = mount(ServerEndpoint, {
-      props: {
-        method: 'get',
-        path,
-        selectedServerUrl: serverUrl,
-        serverUrlList: [serverUrl],
-      },
-    })
+
+    const props = {
+      method: 'get',
+      path,
+      selectedServerUrl: serverUrl,
+      serverUrlList: [serverUrl],
+    }
+    const wrapper = mount(ServerEndpoint, { props })
 
     it('renders correctly with all required props', () => {
       // the component itself is rendered
       expect(wrapper.findTestId('server-endpoint').exists()).toBe(true)
 
       // the selected URL and path are correctly rendered
-      expect(wrapper.findTestId('server-url-with-path').text()).toBe(`${serverUrl}${path}`)
+      const testId = `server-url-${props.method}-${props.serverUrlList[0]}-${props.path}`
+      expect(wrapper.findTestId(testId).text()).toBe(`${serverUrl}${path}`)
     })
   })
 })

@@ -1,7 +1,7 @@
 <template>
   <div
     class="server-endpoint"
-    :data-testid="`server-endpoint-${dataTestId}`"
+    data-testid="server-endpoint"
   >
     <div class="current-endpoint">
       <MethodBadge
