@@ -12,7 +12,6 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import type { PropType } from 'vue'
 import composables from '@/composables'
 import { requestSampleConfigs } from '@/constants'
 import type { LanguageCode } from '@/types/request-languages'
