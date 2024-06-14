@@ -87,6 +87,11 @@ const props = defineProps({
     type: Array as PropType<Record<string, string>[]>,
     default: () => [],
   },
+  requestQuery: {
+    type: Object as PropType<URLSearchParams>,
+    default: () => {},
+  },
+
 })
 
 const requestConfigs = computed(() => {
@@ -144,6 +149,7 @@ watch(() => ({
   serverUrl: props.serverUrl,
   authHeaders: props.authHeaders,
   requestPath: props.requestPath,
+  requestQuery: props.requestQuery,
 }), async (newValue, oldValue) => {
   const jsonObj = (requestSamples.value as INodeExample[]).find(s => s.key === newValue.requestBodyKey)?.value
 
@@ -155,28 +161,26 @@ watch(() => ({
   if (newValue.lang !== oldValue?.lang) {
     selectedLangLibrary.value = selectedLangLibraries.value?.length ? selectedLangLibraries.value[0].httpSnippetLibrary : undefined
   }
-  let snippedChanged = false
+  let snippetError = false
+  let snippetChanged = false
 
   // if we selected new requestBody or if we do not have httpSNippet yet, we need to re-init it
   if (!snippet.value ||
     newValue.requestBodyKey !== oldValue?.requestBodyKey ||
     newValue.serverUrl !== oldValue.serverUrl ||
     newValue.requestPath !== oldValue.requestPath ||
+    newValue.requestQuery !== oldValue.requestQuery ||
     newValue.authHeaders !== oldValue?.authHeaders) {
 
-    // TODO: handle parameter / query change in url gracefully
-    let serverUrl = (newValue.serverUrl + newValue.requestPath).replaceAll('{', '').replaceAll('}', '')
-    let serverUrlValid = true
-    try {
-      new URL(serverUrl)
-    } catch (e) {
-      serverUrlValid = false
-    }
+    // TODO: handle body change gracefully
 
-    if (serverUrlValid) {
+    try {
+
+      let serverUrl = new URL((newValue.serverUrl + newValue.requestPath).replaceAll('{', '').replaceAll('}', ''))
+      serverUrl.search = newValue.requestQuery.toString()
       const reqData: HarRequest = ({
         method: newValue.method,
-        url: serverUrl,
+        url: serverUrl.toString(),
         headers: [
           ...newValue.authHeaders,
           ...getRequestHeaders(props.data),
@@ -189,16 +193,21 @@ watch(() => ({
 
       snippet.value = new HTTPSnippet(reqData)
 
-      snippedChanged = true
+      snippetChanged = true
+    } catch {
+      snippetError = true
     }
   }
-
-  // if we do not have requestCode generated, or our lanf or lib are changed - we need to re-generate requestCode
-  if (!requestCode.value || snippedChanged || newValue.lang !== oldValue?.lang || newValue.lib !== oldValue?.lib) {
-    if (newValue.lang === 'json') {
-      requestCode.value = jsonObj ? JSON.stringify(jsonObj, null, 2) : null
-    } else if (snippet.value) {
-      requestCode.value = await snippet.value.convert((newValue.lang as TargetId), newValue.lib)
+  if (snippetError) {
+    requestCode.value = 'Error initializing code snippet'
+  } else {
+    // if we do not have requestCode generated, or our lanf or lib are changed - we need to re-generate requestCode
+    if (!requestCode.value || snippetChanged || newValue.lang !== oldValue?.lang || newValue.lib !== oldValue?.lib) {
+      if (newValue.lang === 'json') {
+        requestCode.value = jsonObj ? JSON.stringify(jsonObj, null, 2) : null
+      } else if (snippet.value) {
+        requestCode.value = await snippet.value.convert((newValue.lang as TargetId), newValue.lib)
+      }
     }
   }
 }, { immediate: true, deep: true })

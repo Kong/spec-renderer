@@ -39,6 +39,7 @@
     <TryItParams
       :data="data"
       param-type="query"
+      @request-query-changed="requestQueryChanged"
     />
 
     <TryItParams
@@ -79,7 +80,7 @@ import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import TryItAuth from './TryItAuth.vue'
 import TryItServer from './TryItServer.vue'
 import TryItParams from './TryItParams.vue'
-import { getSamplePath } from '@/utils'
+import { getSamplePath, getSampleQuery } from '@/utils'
 
 
 const props = defineProps({
@@ -97,7 +98,7 @@ const emit = defineEmits<{
   (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>): void
   (e: 'server-url-changed', serverUrl: string): void
   (e: 'request-path-changed', newPath: string): void
-
+  (e: 'request-query-changed', newPath: URLSearchParams): void
 }>()
 
 
@@ -110,9 +111,16 @@ const currentServerUrl = ref<string>(props.serverUrl)
 
 const currentRequestPath = ref<string>(getSamplePath(props.data))
 
+const currentRequestQuery = ref<URLSearchParams>(getSampleQuery(props.data))
+
 const requestPathChanged = (newPath: string) => {
   currentRequestPath.value = newPath
   emit('request-path-changed', newPath)
+}
+
+const requestQueryChanged = (newQuery: URLSearchParams) => {
+  currentRequestQuery.value = newQuery
+  emit('request-query-changed', newQuery)
 }
 
 /*
@@ -130,8 +138,10 @@ const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 const doApiCall = async () => {
   try {
-    // Todo - deal with params and body
-    response.value = await fetch(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''), {
+    // Todo - deal with  body
+    const url = new URL(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''))
+    url.search = currentRequestQuery.value?.toString()
+    response.value = await fetch(url, {
       method: props.data.method,
       headers: [
         ...(authHeaders?.value || []),

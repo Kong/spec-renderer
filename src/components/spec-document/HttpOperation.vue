@@ -49,12 +49,14 @@
           :server-url="selectedServerURL"
           @access-tokens-changed="setAuthHeaders"
           @request-path-changed="setRequestPath"
+          @request-query-changed="setRequestQuery"
           @server-url-changed="setServerUrl"
         />
         <RequestSample
           :auth-headers="authHeaders"
           :data="data"
           :request-path="currentRequestPath"
+          :request-query="currentRequestQuery"
           :server-url="currentServerUrl"
         />
       </div>
@@ -72,7 +74,7 @@ import TryIt from './try-it/TryIt.vue'
 import RequestSample from './samples/RequestSample.vue'
 import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import PageHeader from '../common/PageHeader.vue'
-import { getSamplePath } from '@/utils'
+import { getSamplePath, getSampleQuery } from '@/utils'
 
 const props = defineProps({
   data: {
@@ -89,6 +91,7 @@ const setAuthHeaders = (newHeaders: Array<Record<string, string>>) => {
 const selectedServerURL = ref<string>(props.data.servers?.[0]?.url ?? '')
 const currentServerUrl = ref<string>(props.data.servers?.[0]?.url ?? '')
 const currentRequestPath = ref<string>(getSamplePath(props.data))
+const currentRequestQuery = ref<URLSearchParams>(getSampleQuery(props.data))
 
 // this is fired when server url parameters in tryIt section getting changed
 const setServerUrl = (newServerUrl: string) => {
@@ -97,6 +100,9 @@ const setServerUrl = (newServerUrl: string) => {
 
 const setRequestPath = (newPath: string) => {
   currentRequestPath.value = newPath
+}
+const setRequestQuery = (newQuery: URLSearchParams) => {
+  currentRequestQuery.value = newQuery
 }
 
 const serverList = computed(() => props.data.servers?.map(server => server.url) ?? [])

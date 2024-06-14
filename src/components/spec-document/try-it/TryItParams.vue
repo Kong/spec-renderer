@@ -32,9 +32,9 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import type { PropType } from 'vue'
-import type { IHttpOperation, IHttpPathParam } from '@stoplight/types'
+import type { IHttpOperation, IHttpPathParam, IHttpQueryParam } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
-import { extractSample, getSamplePath } from '@/utils'
+import { extractSample, getSamplePath, getSampleQuery } from '@/utils'
 import type { RequestParamTypes } from '@/types'
 
 /**
@@ -54,6 +54,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'request-path-changed', newPath: string): void
+  (e: 'request-query-changed', newQuery: URLSearchParams): void
 }>()
 
 const compTitles = {
@@ -62,9 +63,9 @@ const compTitles = {
   body: 'Body',
 }
 
-const params = computed((): IHttpPathParam[] | undefined => {
+const params = computed((): IHttpPathParam[] | IHttpQueryParam[]| undefined => {
   if (props.paramType === 'query') {
-    return []
+    return props.data.request?.query
   }
   if (props.paramType === 'path') {
     return props.data.request?.path
@@ -88,6 +89,10 @@ watch(params, () => {
 watch(fieldValues, () => {
   if (props.paramType === 'path') {
     emit('request-path-changed', getSamplePath(props.data, fieldValues.value))
+    return
+  }
+  if (props.paramType === 'query') {
+    emit('request-query-changed', getSampleQuery(props.data, fieldValues.value))
   }
 }, { deep: true })
 
