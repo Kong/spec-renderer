@@ -1,3 +1,10 @@
+# [1.27.0](https://github.com/Kong/spec-renderer/compare/v1.26.2...v1.27.0) (2024-06-14)
+
+
+### Features
+
+* query parameters in tryIt and request sample [KHCP-12157] ([#135](https://github.com/Kong/spec-renderer/issues/135)) ([daf303f](https://github.com/Kong/spec-renderer/commit/daf303f588e1b254e01027fc929e7fcfbba2ab1f))
+
 ## [1.26.2](https://github.com/Kong/spec-renderer/compare/v1.26.1...v1.26.2) (2024-06-14)
 
 
