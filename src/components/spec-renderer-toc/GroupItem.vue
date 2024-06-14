@@ -63,7 +63,7 @@ const selectItem = (id: any) => {
   emit('item-selected', id)
 }
 
-const isExpanded = ref<boolean>(props.item.hideTitle || props.item.expanded)
+const isExpanded = ref<boolean>(props.item.hideTitle || props.item.initiallyExpanded)
 const collapseTriggerRef = ref<HTMLElement | null>(null)
 
 const onClick = (event: Event) => {
