@@ -54,7 +54,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'request-path-changed', newPath: string): void
-  (e: 'request-query-changed', newQuery: URLSearchParams): void
+  (e: 'request-query-changed', newQuery: string): void
 }>()
 
 const compTitles = {

@@ -6,11 +6,6 @@ import type { RequestSampleConfigs } from './types'
 */
 export const requestSampleConfigs: RequestSampleConfigs = [
   {
-    label: 'JSON (body)',
-    httpSnippetLanguage: 'json',
-    highlightLanguage: 'json',
-  },
-  {
     label: 'Shell',
     httpSnippetLanguage: 'shell',
     highlightLanguage: 'fish',
@@ -24,6 +19,11 @@ export const requestSampleConfigs: RequestSampleConfigs = [
     //     httpSnippetLibrary: 'wget',
     //   },
     // ],
+  },
+  {
+    label: 'JSON (body)',
+    httpSnippetLanguage: 'json',
+    highlightLanguage: 'json',
   },
   {
     label: 'Python',

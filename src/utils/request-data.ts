@@ -82,7 +82,7 @@ export const getSamplePath = (data: IHttpOperation, fieldValues?: Record<string,
  * @param fieldValues user inputs
  * @returns query string
  */
-export const getSampleQuery = (data: IHttpOperation, fieldValues?: Record<string, string> | undefined): URLSearchParams => {
+export const getSampleQuery = (data: IHttpOperation, fieldValues?: Record<string, string> | undefined): string => {
 
   const myFieldValues = fieldValues || extractSample(data.request?.query) || {}
   const urlParams = new URLSearchParams()
@@ -91,5 +91,5 @@ export const getSampleQuery = (data: IHttpOperation, fieldValues?: Record<string
     urlParams.append(key, myFieldValues[key])
   })
 
-  return urlParams
+  return urlParams.toString()
 }

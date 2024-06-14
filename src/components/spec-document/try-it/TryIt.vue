@@ -98,7 +98,7 @@ const emit = defineEmits<{
   (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>): void
   (e: 'server-url-changed', serverUrl: string): void
   (e: 'request-path-changed', newPath: string): void
-  (e: 'request-query-changed', newPath: URLSearchParams): void
+  (e: 'request-query-changed', newPath: string): void
 }>()
 
 
@@ -109,16 +109,16 @@ const authHeaders = ref<Array<Record<string, string>>>()
 
 const currentServerUrl = ref<string>(props.serverUrl)
 
-const currentRequestPath = ref<string>(getSamplePath(props.data))
+const currentRequestPath = ref<string>()
 
-const currentRequestQuery = ref<URLSearchParams>(getSampleQuery(props.data))
+const currentRequestQuery = ref<string>()
 
 const requestPathChanged = (newPath: string) => {
   currentRequestPath.value = newPath
   emit('request-path-changed', newPath)
 }
 
-const requestQueryChanged = (newQuery: URLSearchParams) => {
+const requestQueryChanged = (newQuery: string) => {
   currentRequestQuery.value = newQuery
   emit('request-query-changed', newQuery)
 }
@@ -140,7 +140,7 @@ const doApiCall = async () => {
   try {
     // Todo - deal with  body
     const url = new URL(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''))
-    url.search = currentRequestQuery.value?.toString()
+    url.search = currentRequestQuery.value
     response.value = await fetch(url, {
       method: props.data.method,
       headers: [

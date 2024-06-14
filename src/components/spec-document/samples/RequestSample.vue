@@ -88,8 +88,8 @@ const props = defineProps({
     default: () => [],
   },
   requestQuery: {
-    type: Object as PropType<URLSearchParams>,
-    default: () => {},
+    type: String,
+    default: '',
   },
 
 })
@@ -177,7 +177,7 @@ watch(() => ({
     try {
 
       let serverUrl = new URL((newValue.serverUrl + newValue.requestPath).replaceAll('{', '').replaceAll('}', ''))
-      serverUrl.search = newValue.requestQuery.toString()
+      serverUrl.search = newValue.requestQuery
       const reqData: HarRequest = ({
         method: newValue.method,
         url: serverUrl.toString(),

@@ -52,6 +52,7 @@
           @request-query-changed="setRequestQuery"
           @server-url-changed="setServerUrl"
         />
+        aaa: {{ currentRequestQuery }}
         <RequestSample
           :auth-headers="authHeaders"
           :data="data"
@@ -65,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpOperation } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
@@ -91,7 +92,7 @@ const setAuthHeaders = (newHeaders: Array<Record<string, string>>) => {
 const selectedServerURL = ref<string>(props.data.servers?.[0]?.url ?? '')
 const currentServerUrl = ref<string>(props.data.servers?.[0]?.url ?? '')
 const currentRequestPath = ref<string>(getSamplePath(props.data))
-const currentRequestQuery = ref<URLSearchParams>(getSampleQuery(props.data))
+const currentRequestQuery = ref<string>(getSampleQuery(props.data))
 
 // this is fired when server url parameters in tryIt section getting changed
 const setServerUrl = (newServerUrl: string) => {
@@ -101,7 +102,7 @@ const setServerUrl = (newServerUrl: string) => {
 const setRequestPath = (newPath: string) => {
   currentRequestPath.value = newPath
 }
-const setRequestQuery = (newQuery: URLSearchParams) => {
+const setRequestQuery = (newQuery: string) => {
   currentRequestQuery.value = newQuery
 }
 
