@@ -74,7 +74,7 @@ import TryIt from './try-it/TryIt.vue'
 import RequestSample from './samples/RequestSample.vue'
 import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import PageHeader from '../common/PageHeader.vue'
-import { getSamplePath, getSampleQuery } from '@/utils'
+import { getSamplePath, getSampleQuery, removeTrailingSlash } from '@/utils'
 
 const props = defineProps({
   data: {
@@ -87,9 +87,12 @@ const authHeaders = ref<Array<Record<string, string>>>()
 const setAuthHeaders = (newHeaders: Array<Record<string, string>>) => {
   authHeaders.value = newHeaders
 }
+
+const serverList = computed(() => props.data.servers?.map(server => removeTrailingSlash(server.url)) ?? [])
+
 // this is the server selected by user, defaults to first server in the list
-const selectedServerURL = ref<string>(props.data.servers?.[0]?.url ?? '')
-const currentServerUrl = ref<string>(props.data.servers?.[0]?.url ?? '')
+const selectedServerURL = ref<string>(serverList.value?.[0] ?? '')
+const currentServerUrl = ref<string>(serverList.value?.[0] ?? '')
 const currentRequestPath = ref<string>('')
 const currentRequestQuery = ref<string>('')
 
@@ -105,7 +108,6 @@ const setRequestQuery = (newQuery: string) => {
   currentRequestQuery.value = newQuery
 }
 
-const serverList = computed(() => props.data.servers?.map(server => server.url) ?? [])
 
 function updateSelectedServerURL(url: string) {
   selectedServerURL.value = url

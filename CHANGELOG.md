@@ -1,3 +1,10 @@
+# [1.26.0](https://github.com/Kong/spec-renderer/compare/v1.25.0...v1.26.0) (2024-06-14)
+
+
+### Features
+
+* removing trailing slash from server endpoint URL ([#132](https://github.com/Kong/spec-renderer/issues/132)) ([9cc3679](https://github.com/Kong/spec-renderer/commit/9cc36799d1b1e1271d14e549ed6dcd92ec2a5f29))
+
 # [1.25.0](https://github.com/Kong/spec-renderer/compare/v1.24.1...v1.25.0) (2024-06-14)
 
 
