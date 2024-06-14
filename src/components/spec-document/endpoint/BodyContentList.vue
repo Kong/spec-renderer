@@ -20,7 +20,10 @@
         v-for="content in contents"
         :key="content.id"
       >
-        <CollapsibleSection v-if="content.schema">
+        <CollapsibleSection
+          v-if="content.schema?.title"
+          :border-visible="false"
+        >
           <template
             v-if="content.schema.title"
             #title
