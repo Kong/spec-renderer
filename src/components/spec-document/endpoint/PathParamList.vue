@@ -1,28 +1,34 @@
 <template>
-  <div
+  <CollapsibleSection
     class="path-param-list"
     data-testid="endpoint-path-param-list"
   >
-    <h5>Path Parameters</h5>
-    <div
-      v-for="pathParam in pathParamList"
-      :key="pathParam.id"
-      class="path-param-list-item"
-    >
-      <ModelProperty
-        v-if="pathParam.schema"
-        :property="{...pathParam.schema, ...populatePathParamProperty(pathParam) }"
-        :property-name="pathParam.name"
-        :required-fields="pathParamItemRequiredFields(pathParam)"
-      />
+    <template #title>
+      <h5 class="path-param-list-title">
+        Path Parameters
+      </h5>
+    </template>
+    <div class="path-param-list-items">
+      <template
+        v-for="pathParam in pathParamList"
+        :key="pathParam.id"
+      >
+        <ModelProperty
+          v-if="pathParam.schema"
+          :property="{...pathParam.schema, ...populatePathParamProperty(pathParam) }"
+          :property-name="pathParam.name"
+          :required-fields="pathParamItemRequiredFields(pathParam)"
+        />
+      </template>
     </div>
-  </div>
+  </CollapsibleSection>
 </template>
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import type { IHttpPathParam } from '@stoplight/types'
-import ModelProperty from '../ModelProperty.vue'
+import ModelProperty from '../schema-model/ModelProperty.vue'
+import CollapsibleSection from './CollapsibleSection.vue'
 import type { SchemaObject } from '@/types'
 
 defineProps({
@@ -57,3 +63,17 @@ const pathParamItemRequiredFields = (pathParam: IHttpPathParam) => {
   return pathParam.required ? [pathParam.name] : []
 }
 </script>
+
+<style lang="scss" scoped>
+.path-param-list {
+  .path-param-list-title {
+    font-size: var(--kui-font-size-40, $kui-font-size-40);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    line-height: var(--kui-line-height-40, $kui-line-height-40);
+  }
+  .path-param-list-items {
+    padding-bottom: var(--kui-space-60, $kui-space-60);
+    padding-top: var(--kui-space-40, $kui-space-40);
+  }
+}
+</style>

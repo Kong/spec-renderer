@@ -3,24 +3,19 @@
     class="spec-renderer-page-header"
     data-testid="spec-renderer-page-header"
   >
-    <div
-      :class="{ 'page-header-with-footer': $slots.default }"
-      data-testid="spec-renderer-page-header-content"
+    <h1
+      class="page-header-title"
+      data-testid="spec-renderer-page-header-title"
     >
-      <h1
-        class="page-header-title"
-        data-testid="spec-renderer-page-header-title"
-      >
-        {{ title }}
-      </h1>
-      <p
-        v-if="description"
-        class="page-header-description"
-        data-testid="spec-renderer-page-header-description"
-      >
-        {{ description }}
-      </p>
-    </div>
+      {{ title }}
+    </h1>
+    <p
+      v-if="description"
+      class="page-header-description"
+      data-testid="spec-renderer-page-header-description"
+    >
+      {{ description }}
+    </p>
     <slot />
   </div>
 </template>
@@ -48,11 +43,10 @@ defineProps({
   .page-header-description {
     font-size: var(--kui-font-size-30, $kui-font-size-30);
     line-height: var(--kui-line-height-40, $kui-line-height-40);
-    margin-top: var(--kui-space-60, $kui-space-60);
   }
 
-  .page-header-with-footer {
-    margin-bottom: var(--kui-space-80, $kui-space-80);
+  > :not(:first-child) {
+    margin-top: var(--kui-space-60, $kui-space-60);
   }
 }
 </style>
