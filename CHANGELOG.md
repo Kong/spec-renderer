@@ -1,3 +1,10 @@
+# [1.25.0](https://github.com/Kong/spec-renderer/compare/v1.24.1...v1.25.0) (2024-06-14)
+
+
+### Features
+
+* endpoint request styling [KHCP-12165] ([#130](https://github.com/Kong/spec-renderer/issues/130)) ([48969e7](https://github.com/Kong/spec-renderer/commit/48969e7b2eaa142fc5e4d48bda2be4dc5cccb217))
+
 ## [1.24.1](https://github.com/Kong/spec-renderer/compare/v1.24.0...v1.24.1) (2024-06-14)
 
 
