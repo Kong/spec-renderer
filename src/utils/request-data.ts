@@ -1,4 +1,4 @@
-import type { IHttpOperation, IHttpPathParam } from '@stoplight/types'
+import type { IHttpOperation, IHttpPathParam, IHttpQueryParam } from '@stoplight/types'
 
 const getAcceptHeader = (data: IHttpOperation): string => {
   const headers = new Set()
@@ -31,7 +31,7 @@ export const getRequestHeaders = (data: IHttpOperation):Array<Record<string, str
  * @param paramData
  * @returns objct key - field name| value - field sample value
  */
-export const extractSample = (paramData: IHttpPathParam[] | undefined): Record<string, any> => {
+export const extractSample = (paramData: IHttpPathParam[] | IHttpQueryParam[] | undefined): Record<string, any> => {
   const samples = <Record<string, any>>{}
 
   paramData?.forEach(d => {
@@ -75,4 +75,21 @@ export const getSamplePath = (data: IHttpOperation, fieldValues?: Record<string,
     newPath = newPath.replaceAll(`{${key}}`, fieldValue)
   })
   return newPath.replaceAll('{', '').replaceAll('}', '')
+}
+
+/**
+ * @param data Generates query from query data and user inputs
+ * @param fieldValues user inputs
+ * @returns query string
+ */
+export const getSampleQuery = (data: IHttpOperation, fieldValues?: Record<string, string> | undefined): string => {
+
+  const myFieldValues = fieldValues || extractSample(data.request?.query) || {}
+  const urlParams = new URLSearchParams()
+
+  Object.keys(myFieldValues).forEach(key => {
+    urlParams.append(key, myFieldValues[key])
+  })
+
+  return urlParams.toString()
 }

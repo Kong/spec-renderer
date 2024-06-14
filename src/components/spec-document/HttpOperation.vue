@@ -49,12 +49,14 @@
           :server-url="selectedServerURL"
           @access-tokens-changed="setAuthHeaders"
           @request-path-changed="setRequestPath"
+          @request-query-changed="setRequestQuery"
           @server-url-changed="setServerUrl"
         />
         <RequestSample
           :auth-headers="authHeaders"
           :data="data"
           :request-path="currentRequestPath"
+          :request-query="currentRequestQuery"
           :server-url="currentServerUrl"
         />
       </div>
@@ -63,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpOperation } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
@@ -72,8 +74,7 @@ import TryIt from './try-it/TryIt.vue'
 import RequestSample from './samples/RequestSample.vue'
 import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import PageHeader from '../common/PageHeader.vue'
-import { getSamplePath } from '@/utils'
-import { removeTrailingSlash } from '@/utils'
+import { getSamplePath, getSampleQuery, removeTrailingSlash } from '@/utils'
 
 const props = defineProps({
   data: {
@@ -92,7 +93,8 @@ const serverList = computed(() => props.data.servers?.map(server => removeTraili
 // this is the server selected by user, defaults to first server in the list
 const selectedServerURL = ref<string>(serverList.value?.[0] ?? '')
 const currentServerUrl = ref<string>(serverList.value?.[0] ?? '')
-const currentRequestPath = ref<string>(getSamplePath(props.data))
+const currentRequestPath = ref<string>('')
+const currentRequestQuery = ref<string>('')
 
 // this is fired when server url parameters in tryIt section getting changed
 const setServerUrl = (newServerUrl: string) => {
@@ -102,6 +104,9 @@ const setServerUrl = (newServerUrl: string) => {
 const setRequestPath = (newPath: string) => {
   currentRequestPath.value = newPath
 }
+const setRequestQuery = (newQuery: string) => {
+  currentRequestQuery.value = newQuery
+}
 
 
 function updateSelectedServerURL(url: string) {
@@ -109,6 +114,10 @@ function updateSelectedServerURL(url: string) {
   currentServerUrl.value = url
 }
 
+watch(() => (props.data.id), () => {
+  currentRequestPath.value = getSamplePath(props.data)
+  currentRequestQuery.value = getSampleQuery(props.data)
+}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

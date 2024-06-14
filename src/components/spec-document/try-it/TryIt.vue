@@ -39,6 +39,7 @@
     <TryItParams
       :data="data"
       param-type="query"
+      @request-query-changed="requestQueryChanged"
     />
 
     <TryItParams
@@ -79,7 +80,7 @@ import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import TryItAuth from './TryItAuth.vue'
 import TryItServer from './TryItServer.vue'
 import TryItParams from './TryItParams.vue'
-import { getSamplePath } from '@/utils'
+import { getSamplePath, getSampleQuery } from '@/utils'
 
 
 const props = defineProps({
@@ -97,7 +98,7 @@ const emit = defineEmits<{
   (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>): void
   (e: 'server-url-changed', serverUrl: string): void
   (e: 'request-path-changed', newPath: string): void
-
+  (e: 'request-query-changed', newPath: string): void
 }>()
 
 
@@ -108,11 +109,18 @@ const authHeaders = ref<Array<Record<string, string>>>()
 
 const currentServerUrl = ref<string>(props.serverUrl)
 
-const currentRequestPath = ref<string>(getSamplePath(props.data))
+const currentRequestPath = ref<string>('')
+
+const currentRequestQuery = ref<string>('')
 
 const requestPathChanged = (newPath: string) => {
   currentRequestPath.value = newPath
   emit('request-path-changed', newPath)
+}
+
+const requestQueryChanged = (newQuery: string) => {
+  currentRequestQuery.value = newQuery
+  emit('request-query-changed', newQuery)
 }
 
 /*
@@ -130,8 +138,10 @@ const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 const doApiCall = async () => {
   try {
-    // Todo - deal with params and body
-    response.value = await fetch(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''), {
+    // Todo - deal with  body
+    const url = new URL(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''))
+    url.search = currentRequestQuery.value
+    response.value = await fetch(url, {
       method: props.data.method,
       headers: [
         ...(authHeaders?.value || []),
@@ -163,13 +173,12 @@ watch(() => props.serverUrl, () => {
   currentServerUrl.value = props.serverUrl
 })
 
-watch(() => ({
-  data: props.data,
-  serverUrl: currentServerUrl,
-}), () => {
+watch(() => (props.data.id), () => {
+  currentRequestPath.value = getSamplePath(props.data)
+  currentRequestQuery.value = getSampleQuery(props.data)
   responseText.value = ''
   response.value = undefined
-})
+}, { immediate: true })
 
 </script>
 
