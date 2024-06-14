@@ -30,10 +30,9 @@ export type TableOfContentsNodeGroup = TableOfContentsNode<'http_service'> & Tab
 export type TableOfContentsGroup = {
   title: string;
   hideTitle?: boolean;
-
   items: TableOfContentsGroupItem[];
   itemsType?: 'article' | 'http_operation' | 'http_webhook' | 'model';
-  expanded: boolean;
+  initiallyExpanded: boolean;
 }
 
 export type TableOfContentsGroupItem =

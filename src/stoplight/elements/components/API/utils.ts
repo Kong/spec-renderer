@@ -20,7 +20,7 @@ const defaults = (...args) =>
 
 type GroupableNode = OperationNode | WebhookNode | SchemaNode
 
-export type TagGroup<T extends GroupableNode> = { title: string; items: T[], expanded: boolean }
+export type TagGroup<T extends GroupableNode> = { title: string; items: T[], initiallyExpanded: boolean }
 
 export function computeTagGroups<T extends GroupableNode>(serviceNode: ServiceNode, nodeType: T['type'], currentPath: string) {
   const groupsByTagId: { [tagId: string]: TagGroup<T> } = {}
@@ -37,14 +37,14 @@ export function computeTagGroups<T extends GroupableNode>(serviceNode: ServiceNo
       const tagId = tagName.toLowerCase()
       if (groupsByTagId[tagId]) {
         groupsByTagId[tagId].items.push(node)
-        groupsByTagId[tagId].expanded = groupsByTagId[tagId].expanded ? true : node.uri === currentPath
+        groupsByTagId[tagId].initiallyExpanded = groupsByTagId[tagId].initiallyExpanded ? true : node.uri === currentPath
       } else {
         const serviceTagIndex = lowerCaseServiceTags.findIndex(tn => tn === tagId)
         const serviceTagName = serviceNode.tags[serviceTagIndex]
         groupsByTagId[tagId] = {
           title: serviceTagName || tagName,
           items: [node],
-          expanded: node.uri === currentPath,
+          initiallyExpanded: node.uri === currentPath,
         }
       }
     } else {
@@ -104,7 +104,7 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
       title: 'Endpoints',
       items: [],
       hideTitle: mergedConfig.hideSchemas,
-      expanded: true, // Endpoints are always expanded by default
+      initiallyExpanded: true, // Endpoints are always expanded by default
     })
 
     addTagGroupsToTree(groups, ungrouped, tree.at(-1).items, NodeType.HttpOperation, mergedConfig.hideInternal)
@@ -117,7 +117,7 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
     tree.push({
       title: 'Webhooks',
       items: [],
-      expanded: groups.some(group => group.expanded) || ungrouped.some(node => node.uri === mergedConfig.currentPath),
+      initiallyExpanded: groups.some(group => group.initiallyExpanded) || ungrouped.some(node => node.uri === mergedConfig.currentPath),
     })
 
     addTagGroupsToTree(groups, ungrouped, tree.at(-1).items, NodeType.HttpWebhook, mergedConfig.hideInternal)
@@ -134,7 +134,7 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
     tree.push({
       title: 'Schemas',
       items: [],
-      expanded: groups.some(group => group.expanded) || ungrouped.some(node => node.uri === mergedConfig.currentPath),
+      initiallyExpanded: groups.some(group => group.initiallyExpanded) || ungrouped.some(node => node.uri === mergedConfig.currentPath),
     })
 
     addTagGroupsToTree(groups, ungrouped, tree.at(-1).items, NodeType.Model, mergedConfig.hideInternal)
@@ -215,7 +215,7 @@ const addTagGroupsToTree = <T extends GroupableNode>(
         title: group.title,
         items,
         itemsType,
-        expanded: group.expanded,
+        initiallyExpanded: group.initiallyExpanded,
       })
     }
   })
