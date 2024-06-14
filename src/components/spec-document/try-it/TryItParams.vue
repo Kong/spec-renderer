@@ -22,7 +22,7 @@
       </label>
       <input
         v-model="fieldValues[p.name]"
-        :data-testid="`tryit-path-param-${p.name}-${data.id}`"
+        :data-testid="`tryit-${paramType}-param-${p.name}-${data.id}`"
         :title="p.description"
       >
     </div>

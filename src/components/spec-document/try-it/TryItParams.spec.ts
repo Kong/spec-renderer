@@ -89,6 +89,7 @@ describe('<TryItParams />', () => {
     })
 
     it('Should emit an event when path parameter is changed', async () => {
+      testData.props.paramType = 'path'
       const wrapper = mount(TryItParams, testData)
 
       const field = wrapper.findTestId('tryit-path-param-apiProductId-123')
@@ -102,16 +103,16 @@ describe('<TryItParams />', () => {
       testData.props.paramType = 'query'
 
       const wrapper = mount(TryItParams, testData)
-      const field = wrapper.findTestId('tryit-path-param-page[size]-123')
+      const field = wrapper.findTestId('tryit-query-param-page[size]-123')
       expect(field.exists()).toBe(true)
     })
 
     it('Should emit an event when query parameter is changed', async () => {
+      testData.props.paramType = 'query'
       const wrapper = mount(TryItParams, testData)
-
-      const field = wrapper.findTestId('tryit-path-param--page[number]-123')
-      await field.setValue(4)
-      expect(wrapper.emitted('request-query-changed')?.toString()).toBe('/api-products/xxx-yyy-zzz/product-versions/9f5061ce-78f6-4452-9108-ad7c02821fd5')
+      const field = wrapper.findTestId('tryit-query-param-page[number]-123')
+      await field.setValue('4')
+      expect(wrapper.emitted('request-query-changed')?.toString()).toBe('page%5Bsize%5D=10&page%5Bnumber%5D=4')
     })
   })
 
