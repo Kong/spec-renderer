@@ -31,6 +31,7 @@ defineProps({
   },
   /**
    * Invert the badge colors
+   * Styles for both inverted and non-inverted appearances are defined in mixins/_badges.scss
    */
   inverted: {
     type: Boolean,
