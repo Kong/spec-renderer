@@ -1,6 +1,7 @@
 <template>
   <details
     class="endpoint-collapsible-section"
+    :class="{ 'border-visible': borderVisible }"
     open
   >
     <summary
@@ -27,6 +28,12 @@
 import { ref } from 'vue'
 import { ChevronRightIcon } from '@kong/icons'
 
+defineProps({
+  borderVisible: {
+    type: Boolean,
+    default: true,
+  },
+})
 const expanded = ref(true)
 </script>
 
@@ -50,6 +57,15 @@ const expanded = ref(true)
 
   .endpoint-collapsible-section-content {
     border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+  }
+
+  &:not(.border-visible) {
+    >.endpoint-collapsible-section-header {
+      padding-bottom: var(--kui-space-20, $kui-space-20);
+    }
+    >.endpoint-collapsible-section-content {
+      border: none;
+    }
   }
 }
 </style>

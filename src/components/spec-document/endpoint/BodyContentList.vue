@@ -20,7 +20,10 @@
         v-for="content in contents"
         :key="content.id"
       >
-        <CollapsibleSection v-if="content.schema">
+        <CollapsibleSection
+          v-if="content.schema?.title"
+          :border-visible="false"
+        >
           <template
             v-if="content.schema.title"
             #title
@@ -29,7 +32,7 @@
               {{ content.schema.title }}
             </h3>
           </template>
-          <div class="request-body-model-content">
+          <div class="request-body-model-content model-title-present">
             <p
               v-if="content.schema.description"
               class="request-body-model-description"
@@ -42,6 +45,21 @@
             />
           </div>
         </CollapsibleSection>
+        <div
+          v-else-if="content.schema"
+          class="request-body-model-content"
+        >
+          <p
+            v-if="content.schema.description"
+            class="request-body-model-description"
+          >
+            {{ content.schema.description }}
+          </p>
+          <ModelNode
+            :schema="parseSchema(content.schema)"
+            :title="content.schema.title"
+          />
+        </div>
       </template>
     </div>
   </CollapsibleSection>
@@ -103,7 +121,6 @@ function parseSchema(schema: SchemaObject) {
     }
 
     .request-body-model-content {
-      margin-top: var(--kui-space-50, $kui-space-50);
       .request-body-model-description {
         margin-bottom: var(--kui-space-40, $kui-space-40);
       }
