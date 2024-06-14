@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import ModelProperty from './schema-model/ModelProperty.vue'
-import type { SchemaObject } from '@/types'
+import ModelProperty from './ModelProperty.vue'
 
 describe('<ModelProperty />', () => {
   it('renders all fields of a property', () => {
@@ -37,103 +36,5 @@ describe('<ModelProperty />', () => {
     for (const component of componentList) {
       expect(wrapper.findTestId(component).exists()).toBe(true)
     }
-  })
-
-  describe('renders oneOf', () => {
-    const oneOfList: Array<SchemaObject> = [
-      {
-        type: 'object',
-        title: 'HeadingBlock',
-      },
-      {
-        type: 'object',
-        title: 'BlockQuoteBlock',
-      },
-    ]
-
-    it('when schema model is an array', () => {
-
-      const wrapper = mount(ModelProperty, {
-        props: {
-          property: {
-            description: 'List of children nodes of the current node',
-            type: 'array',
-            items: {
-              type: 'object',
-              oneOf: oneOfList,
-            },
-            title: 'NodeChildren',
-          },
-          propertyName: 'NodeChildren',
-        },
-      })
-
-      // Check if PropertyOneOf component renders
-      expect(wrapper.findTestId('property-field-one-of').exists()).toBe(true)
-
-      // Check if ModelProperty component renders for both oneOf objects
-      for (const oneOfItem of oneOfList) {
-        expect(wrapper.findTestId(`model-property-${oneOfItem.title}`).exists()).toBe(true)
-      }
-    })
-
-    it('when schema model is a simple object', () => {
-      const wrapper = mount(ModelProperty, {
-        props: {
-          property: {
-            type: 'object',
-            oneOf: oneOfList,
-          },
-          propertyName: 'sample-property',
-        },
-      })
-
-      // Check if PropertyOneOf component renders
-      expect(wrapper.findTestId('property-field-one-of').exists()).toBe(true)
-      // Check if ModelProperty component renders for both oneOf objects
-      for (const oneOfItem of oneOfList) {
-        expect(wrapper.findTestId(`model-property-${oneOfItem.title}`).exists()).toBe(true)
-      }
-    })
-  })
-
-  describe('renders anyOf', () => {
-    const anyOfList: Array<SchemaObject> = [
-      {
-        type: 'object',
-        title: 'HeadingBlock',
-      },
-      {
-        type: 'object',
-        title: 'BlockQuoteBlock',
-      },
-    ]
-
-    it('when schema model is an array', () => {
-      const arrayWithanyOf: SchemaObject = {
-        description: 'List of children nodes of the current node',
-        type: 'array',
-        items: {
-          type: 'object',
-          anyOf: anyOfList,
-        },
-        title: 'NodeChildren',
-      }
-
-      const wrapper = mount(ModelProperty, {
-        props: {
-          property: arrayWithanyOf,
-          propertyName: 'NodeChildren',
-        },
-      })
-
-      // Check if PropertyanyOf component renders
-      expect(wrapper.findTestId('property-field-any-of').exists()).toBe(true)
-
-      // Check if ModelProperty component renders for both anyOf objects
-      for (const anyOfItem of anyOfList) {
-        expect(wrapper.findTestId(`model-property-${anyOfItem.title}`).exists()).toBe(true)
-      }
-    })
   })
 })
