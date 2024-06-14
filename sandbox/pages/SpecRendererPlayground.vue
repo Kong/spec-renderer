@@ -18,7 +18,7 @@
           v-model="hideTryIt"
           type="checkbox"
         >
-        <label for="hide-schemas">Hide TryIt</label>
+        <label for="hide-tryit">Hide TryIt</label>
       </div>
     </div>
     <SpecRenderer
