@@ -1,3 +1,10 @@
+## [1.26.2](https://github.com/Kong/spec-renderer/compare/v1.26.1...v1.26.2) (2024-06-14)
+
+
+### Bug Fixes
+
+* **toc:** misc fixes ([#133](https://github.com/Kong/spec-renderer/issues/133)) ([b876271](https://github.com/Kong/spec-renderer/commit/b876271d0c2070a98c5b928b940b3f2d69e8f8ce))
+
 ## [1.26.1](https://github.com/Kong/spec-renderer/compare/v1.26.0...v1.26.1) (2024-06-14)
 
 
