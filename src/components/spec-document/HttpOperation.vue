@@ -52,7 +52,6 @@
           @request-query-changed="setRequestQuery"
           @server-url-changed="setServerUrl"
         />
-        aaa: {{ currentRequestQuery }}
         <RequestSample
           :auth-headers="authHeaders"
           :data="data"
@@ -91,8 +90,8 @@ const setAuthHeaders = (newHeaders: Array<Record<string, string>>) => {
 // this is the server selected by user, defaults to first server in the list
 const selectedServerURL = ref<string>(props.data.servers?.[0]?.url ?? '')
 const currentServerUrl = ref<string>(props.data.servers?.[0]?.url ?? '')
-const currentRequestPath = ref<string>(getSamplePath(props.data))
-const currentRequestQuery = ref<string>(getSampleQuery(props.data))
+const currentRequestPath = ref<string>('')
+const currentRequestQuery = ref<string>('')
 
 // this is fired when server url parameters in tryIt section getting changed
 const setServerUrl = (newServerUrl: string) => {
@@ -113,6 +112,10 @@ function updateSelectedServerURL(url: string) {
   currentServerUrl.value = url
 }
 
+watch(() => (props.data.id), () => {
+  currentRequestPath.value = getSamplePath(props.data)
+  currentRequestQuery.value = getSampleQuery(props.data)
+}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

@@ -109,9 +109,9 @@ const authHeaders = ref<Array<Record<string, string>>>()
 
 const currentServerUrl = ref<string>(props.serverUrl)
 
-const currentRequestPath = ref<string>()
+const currentRequestPath = ref<string>('')
 
-const currentRequestQuery = ref<string>()
+const currentRequestQuery = ref<string>('')
 
 const requestPathChanged = (newPath: string) => {
   currentRequestPath.value = newPath
@@ -173,13 +173,12 @@ watch(() => props.serverUrl, () => {
   currentServerUrl.value = props.serverUrl
 })
 
-watch(() => ({
-  data: props.data,
-  serverUrl: currentServerUrl,
-}), () => {
+watch(() => (props.data.id), () => {
+  currentRequestPath.value = getSamplePath(props.data)
+  currentRequestQuery.value = getSampleQuery(props.data)
   responseText.value = ''
   response.value = undefined
-})
+}, { immediate: true })
 
 </script>
 
