@@ -6,7 +6,7 @@ import type { SchemaObject } from '@/types'
 describe('<ModelNode />', () => {
   // test for a simple model with properties
   it('renders all properties of a model', () => {
-    const data: SchemaObject = {
+    const schema: SchemaObject = {
       description: "I'm a model's description.",
       type: 'object',
       title: 'Todo',
@@ -48,12 +48,12 @@ describe('<ModelNode />', () => {
     const title = 'Todo'
     const wrapper = shallowMount(ModelNode, {
       props: {
-        data,
+        schema,
         title,
       },
     })
 
-    for (const property in data.properties) {
+    for (const property in schema.properties) {
       expect(wrapper.findTestId(`model-property-${property}`).exists()).toBe(true)
     }
   })
@@ -83,7 +83,7 @@ describe('<ModelNode />', () => {
 
       const wrapper = mount(ModelNode, {
         props: {
-          data: arrayWithOneOf,
+          schema: arrayWithOneOf,
           title: 'NodeChildren',
         },
       })
@@ -100,7 +100,7 @@ describe('<ModelNode />', () => {
     it('when schema model is a simple object', () => {
       const wrapper = mount(ModelNode, {
         props: {
-          data: {
+          schema: {
             description: 'List of children nodes of the current node',
             type: 'object',
             oneOf: oneOfList,
@@ -144,7 +144,7 @@ describe('<ModelNode />', () => {
 
       const wrapper = mount(ModelNode, {
         props: {
-          data: arrayWithanyOf,
+          schema: arrayWithanyOf,
           title: 'NodeChildren',
         },
       })
@@ -161,7 +161,7 @@ describe('<ModelNode />', () => {
     it('when schema model is a simple object', () => {
       const wrapper = mount(ModelNode, {
         props: {
-          data: {
+          schema: {
             description: 'List of children nodes of the current node',
             type: 'object',
             anyOf: anyOfList,

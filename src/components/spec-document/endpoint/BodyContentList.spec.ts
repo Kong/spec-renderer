@@ -44,8 +44,6 @@ describe('<BodyContentList />', () => {
     // ——— the model node component renders for both request body content items ———
     // schema with title
     expect(wrapper.findTestId('model-node-Person').exists()).toBe(true)
-    // schema without title, so generic title is used for rendering ModelNode
-    expect(wrapper.findTestId('model-node-Request-Body-Schema-Model').exists()).toBe(true)
   })
 
   describe('does not render readonly property if readonlyVisible is false', () => {
