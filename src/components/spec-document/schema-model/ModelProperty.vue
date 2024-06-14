@@ -8,7 +8,6 @@
     <component
       :is="nestedPropertiesPresent ? 'summary' : 'div'"
       class="model-property-fields"
-      :class="{ 'nested-properties-present': nestedPropertiesPresent }"
     >
       <component
         :is="field.component"
@@ -18,32 +17,12 @@
       />
     </component>
 
-    <template v-if="resolvedModelProperty">
-      <div
-        v-if="nestedPropertiesPresent && nestedPropertiesExpanded"
-        class="model-property-nested-fields"
-      >
-        <template
-          v-for="(subProperty, subPropertyName) in resolvedModelProperty.properties"
-          :key="subPropertyName"
-        >
-          <ModelProperty
-            v-if="isValidSchemaObject(subProperty)"
-            :property="subProperty"
-            :property-name="subPropertyName.toString()"
-            :required-fields="resolvedModelProperty.required"
-          />
-        </template>
-      </div>
-      <PropertyOneOf
-        v-if="Array.isArray(resolvedModelProperty.oneOf) && resolvedModelProperty.oneOf?.length"
-        :one-of-list="resolvedModelProperty.oneOf"
-      />
-      <PropertyAnyOf
-        v-if="Array.isArray(resolvedModelProperty.anyOf) && resolvedModelProperty.anyOf?.length"
-        :any-of-list="resolvedModelProperty.anyOf"
-      />
-    </template>
+    <ModelNode
+      v-if="resolvedModelProperty && nestedPropertiesExpanded"
+      class="model-property-nested-fields"
+      :schema="resolvedModelProperty"
+      :title="propertyName"
+    />
   </component>
 </template>
 
@@ -53,14 +32,13 @@ import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 import type { PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 
+import ModelNode from './ModelNode.vue'
 import PropertyDescription from './property-fields/PropertyDescription.vue'
 import PropertyExample from './property-fields/PropertyExample.vue'
 import PropertyInfo from './property-fields/PropertyInfo.vue'
 import PropertyEnum from './property-fields/PropertyEnum.vue'
 import PropertyPattern from './property-fields/PropertyPattern.vue'
 import PropertyRange from './property-fields/PropertyRange.vue'
-import PropertyOneOf from './property-fields/PropertyOneOf.vue'
-import PropertyAnyOf from './property-fields/PropertyAnyOf.vue'
 
 const props = defineProps({
   property: {
@@ -80,6 +58,15 @@ const nestedPropertiesExpanded = ref(false)
 
 const resolvedModelProperty = computed(() => resolveSchemaObjectFields(props.property))
 
+const dataTestId = computed(() => `model-property-${props.propertyName.replaceAll(' ', '-')}`)
+
+const nestedPropertiesPresent = computed<boolean>(() =>{
+  if (resolvedModelProperty.value?.properties) {
+    return Boolean(Object.keys(resolvedModelProperty.value?.properties).length)
+  }
+  return Boolean(resolvedModelProperty.value?.anyOf?.length) || Boolean(resolvedModelProperty.value?.oneOf?.length)
+})
+
 const orderedFieldList = computed(() => {
   const fields = []
 
@@ -97,7 +84,7 @@ const orderedFieldList = computed(() => {
               ? props.property.items.type
               : '',
         requiredFields: props.requiredFields,
-        collapsableProperty: Boolean(resolvedModelProperty.value?.properties),
+        collapsableProperty: nestedPropertiesPresent.value,
         itemsExpanded: nestedPropertiesExpanded.value,
       },
       key: 'property-info',
@@ -152,8 +139,7 @@ const orderedFieldList = computed(() => {
   return fields
 })
 
-const dataTestId = computed(() => `model-property-${props.propertyName.replaceAll(' ', '-')}`)
-const nestedPropertiesPresent = computed(() => Object.keys(resolvedModelProperty.value?.properties || {}).length > 0)
+
 </script>
 
 <style lang="scss" scoped>

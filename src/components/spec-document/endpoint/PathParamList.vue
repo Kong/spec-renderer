@@ -27,7 +27,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import type { IHttpPathParam } from '@stoplight/types'
-import ModelProperty from '../ModelProperty.vue'
+import ModelProperty from '../schema-model/ModelProperty.vue'
 import CollapsibleSection from './CollapsibleSection.vue'
 import type { SchemaObject } from '@/types'
 

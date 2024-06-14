@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import ModelProperty from './ModelProperty.vue'
+import ModelProperty from './schema-model/ModelProperty.vue'
 import type { SchemaObject } from '@/types'
 
 describe('<ModelProperty />', () => {

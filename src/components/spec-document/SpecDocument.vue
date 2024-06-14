@@ -15,7 +15,7 @@ import { NodeType } from '@stoplight/types'
 import type { ServiceNode } from '../../stoplight/elements/utils/oas/types'
 import HttpService from './HttpService.vue'
 import HttpOperation from './HttpOperation.vue'
-import ModelNode from './ModelNode.vue'
+import HttpModel from './HttpModel.vue'
 import ArticleNode from './ArticleNode.vue'
 import UnknownNode from './UnknownNode.vue'
 
@@ -70,7 +70,7 @@ const docComponent = computed(() => {
       // todo: add openApiVersion to props
       return { component: HttpService, props: defaultProps }
     case NodeType.Model:
-      return { component: ModelNode, props: { ...defaultProps, title: serviceNode.value.name } }
+      return { component: HttpModel, props: { ...defaultProps, title: serviceNode.value.name } }
     default:
       return { component: UnknownNode, props: defaultProps }
   }

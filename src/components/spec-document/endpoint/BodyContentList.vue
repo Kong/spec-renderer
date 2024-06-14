@@ -22,23 +22,22 @@
       >
         <CollapsibleSection v-if="content.schema">
           <template
-            v-if="content.schema?.title"
+            v-if="content.schema.title"
             #title
           >
             <h3 class="request-body-model-title">
-              {{ content.schema?.title }}
+              {{ content.schema.title }}
             </h3>
           </template>
           <div class="request-body-model-content">
             <p
-              v-if="content.schema?.description"
+              v-if="content.schema.description"
               class="request-body-model-description"
             >
-              {{ content.schema?.description }}
+              {{ content.schema.description }}
             </p>
             <ModelNode
-              :data="parseSchema(content.schema)"
-              :header-visible="false"
+              :schema="parseSchema(content.schema)"
               :title="content.schema.title"
             />
           </div>
@@ -51,7 +50,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import type { IMediaTypeContent } from '@stoplight/types'
-import ModelNode from '../ModelNode.vue'
+import ModelNode from '../schema-model/ModelNode.vue'
 import CollapsibleSection from './CollapsibleSection.vue'
 import type { SchemaObject } from '@/types'
 import { removeFieldsFromSchemaObject } from '@/utils'
