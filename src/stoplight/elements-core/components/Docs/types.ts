@@ -32,6 +32,10 @@ export type TableOfContentsGroup = {
   hideTitle?: boolean;
   items: TableOfContentsGroupItem[];
   itemsType?: 'article' | 'http_operation' | 'http_webhook' | 'model';
+  /**
+   * `true` when group is expended on initial load.
+   * e.g. when the group contains the active item.
+   */
   initiallyExpanded: boolean;
 }
 
