@@ -7,6 +7,9 @@
 /.github/ @adamdehaven @jillztom @ValeryG
 /lefthook.yaml @adamdehaven @jillztom @ValeryG
 
+# Main library code
+/src/ @Kong/team-core-ui
+
 # ================================================
 # Renovate Bot approvals
 # Allow Kongponents BOT to approve dependency updates
