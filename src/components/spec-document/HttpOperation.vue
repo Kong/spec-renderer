@@ -31,14 +31,25 @@
           v-if="data.request"
           v-bind="data.request"
         />
-        <section v-if="Array.isArray(data.responses) && data.responses.length">
-          <h4>Responses</h4>
-          <HttpResponse
-            v-for="response in data.responses"
-            :key="response.code"
-            :response="response"
-          />
-        </section>
+
+        <HttpResponse
+          :response="activeResponse"
+        >
+          <select
+            name="response-select-menu"
+            :value="activeResponseCode"
+            @change="handleResponseCodeChanged"
+            @click.stop
+          >
+            <option
+              v-for="code in responseCodeList"
+              :key="code"
+              :value="code"
+            >
+              {{ code }}
+            </option>
+          </select>
+        </HttpResponse>
       </div>
       <div
         class="right"
@@ -75,6 +86,7 @@ import RequestSample from './samples/RequestSample.vue'
 import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import PageHeader from '../common/PageHeader.vue'
 import { getSamplePath, getSampleQuery, removeTrailingSlash } from '@/utils'
+import composables from '@/composables'
 
 const props = defineProps({
   data: {
@@ -96,6 +108,10 @@ const currentServerUrl = ref<string>(serverList.value?.[0] ?? '')
 const currentRequestPath = ref<string>('')
 const currentRequestQuery = ref<string>('')
 
+// refs and computed properties to manage currently active response object
+const responseList = computed(() => props.data.responses ?? [])
+const { responseCodeList, activeResponseCode, activeResponse, handleResponseCodeChanged } = composables.useResponseCode(responseList)
+
 // this is fired when server url parameters in tryIt section getting changed
 const setServerUrl = (newServerUrl: string) => {
   currentServerUrl.value = newServerUrl
@@ -108,12 +124,10 @@ const setRequestQuery = (newQuery: string) => {
   currentRequestQuery.value = newQuery
 }
 
-
 function updateSelectedServerURL(url: string) {
   selectedServerURL.value = url
   currentServerUrl.value = url
 }
-
 watch(() => (props.data.id), () => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
