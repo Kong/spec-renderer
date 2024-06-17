@@ -34,7 +34,7 @@ import { computed, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpOperation, IMediaTypeContent, IHttpPathParam, IHttpQueryParam } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
-import { extractSample, getSamplePath, getSampleQuery } from '@/utils'
+import { extractSample, getSamplePath, getSampleQuery, getSampleBody } from '@/utils'
 import type { RequestParamTypes } from '@/types'
 
 /**
@@ -55,6 +55,7 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'request-path-changed', newPath: string): void
   (e: 'request-query-changed', newQuery: string): void
+  (e: 'request-body-changed', newBody: Record<string, any>): void
 }>()
 
 const compTitles = {
@@ -80,6 +81,7 @@ const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Re
     (((props.data.request?.body?.contents[0]) as unknown as IMediaTypeContent).schema?.required || []).forEach(r => {
       resBody[r].required = true
     })
+    console.log('body:', props.data.request?.body?.contents)
     return resBody
   }
   return undefined
@@ -106,6 +108,9 @@ watch(fieldValues, () => {
   }
   if (props.paramType === 'query') {
     emit('request-query-changed', getSampleQuery(props.data, fieldValues.value))
+  }
+  if (props.paramType === 'body') {
+    emit('request-body-changed', getSampleBody(props.data, fieldValues.value))
   }
 }, { deep: true })
 

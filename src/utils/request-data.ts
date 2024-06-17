@@ -27,8 +27,8 @@ export const getRequestHeaders = (data: IHttpOperation):Array<Record<string, str
 }
 
 /**
- * Extract sample valute from provided params definition (works for params, query and body)
- * @param paramData
+ * Extract sample value from provided params definition (works for params, query and body)
+ * @param paramData operation parameter data
  * @returns objct key - field name| value - field sample value
  */
 export const extractSample = (paramData: Record<string, any> | undefined): Record<string, any> => {
@@ -40,14 +40,14 @@ export const extractSample = (paramData: Record<string, any> | undefined): Recor
   Object.keys(paramData).forEach((key) => {
     const d = paramData[key]
     let exampleValue = d.example
-    if (exampleValue) {
+    if (exampleValue !== undefined) {
       samples[key] = exampleValue
       return
     }
 
     if (d.schema?.examples) {
       exampleValue = d.schema?.examples[0]
-      if (exampleValue) {
+      if (exampleValue !== undefined) {
         samples[key] = exampleValue
         return
       }
@@ -55,11 +55,16 @@ export const extractSample = (paramData: Record<string, any> | undefined): Recor
 
     if (d.examples) {
       exampleValue = d.examples[0]
-      if (exampleValue) {
+      if (exampleValue !== undefined) {
         samples[key] = exampleValue
         return
       }
     }
+    if (d.default !== undefined) {
+      samples[key] = typeof d.default === 'object' ? JSON.stringify(d.default) : d.default
+      return
+    }
+
     if (paramData[key].type === 'string') {
       samples[key] = key
     }
@@ -69,8 +74,10 @@ export const extractSample = (paramData: Record<string, any> | undefined): Recor
 
 /**
  * Generates sample path based on schema parameters
- * @param data
- * @returns
+ *
+ * @param data  operation data
+ * @param fieldValues user inputs
+ * @returns path string
  */
 export const getSamplePath = (data: IHttpOperation, fieldValues?: Record<string, string> | undefined) : string => {
   if (!data.path) {
@@ -91,7 +98,9 @@ export const getSamplePath = (data: IHttpOperation, fieldValues?: Record<string,
 }
 
 /**
- * @param data Generates query from query data and user inputs
+ * Generates query from query data and user inputs
+ *
+ * @param data  operation data
  * @param fieldValues user inputs
  * @returns query string
  */
@@ -105,4 +114,23 @@ export const getSampleQuery = (data: IHttpOperation, fieldValues?: Record<string
   })
 
   return urlParams.toString()
+}
+
+/**
+ * Generates body from data and user inputs
+ *
+ * @param data  operation data
+ * @param fieldValues user inputs
+ * @returns query string
+ */
+export const getSampleBody = (data: IHttpOperation, fieldValues?: Record<string, string> | undefined): Record<string, any> => {
+
+  const myFieldValues = fieldValues || extractSample(data.request?.query) || {}
+  const urlParams = new URLSearchParams()
+
+  Object.keys(myFieldValues).forEach(key => {
+    urlParams.append(key, myFieldValues[key])
+  })
+
+  return {}
 }

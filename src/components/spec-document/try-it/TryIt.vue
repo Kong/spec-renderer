@@ -45,6 +45,7 @@
     <TryItParams
       :data="data"
       param-type="body"
+      @request-body-changed="requestBodyChanged"
     />
 
     <CollapsablePanel
@@ -92,6 +93,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  requestBody: {
+    type: Object as PropType<Record<string, any>>,
+    default: () =>{},
+  },
 })
 
 const emit = defineEmits<{
@@ -99,6 +104,7 @@ const emit = defineEmits<{
   (e: 'server-url-changed', serverUrl: string): void
   (e: 'request-path-changed', newPath: string): void
   (e: 'request-query-changed', newPath: string): void
+  (e: 'request-body-changed', newBody: Record<string, any>): void
 }>()
 
 
@@ -113,6 +119,8 @@ const currentRequestPath = ref<string>('')
 
 const currentRequestQuery = ref<string>('')
 
+const currentRequestBody = ref<Record<string, any>>()
+
 const requestPathChanged = (newPath: string) => {
   currentRequestPath.value = newPath
   emit('request-path-changed', newPath)
@@ -121,6 +129,11 @@ const requestPathChanged = (newPath: string) => {
 const requestQueryChanged = (newQuery: string) => {
   currentRequestQuery.value = newQuery
   emit('request-query-changed', newQuery)
+}
+
+const requestBodyChanged = (newBody: Record<string, any>) => {
+  currentRequestBody.value = newBody
+  emit('request-body-changed', newBody)
 }
 
 /*
@@ -148,7 +161,9 @@ const doApiCall = async () => {
         ...getRequestHeaders(props.data),
       ].reduce((acc, current) => {
         acc[current.name] = current.value; return acc
-      }, { }),
+      }
+      , { }),
+      ...(currentRequestBody.value ? { body: JSON.stringify(currentRequestBody.value) } : null),
     })
     responseText.value = JSON.stringify((await response.value?.json()), null, 2)
 
@@ -171,6 +186,10 @@ const showTryIt = computed((): boolean => {
 
 watch(() => props.serverUrl, () => {
   currentServerUrl.value = props.serverUrl
+})
+
+watch(() => props.requestBody, () => {
+  currentRequestBody.value = props.requestBody
 })
 
 watch(() => (props.data.id), () => {

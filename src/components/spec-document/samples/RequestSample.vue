@@ -94,6 +94,10 @@ const props = defineProps({
 
 })
 
+const emit = defineEmits<{
+  (e: 'request-body-sample-changed', newSample: Record<string, any>): void
+}>()
+
 const requestConfigs = computed(() => {
   if (['get', 'delete'].includes(props.data.method) || requestSamples.value.length === 0) {
     return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
@@ -136,6 +140,7 @@ watch(requestSamples, (newValue: INodeExample[]) => {
   selectedRequestSample.value = getFirstSampleKey(newValue)
 })
 
+
 const snippet = ref<HTTPSnippetType>()
 
 const requestCode = ref<string | string[] | null>()
@@ -143,7 +148,7 @@ const requestCode = ref<string | string[] | null>()
 
 watch(() => ({
   method: props.data.method,
-  requestBodyKey: selectedRequestSample.value,
+  requestSampleKey: selectedRequestSample.value,
   lang: selectedLang.value,
   lib: selectedLangLibrary.value,
   serverUrl: props.serverUrl,
@@ -151,7 +156,7 @@ watch(() => ({
   requestPath: props.requestPath,
   requestQuery: props.requestQuery,
 }), async (newValue, oldValue) => {
-  const jsonObj = (requestSamples.value as INodeExample[]).find(s => s.key === newValue.requestBodyKey)?.value
+  const jsonObj = (requestSamples.value as INodeExample[]).find(s => s.key === newValue.requestSampleKey)?.value
 
   if (newValue.method !== oldValue?.method) {
     selectedLang.value = requestConfigs.value[0].httpSnippetLanguage
@@ -161,12 +166,17 @@ watch(() => ({
   if (newValue.lang !== oldValue?.lang) {
     selectedLangLibrary.value = selectedLangLibraries.value?.length ? selectedLangLibraries.value[0].httpSnippetLibrary : undefined
   }
+
+  if (newValue.requestSampleKey !== oldValue?.requestSampleKey) {
+    emit('request-body-sample-changed', jsonObj as Record<string, any>)
+  }
+
   let snippetError = false
   let snippetChanged = false
 
   // if we selected new requestBody or if we do not have httpSNippet yet, we need to re-init it
   if (!snippet.value ||
-    newValue.requestBodyKey !== oldValue?.requestBodyKey ||
+    newValue.requestSampleKey !== oldValue?.requestSampleKey ||
     newValue.serverUrl !== oldValue.serverUrl ||
     newValue.requestPath !== oldValue.requestPath ||
     newValue.requestQuery !== oldValue.requestQuery ||
