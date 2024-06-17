@@ -204,7 +204,10 @@ watch(() => (props.data.id), () => {
         select {
           border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
           border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+          color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
           font-family: var(--kui-font-family-code, $kui-font-family-code);
+          font-size: var(--kui-font-size-20, $kui-font-size-20);
+          line-height: var(--kui-line-height-20, $kui-line-height-20);
           outline: none;
           padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30) var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
         }
