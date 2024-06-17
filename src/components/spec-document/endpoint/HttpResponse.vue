@@ -1,5 +1,8 @@
 <template>
-  <section class="endpoint-http-response">
+  <section
+    class="endpoint-http-response"
+    data-testid="endpoint-http-response"
+  >
     <CollapsibleSection>
       <template #title>
         <div class="http-response-header">
@@ -19,6 +22,7 @@
           v-for="content in contentList"
           :key="content.id"
           class="http-response-body-content"
+          data-testid="endpoint-body-content-list"
         >
           <ModelNode
             v-if="content.schema"
