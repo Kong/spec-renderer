@@ -31,7 +31,7 @@ export const getRequestHeaders = (data: IHttpOperation):Array<Record<string, str
  * @param paramData
  * @returns objct key - field name| value - field sample value
  */
-export const extractSample = (paramData: Record<string, any>| undefined): Record<string, any> => {
+export const extractSample = (paramData: Record<string, any> | undefined): Record<string, any> => {
   const samples = <Record<string, any>>{}
   if (!paramData) {
     return {}

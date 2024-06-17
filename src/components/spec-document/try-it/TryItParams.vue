@@ -63,7 +63,7 @@ const compTitles = {
   body: 'Body',
 }
 
-const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Record<string, any>>| undefined => {
+const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Record<string, any>> | undefined => {
   if (props.paramType === 'query') {
     return props.data.request?.query?.reduce((acc: Record<string, IHttpQueryParam>, current: IHttpQueryParam) => {
       (acc[current.name] = current); return acc
