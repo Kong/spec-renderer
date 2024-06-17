@@ -2,13 +2,8 @@
   <CollapsibleSection
     class="endpoint-body-content-list"
     data-testid="endpoint-body-content-list"
+    title="Body"
   >
-    <template #title>
-      <h2 class="request-body-title">
-        Body
-      </h2>
-    </template>
-
     <div class="request-body-content">
       <p
         v-if="description"
@@ -82,10 +77,6 @@ const props = defineProps({
     type: Array as PropType<Array<IMediaTypeContent>>,
     required: true,
   },
-  defaultModelTitle: {
-    type: String,
-    default: 'Request Body Schema Model',
-  },
   readonlyVisible: {
     type: Boolean,
     default: true,
@@ -99,11 +90,6 @@ function parseSchema(schema: SchemaObject) {
 
 <style lang="scss" scoped>
 .endpoint-body-content-list {
-  .request-body-title {
-    font-size: var(--kui-font-size-40, $kui-font-size-40);
-    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-    line-height: var(--kui-line-height-40, $kui-line-height-40);
-  }
 
   .request-body-content {
     padding: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0);

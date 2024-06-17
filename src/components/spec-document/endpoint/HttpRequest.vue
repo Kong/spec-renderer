@@ -65,7 +65,6 @@ const componentList = computed(() => {
       componentProps: {
         description: body.value.description,
         contents: body.value.contents,
-        defaultModelTitle: 'Request Body Schema Model',
         readonlyVisible: false,
       },
       key: 'body',

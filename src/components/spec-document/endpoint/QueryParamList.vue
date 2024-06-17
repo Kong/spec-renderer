@@ -2,13 +2,8 @@
   <CollapsibleSection
     class="query-param-list"
     data-testid="endpoint-query-param-list"
+    title="Query Parameters"
   >
-    <template #title>
-      <h2 class="query-param-list-title">
-        Query Parameters
-      </h2>
-    </template>
-
     <div class="query-param-list-items">
       <template
         v-for="queryParam in queryParamList"
@@ -67,11 +62,6 @@ const queryParamItemRequiredFields = (queryParam: IHttpQueryParam) => {
 
 <style lang="scss" scoped>
 .query-param-list {
-  .query-param-list-title {
-    font-size: var(--kui-font-size-40, $kui-font-size-40);
-    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-    line-height: var(--kui-line-height-40, $kui-line-height-40);
-  }
   .query-param-list-items {
     padding-bottom: var(--kui-space-60, $kui-space-60);
     padding-top: var(--kui-space-40, $kui-space-40);
