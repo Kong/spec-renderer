@@ -1,6 +1,6 @@
 <template>
   <CollapsablePanel
-    v-if="params?.length"
+    v-if="params&& Object.keys(params).length"
     :data-testid="`tryit-params-${props.paramType}-${data.id}`"
   >
     <template #header>
@@ -10,20 +10,20 @@
     </template>
 
     <div
-      v-for="p in params"
-      :key="`${p.name}${paramType}`"
+      v-for="pKey in Object.keys(params)"
+      :key="`${params[pKey].name}${paramType}`"
       class="wide"
     >
       <label>
-        <span v-if="p.required">
+        <span v-if="params[pKey].required">
           *
         </span>
-        {{ p.name }}
+        {{ params[pKey].name || pKey }}
       </label>
       <input
-        v-model="fieldValues[p.name]"
-        :data-testid="`tryit-${paramType}-param-${p.name}-${data.id}`"
-        :title="p.description"
+        v-model="fieldValues[pKey]"
+        :data-testid="`tryit-${paramType}-param-${pKey}-${data.id}`"
+        :title="params[pKey].description"
       >
     </div>
   </CollapsablePanel>
@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import type { PropType } from 'vue'
-import type { IHttpOperation, IHttpPathParam, IHttpQueryParam } from '@stoplight/types'
+import type { IHttpOperation, IMediaTypeContent, IHttpPathParam, IHttpQueryParam } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import { extractSample, getSamplePath, getSampleQuery } from '@/utils'
 import type { RequestParamTypes } from '@/types'
@@ -63,15 +63,26 @@ const compTitles = {
   body: 'Body',
 }
 
-const params = computed((): IHttpPathParam[] | IHttpQueryParam[]| undefined => {
+const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Record<string, any>>| undefined => {
   if (props.paramType === 'query') {
-    return props.data.request?.query
+    return props.data.request?.query?.reduce((acc: Record<string, IHttpQueryParam>, current: IHttpQueryParam) => {
+      (acc[current.name] = current); return acc
+    }, {})
+
   }
   if (props.paramType === 'path') {
-    return props.data.request?.path
+    return props.data.request?.path?.reduce((acc: Record<string, IHttpPathParam>, current: IHttpPathParam) => {
+      (acc[current.name] = current); return acc
+    }, {})
   }
-  // this is for 'body'
-  return []
+  if (props.data.request?.body?.contents && props.data.request?.body?.contents.length > 0) {
+    const resBody = ((props.data.request?.body?.contents[0]) as unknown as IMediaTypeContent).schema?.properties as Record<string, any>
+    (((props.data.request?.body?.contents[0]) as unknown as IMediaTypeContent).schema?.required || []).forEach(r => {
+      resBody[r].required = true
+    })
+    return resBody
+  }
+  return undefined
 })
 
 const fieldValues = ref<Record<string, string>>({})
@@ -79,10 +90,12 @@ const fieldValues = ref<Record<string, string>>({})
 
 // this is to calculate initial values for the fields
 watch(params, () => {
-  const samples = extractSample(params.value)
-  params.value?.forEach((p) => {
-    fieldValues.value[p.name] = samples[p.name]
-  })
+  if (params.value) {
+    const samples = extractSample(params.value)
+    Object.keys(params.value).forEach(key => {
+      fieldValues.value[key] = samples[key]
+    })
+  }
 }, { immediate: true })
 
 // this is to fire event when fieldValues changed

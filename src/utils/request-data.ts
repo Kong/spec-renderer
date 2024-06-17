@@ -1,4 +1,4 @@
-import type { IHttpOperation, IHttpPathParam, IHttpQueryParam } from '@stoplight/types'
+import type { IHttpOperation } from '@stoplight/types'
 
 const getAcceptHeader = (data: IHttpOperation): string => {
   const headers = new Set()
@@ -31,25 +31,38 @@ export const getRequestHeaders = (data: IHttpOperation):Array<Record<string, str
  * @param paramData
  * @returns objct key - field name| value - field sample value
  */
-export const extractSample = (paramData: IHttpPathParam[] | IHttpQueryParam[] | undefined): Record<string, any> => {
+export const extractSample = (paramData: Record<string, any>| undefined): Record<string, any> => {
   const samples = <Record<string, any>>{}
+  if (!paramData) {
+    return {}
+  }
 
-  paramData?.forEach(d => {
-    //@ts-ignore there might be undocumented untyped property that holds the example for the specific field
+  Object.keys(paramData).forEach((key) => {
+    const d = paramData[key]
     let exampleValue = d.example
     if (exampleValue) {
-      samples[d.name] = exampleValue
+      samples[key] = exampleValue
       return
     }
+
     if (d.schema?.examples) {
-      //@ts-ignore  we are not sure what type this sucker is
       exampleValue = d.schema?.examples[0]
       if (exampleValue) {
-        samples[d.name] = exampleValue
+        samples[key] = exampleValue
         return
       }
     }
-    samples[d.name] = d.name
+
+    if (d.examples) {
+      exampleValue = d.examples[0]
+      if (exampleValue) {
+        samples[key] = exampleValue
+        return
+      }
+    }
+    if (paramData[key].type === 'string') {
+      samples[key] = key
+    }
   })
   return samples
 }
