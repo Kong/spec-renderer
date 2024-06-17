@@ -33,22 +33,28 @@
         />
 
         <HttpResponse
-          :response="activeResponse"
+          class="http-operation-response"
+          :content-list="activeResponseContentList"
+          :description="activeResponse?.description"
         >
-          <select
-            name="response-select-menu"
-            :value="activeResponseCode"
-            @change="handleResponseCodeChanged"
-            @click.stop
-          >
-            <option
-              v-for="code in responseCodeList"
-              :key="code"
-              :value="code"
+          <div class="http-response-header-menu">
+            <select
+              v-for="component in responseSelectList"
+              :key="component.name"
+              :name="component.name"
+              :value="component.value"
+              @change="component.onChange"
+              @click.stop
             >
-              {{ code }}
-            </option>
-          </select>
+              <option
+                v-for="option in component.optionList"
+                :key="option"
+                :value="option"
+              >
+                {{ option }}
+              </option>
+            </select>
+          </div>
         </HttpResponse>
       </div>
       <div
@@ -110,7 +116,36 @@ const currentRequestQuery = ref<string>('')
 
 // refs and computed properties to manage currently active response object
 const responseList = computed(() => props.data.responses ?? [])
-const { responseCodeList, activeResponseCode, activeResponse, handleResponseCodeChanged } = composables.useResponseCode(responseList)
+const {
+  responseCodeList,
+  activeResponseCode,
+  activeResponse,
+  activeContentType,
+  contentTypeList,
+  activeResponseContentList,
+  handleResponseCodeChanged,
+  handleContentTypeChanged,
+} = composables.useCurrentResponse(responseList)
+
+const responseSelectList = computed(()=> {
+  const componentList = [{
+    name: 'response-code-select-menu',
+    value: activeResponseCode.value,
+    optionList: responseCodeList.value,
+    onChange: handleResponseCodeChanged,
+  }]
+
+  if (contentTypeList.value.length > 1) {
+    componentList.push({
+      name: 'content-type-select-menu',
+      value: activeContentType.value,
+      optionList: contentTypeList.value,
+      onChange: handleContentTypeChanged,
+    })
+  }
+
+  return componentList
+})
 
 // this is fired when server url parameters in tryIt section getting changed
 const setServerUrl = (newServerUrl: string) => {
@@ -128,6 +163,7 @@ function updateSelectedServerURL(url: string) {
   selectedServerURL.value = url
   currentServerUrl.value = url
 }
+
 watch(() => (props.data.id), () => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
@@ -157,6 +193,22 @@ watch(() => (props.data.id), () => {
     .right {
       background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
       padding: var(--kui-space-40, $kui-space-40);
+    }
+
+    .http-operation-response {
+      .http-response-header-menu {
+        align-items: center;
+        display: inline-flex;
+        gap: var(--kui-space-20, $kui-space-20);
+
+        select {
+          border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+          border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+          font-family: var(--kui-font-family-code, $kui-font-family-code);
+          outline: none;
+          padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30) var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
+        }
+      }
     }
   }
   // TODO change when we have floating TOC for smaller width

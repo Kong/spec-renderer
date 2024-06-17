@@ -10,13 +10,13 @@
 
       <div class="http-response-body">
         <p
-          v-if="response.description"
+          v-if="description"
           class="http-response-body-description"
         >
-          {{ response.description }}
+          {{ description }}
         </p>
         <div
-          v-for="content in response.contents"
+          v-for="content in contentList"
           :key="content.id"
           class="http-response-body-content"
         >
@@ -38,9 +38,13 @@ import CollapsibleSection from './CollapsibleSection.vue'
 import ModelNode from '../schema-model/ModelNode.vue'
 
 defineProps({
-  response: {
-    type: Object as PropType<IHttpOperationResponse>,
-    default: () => ({}),
+  description: {
+    type: String,
+    default: '',
+  },
+  contentList: {
+    type: Array as PropType<IHttpOperationResponse['contents']>,
+    default: () => [],
   },
 })
 </script>
