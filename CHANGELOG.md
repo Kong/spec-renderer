@@ -1,3 +1,25 @@
+# [1.28.0](https://github.com/Kong/spec-renderer/compare/v1.27.1...v1.28.0) (2024-06-18)
+
+
+### Features
+
+* fire path-not-found event [KHCP-12245] ([#147](https://github.com/Kong/spec-renderer/issues/147)) ([fa41f83](https://github.com/Kong/spec-renderer/commit/fa41f83284a90799ad4e37417706f6e9f28d2329))
+
+## [1.27.1](https://github.com/Kong/spec-renderer/compare/v1.27.0...v1.27.1) (2024-06-18)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#143](https://github.com/Kong/spec-renderer/issues/143)) ([8b45a3c](https://github.com/Kong/spec-renderer/commit/8b45a3c4c9baf0aed8e68b027dd2d88e789444de))
+* **deps:** update dependency @scalar/openapi-parser to ^0.5.0 ([#144](https://github.com/Kong/spec-renderer/issues/144)) ([e928cbd](https://github.com/Kong/spec-renderer/commit/e928cbdd23db02094c40ceee5fa81a2076695750))
+
+# [1.27.0](https://github.com/Kong/spec-renderer/compare/v1.26.2...v1.27.0) (2024-06-14)
+
+
+### Features
+
+* query parameters in tryIt and request sample [KHCP-12157] ([#135](https://github.com/Kong/spec-renderer/issues/135)) ([daf303f](https://github.com/Kong/spec-renderer/commit/daf303f588e1b254e01027fc929e7fcfbba2ab1f))
+
 ## [1.26.2](https://github.com/Kong/spec-renderer/compare/v1.26.1...v1.26.2) (2024-06-14)
 
 

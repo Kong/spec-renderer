@@ -1,6 +1,6 @@
 {
   "name": "@kong/spec-renderer-dev",
-  "version": "1.26.2",
+  "version": "1.28.0",
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
   "type": "module",
@@ -48,7 +48,7 @@
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "^11.6.4",
     "@kong/icons": "^1.13.0",
-    "@scalar/openapi-parser": "^0.4.1",
+    "@scalar/openapi-parser": "^0.5.0",
     "@seriousme/openapi-schema-validator": "^2.2.1",
     "@stoplight/http-spec": "^7.0.3",
     "@stoplight/json": "^3.21.0",
@@ -60,13 +60,13 @@
     "lodash": "^4.17.21",
     "oas-normalize": "^11.1.0",
     "openapi3-ts": "4.3.2",
-    "shiki": "^1.6.2"
+    "shiki": "^1.6.3"
   },
   "resolutions": {
     "openapi3-ts": "4.3.2"
   },
   "devDependencies": {
-    "@babel/types": "^7.24.6",
+    "@babel/types": "^7.24.7",
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
@@ -77,7 +77,7 @@
     "@semantic-release/git": "^10.0.1",
     "@types/jsdom": "^21.1.7",
     "@types/json-schema": "^7.0.15",
-    "@types/node": "^20.14.1",
+    "@types/node": "^20.14.2",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vitest/ui": "^1.6.0",
     "@vue/test-utils": "^2.4.6",
@@ -102,16 +102,16 @@
     "stylelint-order": "^6.0.4",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
-    "tslib": "^2.6.2",
+    "tslib": "^2.6.3",
     "typescript": "^5.4.5",
-    "vite": "^5.2.12",
+    "vite": "^5.2.13",
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-replace": "^0.1.1",
     "vite-plugin-vue-devtools": "^7.2.1",
     "vitest": "1.6.0",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2",
-    "vue-tsc": "^2.0.19"
+    "vue-tsc": "^2.0.20"
   },
   "repository": {
     "type": "git",
@@ -167,7 +167,7 @@
   },
   "volta": {
     "node": "20.14.0",
-    "pnpm": "9.1.4"
+    "pnpm": "9.2.0"
   },
   "config": {
     "commitizen": {
