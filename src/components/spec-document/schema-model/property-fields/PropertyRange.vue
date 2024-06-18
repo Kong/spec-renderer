@@ -34,7 +34,7 @@ defineProps({
 .property-field-range {
   @include model-property-additional-field;
 
-  &> :first-child {
+  > :first-child {
     margin-right: var(--kui-space-40, $kui-space-40);
   }
 

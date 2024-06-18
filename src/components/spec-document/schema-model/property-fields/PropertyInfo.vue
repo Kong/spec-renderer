@@ -85,10 +85,10 @@ defineProps({
   align-items: center;
   display: flex;
   font-family: var(--kui-font-family-code, $kui-font-family-code);
-  gap: var(--kui-space-60, $kui-space-60);
+  gap: var(--kui-space-50, $kui-space-50);
 
   .property-title {
-    color: var(--kui-color-text, $kui-color-text);
+    color: var(--kui-color-text-primary, $kui-color-text-primary);
     font-size:var(--kui-font-size-30, $kui-font-size-30);
     font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     line-height: var(--kui-line-height-30, $kui-line-height-30);
@@ -110,7 +110,7 @@ defineProps({
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     line-height: var(--kui-line-height-20, $kui-line-height-20);
 
-    &> :not(:first-child) {
+    > :not(:first-child) {
       margin-left: var(--kui-space-40, $kui-space-40);
     }
 

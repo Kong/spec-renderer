@@ -144,6 +144,9 @@ const orderedFieldList = computed(() => {
 
 <style lang="scss" scoped>
 .model-property {
+  border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+  padding: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0);
+
   // reset margins for nested fields
   * {
     margin: var(--kui-space-0, $kui-space-0);
@@ -153,9 +156,8 @@ const orderedFieldList = computed(() => {
     margin-top: var(--kui-space-20, $kui-space-20);
   }
 
-  .model-property-fields {
-    padding: var(--kui-space-40, $kui-space-40);
-    padding-left: var(--kui-space-0, $kui-space-0);
+  .model-property-fields>:not(:first-child) {
+    margin-top: var(--kui-space-50, $kui-space-50);
   }
 
   summary.model-property-fields {
