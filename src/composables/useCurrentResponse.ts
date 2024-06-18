@@ -53,15 +53,6 @@ export default function useResponseCode(responseList: ComputedRef<Array<IHttpOpe
     activeContentType.value = contentTypeList.value[0]
   })
 
-  function handleSelectInputChange(event: Event, componentName: ResponseSelectComponent) {
-    const newValue = (event.target as HTMLSelectElement).value
-    if (componentName === ResponseSelectComponent.ResponseCodeSelectMenu) {
-      activeResponseCode.value = newValue
-    } else if (componentName === ResponseSelectComponent.ContentTypeSelectMenu) {
-      activeContentType.value = newValue
-    }
-  }
-
   return {
     responseCodeList,
     activeResponseCode,
@@ -71,6 +62,5 @@ export default function useResponseCode(responseList: ComputedRef<Array<IHttpOpe
     contentTypeList,
     activeResponseContentList,
     responseSelectComponentList,
-    handleSelectInputChange,
   }
 }

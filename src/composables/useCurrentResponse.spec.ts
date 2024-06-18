@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest'
 import useCurrentResponse from './useCurrentResponse'
 import { computed } from 'vue'
 import type { IHttpOperationResponse } from '@stoplight/types'
-import { ResponseSelectComponent } from '@/types'
 
 describe('useCurrentResponse', () => {
   const responseList = computed<Array<IHttpOperationResponse>>(() => [
@@ -74,41 +73,6 @@ describe('useCurrentResponse', () => {
           mediaType: 'application/json',
         },
       ])
-    })
-  })
-
-  describe('handleSelectInputChange', () => {
-    const {
-      handleSelectInputChange,
-      activeResponseCode,
-      activeContentType,
-    } = useCurrentResponse(responseList)
-
-    it('should update the active response code', () => {
-      // check inital value
-      expect(activeResponseCode.value).toBe('200')
-
-      const mockEvent = {
-        target: {
-          value: '400',
-        },
-      } as unknown as Event
-
-      handleSelectInputChange(mockEvent, ResponseSelectComponent.ResponseCodeSelectMenu)
-      // verify activeResponseCode is updated
-      expect(activeResponseCode.value).toBe('400')
-    })
-    it('should update the active content type', () => {
-      expect(activeContentType.value).toBe('application/json')
-
-      const mockEvent = {
-        target: {
-          value: 'application/xml',
-        },
-      } as unknown as Event
-
-      handleSelectInputChange(mockEvent, ResponseSelectComponent.ContentTypeSelectMenu)
-      expect(activeContentType.value).toBe('application/xml')
     })
   })
 })

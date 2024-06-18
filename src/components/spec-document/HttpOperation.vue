@@ -93,6 +93,7 @@ import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import PageHeader from '../common/PageHeader.vue'
 import { getSamplePath, getSampleQuery, removeTrailingSlash } from '@/utils'
 import composables from '@/composables'
+import { ResponseSelectComponent } from '@/types'
 
 const props = defineProps({
   data: {
@@ -118,10 +119,20 @@ const currentRequestQuery = ref<string>('')
 const responseList = computed(() => props.data.responses ?? [])
 const {
   activeResponseDescription,
+  activeResponseCode,
+  activeContentType,
   activeResponseContentList,
   responseSelectComponentList,
-  handleSelectInputChange,
 } = composables.useCurrentResponse(responseList)
+
+function handleSelectInputChange(event: Event, componentName: ResponseSelectComponent) {
+  const newValue = (event.target as HTMLSelectElement).value
+  if (componentName === ResponseSelectComponent.ResponseCodeSelectMenu) {
+    activeResponseCode.value = newValue
+  } else if (componentName === ResponseSelectComponent.ContentTypeSelectMenu) {
+    activeContentType.value = newValue
+  }
+}
 
 // this is fired when server url parameters in tryIt section getting changed
 const setServerUrl = (newServerUrl: string) => {
