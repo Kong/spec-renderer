@@ -35,7 +35,7 @@
         <HttpResponse
           class="http-operation-response"
           :content-list="activeResponseContentList"
-          :description="activeResponse?.description"
+          :description="activeResponseDescription"
         >
           <div class="http-response-header-menu">
             <select
@@ -117,7 +117,7 @@ const currentRequestQuery = ref<string>('')
 // refs and computed properties to manage currently active response object
 const responseList = computed(() => props.data.responses ?? [])
 const {
-  activeResponse,
+  activeResponseDescription,
   activeResponseContentList,
   responseSelectComponentList,
   handleSelectInputChange,
@@ -185,7 +185,7 @@ watch(() => (props.data.id), () => {
           font-size: var(--kui-font-size-20, $kui-font-size-20);
           line-height: var(--kui-line-height-20, $kui-line-height-20);
           outline: none;
-          padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30) var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
+          padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
         }
       }
     }

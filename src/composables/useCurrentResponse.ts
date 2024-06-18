@@ -11,6 +11,7 @@ export default function useResponseCode(responseList: ComputedRef<Array<IHttpOpe
   const activeResponseCode = ref<string>(responseCodeList.value[0])
   // compute the response object for the active response code
   const activeResponse = computed(() => responseList.value?.find(response => response.code === activeResponseCode.value))
+  const activeResponseDescription = computed(() => activeResponse.value?.description ?? '')
 
   // compute the list of content types for the active response. Used to populate the content-type select dropdown
   // e.g. ['application/json', 'application/xml']
@@ -65,6 +66,7 @@ export default function useResponseCode(responseList: ComputedRef<Array<IHttpOpe
     responseCodeList,
     activeResponseCode,
     activeResponse,
+    activeResponseDescription,
     activeContentType,
     contentTypeList,
     activeResponseContentList,
