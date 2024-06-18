@@ -43,7 +43,7 @@
               :key="component.name"
               :name="component.name"
               :value="component.value"
-              @change="component.onChange"
+              @change="(event) => handleSelectInputChange(event, component.name)"
               @click.stop
             >
               <option
@@ -120,6 +120,7 @@ const {
   activeResponse,
   activeResponseContentList,
   responseSelectComponentList,
+  handleSelectInputChange,
 } = composables.useCurrentResponse(responseList)
 
 // this is fired when server url parameters in tryIt section getting changed

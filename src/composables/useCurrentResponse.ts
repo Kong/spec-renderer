@@ -1,5 +1,6 @@
 import { computed, ref, watch, type ComputedRef } from 'vue'
 import type { IHttpOperationResponse } from '@stoplight/types'
+import { ResponseSelectComponent } from '@/types'
 
 export default function useResponseCode(responseList: ComputedRef<Array<IHttpOperationResponse>>) {
 
@@ -28,39 +29,36 @@ export default function useResponseCode(responseList: ComputedRef<Array<IHttpOpe
 
   const responseSelectComponentList = computed(()=> {
     const componentList = [{
-      name: 'response-code-select-menu',
+      name: ResponseSelectComponent.ResponseCodeSelectMenu,
       value: activeResponseCode.value,
       optionList: responseCodeList.value,
-      onChange: handleResponseCodeChanged,
     }]
 
     if (contentTypeList.value.length > 1) {
       componentList.push({
-        name: 'content-type-select-menu',
+        name: ResponseSelectComponent.ContentTypeSelectMenu,
         value: activeContentType.value,
         optionList: contentTypeList.value,
-        onChange: handleContentTypeChanged,
       })
     }
 
     return componentList
   })
 
-  // update active response code and content-type when default response code changes
+  // reset default value of active response code and content-type when list of response code changes
   // this will happen when a new endpoint page is opened
   watch(responseCodeList, (newResponseCodeList) => {
     activeResponseCode.value = newResponseCodeList[0]
     activeContentType.value = contentTypeList.value[0]
   })
 
-  function handleResponseCodeChanged(event: Event) {
-    const code = (event.target as HTMLSelectElement).value
-    activeResponseCode.value = code
-  }
-
-  function handleContentTypeChanged(event: Event) {
-    const contentType = (event.target as HTMLSelectElement).value
-    activeContentType.value = contentType
+  function handleSelectInputChange(event: Event, componentName: ResponseSelectComponent) {
+    const newValue = (event.target as HTMLSelectElement).value
+    if (componentName === ResponseSelectComponent.ResponseCodeSelectMenu) {
+      activeResponseCode.value = newValue
+    } else if (componentName === ResponseSelectComponent.ContentTypeSelectMenu) {
+      activeContentType.value = newValue
+    }
   }
 
   return {
@@ -71,7 +69,6 @@ export default function useResponseCode(responseList: ComputedRef<Array<IHttpOpe
     contentTypeList,
     activeResponseContentList,
     responseSelectComponentList,
-    handleResponseCodeChanged,
-    handleContentTypeChanged,
+    handleSelectInputChange,
   }
 }

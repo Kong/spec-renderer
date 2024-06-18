@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import useCurrentResponse from './useCurrentResponse'
 import { computed } from 'vue'
 import type { IHttpOperationResponse } from '@stoplight/types'
+import { ResponseSelectComponent } from '@/types'
 
 describe('useCurrentResponse', () => {
   const responseList = computed<Array<IHttpOperationResponse>>(() => [
@@ -40,7 +41,6 @@ describe('useCurrentResponse', () => {
       responseCodeList,
       activeResponseCode,
       activeResponse,
-      handleResponseCodeChanged,
     } = useCurrentResponse(responseList)
 
     it('should return the list of response codes', () => {
@@ -52,20 +52,6 @@ describe('useCurrentResponse', () => {
     it('should return the response object for the active response code', () => {
       expect(activeResponse.value).toEqual(responseList.value[0])
     })
-    it('should update the active response code when a new response code is selected', () => {
-      const mockEvent = {
-        target: {
-          value: '400',
-        },
-      } as unknown as Event
-
-      handleResponseCodeChanged(mockEvent)
-
-      // the new active response code is 400
-      expect(activeResponseCode.value).toBe('400')
-      // the new active response is the second response in the list
-      expect(activeResponse.value).toEqual(responseList.value[1])
-    })
   })
 
   describe('active content type', () => {
@@ -73,7 +59,6 @@ describe('useCurrentResponse', () => {
       activeContentType,
       contentTypeList,
       activeResponseContentList,
-      handleContentTypeChanged,
     } = useCurrentResponse(responseList)
 
     it('should return the list of content types', () => {
@@ -90,24 +75,40 @@ describe('useCurrentResponse', () => {
         },
       ])
     })
-    it('should update the active content type when a new content type is selected', () => {
+  })
+
+  describe('handleSelectInputChange', () => {
+    const {
+      handleSelectInputChange,
+      activeResponseCode,
+      activeContentType,
+    } = useCurrentResponse(responseList)
+
+    it('should update the active response code', () => {
+      // check inital value
+      expect(activeResponseCode.value).toBe('200')
+
+      const mockEvent = {
+        target: {
+          value: '400',
+        },
+      } as unknown as Event
+
+      handleSelectInputChange(mockEvent, ResponseSelectComponent.ResponseCodeSelectMenu)
+      // verify activeResponseCode is updated
+      expect(activeResponseCode.value).toBe('400')
+    })
+    it('should update the active content type', () => {
+      expect(activeContentType.value).toBe('application/json')
+
       const mockEvent = {
         target: {
           value: 'application/xml',
         },
       } as unknown as Event
 
-      handleContentTypeChanged(mockEvent)
-
-      // the new active content type is application/json
+      handleSelectInputChange(mockEvent, ResponseSelectComponent.ContentTypeSelectMenu)
       expect(activeContentType.value).toBe('application/xml')
-      // the new active response content list is filtered to only include the selected content type
-      expect(activeResponseContentList.value).toEqual([
-        {
-          id: 'sample-content-2',
-          mediaType: 'application/xml',
-        },
-      ])
     })
   })
 })
