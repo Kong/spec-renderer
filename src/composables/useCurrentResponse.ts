@@ -25,6 +25,27 @@ export default function useResponseCode(responseList: ComputedRef<Array<IHttpOpe
     return activeResponse.value?.contents?.filter(content => content.mediaType === activeContentType.value)
   })
 
+
+  const responseSelectComponentList = computed(()=> {
+    const componentList = [{
+      name: 'response-code-select-menu',
+      value: activeResponseCode.value,
+      optionList: responseCodeList.value,
+      onChange: handleResponseCodeChanged,
+    }]
+
+    if (contentTypeList.value.length > 1) {
+      componentList.push({
+        name: 'content-type-select-menu',
+        value: activeContentType.value,
+        optionList: contentTypeList.value,
+        onChange: handleContentTypeChanged,
+      })
+    }
+
+    return componentList
+  })
+
   // update active response code and content-type when default response code changes
   // this will happen when a new endpoint page is opened
   watch(responseCodeList, (newResponseCodeList) => {
@@ -49,6 +70,7 @@ export default function useResponseCode(responseList: ComputedRef<Array<IHttpOpe
     activeContentType,
     contentTypeList,
     activeResponseContentList,
+    responseSelectComponentList,
     handleResponseCodeChanged,
     handleContentTypeChanged,
   }

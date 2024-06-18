@@ -117,35 +117,10 @@ const currentRequestQuery = ref<string>('')
 // refs and computed properties to manage currently active response object
 const responseList = computed(() => props.data.responses ?? [])
 const {
-  responseCodeList,
-  activeResponseCode,
   activeResponse,
-  activeContentType,
-  contentTypeList,
   activeResponseContentList,
-  handleResponseCodeChanged,
-  handleContentTypeChanged,
+  responseSelectComponentList,
 } = composables.useCurrentResponse(responseList)
-
-const responseSelectComponentList = computed(()=> {
-  const componentList = [{
-    name: 'response-code-select-menu',
-    value: activeResponseCode.value,
-    optionList: responseCodeList.value,
-    onChange: handleResponseCodeChanged,
-  }]
-
-  if (contentTypeList.value.length > 1) {
-    componentList.push({
-      name: 'content-type-select-menu',
-      value: activeContentType.value,
-      optionList: contentTypeList.value,
-      onChange: handleContentTypeChanged,
-    })
-  }
-
-  return componentList
-})
 
 // this is fired when server url parameters in tryIt section getting changed
 const setServerUrl = (newServerUrl: string) => {
