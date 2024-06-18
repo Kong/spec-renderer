@@ -30,6 +30,7 @@
       :spec="specText"
       :spec-url="specUrl"
       :trace-parsing="true"
+      @path-not-found="handlePathNotFound"
     />
   </div>
 </template>
@@ -48,6 +49,10 @@ const specUrl = ref<string>('')
 const currentPath = ref<string>(route.path)
 const hideSchemas = ref<boolean>(false)
 const hideTryIt = ref<boolean>(false)
+
+const handlePathNotFound = (requestedPath: string) => {
+  console.error(`${requestedPath} not found. App to redirect to it's own 404`)
+}
 
 const sampleSpecSelected = async (sampleSpecUrl: string, resetPath: boolean) => {
   specText.value = ''

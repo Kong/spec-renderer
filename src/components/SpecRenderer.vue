@@ -20,6 +20,7 @@
         :document="parsedDocument"
         :hide-try-it="hideTryIt"
         :json="jsonDocument"
+        @path-not-found="relayPathNotFound"
       />
     </div>
   </div>
@@ -114,7 +115,19 @@ const itemSelected = (id: any) => {
   currentPath.value = id
 }
 
+const emit = defineEmits<{
+  (e: 'path-not-found', requestedPath: string): void
+}>()
+
+
 const specRendererTocRef = ref<InstanceType<typeof SpecRendererToc> | null>(null)
+
+/**
+ * re-emits path-not-found event so application that consumes SpecRender component can handle 404
+ */
+const relayPathNotFound = (requestedPath: string): void => {
+  emit('path-not-found', requestedPath)
+}
 
 watch(() => ({
   specUrl: props.specUrl,
@@ -147,7 +160,7 @@ watch(() => ({
  * Once element is in the DOM, trigger scroll to active item in TOC.
  */
 watch(specRendererTocRef, async (val) => {
-  if (val) {
+  if (val?.$el?.scrollTo) {
     const scrollPosition = await val.getActiveItemScrollPosition()
 
     val.$el.scrollTo({

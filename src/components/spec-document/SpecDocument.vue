@@ -46,11 +46,18 @@ const serviceNode = ref<ServiceNode | null>(null)
 provide<Ref<string>>('base-path', computed((): string => props.basePath))
 provide<Ref<boolean>>('hide-tryit', computed((): boolean => props.hideTryIt))
 
+const emit = defineEmits < {
+  (e: 'path-not-found', requestedPath: string): void
+}>()
+
 /** we show tryIt section when it's requested to be hidden and when node */
 
 watch(() => ({ pathname: props.currentPath, document: props.document }), ({ pathname, document }) => {
   const isRootPath = !pathname || pathname === '/'
   serviceNode.value = <ServiceNode>(isRootPath ? document : document.children.find((child:any) => child.uri === pathname))
+  if (!serviceNode.value) {
+    emit('path-not-found', pathname)
+  }
 }, { immediate: true })
 
 const docComponent = computed(() => {
