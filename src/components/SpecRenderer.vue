@@ -160,7 +160,7 @@ watch(() => ({
  * Once element is in the DOM, trigger scroll to active item in TOC.
  */
 watch(specRendererTocRef, async (val) => {
-  if (val && val.$el && val.$el.scrollTo) {
+  if (val?.$el?.scrollTo) {
     const scrollPosition = await val.getActiveItemScrollPosition()
 
     val.$el.scrollTo({
