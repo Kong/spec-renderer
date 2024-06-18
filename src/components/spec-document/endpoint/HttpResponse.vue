@@ -11,26 +11,11 @@
         </div>
       </template>
 
-      <div class="http-response-body">
-        <p
-          v-if="description"
-          class="http-response-body-description"
-        >
-          {{ description }}
-        </p>
-        <div
-          v-for="content in contentList"
-          :key="content.id"
-          class="http-response-body-content"
-          data-testid="endpoint-body-content-list"
-        >
-          <ModelNode
-            v-if="content.schema"
-            :schema="content.schema"
-            :title="content.schema.title"
-          />
-        </div>
-      </div>
+      <BodyContentList
+        v-if="Array.isArray(contentList) && contentList.length"
+        :contents="contentList"
+        :description="description"
+      />
     </CollapsibleSection>
   </section>
 </template>
@@ -39,7 +24,7 @@
 import type { PropType } from 'vue'
 import type { IHttpOperationResponse } from '@stoplight/types'
 import CollapsibleSection from './CollapsibleSection.vue'
-import ModelNode from '../schema-model/ModelNode.vue'
+import BodyContentList from './BodyContentList.vue'
 
 defineProps({
   description: {
