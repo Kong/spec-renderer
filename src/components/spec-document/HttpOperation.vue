@@ -39,7 +39,7 @@
         >
           <div class="http-response-header-menu">
             <select
-              v-for="component in responseSelectList"
+              v-for="component in responseSelectComponentList"
               :key="component.name"
               :name="component.name"
               :value="component.value"
@@ -127,7 +127,7 @@ const {
   handleContentTypeChanged,
 } = composables.useCurrentResponse(responseList)
 
-const responseSelectList = computed(()=> {
+const responseSelectComponentList = computed(()=> {
   const componentList = [{
     name: 'response-code-select-menu',
     value: activeResponseCode.value,
