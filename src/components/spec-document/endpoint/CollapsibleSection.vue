@@ -8,7 +8,11 @@
       class="endpoint-collapsible-section-header"
       @click="expanded = !expanded"
     >
-      <slot name="title" />
+      <slot name="title">
+        <h2 v-if="title">
+          {{ title }}
+        </h2>
+      </slot>
       <ChevronRightIcon
         class="chevron-icon"
         :class="{ 'expanded': expanded }"
@@ -33,6 +37,10 @@ defineProps({
     type: Boolean,
     default: true,
   },
+  title: {
+    type: String,
+    default: '',
+  },
 })
 const expanded = ref(true)
 </script>
@@ -48,6 +56,13 @@ const expanded = ref(true)
     display: flex;
     justify-content: space-between;
     padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
+
+    // applies to the title slot and fallback title prop, both
+    :slotted(h2) {
+      font-size: var(--kui-font-size-40, $kui-font-size-40);
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+      line-height: var(--kui-line-height-40, $kui-line-height-40);
+    }
 
     .chevron-icon {
       @include chevron-toggle;
