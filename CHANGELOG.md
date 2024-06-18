@@ -1,3 +1,10 @@
+# [1.28.0](https://github.com/Kong/spec-renderer/compare/v1.27.1...v1.28.0) (2024-06-18)
+
+
+### Features
+
+* fire path-not-found event [KHCP-12245] ([#147](https://github.com/Kong/spec-renderer/issues/147)) ([fa41f83](https://github.com/Kong/spec-renderer/commit/fa41f83284a90799ad4e37417706f6e9f28d2329))
+
 ## [1.27.1](https://github.com/Kong/spec-renderer/compare/v1.27.0...v1.27.1) (2024-06-18)
 
 
