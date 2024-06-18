@@ -35,7 +35,7 @@
           class="request-sample-selector"
         >
           <option
-            v-for="sample in requestSamples "
+            v-for="sample in requestSamples"
             :key="sample.key"
             :value="sample.key"
           >
@@ -56,8 +56,8 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, computed } from 'vue'
-import type { PropType } from 'vue'
+import { watch, ref, computed, inject } from 'vue'
+import type { PropType, Ref } from 'vue'
 import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet-lite'
 import { requestSampleConfigs } from '@/constants'
@@ -94,12 +94,15 @@ const props = defineProps({
 
 })
 
+const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
+
 const emit = defineEmits<{
   (e: 'request-body-sample-changed', newSample: Record<string, any>): void
 }>()
 
 const requestConfigs = computed(() => {
-  if (['get', 'delete'].includes(props.data.method) || requestSamples.value.length === 0) {
+  // we do not want to shoe json option if tryIt is not hidden. in this case json will be shown as body parameter
+  if (!hideTryIt.value || (['get', 'delete'].includes(props.data.method) || requestSamples.value.length === 0)) {
     return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
   } else {
     return requestSampleConfigs
