@@ -46,25 +46,15 @@
       :data="data"
       param-type="body"
     />
-
-    <CollapsablePanel
-      v-if="response"
-      :data-testid="`tryit-response-${data.id}`"
-    >
-      <template #header>
-        <h5>
-          Response
-        </h5>
-      </template>
-
-      <div class="wide">
-        <CodeBlock
-          v-if="responseText"
-          :code="responseText"
-          lang="json"
-        />
-      </div>
-    </CollapsablePanel>
+    response: {{ response }}<br>
+    responseError: {{ responseError }}
+    <TryItResponse
+      v-if="response || responseError"
+      :data="data"
+      :response="response"
+      :response-error="responseError"
+      :response-text="responseText"
+    />
   </div>
 </template>
 
@@ -75,11 +65,10 @@ import TryItButton from './TryItButton.vue'
 import { getRequestHeaders } from '@/utils'
 import type { IHttpOperation } from '@stoplight/types'
 import MethodBadge from '@/components/common/MethodBadge.vue'
-import CodeBlock from '@/components/common/CodeBlock.vue'
-import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import TryItAuth from './TryItAuth.vue'
 import TryItServer from './TryItServer.vue'
 import TryItParams from './TryItParams.vue'
+import TryItResponse from './TryItResponse.vue'
 import { getSamplePath, getSampleQuery } from '@/utils'
 
 
@@ -104,6 +93,7 @@ const emit = defineEmits<{
 
 const response = ref<Response | undefined>()
 const responseText = ref<string>()
+const responseError = ref<Error>()
 
 const authHeaders = ref<Array<Record<string, string>>>()
 
@@ -150,10 +140,11 @@ const doApiCall = async () => {
         acc[current.name] = current.value; return acc
       }, { }),
     })
-    responseText.value = JSON.stringify((await response.value?.json()), null, 2)
+    responseText.value = await response.value?.text()
 
-  } catch (error) {
-    console.error(error)
+  } catch (error: any) {
+    // responseError.value = error
+    responseError.value = await error.response.text()
   }
 }
 
