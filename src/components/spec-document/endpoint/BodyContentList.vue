@@ -1,11 +1,11 @@
 <template>
   <div
-    class="request-body-content"
+    class="body-content-list"
     data-testid="endpoint-body-content-list"
   >
     <p
       v-if="description"
-      class="request-body-description"
+      class="body-content-list-description"
     >
       {{ description }}
     </p>
@@ -21,14 +21,14 @@
           v-if="content.schema.title"
           #title
         >
-          <h3 class="request-body-model-title">
+          <h3 class="content-list-schema-title">
             {{ content.schema.title }}
           </h3>
         </template>
-        <div class="request-body-model-content model-title-present">
+        <div class="content-list-schema-content">
           <p
             v-if="content.schema.description"
-            class="request-body-model-description"
+            class="content-list-schema-description"
           >
             {{ content.schema.description }}
           </p>
@@ -40,11 +40,11 @@
       </CollapsibleSection>
       <div
         v-else-if="content.schema"
-        class="request-body-model-content"
+        class="content-list-schema-content"
       >
         <p
           v-if="content.schema.description"
-          class="request-body-model-description"
+          class="content-list-schema-description"
         >
           {{ content.schema.description }}
         </p>
@@ -86,23 +86,23 @@ function parseSchema(schema: SchemaObject) {
 </script>
 
 <style lang="scss" scoped>
-.request-body-content {
+.body-content-list {
   padding: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0);
 
-  .request-body-description {
+  .body-content-list-description {
     color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
     font-size: var(--kui-font-size-30, $kui-font-size-30);
     line-height: var(--kui-line-height-30, $kui-line-height-30);
     margin-bottom: var(--kui-space-40, $kui-space-40);
   }
 
-  .request-body-model-title {
+  .content-list-schema-title {
     font-size: var(--kui-font-size-30, $kui-font-size-30);
     line-height: var(--kui-line-height-30, $kui-line-height-30);
   }
 
-  .request-body-model-content {
-    .request-body-model-description {
+  .content-list-schema-content {
+    .content-list-schema-description {
       margin-bottom: var(--kui-space-40, $kui-space-40);
     }
   }
