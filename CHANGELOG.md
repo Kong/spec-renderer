@@ -1,3 +1,11 @@
+## [1.27.1](https://github.com/Kong/spec-renderer/compare/v1.27.0...v1.27.1) (2024-06-18)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#143](https://github.com/Kong/spec-renderer/issues/143)) ([8b45a3c](https://github.com/Kong/spec-renderer/commit/8b45a3c4c9baf0aed8e68b027dd2d88e789444de))
+* **deps:** update dependency @scalar/openapi-parser to ^0.5.0 ([#144](https://github.com/Kong/spec-renderer/issues/144)) ([e928cbd](https://github.com/Kong/spec-renderer/commit/e928cbdd23db02094c40ceee5fa81a2076695750))
+
 # [1.27.0](https://github.com/Kong/spec-renderer/compare/v1.26.2...v1.27.0) (2024-06-14)
 
 
