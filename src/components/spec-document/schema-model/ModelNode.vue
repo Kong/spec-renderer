@@ -1,5 +1,6 @@
 <template>
   <div
+    class="model-node-container"
     :data-testid="dataTestId"
   >
     <template
@@ -50,3 +51,19 @@ const props = defineProps({
 const resolvedSchemaObject = computed(() => resolveSchemaObjectFields(props.schema))
 const dataTestId = computed(() => `model-node-${props.title.replaceAll(' ', '-')}`)
 </script>
+
+<style lang="scss" scoped>
+.model-node-container {
+  /**
+    Apply the border to ModelNode children, except when
+    the ModelNode is itself nested in a ModelProperty.
+    We do this by checking if the nested-model-node class is present,
+    which is applied to a ModelNode that's nested inside ModelProperty.
+   */
+  &:not(.nested-model-node) {
+    > :not(:last-child){
+      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    }
+  }
+}
+</style>
