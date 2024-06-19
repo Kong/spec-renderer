@@ -174,16 +174,12 @@ const orderedFieldList = computed(() => {
     padding: var(--kui-space-50, $kui-space-50) var(--kui-space-40, $kui-space-40);
 
     .add-circle-icon {
-      color: var(--kui-color-text-neutral, $kui-color-text-neutral) !important;
-      flex-shrink: 0;
-      height: var(--kui-icon-size-40, $kui-icon-size-40) !important;
-      pointer-events: none;
-      transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
-      width: var(--kui-icon-size-40, $kui-icon-size-40) !important;
-
-      &.expanded {
-        transform: rotate(45deg);
-      }
+      @include toggle-icon(
+        $textColor: var(--kui-color-text-neutral, $kui-color-text-neutral),
+        $height: var(--kui-icon-size-40, $kui-icon-size-40),
+        $width: var(--kui-icon-size-40, $kui-icon-size-40),
+        $rotate-degree: 45deg,
+      );
     }
   }
 

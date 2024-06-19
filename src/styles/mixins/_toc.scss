@@ -19,7 +19,7 @@
   }
 
   .chevron-icon {
-    @include chevron-toggle;
+    @include toggle-icon;
   }
 
   &.active {

@@ -65,7 +65,7 @@ const expanded = ref(true)
     }
 
     .chevron-icon {
-      @include chevron-toggle;
+      @include toggle-icon;
       color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
     }
   }
