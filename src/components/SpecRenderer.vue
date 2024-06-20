@@ -182,6 +182,7 @@ aside {
 .doc {
   flex: 1;
   overflow: visible;
+  padding: var(--kui-space-60, $kui-space-60);
 }
 .wrapper {
   display: flex;
