@@ -17,9 +17,10 @@
         class="nested-fields-summary"
         @click="() => nestedPropertiesExpanded = !nestedPropertiesExpanded"
       >
-        <AddCircleIcon
+        <AddIcon
           class="add-circle-icon"
           :class="{ 'expanded': nestedPropertiesExpanded }"
+          size="16px"
         />
         <span>{{ nestedPropertiesExpanded ? 'Hide' : 'Show' }} Child Parameters</span>
       </summary>
@@ -35,7 +36,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { AddCircleIcon } from '@kong/icons'
+import { AddIcon } from '@kong/icons'
 import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 import type { PropType } from 'vue'
 import type { SchemaObject } from '@/types'
@@ -167,17 +168,19 @@ const orderedFieldList = computed(() => {
     color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
     cursor: pointer;
     display: flex;
-    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
     font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
     gap: var(--kui-space-30, $kui-space-30);
-    line-height: var(--kui-line-height-40, $kui-line-height-40);
-    padding: var(--kui-space-50, $kui-space-50) var(--kui-space-40, $kui-space-40);
+    line-height: var(--kui-line-height-20, $kui-line-height-20);
+    padding: var(--kui-space-20, $kui-space-20);
+    padding-right: var(--kui-space-30, $kui-space-30);
+    width: max-content;
 
     .add-circle-icon {
       @include toggle-icon(
         $textColor: var(--kui-color-text-neutral, $kui-color-text-neutral),
-        $height: var(--kui-icon-size-40, $kui-icon-size-40),
-        $width: var(--kui-icon-size-40, $kui-icon-size-40),
+        $height: var(--kui-icon-size-30, $kui-icon-size-30),
+        $width: var(--kui-icon-size-30, $kui-icon-size-30),
         $rotate-degree: 45deg,
       );
     }
