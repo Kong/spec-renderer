@@ -1,3 +1,10 @@
+# [1.30.0](https://github.com/Kong/spec-renderer/compare/v1.29.0...v1.30.0) (2024-06-20)
+
+
+### Features
+
+* add spec version field to parsed spec document ([#151](https://github.com/Kong/spec-renderer/issues/151)) ([511866f](https://github.com/Kong/spec-renderer/commit/511866f1799f87ae386747f94aaeaa9956326b44))
+
 # [1.29.0](https://github.com/Kong/spec-renderer/compare/v1.28.0...v1.29.0) (2024-06-18)
 
 
