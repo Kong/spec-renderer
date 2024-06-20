@@ -50,6 +50,10 @@ defineProps({
     gap: var(--kui-space-40, $kui-space-40);
     padding: var(--kui-space-40, $kui-space-40);
 
+    &:hover {
+      cursor: pointer;
+    }
+
     .chevron-icon {
       @include chevron-toggle;
     }

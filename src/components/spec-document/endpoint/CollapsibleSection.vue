@@ -57,6 +57,10 @@ const expanded = ref(true)
     justify-content: space-between;
     padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
 
+    &:hover {
+      cursor: pointer;
+    }
+
     // applies to the title slot and fallback title prop, both
     :slotted(h2) {
       font-size: var(--kui-font-size-40, $kui-font-size-40);

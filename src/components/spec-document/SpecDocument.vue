@@ -88,6 +88,5 @@ const docComponent = computed(() => {
 .spec-renderer-document {
   background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
   color: var(--kui-color-text, $kui-color-text);
-  padding: var(--kui-space-60, $kui-space-60);
 }
 </style>
