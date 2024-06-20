@@ -1,6 +1,6 @@
 {
   "name": "@kong/spec-renderer-dev",
-  "version": "1.29.0",
+  "version": "1.30.0",
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
   "type": "module",
@@ -111,7 +111,7 @@
     "vitest": "1.6.0",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2",
-    "vue-tsc": "^2.0.20"
+    "vue-tsc": "^2.0.21"
   },
   "repository": {
     "type": "git",

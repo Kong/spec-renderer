@@ -193,7 +193,7 @@ importers:
         specifier: ^4.3.2
         version: 4.3.2(vue@3.4.27(typescript@5.4.5))
       vue-tsc:
-        specifier: ^2.0.20
+        specifier: ^2.0.21
         version: 2.0.21(typescript@5.4.5)
 
 packages:
