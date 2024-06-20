@@ -154,14 +154,14 @@ watch(()=>props.response, async () => {
 
 .error-panel {
   background-color: var( --kui-color-background-danger-weaker, $kui-color-background-danger-weaker);
-  color: var(--kui-color-text-danger-strong, $kui-color-text-danger-strong);
   border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
-  padding: var(--kui-space-40, $kui-space-40);
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+  color: var(--kui-color-text-danger-strong, $kui-color-text-danger-strong);
+  padding: var(--kui-space-40, $kui-space-40);
 }
 .res-option-selector {
-  width: 100px;
   margin-left: auto!important;
+  width: 100px;
 }
 :deep(.response-body pre) {
     max-height: 200px;
