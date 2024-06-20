@@ -46,14 +46,11 @@
       :data="data"
       param-type="body"
     />
-    response: {{ response }}<br>
-    responseError: {{ responseError }}
     <TryItResponse
       v-if="response || responseError"
-      :data="data"
+      :data-id="data.id"
       :response="response"
       :response-error="responseError"
-      :response-text="responseText"
     />
   </div>
 </template>
@@ -92,7 +89,6 @@ const emit = defineEmits<{
 
 
 const response = ref<Response | undefined>()
-const responseText = ref<string>()
 const responseError = ref<Error>()
 
 const authHeaders = ref<Array<Record<string, string>>>()
@@ -128,7 +124,7 @@ const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 const doApiCall = async () => {
   try {
-    // Todo - deal with  body
+    response.value = undefined
     const url = new URL(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''))
     url.search = currentRequestQuery.value
     response.value = await fetch(url, {
@@ -140,11 +136,8 @@ const doApiCall = async () => {
         acc[current.name] = current.value; return acc
       }, { }),
     })
-    responseText.value = await response.value?.text()
-
   } catch (error: any) {
-    // responseError.value = error
-    responseError.value = await error.response.text()
+    responseError.value = error
   }
 }
 
@@ -167,7 +160,6 @@ watch(() => props.serverUrl, () => {
 watch(() => (props.data.id), () => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
-  responseText.value = ''
   response.value = undefined
 }, { immediate: true })
 
@@ -188,7 +180,7 @@ watch(() => (props.data.id), () => {
 }
 
 /* using deep as this thing is used in multiple child components */
-:deep(input), :deep(select) {
+:deep(.panel-body input), :deep(.panel-body select) {
   border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
   border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   box-sizing: border-box;

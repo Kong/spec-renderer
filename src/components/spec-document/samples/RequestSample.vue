@@ -35,7 +35,7 @@
           class="request-sample-selector"
         >
           <option
-            v-for="sample in requestSamples "
+            v-for="sample in requestSamples"
             :key="sample.key"
             :value="sample.key"
           >
