@@ -27,7 +27,7 @@ import { oas2SourceMap } from './oas2'
 import { oas3SourceMap } from './oas3'
 
 import type { ISourceNodeMap, ServiceChildNode, ServiceNode } from './types'
-import { NodeTypes } from './types'
+import { NodeTypes, SpecVersion } from './types'
 type OpenAPIObject = _OpenAPIObject & {
   webhooks?: PathObject;
 }
@@ -56,12 +56,13 @@ export function transformOasToServiceNode(apiDescriptionDocument: unknown) {
       oas3SourceMap,
       transformOas3Service,
       transformOas3Operation,
+      SpecVersion.OAS31,
     )
   }
   if (isOas3(apiDescriptionDocument)) {
-    return computeServiceNode(apiDescriptionDocument, oas3SourceMap, transformOas3Service, transformOas3Operation)
+    return computeServiceNode(apiDescriptionDocument, oas3SourceMap, transformOas3Service, transformOas3Operation, SpecVersion.OAS3)
   } else if (isOas2(apiDescriptionDocument)) {
-    return computeServiceNode(apiDescriptionDocument, oas2SourceMap, transformOas2Service, transformOas2Operation)
+    return computeServiceNode(apiDescriptionDocument, oas2SourceMap, transformOas2Service, transformOas2Operation, SpecVersion.OAS2)
   }
 
   return null
@@ -71,6 +72,7 @@ function computeServiceNode(
   map: ISourceNodeMap[],
   transformService: Oas2HttpServiceTransformer | Oas3HttpServiceTransformer,
   transformOperation: Oas2HttpOperationTransformer | Oas3HttpEndpointOperationTransformer,
+  specVersion: SpecVersion,
 ) {
   const serviceDocument = transformService({ document })
   const serviceNode: ServiceNode = {
@@ -80,6 +82,7 @@ function computeServiceNode(
     data: serviceDocument,
     tags: serviceDocument.tags?.map(tag => tag.name) || [],
     children: computeChildNodes(document, document, map, transformOperation),
+    specVersion,
   }
 
   return serviceNode

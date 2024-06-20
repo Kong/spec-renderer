@@ -4,17 +4,16 @@
       class="overview-page-header"
       :title="data.name"
     >
-      <p class="overview-page-versions">
-        <VersionBadge type="primary">
-          v{{ data.version }}
-        </VersionBadge>
+      <div class="overview-page-versions">
         <VersionBadge
-          v-if="openApiVersion"
+          type="primary"
+          :version="`v${data.version}`"
+        />
+        <VersionBadge
           type="neutral"
-        >
-          OAS {{ openApiVersion }}
-        </VersionBadge>
-      </p>
+          :version="specVersion"
+        />
+      </div>
     </PageHeader>
 
     <section class="overview-page-content">
@@ -56,10 +55,9 @@ defineProps({
     type: Object as PropType<IHttpService>,
     required: true,
   },
-  // todo: pass value for this prop from SpecDocument
-  openApiVersion: {
+  specVersion: {
     type: String,
-    default: '',
+    required: true,
   },
 })
 </script>
