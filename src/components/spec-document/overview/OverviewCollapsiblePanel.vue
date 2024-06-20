@@ -45,14 +45,10 @@ defineProps({
   .overview-collapsible-panel-header {
     align-items: center;
     color: var(--kui-color-text-neutral, $kui-color-text-neutral);
-    cursor: default;
+    cursor: pointer;
     display: flex;
     gap: var(--kui-space-40, $kui-space-40);
     padding: var(--kui-space-40, $kui-space-40);
-
-    &:hover {
-      cursor: pointer;
-    }
 
     .chevron-icon {
       @include chevron-toggle;
