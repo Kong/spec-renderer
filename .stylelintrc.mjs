@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   extends: [
     'stylelint-config-html',
     'stylelint-config-recommended-scss',
@@ -7,11 +7,18 @@ module.exports = {
   plugins: [
     'stylelint-order',
     '@kong/design-tokens/stylelint-plugin',
+    '@stylistic/stylelint-plugin',
   ],
   rules: {
     'order/properties-alphabetical-order': true,
     'unit-disallowed-list': [
       ['rem', 'em'],
+    ],
+    '@stylistic/indentation': [
+      2,
+      {
+        baseIndentLevel: 0,
+      },
     ],
     // Only allow @kong/design-tokens CSS custom properties
     'custom-property-pattern': [

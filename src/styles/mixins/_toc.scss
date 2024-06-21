@@ -1,7 +1,7 @@
 @mixin toc-item {
   align-items: center;
   background-color: var(--kui-color-background-transparent,
-      $kui-color-background-transparent ); // transparent so that it doesn't interfere with the parent's background color
+  $kui-color-background-transparent ); // transparent so that it doesn't interfere with the parent's background color
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
   display: flex;

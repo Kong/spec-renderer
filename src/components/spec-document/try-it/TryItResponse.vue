@@ -149,7 +149,7 @@ watch(() => props.response, async (res) => {
 }
 
 .response-status.true:before {
-      color: var(--kui-color-text-success, $kui-color-text-success);
+  color: var(--kui-color-text-success, $kui-color-text-success);
 }
 
 .error-panel {
@@ -164,8 +164,8 @@ watch(() => props.response, async (res) => {
   width: 100px;
 }
 :deep(.response-body pre) {
-    max-height: 200px;
-    overflow-y: auto;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 </style>
