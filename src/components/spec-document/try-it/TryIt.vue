@@ -45,6 +45,7 @@
     <TryItParams
       :data="data"
       param-type="body"
+      :request-body="currentRequestBody"
       @request-body-changed="requestBodyChanged"
     />
     <TryItResponse
@@ -80,8 +81,8 @@ const props = defineProps({
     required: true,
   },
   requestBody: {
-    type: Object as PropType<Record<string, any>>,
-    default: () =>{},
+    type: String,
+    default: '',
   },
 })
 
@@ -90,7 +91,7 @@ const emit = defineEmits<{
   (e: 'server-url-changed', serverUrl: string): void
   (e: 'request-path-changed', newPath: string): void
   (e: 'request-query-changed', newPath: string): void
-  (e: 'request-body-changed', newBody: Record<string, any>): void
+  (e: 'request-body-changed', newBody: string): void
 }>()
 
 
@@ -105,7 +106,7 @@ const currentRequestPath = ref<string>('')
 
 const currentRequestQuery = ref<string>('')
 
-const currentRequestBody = ref<Record<string, any>>()
+const currentRequestBody = ref<string>('')
 
 const requestPathChanged = (newPath: string) => {
   currentRequestPath.value = newPath
@@ -117,7 +118,7 @@ const requestQueryChanged = (newQuery: string) => {
   emit('request-query-changed', newQuery)
 }
 
-const requestBodyChanged = (newBody: Record<string, any>) => {
+const requestBodyChanged = (newBody: string) => {
   currentRequestBody.value = newBody
   emit('request-body-changed', newBody)
 }

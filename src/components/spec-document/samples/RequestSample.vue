@@ -73,12 +73,13 @@ const props = defineProps({
     required: true,
   },
   /**
-   * server url+path selected by user on endpoints detail page
+   * server url selected by user on endpoints detail page
    */
   serverUrl: {
     type: String,
     required: true,
   },
+  /* value is coming from TryIt path parameter change */
   requestPath: {
     type: String,
     required: true,
@@ -87,17 +88,22 @@ const props = defineProps({
     type: Array as PropType<Record<string, string>[]>,
     default: () => [],
   },
+  /* value is coming from TryIt query parameter change */
   requestQuery: {
     type: String,
     default: '',
   },
-
+  /* value is coming from TryIt body parameter change */
+  requestBody: {
+    type: String,
+    default: '',
+  },
 })
 
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 const emit = defineEmits<{
-  (e: 'request-body-sample-changed', newSample: Record<string, any>): void
+  (e: 'request-body-sample-changed', newSample: string): void
 }>()
 
 const requestConfigs = computed(() => {
@@ -171,7 +177,7 @@ watch(() => ({
   }
 
   if (newValue.requestSampleKey !== oldValue?.requestSampleKey) {
-    emit('request-body-sample-changed', jsonObj as Record<string, any>)
+    emit('request-body-sample-changed', JSON.stringify(jsonObj, null, 2))
   }
 
   let snippetError = false

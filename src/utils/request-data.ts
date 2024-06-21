@@ -123,14 +123,19 @@ export const getSampleQuery = (data: IHttpOperation, fieldValues?: Record<string
  * @param fieldValues user inputs
  * @returns query string
  */
-export const getSampleBody = (data: IHttpOperation, fieldValues?: Record<string, string> | undefined): Record<string, any> => {
+export const getSampleBody = (data: IHttpOperation, sampleBody: string): string => {
 
-  const myFieldValues = fieldValues || extractSample(data.request?.query) || {}
-  const urlParams = new URLSearchParams()
 
-  Object.keys(myFieldValues).forEach(key => {
-    urlParams.append(key, myFieldValues[key])
-  })
+  if (sampleBody) {
+    return sampleBody
+  }
 
-  return {}
+  // const myFieldValues = fieldValues || extractSample(data.request?.query) || {}
+  // const urlParams = new URLSearchParams()
+
+  // Object.keys(myFieldValues).forEach(key => {
+  //   urlParams.append(key, myFieldValues[key])
+  // })
+
+  return ''
 }

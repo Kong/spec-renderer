@@ -1,7 +1,7 @@
 <template>
   <CollapsablePanel
     v-if="params&& Object.keys(params).length"
-    :data-testid="`tryit-params-${props.paramType}-${data.id}`"
+    :data-testid="`tryit-params-${paramType}-${data.id}`"
   >
     <template #header>
       <h5>
@@ -10,21 +10,31 @@
     </template>
 
     <div
-      v-for="pKey in Object.keys(params)"
-      :key="`${params[pKey].name}${paramType}`"
+      v-if="paramType !== 'body'"
       class="wide"
     >
-      <label>
-        <span v-if="params[pKey].required">
-          *
-        </span>
-        {{ params[pKey].name || pKey }}
-      </label>
-      <input
-        v-model="fieldValues[pKey]"
-        :data-testid="`tryit-${paramType}-param-${pKey}-${data.id}`"
-        :title="params[pKey].description"
+      <div
+        v-for="pKey in Object.keys(params)"
+        :key="`${params[pKey].name}${paramType}`"
       >
+        <label>
+          <span v-if="params[pKey].required">
+            *
+          </span>
+          {{ params[pKey].name || pKey }}
+        </label>
+        <input
+          v-model="fieldValues[pKey]"
+          :data-testid="`tryit-${paramType}-param-${pKey}-${data.id}`"
+          :title="params[pKey].description"
+        >
+      </div>
+    </div>
+    <div
+      v-else
+      class="wide"
+    >
+      <EditableCodeBlock code="//" />
     </div>
   </CollapsablePanel>
 </template>
@@ -36,6 +46,7 @@ import type { IHttpOperation, IMediaTypeContent, IHttpPathParam, IHttpQueryParam
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import { extractSample, getSamplePath, getSampleQuery, getSampleBody } from '@/utils'
 import type { RequestParamTypes } from '@/types'
+import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
 
 /**
  * This components handles path parameters, query parameters and body.
@@ -50,12 +61,17 @@ const props = defineProps({
     type: String as PropType<RequestParamTypes>,
     required: true,
   },
+  /* coming as a property when request sample is picked in RequestSample */
+  requestBody: {
+    type: String,
+    default: '',
+  },
 })
 
 const emit = defineEmits<{
   (e: 'request-path-changed', newPath: string): void
   (e: 'request-query-changed', newQuery: string): void
-  (e: 'request-body-changed', newBody: Record<string, any>): void
+  (e: 'request-body-changed', newBody: string): void
 }>()
 
 const compTitles = {
@@ -110,7 +126,7 @@ watch(fieldValues, () => {
     emit('request-query-changed', getSampleQuery(props.data, fieldValues.value))
   }
   if (props.paramType === 'body') {
-    emit('request-body-changed', getSampleBody(props.data, fieldValues.value))
+    emit('request-body-changed', getSampleBody(props.data, props.requestBody))
   }
 }, { deep: true })
 

@@ -118,7 +118,7 @@ const selectedServerURL = ref<string>(serverList.value?.[0] ?? '')
 const currentServerUrl = ref<string>(serverList.value?.[0] ?? '')
 const currentRequestPath = ref<string>('')
 const currentRequestQuery = ref<string>('')
-const currentRequestBody = ref<Record<string, any>>()
+const currentRequestBody = ref<string>('')
 
 // refs and computed properties to manage currently active response object
 const responseList = computed(() => props.data.responses ?? [])
@@ -151,7 +151,7 @@ const setRequestQuery = (newQuery: string) => {
   currentRequestQuery.value = newQuery
 }
 
-const setRequestBody = (newSample: Record<string, any>) => {
+const setRequestBody = (newSample: string) => {
   currentRequestBody.value = newSample
 }
 
@@ -163,7 +163,7 @@ function updateSelectedServerURL(url: string) {
 watch(() => (props.data.id), () => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
-  currentRequestBody.value = getSampleBody(props.data)
+  currentRequestBody.value = getSampleBody(props.data, currentRequestBody.value)
 }, { immediate: true })
 </script>
 
