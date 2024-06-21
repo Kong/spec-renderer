@@ -1,33 +1,42 @@
 <template>
-  <component
-    :is="nestedPropertiesPresent ? 'details' : 'div'"
+  <div
     class="model-property"
     :data-testid="dataTestId"
-    @toggle="() => nestedPropertiesExpanded = !nestedPropertiesExpanded"
   >
     <component
-      :is="nestedPropertiesPresent ? 'summary' : 'div'"
-      class="model-property-fields"
-    >
-      <component
-        :is="field.component"
-        v-for="field in orderedFieldList"
-        :key="field.key"
-        v-bind="field.props"
-      />
-    </component>
-
-    <ModelNode
-      v-if="resolvedModelProperty && nestedPropertiesExpanded"
-      class="model-property-nested-fields"
-      :schema="resolvedModelProperty"
-      :title="propertyName"
+      :is="field.component"
+      v-for="field in orderedFieldList"
+      :key="field.key"
+      v-bind="field.props"
     />
-  </component>
+
+    <details
+      v-if="nestedPropertiesPresent"
+    >
+      <summary
+        class="nested-fields-summary"
+        @click="() => nestedPropertiesExpanded = !nestedPropertiesExpanded"
+      >
+        <AddIcon
+          class="add-circle-icon"
+          :class="{ 'expanded': nestedPropertiesExpanded }"
+          size="16px"
+        />
+        <span>{{ nestedPropertiesExpanded ? 'Hide' : 'Show' }} Child Parameters</span>
+      </summary>
+      <ModelNode
+        v-if="resolvedModelProperty && nestedPropertiesExpanded"
+        class="nested-model-node"
+        :schema="resolvedModelProperty"
+        :title="propertyName"
+      />
+    </details>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { AddIcon } from '@kong/icons'
 import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 import type { PropType } from 'vue'
 import type { SchemaObject } from '@/types'
@@ -84,8 +93,6 @@ const orderedFieldList = computed(() => {
               ? props.property.items.type
               : '',
         requiredFields: props.requiredFields,
-        collapsableProperty: nestedPropertiesPresent.value,
-        itemsExpanded: nestedPropertiesExpanded.value,
       },
       key: 'property-info',
     })
@@ -144,30 +151,51 @@ const orderedFieldList = computed(() => {
 
 <style lang="scss" scoped>
 .model-property {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kui-space-50, $kui-space-50);
+  padding: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0);
+
   // reset margins for nested fields
   * {
     margin: var(--kui-space-0, $kui-space-0);
   }
 
-  > :not(:first-child) {
-    margin-top: var(--kui-space-20, $kui-space-20);
-  }
-
-  .model-property-fields {
-    padding: var(--kui-space-40, $kui-space-40);
-    padding-left: var(--kui-space-0, $kui-space-0);
-  }
-
-  summary.model-property-fields {
+  .nested-fields-summary {
+    align-items: center;
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
     cursor: pointer;
-    list-style: none;
+    display: flex;
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+    gap: var(--kui-space-30, $kui-space-30);
+    line-height: var(--kui-line-height-20, $kui-line-height-20);
+    padding: var(--kui-space-20, $kui-space-20);
+    padding-right: var(--kui-space-30, $kui-space-30);
+    width: max-content;
+
+    .add-circle-icon {
+      @include toggle-icon(
+        $textColor: var(--kui-color-text-neutral, $kui-color-text-neutral),
+        $height: var(--kui-icon-size-30, $kui-icon-size-30),
+        $width: var(--kui-icon-size-30, $kui-icon-size-30),
+        $rotate-degree: 45deg,
+      );
+    }
   }
 
-  .model-property-nested-fields {
+  .nested-model-node {
     @include tree-nesting;
 
-    // only nested fields should have a left padding
-    padding-left: var(--kui-space-70, $kui-space-70);
+    // left padding for the nested model-node tree
+    padding-left: var(--kui-space-40, $kui-space-40);
+
+    .model-property {
+      // left padding for space between the tree-branch and model-property
+      padding-left: var(--kui-space-40, $kui-space-40);
+    }
   }
 
 }

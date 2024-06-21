@@ -51,7 +51,7 @@ defineProps({
     padding: var(--kui-space-40, $kui-space-40);
 
     .chevron-icon {
-      @include chevron-toggle;
+      @include toggle-icon;
     }
 
     .overview-collapsible-panel-header-title {
