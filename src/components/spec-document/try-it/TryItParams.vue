@@ -63,7 +63,7 @@ const compTitles = {
   body: 'Body',
 }
 
-const params = computed((): IHttpPathParam[] | IHttpQueryParam[]| undefined => {
+const params = computed((): IHttpPathParam[] | IHttpQueryParam[] | undefined => {
   if (props.paramType === 'query') {
     return props.data.request?.query
   }

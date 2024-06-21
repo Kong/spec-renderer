@@ -92,7 +92,7 @@ const headersText = computed((): string => {
       headers[pair[0]] = pair[1]
     }
   }
-  return Object.keys(headers).length ? JSON.stringify(headers, null, 2): ''
+  return Object.keys(headers).length ? JSON.stringify(headers, null, 2) : ''
 })
 
 const responseText = ref<string>('')
