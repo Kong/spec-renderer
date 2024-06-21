@@ -1,3 +1,10 @@
+# [1.31.0](https://github.com/Kong/spec-renderer/compare/v1.30.0...v1.31.0) (2024-06-21)
+
+
+### Features
+
+* presenting more details of TryIt response [KHCP-12154] ([#148](https://github.com/Kong/spec-renderer/issues/148)) ([111f759](https://github.com/Kong/spec-renderer/commit/111f7598d55332e5220335e76a26afc6d3096585))
+
 # [1.30.0](https://github.com/Kong/spec-renderer/compare/v1.29.0...v1.30.0) (2024-06-20)
 
 
