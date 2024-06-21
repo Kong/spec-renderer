@@ -2,12 +2,8 @@
   <CollapsibleSection
     class="path-param-list"
     data-testid="endpoint-path-param-list"
+    title="Path Parameters"
   >
-    <template #title>
-      <h5 class="path-param-list-title">
-        Path Parameters
-      </h5>
-    </template>
     <div class="path-param-list-items">
       <template
         v-for="pathParam in pathParamList"
@@ -66,11 +62,6 @@ const pathParamItemRequiredFields = (pathParam: IHttpPathParam) => {
 
 <style lang="scss" scoped>
 .path-param-list {
-  .path-param-list-title {
-    font-size: var(--kui-font-size-40, $kui-font-size-40);
-    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-    line-height: var(--kui-line-height-40, $kui-line-height-40);
-  }
   .path-param-list-items {
     padding-bottom: var(--kui-space-60, $kui-space-60);
     padding-top: var(--kui-space-40, $kui-space-40);

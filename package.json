@@ -1,6 +1,6 @@
 {
   "name": "@kong/spec-renderer-dev",
-  "version": "1.28.0",
+  "version": "1.30.0",
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
   "type": "module",
@@ -59,11 +59,11 @@
     "json-schema": "^0.4.0",
     "lodash": "^4.17.21",
     "oas-normalize": "^11.1.0",
-    "openapi3-ts": "4.3.2",
+    "openapi3-ts": "4.3.3",
     "shiki": "^1.6.3"
   },
   "resolutions": {
-    "openapi3-ts": "4.3.2"
+    "openapi3-ts": "4.3.3"
   },
   "devDependencies": {
     "@babel/types": "^7.24.7",
@@ -94,7 +94,7 @@
     "rimraf": "^5.0.7",
     "rollup-plugin-visualizer": "^5.12.0",
     "sass": "^1.77.4",
-    "semantic-release": "^23.1.1",
+    "semantic-release": "^24.0.0",
     "stylelint": "^16.6.1",
     "stylelint-config-html": "^1.1.0",
     "stylelint-config-recommended-scss": "^14.0.0",
@@ -110,8 +110,8 @@
     "vite-plugin-vue-devtools": "^7.2.1",
     "vitest": "1.6.0",
     "vue": "^3.4.27",
-    "vue-router": "^4.3.2",
-    "vue-tsc": "^2.0.20"
+    "vue-router": "^4.3.3",
+    "vue-tsc": "^2.0.21"
   },
   "repository": {
     "type": "git",
@@ -167,7 +167,7 @@
   },
   "volta": {
     "node": "20.14.0",
-    "pnpm": "9.2.0"
+    "pnpm": "9.3.0"
   },
   "config": {
     "commitizen": {

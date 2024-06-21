@@ -1,11 +1,11 @@
 <template>
-  <div
+  <span
     class="version-badge"
     :class="type"
     data-testid="version-badge"
   >
-    <slot>{{ version }}</slot>
-  </div>
+    {{ version }}
+  </span>
 </template>
 
 <script setup lang="ts">

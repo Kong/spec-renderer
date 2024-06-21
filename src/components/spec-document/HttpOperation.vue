@@ -31,14 +31,31 @@
           v-if="data.request"
           v-bind="data.request"
         />
-        <section v-if="Array.isArray(data.responses) && data.responses.length">
-          <h4>Responses</h4>
-          <HttpResponse
-            v-for="response in data.responses"
-            :key="response.code"
-            :response="response"
-          />
-        </section>
+
+        <HttpResponse
+          class="http-operation-response"
+          :content-list="activeResponseContentList"
+          :description="activeResponseDescription"
+        >
+          <div class="http-response-header-menu">
+            <select
+              v-for="component in responseSelectComponentList"
+              :key="component.name"
+              :name="component.name"
+              :value="component.value"
+              @change="(event) => handleSelectInputChange(event, component.name)"
+              @click.stop
+            >
+              <option
+                v-for="option in component.optionList"
+                :key="option"
+                :value="option"
+              >
+                {{ option }}
+              </option>
+            </select>
+          </div>
+        </HttpResponse>
       </div>
       <div
         class="right"
@@ -79,6 +96,8 @@ import RequestSample from './samples/RequestSample.vue'
 import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import PageHeader from '../common/PageHeader.vue'
 import { getSamplePath, getSampleQuery, getSampleBody, removeTrailingSlash } from '@/utils'
+import composables from '@/composables'
+import { ResponseSelectComponent } from '@/types'
 
 const props = defineProps({
   data: {
@@ -100,6 +119,25 @@ const currentServerUrl = ref<string>(serverList.value?.[0] ?? '')
 const currentRequestPath = ref<string>('')
 const currentRequestQuery = ref<string>('')
 const currentRequestBody = ref<Record<string, any>>()
+
+// refs and computed properties to manage currently active response object
+const responseList = computed(() => props.data.responses ?? [])
+const {
+  activeResponseDescription,
+  activeResponseCode,
+  activeContentType,
+  activeResponseContentList,
+  responseSelectComponentList,
+} = composables.useCurrentResponse(responseList)
+
+function handleSelectInputChange(event: Event, componentName: ResponseSelectComponent) {
+  const newValue = (event.target as HTMLSelectElement).value
+  if (componentName === ResponseSelectComponent.ResponseCodeSelectMenu) {
+    activeResponseCode.value = newValue
+  } else if (componentName === ResponseSelectComponent.ContentTypeSelectMenu) {
+    activeContentType.value = newValue
+  }
+}
 
 // this is fired when server url parameters in tryIt section getting changed
 const setServerUrl = (newServerUrl: string) => {
@@ -152,6 +190,25 @@ watch(() => (props.data.id), () => {
     .right {
       background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
       padding: var(--kui-space-40, $kui-space-40);
+    }
+
+    .http-operation-response {
+      .http-response-header-menu {
+        align-items: center;
+        display: inline-flex;
+        gap: var(--kui-space-20, $kui-space-20);
+
+        select {
+          border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+          border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+          color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+          font-family: var(--kui-font-family-code, $kui-font-family-code);
+          font-size: var(--kui-font-size-20, $kui-font-size-20);
+          line-height: var(--kui-line-height-20, $kui-line-height-20);
+          outline: none;
+          padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
+        }
+      }
     }
   }
   // TODO change when we have floating TOC for smaller width

@@ -74,8 +74,7 @@ const docComponent = computed(() => {
     case NodeType.HttpWebhook:
       return { component: HttpOperation, props: defaultProps }
     case NodeType.HttpService:
-      // todo: add openApiVersion to props
-      return { component: HttpService, props: defaultProps }
+      return { component: HttpService, props: { ...defaultProps, specVersion: serviceNode.value.specVersion } }
     case NodeType.Model:
       return { component: HttpModel, props: { ...defaultProps, title: serviceNode.value.name } }
     default:
@@ -88,6 +87,5 @@ const docComponent = computed(() => {
 .spec-renderer-document {
   background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
   color: var(--kui-color-text, $kui-color-text);
-  padding: var(--kui-space-60, $kui-space-60);
 }
 </style>
