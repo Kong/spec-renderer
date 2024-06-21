@@ -123,13 +123,13 @@ watch(resultOptions, () => {
 
 const requestLang = ref<string>('')
 
-watch(()=>props.response, async () => {
-  if (props.response) {
-    if (props.response.headers.get('content-type')?.includes('/json')) {
-      responseText.value = JSON.stringify(await props.response.json(), null, 2)
+watch(() => props.response, async (res) => {
+  if (res) {
+    if (res.headers.get('content-type')?.includes('/json')) {
+      responseText.value = JSON.stringify(await res.json(), null, 2)
       requestLang.value = 'json'
     } else {
-      responseText.value = await props.response.text()
+      responseText.value = await res.text()
       requestLang.value = ''
     }
   } else {
