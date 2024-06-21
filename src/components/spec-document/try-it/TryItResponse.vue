@@ -115,9 +115,9 @@ const resultOptions = computed(():Array<Record<string, string>> => {
 
 const selectedResOption = ref<string>()
 
-watch(resultOptions, () => {
-  if (resultOptions.value.length) {
-    selectedResOption.value = resultOptions.value[0].value
+watch(resultOptions, (options) => {
+  if (options.length) {
+    selectedResOption.value = options[0].value
   }
 }, { immediate: true })
 
