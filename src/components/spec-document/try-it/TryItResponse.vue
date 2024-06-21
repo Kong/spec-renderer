@@ -81,7 +81,7 @@ const props = defineProps({
 })
 
 const errorText = computed((): string => {
-  return props.responseError?.message. || ''
+  return props.responseError?.message || ''
 })
 
 const headersText = computed((): string => {
