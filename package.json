@@ -1,6 +1,6 @@
 {
   "name": "@kong/spec-renderer-dev",
-  "version": "1.30.0",
+  "version": "1.31.0",
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
   "type": "module",
@@ -75,6 +75,7 @@
     "@kong/eslint-config-kong-ui": "1.1.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
+    "@stylistic/stylelint-plugin": "^2.1.2",
     "@types/jsdom": "^21.1.7",
     "@types/json-schema": "^7.0.15",
     "@types/node": "^20.14.2",

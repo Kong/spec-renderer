@@ -47,25 +47,12 @@
       param-type="body"
       @request-body-changed="requestBodyChanged"
     />
-
-    <CollapsablePanel
-      v-if="response"
-      :data-testid="`tryit-response-${data.id}`"
-    >
-      <template #header>
-        <h5>
-          Response
-        </h5>
-      </template>
-
-      <div class="wide">
-        <CodeBlock
-          v-if="responseText"
-          :code="responseText"
-          lang="json"
-        />
-      </div>
-    </CollapsablePanel>
+    <TryItResponse
+      v-if="response || responseError"
+      :data-id="data.id"
+      :response="response"
+      :response-error="responseError"
+    />
   </div>
 </template>
 
@@ -76,11 +63,10 @@ import TryItButton from './TryItButton.vue'
 import { getRequestHeaders } from '@/utils'
 import type { IHttpOperation } from '@stoplight/types'
 import MethodBadge from '@/components/common/MethodBadge.vue'
-import CodeBlock from '@/components/common/CodeBlock.vue'
-import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import TryItAuth from './TryItAuth.vue'
 import TryItServer from './TryItServer.vue'
 import TryItParams from './TryItParams.vue'
+import TryItResponse from './TryItResponse.vue'
 import { getSamplePath, getSampleQuery } from '@/utils'
 
 
@@ -109,7 +95,7 @@ const emit = defineEmits<{
 
 
 const response = ref<Response | undefined>()
-const responseText = ref<string>()
+const responseError = ref<Error>()
 
 const authHeaders = ref<Array<Record<string, string>>>()
 
@@ -151,7 +137,7 @@ const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 const doApiCall = async () => {
   try {
-    // Todo - deal with  body
+    response.value = undefined
     const url = new URL(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''))
     url.search = currentRequestQuery.value
     response.value = await fetch(url, {
@@ -165,10 +151,8 @@ const doApiCall = async () => {
       , { }),
       ...(currentRequestBody.value ? { body: JSON.stringify(currentRequestBody.value) } : null),
     })
-    responseText.value = JSON.stringify((await response.value?.json()), null, 2)
-
-  } catch (error) {
-    console.error(error)
+  } catch (error: any) {
+    responseError.value = error
   }
 }
 
@@ -195,7 +179,6 @@ watch(() => props.requestBody, () => {
 watch(() => (props.data.id), () => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
-  responseText.value = ''
   response.value = undefined
 }, { immediate: true })
 
@@ -216,7 +199,7 @@ watch(() => (props.data.id), () => {
 }
 
 /* using deep as this thing is used in multiple child components */
-:deep(input), :deep(select) {
+:deep(.panel-body input), :deep(.panel-body select) {
   border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
   border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   box-sizing: border-box;

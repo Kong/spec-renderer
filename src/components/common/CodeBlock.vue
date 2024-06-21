@@ -26,7 +26,7 @@ const props = defineProps({
   },
   lang: {
     type: String,
-    required: true,
+    default: '',
   },
 })
 const { getHighlighter } = composables.useShiki()
@@ -35,12 +35,13 @@ const highlighter = ref<HighlighterCore>()
 const getHighlightLanguage = (snippetLang: LanguageCode | null | undefined): string | null | undefined => {
   return requestSampleConfigs.find(c => c.httpSnippetLanguage === snippetLang)?.highlightLanguage
 }
+
 const highlightedCode = computed(():string => {
-  if (highlighter.value) {
+  if (highlighter.value && props.lang) {
     const hightLightLang = getHighlightLanguage(props.lang as LanguageCode)
     return highlighter.value.codeToHtml(props.code, { lang: hightLightLang as string, theme: 'material-theme-lighter' })
   }
-  return ''
+  return props.code
 })
 
 onMounted(async ()=> {
