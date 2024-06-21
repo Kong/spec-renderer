@@ -1,3 +1,10 @@
+# [1.32.0](https://github.com/Kong/spec-renderer/compare/v1.31.0...v1.32.0) (2024-06-21)
+
+
+### Features
+
+* updated schema model styling [KHCP-12288] ([#150](https://github.com/Kong/spec-renderer/issues/150)) ([0e978b3](https://github.com/Kong/spec-renderer/commit/0e978b3bab0326da843749df4f0e5b232cc659f8))
+
 # [1.31.0](https://github.com/Kong/spec-renderer/compare/v1.30.0...v1.31.0) (2024-06-21)
 
 
