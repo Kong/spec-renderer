@@ -20,15 +20,20 @@
   }
 }
 
-@mixin chevron-toggle {
-  color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
+@mixin toggle-icon(
+  $textColor: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong),
+  $height: var(--kui-icon-size-30, $kui-icon-size-30),
+  $width: var(--kui-icon-size-30, $kui-icon-size-30),
+  $rotate-degree: 90deg
+) {
+  color: $textColor !important;
   flex-shrink: 0;
-  height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
+  height: $height !important;
   pointer-events: none;
   transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
-  width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
+  width: $width !important;
 
   &.expanded {
-    transform: rotate(90deg);
+    transform: rotate($rotate-degree);
   }
 }

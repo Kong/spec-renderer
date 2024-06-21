@@ -1,5 +1,5 @@
 @mixin tree-nesting {
-  $branch-width: var(--kui-space-60, $kui-space-60);
+  $branch-width: var(--kui-space-50, $kui-space-50);
   $left: calc(-1 * ($branch-width));
   $border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
 
@@ -12,10 +12,10 @@
       border-bottom: $border;
       border-left: $border;
       content: "";
-      height: var(--kui-icon-size-30, $kui-icon-size-30);
+      height: 28px;
       left: $left;
       position: absolute;
-      top: 2px;
+      top: 0px;
       width: $branch-width;
     }
 
