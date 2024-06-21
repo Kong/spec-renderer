@@ -141,7 +141,6 @@ watch(() => props.response, async (res) => {
 </script>
 
 <style lang="scss" scoped>
-
 .response-status:before {
   color: var(--kui-color-text-danger, $kui-color-text-danger);
   content: '\25CF';
