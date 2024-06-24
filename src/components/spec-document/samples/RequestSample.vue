@@ -161,6 +161,7 @@ const snippet = ref<HTTPSnippetType>()
 const requestCode = ref<string | string[] | null>()
 
 watch(selectedRequestSample, (sampleKey) => {
+  // firing the index of example user selects.
   emit('request-body-sample-idx-changed', (requestSamples.value as INodeExample[]).findIndex(s => s.key === sampleKey))
 })
 
