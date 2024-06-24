@@ -96,7 +96,10 @@ const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Re
       (acc[current.name] = current); return acc
     }, {})
   }
-  return <Record<string, any>>{ body: { example: props.requestBody } }
+  if (props.requestBody) {
+    return <Record<string, any>>{ body: { example: props.requestBody } }
+  }
+  return <Record<string, any>>{}
 })
 
 //
