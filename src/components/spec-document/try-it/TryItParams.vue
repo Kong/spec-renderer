@@ -107,10 +107,10 @@ const fieldValues = ref<Record<string, string>>({})
 
 
 // calculating initial values for the fields,
-watch(params, () => {
-  if (params.value) {
-    const samples = extractSample(params.value)
-    Object.keys(params.value).forEach(key => {
+watch(params, (newParams) => {
+  if (newParams) {
+    const samples = extractSample(newParams)
+    Object.keys(newParams).forEach(key => {
       fieldValues.value[key] = samples[key]
     })
   }
@@ -121,13 +121,13 @@ const requestBodyChanged = (newBody: string) => {
 }
 
 // this is to fire event when fieldValues changed
-watch(fieldValues, () => {
+watch(fieldValues, (newFieldValues) => {
   if (props.paramType === 'path') {
-    emit('request-path-changed', getSamplePath(props.data, fieldValues.value))
+    emit('request-path-changed', getSamplePath(props.data, newFieldValues))
     return
   }
   if (props.paramType === 'query') {
-    emit('request-query-changed', getSampleQuery(props.data, fieldValues.value))
+    emit('request-query-changed', getSampleQuery(props.data, newFieldValues))
   }
 }, { deep: true })
 
