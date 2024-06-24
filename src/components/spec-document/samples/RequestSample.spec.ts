@@ -9,7 +9,7 @@ describe('<RequestSample />', () => {
   it('Should use correct url in the request sample', async () => {
     vi.spyOn(composables, 'useShiki').mockImplementation(() => {
       return {
-        getHighlighter: (): Promise<HighlighterCore> => {
+        createHighlighter: (): Promise<HighlighterCore> => {
           return {
             //@ts-ignore irrelavent for mocking purposes
             codeToHtml: (c: string) => (c),

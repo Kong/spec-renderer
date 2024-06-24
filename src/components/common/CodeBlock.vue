@@ -29,7 +29,7 @@ const props = defineProps({
     default: '',
   },
 })
-const { getHighlighter } = composables.useShiki()
+const { createHighlighter } = composables.useShiki()
 const highlighter = ref<HighlighterCore>()
 
 const getHighlightLanguage = (snippetLang: LanguageCode | null | undefined): string | null | undefined => {
@@ -45,7 +45,7 @@ const highlightedCode = computed(():string => {
 })
 
 onMounted(async ()=> {
-  highlighter.value = await getHighlighter()
+  highlighter.value = await createHighlighter()
 })
 
 </script>
