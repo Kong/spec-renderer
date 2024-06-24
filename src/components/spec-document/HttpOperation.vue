@@ -63,8 +63,10 @@
       >
         <TryIt
           :data="data"
+          :request-body="currentRequestBody"
           :server-url="selectedServerURL"
           @access-tokens-changed="setAuthHeaders"
+          @request-body-changed="setRequestBody"
           @request-path-changed="setRequestPath"
           @request-query-changed="setRequestQuery"
           @server-url-changed="setServerUrl"
@@ -72,9 +74,11 @@
         <RequestSample
           :auth-headers="authHeaders"
           :data="data"
+          :request-body="currentRequestBody"
           :request-path="currentRequestPath"
           :request-query="currentRequestQuery"
           :server-url="currentServerUrl"
+          @request-body-sample-idx-changed="setRequestBodyByIdx"
         />
       </div>
     </section>
@@ -91,7 +95,7 @@ import TryIt from './try-it/TryIt.vue'
 import RequestSample from './samples/RequestSample.vue'
 import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import PageHeader from '../common/PageHeader.vue'
-import { getSamplePath, getSampleQuery, removeTrailingSlash } from '@/utils'
+import { getSamplePath, getSampleQuery, getSampleBody, removeTrailingSlash } from '@/utils'
 import composables from '@/composables'
 import { ResponseSelectComponent } from '@/types'
 
@@ -114,6 +118,7 @@ const selectedServerURL = ref<string>(serverList.value?.[0] ?? '')
 const currentServerUrl = ref<string>(serverList.value?.[0] ?? '')
 const currentRequestPath = ref<string>('')
 const currentRequestQuery = ref<string>('')
+const currentRequestBody = ref<string>('')
 
 // refs and computed properties to manage currently active response object
 const responseList = computed(() => props.data.responses ?? [])
@@ -146,6 +151,14 @@ const setRequestQuery = (newQuery: string) => {
   currentRequestQuery.value = newQuery
 }
 
+const setRequestBody = (newBody: string) => {
+  currentRequestBody.value = newBody
+}
+
+const setRequestBodyByIdx = (newSampleIdx: number) => {
+  currentRequestBody.value = getSampleBody(props.data, newSampleIdx)
+}
+
 function updateSelectedServerURL(url: string) {
   selectedServerURL.value = url
   currentServerUrl.value = url
@@ -154,6 +167,7 @@ function updateSelectedServerURL(url: string) {
 watch(() => (props.data.id), () => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
+  currentRequestBody.value = getSampleBody(props.data, 0)
 }, { immediate: true })
 </script>
 

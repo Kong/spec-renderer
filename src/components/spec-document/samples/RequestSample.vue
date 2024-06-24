@@ -56,8 +56,8 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, computed } from 'vue'
-import type { PropType } from 'vue'
+import { watch, ref, computed, inject } from 'vue'
+import type { PropType, Ref } from 'vue'
 import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet-lite'
 import { requestSampleConfigs } from '@/constants'
@@ -73,12 +73,13 @@ const props = defineProps({
     required: true,
   },
   /**
-   * server url+path selected by user on endpoints detail page
+   * server url selected by user on endpoints detail page
    */
   serverUrl: {
     type: String,
     required: true,
   },
+  /* value is coming from TryIt path parameter change */
   requestPath: {
     type: String,
     required: true,
@@ -87,19 +88,38 @@ const props = defineProps({
     type: Array as PropType<Record<string, string>[]>,
     default: () => [],
   },
+  /* value is coming from TryIt query parameter change */
   requestQuery: {
     type: String,
     default: '',
   },
-
+  /* value is coming from TryIt body parameter change */
+  requestBody: {
+    type: String,
+    default: '',
+  },
 })
 
+const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
+
+const emit = defineEmits<{
+  (e: 'request-body-sample-idx-changed', samlpleIdx: number): void
+}>()
+
 const requestConfigs = computed(() => {
-  if (['get', 'delete'].includes(props.data.method) || requestSamples.value.length === 0) {
+
+  if (!hideTryIt.value) {
     return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
-  } else {
+  }
+
+  // when we have tryIt section is hidden, we want to show JSON choice when we have a body
+  if (props.requestBody && hideTryIt.value) {
     return requestSampleConfigs
   }
+
+  // in all other cases we filter json out
+  return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
+
 })
 
 const selectedLang = ref<LanguageCode>()
@@ -140,20 +160,23 @@ const snippet = ref<HTTPSnippetType>()
 
 const requestCode = ref<string | string[] | null>()
 
+watch(selectedRequestSample, (sampleKey) => {
+  // firing the index of example user selects.
+  emit('request-body-sample-idx-changed', (requestSamples.value as INodeExample[]).findIndex(s => s.key === sampleKey))
+})
 
 watch(() => ({
   method: props.data.method,
-  requestBodyKey: selectedRequestSample.value,
   lang: selectedLang.value,
   lib: selectedLangLibrary.value,
   serverUrl: props.serverUrl,
   authHeaders: props.authHeaders,
   requestPath: props.requestPath,
   requestQuery: props.requestQuery,
+  requestBody: props.requestBody,
 }), async (newValue, oldValue) => {
-  const jsonObj = (requestSamples.value as INodeExample[]).find(s => s.key === newValue.requestBodyKey)?.value
 
-  if (newValue.method !== oldValue?.method) {
+  if (newValue.method !== oldValue?.method && requestConfigs.value?.[0]) {
     selectedLang.value = requestConfigs.value[0].httpSnippetLanguage
     newValue.lang = selectedLang.value
   }
@@ -161,15 +184,16 @@ watch(() => ({
   if (newValue.lang !== oldValue?.lang) {
     selectedLangLibrary.value = selectedLangLibraries.value?.length ? selectedLangLibraries.value[0].httpSnippetLibrary : undefined
   }
+
   let snippetError = false
   let snippetChanged = false
 
   // if we selected new requestBody or if we do not have httpSNippet yet, we need to re-init it
   if (!snippet.value ||
-    newValue.requestBodyKey !== oldValue?.requestBodyKey ||
-    newValue.serverUrl !== oldValue.serverUrl ||
-    newValue.requestPath !== oldValue.requestPath ||
-    newValue.requestQuery !== oldValue.requestQuery ||
+    newValue.serverUrl !== oldValue?.serverUrl ||
+    newValue.requestPath !== oldValue?.requestPath ||
+    newValue.requestQuery !== oldValue?.requestQuery ||
+    newValue.requestBody !== oldValue?.requestBody ||
     newValue.authHeaders !== oldValue?.authHeaders) {
 
     // TODO: handle body change gracefully
@@ -187,7 +211,7 @@ watch(() => ({
         ],
         postData: {
           mimeType: 'application/json',
-          text: JSON.stringify(jsonObj, null, 2),
+          text: newValue.requestBody,
         },
       } as unknown as HarRequest)
 
@@ -204,7 +228,8 @@ watch(() => ({
     // if we do not have requestCode generated, or our lanf or lib are changed - we need to re-generate requestCode
     if (!requestCode.value || snippetChanged || newValue.lang !== oldValue?.lang || newValue.lib !== oldValue?.lib) {
       if (newValue.lang === 'json') {
-        requestCode.value = jsonObj ? JSON.stringify(jsonObj, null, 2) : null
+        requestCode.value = newValue.requestBody
+        return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
       } else if (snippet.value) {
         requestCode.value = await snippet.value.convert((newValue.lang as TargetId), newValue.lib)
       }

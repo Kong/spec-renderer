@@ -1,7 +1,7 @@
 <template>
   <CollapsablePanel
-    v-if="params?.length"
-    :data-testid="`tryit-params-${props.paramType}-${data.id}`"
+    v-if="params&& Object.keys(params).length"
+    :data-testid="`tryit-params-${paramType}-${data.id}`"
   >
     <template #header>
       <h5>
@@ -10,21 +10,34 @@
     </template>
 
     <div
-      v-for="p in params"
-      :key="`${p.name}${paramType}`"
+      v-if="paramType !== 'body'"
       class="wide"
     >
-      <label>
-        <span v-if="p.required">
-          *
-        </span>
-        {{ p.name }}
-      </label>
-      <input
-        v-model="fieldValues[p.name]"
-        :data-testid="`tryit-${paramType}-param-${p.name}-${data.id}`"
-        :title="p.description"
+      <div
+        v-for="pKey in Object.keys(params)"
+        :key="`${params[pKey].name}${paramType}`"
       >
+        <label>
+          <span v-if="params[pKey].required">
+            *
+          </span>
+          {{ params[pKey].name || pKey }}
+        </label>
+        <input
+          v-model="fieldValues[pKey]"
+          :data-testid="`tryit-${paramType}-param-${pKey}-${data.id}`"
+          :title="params[pKey].description"
+        >
+      </div>
+    </div>
+    <div
+      v-else
+      class="wide"
+    >
+      <EditableCodeBlock
+        :code="fieldValues.body"
+        @request-body-changed="requestBodyChanged"
+      />
     </div>
   </CollapsablePanel>
 </template>
@@ -36,6 +49,7 @@ import type { IHttpOperation, IHttpPathParam, IHttpQueryParam } from '@stoplight
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import { extractSample, getSamplePath, getSampleQuery } from '@/utils'
 import type { RequestParamTypes } from '@/types'
+import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
 
 /**
  * This components handles path parameters, query parameters and body.
@@ -50,11 +64,17 @@ const props = defineProps({
     type: String as PropType<RequestParamTypes>,
     required: true,
   },
+  /* coming as a property when request sample is picked in RequestSample */
+  requestBody: {
+    type: String,
+    default: '',
+  },
 })
 
 const emit = defineEmits<{
   (e: 'request-path-changed', newPath: string): void
   (e: 'request-query-changed', newQuery: string): void
+  (e: 'request-body-changed', newBody: string): void
 }>()
 
 const compTitles = {
@@ -63,36 +83,51 @@ const compTitles = {
   body: 'Body',
 }
 
-const params = computed((): IHttpPathParam[] | IHttpQueryParam[] | undefined => {
+// params schema props extracted from data (schema) or received from outside controls (reqBody)
+const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Record<string, any>> | undefined => {
   if (props.paramType === 'query') {
-    return props.data.request?.query
+    return props.data.request?.query?.reduce((acc: Record<string, IHttpQueryParam>, current: IHttpQueryParam) => {
+      (acc[current.name] = current); return acc
+    }, {})
+
   }
   if (props.paramType === 'path') {
-    return props.data.request?.path
+    return props.data.request?.path?.reduce((acc: Record<string, IHttpPathParam>, current: IHttpPathParam) => {
+      (acc[current.name] = current); return acc
+    }, {})
   }
-  // this is for 'body'
-  return []
+  if (props.requestBody) {
+    return <Record<string, any>>{ body: { example: props.requestBody } }
+  }
+  return <Record<string, any>>{}
 })
 
+//
 const fieldValues = ref<Record<string, string>>({})
 
 
-// this is to calculate initial values for the fields
-watch(params, () => {
-  const samples = extractSample(params.value)
-  params.value?.forEach((p) => {
-    fieldValues.value[p.name] = samples[p.name]
-  })
+// calculating initial values for the fields,
+watch(params, (newParams) => {
+  if (newParams) {
+    const samples = extractSample(newParams)
+    Object.keys(newParams).forEach(key => {
+      fieldValues.value[key] = samples[key]
+    })
+  }
 }, { immediate: true })
 
+const requestBodyChanged = (newBody: string) => {
+  emit('request-body-changed', newBody)
+}
+
 // this is to fire event when fieldValues changed
-watch(fieldValues, () => {
+watch(fieldValues, (newFieldValues) => {
   if (props.paramType === 'path') {
-    emit('request-path-changed', getSamplePath(props.data, fieldValues.value))
+    emit('request-path-changed', getSamplePath(props.data, newFieldValues))
     return
   }
   if (props.paramType === 'query') {
-    emit('request-query-changed', getSampleQuery(props.data, fieldValues.value))
+    emit('request-query-changed', getSampleQuery(props.data, newFieldValues))
   }
 }, { deep: true })
 

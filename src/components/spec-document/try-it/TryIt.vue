@@ -41,10 +41,11 @@
       param-type="query"
       @request-query-changed="requestQueryChanged"
     />
-
     <TryItParams
       :data="data"
       param-type="body"
+      :request-body="currentRequestBody"
+      @request-body-changed="requestBodyChanged"
     />
     <TryItResponse
       v-if="response || responseError"
@@ -78,6 +79,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  requestBody: {
+    type: String,
+    default: '',
+  },
 })
 
 const emit = defineEmits<{
@@ -85,6 +90,7 @@ const emit = defineEmits<{
   (e: 'server-url-changed', serverUrl: string): void
   (e: 'request-path-changed', newPath: string): void
   (e: 'request-query-changed', newPath: string): void
+  (e: 'request-body-changed', newBody: string): void
 }>()
 
 
@@ -99,6 +105,8 @@ const currentRequestPath = ref<string>('')
 
 const currentRequestQuery = ref<string>('')
 
+const currentRequestBody = ref<string>('')
+
 const requestPathChanged = (newPath: string) => {
   currentRequestPath.value = newPath
   emit('request-path-changed', newPath)
@@ -107,6 +115,11 @@ const requestPathChanged = (newPath: string) => {
 const requestQueryChanged = (newQuery: string) => {
   currentRequestQuery.value = newQuery
   emit('request-query-changed', newQuery)
+}
+
+const requestBodyChanged = (newBody: string) => {
+  currentRequestBody.value = newBody
+  emit('request-body-changed', newBody)
 }
 
 /*
@@ -134,7 +147,9 @@ const doApiCall = async () => {
         ...getRequestHeaders(props.data),
       ].reduce((acc, current) => {
         acc[current.name] = current.value; return acc
-      }, { }),
+      }
+      , { }),
+      ...(currentRequestBody.value ? { body: currentRequestBody.value } : null),
     })
   } catch (error: any) {
     responseError.value = error
@@ -156,6 +171,10 @@ const showTryIt = computed((): boolean => {
 watch(() => props.serverUrl, () => {
   currentServerUrl.value = props.serverUrl
 })
+
+watch(() => props.requestBody, (body) => {
+  currentRequestBody.value = body
+}, { immediate: true })
 
 watch(() => (props.data.id), () => {
   currentRequestPath.value = getSamplePath(props.data)
