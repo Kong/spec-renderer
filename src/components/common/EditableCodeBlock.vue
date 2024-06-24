@@ -57,10 +57,10 @@ watch(() => props.code, (newCode) => {
 
 <style lang="scss" scoped>
 code {
-  width: 100%;
-  min-height: 100px;
   background: transparent !important;
+  min-height: 100px;
   outline: none;
+  width: 100%;
 
 }
 .error-wrapper {
