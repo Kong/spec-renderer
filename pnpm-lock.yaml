@@ -15,8 +15,8 @@ importers:
         specifier: ^11.6.4
         version: 11.6.4
       '@kong/icons':
-        specifier: ^1.14.0
-        version: 1.14.0(vue@3.4.27(typescript@5.4.5))
+        specifier: ^1.14.1
+        version: 1.14.1(vue@3.4.27(typescript@5.4.5))
       '@scalar/openapi-parser':
         specifier: ^0.5.0
         version: 0.5.0
@@ -679,6 +679,7 @@ packages:
 
   '@evilmartians/lefthook@1.6.18':
     resolution: {integrity: sha512-nvJ1uYgz/F1DbykTMIiI2nUZctVmijUYkqdGqmGkrL0ImEKFjWxk1jZg6pULJ5vWxsArfUFJiFuOhUnUhyMbig==}
+    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -745,8 +746,8 @@ packages:
     peerDependencies:
       eslint: '>= 9.4.0'
 
-  '@kong/icons@1.14.0':
-    resolution: {integrity: sha512-eNhWJ9sms1mLMe8emyVh7LxUbekNHJk8aNpqrsuZ7WL1TWErF8pkMECyvIjM8VXr+lsU6itHcZ7KyP+dPgMuPw==}
+  '@kong/icons@1.14.1':
+    resolution: {integrity: sha512-2FbzPWQnHa5URm5jSw/JnRiJUDwVi5oSNLPg22LxckJoQ4wD0Q6i71CCG9I2HJ/Cd95a43eGfm2M9BCAHKPlwg==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: '>= 3.3.4 < 4'
@@ -5467,7 +5468,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@kong/icons@1.14.0(vue@3.4.27(typescript@5.4.5))':
+  '@kong/icons@1.14.1(vue@3.4.27(typescript@5.4.5))':
     dependencies:
       vue: 3.4.27(typescript@5.4.5)
 
