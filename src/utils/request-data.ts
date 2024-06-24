@@ -148,6 +148,7 @@ export const getSampleBody = (data: IHttpOperation, sampleIdx?: number): string 
   if (sampleIdx !== undefined) {
     if (Array.isArray(data.request.body.contents[0].examples) &&
       sampleIdx < data.request.body.contents[0].examples.length) {
+      //@ts-ignore value is valid property of example
       return JSON.stringify(data.request.body.contents[0].examples[sampleIdx].value as Record<string, any>, null, 2)
     }
   }
