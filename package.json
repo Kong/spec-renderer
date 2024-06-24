@@ -60,7 +60,7 @@
     "lodash": "^4.17.21",
     "oas-normalize": "^11.1.0",
     "openapi3-ts": "4.3.3",
-    "shiki": "^1.6.4"
+    "shiki": "^1.9.0"
   },
   "resolutions": {
     "openapi3-ts": "4.3.3"
