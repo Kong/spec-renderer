@@ -1,3 +1,10 @@
+# [1.33.0](https://github.com/Kong/spec-renderer/compare/v1.32.2...v1.33.0) (2024-06-24)
+
+
+### Features
+
+* handle body parameters in TryIt [KHCP-12157] ([#141](https://github.com/Kong/spec-renderer/issues/141)) ([f15df78](https://github.com/Kong/spec-renderer/commit/f15df78e6e3774fd24ed3ef71a82c65a72af3fbc))
+
 ## [1.32.2](https://github.com/Kong/spec-renderer/compare/v1.32.1...v1.32.2) (2024-06-24)
 
 
