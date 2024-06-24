@@ -1,3 +1,10 @@
+## [1.32.2](https://github.com/Kong/spec-renderer/compare/v1.32.1...v1.32.2) (2024-06-24)
+
+
+### Bug Fixes
+
+* **shiki:** highlighter method rename ([#158](https://github.com/Kong/spec-renderer/issues/158)) ([59840b8](https://github.com/Kong/spec-renderer/commit/59840b8e9d6e412dad67ac958df4f7a1663c663e))
+
 ## [1.32.1](https://github.com/Kong/spec-renderer/compare/v1.32.0...v1.32.1) (2024-06-24)
 
 
