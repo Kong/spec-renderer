@@ -172,8 +172,8 @@ watch(() => props.serverUrl, () => {
   currentServerUrl.value = props.serverUrl
 })
 
-watch(() => props.requestBody, () => {
-  currentRequestBody.value = props.requestBody
+watch(() => props.requestBody, (body) => {
+  currentRequestBody.value = body
 }, { immediate: true })
 
 watch(() => (props.data.id), () => {
