@@ -32,6 +32,9 @@ const emit = defineEmits < {
   (e: 'request-body-changed', newBody: string): void
 }>()
 
+const currentCode = ref<string>()
+const codeError = ref<boolean>(false)
+
 const handleInput = (e: Event) => {
   codeError.value = false
   const cText = (e.target as HTMLElement).innerText
@@ -45,9 +48,6 @@ const handleInput = (e: Event) => {
   emit('request-body-changed', resText)
 }
 
-
-const currentCode = ref<string>()
-const codeError = ref<boolean>(false)
 
 watch(() => props.code, (newCode) => {
   currentCode.value = newCode
