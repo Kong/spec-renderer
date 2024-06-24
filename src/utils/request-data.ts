@@ -27,9 +27,54 @@ export const getRequestHeaders = (data: IHttpOperation):Array<Record<string, str
 }
 
 /**
- * Extract sample value from provided params definition (works for params, query and body)
+ * Returning sample value for single parameter
+ *
+ * @param paramData
+ * @param key
+ * @returns
+ */
+export const extractSampleForParam = (paramData: Record<string, any> | undefined, key: string): string | boolean => {
+  if (!paramData) {
+    return ''
+  }
+
+  let exampleValue = paramData.example
+  if (exampleValue !== undefined) {
+    return exampleValue
+  }
+
+  if (paramData.schema?.examples) {
+    exampleValue = paramData.schema?.examples[0]
+    if (exampleValue !== undefined) {
+      return exampleValue
+    }
+  }
+
+  if (paramData.examples) {
+    exampleValue = paramData.examples[0]
+    if (exampleValue !== undefined) {
+      return exampleValue
+    }
+  }
+  if (paramData.type === 'boolean') {
+    return false
+  }
+
+  if (paramData.default !== undefined) {
+    return typeof paramData.default === 'object' ? JSON.stringify(paramData.default) : paramData.default
+  }
+
+  if (paramData.type === 'string') {
+    return key
+  }
+  return ''
+}
+
+
+/**
+ * Extract sample value from provided params definition (works for params, query)
  * @param paramData operation parameter data
- * @returns objct key - field name| value - field sample value
+ * @returns object key - field name| value - field sample value
  */
 export const extractSample = (paramData: Record<string, any> | undefined): Record<string, any> => {
   const samples = <Record<string, any>>{}
@@ -38,37 +83,9 @@ export const extractSample = (paramData: Record<string, any> | undefined): Recor
   }
 
   Object.keys(paramData).forEach((key) => {
-    const d = paramData[key]
-    let exampleValue = d.example
-    if (exampleValue !== undefined) {
-      samples[key] = exampleValue
-      return
-    }
-
-    if (d.schema?.examples) {
-      exampleValue = d.schema?.examples[0]
-      if (exampleValue !== undefined) {
-        samples[key] = exampleValue
-        return
-      }
-    }
-
-    if (d.examples) {
-      exampleValue = d.examples[0]
-      if (exampleValue !== undefined) {
-        samples[key] = exampleValue
-        return
-      }
-    }
-    if (d.default !== undefined) {
-      samples[key] = typeof d.default === 'object' ? JSON.stringify(d.default) : d.default
-      return
-    }
-
-    if (paramData[key].type === 'string') {
-      samples[key] = key
-    }
+    samples[key] = extractSampleForParam(paramData[key], key)
   })
+
   return samples
 }
 
@@ -120,22 +137,49 @@ export const getSampleQuery = (data: IHttpOperation, fieldValues?: Record<string
  * Generates body from data and user inputs
  *
  * @param data  operation data
- * @param fieldValues user inputs
+ * @param sampleBody body example extracted from data
  * @returns query string
  */
-export const getSampleBody = (data: IHttpOperation, sampleBody: string): string => {
+export const getSampleBody = (data: IHttpOperation, sampleIdx?: number): string => {
 
-
-  if (sampleBody) {
-    return sampleBody
+  if (!data.request?.body?.contents?.length || !data.request.body.contents[0]) {
+    return ''
+  }
+  if (sampleIdx !== undefined) {
+    if (Array.isArray(data.request.body.contents[0].examples) &&
+      sampleIdx < data.request.body.contents[0].examples.length) {
+      return JSON.stringify(data.request.body.contents[0].examples[sampleIdx].value as Record<string, any>, null, 2)
+    }
   }
 
-  // const myFieldValues = fieldValues || extractSample(data.request?.query) || {}
-  // const urlParams = new URLSearchParams()
+  // now we do not have examples for entire body, let's try to build sample object here
+  // to avoid circular references we will dig 10 levels deep , no more
+  const crawl = (objData: Record<string, any>, parentKey: string, nestedLevel: number): Record<string, any> => {
 
-  // Object.keys(myFieldValues).forEach(key => {
-  //   urlParams.append(key, myFieldValues[key])
-  // })
+    const sampleObj = <Record<string, any>>{}
 
-  return ''
+    if (nestedLevel > 10) {
+      sampleObj[parentKey] = extractSampleForParam(objData, parentKey)
+      return sampleObj
+    }
+    Object.keys(objData).forEach((key: string) => {
+      if (objData[key].anyOf && Array.isArray(objData[key].anyOf) && objData[key].anyOf.length) {
+        sampleObj[key] = crawl(objData[key].anyOf[0].properties || {}, key, nestedLevel)
+      } else if (objData[key].type === 'object') {
+        const props = objData[key].properties || objData[key].additionalProperties
+        if (props) {
+          sampleObj[key] = crawl(objData[key].properties || {}, key, nestedLevel++)
+        }
+      } else if (objData[key].type === 'array') {
+        sampleObj[key] = [extractSampleForParam(objData[key], key)]
+      } else {
+        sampleObj[key] = extractSampleForParam(objData[key] , key)
+      }
+    })
+
+    return sampleObj
+  }
+
+  return JSON.stringify(crawl(data.request.body.contents[0].schema?.properties as Record<string, any>, '', 0), null, 2)
+
 }

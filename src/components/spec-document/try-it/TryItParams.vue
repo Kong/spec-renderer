@@ -34,7 +34,10 @@
       v-else
       class="wide"
     >
-      <EditableCodeBlock code="//" />
+      <EditableCodeBlock
+        :code="fieldValues.body"
+        @request-body-changed="requestBodyChanged"
+      />
     </div>
   </CollapsablePanel>
 </template>
@@ -42,9 +45,9 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import type { PropType } from 'vue'
-import type { IHttpOperation, IMediaTypeContent, IHttpPathParam, IHttpQueryParam } from '@stoplight/types'
+import type { IHttpOperation, IHttpPathParam, IHttpQueryParam } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
-import { extractSample, getSamplePath, getSampleQuery, getSampleBody } from '@/utils'
+import { extractSample, getSamplePath, getSampleQuery } from '@/utils'
 import type { RequestParamTypes } from '@/types'
 import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
 
@@ -80,6 +83,7 @@ const compTitles = {
   body: 'Body',
 }
 
+// params schema props extracted from data (schema) or received from outside controls (reqBody)
 const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Record<string, any>> | undefined => {
   if (props.paramType === 'query') {
     return props.data.request?.query?.reduce((acc: Record<string, IHttpQueryParam>, current: IHttpQueryParam) => {
@@ -92,21 +96,14 @@ const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Re
       (acc[current.name] = current); return acc
     }, {})
   }
-  if (props.data.request?.body?.contents && props.data.request?.body?.contents.length > 0) {
-    const resBody = ((props.data.request?.body?.contents[0]) as unknown as IMediaTypeContent).schema?.properties as Record<string, any>
-    (((props.data.request?.body?.contents[0]) as unknown as IMediaTypeContent).schema?.required || []).forEach(r => {
-      resBody[r].required = true
-    })
-    console.log('body:', props.data.request?.body?.contents)
-    return resBody
-  }
-  return undefined
+  return <Record<string, any>>{ body: { example: props.requestBody } }
 })
 
+//
 const fieldValues = ref<Record<string, string>>({})
 
 
-// this is to calculate initial values for the fields
+// calculating initial values for the fields,
 watch(params, () => {
   if (params.value) {
     const samples = extractSample(params.value)
@@ -116,6 +113,10 @@ watch(params, () => {
   }
 }, { immediate: true })
 
+const requestBodyChanged = (newBody: string) => {
+  emit('request-body-changed', newBody)
+}
+
 // this is to fire event when fieldValues changed
 watch(fieldValues, () => {
   if (props.paramType === 'path') {
@@ -124,9 +125,6 @@ watch(fieldValues, () => {
   }
   if (props.paramType === 'query') {
     emit('request-query-changed', getSampleQuery(props.data, fieldValues.value))
-  }
-  if (props.paramType === 'body') {
-    emit('request-body-changed', getSampleBody(props.data, props.requestBody))
   }
 }, { deep: true })
 

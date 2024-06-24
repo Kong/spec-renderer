@@ -41,7 +41,6 @@
       param-type="query"
       @request-query-changed="requestQueryChanged"
     />
-
     <TryItParams
       :data="data"
       param-type="body"
@@ -150,7 +149,7 @@ const doApiCall = async () => {
         acc[current.name] = current.value; return acc
       }
       , { }),
-      ...(currentRequestBody.value ? { body: JSON.stringify(currentRequestBody.value) } : null),
+      ...(currentRequestBody.value ? { body: currentRequestBody.value } : null),
     })
   } catch (error: any) {
     responseError.value = error
@@ -175,7 +174,7 @@ watch(() => props.serverUrl, () => {
 
 watch(() => props.requestBody, () => {
   currentRequestBody.value = props.requestBody
-})
+}, { immediate: true })
 
 watch(() => (props.data.id), () => {
   currentRequestPath.value = getSamplePath(props.data)

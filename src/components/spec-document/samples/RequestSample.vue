@@ -103,16 +103,23 @@ const props = defineProps({
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 const emit = defineEmits<{
-  (e: 'request-body-sample-changed', newSample: string): void
+  (e: 'request-body-sample-idx-changed', samlpleIdx: number): void
 }>()
 
 const requestConfigs = computed(() => {
-  // we do not want to shoe json option if tryIt is not hidden. in this case json will be shown as body parameter
-  if (!hideTryIt.value || (['get', 'delete'].includes(props.data.method) || requestSamples.value.length === 0)) {
+
+  if (!hideTryIt.value) {
     return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
-  } else {
+  }
+
+  // when we have tryIt section is hidden, we want to show JSON choice when we have a body
+  if (props.requestBody && hideTryIt.value) {
     return requestSampleConfigs
   }
+
+  // in all other cases we filter json out
+  return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
+
 })
 
 const selectedLang = ref<LanguageCode>()
@@ -149,25 +156,26 @@ watch(requestSamples, (newValue: INodeExample[]) => {
   selectedRequestSample.value = getFirstSampleKey(newValue)
 })
 
-
 const snippet = ref<HTTPSnippetType>()
 
 const requestCode = ref<string | string[] | null>()
 
+watch(selectedRequestSample, (sampleKey) => {
+  emit('request-body-sample-idx-changed', (requestSamples.value as INodeExample[]).findIndex(s => s.key === sampleKey))
+})
 
 watch(() => ({
   method: props.data.method,
-  requestSampleKey: selectedRequestSample.value,
   lang: selectedLang.value,
   lib: selectedLangLibrary.value,
   serverUrl: props.serverUrl,
   authHeaders: props.authHeaders,
   requestPath: props.requestPath,
   requestQuery: props.requestQuery,
+  requestBody: props.requestBody,
 }), async (newValue, oldValue) => {
-  const jsonObj = (requestSamples.value as INodeExample[]).find(s => s.key === newValue.requestSampleKey)?.value
 
-  if (newValue.method !== oldValue?.method) {
+  if (newValue.method !== oldValue?.method && requestConfigs.value?.[0]) {
     selectedLang.value = requestConfigs.value[0].httpSnippetLanguage
     newValue.lang = selectedLang.value
   }
@@ -176,19 +184,15 @@ watch(() => ({
     selectedLangLibrary.value = selectedLangLibraries.value?.length ? selectedLangLibraries.value[0].httpSnippetLibrary : undefined
   }
 
-  if (newValue.requestSampleKey !== oldValue?.requestSampleKey) {
-    emit('request-body-sample-changed', JSON.stringify(jsonObj, null, 2))
-  }
-
   let snippetError = false
   let snippetChanged = false
 
   // if we selected new requestBody or if we do not have httpSNippet yet, we need to re-init it
   if (!snippet.value ||
-    newValue.requestSampleKey !== oldValue?.requestSampleKey ||
-    newValue.serverUrl !== oldValue.serverUrl ||
-    newValue.requestPath !== oldValue.requestPath ||
-    newValue.requestQuery !== oldValue.requestQuery ||
+    newValue.serverUrl !== oldValue?.serverUrl ||
+    newValue.requestPath !== oldValue?.requestPath ||
+    newValue.requestQuery !== oldValue?.requestQuery ||
+    newValue.requestBody !== oldValue?.requestBody ||
     newValue.authHeaders !== oldValue?.authHeaders) {
 
     // TODO: handle body change gracefully
@@ -206,7 +210,7 @@ watch(() => ({
         ],
         postData: {
           mimeType: 'application/json',
-          text: JSON.stringify(jsonObj, null, 2),
+          text: newValue.requestBody,
         },
       } as unknown as HarRequest)
 
@@ -223,7 +227,8 @@ watch(() => ({
     // if we do not have requestCode generated, or our lanf or lib are changed - we need to re-generate requestCode
     if (!requestCode.value || snippetChanged || newValue.lang !== oldValue?.lang || newValue.lib !== oldValue?.lib) {
       if (newValue.lang === 'json') {
-        requestCode.value = jsonObj ? JSON.stringify(jsonObj, null, 2) : null
+        requestCode.value = newValue.requestBody
+        return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
       } else if (snippet.value) {
         requestCode.value = await snippet.value.convert((newValue.lang as TargetId), newValue.lib)
       }

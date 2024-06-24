@@ -78,7 +78,7 @@
           :request-path="currentRequestPath"
           :request-query="currentRequestQuery"
           :server-url="currentServerUrl"
-          @request-body-sample-changed="setRequestBody"
+          @request-body-sample-idx-changed="setRequestBodyByIdx"
         />
       </div>
     </section>
@@ -151,8 +151,12 @@ const setRequestQuery = (newQuery: string) => {
   currentRequestQuery.value = newQuery
 }
 
-const setRequestBody = (newSample: string) => {
-  currentRequestBody.value = newSample
+const setRequestBody = (newBody: string) => {
+  currentRequestBody.value = newBody
+}
+
+const setRequestBodyByIdx = (newSampleIdx: number) => {
+  currentRequestBody.value = getSampleBody(props.data, newSampleIdx)
 }
 
 function updateSelectedServerURL(url: string) {
@@ -163,7 +167,7 @@ function updateSelectedServerURL(url: string) {
 watch(() => (props.data.id), () => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
-  currentRequestBody.value = getSampleBody(props.data, currentRequestBody.value)
+  currentRequestBody.value = getSampleBody(props.data, 0)
 }, { immediate: true })
 </script>
 
