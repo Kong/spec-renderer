@@ -1,10 +1,10 @@
-import { getHighlighterCore } from 'shiki/core'
+import { createHighlighterCore } from 'shiki/core'
 import type { HighlighterCore } from 'shiki/core'
 
 export default function useShiki() {
 
-  const getHighlighter = async (): Promise<HighlighterCore> => {
-    return await getHighlighterCore({
+  const createHighlighter = async (): Promise<HighlighterCore> => {
+    return await createHighlighterCore({
       themes: [
         import('shiki/themes/material-theme-lighter.mjs'),
         import('shiki/themes/material-theme-palenight.mjs'),
@@ -33,6 +33,6 @@ export default function useShiki() {
   }
 
   return {
-    getHighlighter,
+    createHighlighter,
   }
 }
