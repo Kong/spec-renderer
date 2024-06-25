@@ -158,6 +158,7 @@ watch(() => ({ code: props.code, lang: props.lang }), ({ code: newCode, lang: ne
 <style lang="scss" scoped>
 .editable-code-wrapper {
   position: relative;
+
   .editable-code {
     background: transparent;
     caret-color: black;
