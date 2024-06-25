@@ -47,10 +47,6 @@ defineOptions({
 })
 
 const props = defineProps({
-  title: {
-    type: String,
-    default: '',
-  },
   placement: {
     type: String as PropType<Placement>,
     validator: (value: Placement): boolean => PopoverPlacementVariants.includes(value),
@@ -68,10 +64,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  popoverTimeout: {
-    type: Number,
-    default: 300,
-  },
   closeOnPopoverClick: {
     type: Boolean,
     default: false,
@@ -79,10 +71,6 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false,
-  },
-  width: {
-    type: String,
-    default: 'auto',
   },
   maxWidth: {
     type: String,
@@ -95,10 +83,6 @@ const props = defineProps({
   popoverClasses: {
     type: String,
     default: '',
-  },
-  zIndex: {
-    type: Number,
-    default: 1000,
   },
 })
 
@@ -145,7 +129,7 @@ const hidePopover = () => {
   if (window) {
     timer.value = window.setTimeout(() => {
       isVisible.value = false
-    }, props.openOnMouseover ? props.popoverTimeout : 0)
+    }, props.openOnMouseover ? 300 : 0)
   }
 }
 
@@ -171,7 +155,6 @@ const clickHandler = (event: Event) => {
 
 const popoverStyles = computed(() => {
   return {
-    width: props.width,
     maxWidth: props.maxWidth,
     maxHeight: props.maxHeight,
   }
