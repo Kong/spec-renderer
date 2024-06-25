@@ -43,18 +43,18 @@ defineProps({
 <style lang="scss" scoped>
 .tooltip-popover {
   .tooltip-trigger-info-icon {
-    width: var(--kui-icon-size-40, $kui-icon-size-40) !important;
     height: var(--kui-icon-size-40, $kui-icon-size-40) !important;
+    width: var(--kui-icon-size-40, $kui-icon-size-40) !important;
   }
 
   :deep(.popover-content) {
     background-color: var(--kui-color-background-inverse, $kui-color-background-inverse);
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     color: var(--kui-color-text-inverse, $kui-color-text-inverse);
-    padding: var(--kui-space-20, $kui-space-20);
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
     line-height: var(--kui-line-height-20, $kui-line-height-20);
+    padding: var(--kui-space-20, $kui-space-20);
   }
 }
 </style>
