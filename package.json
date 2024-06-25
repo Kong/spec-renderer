@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "^11.6.4",
+    "@floating-ui/vue": "^1.0.7",
     "@kong/icons": "^1.14.1",
     "@scalar/openapi-parser": "^0.6.0",
     "@seriousme/openapi-schema-validator": "^2.2.1",
