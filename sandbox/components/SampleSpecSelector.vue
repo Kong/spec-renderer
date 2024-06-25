@@ -66,6 +66,7 @@ const optionsArray = [
   { url: '/spec-renderer/specs/stoplight.yaml', label: 'Stoplight ToDo' },
   { url: '/spec-renderer/specs/konnect-api.yaml', label: 'Konnect Api' },
   { url: '/spec-renderer/specs/callback.yaml', label: 'Callbacks' },
+  { url: '/spec-renderer/specs/cloudflare.json', label: 'CloudFlare' },
   { url: '/spec-renderer/specs/beer-and-coffee.yaml', label: 'Beer-and-coffee (e50ca83c443b.us)' },
   { url: 'https://raw.githubusercontent.com/digitalocean/openapi/main/specification/DigitalOcean-public.v2.yaml', label: 'Digital Ocean' },
   { url: 'https://raw.githubusercontent.com/stoplightio/Public-APIs/master/reference/zoom/openapi.yaml', label: 'Zoom' },
@@ -75,6 +76,15 @@ const optionsArray = [
   { url: 'https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.json', label: 'Stripe' },
 ]
 
+const trySetStorage = (str: string) => {
+  try {
+    window.sessionStorage.setItem('spec-renderer-playground', str)
+  } catch (err) {
+    console.error(err)
+    window.sessionStorage.removeItem('spec-renderer-playground')
+  }
+
+}
 const onDrop = async (files: File[] | null) => {
   // called when files are dropped on zone
   if (specSelector.value) {
@@ -83,7 +93,7 @@ const onDrop = async (files: File[] | null) => {
   if (files) {
     fName.value = files[0].name
     const t = await files[0].text()
-    window.sessionStorage.setItem('spec-renderer-playground', JSON.stringify({ spec: t, fName: fName.value }))
+    trySetStorage(JSON.stringify({ spec: t, fName: fName.value }))
 
     emit('sample-spec-uploaded', t, true)
   }
@@ -100,7 +110,7 @@ const finputChange = () => {
         emit('sample-spec-uploaded', e.target?.result?.toString(), true)
 
         fName.value = file.name
-        window.sessionStorage.setItem('spec-renderer-playground', JSON.stringify({ spec: e.target.result, fName: fName.value }))
+        trySetStorage( JSON.stringify({ spec: e.target.result, fName: fName.value }))
         if (specSelector.value) {
           specSelector.value.value = ''
         }
@@ -117,7 +127,7 @@ useDropZone(dropZoneRef, {
 const specSelected = async () => {
   fName.value = 'Drop your own spec file'
 
-  window.sessionStorage.setItem('spec-renderer-playground', JSON.stringify({ url: specSelector.value?.value }))
+  trySetStorage( JSON.stringify({ url: specSelector.value?.value }))
   window.history.pushState({}, '', '/spec-renderer/')
 
   emit('sample-spec-selected', specSelector.value?.value, true)
