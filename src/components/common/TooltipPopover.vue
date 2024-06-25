@@ -2,6 +2,7 @@
   <Popover
     class="tooltip-popover"
     open-on-mouseover
+    :placement="placement"
     role="tooltip"
   >
     <slot>
@@ -35,7 +36,7 @@ defineProps({
   placement: {
     type: String as PropType<Placement>,
     validator: (value: Placement): boolean => PopoverPlacementVariants.includes(value),
-    default: 'bottom-start',
+    default: 'top-start',
   },
 })
 </script>
