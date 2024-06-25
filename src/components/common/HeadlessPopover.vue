@@ -3,6 +3,7 @@
     ref="popoverWrapperRef"
     class="popover"
     data-testid="popover"
+    v-bind="sanitizedAttrs"
   >
     <div
       ref="triggerWrapperRef"
@@ -18,9 +19,10 @@
         class="popover-container"
         :class="[`popover-${placement}`, popoverClasses]"
         data-testid="popover-container"
-        role="dialog"
+        :role="role"
         :style="floatingStyles"
         :x-placement="placement"
+        v-bind="attrs.id ? { id: String(attrs.id) } : {}"
       >
         <div
           class="popover-content"
@@ -34,17 +36,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed, watch, useAttrs } from 'vue'
 import type { PropType } from 'vue'
-import { useFloating, autoUpdate } from '@floating-ui/vue'
+import { useFloating, autoUpdate, offset } from '@floating-ui/vue'
 import type { Placement } from '@floating-ui/vue'
 import { PopoverPlacementVariants } from '@/types'
 
+defineOptions({
+  inheritAttrs: false,
+})
+
 const props = defineProps({
-  buttonText: {
-    type: String,
-    default: '',
-  },
   title: {
     type: String,
     default: '',
@@ -53,6 +55,14 @@ const props = defineProps({
     type: String as PropType<Placement>,
     validator: (value: Placement): boolean => PopoverPlacementVariants.includes(value),
     default: 'bottom-start',
+  },
+  popoverOffset: {
+    type: Number,
+    default: 6,
+  },
+  role: {
+    type: String,
+    default: 'listbox',
   },
   openOnMouseover: {
     type: Boolean,
@@ -94,6 +104,8 @@ const props = defineProps({
 
 const emit = defineEmits(['open', 'close'])
 
+const attrs = useAttrs()
+
 const popoverWrapperRef = ref<HTMLElement | null>(null)
 const triggerWrapperRef = ref<HTMLElement | null>(null)
 const popoverRef = ref<HTMLElement | null>(null)
@@ -102,6 +114,14 @@ const isVisible = ref<boolean>(false)
 const popoverTrigger = computed((): HTMLElement | null => triggerWrapperRef.value && triggerWrapperRef.value?.children[0] ? triggerWrapperRef.value?.children[0] as HTMLElement : null)
 
 const timer = ref<number | null>(null)
+
+const sanitizedAttrs = computed(() => {
+  // remove id from attrs because we bind it to the popover container
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id, ...rest } = attrs
+
+  return rest
+})
 
 const togglePopover = () => {
   if (!isVisible.value) {
@@ -159,6 +179,7 @@ const popoverStyles = computed(() => {
 
 const { floatingStyles, update: updatePosition } = useFloating(popoverTrigger, popoverRef, {
   placement: props.placement,
+  middleware: [offset(props.popoverOffset)],
   strategy: 'fixed',
   transform: false,
 })
