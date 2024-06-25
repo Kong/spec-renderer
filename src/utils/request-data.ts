@@ -141,7 +141,6 @@ export const getSampleQuery = (data: IHttpOperation, fieldValues?: Record<string
  * @returns query string
  */
 export const getSampleBody = (data: IHttpOperation, sampleIdx?: number): string => {
-
   if (!data.request?.body?.contents?.length || !data.request.body.contents[0]) {
     return ''
   }
@@ -158,7 +157,9 @@ export const getSampleBody = (data: IHttpOperation, sampleIdx?: number): string 
   const crawl = (objData: Record<string, any>, parentKey: string, nestedLevel: number): Record<string, any> => {
 
     const sampleObj = <Record<string, any>>{}
-
+    if (typeof objData === 'undefined') {
+      return sampleObj
+    }
     if (nestedLevel > 10) {
       sampleObj[parentKey] = extractSampleForParam(objData, parentKey)
       return sampleObj
@@ -181,6 +182,7 @@ export const getSampleBody = (data: IHttpOperation, sampleIdx?: number): string 
     return sampleObj
   }
 
-  return JSON.stringify(crawl(data.request.body.contents[0].schema?.properties as Record<string, any>, '', 0), null, 2)
+  //TODO: handle allOf correctly
+  return JSON.stringify(crawl((data.request.body.contents[0].schema?.properties || data.request.body.contents[0].schema?.allOf) as Record<string, any>, '', 0), null, 2)
 
 }
