@@ -41,7 +41,7 @@ const highlightedCode = computed(():string => {
     const hightLightLang = getHighlightLanguage(props.lang as LanguageCode)
     return highlighter.value.codeToHtml(props.code, { lang: hightLightLang as string, theme: 'material-theme-lighter' })
   }
-  return props.code
+  return ''
 })
 
 onMounted(async ()=> {
@@ -59,6 +59,33 @@ onMounted(async ()=> {
   code {
     background: transparent !important;
     padding: var(--kui-space-0, $kui-space-0);
+  }
+
+  $codeblock-line-count-width: 40px;
+  $codeblock-line-gap: 1px;
+
+
+  span.line {
+    display: inline;
+    word-break: break-all;
+    counter-increment: codeblock-line;
+    min-width: fit-content;
+    position: relative;
+    padding-left: calc(#{$codeblock-line-count-width} + 6px);
+
+    &:after {
+      content: counter(codeblock-line);
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral-weak);
+      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+      position: absolute;
+      top: var(--kui-space-0, $kui-space-0);
+      right: var(--kui-space-0, $kui-space-0);
+      bottom: var(--kui-space-0, $kui-space-0);
+      left: var(--kui-space-0, $kui-space-0);
+      width: $codeblock-line-count-width;
+      text-align: right;
+      padding-right: calc(#{$codeblock-line-gap} * 2);
+    }
   }
 }
 </style>
