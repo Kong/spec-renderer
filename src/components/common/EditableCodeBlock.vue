@@ -4,7 +4,6 @@
       :code="presentedCode || ''"
       :lang="lang"
     />
-
     <code
       v-once
       ref="editableInput"
@@ -12,9 +11,7 @@
       contenteditable="true"
       @focusout="handleFocusOut"
       @input="handleInput"
-    >
-      {{ editableCode }}
-    </code>
+    >{{ editableCode }}</code>
   </div>
 </template>
 
@@ -49,7 +46,7 @@ const cursorPosition = ref<number>(0)
 
 
 const setCursorPosition = (customPosition: number, eol: boolean) => {
-  if (!editableInput.value || !editableInput.value.childNodes[0]) {
+  if (typeof window === 'undefined' || !editableInput.value || !editableInput.value.childNodes[0]) {
     return
   }
   // select text from a window
@@ -88,7 +85,7 @@ const setCursorPosition = (customPosition: number, eol: boolean) => {
 
 const getCursorPosition = () => {
 
-  if (!editableInput.value) {
+  if (typeof window === 'undefined' || !editableInput.value) {
     return 0
   }
   const selection = window.getSelection()
@@ -157,20 +154,29 @@ watch(() => ({ code: props.code, lang: props.lang }), ({ code: newCode, lang: ne
 
 <style lang="scss" scoped>
 .editable-code-wrapper {
+  font-family: var(--kui-font-family-code, $kui-font-family-code);
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
   position: relative;
 
   .editable-code {
     background: transparent;
-
     caret-color: black;
     color:transparent;
-    left: 40px;
+    font-family: var(--kui-font-family-code, $kui-font-family-code);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+    left: 34px;
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
     min-width: fit-content;
     outline: none;
     position:absolute;
-    top: 6px;
-
+    top: 8px;
+    white-space: break-spaces;
+    word-wrap: break-word;
   }
+
   &.error-wrapper {
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-danger, $kui-color-border-danger);
   }

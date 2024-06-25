@@ -52,22 +52,30 @@ onMounted(async ()=> {
 
 <style lang="scss" scoped>
 :deep(pre) {
+  border: none;
+  font-family: var(--kui-font-family-code, $kui-font-family-code);
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
   margin: var(--kui-space-0, $kui-space-0);
   padding: var(--kui-space-40, $kui-space-40);
-  white-space: pre-wrap;
+  white-space: break-spaces;
 
   code {
     background: transparent !important;
-    padding: var(--kui-space-0, $kui-space-0);
+    white-space: break-spaces;
+    word-wrap: break-word;
   }
 
-  $codeblock-line-count-width: 30px;
+  $codeblock-line-count-width: 20px;
   $codeblock-line-gap: 1px;
 
 
   span.line {
     counter-increment: codeblock-line;
-    display: inline;
+    display: inline-block;
+    font-family: var(--kui-font-family-code, $kui-font-family-code);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
     min-width: fit-content;
     padding-left: calc(#{$codeblock-line-count-width} + 6px);
     position: relative;

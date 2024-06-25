@@ -15,17 +15,6 @@ hr {
   margin: var(--kui-space-70, $kui-space-70) var(--kui-space-0, $kui-space-0);
 }
 
-// inline code
-code {
-  background: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
-  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-  color: var(--kui-color-text, $kui-color-text);
-  font-family: var(--kui-font-family-code, $kui-font-family-code);
-  font-size: var(--kui-font-size-30, $kui-font-size-30);
-  padding: var(--kui-space-10, $kui-space-10) var(--kui-space-20, $kui-space-20);
-  white-space: break-spaces;
-  word-wrap: break-word;
-}
 
 img {
   max-width: 100%;
