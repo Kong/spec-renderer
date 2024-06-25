@@ -1,3 +1,10 @@
+## [1.33.3](https://github.com/Kong/spec-renderer/compare/v1.33.2...v1.33.3) (2024-06-25)
+
+
+### Bug Fixes
+
+* adding cloudflare with a lot of allOff. making sure getSampleBody is not choking ([#164](https://github.com/Kong/spec-renderer/issues/164)) ([e63a8ab](https://github.com/Kong/spec-renderer/commit/e63a8ab26fa51bd28b4d5683c5c47d8c4f29cd1f))
+
 ## [1.33.2](https://github.com/Kong/spec-renderer/compare/v1.33.1...v1.33.2) (2024-06-25)
 
 
