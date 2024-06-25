@@ -66,25 +66,25 @@ onMounted(async ()=> {
 
 
   span.line {
-    display: inline;
-    word-break: break-all;
     counter-increment: codeblock-line;
+    display: inline;
     min-width: fit-content;
-    position: relative;
     padding-left: calc(#{$codeblock-line-count-width} + 6px);
+    position: relative;
+    word-break: break-all;
 
     &:after {
-      content: counter(codeblock-line);
-      color: var(--kui-color-text-neutral, $kui-color-text-neutral-weak);
       background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
-      position: absolute;
-      top: var(--kui-space-0, $kui-space-0);
-      right: var(--kui-space-0, $kui-space-0);
-      bottom: var(--kui-space-0, $kui-space-0);
-      left: var(--kui-space-0, $kui-space-0);
-      width: $codeblock-line-count-width;
-      text-align: right;
+      bottom: 0;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral-weak);
+      content: counter(codeblock-line);
+      left: 0;
       padding-right: calc(#{$codeblock-line-gap} * 2);
+      position: absolute;
+      right: 0;
+      text-align: right;
+      top: 0;
+      width: $codeblock-line-count-width;
     }
   }
 }

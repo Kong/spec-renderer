@@ -160,14 +160,14 @@ watch(() => ({ code: props.code, lang: props.lang }), ({ code: newCode, lang: ne
   position: relative;
   .editable-code {
     background: transparent;
+    caret-color: black;
     color:transparent;
+    left: 50px;
     min-height: 100px;
-    outline: none;
     min-width: fit-content;
+    outline: none;
     position:absolute;
     top: 6px;
-    left: 50px;
-    caret-color: black;
 
   }
   &.error-wrapper {
