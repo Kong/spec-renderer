@@ -36,6 +36,7 @@
     >
       <EditableCodeBlock
         :code="fieldValues.body"
+        lang="json"
         @request-body-changed="requestBodyChanged"
       />
     </div>

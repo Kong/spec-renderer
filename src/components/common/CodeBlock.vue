@@ -41,7 +41,7 @@ const highlightedCode = computed(():string => {
     const hightLightLang = getHighlightLanguage(props.lang as LanguageCode)
     return highlighter.value.codeToHtml(props.code, { lang: hightLightLang as string, theme: 'material-theme-lighter' })
   }
-  return props.code
+  return ''
 })
 
 onMounted(async ()=> {
@@ -52,13 +52,48 @@ onMounted(async ()=> {
 
 <style lang="scss" scoped>
 :deep(pre) {
+  border: none;
+  font-family: var(--kui-font-family-code, $kui-font-family-code);
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
   margin: var(--kui-space-0, $kui-space-0);
   padding: var(--kui-space-40, $kui-space-40);
-  white-space: pre-wrap;
+  white-space: break-spaces;
 
   code {
     background: transparent !important;
-    padding: var(--kui-space-0, $kui-space-0);
+    white-space: break-spaces;
+    word-wrap: break-word;
+  }
+
+  $codeblock-line-count-width: 20px;
+  $codeblock-line-gap: 1px;
+
+
+  span.line {
+    counter-increment: codeblock-line;
+    display: inline-block;
+    font-family: var(--kui-font-family-code, $kui-font-family-code);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    min-width: fit-content;
+    padding-left: calc(#{$codeblock-line-count-width} + 6px);
+    position: relative;
+    word-break: break-all;
+
+    &:after {
+      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+      bottom: 0;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral-weak);
+      content: counter(codeblock-line);
+      left: 0;
+      padding-right: calc(#{$codeblock-line-gap} * 2);
+      position: absolute;
+      right: 0;
+      text-align: right;
+      top: 0;
+      width: $codeblock-line-count-width;
+    }
   }
 }
 </style>

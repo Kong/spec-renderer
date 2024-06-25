@@ -1,3 +1,10 @@
+# [1.34.0](https://github.com/Kong/spec-renderer/compare/v1.33.3...v1.34.0) (2024-06-25)
+
+
+### Features
+
+* codeBlock and editable codeBlock [KHCP-12384] ([#163](https://github.com/Kong/spec-renderer/issues/163)) ([3ab5ba2](https://github.com/Kong/spec-renderer/commit/3ab5ba26503b5fabebac7fec3e0c6c4a28212e7f))
+
 ## [1.33.3](https://github.com/Kong/spec-renderer/compare/v1.33.2...v1.33.3) (2024-06-25)
 
 
