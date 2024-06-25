@@ -61,7 +61,7 @@ onMounted(async ()=> {
     padding: var(--kui-space-0, $kui-space-0);
   }
 
-  $codeblock-line-count-width: 40px;
+  $codeblock-line-count-width: 30px;
   $codeblock-line-gap: 1px;
 
 
