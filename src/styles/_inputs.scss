@@ -10,10 +10,10 @@ input[type="text"] {
   border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   box-shadow: var(--kui-shadow-border, $kui-shadow-border);
   box-sizing: border-box; // Ensure the padding is calculated in the element's width
-  transition: box-shadow var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
   outline: none;
-  width: 100%;
   padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
+  transition: box-shadow var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
+  width: 100%;
 
   &:hover {
     box-shadow: var(--kui-shadow-border-primary-weak, $kui-shadow-border-primary-weak);
