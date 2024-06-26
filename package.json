@@ -58,7 +58,7 @@
     "httpsnippet-lite": "^3.0.5",
     "json-schema": "^0.4.0",
     "lodash": "^4.17.21",
-    "oas-normalize": "^11.1.0",
+    "oas-normalize": "^11.1.1",
     "openapi3-ts": "4.3.3",
     "shiki": "^1.9.0"
   },
