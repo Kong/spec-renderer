@@ -17,7 +17,7 @@
           :title="`${scheme.key} (${scheme.type})`"
         >
           <p>
-            {{ scheme.description }}
+            {{ getDescription(scheme) }}
           </p>
         </OverviewCollapsiblePanel>
       </div>
@@ -31,6 +31,8 @@ import type { HttpSecurityScheme } from '@stoplight/types'
 import { LockIcon } from '@kong/icons'
 import OverviewPanel from './OverviewPanel.vue'
 import OverviewCollapsiblePanel from './OverviewCollapsiblePanel.vue'
+import { getDefaultDescription } from '@/stoplight/elements-core/utils/securitySchemes'
+
 
 defineProps({
   securitySchemeList: {
@@ -38,6 +40,13 @@ defineProps({
     required: true,
   },
 })
+
+const getDescription = (scheme: HttpSecurityScheme): string => {
+  if (scheme.description) {
+    return scheme.description
+  }
+  return getDefaultDescription(scheme)
+}
 </script>
 
 <style lang="scss" scoped>
