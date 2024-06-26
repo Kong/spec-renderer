@@ -213,7 +213,7 @@ watch(() => ({
       if (newValue.authQuery) {
         queryStr += (newValue.requestQuery ? '&' : '?') + newValue.authQuery
       }
-      console.log('aaaa:', queryStr)
+
       serverUrl.search = queryStr
       const reqData: HarRequest = ({
         method: newValue.method,

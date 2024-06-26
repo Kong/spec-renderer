@@ -140,7 +140,12 @@ const doApiCall = async () => {
   try {
     response.value = undefined
     const url = new URL(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''))
-    url.search = currentRequestQuery.value
+    let queryStr = currentRequestQuery.value
+    if (authQuery.value) {
+      queryStr += (currentRequestQuery.value ? '&' : '?') + authQuery.value
+    }
+
+    url.search = queryStr
     response.value = await fetch(url, {
       method: props.data.method,
       headers: [
