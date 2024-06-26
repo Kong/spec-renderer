@@ -63,7 +63,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>): void
+  (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>, authQuery: string): void
 }>()
 
 const schemeIdx = ref<number>(0)
@@ -102,8 +102,10 @@ const getSchemeLabel = (scheme: HttpSecurityScheme):string => {
 
 const tokenValues = ref<Array<string>>([])
 
-watch(schemeIdx, (newIdx) => {
-  tokenValues.value = Array.from({ length: securityScheme.value.length }, () => '')
+watch(securityScheme, (newScheme) => {
+  if (newScheme) {
+    tokenValues.value = Array.from({ length: newScheme.length }, () => '')
+  }
 }, { immediate: true })
 
 watch(tokenValues, (newValues) => {
@@ -111,24 +113,23 @@ watch(tokenValues, (newValues) => {
   const authQuery = <Record<string, string>>{}
 
   newValues.forEach((tokenValue, i) => {
-    const scheme:HttpSecurityScheme = securityScheme.value[i]
-    console.log('scheme:', i, scheme)
-    if (scheme && tokenValue) {
+    if (securityScheme.value?.[i]) {
+      const scheme: HttpSecurityScheme = securityScheme.value[i]
+      if (scheme && tokenValue) {
       // @ts-ignore `in` is valid attribute of the schema
-      if (scheme.in === 'query') {
+        if (scheme.in === 'query') {
         // @ts-ignore `name` is valid attribute of the schema
-        authQuery[scheme.name] = tokenValue
-      } else {
-        authHeaders.push({
-          name: 'Authorization',
-          value: `Bearer ${tokenValue}`,
-        })
+          authQuery[scheme.name] = tokenValue
+        } else {
+          authHeaders.push({
+            name: 'Authorization',
+            value: `Bearer ${tokenValue}`,
+          })
+        }
       }
     }
-
   })
-  console.log('invoking:', authHeaders, new URLSearchParams(authQuery).toString())
-  emit('access-tokens-changed', authHeaders)
+  emit('access-tokens-changed', authHeaders, new URLSearchParams(authQuery).toString())
 }, { deep: true })
 </script>
 

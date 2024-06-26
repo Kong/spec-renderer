@@ -73,6 +73,7 @@
         />
         <RequestSample
           :auth-headers="authHeaders"
+          :auth-query="authQuery"
           :data="data"
           :request-body="currentRequestBody"
           :request-path="currentRequestPath"
@@ -106,9 +107,11 @@ const props = defineProps({
   },
 })
 const authHeaders = ref<Array<Record<string, string>>>()
+const authQuery = ref<string>('')
 
-const setAuthHeaders = (newHeaders: Array<Record<string, string>>) => {
+const setAuthHeaders = (newHeaders: Array<Record<string, string>>, newAuthQuery: string) => {
   authHeaders.value = newHeaders
+  authQuery.value = newAuthQuery
 }
 
 const serverList = computed(() => props.data.servers?.map(server => removeTrailingSlash(server.url)) ?? [])
