@@ -1,3 +1,10 @@
+## [1.34.1](https://github.com/Kong/spec-renderer/compare/v1.34.0...v1.34.1) (2024-06-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency oas-normalize to ^11.1.1 ([#166](https://github.com/Kong/spec-renderer/issues/166)) ([b24d1a3](https://github.com/Kong/spec-renderer/commit/b24d1a3f1fd5273c7f32cbfd7b2a26d8472a51be))
+
 # [1.34.0](https://github.com/Kong/spec-renderer/compare/v1.33.3...v1.34.0) (2024-06-25)
 
 
