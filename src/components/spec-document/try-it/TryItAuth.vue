@@ -84,14 +84,15 @@ const securitySchemeList = computed((): HttpSecurityScheme[] | undefined => {
 // this is details for selected from the list - we grap all elements for schemeIdx
 const securityScheme = computed((): HttpSecurityScheme[] | undefined => {
   const res = props.data.security?.[schemeIdx.value]
-  return [...res, ...[{
-    'id': '3b4ad86dff71c' + (new Date()).getTime(),
-    'type': 'apiKey',
-    'in': 'query',
-    'name': 'access_token',
-    'key': 'global',
-    'extensions': {},
-  }]]
+  return res
+  // return [...res, ...[{
+  //   'id': '3b4ad86dff71c' + (new Date()).getTime(),
+  //   'type': 'apiKey',
+  //   'in': 'query',
+  //   'name': 'access_token',
+  //   'key': 'global',
+  //   'extensions': {},
+  // }]]
 
 })
 
