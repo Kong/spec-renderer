@@ -14,6 +14,7 @@
       </label>
       <input
         aria-describedby="input-tooltip"
+        placeholder="Text input"
         type="text"
       >
     </div>

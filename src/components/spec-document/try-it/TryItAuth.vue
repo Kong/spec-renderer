@@ -31,6 +31,7 @@
       <label required>Access Token</label>
       <input
         placeholder="App credential"
+        type="text"
         @keyup="accessTokenChanged"
       >
     </div>

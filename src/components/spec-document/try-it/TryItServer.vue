@@ -20,6 +20,7 @@
         :data-testid="`tryit-server-${key}-${data.id}`"
         :placeholder="serverVariables[key].default"
         :title="serverVariables[key].description"
+        type="text"
       >
     </div>
   </CollapsablePanel>

@@ -24,6 +24,7 @@
           v-model="fieldValues[pKey]"
           :data-testid="`tryit-${paramType}-param-${pKey}-${data.id}`"
           :title="params[pKey].description"
+          type="text"
         >
       </div>
     </div>
