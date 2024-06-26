@@ -5,7 +5,7 @@
       <h2>Tooltip</h2>
       <Tooltip text="This is a tooltip" />
       <hr>
-      <label>
+      <label required>
         Input label with tooltip
         <Tooltip
           id="input-tooltip"

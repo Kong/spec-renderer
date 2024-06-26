@@ -17,10 +17,7 @@
         v-for="pKey in Object.keys(params)"
         :key="`${params[pKey].name}${paramType}`"
       >
-        <label>
-          <span v-if="params[pKey].required">
-            *
-          </span>
+        <label :required="params[pKey].required ? true : undefined">
           {{ params[pKey].name || pKey }}
         </label>
         <input

@@ -16,7 +16,7 @@
 
     <!-- body -->
     <div class="short">
-      <label>Method</label>
+      <label required>Method</label>
       <select>
         <option
           v-for="sec in security"
@@ -28,7 +28,7 @@
     </div>
 
     <div class="short">
-      <label>Access Token</label>
+      <label required>Access Token</label>
       <input
         placeholder="App credential"
         @keyup="accessTokenChanged"

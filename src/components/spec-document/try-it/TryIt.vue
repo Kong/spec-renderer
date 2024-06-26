@@ -206,14 +206,4 @@ watch(() => (props.data.id), () => {
   padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
   width: 100%;
 }
-// required label
-:deep(label>span) {
-  color: var(--kui-color-text-danger, $kui-color-text-danger);
-}
-
-:deep(label) {
-  font-size: var(--kui-font-size-30, $kui-font-size-30);
-  font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
-  line-height: var(--kui-line-height-30, $kui-line-height-30);
-}
 </style>

@@ -74,8 +74,6 @@ const onClick = (event: Event) => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/styles';
-
 @mixin group-spacing {
   display: flex;
   flex-direction: column;
