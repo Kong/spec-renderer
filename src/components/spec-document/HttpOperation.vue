@@ -173,6 +173,10 @@ watch(() => (props.data.id), () => {
 
 <style lang="scss" scoped>
 .http-operation {
+  * {
+    margin: var(--kui-space-0, $kui-space-0);
+  }
+
   .http-operation-header {
     margin-bottom: var(--kui-space-90, $kui-space-90);
   }

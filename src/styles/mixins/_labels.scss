@@ -1,4 +1,4 @@
-label {
+@mixin label-default {
   align-items: center;
   color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
   display: flex;
@@ -8,7 +8,7 @@ label {
   line-height: var(--kui-line-height-20, $kui-line-height-20);
   margin-bottom: var(--kui-space-40, $kui-space-40);
 
-  &[required] {
+  &.required {
     &::before {
       background-color: var(--kui-color-background-danger, $kui-color-background-danger);
       border-radius: var(--kui-border-radius-circle, $kui-border-radius-circle);

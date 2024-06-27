@@ -5,6 +5,7 @@
 @import "@/styles/mixins/toc";
 @import "@/styles/mixins/tree";
 @import "@/styles/mixins/inputs";
+@import "@/styles/mixins/labels";
 
 // common mixins; to be used in varied places
 @mixin truncate($lines: 0) {

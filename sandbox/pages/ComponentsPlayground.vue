@@ -5,13 +5,13 @@
       <h2>Tooltip</h2>
       <Tooltip text="This is a tooltip" />
       <hr>
-      <label required>
+      <Label>
         Input label with tooltip
         <Tooltip
           id="input-tooltip"
           text="This is a label tooltip"
         />
-      </label>
+      </Label>
       <input
         aria-describedby="input-tooltip"
         placeholder="Text input"
@@ -22,6 +22,7 @@
 </template>
 
 <script setup lang="ts">
+import Label from '../../src/components/common/InputLabel.vue'
 import Tooltip from '../../src/components/common/TooltipPopover.vue'
 </script>
 
@@ -34,6 +35,10 @@ import Tooltip from '../../src/components/common/TooltipPopover.vue'
     padding: 12px;
     border-radius: 4px;
     border: 1px solid lightgray;
+  }
+
+  input {
+    @include input-default;
   }
 }
 </style>

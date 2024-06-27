@@ -14,7 +14,7 @@
       :key="key"
       class="short"
     >
-      <label>{{ key }}</label>
+      <Label>{{ key }}</Label>
       <input
         v-model="fieldValues[key]"
         :data-testid="`tryit-server-${key}-${data.id}`"
@@ -31,7 +31,7 @@ import { computed, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpOperation, INodeVariable } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
-
+import Label from '@/components/common/InputLabel.vue'
 
 const props = defineProps({
   data: {
@@ -64,6 +64,11 @@ watch(fieldValues, () => {
   })
   emit('server-url-changed', newServerUrl)
 }, { deep: true })
-
 </script>
+
+<style lang="scss" scoped>
+input {
+  @include input-default;
+}
+</style>
 
