@@ -69,7 +69,7 @@ const emit = defineEmits<{
 const schemeIdx = ref<number>(0)
 
 
-// this is the list, we grab first element for each scheme
+// this is the list, we grab first element for each scheme to present in the scheme selector
 const securitySchemeList = computed((): HttpSecurityScheme[] | undefined => {
 
   const secArray:Array<HttpSecurityScheme> = []
@@ -81,56 +81,46 @@ const securitySchemeList = computed((): HttpSecurityScheme[] | undefined => {
   return secArray
 })
 
-// this is details for selected from the list - we grap all elements for schemeIdx
-const securityScheme = computed((): HttpSecurityScheme[] | undefined => {
-  const res = props.data.security?.[schemeIdx.value]
-  return res
-  // return [...res, ...[{
-  //   'id': '3b4ad86dff71c' + (new Date()).getTime(),
-  //   'type': 'apiKey',
-  //   'in': 'query',
-  //   'name': 'access_token',
-  //   'key': 'global',
-  //   'extensions': {},
-  // }]]
-
-})
+// this is details for selected from the list - we grab all elements for schemeIdx
+const securityScheme = ref < HttpSecurityScheme[] | undefined>([])
 
 const getSchemeLabel = (scheme: HttpSecurityScheme):string => {
   //@ts-ignore `name` is valid property
   return scheme.name || scheme.bearerFormat || 'Access Token'
 }
 
-const tokenValues = ref<Array<string>>([])
+const tokenValues = ref<string[]>([])
 
-watch(securityScheme, (newScheme) => {
-  if (newScheme) {
-    tokenValues.value = Array.from({ length: newScheme.length }, () => '')
-  }
+// when different security scheme selected we need to re-draw the form and reset the tokenValues
+watch(schemeIdx, (newIdx) => {
+  securityScheme.value = props.data.security?.[newIdx]
+  tokenValues.value = Array.from({ length: securityScheme.value?.length || 0 }, () => '')
 }, { immediate: true })
 
+// when tokenValues changed we need to fire event to set security headers and queries
 watch(tokenValues, (newValues) => {
   const authHeaders:Array<Record<string, string>> = []
   const authQuery = <Record<string, string>>{}
-
-  newValues.forEach((tokenValue, i) => {
-    if (securityScheme.value?.[i]) {
-      const scheme: HttpSecurityScheme = securityScheme.value[i]
-      if (scheme && tokenValue) {
-      // @ts-ignore `in` is valid attribute of the schema
-        if (scheme.in === 'query') {
-        // @ts-ignore `name` is valid attribute of the schema
-          authQuery[scheme.name] = tokenValue
-        } else {
-          authHeaders.push({
-            name: 'Authorization',
-            value: `Bearer ${tokenValue}`,
-          })
+  if (newValues) {
+    newValues.forEach((tokenValue, i) => {
+      if (securityScheme.value?.[i]) {
+        const scheme: HttpSecurityScheme = securityScheme.value[i]
+        if (scheme && tokenValue) {
+        // @ts-ignore `in` is valid attribute of the schema
+          if (scheme.in === 'query') {
+          // @ts-ignore `name` is valid attribute of the schema
+            authQuery[scheme.name] = tokenValue
+          } else {
+            authHeaders.push({
+              name: 'Authorization',
+              value: `Bearer ${tokenValue}`,
+            })
+          }
         }
       }
-    }
-  })
-  emit('access-tokens-changed', authHeaders, new URLSearchParams(authQuery).toString())
+    })
+    emit('access-tokens-changed', authHeaders, new URLSearchParams(authQuery).toString())
+  }
 }, { deep: true })
 </script>
 
