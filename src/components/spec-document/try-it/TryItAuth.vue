@@ -101,26 +101,24 @@ watch(schemeIdx, (newIdx) => {
 watch(tokenValues, (newValues) => {
   const authHeaders:Array<Record<string, string>> = []
   const authQuery = <Record<string, string>>{}
-  if (newValues) {
-    newValues.forEach((tokenValue, i) => {
-      if (securityScheme.value?.[i]) {
-        const scheme: HttpSecurityScheme = securityScheme.value[i]
-        if (scheme && tokenValue) {
+  newValues.forEach((tokenValue, i) => {
+    if (securityScheme.value?.[i]) {
+      const scheme: HttpSecurityScheme = securityScheme.value[i]
+      if (scheme && tokenValue) {
         // @ts-ignore `in` is valid attribute of the schema
-          if (scheme.in === 'query') {
+        if (scheme.in === 'query') {
           // @ts-ignore `name` is valid attribute of the schema
-            authQuery[scheme.name] = tokenValue
-          } else {
-            authHeaders.push({
-              name: 'Authorization',
-              value: `Bearer ${tokenValue}`,
-            })
-          }
+          authQuery[scheme.name] = tokenValue
+        } else {
+          authHeaders.push({
+            name: 'Authorization',
+            value: `Bearer ${tokenValue}`,
+          })
         }
       }
-    })
-    emit('access-tokens-changed', authHeaders, new URLSearchParams(authQuery).toString())
-  }
+    }
+  })
+  emit('access-tokens-changed', authHeaders, new URLSearchParams(authQuery).toString())
 }, { deep: true })
 </script>
 
