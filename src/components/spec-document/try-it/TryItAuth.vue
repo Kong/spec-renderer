@@ -84,7 +84,7 @@ const securitySchemeList = computed((): HttpSecurityScheme[] | undefined => {
 // this is details for selected from the list - we grab all elements for schemeIdx
 const securityScheme = ref < HttpSecurityScheme[] | undefined>([])
 
-const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName: string): string => {
+const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): string => {
   //@ts-ignore `name` is valid property
   return scheme.name || scheme.bearerFormat || defaultName || 'Access Token'
 }
