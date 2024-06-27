@@ -9,6 +9,7 @@
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "editor.detectIndentation": false,
+  "files.insertFinalNewline": true,
   "eslint.format.enable": true,
   "eslint.validate": [
     "typescript",
