@@ -14,7 +14,7 @@
       :key="key"
       class="short"
     >
-      <Label>{{ key }}</Label>
+      <InputLabel>{{ key }}</InputLabel>
       <input
         v-model="fieldValues[key]"
         :data-testid="`tryit-server-${key}-${data.id}`"
@@ -31,7 +31,7 @@ import { computed, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpOperation, INodeVariable } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
-import Label from '@/components/common/InputLabel.vue'
+import InputLabel from '@/components/common/InputLabel.vue'
 
 const props = defineProps({
   data: {

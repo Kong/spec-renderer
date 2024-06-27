@@ -17,9 +17,9 @@
         v-for="pKey in Object.keys(params)"
         :key="`${params[pKey].name}${paramType}`"
       >
-        <Label>
+        <InputLabel>
           {{ params[pKey].name || pKey }}
-        </Label>
+        </InputLabel>
         <input
           v-model="fieldValues[pKey]"
           :data-testid="`tryit-${paramType}-param-${pKey}-${data.id}`"
@@ -49,7 +49,7 @@ import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import { extractSample, getSamplePath, getSampleQuery } from '@/utils'
 import type { RequestParamTypes } from '@/types'
 import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
-import Label from '@/components/common/InputLabel.vue'
+import InputLabel from '@/components/common/InputLabel.vue'
 
 /**
  * This components handles path parameters, query parameters and body.

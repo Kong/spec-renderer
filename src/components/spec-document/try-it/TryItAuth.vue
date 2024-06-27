@@ -16,7 +16,9 @@
 
     <!-- body -->
     <div class="short">
-      <Label required>Method</Label>
+      <InputLabel required>
+        Method
+      </InputLabel>
       <select>
         <option
           v-for="sec in security"
@@ -28,7 +30,9 @@
     </div>
 
     <div class="short">
-      <Label required>Access Token</Label>
+      <InputLabel required>
+        Access Token
+      </InputLabel>
       <input
         placeholder="App credential"
         type="text"
@@ -45,7 +49,7 @@ import { LockIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import type { IHttpOperation, HttpSecurityScheme } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
-import Label from '@/components/common/InputLabel.vue'
+import InputLabel from '@/components/common/InputLabel.vue'
 
 const props = defineProps({
   data: {
