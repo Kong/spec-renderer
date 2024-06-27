@@ -5,7 +5,10 @@
       <h2>Tooltip</h2>
       <Tooltip text="This is a tooltip" />
       <hr>
-      <InputLabel>
+      <InputLabel
+        for="sandbox-input"
+        required
+      >
         Input label with tooltip
         <Tooltip
           id="input-tooltip"
@@ -13,6 +16,7 @@
         />
       </InputLabel>
       <input
+        id="sandbox-input"
         aria-describedby="input-tooltip"
         placeholder="Text input"
         type="text"
