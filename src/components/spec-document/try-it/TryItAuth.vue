@@ -40,7 +40,6 @@
       <input
         v-model="tokenValues[i]"
         placeholder="App credential"
-        type="password"
       >
     </div>
   </CollapsablePanel>
@@ -94,8 +93,7 @@ const tokenValues = ref<string[]>([])
 // when different security scheme selected we need to re-draw the form and reset the tokenValues
 watch(schemeIdx, (newIdx) => {
   securityScheme.value = props.data.security?.[newIdx]
-  console.log('aaaa:', securityScheme.value)
-  tokenValues.value = Array.from({ length: securityScheme.value?.length || 0 }, () => '123')
+  tokenValues.value = Array.from({ length: securityScheme.value?.length || 0 }, () => '')
 }, { immediate: true })
 
 // when tokenValues changed we need to fire event to set security headers and queries
@@ -113,7 +111,7 @@ watch(tokenValues, (newValues) => {
         const schemeIn = scheme.in
         // @ts-ignore `scheme` is valid attribute of the schema
         const isBearer = scheme.scheme == 'bearer'
-        if (scheme && tokenValue) {
+        if (scheme) {
           if (schemeIn === 'query') {
             authQuery[schemeName] = tokenValue
           } else {
