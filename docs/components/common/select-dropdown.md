@@ -9,10 +9,10 @@ SelectDropdown is a fly-out component that can act both like `select` HTML eleme
 * type: `SelectItem`
 * required: `true`
 
-[`SelectItem` interface](../../../src/types/dropdown.ts) is rather simple:
+[`SelectItem` interface](../../../src/types/dropdown.ts) is rather straight-forward:
 
 ```ts
-interface  {
+interface SelectItem {
   label: string
   value: string
   /**
@@ -101,6 +101,7 @@ Let's say SelectDropdown receives this array as value provided through the [`ite
 
 Let's say you want _Item 2_ to be a link. You can achieve that with something like this:
 
+```html
 <template #foobar-item>
   <a
     href="https://insomnia.rest/"
@@ -109,6 +110,7 @@ Let's say you want _Item 2_ to be a link. You can achieve that with something li
     Try in Insomnia
   </a>
 </template>
+```
 
 ## Events
 
