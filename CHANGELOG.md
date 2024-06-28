@@ -1,3 +1,10 @@
+## [1.36.2](https://github.com/Kong/spec-renderer/compare/v1.36.1...v1.36.2) (2024-06-28)
+
+
+### Bug Fixes
+
+* **input, label:** add styling [KHCP-12289] ([#168](https://github.com/Kong/spec-renderer/issues/168)) ([ce05df0](https://github.com/Kong/spec-renderer/commit/ce05df0e43ebf9b6e7b8d42e61b3946bb74ea2fd))
+
 ## [1.36.1](https://github.com/Kong/spec-renderer/compare/v1.36.0...v1.36.1) (2024-06-28)
 
 
