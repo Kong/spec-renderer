@@ -26,12 +26,12 @@
     <div class="component-container">
       <h2>Dropdown</h2>
       <SelectDropdown :items="dropdownItems">
-        <template #item-content-item-2>
+        <template #item-2-item-content>
           <KongIcon />
           Item 2
         </template>
 
-        <template #item-item-3>
+        <template #item-3-item>
           <a
             href="http://localhost:5173/spec-renderer/comppnents"
             target="_blank"
@@ -40,7 +40,7 @@
           </a>
         </template>
 
-        <template #item-item-4>
+        <template #item-4-item>
           <button @click="onDropdownButtonClick">
             Item 4 (action button)
           </button>

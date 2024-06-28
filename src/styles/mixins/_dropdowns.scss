@@ -3,7 +3,7 @@
   color: var(--kui-color-text, $kui-color-text);
   display: flex;
   font-size: var(--kui-font-size-30, $kui-font-size-30);
-  font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
   gap: var(--kui-space-40, $kui-space-40);
   line-height: var(--kui-line-height-40, $kui-line-height-40);
 }

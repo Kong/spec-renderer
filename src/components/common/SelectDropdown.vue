@@ -14,7 +14,7 @@
       :disabled="disabled ? true : undefined"
     >
       <slot name="trigger-content">
-        <slot :name="`item-content-${selectedItem?.key}`">
+        <slot :name="`${selectedItem?.key}-item-content`">
           {{ selectedItem?.label || triggerButton }}
         </slot>
       </slot>
@@ -29,12 +29,12 @@
             class="select-item"
             :data-testid="item.key ? `${item.key}-item` : 'select-item'"
           >
-            <slot :name="`item-${item.key}`">
+            <slot :name="`${item.key}-item`">
               <button
                 :data-testid="item.key ? `${item.key}-item-trigger` : 'select-item-trigger'"
                 @click="selectValue = item.value"
               >
-                <slot :name="`item-content-${item.key}`">
+                <slot :name="`${item.key}-item-content`">
                   {{ item.label }}
                 </slot>
               </button>
