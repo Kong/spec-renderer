@@ -36,11 +36,18 @@
     >
       <InputLabel>
         {{ getSchemeLabel(scheme) }}
+        <Tooltip
+          v-if="scheme.description"
+          :id="`auth-token-tooltip-${getSchemeLabel(scheme)}-${data.id}`"
+          :text="scheme.description"
+        />
       </InputLabel>
       <input
         v-model="tokenValues[i]"
+        :aria-describedby="`auth-token-tooltip-${getSchemeLabel(scheme)}-${data.id}`"
         autocomplete="off"
         placeholder="App credential"
+        type="text"
       >
     </div>
   </CollapsablePanel>
@@ -55,6 +62,7 @@ import type { IHttpOperation, HttpSecurityScheme } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import { useDebounceFn } from '@vueuse/core'
 import InputLabel from '@/components/common/InputLabel.vue'
+import Tooltip from '@/components/common/TooltipPopover.vue'
 
 const props = defineProps({
   data: {
