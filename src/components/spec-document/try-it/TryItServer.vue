@@ -14,13 +14,20 @@
       :key="key"
       class="short"
     >
-      <InputLabel>{{ key }}</InputLabel>
+      <InputLabel>
+        {{ key }}
+        <Tooltip
+          v-if="serverVariables[key].description"
+          :id="`server-tooltip-${key}-${data.id}`"
+          :text="serverVariables[key].description"
+        />
+      </InputLabel>
       <input
         v-model="fieldValues[key]"
+        :aria-describedby="`server-tooltip-${key}-${data.id}`"
         autocomplete="off"
         :data-testid="`tryit-server-${key}-${data.id}`"
         :placeholder="serverVariables[key].default"
-        :title="serverVariables[key].description"
         type="text"
       >
     </div>
@@ -33,6 +40,8 @@ import type { PropType } from 'vue'
 import type { IHttpOperation, INodeVariable } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import InputLabel from '@/components/common/InputLabel.vue'
+import Tooltip from '@/components/common/TooltipPopover.vue'
+
 
 const props = defineProps({
   data: {
