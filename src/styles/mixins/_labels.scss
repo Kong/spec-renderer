@@ -1,0 +1,21 @@
+@mixin label-default {
+  align-items: center;
+  color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+  display: flex;
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+  gap: var(--kui-space-40, $kui-space-40);
+  line-height: var(--kui-line-height-20, $kui-line-height-20);
+  margin-bottom: var(--kui-space-40, $kui-space-40);
+
+  &.required {
+    &::before {
+      background-color: var(--kui-color-background-danger, $kui-color-background-danger);
+      border-radius: var(--kui-border-radius-circle, $kui-border-radius-circle);
+      content: "";
+      display: block;
+      height: 6px;
+      width: 6px;
+    }
+  }
+}

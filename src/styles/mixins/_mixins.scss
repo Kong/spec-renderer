@@ -1,9 +1,11 @@
-@import '@/styles/mixins/buttons';
-@import '@/styles/mixins/select';
-@import '@/styles/mixins/badges';
-@import '@/styles/mixins/schema-model';
-@import '@/styles/mixins/toc';
-@import '@/styles/mixins/tree';
+@import "@/styles/mixins/buttons";
+@import "@/styles/mixins/select";
+@import "@/styles/mixins/badges";
+@import "@/styles/mixins/schema-model";
+@import "@/styles/mixins/toc";
+@import "@/styles/mixins/tree";
+@import "@/styles/mixins/inputs";
+@import "@/styles/mixins/labels";
 
 // common mixins; to be used in varied places
 @mixin truncate($lines: 0) {
@@ -24,7 +26,7 @@
   $textColor: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong),
   $height: var(--kui-icon-size-30, $kui-icon-size-30),
   $width: var(--kui-icon-size-30, $kui-icon-size-30),
-  $rotate-degree: 90deg
+  $rotateDegree: 90deg
 ) {
   color: $textColor !important;
   flex-shrink: 0;
@@ -34,6 +36,6 @@
   width: $width !important;
 
   &.expanded {
-    transform: rotate($rotate-degree);
+    transform: rotate($rotateDegree);
   }
 }

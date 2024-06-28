@@ -17,17 +17,15 @@
         v-for="pKey in Object.keys(params)"
         :key="`${params[pKey].name}${paramType}`"
       >
-        <label>
-          <span v-if="params[pKey].required">
-            *
-          </span>
+        <InputLabel class="param-label">
           {{ params[pKey].name || pKey }}
-        </label>
+        </InputLabel>
         <input
           v-model="fieldValues[pKey]"
           autocomplete="off"
           :data-testid="`tryit-${paramType}-param-${pKey}-${data.id}`"
           :title="params[pKey].description"
+          type="text"
         >
       </div>
     </div>
@@ -52,6 +50,7 @@ import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import { extractSample, getSamplePath, getSampleQuery } from '@/utils'
 import type { RequestParamTypes } from '@/types'
 import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
+import InputLabel from '@/components/common/InputLabel.vue'
 
 /**
  * This components handles path parameters, query parameters and body.
@@ -132,6 +131,15 @@ watch(fieldValues, (newFieldValues) => {
     emit('request-query-changed', getSampleQuery(props.data, newFieldValues))
   }
 }, { deep: true })
-
 </script>
+
+<style lang="scss" scoped>
+.param-label {
+  margin-bottom: var(--kui-space-40, $kui-space-40);
+}
+
+input {
+  @include input-default;
+}
+</style>
 

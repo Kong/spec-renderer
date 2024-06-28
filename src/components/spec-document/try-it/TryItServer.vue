@@ -14,12 +14,14 @@
       :key="key"
       class="short"
     >
-      <label>{{ key }}</label>
+      <InputLabel>{{ key }}</InputLabel>
       <input
         v-model="fieldValues[key]"
+        autocomplete="off"
         :data-testid="`tryit-server-${key}-${data.id}`"
         :placeholder="serverVariables[key].default"
         :title="serverVariables[key].description"
+        type="text"
       >
     </div>
   </CollapsablePanel>
@@ -30,7 +32,7 @@ import { computed, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpOperation, INodeVariable } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
-
+import InputLabel from '@/components/common/InputLabel.vue'
 
 const props = defineProps({
   data: {
@@ -63,6 +65,11 @@ watch(fieldValues, () => {
   })
   emit('server-url-changed', newServerUrl)
 }, { deep: true })
-
 </script>
+
+<style lang="scss" scoped>
+input {
+  @include input-default;
+}
+</style>
 

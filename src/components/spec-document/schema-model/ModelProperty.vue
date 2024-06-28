@@ -181,7 +181,7 @@ const orderedFieldList = computed(() => {
         $textColor: var(--kui-color-text-neutral, $kui-color-text-neutral),
         $height: var(--kui-icon-size-30, $kui-icon-size-30),
         $width: var(--kui-icon-size-30, $kui-icon-size-30),
-        $rotate-degree: 45deg,
+        $rotateDegree: 45deg,
       );
     }
   }

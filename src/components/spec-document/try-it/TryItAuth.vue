@@ -34,9 +34,9 @@
       :key="scheme.id"
       class="wide"
     >
-      <label>
+      <InputLabel>
         {{ getSchemeLabel(scheme) }}
-      </label>
+      </InputLabel>
       <input
         v-model="tokenValues[i]"
         autocomplete="off"
@@ -54,6 +54,7 @@ import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import type { IHttpOperation, HttpSecurityScheme } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import { useDebounceFn } from '@vueuse/core'
+import InputLabel from '@/components/common/InputLabel.vue'
 
 const props = defineProps({
   data: {
@@ -135,7 +136,12 @@ watch(tokenValues, (newValues) => {
 .kui-icon {
   margin-right: var(--kui-space-30, $kui-space-30)!important;
 }
+
 .scheme-selector {
-  margin-left: auto!important;;
+  margin-left: auto !important;
+}
+
+input {
+  @include input-default;
 }
 </style>

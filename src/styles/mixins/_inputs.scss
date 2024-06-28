@@ -1,0 +1,50 @@
+@mixin input-text {
+  color: var(--kui-color-text, $kui-color-text);
+  font-size: var(
+    --kui-font-size-40,
+    $kui-font-size-40
+  ); // needs to be at least 16px to prevent automatic zoom in on focus on mobile
+  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+  line-height: var(--kui-line-height-40, $kui-line-height-40);
+
+  @media (min-width: $kui-breakpoint-mobile) {
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+  }
+}
+
+@mixin input-default {
+  @include input-text;
+
+  -webkit-appearance: none; // need this to allow box-shadow to apply on mobile
+  appearance: none;
+  background-color: var(--kui-color-background, $kui-color-background);
+  border: 0;
+  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+  box-shadow: var(--kui-shadow-border, $kui-shadow-border);
+  box-sizing: border-box; // Ensure the padding is calculated in the element's width
+  outline: none;
+  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
+  transition: box-shadow var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
+  width: 100%;
+
+  &::placeholder {
+    @include input-text;
+
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+  }
+
+  &:hover {
+    box-shadow: var(--kui-shadow-border-primary-weak, $kui-shadow-border-primary-weak);
+  }
+
+  &:focus {
+    box-shadow: var(--kui-shadow-border-primary, $kui-shadow-border-primary), var(--kui-shadow-focus, $kui-shadow-focus);
+  }
+
+  &:disabled {
+    background-color: var(--kui-color-background-disabled, $kui-color-background-disabled) !important;
+    box-shadow: var(--kui-shadow-border-disabled, $kui-shadow-border-disabled) !important;
+    color: var(--kui-color-text-disabled, $kui-color-text-disabled) !important;
+    cursor: not-allowed;
+  }
+}
