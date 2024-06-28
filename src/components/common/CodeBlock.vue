@@ -76,8 +76,8 @@ onMounted(async ()=> {
     display: inline-block;
     font-family: var(--kui-font-family-code, $kui-font-family-code);
     font-size: var(--kui-font-size-20, $kui-font-size-20);
+    min-height: 16px; // this is to enforce height on empty line
     min-width: fit-content;
-    min-height: calc(var(--kui-space-50, $kui-space-50) + 2px);
     padding-left: calc(#{$codeblock-line-count-width} + 6px);
     position: relative;
     word-break: break-all;
