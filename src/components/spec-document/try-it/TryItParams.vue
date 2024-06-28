@@ -19,12 +19,17 @@
       >
         <InputLabel class="param-label">
           {{ params[pKey].name || pKey }}
+          <Tooltip
+            v-if="params[pKey].description"
+            :id="`request-${paramType}-tooltip-${params[pKey].name || pKey}-${data.id}`"
+            :text="params[pKey].description"
+          />
         </InputLabel>
         <input
           v-model="fieldValues[pKey]"
+          :aria-describedby="`request-${paramType}-tooltip-${params[pKey].name || pKey}-${data.id}`"
           autocomplete="off"
           :data-testid="`tryit-${paramType}-param-${pKey}-${data.id}`"
-          :title="params[pKey].description"
           type="text"
         >
       </div>
@@ -51,6 +56,7 @@ import { extractSample, getSamplePath, getSampleQuery } from '@/utils'
 import type { RequestParamTypes } from '@/types'
 import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
 import InputLabel from '@/components/common/InputLabel.vue'
+import Tooltip from '@/components/common/TooltipPopover.vue'
 
 /**
  * This components handles path parameters, query parameters and body.
