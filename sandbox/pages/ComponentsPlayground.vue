@@ -18,6 +18,7 @@
       <input
         id="sandbox-input"
         aria-describedby="input-tooltip"
+        autocomplete="off"
         placeholder="Text input"
         type="text"
       >

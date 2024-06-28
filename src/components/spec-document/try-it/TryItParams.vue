@@ -17,7 +17,7 @@
         v-for="pKey in Object.keys(params)"
         :key="`${params[pKey].name}${paramType}`"
       >
-        <InputLabel>
+        <InputLabel class="param-label">
           {{ params[pKey].name || pKey }}
         </InputLabel>
         <input
@@ -138,6 +138,10 @@ watch(fieldValues, (newFieldValues) => {
   display: flex;
   flex-direction: column;
   gap: var(--kui-space-40, $kui-space-40);
+}
+
+.param-label {
+  margin-bottom: var(--kui-space-40, $kui-space-40);
 }
 
 input {

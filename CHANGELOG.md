@@ -1,3 +1,17 @@
+## [1.36.1](https://github.com/Kong/spec-renderer/compare/v1.36.0...v1.36.1) (2024-06-28)
+
+
+### Bug Fixes
+
+* minheight for line numbers in code-block [KHCP-12439] ([#173](https://github.com/Kong/spec-renderer/issues/173)) ([0e2f349](https://github.com/Kong/spec-renderer/commit/0e2f3493dd309e5d63d14689f40c6b1d6c9366d5))
+
+# [1.36.0](https://github.com/Kong/spec-renderer/compare/v1.35.1...v1.36.0) (2024-06-28)
+
+
+### Features
+
+* auth tokens [KHCP-12155] ([#167](https://github.com/Kong/spec-renderer/issues/167)) ([3ca702c](https://github.com/Kong/spec-renderer/commit/3ca702c3c6db14669ab27a14a481ab78ac503af7))
+
 ## [1.35.1](https://github.com/Kong/spec-renderer/compare/v1.35.0...v1.35.1) (2024-06-27)
 
 
