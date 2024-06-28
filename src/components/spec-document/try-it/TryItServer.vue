@@ -24,7 +24,7 @@
       </InputLabel>
       <input
         v-model="fieldValues[key]"
-        :aria-describedby="`auth-token-tooltip-${key}-${data.id}`"
+        :aria-describedby="`server-tooltip-${key}-${data.id}`"
         autocomplete="off"
         :data-testid="`tryit-server-${key}-${data.id}`"
         :placeholder="serverVariables[key].default"
