@@ -23,12 +23,49 @@
         type="text"
       >
     </div>
+    <div class="component-container">
+      <h2>Dropdown</h2>
+      <SelectDropdown :items="dropdownItems">
+        <template #item-content-item-2>
+          <KongIcon />
+          Item 2
+        </template>
+
+        <template #item-item-3>
+          <a
+            href="http://localhost:5173/spec-renderer/comppnents"
+            target="_blank"
+          >
+            Item 3 (link)
+          </a>
+        </template>
+
+        <template #item-item-4>
+          <button @click="onDropdownButtonClick">
+            Item 4 (action button)
+          </button>
+        </template>
+      </SelectDropdown>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import InputLabel from '../../src/components/common/InputLabel.vue'
 import Tooltip from '../../src/components/common/TooltipPopover.vue'
+import SelectDropdown from '../../src/components/common/SelectDropdown.vue'
+import { KongIcon } from '@kong/icons'
+
+const dropdownItems = [
+  { label: 'Item 1', value: 'item-1' },
+  { label: 'Item 2', value: 'item-2', key: 'item-2' },
+  { label: 'Item 3', value: 'item-3', key: 'item-3' },
+  { label: 'Item 4', value: 'item-4', key: 'item-4' },
+]
+
+const onDropdownButtonClick = () => {
+  alert('Item 4 clicked')
+}
 </script>
 
 <style lang="scss" scoped>
@@ -36,10 +73,10 @@ import Tooltip from '../../src/components/common/TooltipPopover.vue'
   gap: 12px;
 
   .component-container {
-    width: 100%;
     padding: 12px;
     border-radius: 4px;
     border: 1px solid lightgray;
+    margin-bottom: 12px;
   }
 
   input {

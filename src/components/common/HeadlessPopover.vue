@@ -76,6 +76,10 @@ const props = defineProps({
     type: String,
     default: 'auto',
   },
+  width: {
+    type: String,
+    default: 'auto',
+  },
   maxHeight: {
     type: String,
     default: 'auto',
@@ -156,6 +160,7 @@ const clickHandler = (event: Event) => {
 const popoverStyles = computed(() => {
   return {
     maxWidth: props.maxWidth,
+    width: props.width,
     maxHeight: props.maxHeight,
   }
 })

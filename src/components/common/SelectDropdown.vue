@@ -1,89 +1,167 @@
 <template>
-  <div
-    class="select-dropdown-container"
-    :data-testid="dataTestId"
-    @click="selectDropdown?.showPicker()"
+  <Popover
+    class="select-dropdown"
+    close-on-popover-click
+    :disabled="disabled"
+    :placement="placement"
+    :popover-offset="10"
+    width="300px"
   >
-    <select
-      ref="selectDropdown"
-      class="select-dropdown"
-      data-testid="select-dropdown"
-      @change="changeSelectedOption"
+    <button
+      class="trigger-button"
+      :disabled="disabled ? true : undefined"
     >
-      <option
-        v-for="option in optionList"
-        :key="option"
-        :data-testid="`select-dropdown-option-${option}`"
-        :selected="option === selectedOption"
-        :value="option"
-      >
-        {{ option }}
-      </option>
-    </select>
-    <slot />
-  </div>
+      <slot name="trigger-content">
+        <slot :name="`item-content-${selectedItem?.key}`">
+          <span>
+            {{ selectedItem?.label || triggerButton }}
+          </span>
+        </slot>
+      </slot>
+      <ChevronDownIcon class="chevron-icon" />
+    </button>
+    <template #content>
+      <div class="select-items-container">
+        <ul>
+          <li
+            v-for="item in items"
+            :key="`${item.key ? item.key : item.value}-item`"
+            class="select-item"
+          >
+            <slot :name="`item-${item.key}`">
+              <button @click="selectValue = item.value">
+                <slot :name="`item-content-${item.key}`">
+                  {{ item.label }}
+                </slot>
+              </button>
+            </slot>
+          </li>
+        </ul>
+      </div>
+    </template>
+  </Popover>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import type { PropType } from 'vue'
+import { computed, ref, watch, type PropType } from 'vue'
+import Popover from './HeadlessPopover.vue'
+import { ChevronDownIcon } from '@kong/icons'
+import type { SelectItem } from '@/types'
+import type { Placement } from '@floating-ui/vue'
+import { PopoverPlacementVariants } from '@/types'
 
 const props = defineProps({
-  optionList: {
-    type: Array as PropType<Array<string | number>>,
+  modelValue: {
+    type: String,
+    default: '',
+  },
+  triggerButton: {
+    type: String,
+    default: 'Select',
+  },
+  items: {
+    type: Object as PropType<Array<SelectItem>>,
     required: true,
   },
-  selectedOption: {
-    type: [String, Number],
-    required: true,
+  placement: {
+    type: String as PropType<Placement>,
+    validator: (value: Placement): boolean => PopoverPlacementVariants.includes(value),
+    default: 'bottom-start',
   },
-  // if true, the width of the select element will be changed based on the selected option
-  dynamicWidth: {
+  disabled: {
     type: Boolean,
     default: false,
   },
 })
 
-const selectDropdown = ref<HTMLSelectElement>()
-const dataTestId = computed(() => `select-dropdown-container-${props.optionList[0]}`)
-
 const emit = defineEmits<{
-  (e: 'selected-option-changed', option: string): void
+  (e: 'update:modelValue', value: string): void
+  (e: 'change', item: SelectItem): void
 }>()
 
-onMounted(() => {
-  if (props.dynamicWidth) {
-    updateSelectWidth()
-  }
+const selectValue = ref<string>(props.modelValue)
+
+const selectedItem = computed((): SelectItem | undefined => {
+  return props.items.find((item) => item.value === selectValue.value)
 })
 
-// emit event and change width of select element based on selected option
-function changeSelectedOption(event: Event) {
-  const selectElement = event.target as HTMLSelectElement
-  emit('selected-option-changed', selectElement.value)
+watch(() => props.modelValue, (newValue: string) => {
+  selectValue.value = newValue
+})
 
-  if (props.dynamicWidth) {
-    updateSelectWidth()
-  }
-}
+watch(selectValue, (newValue: string) => {
+  emit('update:modelValue', newValue)
 
-function updateSelectWidth() {
-  if (selectDropdown.value) {
-    const selectedOption = selectDropdown.value.options[selectDropdown.value.selectedIndex]
-    selectDropdown.value.style.width = `${selectedOption.text.length}ch`
+  const selectedItem = props.items.find((item) => item.value === newValue)
+  if (selectedItem) {
+    emit('change', selectedItem)
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>
-.select-dropdown-container{
-  align-items: center;
-  cursor: pointer;
-  display: flex;
+:deep(.popover-trigger-wrapper) {
+  display: inline-block;
+}
 
-  .select-dropdown{
-    @include default-select-reset;
-    display: inline;
+.select-dropdown {
+  display: inline-block;
+
+  .trigger-button {
+    @include default-button-reset;
+    @include dropdown-item-container;
+
+    padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
+    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+
+    .chevron-icon {
+      width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
+      height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
+      color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
+    }
+
+    &:hover:not(:disabled):not(:focus):not(:active) {
+      background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
+    }
+
+    &:focus:not(:disabled),
+    &:active:not(:disabled) {
+      background-color: var(--kui-color-background-neutral-weak, $kui-color-background-neutral-weak);
+    }
+
+    &:disabled {
+      color: var(--kui-color-text-disabled, $kui-color-text-disabled);
+      cursor: not-allowed;
+    }
+  }
+
+  .select-items-container {
+    padding: var(--kui-space-10, $kui-space-10) var(--kui-space-0, $kui-space-0);
+    background-color: var(--kui-color-background, $kui-color-background);
+    box-shadow: var(--kui-shadow, $kui-shadow);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+
+    ul {
+      list-style-type: none;
+      margin: var(--kui-space-0, $kui-space-0);
+      padding: var(--kui-space-0, $kui-space-0);
+
+      .select-item {
+        button,
+        :slotted(button),
+        :slotted(a) {
+          @include default-button-reset;
+          @include dropdown-item-container;
+          @include dropdown-item;
+
+          text-align: left;
+        }
+
+        :slotted(a) {
+          width: auto;
+        }
+      }
+    }
   }
 }
 </style>
