@@ -77,13 +77,13 @@ const emit = defineEmits<{
 }>()
 
 // unique id for a server-endpoint component
-const dataTestId = computed(() => `${props.method}-${props.serverUrlList[0]}-${props.path}`)
+const dataTestId = computed(() => `${props.method}-${props.serverUrlList[0]}${props.path}`)
 
 const changeEndpointServer = (url: string) => {
   emit('selected-server-changed', url)
 }
 
-const selectItems = computed(() => props.serverUrlList.map((url) => ({ label: url, value: url })))
+const selectItems = computed(() => props.serverUrlList.map((url) => ({ label: url, value: url, key: url })))
 
 const serverUrl = ref<string>(props.selectedServerUrl)
 

@@ -2,6 +2,7 @@
   <Popover
     class="select-dropdown"
     close-on-popover-click
+    data-testid="select-dropdown"
     :disabled="disabled"
     :placement="placement"
     :popover-offset="10"
@@ -9,13 +10,12 @@
   >
     <button
       class="trigger-button"
+      data-testid="trigger-button"
       :disabled="disabled ? true : undefined"
     >
       <slot name="trigger-content">
         <slot :name="`item-content-${selectedItem?.key}`">
-          <span>
-            {{ selectedItem?.label || triggerButton }}
-          </span>
+          {{ selectedItem?.label || triggerButton }}
         </slot>
       </slot>
       <ChevronDownIcon class="chevron-icon" />
@@ -27,9 +27,13 @@
             v-for="item in items"
             :key="`${item.key ? item.key : item.value}-item`"
             class="select-item"
+            :data-testid="item.key ? `${item.key}-item` : 'select-item'"
           >
             <slot :name="`item-${item.key}`">
-              <button @click="selectValue = item.value">
+              <button
+                :data-testid="item.key ? `${item.key}-item-trigger` : 'select-item-trigger'"
+                @click="selectValue = item.value"
+              >
                 <slot :name="`item-content-${item.key}`">
                   {{ item.label }}
                 </slot>

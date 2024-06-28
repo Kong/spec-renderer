@@ -15,28 +15,39 @@ describe('<ServerEndpoint />', () => {
         selectedServerUrl,
         serverUrlList,
       },
+      attachTo: document.body, // required for any interaction with the DOM to work
     })
-    const select = wrapper.findTestId<'select'>('select-dropdown')
+
+    const select = wrapper.findTestId(`server-dropdown-get-${serverUrlList[0]}${path}`)
 
     it('renders correctly with all required props', () => {
-    // the component itself is rendered
+      // the component itself is rendered
       expect(wrapper.findTestId('server-endpoint').exists()).toBe(true)
 
       // the selected URL and path are correctly rendered
-      expect(select.element.value).toBe(selectedServerUrl)
+      expect(select.element.innerHTML).toContain(selectedServerUrl)
       expect(wrapper.findTestId('endpoint-path').text()).toBe(path)
 
 
       // the list of URLs is correctly rendered
       for (const serverUrl of serverUrlList) {
-        expect(wrapper.findTestId(`select-dropdown-option-${serverUrl}`).exists()).toBe(true)
+        expect(wrapper.findTestId(`${serverUrl}-item`).exists()).toBe(true)
+        expect(wrapper.findTestId(`${serverUrl}-item`).isVisible()).toBe(false)
       }
     })
 
     it('emits an event when a new server URL is selected', async () => {
-    // initial value was the second item in serverUrlList array
-    // updating it to the first item should trigger emit
-      await select.setValue(serverUrlList[0])
+      // initial value was the second item in serverUrlList array
+      // updating it to the first item should trigger emit
+      expect(wrapper.findTestId(`${serverUrlList[0]}-item`).isVisible()).toBe(false)
+
+      await wrapper.findTestId('trigger-button').trigger('click')
+
+      console.log(select.element.innerHTML)
+
+      expect(wrapper.findTestId(`${serverUrlList[0]}-item`).isVisible()).toBe(true)
+      await wrapper.findTestId(`${serverUrlList[0]}-item-trigger`).trigger('click')
+
       expect(wrapper.emitted('selected-server-changed')?.toString()).toBe(serverUrlList[0])
     })
   })
@@ -58,7 +69,7 @@ describe('<ServerEndpoint />', () => {
       expect(wrapper.findTestId('server-endpoint').exists()).toBe(true)
 
       // the selected URL and path are correctly rendered
-      const testId = `server-url-${props.method}-${props.serverUrlList[0]}-${props.path}`
+      const testId = `server-url-${props.method}-${props.serverUrlList[0]}${props.path}`
       expect(wrapper.findTestId(testId).text()).toBe(`${serverUrl}${path}`)
     })
   })
