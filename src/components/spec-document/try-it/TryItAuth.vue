@@ -39,6 +39,7 @@
       </label>
       <input
         v-model="tokenValues[i]"
+        autocomplete="off"
         placeholder="App credential"
       >
     </div>
