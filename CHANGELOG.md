@@ -1,3 +1,10 @@
+# [1.37.0](https://github.com/Kong/spec-renderer/compare/v1.36.2...v1.37.0) (2024-06-28)
+
+
+### Features
+
+* add tootips for TryIt inputs [KHCP-12463] ([#175](https://github.com/Kong/spec-renderer/issues/175)) ([e5f0c9b](https://github.com/Kong/spec-renderer/commit/e5f0c9ba1653811f434cbc81567e5960f531e3b3))
+
 ## [1.36.2](https://github.com/Kong/spec-renderer/compare/v1.36.1...v1.36.2) (2024-06-28)
 
 
