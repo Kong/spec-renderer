@@ -134,12 +134,6 @@ watch(fieldValues, (newFieldValues) => {
 </script>
 
 <style lang="scss" scoped>
-.wide {
-  display: flex;
-  flex-direction: column;
-  gap: var(--kui-space-40, $kui-space-40);
-}
-
 .param-label {
   margin-bottom: var(--kui-space-40, $kui-space-40);
 }
