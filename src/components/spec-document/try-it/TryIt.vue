@@ -86,7 +86,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>): void
+  (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>, authQuery: string): void
   (e: 'server-url-changed', serverUrl: string): void
   (e: 'request-path-changed', newPath: string): void
   (e: 'request-query-changed', newPath: string): void
@@ -98,6 +98,7 @@ const response = ref<Response | undefined>()
 const responseError = ref<Error>()
 
 const authHeaders = ref<Array<Record<string, string>>>()
+const authQuery = ref<string>('')
 
 const currentServerUrl = ref<string>(props.serverUrl)
 
@@ -139,7 +140,12 @@ const doApiCall = async () => {
   try {
     response.value = undefined
     const url = new URL(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''))
-    url.search = currentRequestQuery.value
+    let queryStr = currentRequestQuery.value
+    if (authQuery.value) {
+      queryStr += (currentRequestQuery.value ? '&' : '?') + authQuery.value
+    }
+
+    url.search = queryStr
     response.value = await fetch(url, {
       method: props.data.method,
       headers: [
@@ -157,9 +163,10 @@ const doApiCall = async () => {
 }
 
 /* pass trough one level up as it needs to change Request sample */
-const accessTokenChanged = (newHeaders: Array<Record<string, string>>) => {
-  emit('access-tokens-changed', newHeaders)
+const accessTokenChanged = (newHeaders: Array<Record<string, string>>, newAuthQuery: string) => {
+  emit('access-tokens-changed', newHeaders, newAuthQuery)
   authHeaders.value = newHeaders
+  authQuery.value = newAuthQuery
 }
 
 // there is more logic that drives do we show tryouts or not

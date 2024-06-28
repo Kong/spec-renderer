@@ -25,6 +25,7 @@
         </label>
         <input
           v-model="fieldValues[pKey]"
+          autocomplete="off"
           :data-testid="`tryit-${paramType}-param-${pKey}-${data.id}`"
           :title="params[pKey].description"
         >
