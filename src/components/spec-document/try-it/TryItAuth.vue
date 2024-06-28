@@ -47,6 +47,7 @@
         :aria-describedby="`auth-token-tooltip-${getSchemeLabel(scheme)}-${data.id}`"
         autocomplete="off"
         placeholder="App credential"
+        type="text"
       >
     </div>
   </CollapsablePanel>
