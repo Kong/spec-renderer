@@ -34,6 +34,7 @@
         Access Token
       </InputLabel>
       <input
+        autocomplete="off"
         placeholder="App credential"
         type="text"
         @keyup="accessTokenChanged"

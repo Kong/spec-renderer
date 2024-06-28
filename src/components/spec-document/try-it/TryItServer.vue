@@ -17,6 +17,7 @@
       <InputLabel>{{ key }}</InputLabel>
       <input
         v-model="fieldValues[key]"
+        autocomplete="off"
         :data-testid="`tryit-server-${key}-${data.id}`"
         :placeholder="serverVariables[key].default"
         :title="serverVariables[key].description"
