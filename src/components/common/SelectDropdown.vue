@@ -111,13 +111,13 @@ watch(selectValue, (newValue: string) => {
     @include default-button-reset;
     @include dropdown-item-container;
 
-    padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+    padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
 
     .chevron-icon {
-      width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
-      height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
       color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
+      height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
+      width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
     }
 
     &:hover:not(:disabled):not(:focus):not(:active) {
@@ -136,10 +136,10 @@ watch(selectValue, (newValue: string) => {
   }
 
   .select-items-container {
-    padding: var(--kui-space-10, $kui-space-10) var(--kui-space-0, $kui-space-0);
     background-color: var(--kui-color-background, $kui-color-background);
-    box-shadow: var(--kui-shadow, $kui-shadow);
     border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    box-shadow: var(--kui-shadow, $kui-shadow);
+    padding: var(--kui-space-10, $kui-space-10) var(--kui-space-0, $kui-space-0);
 
     ul {
       list-style-type: none;

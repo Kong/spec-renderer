@@ -104,17 +104,17 @@ watch(serverUrl, (newUrl) => {
   > .current-endpoint {
     align-items: center;
     display: flex;
-    gap: var(--kui-space-20, $kui-space-20);
     font-size: var(--kui-font-size-30, $kui-font-size-30);
-    line-height: var(--kui-line-height-40, $kui-line-height-40);
     font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+    gap: var(--kui-space-20, $kui-space-20);
+    line-height: var(--kui-line-height-40, $kui-line-height-40);
 
     .server-select-dropdown {
       :deep(.trigger-button) {
-        padding: var(--kui-space-0, $kui-space-0) var(--kui-space-10, $kui-space-20);
-        gap: var(--kui-space-0, $kui-space-0);
-        font-family: var(--kui-font-family-code, $kui-font-family-code);
         color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+        font-family: var(--kui-font-family-code, $kui-font-family-code);
+        gap: var(--kui-space-0, $kui-space-0);
+        padding: var(--kui-space-0, $kui-space-0) var(--kui-space-10, $kui-space-20);
 
         .chevron-icon {
           margin-left: var(--kui-space-40, $kui-space-40);
@@ -123,9 +123,9 @@ watch(serverUrl, (newUrl) => {
     }
 
     .server-url-with-path {
-      gap: var(--kui-space-20, $kui-space-20);
-      font-family: var(--kui-font-family-code, $kui-font-family-code);
       color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+      font-family: var(--kui-font-family-code, $kui-font-family-code);
+      gap: var(--kui-space-20, $kui-space-20);
     }
 
     .endpoint-path {
