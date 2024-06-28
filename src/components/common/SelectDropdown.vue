@@ -136,6 +136,10 @@ watch(selectValue, (newValue: string) => {
     &:disabled {
       color: var(--kui-color-text-disabled, $kui-color-text-disabled);
       cursor: not-allowed;
+
+      .chevron-icon {
+        color: var(--kui-color-text-disabled, $kui-color-text-disabled) !important;
+      }
     }
   }
 
