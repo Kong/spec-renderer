@@ -65,11 +65,10 @@ const onClick = () => {
   margin-top: var(--kui-space-40, $kui-space-40)!important;
 
   .panel-header {
+    background-color: var(--kui-color-background, $kui-color-background);
     border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
     border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     border-top-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    background-color: var(--kui-color-background, $kui-color-background);
-    background-color: var(--kui-color-background, $kui-color-background);
     display: flex;
     flex-flow: row;
     padding: var(--kui-space-50, $kui-space-50);
@@ -95,9 +94,9 @@ const onClick = () => {
 
     :deep(>h5) {
       color: var(--kui-color-text, $kui-color-text);
+      flex: 1;
       font-size: var(--kui-font-size-30, $kui-font-size-30)!important;
       padding: var(--kui-space-0, $kui-space-0);
-      flex: 1;
     }
   }
 

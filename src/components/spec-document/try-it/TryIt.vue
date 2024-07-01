@@ -197,10 +197,10 @@ watch(() => (props.data.id), () => {
 .tryit-wrapper {
 
   .tryit-header {
+    align-items: center;    background-color: var(--kui-color-background, $kui-color-background);
     border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
     border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    border-top-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);    background-color: var(--kui-color-background, $kui-color-background);
-    align-items: center;
+    border-top-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     display: flex;
     padding: var(--kui-space-50, $kui-space-50);
     .path {
@@ -211,9 +211,9 @@ watch(() => (props.data.id), () => {
     }
   }
 
-  .tryit-body {
+  .tryit-body {      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+    border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
     border-radius: 0;
-    border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     border-top: 0px;
     padding: var(--kui-space-40, $kui-space-40);
   }
