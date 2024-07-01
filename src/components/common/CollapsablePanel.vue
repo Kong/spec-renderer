@@ -1,7 +1,32 @@
 <template>
   <div class="collapsable-panel">
-    <div class="panel-header">
+    <div
+      :class="{'panel-header': 'true', 'panel-collapsed': isCollapsed}"
+    >
       <slot name="header" />
+
+      <div class="btn-container">
+        <CopyButton
+          v-if="contentToCopy && !isCollapsed"
+          :content="contentToCopy"
+        />
+        <button
+          v-if="collapsible"
+          :aria-expanded="!isCollapsed"
+          class="collapse-trigger-btn"
+          type="button"
+          @click="onClick"
+        >
+          <ChevronRightIcon
+            v-if="isCollapsed"
+            class="chevron-icon"
+          />
+          <ChevronDownIcon
+            v-if="!isCollapsed"
+            class="chevron-icon"
+          />
+        </button>
+      </div>
     </div>
     <!-- TODO ADD expand/collapse/copy content-->
     <div
@@ -15,34 +40,75 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { ChevronRightIcon, ChevronDownIcon } from '@kong/icons'
+import CopyButton from './CopyButton.vue'
 
-const isCollapsed = ref<boolean>(false)
+const props = defineProps({
+  collapsible: {
+    type: Boolean,
+    default: true,
+  },
+  contentToCopy: {
+    type: String,
+    default: '',
+  },
+})
+
+const isCollapsed = ref<boolean>(props.collapsible)
+const onClick = () => {
+  isCollapsed.value = !isCollapsed.value
+}
 </script>
 
 <style lang="scss" scoped>
 .collapsable-panel {
-  border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
-  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   margin-top: var(--kui-space-40, $kui-space-40)!important;
 
   .panel-header {
-    align-items: center;
+    border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+    border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    border-top-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    background-color: var(--kui-color-background, $kui-color-background);
     background-color: var(--kui-color-background, $kui-color-background);
     display: flex;
-    padding: var(--kui-space-40, $kui-space-40);
+    flex-flow: row;
+    padding: var(--kui-space-50, $kui-space-50);
+
+    &.panel-collapsed {
+      border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+      border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    }
+    .btn-container {
+      align-self: flex-end;
+      padding-left: var(--kui-space-30, $kui-space-30);
+
+      .collapse-trigger-btn {
+        background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+        border: none;
+        cursor: pointer;
+        padding: 0px;
+        .chevron-icon {
+          @include toggle-icon;
+        }
+      }
+    }
 
     :deep(>h5) {
       color: var(--kui-color-text, $kui-color-text);
+      font-size: var(--kui-font-size-30, $kui-font-size-30)!important;
       padding: var(--kui-space-0, $kui-space-0);
+      flex: 1;
     }
   }
 
   .panel-body {
-    background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
-    border-top: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+    background-color: var(--kui-color-background, $kui-color-background);
+    border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+    border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    border-top: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    width: 100%;
 
     :deep(.short) {
       display: flex;

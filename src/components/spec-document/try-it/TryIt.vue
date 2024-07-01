@@ -17,42 +17,43 @@
         @tryit-api-call="doApiCall"
       />
     </div>
+    <div class="tryit-body">
+      <TryItAuth
+        v-if="showTryIt"
+        :data="data"
+        @access-tokens-changed="accessTokenChanged"
+      />
 
-    <TryItAuth
-      v-if="showTryIt"
-      :data="data"
-      @access-tokens-changed="accessTokenChanged"
-    />
+      <TryItServer
+        :data="data"
+        :server-url="serverUrl"
+        @server-url-changed="serverUrlChanged"
+      />
 
-    <TryItServer
-      :data="data"
-      :server-url="serverUrl"
-      @server-url-changed="serverUrlChanged"
-    />
+      <TryItParams
+        :data="data"
+        param-type="path"
+        @request-path-changed="requestPathChanged"
+      />
 
-    <TryItParams
-      :data="data"
-      param-type="path"
-      @request-path-changed="requestPathChanged"
-    />
-
-    <TryItParams
-      :data="data"
-      param-type="query"
-      @request-query-changed="requestQueryChanged"
-    />
-    <TryItParams
-      :data="data"
-      param-type="body"
-      :request-body="currentRequestBody"
-      @request-body-changed="requestBodyChanged"
-    />
-    <TryItResponse
-      v-if="response || responseError"
-      :data-id="data.id"
-      :response="response"
-      :response-error="responseError"
-    />
+      <TryItParams
+        :data="data"
+        param-type="query"
+        @request-query-changed="requestQueryChanged"
+      />
+      <TryItParams
+        :data="data"
+        param-type="body"
+        :request-body="currentRequestBody"
+        @request-body-changed="requestBodyChanged"
+      />
+      <TryItResponse
+        v-if="response || responseError"
+        :data-id="data.id"
+        :response="response"
+        :response-error="responseError"
+      />
+    </div>
   </div>
 </template>
 
@@ -193,18 +194,30 @@ watch(() => (props.data.id), () => {
 
 <style lang="scss" scoped>
 
-.tryit-header {
-  align-items: center;
-  display: flex;
-  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
-  .path {
-    margin-left: var(--kui-space-20, $kui-space-20);
+.tryit-wrapper {
+
+  .tryit-header {
+    border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+    border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    border-top-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);    background-color: var(--kui-color-background, $kui-color-background);
+    align-items: center;
+    display: flex;
+    padding: var(--kui-space-50, $kui-space-50);
+    .path {
+      margin-left: var(--kui-space-20, $kui-space-20);
+    }
+    .tryit-btn {
+      margin-left: auto;
+    }
   }
-  .tryit-btn {
-    margin-left: auto;
+
+  .tryit-body {
+    border-radius: 0;
+    border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+    border-top: 0px;
+    padding: var(--kui-space-40, $kui-space-40);
   }
 }
-
 /* using deep as this thing is used in multiple child components */
 :deep(.panel-body input), :deep(.panel-body select) {
   border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);

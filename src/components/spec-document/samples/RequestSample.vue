@@ -4,7 +4,10 @@
     :data-testid="`request-sample-${data.id}`"
   >
     <h5>REQUEST SAMPLE</h5>
-    <CollapsablePanel>
+    <CollapsablePanel
+      :collapsible="false"
+      :content-to-copy="requestCode as string"
+    >
       <template #header>
         <select v-model="selectedLang">
           <option
