@@ -83,8 +83,8 @@ const toggleState = (e: Event) => {
       border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
       border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
       :deep(select) {
-      display: none;
-    }
+        display: none;
+      }
     }
     .btn-container {
       align-self: flex-end;
