@@ -3,7 +3,7 @@
     ref="copyButton"
     class="copy-button"
     :title="copied ? 'Copied!' : 'Copy'"
-    @click="copyCode"
+    @click.stop="copyCode"
   >
     <component
       :is="copied ? CheckIcon : CopyIcon"

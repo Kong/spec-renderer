@@ -1,7 +1,8 @@
 <template>
   <div class="collapsable-panel">
     <div
-      :class="{'panel-header': 'true', 'panel-collapsed': isCollapsed}"
+      :class="{ 'panel-header': 'true', 'collapsed': isCollapsed, 'collapsible': collapsible }"
+      @click.stop="toggleState"
     >
       <slot name="header" />
 
@@ -15,7 +16,6 @@
           :aria-expanded="!isCollapsed"
           class="collapse-trigger-btn"
           type="button"
-          @click="onClick"
         >
           <ChevronRightIcon
             v-if="isCollapsed"
@@ -55,8 +55,10 @@ const props = defineProps({
 })
 
 const isCollapsed = ref<boolean>(props.collapsible)
-const onClick = () => {
-  isCollapsed.value = !isCollapsed.value
+const toggleState = (e: Event) => {
+  if (props.collapsible && (e.target as HTMLElement).nodeName !== 'SELECT') {
+    isCollapsed.value = !isCollapsed.value
+  }
 }
 </script>
 
@@ -73,9 +75,16 @@ const onClick = () => {
     flex-flow: row;
     padding: var(--kui-space-50, $kui-space-50);
 
-    &.panel-collapsed {
+    &.collapsible {
+      cursor: pointer;
+    }
+
+    &.collapsed {
       border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
       border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+      :deep(select) {
+      display: none;
+    }
     }
     .btn-container {
       align-self: flex-end;
@@ -135,3 +144,4 @@ const onClick = () => {
   }
 }
 </style>
+
