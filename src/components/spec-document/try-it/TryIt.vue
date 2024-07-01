@@ -197,8 +197,9 @@ watch(() => (props.data.id), () => {
 .tryit-wrapper {
 
   .tryit-header {
-    align-items: center;    background-color: var(--kui-color-background, $kui-color-background);
-    border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+    align-items: center;
+    background-color: var(--kui-color-background, $kui-color-background);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     border-top-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     display: flex;
@@ -211,8 +212,9 @@ watch(() => (props.data.id), () => {
     }
   }
 
-  .tryit-body {      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
-    border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+  .tryit-body {
+    background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: 0;
     border-top: 0px;
     padding: var(--kui-space-40, $kui-space-40);
@@ -220,7 +222,7 @@ watch(() => (props.data.id), () => {
 }
 /* using deep as this thing is used in multiple child components */
 :deep(.panel-body input), :deep(.panel-body select) {
-  border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   box-sizing: border-box;
   padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);

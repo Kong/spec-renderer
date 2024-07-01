@@ -30,6 +30,6 @@ const startApiCall = () => {
 
 <style lang="scss" scoped>
 .tryit-btn {
-  border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
 }
 </style>

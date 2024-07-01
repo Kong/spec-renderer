@@ -68,7 +68,7 @@ const toggleState = (e: Event) => {
 
   .panel-header {
     background-color: var(--kui-color-background, $kui-color-background);
-    border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     border-top-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     display: flex;
@@ -111,7 +111,7 @@ const toggleState = (e: Event) => {
 
   .panel-body {
     background-color: var(--kui-color-background, $kui-color-background);
-    border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     border-top: 0;
