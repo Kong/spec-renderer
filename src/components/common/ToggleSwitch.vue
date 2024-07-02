@@ -8,6 +8,7 @@
       ref="switchInputRef"
       :checked="toggleValue"
       :disabled="disabled"
+      hidden
       tabindex="-1"
       type="checkbox"
       v-bind="attrs.id ? { id: String(attrs.id) } : {}"
@@ -111,10 +112,6 @@ $toggleSwitchPadding: var(--kui-space-10, $kui-space-10);
   align-items: center;
   display: inline-flex;
   gap: var(--kui-space-40, $kui-space-40);
-
-  input {
-    display: none;
-  }
 
   :deep(label) {
     margin-bottom: var(--kui-space-0, $kui-space-0);
