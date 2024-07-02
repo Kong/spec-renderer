@@ -1,89 +1,203 @@
 <template>
-  <div
-    class="select-dropdown-container"
-    :data-testid="dataTestId"
-    @click="selectDropdown?.showPicker()"
+  <Popover
+    :aria-activedescendant="selectedItem ? `${selectedItem.key ? selectedItem.key : selectedItem.value}-item` : undefined"
+    :aria-labelledby="attrs.id ? String(attrs.id) : undefined"
+    class="select-dropdown"
+    close-on-popover-click
+    data-testid="select-dropdown"
+    :disabled="disabled"
+    :placement="placement"
+    :popover-offset="10"
+    width="300px"
+    v-bind="sanitizedAttrs"
   >
-    <select
-      ref="selectDropdown"
-      class="select-dropdown"
-      data-testid="select-dropdown"
-      @change="changeSelectedOption"
+    <button
+      class="trigger-button"
+      data-testid="trigger-button"
+      :disabled="disabled ? true : undefined"
+      v-bind="attrs.id ? { id: String(attrs.id) } : {}"
     >
-      <option
-        v-for="option in optionList"
-        :key="option"
-        :data-testid="`select-dropdown-option-${option}`"
-        :selected="option === selectedOption"
-        :value="option"
-      >
-        {{ option }}
-      </option>
-    </select>
-    <slot />
-  </div>
+      <slot name="trigger-content">
+        <slot :name="`${selectedItem?.key}-item-content`">
+          {{ selectedItem?.label || triggerButton }}
+        </slot>
+      </slot>
+      <ChevronDownIcon class="chevron-icon" />
+    </button>
+    <template #content>
+      <div class="select-items-container">
+        <ul>
+          <li
+            v-for="item in items"
+            :id="`${item.key ? item.key : item.value}-item`"
+            :key="`${item.key ? item.key : item.value}-item`"
+            :aria-selected="item.value === selectValue ? 'true' : 'false'"
+            class="select-item"
+            :class="{ 'selected': item.value === selectValue }"
+            :data-testid="item.key ? `${item.key}-item` : 'select-item'"
+            role="option"
+          >
+            <slot :name="`${item.key}-item`">
+              <button
+                :data-testid="item.key ? `${item.key}-item-trigger` : 'select-item-trigger'"
+                @click="selectValue = item.value"
+              >
+                <slot :name="`${item.key}-item-content`">
+                  {{ item.label }}
+                </slot>
+              </button>
+            </slot>
+          </li>
+        </ul>
+      </div>
+    </template>
+  </Popover>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+defineOptions({
+  inheritAttrs: false,
+})
+
+import { computed, useAttrs, watch } from 'vue'
 import type { PropType } from 'vue'
+import Popover from './HeadlessPopover.vue'
+import { ChevronDownIcon } from '@kong/icons'
+import type { SelectItem } from '@/types'
+import type { Placement } from '@floating-ui/vue'
+import { PopoverPlacementVariants } from '@/types'
 
 const props = defineProps({
-  optionList: {
-    type: Array as PropType<Array<string | number>>,
+  triggerButton: {
+    type: String,
+    default: 'Select',
+  },
+  items: {
+    type: Object as PropType<Array<SelectItem>>,
     required: true,
   },
-  selectedOption: {
-    type: [String, Number],
-    required: true,
+  placement: {
+    type: String as PropType<Placement>,
+    validator: (value: Placement): boolean => PopoverPlacementVariants.includes(value),
+    default: 'bottom-start',
   },
-  // if true, the width of the select element will be changed based on the selected option
-  dynamicWidth: {
+  disabled: {
     type: Boolean,
     default: false,
   },
 })
 
-const selectDropdown = ref<HTMLSelectElement>()
-const dataTestId = computed(() => `select-dropdown-container-${props.optionList[0]}`)
-
 const emit = defineEmits<{
-  (e: 'selected-option-changed', option: string): void
+  (e: 'change', item: SelectItem): void
 }>()
 
-onMounted(() => {
-  if (props.dynamicWidth) {
-    updateSelectWidth()
-  }
+const attrs = useAttrs()
+
+/**
+ * Remove id from attrs because we bind them to the trigger button.
+ */
+const sanitizedAttrs = computed(() => {
+  const strippedAttrs = { ...attrs }
+
+  delete strippedAttrs.id
+
+  return strippedAttrs
 })
 
-// emit event and change width of select element based on selected option
-function changeSelectedOption(event: Event) {
-  const selectElement = event.target as HTMLSelectElement
-  emit('selected-option-changed', selectElement.value)
+const selectValue = defineModel<string>({ required: true })
 
-  if (props.dynamicWidth) {
-    updateSelectWidth()
-  }
-}
+const selectedItem = computed((): SelectItem | undefined => {
+  return props.items.find((item) => item.value === selectValue.value)
+})
 
-function updateSelectWidth() {
-  if (selectDropdown.value) {
-    const selectedOption = selectDropdown.value.options[selectDropdown.value.selectedIndex]
-    selectDropdown.value.style.width = `${selectedOption.text.length}ch`
+watch(selectValue, (newValue: string) => {
+  const selectedItem = props.items.find((item) => item.value === newValue)
+  if (selectedItem) {
+    emit('change', selectedItem)
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>
-.select-dropdown-container{
-  align-items: center;
-  cursor: pointer;
-  display: flex;
+:deep(.popover-trigger-wrapper) {
+  display: inline-block;
+}
 
-  .select-dropdown{
-    @include default-select-reset;
-    display: inline;
+.select-dropdown {
+  display: inline-block;
+
+  .trigger-button {
+    @include default-button-reset;
+    @include dropdown-item-container;
+
+    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+    padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
+
+    .chevron-icon {
+      color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
+      height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
+      width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
+    }
+
+    &:hover:not(:disabled):not(:focus):not(:active) {
+      background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
+      color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
+    }
+
+    &:focus:not(:disabled),
+    &:active:not(:disabled) {
+      background-color: var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker);
+      color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
+    }
+
+    &:disabled {
+      color: var(--kui-color-text-disabled, $kui-color-text-disabled);
+      cursor: not-allowed;
+
+      .chevron-icon {
+        color: var(--kui-color-text-disabled, $kui-color-text-disabled) !important;
+      }
+    }
+  }
+
+  .select-items-container {
+    background-color: var(--kui-color-background, $kui-color-background);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    box-shadow: var(--kui-shadow, $kui-shadow);
+    padding: var(--kui-space-10, $kui-space-10) var(--kui-space-0, $kui-space-0);
+
+    ul {
+      list-style-type: none;
+      margin: var(--kui-space-0, $kui-space-0);
+      padding: var(--kui-space-0, $kui-space-0);
+
+      .select-item {
+        button,
+        :slotted(button),
+        :slotted(a) {
+          @include default-button-reset;
+          @include dropdown-item-container;
+          @include dropdown-item;
+
+          text-align: left;
+        }
+
+        :slotted(a) {
+          width: auto;
+        }
+
+        &.selected {
+          background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
+
+          button,
+          :slotted(button),
+          :slotted(a) {
+            color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
+          }
+        }
+      }
+    }
   }
 }
 </style>

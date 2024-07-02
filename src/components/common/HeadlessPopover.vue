@@ -16,6 +16,8 @@
       <div
         v-show="isVisible"
         ref="popoverRef"
+        :aria-activedescendant="attrs['aria-activedescendant'] ? String(attrs['aria-activedescendant']) : undefined"
+        :aria-labelledby="attrs['aria-labelledby'] ? String(attrs['aria-labelledby']) : undefined"
         class="popover-container"
         :class="[`popover-${placement}`, popoverClasses]"
         data-testid="popover-container"
@@ -76,6 +78,10 @@ const props = defineProps({
     type: String,
     default: 'auto',
   },
+  width: {
+    type: String,
+    default: 'auto',
+  },
   maxHeight: {
     type: String,
     default: 'auto',
@@ -90,6 +96,19 @@ const emit = defineEmits(['open', 'close'])
 
 const attrs = useAttrs()
 
+/**
+ * Remove id, aria-activedescendant and aria-labelledby from attrs because we bind them to the popover container.
+ */
+const sanitizedAttrs = computed(() => {
+  const strippedAttrs = { ...attrs }
+
+  delete strippedAttrs.id
+  delete strippedAttrs['aria-activedescendant']
+  delete strippedAttrs['aria-labelledby']
+
+  return strippedAttrs
+})
+
 const popoverWrapperRef = ref<HTMLElement | null>(null)
 const triggerWrapperRef = ref<HTMLElement | null>(null)
 const popoverRef = ref<HTMLElement | null>(null)
@@ -98,14 +117,6 @@ const isVisible = ref<boolean>(false)
 const popoverTrigger = computed((): HTMLElement | null => triggerWrapperRef.value && triggerWrapperRef.value?.children[0] ? triggerWrapperRef.value?.children[0] as HTMLElement : null)
 
 const timer = ref<number | null>(null)
-
-const sanitizedAttrs = computed(() => {
-  // remove id from attrs because we bind it to the popover container
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { id, ...rest } = attrs
-
-  return rest
-})
 
 const togglePopover = () => {
   if (!isVisible.value) {
@@ -156,6 +167,7 @@ const clickHandler = (event: Event) => {
 const popoverStyles = computed(() => {
   return {
     maxWidth: props.maxWidth,
+    width: props.width,
     maxHeight: props.maxHeight,
   }
 })
