@@ -1,7 +1,6 @@
 <template>
   <Popover
     :aria-activedescendant="selectedItem ? `${selectedItem.key ? selectedItem.key : selectedItem.value}-item` : undefined"
-    v-bind="sanitizedAttrs"
     :aria-labelledby="attrs.id ? String(attrs.id) : undefined"
     class="select-dropdown"
     close-on-popover-click
@@ -10,6 +9,7 @@
     :placement="placement"
     :popover-offset="10"
     width="300px"
+    v-bind="sanitizedAttrs"
   >
     <button
       class="trigger-button"
@@ -104,6 +104,7 @@ const sanitizedAttrs = computed(() => {
   const strippedAttrs = { ...attrs }
 
   delete strippedAttrs.id
+  console.log(strippedAttrs)
 
   return strippedAttrs
 })
