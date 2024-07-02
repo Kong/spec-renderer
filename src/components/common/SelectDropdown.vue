@@ -59,7 +59,8 @@ defineOptions({
   inheritAttrs: false,
 })
 
-import { computed, ref, useAttrs, watch, type PropType } from 'vue'
+import { computed, useAttrs, watch } from 'vue'
+import type { PropType } from 'vue'
 import Popover from './HeadlessPopover.vue'
 import { ChevronDownIcon } from '@kong/icons'
 import type { SelectItem } from '@/types'
@@ -67,10 +68,6 @@ import type { Placement } from '@floating-ui/vue'
 import { PopoverPlacementVariants } from '@/types'
 
 const props = defineProps({
-  modelValue: {
-    type: String,
-    default: '',
-  },
   triggerButton: {
     type: String,
     default: 'Select',
@@ -91,7 +88,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void
   (e: 'change', item: SelectItem): void
 }>()
 
@@ -108,19 +104,13 @@ const sanitizedAttrs = computed(() => {
   return strippedAttrs
 })
 
-const selectValue = ref<string>(props.modelValue)
+const selectValue = defineModel<string>({ required: true })
 
 const selectedItem = computed((): SelectItem | undefined => {
   return props.items.find((item) => item.value === selectValue.value)
 })
 
-watch(() => props.modelValue, (newValue: string) => {
-  selectValue.value = newValue
-})
-
 watch(selectValue, (newValue: string) => {
-  emit('update:modelValue', newValue)
-
   const selectedItem = props.items.find((item) => item.value === newValue)
   if (selectedItem) {
     emit('change', selectedItem)
