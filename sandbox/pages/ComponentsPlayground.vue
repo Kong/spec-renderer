@@ -25,7 +25,10 @@
     </div>
     <div class="component-container">
       <h2>Dropdown</h2>
-      <SelectDropdown :items="dropdownItems">
+      <SelectDropdown
+        id="sandbox-select-dropdown"
+        :items="dropdownItems"
+      >
         <template #item-2-item-content>
           <KongIcon />
           Item 2

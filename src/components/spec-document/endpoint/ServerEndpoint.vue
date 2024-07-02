@@ -12,6 +12,7 @@
 
       <SelectDropdown
         v-if="serverUrlList.length > 1"
+        id="server-select-dropdown"
         v-model="serverUrl"
         class="server-select-dropdown"
         :data-testid="`server-dropdown-${dataTestId}`"

@@ -1,5 +1,8 @@
 <template>
   <Popover
+    :aria-activedescendant="selectedItem ? `${selectedItem.key ? selectedItem.key : selectedItem.value}-item` : undefined"
+    v-bind="sanitizedAttrs"
+    :aria-labelledby="attrs.id ? String(attrs.id) : undefined"
     class="select-dropdown"
     close-on-popover-click
     data-testid="select-dropdown"
@@ -12,6 +15,7 @@
       class="trigger-button"
       data-testid="trigger-button"
       :disabled="disabled ? true : undefined"
+      v-bind="attrs.id ? { id: String(attrs.id) } : {}"
     >
       <slot name="trigger-content">
         <slot :name="`${selectedItem?.key}-item-content`">
@@ -25,9 +29,13 @@
         <ul>
           <li
             v-for="item in items"
+            :id="`${item.key ? item.key : item.value}-item`"
             :key="`${item.key ? item.key : item.value}-item`"
+            :aria-selected="item.value === selectValue ? 'true' : 'false'"
             class="select-item"
+            :class="{ 'selected': item.value === selectValue }"
             :data-testid="item.key ? `${item.key}-item` : 'select-item'"
+            role="option"
           >
             <slot :name="`${item.key}-item`">
               <button
@@ -47,7 +55,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, type PropType } from 'vue'
+defineOptions({
+  inheritAttrs: false,
+})
+
+import { computed, ref, useAttrs, watch, type PropType } from 'vue'
 import Popover from './HeadlessPopover.vue'
 import { ChevronDownIcon } from '@kong/icons'
 import type { SelectItem } from '@/types'
@@ -82,6 +94,19 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
   (e: 'change', item: SelectItem): void
 }>()
+
+const attrs = useAttrs()
+
+/**
+ * Remove id from attrs because we bind them to the trigger button.
+ */
+const sanitizedAttrs = computed(() => {
+  const strippedAttrs = { ...attrs }
+
+  delete strippedAttrs.id
+
+  return strippedAttrs
+})
 
 const selectValue = ref<string>(props.modelValue)
 
@@ -170,6 +195,16 @@ watch(selectValue, (newValue: string) => {
 
         :slotted(a) {
           width: auto;
+        }
+
+        &.selected {
+          background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
+
+          button,
+          :slotted(button),
+          :slotted(a) {
+            color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
+          }
         }
       }
     }
