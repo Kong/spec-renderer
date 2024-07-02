@@ -125,12 +125,14 @@ watch(selectValue, (newValue: string) => {
     }
 
     &:hover:not(:disabled):not(:focus):not(:active) {
-      background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
+      background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
+      color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
     }
 
     &:focus:not(:disabled),
     &:active:not(:disabled) {
-      background-color: var(--kui-color-background-neutral-weak, $kui-color-background-neutral-weak);
+      background-color: var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker);
+      color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
     }
 
     &:disabled {
@@ -148,6 +150,7 @@ watch(selectValue, (newValue: string) => {
     border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     box-shadow: var(--kui-shadow, $kui-shadow);
     padding: var(--kui-space-10, $kui-space-10) var(--kui-space-0, $kui-space-0);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
 
     ul {
       list-style-type: none;
