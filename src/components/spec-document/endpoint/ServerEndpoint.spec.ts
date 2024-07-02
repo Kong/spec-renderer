@@ -43,8 +43,6 @@ describe('<ServerEndpoint />', () => {
 
       await wrapper.findTestId('trigger-button').trigger('click')
 
-      console.log(select.element.innerHTML)
-
       expect(wrapper.findTestId(`${serverUrlList[0]}-item`).isVisible()).toBe(true)
       await wrapper.findTestId(`${serverUrlList[0]}-item-trigger`).trigger('click')
 

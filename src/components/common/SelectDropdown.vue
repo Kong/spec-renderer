@@ -104,7 +104,6 @@ const sanitizedAttrs = computed(() => {
   const strippedAttrs = { ...attrs }
 
   delete strippedAttrs.id
-  console.log(strippedAttrs)
 
   return strippedAttrs
 })
