@@ -38,9 +38,7 @@
       v-if="label || $slots.label"
       v-bind="attrs.id ? { for: String(attrs.id) } : {}"
     >
-      <slot name="label">
-        {{ label }}
-      </slot>
+      {{ label }}
     </InputLabel>
   </div>
 </template>
