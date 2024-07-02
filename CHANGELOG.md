@@ -1,3 +1,10 @@
+# [1.39.0](https://github.com/Kong/spec-renderer/compare/v1.38.0...v1.39.0) (2024-07-02)
+
+
+### Features
+
+* **selectdropdown:** dropdown component [KHCP-12294] ([#174](https://github.com/Kong/spec-renderer/issues/174)) ([d3b3787](https://github.com/Kong/spec-renderer/commit/d3b37870919bc2cb431cf982088e268257e383ec))
+
 # [1.38.0](https://github.com/Kong/spec-renderer/compare/v1.37.0...v1.38.0) (2024-07-02)
 
 

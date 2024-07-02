@@ -8,13 +8,13 @@ describe('<HeadlessPopover />', () => {
     PopoverPlacementVariants.forEach((placement) => {
       it(`displays popover with placement: ${placement}`, async () => {
         const wrapper = shallowMount(Popover, {
-          attachTo: document.body, // required for any interaction with the DOM to work
           props: {
             placement,
           },
           slots: {
             default: '<button data-testid="trigger">Trigger</button>',
           },
+          attachTo: document.body, // required for any interaction with the DOM to work
         })
 
         await wrapper.findTestId('trigger').trigger('click')
@@ -40,10 +40,10 @@ describe('<HeadlessPopover />', () => {
 
     it('opens popover when trigger is clicked', async () => {
       const wrapper = shallowMount(Popover, {
-        attachTo: document.body, // required for any interaction with the DOM to work
         slots: {
           default: '<button data-testid="trigger">Trigger</button>',
         },
+        attachTo: document.body, // required for any interaction with the DOM to work
       })
 
       expect(wrapper.findTestId('popover-container').isVisible()).toBe(false)
@@ -56,11 +56,11 @@ describe('<HeadlessPopover />', () => {
 
     it('displays popover content passed through slot when open', async () => {
       const wrapper = shallowMount(Popover, {
-        attachTo: document.body, // required for any interaction with the DOM to work
         slots: {
           default: '<button data-testid="trigger">Trigger</button>',
           content: '<div data-testid="content">Content</div>',
         },
+        attachTo: document.body, // required for any interaction with the DOM to work
       })
 
       expect(wrapper.findTestId('content').exists()).toBe(true)
@@ -73,13 +73,13 @@ describe('<HeadlessPopover />', () => {
 
     it('opens popover when trigger is hovered and `openOnMouseover` prop is true', async () => {
       const wrapper = shallowMount(Popover, {
-        attachTo: document.body, // required for any interaction with the DOM to work
         props: {
           openOnMouseover: true,
         },
         slots: {
           default: '<button data-testid="trigger">Trigger</button>',
         },
+        attachTo: document.body, // required for any interaction with the DOM to work
       })
 
       expect(wrapper.findTestId('popover-container').isVisible()).toBe(false)
@@ -92,13 +92,13 @@ describe('<HeadlessPopover />', () => {
 
     it('does not trigger open popover action when disabled', async () => {
       const wrapper = shallowMount(Popover, {
-        attachTo: document.body, // required for any interaction with the DOM to work
         props: {
           disabled: true,
         },
         slots: {
           default: '<button data-testid="trigger">Trigger</button>',
         },
+        attachTo: document.body, // required for any interaction with the DOM to work
       })
 
       expect(wrapper.findTestId('popover-container').isVisible()).toBe(false)
