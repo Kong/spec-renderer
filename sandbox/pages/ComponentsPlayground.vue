@@ -23,12 +23,24 @@
         type="text"
       >
     </div>
+    <div class="component-container">
+      <h2>Tooltip</h2>
+      <ToggleSwitch
+        id="sandbox-toggle-switch"
+        v-model="toggle"
+        label="Toggle switch label"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import InputLabel from '../../src/components/common/InputLabel.vue'
 import Tooltip from '../../src/components/common/TooltipPopover.vue'
+import ToggleSwitch from '../../src/components/common/ToggleSwitch.vue'
+
+const toggle = ref<boolean>(false)
 </script>
 
 <style lang="scss" scoped>
