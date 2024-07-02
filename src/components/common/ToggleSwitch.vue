@@ -15,13 +15,11 @@
 
     <div class="switch-control-wrapper">
       <span
-        :aria-checked="toggleValue"
-        v-bind="attrs.id ? { 'aria-labelledby': String(attrs.id) } : {}"
         class="switch-control"
         :class="{ 'checked': toggleValue, 'disabled': disabled }"
         data-testid="switch-control"
         role="checkbox"
-        :tabindex="disabled ? -1 : 0"
+        v-bind="switchControlElAttrs"
         @click="propagateInputEvent"
         @keydown.space.prevent
         @keyup.space="propagateInputEvent"
@@ -86,6 +84,16 @@ const inputElAttrs = computed((): Record<string, any> => {
   }
 
   return inputAttrs
+})
+
+const switchControlElAttrs = computed((): Record<string, any> => {
+  const switchControlAttrs = {
+    'aria-checked': toggleValue.value,
+    tabindex: props.disabled ? -1 : 0,
+    ...(!!attrs.id && { 'aria-labelledby': String(attrs.id) }),
+  }
+
+  return switchControlAttrs
 })
 
 const toggleValue = defineModel<boolean>({ required: true })
