@@ -130,14 +130,14 @@ $toggleSwitchPadding: var(--kui-space-10, $kui-space-10);
     display: flex;
 
     .switch-control {
-      border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-      height: 22px;
-      width: 44px;
       background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
+      border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
       cursor: pointer;
+      height: 22px;
       padding: $toggleSwitchPadding;
       position: relative;
       transition: background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
+      width: 44px;
 
       &:hover:not(.disabled) {
         background-color: var(--kui-color-background-neutral-weak, $kui-color-background-neutral-weak);
@@ -164,18 +164,18 @@ $toggleSwitchPadding: var(--kui-space-10, $kui-space-10);
       }
 
       &:after {
-        height: 8px;
-        right: calc(25% - 4px);
-        width: 8px;
         border: var(--kui-border-width-20, $kui-border-width-20) solid var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak);
         border-radius: var(--kui-border-radius-circle, $kui-border-radius-circle);
         box-sizing: border-box;
         content: '';
         display: block;
+        height: 8px;
         position: absolute;
+        right: calc(25% - 4px);
         top: 50%;
         transform: translateY(-50%);
         transition: border-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
+        width: 8px;
       }
 
       &-enabled-bar {
