@@ -6,12 +6,10 @@
   >
     <input
       ref="switchInputRef"
-      :checked="toggleValue"
-      :disabled="disabled"
       hidden
       tabindex="-1"
       type="checkbox"
-      v-bind="attrs.id ? { id: String(attrs.id) } : {}"
+      v-bind="inputElAttrs"
       @input="handleChange"
     >
 
@@ -72,12 +70,22 @@ const attrs = useAttrs()
 /**
  * Remove id from attr because we bind it to the input element.
  */
-const sanitizedAttrs = computed(() => {
+const sanitizedAttrs = computed((): Record<string, any> => {
   const strippedAttrs = { ...attrs }
 
   delete strippedAttrs.id
 
   return strippedAttrs
+})
+
+const inputElAttrs = computed((): Record<string, any> => {
+  const inputAttrs = {
+    disabled: props.disabled,
+    checked: toggleValue.value,
+    ...(!!attrs.id && { id: String(attrs.id) }),
+  }
+
+  return inputAttrs
 })
 
 const toggleValue = defineModel<boolean>({ required: true })
@@ -104,9 +112,9 @@ const handleChange = (event: Event): void => {
 </script>
 
 <style lang="scss" scoped>
-$toggleSwitchPadding: var(--kui-space-10, $kui-space-10);
-
 .toggle-switch {
+  $toggleSwitchPadding: var(--kui-space-10, $kui-space-10);
+
   align-items: center;
   display: inline-flex;
   gap: var(--kui-space-40, $kui-space-40);
