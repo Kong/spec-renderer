@@ -1,3 +1,10 @@
+# [1.38.0](https://github.com/Kong/spec-renderer/compare/v1.37.0...v1.38.0) (2024-07-02)
+
+
+### Features
+
+* collapsible panels and copy in TryIt [KHCP-12451] ([#176](https://github.com/Kong/spec-renderer/issues/176)) ([f195846](https://github.com/Kong/spec-renderer/commit/f19584653c3c6cddaa2e7c472b69d07113aabb18))
+
 # [1.37.0](https://github.com/Kong/spec-renderer/compare/v1.36.2...v1.37.0) (2024-06-28)
 
 
