@@ -264,8 +264,8 @@ watch(() => ({
     margin: var(--kui-space-60, $kui-space-60) var(--kui-space-30, $kui-space-30) var(--kui-space-30, $kui-space-30);
   }
   .select-wrapper {
-    flex: 1;
     display: flex;
+    flex: 1;
     .request-sample-selector {
       margin-left: auto;
     }
