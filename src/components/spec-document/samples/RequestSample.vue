@@ -9,42 +9,44 @@
       :content-to-copy="requestCode as string"
     >
       <template #header>
-        <select v-model="selectedLang">
-          <option
-            v-for="lang in requestConfigs"
-            :key="lang.httpSnippetLanguage"
-            :value="lang.httpSnippetLanguage"
+        <div class="select-wrapper">
+          <select v-model="selectedLang">
+            <option
+              v-for="lang in requestConfigs"
+              :key="lang.httpSnippetLanguage"
+              :value="lang.httpSnippetLanguage"
+            >
+              {{ lang.label }}
+            </option>
+          </select>
+          &nbsp;
+          <select
+            v-if="selectedLangLibraries.length"
+            v-model="selectedLangLibrary"
           >
-            {{ lang.label }}
-          </option>
-        </select>
-        &nbsp;
-        <select
-          v-if="selectedLangLibraries.length"
-          v-model="selectedLangLibrary"
-        >
-          <option
-            v-for="lib in selectedLangLibraries"
-            :key="lib.httpSnippetLibrary"
-            :value="lib.httpSnippetLibrary"
-          >
-            {{ lib.label }}
-          </option>
-        </select>
+            <option
+              v-for="lib in selectedLangLibraries"
+              :key="lib.httpSnippetLibrary"
+              :value="lib.httpSnippetLibrary"
+            >
+              {{ lib.label }}
+            </option>
+          </select>
 
-        <select
-          v-if="requestSamples && requestSamples.length"
-          v-model="selectedRequestSample"
-          class="request-sample-selector"
-        >
-          <option
-            v-for="sample in requestSamples"
-            :key="sample.key"
-            :value="sample.key"
+          <select
+            v-if="requestSamples && requestSamples.length"
+            v-model="selectedRequestSample"
+            class="request-sample-selector"
           >
-            {{ sample.key }}
-          </option>
-        </select>
+            <option
+              v-for="sample in requestSamples"
+              :key="sample.key"
+              :value="sample.key"
+            >
+              {{ sample.key }}
+            </option>
+          </select>
+        </div>
       </template>
       <!-- body -->
       <div class="wide">
@@ -261,8 +263,12 @@ watch(() => ({
   h5 {
     margin: var(--kui-space-60, $kui-space-60) var(--kui-space-30, $kui-space-30) var(--kui-space-30, $kui-space-30);
   }
-  .request-sample-selector {
-    margin-left: auto;
+  .select-wrapper {
+    flex: 1;
+    display: flex;
+    .request-sample-selector {
+      margin-left: auto;
+    }
   }
 }
 </style>
