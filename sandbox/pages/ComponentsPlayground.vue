@@ -24,7 +24,7 @@
       >
     </div>
     <div class="component-container">
-      <h2>Tooltip</h2>
+      <h2>Toggle</h2>
       <ToggleSwitch
         id="sandbox-toggle-switch"
         v-model="toggle"
