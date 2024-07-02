@@ -196,7 +196,7 @@ watch(() => (props.data.id), () => {
     }
     .right {
       background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-      padding: var(--kui-space-40, $kui-space-40);
+      padding: var(--kui-space-0, $kui-space-0);
     }
 
     .http-operation-response {

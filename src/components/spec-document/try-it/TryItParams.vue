@@ -1,6 +1,7 @@
 <template>
   <CollapsablePanel
     v-if="params&& Object.keys(params).length"
+    :content-to-copy="contentToCopy"
     :data-testid="`tryit-params-${paramType}-${data.id}`"
   >
     <template #header>
@@ -112,6 +113,12 @@ const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Re
 //
 const fieldValues = ref<Record<string, string>>({})
 
+const contentToCopy = computed((): string => {
+  if (props.paramType !== 'body') {
+    return ''
+  }
+  return fieldValues.value.body
+})
 
 // calculating initial values for the fields,
 watch(params, (newParams) => {

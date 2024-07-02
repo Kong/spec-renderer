@@ -154,7 +154,7 @@ watch(() => props.response, async (res) => {
 
 .error-panel {
   background-color: var( --kui-color-background-danger-weaker, $kui-color-background-danger-weaker);
-  border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   color: var(--kui-color-text-danger-strong, $kui-color-text-danger-strong);
   padding: var(--kui-space-40, $kui-space-40);
