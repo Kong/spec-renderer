@@ -147,10 +147,10 @@ watch(selectValue, (newValue: string) => {
 
   .select-items-container {
     background-color: var(--kui-color-background, $kui-color-background);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     box-shadow: var(--kui-shadow, $kui-shadow);
     padding: var(--kui-space-10, $kui-space-10) var(--kui-space-0, $kui-space-0);
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
 
     ul {
       list-style-type: none;
