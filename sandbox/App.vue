@@ -17,15 +17,6 @@
   </div>
 </template>
 
-<style lang="scss">
-.spec-renderer-document {
-  .http-operation-container {
-    .right {
-      --kui-color-background-transparent: pink;
-    }
-  }
-}
-</style>
 
 <style lang="scss" scoped>
 .sandbox-container {

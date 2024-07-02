@@ -96,7 +96,7 @@ watch(serverUrl, (newUrl) => {
 <style lang="scss" scoped>
 .server-endpoint {
   align-items: center;
-  border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   display: flex;
   justify-content: space-between;
