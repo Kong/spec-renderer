@@ -141,7 +141,7 @@ watch(fieldValues, (newFieldValues) => {
 
 <style lang="scss" scoped>
 .param-label {
-  margin-bottom: var(--kui-space-40, $kui-space-40);
+  margin-bottom: var(--kui-space-40, $kui-space-40) !important;
 }
 
 input {
