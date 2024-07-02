@@ -2,6 +2,10 @@
 
 SelectDropdown is a fly-out component that can act both like `select` HTML element and dropdown action menu (with no notion of selecting an item but rather triggering action or navigation on item click).
 
+## Accessibility
+
+`id` attribute is required for better accessibility. SelectDropdown binds passed `id` attribute to trigger button element.
+
 ## Props
 
 ### `items`
@@ -16,14 +20,14 @@ interface SelectItem {
   label: string
   value: string
   /**
-   * Unique key for the item `data-testid` attribute. If not provided, the item will use a generic selector.
+   * Unique key for the item `id` and `data-testid` attributes. If not provided, the item will use a generic selector.
    * Also, `item.key` is used for generating item slots. If not provided, the item will not have a slot.
    */
   key?: string
 }
 ```
 
-If you wish to use slots to provide custom content for dropdown items, you need to pass `ite.key` parameter - otherwise it's optional.
+If you wish to use slots to provide custom content for dropdown items, you need to pass `item.key` parameter - otherwise it's optional.
 
 ### `modelValue`
 

@@ -2,7 +2,15 @@
 
 HeadlessPopover component is unstyled component wrapper that provides popover functionality. You can pass your trigger element and popover content through slots and configure the desired behavior using component props and it will take care of rendering the popover and managing it's state.
 
-For better accessability you must pass `id` attribute to the HeadlessPopover component so that you can programmatically associate it to the element it describes using `aria-describedby` attribute. For that reason, HeadlessPopover binds `id` attribute directly to the popover element instead of the outer-most element (unlike the rest of attributes like `class` or `data-testid`, that are bound to the outer-most `div` element).
+## Accessibility
+
+For better accessability you must pass `id` attribute to the HeadlessPopover component and programmatically associate it to the element it describes using `aria-describedby` attribute. For that reason, HeadlessPopover binds `id` and couple other attributes directly to the popover element instead of the outer-most element (unlike the rest of attributes like `class` or `data-testid`, that are bound to the outer-most `div` element).
+
+Full list of attributes which HeadlessPopover binds to the popover element instead of the outer-most element:
+
+* `id`
+* `aria-activedescendant`
+* `aria-labelledby`
 
 ## Props
 
