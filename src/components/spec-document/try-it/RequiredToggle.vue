@@ -6,15 +6,20 @@
     <InputLabel>
       Show only required parameters
     </InputLabel>
-    <input type="checkbox">
+
+    <ToggleSwitch
+      id="sandbox-toggle-switch"
+      v-model="toggle"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpOperation } from '@stoplight/types'
 import InputLabel from '@/components/common/InputLabel.vue'
+import ToggleSwitch from '@/components/common/ToggleSwitch.vue'
 import { MAX_NESTED_LEVELS } from '@/constants'
 
 const props = defineProps({
@@ -23,6 +28,7 @@ const props = defineProps({
     required: true,
   },
 })
+const toggle = ref<boolean>(true)
 
 const showToggle = computed((): boolean => {
   // no body - no toggle
@@ -76,6 +82,7 @@ const showToggle = computed((): boolean => {
   label {
     display: inline !important;
     flex: 1;
+    font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
   }
 
 }
