@@ -1,6 +1,6 @@
 <template>
   <CollapsablePanel
-    v-show="params&& Object.keys(params).length"
+    v-show="params && Object.keys(params).length"
     :content-to-copy="contentToCopy"
     :data-testid="`tryit-params-${paramType}-${data.id}`"
     :start-collapsed="paramType !== 'body'"
@@ -12,7 +12,7 @@
     </template>
 
     <div
-      v-if="paramType !== 'body'"
+      v-if="paramType !== 'body'&& params && Object.keys(params).length"
       class="wide"
     >
       <div
