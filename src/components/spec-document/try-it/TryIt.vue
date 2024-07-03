@@ -188,6 +188,7 @@ watch(() => (props.data.id), () => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
   response.value = undefined
+  responseError.value = undefined
 }, { immediate: true })
 
 </script>
@@ -221,7 +222,7 @@ watch(() => (props.data.id), () => {
   }
 }
 /* using deep as this thing is used in multiple child components */
-:deep(.panel-body input), :deep(.panel-body select) {
+:deep(.panel-body input[type=text]), :deep(.panel-body select) {
   border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   box-sizing: border-box;

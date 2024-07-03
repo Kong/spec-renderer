@@ -1,8 +1,9 @@
 <template>
   <CollapsablePanel
-    v-if="params&& Object.keys(params).length"
+    v-show="params&& Object.keys(params).length"
     :content-to-copy="contentToCopy"
     :data-testid="`tryit-params-${paramType}-${data.id}`"
+    :start-collapsed="paramType !== 'body'"
   >
     <template #header>
       <h5>
@@ -39,6 +40,12 @@
       v-else
       class="wide"
     >
+      <div class="wide required-only-wrapper">
+        <InputLabel>
+          Show only required parameters
+        </InputLabel>
+        <input type="checkbox">
+      </div>
       <EditableCodeBlock
         :code="fieldValues.body"
         lang="json"
@@ -151,8 +158,16 @@ watch(fieldValues, (newFieldValues) => {
   margin-bottom: var(--kui-space-40, $kui-space-40);
 }
 
-input {
+input[type=text] {
   @include input-default;
+}
+.required-only-wrapper {
+  flex-direction: row!important;
+  margin-left: var(--kui-space-10, $kui-space-10)!important;
+  label {
+    display: inline!important;
+    flex: 1;
+  }
 }
 </style>
 

@@ -49,6 +49,16 @@
         </div>
       </template>
       <!-- body -->
+      <div
+        v-if="hideTryIt"
+        class="wide required-only-wrapper"
+      >
+        <InputLabel>
+          Show only required parameters
+        </InputLabel>
+        <input type="checkbox">
+      </div>
+
       <div class="wide">
         <CodeBlock
           v-if="requestCode && selectedLang"
@@ -71,6 +81,8 @@ import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import type { LanguageCode } from '@/types/request-languages'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet-lite'
+import InputLabel from '@/components/common/InputLabel.vue'
+
 
 const props = defineProps({
   data: {
@@ -270,5 +282,17 @@ watch(() => ({
       margin-left: auto;
     }
   }
+  .required-only-wrapper {
+    flex-direction: row!important;
+
+    label {
+      display: inline !important;
+      flex: 1;
+    }
+    input[type=checkbox] {
+      margin-right: var(--kui-space-30, $kui-space-30)!important;
+    }
+  }
 }
+
 </style>

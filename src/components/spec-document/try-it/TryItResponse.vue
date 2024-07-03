@@ -1,5 +1,8 @@
 <template>
-  <CollapsablePanel :data-testid="`tryit-response-${dataId}`">
+  <CollapsablePanel
+    :collapsible="false"
+    :data-testid="`tryit-response-${dataId}`"
+  >
     <template #header>
       <h5>
         <span v-if="!response?.status">

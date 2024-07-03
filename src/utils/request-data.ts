@@ -137,9 +137,11 @@ export const getSampleQuery = (data: IHttpOperation, fieldValues?: Record<string
  *
  * @param data  operation data
  * @param sampleBody body example extracted from data
+ * @param filteringOptions indicates what to exclude
+ * @param sampleIdx index of example to be used
  * @returns query string
  */
-export const getSampleBody = (data: IHttpOperation, sampleIdx?: number): string => {
+export const getSampleBody = (data: IHttpOperation, filteringOptions: Record<string, boolean> = { excludeReadonly: true, excludeNotRequired: false }, sampleIdx: number = 0): string => {
   if (!data.request?.body?.contents?.length || !data.request.body.contents[0]) {
     return ''
   }
@@ -153,9 +155,9 @@ export const getSampleBody = (data: IHttpOperation, sampleIdx?: number): string 
 
   // now we do not have examples for entire body, let's try to build sample object here
   // to avoid circular references we will dig 10 levels deep , no more
-  const crawl = (objData: Record<string, any>, parentKey: string, nestedLevel: number): Record<string, any> => {
+  const crawl = (objData: Record<string, any>, parentKey: string, nestedLevel: number): Record<string, any> | null => {
 
-    const sampleObj = <Record<string, any>>{}
+    let sampleObj = <Record<string, any>>{}
     if (typeof objData === 'undefined') {
       return sampleObj
     }
@@ -163,25 +165,41 @@ export const getSampleBody = (data: IHttpOperation, sampleIdx?: number): string 
       sampleObj[parentKey] = extractSampleForParam(objData, parentKey)
       return sampleObj
     }
-    Object.keys(objData).forEach((key: string) => {
-      if (objData[key].anyOf && Array.isArray(objData[key].anyOf) && objData[key].anyOf.length) {
-        sampleObj[key] = crawl(objData[key].anyOf[0].properties || {}, key, nestedLevel)
-      } else if (objData[key].type === 'object') {
-        const props = objData[key].properties || objData[key].additionalProperties
-        if (props) {
-          sampleObj[key] = crawl(objData[key].properties || {}, key, nestedLevel++)
+    if (objData.allOf && Array.isArray(objData.allOf)) {
+      if (filteringOptions.excludeReadonly) {
+        for (let i = 0; i < objData.allOf.length; i++) {
+          if (objData.allOf[i].readOnly === true) {
+            return null
+          }
         }
-      } else if (objData[key].type === 'array') {
-        sampleObj[key] = [extractSampleForParam(objData[key], key)]
+      }
+      for (let i = 0; i < objData.allOf.length; i++) {
+        sampleObj = {
+          ...sampleObj, ...crawl(objData.allOf[i], `allOf-${i}`, nestedLevel) }
+      }
+      return sampleObj
+    }
+    Object.keys(objData.properties || {}).forEach((key: string) => {
+      const oData = objData.properties[key]
+      if (filteringOptions.excludeReadonly && oData.readOnly) {
+        return
+      }
+      if (oData.anyOf && Array.isArray(oData.anyOf) && oData.anyOf.length) {
+        sampleObj[key] = crawl(oData.anyOf[0] || {}, key, nestedLevel)
+      } else if (oData.type === 'object' || oData.allOf) {
+        const res = crawl(oData || {}, key, nestedLevel++)
+        if (res !== null) {
+          sampleObj[key] = res
+        }
+      } else if (oData.type === 'array') {
+        sampleObj[key] = [extractSampleForParam(oData, key)]
       } else {
-        sampleObj[key] = extractSampleForParam(objData[key] , key)
+        sampleObj[key] = extractSampleForParam(oData , key)
       }
     })
-
     return sampleObj
   }
 
-  //TODO: handle allOf correctly
-  return JSON.stringify(crawl((data.request.body.contents[0].schema?.properties || data.request.body.contents[0].schema?.allOf) as Record<string, any>, '', 0), null, 2)
+  return JSON.stringify(crawl((data.request.body.contents[0].schema) as Record<string, any>, '', 0), null, 2)
 
 }

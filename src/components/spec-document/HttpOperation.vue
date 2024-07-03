@@ -159,7 +159,7 @@ const setRequestBody = (newBody: string) => {
 }
 
 const setRequestBodyByIdx = (newSampleIdx: number) => {
-  currentRequestBody.value = getSampleBody(props.data, newSampleIdx)
+  currentRequestBody.value = getSampleBody(props.data, { excludeReadonly: true, excludeNotRequired: false }, newSampleIdx)
 }
 
 function updateSelectedServerURL(url: string) {
@@ -170,7 +170,7 @@ function updateSelectedServerURL(url: string) {
 watch(() => (props.data.id), () => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
-  currentRequestBody.value = getSampleBody(props.data, 0)
+  currentRequestBody.value = getSampleBody(props.data, { excludeReadonly: true, excludeNotRequired: false }, 0)
 }, { immediate: true })
 </script>
 
