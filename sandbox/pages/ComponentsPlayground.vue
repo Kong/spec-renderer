@@ -23,6 +23,7 @@
         type="text"
       >
     </div>
+
     <div class="component-container">
       <h2>Dropdown</h2>
       <SelectDropdown
@@ -50,12 +51,23 @@
         </template>
       </SelectDropdown>
     </div>
+
+    <div class="component-container">
+      <h2>Toggle</h2>
+      <ToggleSwitch
+        id="sandbox-toggle-switch"
+        v-model="toggle"
+        label="Toggle switch label"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import InputLabel from '../../src/components/common/InputLabel.vue'
 import Tooltip from '../../src/components/common/TooltipPopover.vue'
+import ToggleSwitch from '../../src/components/common/ToggleSwitch.vue'
 import SelectDropdown from '../../src/components/common/SelectDropdown.vue'
 import { KongIcon } from '@kong/icons'
 
@@ -69,6 +81,8 @@ const dropdownItems = [
 const onDropdownButtonClick = () => {
   alert('Item 4 clicked')
 }
+
+const toggle = ref<boolean>(false)
 </script>
 
 <style lang="scss" scoped>

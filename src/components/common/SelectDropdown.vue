@@ -104,7 +104,7 @@ const sanitizedAttrs = computed(() => {
   return strippedAttrs
 })
 
-const selectValue = defineModel<string>({ required: true })
+const selectValue = defineModel<string>({ default: '' })
 
 const selectedItem = computed((): SelectItem | undefined => {
   return props.items.find((item) => item.value === selectValue.value)
