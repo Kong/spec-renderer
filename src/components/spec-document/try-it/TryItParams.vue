@@ -37,15 +37,11 @@
       </div>
     </div>
     <div
-      v-else
+      v-if="paramType === 'body' && params && Object.keys(params).length"
       class="wide"
     >
-      <div class="wide required-only-wrapper">
-        <InputLabel>
-          Show only required parameters
-        </InputLabel>
-        <input type="checkbox">
-      </div>
+      <RequiredToggle :data="data" />
+
       <EditableCodeBlock
         :code="fieldValues.body"
         lang="json"
@@ -65,6 +61,7 @@ import type { RequestParamTypes } from '@/types'
 import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
+import RequiredToggle from './RequiredToggle.vue'
 
 /**
  * This components handles path parameters, query parameters and body.
@@ -97,6 +94,7 @@ const compTitles = {
   query: 'Query Parameters',
   body: 'Body',
 }
+
 
 // params schema props extracted from data (schema) or received from outside controls (reqBody)
 const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Record<string, any>> | undefined => {
@@ -160,14 +158,6 @@ watch(fieldValues, (newFieldValues) => {
 
 input[type=text] {
   @include input-default;
-}
-.required-only-wrapper {
-  flex-direction: row!important;
-  margin-left: var(--kui-space-10, $kui-space-10)!important;
-  label {
-    display: inline!important;
-    flex: 1;
-  }
 }
 </style>
 

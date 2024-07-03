@@ -120,3 +120,6 @@ export const requestSampleConfigs: RequestSampleConfigs = [
     highlightLanguage: 'ruby',
   },
 ]
+
+// maximum nested levels to look deep when generating request/response sample
+export const MAX_NESTED_LEVELS = 10

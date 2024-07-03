@@ -49,16 +49,10 @@
         </div>
       </template>
       <!-- body -->
-      <div
+      <RequiredToggle
         v-if="hideTryIt"
-        class="wide required-only-wrapper"
-      >
-        <InputLabel>
-          Show only required parameters
-        </InputLabel>
-        <input type="checkbox">
-      </div>
-
+        :data="data"
+      />
       <div class="wide">
         <CodeBlock
           v-if="requestCode && selectedLang"
@@ -81,7 +75,7 @@ import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import type { LanguageCode } from '@/types/request-languages'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet-lite'
-import InputLabel from '@/components/common/InputLabel.vue'
+import RequiredToggle from '../try-it/RequiredToggle.vue'
 
 
 const props = defineProps({
@@ -168,7 +162,9 @@ const getFirstSampleKey = (examples: INodeExample[]): string | null => {
 const selectedRequestSample = ref<string | null>(props.data?.request?.body?.contents && props.data.request.body.contents.length ? getFirstSampleKey(props.data.request.body.contents[0].examples as INodeExample[]) : null)
 
 const requestSamples = computed((): INodeExample[] => {
-  if (props.data?.request?.body?.contents && props.data.request.body.contents.length && Array.isArray(props.data.request.body.contents[0].examples) && props.data.request.body.contents[0].examples.length) {
+  if (props.data?.request?.body?.contents && props.data.request.body.contents.length &&
+    Array.isArray(props.data.request.body.contents[0].examples) &&
+    props.data.request.body.contents[0].examples.length) {
     return props.data.request.body.contents[0].examples as INodeExample[]
   } else {
     return []
@@ -282,17 +278,14 @@ watch(() => ({
       margin-left: auto;
     }
   }
-  .required-only-wrapper {
-    flex-direction: row!important;
 
+  :deep(.required-only-wrapper) {
     label {
-      display: inline !important;
-      flex: 1;
+      margin-left: var(--kui-space-10, $kui-space-10) !important;
     }
     input[type=checkbox] {
-      margin-right: var(--kui-space-30, $kui-space-30)!important;
+      margin-right: var(--kui-space-30, $kui-space-30) !important;
     }
   }
 }
-
 </style>

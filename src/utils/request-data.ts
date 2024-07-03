@@ -1,4 +1,5 @@
 import type { IHttpOperation } from '@stoplight/types'
+import { MAX_NESTED_LEVELS } from '@/constants'
 
 const getAcceptHeader = (data: IHttpOperation): string => {
   const headers = new Set()
@@ -147,7 +148,9 @@ export const getSampleBody = (data: IHttpOperation, filteringOptions: Record<str
   }
   if (sampleIdx !== undefined) {
     if (Array.isArray(data.request.body.contents[0].examples) &&
-      sampleIdx < data.request.body.contents[0].examples.length) {
+      // @ts-ignore value is valid property of example
+      data.request.body.contents[0].examples[sampleIdx]?.value
+    ) {
       // @ts-ignore value is valid property of example
       return JSON.stringify(data.request.body.contents[0].examples[sampleIdx].value as Record<string, any>, null, 2)
     }
@@ -161,7 +164,7 @@ export const getSampleBody = (data: IHttpOperation, filteringOptions: Record<str
     if (typeof objData === 'undefined') {
       return sampleObj
     }
-    if (nestedLevel > 10) {
+    if (nestedLevel > MAX_NESTED_LEVELS) {
       sampleObj[parentKey] = extractSampleForParam(objData, parentKey)
       return sampleObj
     }
@@ -201,5 +204,9 @@ export const getSampleBody = (data: IHttpOperation, filteringOptions: Record<str
   }
 
   return JSON.stringify(crawl((data.request.body.contents[0].schema) as Record<string, any>, '', 0), null, 2)
-
 }
+
+/**
+ * Returns true if body of operation has at least one required field
+ * @param data operation
+ */
