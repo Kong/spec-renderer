@@ -8,6 +8,18 @@
       data-testid="property-field-title"
     >
       {{ title }}
+
+      <select
+        v-if="variantsList.length"
+        name="variant-select"
+        @change="handleVariantSelectChange"
+      >
+        <option
+          v-for="(variant, index) in variantsList"
+          :key="variant"
+          :value="index"
+        >{{ variant }}</option>
+      </select>
     </span>
     <span class="property-type">
       <span
@@ -62,7 +74,19 @@ defineProps({
     type: Array as PropType<string[]>,
     default: () => [],
   },
+  variantsList: {
+    type: Array as PropType<Array<string>>,
+    default: () => [],
+  },
 })
+
+const emit = defineEmits<{
+  (e: 'variant-changed', variant: number): void
+}>()
+
+function handleVariantSelectChange(event: Event) {
+  emit('variant-changed', Number((event.target as HTMLSelectElement).value))
+}
 </script>
 
 <style lang="scss" scoped>

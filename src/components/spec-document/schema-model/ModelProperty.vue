@@ -8,6 +8,7 @@
       v-for="field in orderedFieldList"
       :key="field.key"
       v-bind="field.props"
+      v-on="field.eventHandlers"
     />
 
     <details
@@ -25,9 +26,9 @@
         <span>{{ nestedPropertiesExpanded ? 'Hide' : 'Show' }} Child Parameters</span>
       </summary>
       <ModelNode
-        v-if="resolvedModelProperty && nestedPropertiesExpanded"
+        v-if="schemaForModelNode && nestedPropertiesExpanded"
         class="nested-model-node"
-        :schema="resolvedModelProperty"
+        :schema="schemaForModelNode"
         :title="propertyName"
       />
     </details>
@@ -37,7 +38,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { AddIcon } from '@kong/icons'
-import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
+import { inheritedPropertyName, isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 import type { PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 
@@ -66,8 +67,14 @@ const props = defineProps({
 const nestedPropertiesExpanded = ref(false)
 
 const resolvedModelProperty = computed(() => resolveSchemaObjectFields(props.property))
-
 const dataTestId = computed(() => `model-property-${props.propertyName.replaceAll(' ', '-')}`)
+
+const schemaVariants = computed(() => (resolvedModelProperty.value?.oneOf || resolvedModelProperty.value?.anyOf || []).filter(isValidSchemaObject))
+const inheritanceVariantList = computed(() => {
+  return schemaVariants.value.map((variant, index) => inheritedPropertyName(index, variant.title))
+})
+const selectedVariant = ref<SchemaObject>(schemaVariants.value[0])
+
 
 const nestedPropertiesPresent = computed<boolean>(() =>{
   if (resolvedModelProperty.value?.properties) {
@@ -93,6 +100,12 @@ const orderedFieldList = computed(() => {
               ? props.property.items.type
               : '',
         requiredFields: props.requiredFields,
+        variantsList: inheritanceVariantList.value,
+      },
+      eventHandlers: {
+        'variant-changed': (index: number) => {
+          selectedVariant.value = schemaVariants.value[index]
+        },
       },
       key: 'property-info',
     })
@@ -103,6 +116,7 @@ const orderedFieldList = computed(() => {
       props: {
         description: props.property.description,
       },
+      eventHandlers:{},
       key: 'property-description',
     })
   }
@@ -112,6 +126,7 @@ const orderedFieldList = computed(() => {
       props: {
         enumValueList: props.property.enum,
       },
+      eventHandlers:{},
       key: 'property-enum',
     })
   }
@@ -121,6 +136,7 @@ const orderedFieldList = computed(() => {
       props: {
         pattern: props.property.pattern,
       },
+      eventHandlers:{},
       key: 'property-pattern',
     })
   }
@@ -131,6 +147,7 @@ const orderedFieldList = computed(() => {
         max: props.property.maximum,
         min: props.property.minimum,
       },
+      eventHandlers:{},
       key: 'property-range',
     })
   }
@@ -140,13 +157,22 @@ const orderedFieldList = computed(() => {
       props: {
         example: props.property.examples || props.property.example,
       },
+      eventHandlers:{},
       key: 'property-example',
     })
   }
   return fields
 })
 
+const schemaForModelNode = computed(() => {
+  const schema = resolvedModelProperty.value
 
+  if (selectedVariant.value) {
+    return selectedVariant.value
+  }
+
+  return schema
+})
 </script>
 
 <style lang="scss" scoped>

@@ -15,16 +15,6 @@
         :required-fields="resolvedSchemaObject?.required"
       />
     </template>
-
-    <PropertyOneOf
-      v-if="Array.isArray(resolvedSchemaObject?.oneOf) && resolvedSchemaObject?.oneOf?.length"
-      :one-of-list="resolvedSchemaObject?.oneOf"
-    />
-
-    <PropertyAnyOf
-      v-if="Array.isArray(resolvedSchemaObject?.anyOf) && resolvedSchemaObject?.anyOf?.length"
-      :any-of-list="resolvedSchemaObject?.anyOf"
-    />
   </div>
 </template>
 
@@ -34,8 +24,6 @@ import type { PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 import ModelProperty from './ModelProperty.vue'
-import PropertyAnyOf from './property-fields/PropertyAnyOf.vue'
-import PropertyOneOf from './property-fields/PropertyOneOf.vue'
 
 const props = defineProps({
   schema: {
