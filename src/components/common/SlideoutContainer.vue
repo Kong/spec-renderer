@@ -45,10 +45,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  title: {
-    type: String,
-    default: '',
-  },
   /**
    * The max-width of the slideout. **Default: `500px`**.
    */
@@ -119,7 +115,6 @@ onUnmounted(() => {
 
     .slideout-header {
       display: flex;
-      justify-content: space-between;
       padding-right: var(--kui-space-70, $kui-space-70);
 
       .slideout-close-icon {
@@ -155,7 +150,7 @@ onUnmounted(() => {
       padding-right: var(--kui-space-70, $kui-space-70);
 
       :deep(> *:last-child) {
-        padding-bottom: var(--kui-space-70, $kui-space-70); // add padding to the last child to add some spacing before bottom of the page
+        padding-bottom: var(--kui-space-70, $kui-space-70); // add padding to the last child to add some spacing before bottom of the container
       }
     }
   }
