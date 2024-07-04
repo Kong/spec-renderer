@@ -26,9 +26,9 @@
         <span>{{ nestedPropertiesExpanded ? 'Hide' : 'Show' }} Child Parameters</span>
       </summary>
       <ModelNode
-        v-if="schemaForModelNode && nestedPropertiesExpanded"
+        v-if="selectedSchemaModel && nestedPropertiesExpanded"
         class="nested-model-node"
-        :schema="schemaForModelNode"
+        :schema="selectedSchemaModel"
         :title="propertyName"
       />
     </details>
@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { AddIcon } from '@kong/icons'
-import { inheritedPropertyName, isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
+import { isValidSchemaObject } from '@/utils'
 import type { PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 
@@ -49,6 +49,7 @@ import PropertyInfo from './property-fields/PropertyInfo.vue'
 import PropertyEnum from './property-fields/PropertyEnum.vue'
 import PropertyPattern from './property-fields/PropertyPattern.vue'
 import PropertyRange from './property-fields/PropertyRange.vue'
+import useSchemaVariants from '@/composables/useSchemaVariants'
 
 const props = defineProps({
   property: {
@@ -66,21 +67,15 @@ const props = defineProps({
 })
 const nestedPropertiesExpanded = ref(false)
 
-const resolvedModelProperty = computed(() => resolveSchemaObjectFields(props.property))
 const dataTestId = computed(() => `model-property-${props.propertyName.replaceAll(' ', '-')}`)
 
-const schemaVariants = computed(() => (resolvedModelProperty.value?.oneOf || resolvedModelProperty.value?.anyOf || []).filter(isValidSchemaObject))
-const inheritanceVariantList = computed(() => {
-  return schemaVariants.value.map((variant, index) => inheritedPropertyName(index, variant.title))
-})
-const selectedVariant = ref<SchemaObject>(schemaVariants.value[0])
-
+const { variantTitleList, selectedSchemaModel, selectedVariantIndex } = useSchemaVariants(props.property)
 
 const nestedPropertiesPresent = computed<boolean>(() =>{
-  if (resolvedModelProperty.value?.properties) {
-    return Boolean(Object.keys(resolvedModelProperty.value?.properties).length)
+  if (selectedSchemaModel.value?.properties) {
+    return Boolean(Object.keys(selectedSchemaModel.value?.properties).length)
   }
-  return Boolean(resolvedModelProperty.value?.anyOf?.length) || Boolean(resolvedModelProperty.value?.oneOf?.length)
+  return Boolean(selectedSchemaModel.value?.anyOf?.length) || Boolean(selectedSchemaModel.value?.oneOf?.length)
 })
 
 const orderedFieldList = computed(() => {
@@ -100,11 +95,11 @@ const orderedFieldList = computed(() => {
               ? props.property.items.type
               : '',
         requiredFields: props.requiredFields,
-        variantsList: inheritanceVariantList.value,
+        variantsList: variantTitleList,
       },
       eventHandlers: {
         'variant-changed': (index: number) => {
-          selectedVariant.value = schemaVariants.value[index]
+          selectedVariantIndex.value = index
         },
       },
       key: 'property-info',
@@ -162,16 +157,6 @@ const orderedFieldList = computed(() => {
     })
   }
   return fields
-})
-
-const schemaForModelNode = computed(() => {
-  const schema = resolvedModelProperty.value
-
-  if (selectedVariant.value) {
-    return selectedVariant.value
-  }
-
-  return schema
 })
 </script>
 
