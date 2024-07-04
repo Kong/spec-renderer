@@ -108,11 +108,11 @@ onUnmounted(() => {
     flex-grow: 1;
     gap: var(--kui-space-50, $kui-space-50);
     height: 100vh;
+    left: 0;
     max-width: v-bind('props.maxWidth');
     overflow-y: auto;
     padding: var(--kui-space-70, $kui-space-70) var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0) var(--kui-space-70, $kui-space-70);
     position: fixed;
-    left: 0;
     top: 0;
     width: 100%;
     z-index: 1000;
@@ -162,8 +162,8 @@ onUnmounted(() => {
 
   .slideout-backdrop {
     background: var(--kui-color-background-overlay, $kui-color-background-overlay);
-    position: fixed;
     inset: 0;
+    position: fixed;
     z-index: 1000;
   }
 }

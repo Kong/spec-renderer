@@ -217,11 +217,11 @@ watch(specRendererTocRef, async (val) => {
 
 <style lang="scss" scoped>
 .spec-renderer-wrapper {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   height: 100vh;
   position: relative;
-  box-sizing: border-box;
 
   @media (min-width: $kui-breakpoint-tablet) {
     flex-direction: row;
@@ -254,27 +254,27 @@ watch(specRendererTocRef, async (val) => {
   }
 
   .spec-renderer-header {
-    display: flex;
     background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
-    padding: var(--kui-space-30, $kui-space-30);
     border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    display: flex;
+    padding: var(--kui-space-30, $kui-space-30);
 
     .slideout-toc-trigger-button {
       @include default-button-reset;
 
-      display: flex;
       align-items: center;
-      gap: var(--kui-space-20, $kui-space-20);
-      padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      display: flex;
       font-size: var(--kui-font-size-30, $kui-font-size-30);
       font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+      gap: var(--kui-space-20, $kui-space-20);
       line-height: var(--kui-line-height-30, $kui-line-height-30);
-      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
 
       .menu-icon {
-        width: var(--kui-icon-size-40, $kui-icon-size-40) !important;
-        height: var(--kui-icon-size-40, $kui-icon-size-40) !important;
         color: var(--kui-color-text-neutral, $kui-color-text-neutral) !important;
+        height: var(--kui-icon-size-40, $kui-icon-size-40) !important;
+        width: var(--kui-icon-size-40, $kui-icon-size-40) !important;
       }
 
       &:hover,
