@@ -1,6 +1,6 @@
 // composable to manage schema variants for oneOf/anyOf
 import { computed, ref, type ComputedRef } from 'vue'
-import type { SchemaObject } from '@/types'
+import type { SchemaObject, SelectItem } from '@/types'
 import { inheritedPropertyName, isValidSchemaObject } from '@/utils'
 
 export default function useSchemaVariants(schemaModel: ComputedRef<SchemaObject>) {
@@ -8,8 +8,17 @@ export default function useSchemaVariants(schemaModel: ComputedRef<SchemaObject>
   // get the list of variants, from oneOf or anyOf, or an empty array in case neither are present
   const schemaVariantList = computed(() => (schemaModel.value?.oneOf || schemaModel.value?.anyOf || []).filter(
     isValidSchemaObject))
-  // get the list of variant titles
-  const variantTitleList = computed(() => schemaVariantList.value.map((variant, index) => inheritedPropertyName(index, variant.title)))
+  // get the list of items to show in variant select dropdown
+  const variantSelectItemList = computed((): Array<SelectItem> => {
+    return schemaVariantList.value.map((variant, index) => {
+      const variantTitle = inheritedPropertyName(index, variant.title)
+      return {
+        key: variantTitle,
+        value: index.toString(),
+        label: variantTitle,
+      }
+    })
+  })
 
   // ref to store the index of the selected variant
   const selectedVariantIndex = ref<number>(0)
@@ -20,7 +29,7 @@ export default function useSchemaVariants(schemaModel: ComputedRef<SchemaObject>
   })
 
   return {
-    variantTitleList,
+    variantSelectItemList,
     selectedVariantIndex,
     selectedSchemaModel,
   }

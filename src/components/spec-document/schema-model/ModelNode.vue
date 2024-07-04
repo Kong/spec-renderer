@@ -3,19 +3,13 @@
     class="model-node-container"
     :data-testid="dataTestId"
   >
-    <select
-      v-if="variantTitleList.length"
-      name="variant-select"
+    <SelectDropdown
+      v-if="variantSelectItemList.length"
+      :id="`${title}-variant-select-dropdown`"
+      v-model="selectedVariant"
+      :items="variantSelectItemList"
       @change="handleVariantSelectChange"
-    >
-      <option
-        v-for="(variant, index) in variantTitleList"
-        :key="variant"
-        :value="index"
-      >
-        {{ variant }}
-      </option>
-    </select>
+    />
     <template
       v-for="(property, propertyName) in selectedSchemaModel?.properties"
       :key="propertyName"
@@ -32,11 +26,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { PropType } from 'vue'
-import type { SchemaObject } from '@/types'
-import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
+import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import ModelProperty from './ModelProperty.vue'
+import type { SchemaObject, SelectItem } from '@/types'
+import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 import useSchemaVariants from '@/composables/useSchemaVariants'
 
 const props = defineProps({
@@ -51,11 +46,12 @@ const props = defineProps({
 })
 
 const resolvedSchemaObject = computed(() => resolveSchemaObjectFields(props.schema))
-const { variantTitleList, selectedSchemaModel, selectedVariantIndex } = useSchemaVariants(resolvedSchemaObject)
+const { variantSelectItemList, selectedSchemaModel, selectedVariantIndex } = useSchemaVariants(resolvedSchemaObject)
 const dataTestId = computed(() => `model-node-${props.title.replaceAll(' ', '-')}`)
 
-function handleVariantSelectChange(event: Event) {
-  selectedVariantIndex.value = Number((event.target as HTMLSelectElement).value)
+const selectedVariant = ref('0')
+function handleVariantSelectChange(selecteditem: SelectItem) {
+  selectedVariantIndex.value = Number(selecteditem.value)
 }
 </script>
 

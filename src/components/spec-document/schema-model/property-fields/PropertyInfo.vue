@@ -9,17 +9,14 @@
     >
       {{ title }}
 
-      <select
+      <SelectDropdown
         v-if="variantsList.length"
-        name="variant-select"
-        @change="handleVariantSelectChange"
-      >
-        <option
-          v-for="(variant, index) in variantsList"
-          :key="variant"
-          :value="index"
-        >{{ variant }}</option>
-      </select>
+        :id="`${title}-variant-select-dropdown`"
+        v-model="selectedVariant"
+        :items="variantsList"
+        @change="handleSelectChange"
+      />
+
     </span>
     <span class="property-type">
       <span
@@ -50,8 +47,10 @@
 </template>
 
 <script setup lang="ts">
-import type { SchemaObject } from '@/types'
+import { ref } from 'vue'
+import type { SchemaObject, SelectItem } from '@/types'
 import type { PropType } from 'vue'
+import SelectDropdown from '@/components/common/SelectDropdown.vue'
 
 defineProps({
   title: {
@@ -75,17 +74,19 @@ defineProps({
     default: () => [],
   },
   variantsList: {
-    type: Array as PropType<Array<string>>,
+    type: Array as PropType<Array<SelectItem>>,
     default: () => [],
   },
 })
+
+const selectedVariant = ref('0')
 
 const emit = defineEmits<{
   (e: 'variant-changed', variant: number): void
 }>()
 
-function handleVariantSelectChange(event: Event) {
-  emit('variant-changed', Number((event.target as HTMLSelectElement).value))
+function handleSelectChange(selecteditem: SelectItem) {
+  emit('variant-changed', Number((selecteditem.value)))
 }
 </script>
 

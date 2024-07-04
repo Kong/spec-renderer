@@ -70,7 +70,7 @@ const nestedPropertiesExpanded = ref(false)
 const dataTestId = computed(() => `model-property-${props.propertyName.replaceAll(' ', '-')}`)
 
 const resolvedSchemaObject = computed(() => resolveSchemaObjectFields(props.property))
-const { variantTitleList, selectedSchemaModel, selectedVariantIndex } = useSchemaVariants(resolvedSchemaObject)
+const { variantSelectItemList, selectedSchemaModel, selectedVariantIndex } = useSchemaVariants(resolvedSchemaObject)
 
 const nestedPropertiesPresent = computed<boolean>(() =>{
   if (selectedSchemaModel.value?.properties) {
@@ -84,7 +84,7 @@ const orderedFieldList = computed(() => {
 
   if (!isValidSchemaObject(props.property)) return []
 
-  if (props.property.title || props.propertyName) {
+  if (props.property.title || props.propertyName || props.property.type) {
     fields.push({
       component: PropertyInfo,
       props: {
@@ -96,7 +96,7 @@ const orderedFieldList = computed(() => {
               ? props.property.items.type
               : '',
         requiredFields: props.requiredFields,
-        variantsList: variantTitleList.value,
+        variantsList: variantSelectItemList.value,
       },
       eventHandlers: {
         'variant-changed': (index: number) => {
