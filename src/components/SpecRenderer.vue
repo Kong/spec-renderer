@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="spec-renderer-wrapper">
     <aside>
       <SpecRendererToc
         v-if="tableOfContents"
@@ -12,6 +12,12 @@
         @item-selected="itemSelected"
       />
     </aside>
+    <div class="spec-renderer-header">
+      <button class="slideout-toc-trigger-button">
+        <MenuIcon class="menu-icon" />
+        Menu
+      </button>
+    </div>
     <div class="doc">
       <SpecDocument
         v-if="parsedDocument && currentPath"
@@ -31,6 +37,7 @@ import { watch, ref } from 'vue'
 import composables from '../composables'
 import SpecRendererToc from './spec-renderer-toc/SpecRendererToc.vue'
 import SpecDocument from './spec-document/SpecDocument.vue'
+import { MenuIcon } from '@kong/icons'
 
 const props = defineProps({
   /**
@@ -171,22 +178,81 @@ watch(specRendererTocRef, async (val) => {
 </script>
 
 <style lang="scss" scoped>
-// TODO: change when implementing generic(responsive) SpecRender layout
-aside {
+.spec-renderer-wrapper {
   display: flex;
-  flex-shrink: 0;
-  height: 100%;
-  overflow: visible;
-  width: 320px;
-}
-.doc {
-  flex: 1;
-  overflow: visible;
-  padding: var(--kui-space-60, $kui-space-60);
-}
-.wrapper {
-  display: flex;
+  flex-direction: column;
   height: 100vh;
+  position: relative;
+  box-sizing: border-box;
+
+  @media (min-width: $kui-breakpoint-tablet) {
+    flex-direction: row;
+  }
+
+  aside {
+    display: none;
+
+    @media (min-width: $kui-breakpoint-tablet) {
+      display: flex;
+      flex-shrink: 0;
+      height: 100%;
+      overflow: visible;
+      width: 320px;
+    }
+  }
+
+  .spec-renderer-header {
+    display: flex;
+    background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+    padding: var(--kui-space-30, $kui-space-30);
+    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+
+    .slideout-toc-trigger-button {
+      @include default-button-reset;
+
+      display: flex;
+      align-items: center;
+      gap: var(--kui-space-20, $kui-space-20);
+      padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+      line-height: var(--kui-line-height-30, $kui-line-height-30);
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+
+      .menu-icon {
+        width: var(--kui-icon-size-40, $kui-icon-size-40) !important;
+        height: var(--kui-icon-size-40, $kui-icon-size-40) !important;
+        color: var(--kui-color-text-neutral, $kui-color-text-neutral) !important;
+      }
+
+      &:hover:not(:focus):not(:active) {
+        color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+
+        .menu-icon {
+          color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
+        }
+      }
+
+      &:focus,
+      &:active {
+        color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+
+        .menu-icon {
+          color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger) !important;
+        }
+      }
+    }
+
+    @media (min-width: $kui-breakpoint-tablet) {
+      display: none;
+    }
+  }
+
+  .doc {
+    flex: 1;
+    overflow: visible;
+    padding: var(--kui-space-60, $kui-space-60);
+  }
 }
 
 /*

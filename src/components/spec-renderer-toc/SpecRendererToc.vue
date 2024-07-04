@@ -95,6 +95,7 @@ const tocNavRef = ref<HTMLElement | null>(null)
   overflow-x: hidden;
   overflow-y: auto;
   width: 100%;
+  box-sizing: border-box;
 
   > ul {
     padding-left: var(--kui-space-0, $kui-space-0);
