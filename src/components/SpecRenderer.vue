@@ -1,5 +1,22 @@
 <template>
   <div class="spec-renderer-wrapper">
+    <SlideoutContainer
+      class="slideout-toc"
+      :visible="slideoutTocVisible"
+      @close="slideoutTocVisible = false"
+    >
+      <SpecRendererToc
+        v-if="tableOfContents"
+        ref="specRendererSlideoutTocRef"
+        :base-path="basePath"
+        class="spec-renderer-toc"
+        :control-browser-url="controlBrowserUrl"
+        :current-path="currentPath"
+        :table-of-contents="tableOfContents"
+        @item-selected="itemSelected"
+      />
+    </SlideoutContainer>
+
     <aside>
       <SpecRendererToc
         v-if="tableOfContents"
@@ -13,7 +30,10 @@
       />
     </aside>
     <div class="spec-renderer-header">
-      <button class="slideout-toc-trigger-button">
+      <button
+        class="slideout-toc-trigger-button"
+        @click="openSlideoutToc"
+      >
         <MenuIcon class="menu-icon" />
         Menu
       </button>
@@ -33,11 +53,12 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref } from 'vue'
+import { watch, ref, nextTick } from 'vue'
 import composables from '../composables'
 import SpecRendererToc from './spec-renderer-toc/SpecRendererToc.vue'
 import SpecDocument from './spec-document/SpecDocument.vue'
 import { MenuIcon } from '@kong/icons'
+import SlideoutContainer from './common/SlideoutContainer.vue'
 
 const props = defineProps({
   /**
@@ -128,12 +149,28 @@ const emit = defineEmits<{
 
 
 const specRendererTocRef = ref<InstanceType<typeof SpecRendererToc> | null>(null)
+const specRendererSlideoutTocRef = ref<InstanceType<typeof SpecRendererToc> | null>(null)
+const slideoutTocVisible = ref<boolean>(false)
 
 /**
  * re-emits path-not-found event so application that consumes SpecRender component can handle 404
  */
 const relayPathNotFound = (requestedPath: string): void => {
   emit('path-not-found', requestedPath)
+}
+
+const openSlideoutToc = async (): Promise<void> => {
+  slideoutTocVisible.value = true
+
+  await nextTick() // wait for slideout to open
+
+  if (specRendererSlideoutTocRef.value?.$el?.scrollTo) {
+    const scrollPosition = await specRendererSlideoutTocRef.value?.getActiveItemScrollPosition()
+
+    specRendererSlideoutTocRef.value?.$el.scrollTo({
+      top: scrollPosition - 50, // offset 50 so it doesn't stick to the top
+    })
+  }
 }
 
 watch(() => ({
@@ -156,6 +193,7 @@ watch(() => ({
     withCredentials: props.withCredentials,
     currentPath: currentPath.value,
   })
+
   if (props.traceParsing) {
     console.log('parsedDocument:', parsedDocument.value)
     console.log('tableOfContents:', tableOfContents.value)
@@ -187,6 +225,20 @@ watch(specRendererTocRef, async (val) => {
 
   @media (min-width: $kui-breakpoint-tablet) {
     flex-direction: row;
+  }
+
+  .slideout-toc {
+    :deep(.slideout-container) {
+      padding-left: var(--kui-space-0, $kui-space-0);
+
+      .slideout-content {
+        padding-right: var(--kui-space-0, $kui-space-0);
+      }
+    }
+
+    @media (min-width: $kui-breakpoint-tablet) {
+      display: none;
+    }
   }
 
   aside {
@@ -225,20 +277,12 @@ watch(specRendererTocRef, async (val) => {
         color: var(--kui-color-text-neutral, $kui-color-text-neutral) !important;
       }
 
-      &:hover:not(:focus):not(:active) {
+      &:hover,
+      &:focus {
         color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
 
         .menu-icon {
           color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
-        }
-      }
-
-      &:focus,
-      &:active {
-        color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
-
-        .menu-icon {
-          color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger) !important;
         }
       }
     }
@@ -261,22 +305,12 @@ when it's rendered in the context of the SpecRenderer.
 Otherwise host app should have control over these styles.
 */
 .spec-renderer-toc {
-  background-color: var(--kui-color-background, $kui-color-background);
-  position: relative; // important, need this for scrolling to selected item
+  @include standalone-spec-renderer-toc;
+}
 
-  :deep(>) {
-    ul > *:first-child {
-      // overview item
-      padding: var(--kui-space-70, $kui-space-70);
-      padding-bottom: var(--kui-space-0, $kui-space-0);
-    }
-  }
-
-  :deep(.group-item) {
-    &.root {
-      padding-left: var(--kui-space-70, $kui-space-70);
-      padding-right: var(--kui-space-70, $kui-space-70);
-    }
+.slideout-toc {
+  .spec-renderer-toc {
+    @include standalone-spec-renderer-toc($itemPadding: var(--kui-space-40, $kui-space-40));
   }
 }
 </style>

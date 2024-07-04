@@ -99,6 +99,7 @@ const tocNavRef = ref<HTMLElement | null>(null)
 
   > ul {
     padding-left: var(--kui-space-0, $kui-space-0);
+    margin: var(--kui-space-0, $kui-space-0);
 
     > *:first-child + * {
       // reduce spacing to very first group item following the overview

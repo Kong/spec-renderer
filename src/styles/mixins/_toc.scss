@@ -1,7 +1,9 @@
 @mixin toc-item {
   align-items: center;
-  background-color: var(--kui-color-background-transparent,
-  $kui-color-background-transparent ); // transparent so that it doesn't interfere with the parent's background color
+  background-color: var(
+    --kui-color-background-transparent,
+    $kui-color-background-transparent
+  ); // transparent so that it doesn't interfere with the parent's background color
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
   display: flex;
@@ -12,7 +14,9 @@
   line-height: var(--kui-line-height-30, $kui-line-height-30);
   padding: var(--kui-space-30, $kui-space-30);
   text-align: left;
-  transition: color background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease, background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
+  transition:
+    color background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease,
+    background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
 
   &:hover:not(.active) {
     color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
@@ -25,5 +29,25 @@
   &.active {
     background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
     color: var(--kui-color-text-primary, $kui-color-text-primary);
+  }
+}
+
+@mixin standalone-spec-renderer-toc($itemPadding: var(--kui-space-70, $kui-space-70)) {
+  background-color: var(--kui-color-background, $kui-color-background);
+  position: relative; // important, need this for scrolling to selected item
+
+  :deep(>) {
+    ul > *:first-child {
+      // overview item
+      padding: $itemPadding;
+      padding-bottom: var(--kui-space-0, $kui-space-0);
+    }
+  }
+
+  :deep(.group-item) {
+    &.root {
+      padding-left: $itemPadding;
+      padding-right: $itemPadding;
+    }
   }
 }
