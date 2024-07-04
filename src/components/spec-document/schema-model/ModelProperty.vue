@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { AddIcon } from '@kong/icons'
-import { isValidSchemaObject } from '@/utils'
+import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 import type { PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 
@@ -69,7 +69,8 @@ const nestedPropertiesExpanded = ref(false)
 
 const dataTestId = computed(() => `model-property-${props.propertyName.replaceAll(' ', '-')}`)
 
-const { variantTitleList, selectedSchemaModel, selectedVariantIndex } = useSchemaVariants(props.property)
+const resolvedSchemaObject = computed(() => resolveSchemaObjectFields(props.property))
+const { variantTitleList, selectedSchemaModel, selectedVariantIndex } = useSchemaVariants(resolvedSchemaObject)
 
 const nestedPropertiesPresent = computed<boolean>(() =>{
   if (selectedSchemaModel.value?.properties) {
@@ -95,7 +96,7 @@ const orderedFieldList = computed(() => {
               ? props.property.items.type
               : '',
         requiredFields: props.requiredFields,
-        variantsList: variantTitleList,
+        variantsList: variantTitleList.value,
       },
       eventHandlers: {
         'variant-changed': (index: number) => {

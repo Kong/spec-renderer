@@ -3,8 +3,21 @@
     class="model-node-container"
     :data-testid="dataTestId"
   >
+    <select
+      v-if="variantTitleList.length"
+      name="variant-select"
+      @change="handleVariantSelectChange"
+    >
+      <option
+        v-for="(variant, index) in variantTitleList"
+        :key="variant"
+        :value="index"
+      >
+        {{ variant }}
+      </option>
+    </select>
     <template
-      v-for="(property, propertyName) in resolvedSchemaObject?.properties"
+      v-for="(property, propertyName) in selectedSchemaModel?.properties"
       :key="propertyName"
     >
       <ModelProperty
@@ -12,7 +25,7 @@
         :data-testid="`model-property-${propertyName}`"
         :property="property"
         :property-name="propertyName.toString()"
-        :required-fields="resolvedSchemaObject?.required"
+        :required-fields="selectedSchemaModel?.required"
       />
     </template>
   </div>
@@ -24,6 +37,7 @@ import type { PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 import ModelProperty from './ModelProperty.vue'
+import useSchemaVariants from '@/composables/useSchemaVariants'
 
 const props = defineProps({
   schema: {
@@ -37,7 +51,12 @@ const props = defineProps({
 })
 
 const resolvedSchemaObject = computed(() => resolveSchemaObjectFields(props.schema))
+const { variantTitleList, selectedSchemaModel, selectedVariantIndex } = useSchemaVariants(resolvedSchemaObject)
 const dataTestId = computed(() => `model-node-${props.title.replaceAll(' ', '-')}`)
+
+function handleVariantSelectChange(event: Event) {
+  selectedVariantIndex.value = Number((event.target as HTMLSelectElement).value)
+}
 </script>
 
 <style lang="scss" scoped>
