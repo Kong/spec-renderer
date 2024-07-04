@@ -36,6 +36,7 @@
   background-color: var(--kui-color-background, $kui-color-background);
   position: relative; // important, need this for scrolling to selected item
 
+  /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
   :deep(>) {
     ul > *:first-child {
       // overview item
@@ -44,6 +45,7 @@
     }
   }
 
+  /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
   :deep(.group-item) {
     &.root {
       padding-left: $itemPadding;
