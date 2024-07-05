@@ -2,14 +2,14 @@
   <div class="slideout">
     <Transition name="spec-renderer-fade">
       <div
-        v-if="visible"
+        v-show="visible"
         class="slideout-backdrop"
         @click="emit('close')"
       />
     </Transition>
     <Transition name="spec-renderer-slide-in">
       <div
-        v-if="visible"
+        v-show="visible"
         ref="slideoutContainerRef"
         class="slideout-container"
         data-testid="slideout-container"

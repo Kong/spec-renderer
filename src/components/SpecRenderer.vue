@@ -32,6 +32,7 @@
     <div class="spec-renderer-header">
       <button
         class="slideout-toc-trigger-button"
+        type="button"
         @click="openSlideoutToc"
       >
         <MenuIcon class="menu-icon" />
@@ -141,6 +142,8 @@ const currentPath = ref<string>(props.currentPath)
 
 const itemSelected = (id: any) => {
   currentPath.value = id
+
+  slideoutTocVisible.value = false
 }
 
 const emit = defineEmits<{
@@ -255,7 +258,6 @@ watch(specRendererTocRef, async (val) => {
 
   .spec-renderer-header {
     background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
-    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     display: flex;
     padding: var(--kui-space-30, $kui-space-30);
 
