@@ -9,6 +9,8 @@ import type { ParseOptions } from '../types'
 import type { ValidateResult } from '@scalar/openapi-parser'
 import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
+// @ts-ignore no typings
+import mergeAllOf from '@stoplight/json-schema-merge-allof'
 
 const trace = (doTrace: boolean, ...args: any) => {
   if (doTrace) {
@@ -145,6 +147,20 @@ export default function useSchemaParser(): any {
     }
 
     trace(options.traceParsing, 'dereferenced')
+
+    try {
+      // merge allOf
+      Object.keys(jsonDocument.value.components.schemas).forEach(key => {
+        if (jsonDocument.value) {
+          jsonDocument.value.components.schemas[key] = mergeAllOf(jsonDocument.value.components.schemas[key], {
+            deep: true,
+            ignoreAdditionalProperties: true,
+          })
+        }
+      })
+    } catch (err) {
+      console.error('error in mergeAllOf:', err)
+    }
 
     try {
       // convert to AST for ui layer to use
