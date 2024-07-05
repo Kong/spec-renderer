@@ -25,8 +25,15 @@
         />
         <span>{{ nestedPropertiesExpanded ? 'Hide' : 'Show' }} Child Parameters</span>
       </summary>
+      <ModelProperty
+        v-if="variantSelectItemList.length"
+        class="variant-model-property"
+        :property="selectedSchemaModel"
+        :property-name="selectedSchemaModel.title || variantSelectItemList[selectedVariantIndex].label"
+        :required-fields="selectedSchemaModel.required"
+      />
       <ModelNode
-        v-if="selectedSchemaModel && nestedPropertiesExpanded"
+        v-else-if="selectedSchemaModel && nestedPropertiesExpanded"
         class="nested-model-node"
         :schema="selectedSchemaModel"
         :title="propertyName"
@@ -196,6 +203,10 @@ const orderedFieldList = computed(() => {
         $rotateDegree: 45deg,
       );
     }
+  }
+
+  .variant-model-property {
+    padding-left: var(--kui-space-60, $kui-space-60);
   }
 
   .nested-model-node {
