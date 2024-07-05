@@ -46,7 +46,7 @@ const props = defineProps({
     default: false,
   },
   /**
-   * The max-width of the slideout. **Default: `500px`**.
+   * Max width of SlideOut container.
    */
   maxWidth: {
     type: String,

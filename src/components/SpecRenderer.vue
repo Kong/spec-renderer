@@ -1,6 +1,6 @@
 <template>
   <div class="spec-renderer-wrapper">
-    <SlideoutContainer
+    <SlideOut
       class="slideout-toc"
       :visible="slideoutTocVisible"
       @close="slideoutTocVisible = false"
@@ -15,7 +15,7 @@
         :table-of-contents="tableOfContents"
         @item-selected="itemSelected"
       />
-    </SlideoutContainer>
+    </SlideOut>
 
     <aside>
       <SpecRendererToc
@@ -59,7 +59,7 @@ import composables from '../composables'
 import SpecRendererToc from './spec-renderer-toc/SpecRendererToc.vue'
 import SpecDocument from './spec-document/SpecDocument.vue'
 import { MenuIcon } from '@kong/icons'
-import SlideoutContainer from './common/SlideoutContainer.vue'
+import SlideOut from './common/SlideOut.vue'
 
 const props = defineProps({
   /**

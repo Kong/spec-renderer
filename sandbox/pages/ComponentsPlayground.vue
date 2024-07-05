@@ -68,7 +68,7 @@
         Open
       </button>
 
-      <SlideoutContainer
+      <SlideOut
         title="Slideout Title"
         :visible="isSlideoutOpen"
         @close="isSlideoutOpen = false"
@@ -80,7 +80,7 @@
         <p>Porta lorem mollis aliquam ut porttitor leo a. Egestas diam in arcu cursus euismod quis viverra. Egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam. Sociis natoque penatibus et magnis dis parturient montes nascetur. Malesuada nunc vel risus commodo viverra maecenas. Viverra nam libero justo laoreet sit amet. Eu augue ut lectus arcu. Sagittis eu volutpat odio facilisis mauris. Etiam non quam lacus suspendisse faucibus interdum posuere. Mi quis hendrerit dolor magna eget est lorem ipsum dolor. Maecenas ultricies mi eget mauris pharetra et ultrices neque ornare. Nulla porttitor massa id neque aliquam vestibulum morbi blandit. Ut enim blandit volutpat maecenas.</p>
         <p>Gravida quis blandit turpis cursus in hac habitasse platea. Ornare quam viverra orci sagittis eu volutpat odio. Habitant morbi tristique senectus et netus. Cursus metus aliquam eleifend mi in nulla posuere sollicitudin. Nec dui nunc mattis enim ut tellus. Nunc eget lorem dolor sed viverra ipsum nunc. Commodo sed egestas egestas fringilla phasellus faucibus scelerisque. Varius vel pharetra vel turpis nunc eget lorem dolor. Cursus risus at ultrices mi tempus. Velit scelerisque in dictum non. Aliquet bibendum enim facilisis gravida neque convallis a.</p>
         <p>Enim ut tellus elementum sagittis vitae et leo duis. Luctus venenatis lectus magna fringilla. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt. Vitae congue eu consequat ac felis donec et odio pellentesque. Purus viverra accumsan in nisl nisi. Curabitur gravida arcu ac tortor dignissim convallis aenean et tortor. Vestibulum lectus mauris ultrices eros in cursus. Ipsum suspendisse ultrices gravida dictum fusce ut. Et netus et malesuada fames ac turpis egestas integer eget. Sed lectus vestibulum mattis ullamcorper.</p>
-      </SlideoutContainer>
+      </SlideOut>
     </div>
   </div>
 </template>
@@ -92,7 +92,7 @@ import Tooltip from '../../src/components/common/TooltipPopover.vue'
 import ToggleSwitch from '../../src/components/common/ToggleSwitch.vue'
 import SelectDropdown from '../../src/components/common/SelectDropdown.vue'
 import { KongIcon } from '@kong/icons'
-import SlideoutContainer from '../../src/components/common/SlideoutContainer.vue'
+import SlideOut from '../../src/components/common/SlideOut.vue'
 
 const dropdownItems = [
   { label: 'Item 1', value: 'item-1' },
