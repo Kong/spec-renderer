@@ -53,6 +53,7 @@
     "@seriousme/openapi-schema-validator": "^2.2.1",
     "@stoplight/http-spec": "^7.1.0",
     "@stoplight/json": "^3.21.0",
+    "@stoplight/json-schema-merge-allof": "^0.8.0",
     "@stoplight/types": "^14.1.1",
     "@stoplight/yaml": "^4.3.0",
     "@vueuse/core": "^10.11.0",
