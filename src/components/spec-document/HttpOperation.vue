@@ -62,7 +62,7 @@
         :data-testid="`http-operation-right-${data.id}`"
       >
         <TryIt
-          v-model="onlyShowRequired"
+          v-model="excludeNotRequired"
           :data="data"
           :request-body="currentRequestBody"
           :server-url="selectedServerURL"
@@ -109,7 +109,7 @@ const props = defineProps({
 })
 const authHeaders = ref<Array<Record<string, string>>>()
 const authQuery = ref<string>('')
-const onlyShowRequired = ref<boolean>(true)
+const excludeNotRequired = ref<boolean>(true)
 
 const setAuthHeaders = (newHeaders: Array<Record<string, string>>, newAuthQuery: string) => {
   authHeaders.value = newHeaders
@@ -161,7 +161,7 @@ const setRequestBody = (newBody: string) => {
 }
 
 const setRequestBodyByIdx = (newSampleIdx: number) => {
-  currentRequestBody.value = getSampleBody(props.data, { excludeReadonly: true, excludeNotRequired: onlyShowRequired.value }, newSampleIdx)
+  currentRequestBody.value = getSampleBody(props.data, { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value }, newSampleIdx)
 }
 
 function updateSelectedServerURL(url: string) {
@@ -169,10 +169,10 @@ function updateSelectedServerURL(url: string) {
   currentServerUrl.value = url
 }
 
-watch(() => (props.data.id), () => {
+watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value } ), (newValue) => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
-  currentRequestBody.value = getSampleBody(props.data, { excludeReadonly: true, excludeNotRequired: onlyShowRequired.value }, 0)
+  currentRequestBody.value = getSampleBody(props.data, { excludeReadonly: true, excludeNotRequired: newValue.excludeNotRequired }, 0)
 }, { immediate: true })
 </script>
 

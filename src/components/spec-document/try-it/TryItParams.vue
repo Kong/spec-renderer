@@ -41,7 +41,7 @@
       class="wide"
     >
       <RequiredToggle
-        v-model="onlyShowRequired"
+        v-model="excludeNotRequired"
         :data="data"
       />
 
@@ -86,7 +86,7 @@ const props = defineProps({
   },
 })
 
-const onlyShowRequired = defineModel({
+const excludeNotRequired = defineModel({
   type: Boolean,
   default: true,
 })

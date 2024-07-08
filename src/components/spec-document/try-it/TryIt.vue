@@ -42,7 +42,7 @@
         @request-query-changed="requestQueryChanged"
       />
       <TryItParams
-        v-model="onlyShowRequired"
+        v-model="excludeNotRequired"
         :data="data"
         param-type="body"
         :request-body="currentRequestBody"
@@ -87,7 +87,7 @@ const props = defineProps({
   },
 })
 
-const onlyShowRequired = defineModel({
+const excludeNotRequired = defineModel({
   type: Boolean,
   default: true,
 })

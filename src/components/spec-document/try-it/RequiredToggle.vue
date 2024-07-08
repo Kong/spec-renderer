@@ -49,13 +49,11 @@ const showToggle = computed((): boolean => {
   }
 
   const crawlForRequired = (objData: Record<string, any>, parentKey: string, nestedLevel: number): boolean => {
-    console.log('objData:', objData)
     if (nestedLevel > MAX_NESTED_LEVELS) {
       return false
     }
 
     if (objData.required && objData.required.length > 0) {
-      console.log('here')
       return true
     }
     let requiredFound = false
@@ -72,8 +70,6 @@ const showToggle = computed((): boolean => {
     })
     return requiredFound
   }
-
-  console.log('aaa:', props.data.request.body.contents[0])
 
   return crawlForRequired((props.data.request.body.contents[0].schema) as Record<string, any>, '', 0)
 })

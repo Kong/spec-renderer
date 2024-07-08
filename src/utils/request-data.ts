@@ -183,6 +183,11 @@ export const getSampleBody = (data: IHttpOperation, filteringOptions: Record<str
       return sampleObj
     }
     Object.keys(objData.properties || {}).forEach((key: string) => {
+      if (filteringOptions.excludeNotRequired) {
+        if (!objData.required || !Array.isArray(objData.required) || !objData.required.includes(key)) {
+          return
+        }
+      }
       const oData = objData.properties[key]
       if (filteringOptions.excludeReadonly && oData.readOnly) {
         return
