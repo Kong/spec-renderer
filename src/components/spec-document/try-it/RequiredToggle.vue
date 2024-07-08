@@ -59,7 +59,6 @@ const showToggle = computed((): boolean => {
     let requiredFound = false
     Object.keys(objData.properties || {}).forEach((key: string) => {
       const oData = objData.properties[key]
-      console.log('oData:', oData)
       if (oData.anyOf && Array.isArray(oData.anyOf) && oData.anyOf.length) {
         requiredFound = crawlForRequired(oData.anyOf[0] || {}, key, nestedLevel)
       } else if (oData.type === 'object' || oData.allOf) {
