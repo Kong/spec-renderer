@@ -91,6 +91,7 @@ import type { LanguageCode } from '@/types/request-languages'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet-lite'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import LanguageIcon from '@/components/common/LanguageIcon.vue'
+import type { SelectItem } from '@/types'
 
 const props = defineProps({
   data: {

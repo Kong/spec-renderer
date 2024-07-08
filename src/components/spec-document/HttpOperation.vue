@@ -48,14 +48,14 @@
               <template #2xx-item-content="{ item }">
                 <ResponseCodeDot
                   v-if="item?.key"
-                  :response-code="item.key"
+                  response-code="2xx"
                 />
                 {{ item?.label }}
               </template>
               <template #4xx-item-content="{ item }">
                 <ResponseCodeDot
                   v-if="item?.key"
-                  :response-code="item.key"
+                  response-code="4xx"
                 />
                 {{ item?.label }}
               </template>

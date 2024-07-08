@@ -68,12 +68,12 @@ const toggleState = (e: Event) => {
   margin-top: var(--kui-space-40, $kui-space-40)!important;
 
   .panel-header {
+    align-items: center;
     background-color: var(--kui-color-background, $kui-color-background);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     border-top-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     display: flex;
-    align-items: center;
     flex-flow: row;
     padding: var(--kui-space-50, $kui-space-50);
 
