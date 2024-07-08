@@ -1,8 +1,9 @@
 <template>
   <div class="collapsable-panel">
     <div
-      :class="{ 'panel-header': 'true', 'collapsed': isCollapsed, 'collapsible': collapsible }"
-      @click.stop="toggleState"
+      class="panel-header"
+      :class="{ 'collapsed': isCollapsed, 'collapsible': collapsible }"
+      @click="toggleState"
     >
       <slot name="header" />
 
@@ -72,6 +73,7 @@ const toggleState = (e: Event) => {
     border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     border-top-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     display: flex;
+    align-items: center;
     flex-flow: row;
     padding: var(--kui-space-50, $kui-space-50);
 
@@ -87,7 +89,6 @@ const toggleState = (e: Event) => {
       }
     }
     .btn-container {
-      align-self: flex-end;
       padding-left: var(--kui-space-30, $kui-space-30);
 
       .collapse-trigger-btn {

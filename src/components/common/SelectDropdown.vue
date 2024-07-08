@@ -25,7 +25,10 @@
           {{ selectedItem?.label || triggerButton }}
         </slot>
       </slot>
-      <ChevronDownIcon class="chevron-icon" />
+      <ChevronDownIcon
+        class="select-chevron-icon"
+        decorative
+      />
     </button>
     <template #content>
       <div class="select-items-container">
@@ -142,7 +145,7 @@ watch(selectValue, (newValue: string) => {
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
 
-    .chevron-icon {
+    .select-chevron-icon {
       color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
       height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
       width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
@@ -163,7 +166,7 @@ watch(selectValue, (newValue: string) => {
       color: var(--kui-color-text-disabled, $kui-color-text-disabled);
       cursor: not-allowed;
 
-      .chevron-icon {
+      .select-chevron-icon {
         color: var(--kui-color-text-disabled, $kui-color-text-disabled) !important;
       }
     }
