@@ -47,10 +47,6 @@ defineProps({
     background-color: var(--kui-color-background-warning-weak, $kui-color-background-warning-weak);
   }
 
-  &.response-code-5xx {
-    background-color: var(--kui-color-background-danger, $kui-color-background-danger);
-  }
-
   // Size variations
   &.small {
     height: 8px;
