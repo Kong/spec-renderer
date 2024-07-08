@@ -1,3 +1,10 @@
+## [1.40.1](https://github.com/Kong/spec-renderer/compare/v1.40.0...v1.40.1) (2024-07-05)
+
+
+### Bug Fixes
+
+* replace lodash with lodash-es [KHCP-11622] ([#181](https://github.com/Kong/spec-renderer/issues/181)) ([d1e1e93](https://github.com/Kong/spec-renderer/commit/d1e1e934377a6c331a9bbe66ce880153e81f09fa))
+
 # [1.40.0](https://github.com/Kong/spec-renderer/compare/v1.39.0...v1.40.0) (2024-07-03)
 
 

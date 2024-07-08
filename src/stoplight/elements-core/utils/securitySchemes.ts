@@ -1,6 +1,6 @@
 // @ts-nocheck external file
 import type { HttpSecurityScheme, IOauth2Flow, IOauth2SecurityScheme, IOauthFlowObjects } from '@stoplight/types'
-import { entries, keys } from 'lodash'
+import { entries, keys } from 'lodash-es'
 
 import {
   isOauth2AuthorizationCodeFlow,
