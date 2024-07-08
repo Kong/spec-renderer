@@ -11,8 +11,20 @@
       v-on="field.eventHandlers"
     />
 
+    <div
+      v-if="variantSelectItemList.length"
+      class="nested-model-node"
+    >
+      <ModelProperty
+        class="variant-model-property"
+        :property="selectedSchemaModel"
+        :property-name="selectedSchemaModel.title || variantSelectItemList[selectedVariantIndex].label"
+        :required-fields="selectedSchemaModel.required"
+      />
+    </div>
+
     <details
-      v-if="nestedPropertiesPresent"
+      v-else-if="nestedPropertiesPresent"
     >
       <summary
         class="nested-fields-summary"
@@ -25,15 +37,8 @@
         />
         <span>{{ nestedPropertiesExpanded ? 'Hide' : 'Show' }} Child Parameters</span>
       </summary>
-      <ModelProperty
-        v-if="variantSelectItemList.length"
-        class="variant-model-property"
-        :property="selectedSchemaModel"
-        :property-name="selectedSchemaModel.title || variantSelectItemList[selectedVariantIndex].label"
-        :required-fields="selectedSchemaModel.required"
-      />
       <ModelNode
-        v-else-if="selectedSchemaModel && nestedPropertiesExpanded"
+        v-if="nestedPropertiesExpanded"
         class="nested-model-node"
         :schema="selectedSchemaModel"
         :title="propertyName"
@@ -83,7 +88,7 @@ const nestedPropertiesPresent = computed<boolean>(() =>{
   if (selectedSchemaModel.value?.properties) {
     return Boolean(Object.keys(selectedSchemaModel.value?.properties).length)
   }
-  return Boolean(selectedSchemaModel.value?.anyOf?.length) || Boolean(selectedSchemaModel.value?.oneOf?.length)
+  return false
 })
 
 const orderedFieldList = computed(() => {
