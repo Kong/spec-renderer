@@ -10,3 +10,9 @@
   outline: none;
   padding: var(--kui-space-0, $kui-space-0);
 }
+
+@mixin select-dropdown-bordered-trigger {
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+  line-height: var(--kui-line-height-20, $kui-line-height-20);
+}

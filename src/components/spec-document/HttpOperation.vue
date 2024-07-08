@@ -38,22 +38,28 @@
           :description="activeResponseDescription"
         >
           <div class="http-response-header-menu">
-            <select
+            <SelectDropdown
               v-for="component in responseSelectComponentList"
               :key="component.name"
-              :name="component.name"
-              :value="component.value"
-              @change="(event) => handleSelectInputChange(event, component.name)"
-              @click.stop
+              :items="component.optionList"
+              :model-value="component.value"
+              @change="(item) => handleSelectInputChange(item, component.name)"
             >
-              <option
-                v-for="option in component.optionList"
-                :key="option"
-                :value="option"
-              >
-                {{ option }}
-              </option>
-            </select>
+              <template #2xx-item-content="{ item }">
+                <ResponseCodeDot
+                  v-if="item?.key"
+                  :response-code="item.key"
+                />
+                {{ item?.label }}
+              </template>
+              <template #4xx-item-content="{ item }">
+                <ResponseCodeDot
+                  v-if="item?.key"
+                  :response-code="item.key"
+                />
+                {{ item?.label }}
+              </template>
+            </SelectDropdown>
           </div>
         </HttpResponse>
       </div>
@@ -99,6 +105,9 @@ import PageHeader from '../common/PageHeader.vue'
 import { getSamplePath, getSampleQuery, getSampleBody, removeTrailingSlash } from '@/utils'
 import composables from '@/composables'
 import { ResponseSelectComponent } from '@/types'
+import SelectDropdown from '@/components/common/SelectDropdown.vue'
+import ResponseCodeDot from '@/components/common/ResponseCodeDot.vue'
+import type { SelectItem } from '@/types'
 
 const props = defineProps({
   data: {
@@ -133,12 +142,11 @@ const {
   responseSelectComponentList,
 } = composables.useCurrentResponse(responseList)
 
-function handleSelectInputChange(event: Event, componentName: ResponseSelectComponent) {
-  const newValue = (event.target as HTMLSelectElement).value
+function handleSelectInputChange(item: SelectItem, componentName: ResponseSelectComponent) {
   if (componentName === ResponseSelectComponent.ResponseCodeSelectMenu) {
-    activeResponseCode.value = newValue
+    activeResponseCode.value = item.value
   } else if (componentName === ResponseSelectComponent.ContentTypeSelectMenu) {
-    activeContentType.value = newValue
+    activeContentType.value = item.value
   }
 }
 
@@ -205,14 +213,10 @@ watch(() => (props.data.id), () => {
         display: inline-flex;
         gap: var(--kui-space-20, $kui-space-20);
 
-        select {
-          border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-          border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-          color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+        :deep(.trigger-button) {
+          @include select-dropdown-bordered-trigger;
+
           font-family: var(--kui-font-family-code, $kui-font-family-code);
-          font-size: var(--kui-font-size-20, $kui-font-size-20);
-          line-height: var(--kui-line-height-20, $kui-line-height-20);
-          outline: none;
           padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
         }
       }

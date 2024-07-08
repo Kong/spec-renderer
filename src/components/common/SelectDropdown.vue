@@ -18,7 +18,10 @@
       v-bind="attrs.id ? { id: String(attrs.id) } : {}"
     >
       <slot name="trigger-content">
-        <slot :name="`${selectedItem?.key}-item-content`">
+        <slot
+          :item="selectedItem"
+          :name="`${selectedItem?.key}-item-content`"
+        >
           {{ selectedItem?.label || triggerButton }}
         </slot>
       </slot>
@@ -37,12 +40,18 @@
             :data-testid="item.key ? `${item.key}-item` : 'select-item'"
             role="option"
           >
-            <slot :name="`${item.key}-item`">
+            <slot
+              :item="item"
+              :name="`${item.key}-item`"
+            >
               <button
                 :data-testid="item.key ? `${item.key}-item-trigger` : 'select-item-trigger'"
                 @click="selectValue = item.value"
               >
-                <slot :name="`${item.key}-item-content`">
+                <slot
+                  :item="item"
+                  :name="`${item.key}-item-content`"
+                >
                   {{ item.label }}
                 </slot>
               </button>
