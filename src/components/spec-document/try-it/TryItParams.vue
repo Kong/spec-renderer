@@ -40,7 +40,10 @@
       v-if="paramType === 'body' && params && Object.keys(params).length"
       class="wide"
     >
-      <RequiredToggle :data="data" />
+      <RequiredToggle
+        v-model="onlyShowRequired"
+        :data="data"
+      />
 
       <EditableCodeBlock
         :code="fieldValues.body"
@@ -81,6 +84,11 @@ const props = defineProps({
     type: String,
     default: '',
   },
+})
+
+const onlyShowRequired = defineModel({
+  type: Boolean,
+  default: true,
 })
 
 const emit = defineEmits<{

@@ -42,6 +42,7 @@
         @request-query-changed="requestQueryChanged"
       />
       <TryItParams
+        v-model="onlyShowRequired"
         :data="data"
         param-type="body"
         :request-body="currentRequestBody"
@@ -84,6 +85,11 @@ const props = defineProps({
     type: String,
     default: '',
   },
+})
+
+const onlyShowRequired = defineModel({
+  type: Boolean,
+  default: true,
 })
 
 const emit = defineEmits<{

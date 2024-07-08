@@ -9,7 +9,7 @@
 
     <ToggleSwitch
       id="sandbox-toggle-switch"
-      v-model="toggle"
+      v-model="toggleValue"
     />
   </div>
 </template>
@@ -28,7 +28,12 @@ const props = defineProps({
     required: true,
   },
 })
-const toggle = ref<boolean>(true)
+
+const toggleValue = defineModel({
+  type: Boolean,
+  default: true,
+})
+
 
 const showToggle = computed((): boolean => {
   // no body - no toggle
