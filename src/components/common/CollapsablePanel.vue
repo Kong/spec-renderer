@@ -57,7 +57,7 @@ const props = defineProps({
 
 const isCollapsed = ref<boolean>(props.collapsible)
 const toggleState = (e: Event) => {
-  if (props.collapsible && (e.target as HTMLElement).nodeName !== 'SELECT') {
+  if (props.collapsible && !(e.target as HTMLElement).dataset.selectDropdownTrigger) {
     isCollapsed.value = !isCollapsed.value
   }
 }
@@ -84,7 +84,8 @@ const toggleState = (e: Event) => {
     &.collapsed {
       border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
       border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-      :deep(select) {
+
+      :deep(.select-dropdown) {
         display: none;
       }
     }

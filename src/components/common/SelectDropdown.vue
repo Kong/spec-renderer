@@ -1,21 +1,23 @@
 <template>
   <Popover
+    v-bind="sanitizedAttrs"
+    ref="selectPopoverRef"
     :aria-activedescendant="selectedItem ? `${selectedItem.key ? selectedItem.key : selectedItem.value}-item` : undefined"
     :aria-labelledby="attrs.id ? String(attrs.id) : undefined"
     class="select-dropdown"
-    close-on-popover-click
     data-testid="select-dropdown"
     :disabled="disabled"
     :placement="placement"
     :popover-offset="10"
     width="300px"
-    v-bind="sanitizedAttrs"
   >
     <button
       class="trigger-button"
+      v-bind="attrs.id ? { id: String(attrs.id) } : {}"
+      data-select-dropdown-trigger="true"
       data-testid="trigger-button"
       :disabled="disabled ? true : undefined"
-      v-bind="attrs.id ? { id: String(attrs.id) } : {}"
+      type="button"
     >
       <slot name="trigger-content">
         <slot
@@ -49,7 +51,7 @@
             >
               <button
                 :data-testid="item.key ? `${item.key}-item-trigger` : 'select-item-trigger'"
-                @click="selectValue = item.value"
+                @click.stop="selectItem(item.value)"
               >
                 <slot
                   :item="item"
@@ -78,6 +80,7 @@ import { ChevronDownIcon } from '@kong/icons'
 import type { SelectItem } from '@/types'
 import type { Placement } from '@floating-ui/vue'
 import { PopoverPlacementVariants } from '@/types'
+import { ref } from 'vue'
 
 const props = defineProps({
   triggerButton: {
@@ -118,6 +121,14 @@ const sanitizedAttrs = computed(() => {
 
 const selectValue = defineModel<string>({ default: '' })
 
+const selectPopoverRef = ref<InstanceType<typeof Popover> | null>(null)
+
+const selectItem = (value: string) => {
+  selectValue.value = value
+
+  selectPopoverRef.value?.hidePopover()
+}
+
 const selectedItem = computed((): SelectItem | undefined => {
   return props.items.find((item) => item.value === selectValue.value)
 })
@@ -128,6 +139,7 @@ watch(selectValue, (newValue: string) => {
     emit('change', selectedItem)
   }
 })
+
 </script>
 
 <style lang="scss" scoped>
@@ -146,6 +158,7 @@ watch(selectValue, (newValue: string) => {
     padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
 
     .select-chevron-icon {
+      pointer-events: none;
       color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
       height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
       width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
