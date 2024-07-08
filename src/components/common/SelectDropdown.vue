@@ -158,9 +158,9 @@ watch(selectValue, (newValue: string) => {
     padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
 
     .select-chevron-icon {
-      pointer-events: none;
       color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
       height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
+      pointer-events: none;
       width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
     }
 

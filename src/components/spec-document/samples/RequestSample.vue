@@ -305,8 +305,8 @@ watch(() => ({
 
     .language-selector {
       :deep(.trigger-button) {
-        padding-top: var(--kui-space-20, $kui-space-20);
         padding-bottom: var(--kui-space-20, $kui-space-20);
+        padding-top: var(--kui-space-20, $kui-space-20);
       }
     }
 
@@ -315,10 +315,10 @@ watch(() => ({
       place-self: center;
 
       :deep(.trigger-button) {
-        font-size: var(--kui-font-size-20, $kui-font-size-20);
-        line-height: var(--kui-line-height-20, $kui-line-height-20);
         border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
         font-family: var(--kui-font-family-code, $kui-font-family-code);
+        font-size: var(--kui-font-size-20, $kui-font-size-20);
+        line-height: var(--kui-line-height-20, $kui-line-height-20);
         padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
       }
     }
