@@ -1,12 +1,12 @@
 <template>
   <div class="spec-renderer-wrapper">
     <SlideOut
+      v-if="tableOfContents"
       class="slideout-toc"
       :visible="slideoutTocVisible"
       @close="slideoutTocVisible = false"
     >
       <SpecRendererToc
-        v-if="tableOfContents"
         ref="specRendererSlideoutTocRef"
         :base-path="basePath"
         class="spec-renderer-toc"
@@ -29,6 +29,8 @@
         @item-selected="itemSelected"
       />
     </aside>
+
+    <!-- small screen menu button - hidden on kui-breakpoint-tablet -->
     <div class="spec-renderer-header">
       <button
         class="slideout-toc-trigger-button"
@@ -39,6 +41,7 @@
         Menu
       </button>
     </div>
+
     <div class="doc">
       <SpecDocument
         v-if="parsedDocument && currentPath"
@@ -306,6 +309,26 @@ Styles for SpecRendererToc that need to live here so that they apply to the TOC
 when it's rendered in the context of the SpecRenderer.
 Otherwise host app should have control over these styles.
 */
+@mixin standalone-spec-renderer-toc($itemPadding: var(--kui-space-70, $kui-space-70)) {
+  background-color: var(--kui-color-background, $kui-color-background);
+  position: relative; // important, need this for scrolling to selected item
+
+  :deep(>) {
+    ul > *:first-child {
+      // overview item
+      padding: $itemPadding;
+      padding-bottom: var(--kui-space-0, $kui-space-0);
+    }
+  }
+
+  :deep(.group-item) {
+    &.root {
+      padding-left: $itemPadding;
+      padding-right: $itemPadding;
+    }
+  }
+}
+
 .spec-renderer-toc {
   @include standalone-spec-renderer-toc;
 }
