@@ -31,7 +31,10 @@
     </aside>
 
     <!-- small screen menu button - hidden on kui-breakpoint-tablet -->
-    <div class="spec-renderer-header">
+    <div
+      v-if="tableOfContents"
+      class="spec-renderer-small-screen-header"
+    >
       <button
         class="slideout-toc-trigger-button"
         type="button"
@@ -174,7 +177,7 @@ const openSlideoutToc = async (): Promise<void> => {
     const scrollPosition = await specRendererSlideoutTocRef.value?.getActiveItemScrollPosition()
 
     specRendererSlideoutTocRef.value?.$el.scrollTo({
-      top: scrollPosition - 50, // offset 50 so it doesn't stick to the top
+      top: scrollPosition - 50, // offset 50px so it doesn't stick to the top
     })
   }
 }
@@ -215,7 +218,7 @@ watch(specRendererTocRef, async (val) => {
     const scrollPosition = await val.getActiveItemScrollPosition()
 
     val.$el.scrollTo({
-      top: scrollPosition - 50, // offset 50 so it doesn't stick to the top
+      top: scrollPosition - 50, // offset 50px so it doesn't stick to the top
     })
   }
 })
@@ -259,7 +262,7 @@ watch(specRendererTocRef, async (val) => {
     }
   }
 
-  .spec-renderer-header {
+  .spec-renderer-small-screen-header {
     background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     display: flex;
     padding: var(--kui-space-30, $kui-space-30);
