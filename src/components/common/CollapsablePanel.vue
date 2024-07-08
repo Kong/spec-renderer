@@ -95,7 +95,8 @@ const toggleState = (e: Event) => {
         background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
         border: none;
         cursor: pointer;
-        padding: 0px;
+        padding: var(--kui-space-0, $kui-space-0);
+
         .chevron-icon {
           @include toggle-icon;
         }

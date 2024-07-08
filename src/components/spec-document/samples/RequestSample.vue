@@ -12,6 +12,7 @@
         <div class="select-wrapper">
           <SelectDropdown
             v-model="selectedLang"
+            class="language-selector"
             :items="requestConfigsSelectItems"
           >
             <template #shell-item-content="{ item }">
@@ -302,8 +303,24 @@ watch(() => ({
     display: flex;
     flex: 1;
 
+    .language-selector {
+      :deep(.trigger-button) {
+        padding-top: var(--kui-space-20, $kui-space-20);
+        padding-bottom: var(--kui-space-20, $kui-space-20);
+      }
+    }
+
     .request-sample-selector {
       margin-left: auto;
+      place-self: center;
+
+      :deep(.trigger-button) {
+        font-size: var(--kui-font-size-20, $kui-font-size-20);
+        line-height: var(--kui-line-height-20, $kui-line-height-20);
+        border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+        font-family: var(--kui-font-family-code, $kui-font-family-code);
+        padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
+      }
     }
   }
 
