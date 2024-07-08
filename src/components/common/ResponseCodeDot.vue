@@ -34,8 +34,8 @@ defineProps({
 
 <style lang="scss" scoped>
 .response-code-dot {
-  display: inline-block;
   border-radius: var(--kui-border-radius-circle, $kui-border-radius-circle);
+  display: inline-block;
   flex-shrink: 0;
 
   // Code colors
@@ -53,13 +53,13 @@ defineProps({
 
   // Size variations
   &.small {
-    width: 8px;
     height: 8px;
+    width: 8px;
   }
 
   &.large {
-    width: 12px;
     height: 12px;
+    width: 12px;
   }
 }
 </style>

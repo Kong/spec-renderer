@@ -130,9 +130,9 @@ watch(serverUrl, (newUrl) => {
 
     .server-url-with-path {
       color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+      display: flex;
       font-family: var(--kui-font-family-code, $kui-font-family-code);
       gap: var(--kui-space-20, $kui-space-20);
-      display: flex;
     }
 
     .endpoint-body {
@@ -146,10 +146,10 @@ watch(serverUrl, (newUrl) => {
     }
 
     .endpoint-path {
-      white-space: nowrap;
       color: var(--kui-color-text, $kui-color-text);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       margin-left: 1px; // to give a bit of spacing between server url and path
+      white-space: nowrap;
     }
 
     @media (min-width: $kui-breakpoint-tablet) {
