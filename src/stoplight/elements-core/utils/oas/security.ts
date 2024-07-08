@@ -8,7 +8,10 @@ import type {
   IOauth2ImplicitFlow,
   IOauth2PasswordFlow,
 } from '@stoplight/types'
-import { capitalize, filter, flatten, isObject } from 'lodash-es'
+import capitalize from 'lodash-es/capitalize'
+import filter from 'lodash-es/filter'
+import flatten from 'lodash-es/flatten'
+import isObject from 'lodash-es/isObject'
 
 export function getReadableSecurityName(securityScheme: HttpSecurityScheme, includeKey: boolean = false) {
   let name = ''

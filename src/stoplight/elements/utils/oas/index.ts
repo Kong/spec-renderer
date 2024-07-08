@@ -18,7 +18,9 @@ import { encodePointerFragment, pointerToPath } from '@stoplight/json'
 import type { IHttpOperation, IHttpWebhookOperation } from '@stoplight/types'
 
 import { NodeType } from '@stoplight/types'
-import { get, isObject, last } from 'lodash-es'
+import isObject from 'lodash-es/isObject'
+import get from 'lodash-es/get'
+import last from 'lodash-es/last'
 
 import type { OpenAPIObject as _OpenAPIObject, PathObject } from 'openapi3-ts'
 import type { Spec } from 'swagger-schema-official'
