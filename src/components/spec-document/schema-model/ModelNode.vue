@@ -3,15 +3,8 @@
     class="model-node-container"
     :data-testid="dataTestId"
   >
-    <SelectDropdown
-      v-if="variantSelectItemList.length"
-      :id="`${title}-variant-select-dropdown`"
-      v-model="selectedVariant"
-      :items="variantSelectItemList"
-      @change="handleVariantSelectChange"
-    />
     <template
-      v-for="(property, propertyName) in selectedSchemaModel?.properties"
+      v-for="(property, propertyName) in resolvedSchemaObject?.properties"
       :key="propertyName"
     >
       <ModelProperty
@@ -19,20 +12,18 @@
         :data-testid="`model-property-${propertyName}`"
         :property="property"
         :property-name="propertyName.toString()"
-        :required-fields="selectedSchemaModel?.required"
+        :required-fields="resolvedSchemaObject?.required"
       />
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import type { PropType } from 'vue'
-import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import ModelProperty from './ModelProperty.vue'
-import type { SchemaObject, SelectItem } from '@/types'
+import type { SchemaObject } from '@/types'
 import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
-import useSchemaVariants from '@/composables/useSchemaVariants'
 
 const props = defineProps({
   schema: {
@@ -46,13 +37,7 @@ const props = defineProps({
 })
 
 const resolvedSchemaObject = computed(() => resolveSchemaObjectFields(props.schema))
-const { variantSelectItemList, selectedSchemaModel, selectedVariantIndex } = useSchemaVariants(resolvedSchemaObject)
 const dataTestId = computed(() => `model-node-${props.title.replaceAll(' ', '-')}`)
-
-const selectedVariant = ref('0')
-function handleVariantSelectChange(selecteditem: SelectItem) {
-  selectedVariantIndex.value = Number(selecteditem.value)
-}
 </script>
 
 <style lang="scss" scoped>

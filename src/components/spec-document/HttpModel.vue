@@ -9,19 +9,30 @@
       :title="title"
     />
 
+    <SelectDropdown
+      v-if="variantSelectItemList.length"
+      :id="`${dataTestId}-variant-select-dropdown`"
+      v-model="selectedVariantOption"
+      :items="variantSelectItemList"
+      @change="handleVariantSelectChange"
+    />
+
     <ModelNode
-      :schema="data"
+      :schema="selectedSchemaModel"
       :title="title"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { PropType } from 'vue'
-import type { SchemaObject } from '@/types'
+import type { SchemaObject, SelectItem } from '@/types'
 import ModelNode from './schema-model/ModelNode.vue'
 import PageHeader from '../common/PageHeader.vue'
+import SelectDropdown from '../common/SelectDropdown.vue'
+import { resolveSchemaObjectFields } from '@/utils'
+import useSchemaVariants from '@/composables/useSchemaVariants'
 
 const props = defineProps({
   data: {
@@ -35,6 +46,13 @@ const props = defineProps({
 })
 
 const dataTestId = computed(() => `http-model-${props.title.replaceAll(' ', '-')}`)
+const resolvedSchemaObject = computed(() => resolveSchemaObjectFields(props.data))
+const { variantSelectItemList, selectedSchemaModel, selectedVariantIndex } = useSchemaVariants(resolvedSchemaObject)
+
+const selectedVariantOption = ref('0')
+function handleVariantSelectChange(selecteditem: SelectItem) {
+  selectedVariantIndex.value = Number(selecteditem.value)
+}
 </script>
 
 <style lang="scss" scoped>
