@@ -134,11 +134,11 @@ const orderedFieldList = computed(() => {
       key: 'property-range',
     })
   }
-  if (props.property.examples) {
+  if (props.property.examples || props.property.example) {
     fields.push({
       component: PropertyExample,
       props: {
-        example: props.property.examples,
+        example: props.property.examples || props.property.example,
       },
       key: 'property-example',
     })
