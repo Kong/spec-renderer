@@ -1,6 +1,6 @@
 {
   "name": "@kong/spec-renderer-dev",
-  "version": "1.40.1",
+  "version": "1.40.3",
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
   "type": "module",
@@ -51,7 +51,7 @@
     "@kong/icons": "^1.14.2",
     "@scalar/openapi-parser": "^0.7.1",
     "@seriousme/openapi-schema-validator": "^2.2.1",
-    "@stoplight/http-spec": "^7.0.3",
+    "@stoplight/http-spec": "^7.1.0",
     "@stoplight/json": "^3.21.0",
     "@stoplight/types": "^14.1.1",
     "@stoplight/yaml": "^4.3.0",
@@ -85,7 +85,7 @@
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.5.1",
     "autoprefixer": "^10.4.19",
-    "c8": "^9.1.0",
+    "c8": "^10.1.2",
     "commitizen": "^4.3.0",
     "cross-env": "^7.0.3",
     "cz-conventional-changelog": "^3.3.0",
@@ -105,14 +105,14 @@
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
     "tslib": "^2.6.3",
-    "typescript": "^5.4.5",
+    "typescript": "^5.5.2",
     "vite": "^5.3.2",
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-replace": "^0.1.1",
     "vite-plugin-vue-devtools": "^7.3.4",
     "vitest": "1.6.0",
     "vue": "^3.4.31",
-    "vue-router": "^4.3.3",
+    "vue-router": "^4.4.0",
     "vue-tsc": "^2.0.22"
   },
   "repository": {
@@ -168,7 +168,7 @@
     "node": ">=18.17.0"
   },
   "volta": {
-    "node": "20.14.0",
+    "node": "20.15.0",
     "pnpm": "9.4.0"
   },
   "config": {
