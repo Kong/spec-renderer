@@ -79,8 +79,8 @@ importers:
         specifier: ^1.13.2
         version: 1.13.2
       '@kong/eslint-config-kong-ui':
-        specifier: 1.1.0
-        version: 1.1.0(eslint@9.5.0)(typescript@5.4.5)
+        specifier: 1.1.1
+        version: 1.1.1(eslint@9.5.0)(typescript@5.4.5)
       '@semantic-release/changelog':
         specifier: ^6.0.3
         version: 6.0.3(semantic-release@24.0.0(typescript@5.4.5))
@@ -747,8 +747,8 @@ packages:
   '@kong/design-tokens@1.13.2':
     resolution: {integrity: sha512-BXI7Nv+wucuG9mw0faXhBgb3ryN9pnMkHntI9HKf0h9BnBvuR8F+iLoCm/Fwo6TZ0tlO5bZTMVk1xc85lnlhBA==}
 
-  '@kong/eslint-config-kong-ui@1.1.0':
-    resolution: {integrity: sha512-PSZaL7IhVLmbojwpBPaKIfxLIBBLnYFIjjrr5Nbz0Ia4cSYFqdwkdFB3t5PnjLHWwQr0IpLgN5e2vGe1n9Hpig==}
+  '@kong/eslint-config-kong-ui@1.1.1':
+    resolution: {integrity: sha512-L66Nqif4KcWlaSX9xb9WToMh9JbcxGrRb6tF1hz36GsZZaBsk6cHdVKVXUjPA7jgtkE1aUHpzQO1IM/UMLQCQg==}
     engines: {node: '>=18.0.0 || >=20.13.1'}
     peerDependencies:
       eslint: '>= 9.4.0'
@@ -2203,10 +2203,6 @@ packages:
     resolution: {integrity: sha512-+NAOZFrW/jFTS3dASCGBxX1pkFD0/fsO+hfAkJ4TyYKwgsXZbqzrw+seCYFCcPCYXvnD67tAnglU7GQTz6kcVw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     hasBin: true
-
-  espree@10.0.1:
-    resolution: {integrity: sha512-MWkrWZbJsL2UwnjxTX3gG8FneachS/Mwg7tdGXce011sJd5b0JG54vat5KHnfSBODZ3Wvzd2WnjxyzsRoVv+ww==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   espree@10.1.0:
     resolution: {integrity: sha512-M1M6CpiE6ffoigIOWYO9UDP8TMUw9kqb21tf+08IgDYjCsOvCuDt4jQcZmoYxx+w7zlKw9/N0KXfto+I8/FrXA==}
@@ -5419,7 +5415,7 @@ snapshots:
     dependencies:
       ajv: 6.12.4
       debug: 4.3.5
-      espree: 10.0.1
+      espree: 10.1.0
       globals: 14.0.0
       ignore: 5.3.1
       import-fresh: 3.3.0
@@ -5506,7 +5502,7 @@ snapshots:
 
   '@kong/design-tokens@1.13.2': {}
 
-  '@kong/eslint-config-kong-ui@1.1.0(eslint@9.5.0)(typescript@5.4.5)':
+  '@kong/eslint-config-kong-ui@1.1.1(eslint@9.5.0)(typescript@5.4.5)':
     dependencies:
       '@eslint/compat': 1.1.0
       '@eslint/eslintrc': 3.1.0
@@ -6357,10 +6353,6 @@ snapshots:
       through: 2.3.8
 
   abbrev@2.0.0: {}
-
-  acorn-jsx@5.3.2(acorn@8.11.3):
-    dependencies:
-      acorn: 8.11.3
 
   acorn-jsx@5.3.2(acorn@8.12.0):
     dependencies:
@@ -7367,12 +7359,6 @@ snapshots:
       text-table: 0.2.0
     transitivePeerDependencies:
       - supports-color
-
-  espree@10.0.1:
-    dependencies:
-      acorn: 8.11.3
-      acorn-jsx: 5.3.2(acorn@8.11.3)
-      eslint-visitor-keys: 4.0.0
 
   espree@10.1.0:
     dependencies:
