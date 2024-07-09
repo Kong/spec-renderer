@@ -73,7 +73,7 @@ describe('resolveSchemaObjectFields', () => {
     expect(resolveSchemaObjectFields(schemaObject)?.properties).toEqual(itemProperties)
     expect(resolveSchemaObjectFields(schemaObject)?.required).toEqual(itemRequiredFields)
   })
-  it('returns null for invalid Schema Object', () => {
+  it('returns empty objects for invalid Schema Object', () => {
     const invalidSchemaObjectList = [
       [{
         type: 'object',
@@ -84,10 +84,10 @@ describe('resolveSchemaObjectFields', () => {
     ]
 
     for (const invalidSchemaObject of invalidSchemaObjectList) {
-      expect(resolveSchemaObjectFields(invalidSchemaObject)).toBe(null)
+      expect(resolveSchemaObjectFields(invalidSchemaObject)).toStrictEqual({})
     }
   })
-  it('returns null for invalid Schema Object from array', () => {
+  it('returns empty object for invalid Schema Object from array', () => {
     const invalidSchemaObjectList = [
       null,
       false,
@@ -102,7 +102,7 @@ describe('resolveSchemaObjectFields', () => {
     ]
 
     for (const invalidSchemaObject of invalidSchemaObjectList) {
-      expect(resolveSchemaObjectFields(invalidSchemaObject)).toBe(null)
+      expect(resolveSchemaObjectFields(invalidSchemaObject)).toStrictEqual({})
     }
   })
   it('returns Schema Object with merged allOf fields', () => {
