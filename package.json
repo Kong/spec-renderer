@@ -61,7 +61,7 @@
     "lodash-es": "^4.17.21",
     "oas-normalize": "^11.1.1",
     "openapi3-ts": "4.3.3",
-    "shiki": "^1.9.1"
+    "shiki": "^1.10.0"
   },
   "resolutions": {
     "openapi3-ts": "4.3.3"
@@ -109,7 +109,7 @@
     "vite": "^5.3.2",
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-replace": "^0.1.1",
-    "vite-plugin-vue-devtools": "^7.3.4",
+    "vite-plugin-vue-devtools": "^7.3.5",
     "vitest": "1.6.0",
     "vue": "^3.4.31",
     "vue-router": "^4.4.0",
