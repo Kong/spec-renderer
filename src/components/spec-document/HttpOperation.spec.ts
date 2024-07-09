@@ -21,7 +21,7 @@ describe('<HttpOperation />', () => {
           },
         },
       })
-      expect(wrapper.findTestId('tryit-btn-123').exists()).toBe(true)
+      expect(wrapper.findTestId('tryit-dropdown-123').exists()).toBe(true)
     })
 
     it('TryIt is not rendered when hideTryIt is true', () => {
@@ -43,7 +43,7 @@ describe('<HttpOperation />', () => {
         },
 
       })
-      expect(wrapper.findTestId('tryit-btn-123').exists()).toBe(false)
+      expect(wrapper.findTestId('tryit-dropdown-123').exists()).toBe(false)
     })
 
     it('TryIt is not rendered when server list is not defined in the spec', () => {
@@ -54,7 +54,7 @@ describe('<HttpOperation />', () => {
           },
         },
       })
-      expect(wrapper.findTestId('tryit-btn-123').exists()).toBe(false)
+      expect(wrapper.findTestId('tryit-dropdown-123').exists()).toBe(false)
     })
   })
 

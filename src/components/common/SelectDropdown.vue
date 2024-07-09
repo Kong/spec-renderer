@@ -4,6 +4,7 @@
     :aria-activedescendant="selectedItem ? `${selectedItem.key ? selectedItem.key : selectedItem.value}-item` : undefined"
     :aria-labelledby="attrs.id ? String(attrs.id) : undefined"
     class="select-dropdown"
+    close-on-popover-click
     data-testid="select-dropdown"
     :disabled="disabled"
     :placement="placement"

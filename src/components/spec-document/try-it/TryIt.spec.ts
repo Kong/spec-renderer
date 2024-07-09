@@ -21,7 +21,7 @@ describe('<TryIt />', () => {
       },
     })
     global.fetch = vi.fn()
-    await wrapper.findTestId('tryit-btn-123').trigger('click')
+    await wrapper.findTestId('tryit-dropdown-123').trigger('click')
     expect(fetch).toHaveBeenCalledWith(new URL('https://global.api.konghq.com/v2/sample-path'), {
       headers: {
         'Content-Type': 'application/json',
