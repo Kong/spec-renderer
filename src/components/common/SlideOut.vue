@@ -105,13 +105,17 @@ onUnmounted(() => {
     gap: var(--kui-space-50, $kui-space-50);
     height: 100vh;
     left: 0;
-    max-width: v-bind('props.maxWidth');
+    max-width: 100vw; // take up full screen on mobile
     overflow-y: auto;
     padding: var(--kui-space-70, $kui-space-70) var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0) var(--kui-space-70, $kui-space-70);
     position: fixed;
     top: 0;
     width: 100%;
     z-index: 1000;
+
+    @media (min-width: $kui-breakpoint-mobile) {
+      max-width: v-bind('props.maxWidth');
+    }
 
     .slideout-header {
       display: flex;
