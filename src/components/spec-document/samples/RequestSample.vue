@@ -66,6 +66,7 @@
             v-model="selectedRequestSample"
             class="request-sample-selector"
             :items="requestSamplesSelectOptions"
+            placement="bottom-end"
           />
         </div>
       </template>
