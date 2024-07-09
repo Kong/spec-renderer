@@ -210,8 +210,3 @@ export const getSampleBody = (data: IHttpOperation, filteringOptions: Record<str
 
   return JSON.stringify(crawl((data.request.body.contents[0].schema) as Record<string, any>, '', 0), null, 2)
 }
-
-/**
- * Returns true if body of operation has at least one required field
- * @param data operation
- */

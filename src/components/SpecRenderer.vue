@@ -18,8 +18,10 @@
         :base-path="basePath"
         :current-path="currentPath"
         :document="parsedDocument"
+        :hide-insomnia-try-it="hideInsomniaTryIt"
         :hide-try-it="hideTryIt"
         :json="jsonDocument"
+        :spec-url="specUrl"
         @path-not-found="relayPathNotFound"
       />
     </div>
@@ -87,6 +89,13 @@ const props = defineProps({
    * Do not show TryIt section
   */
   hideTryIt: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+     * Do not show  Insomnia option in TryIt
+  */
+  hideInsomniaTryIt: {
     type: Boolean,
     default: false,
   },

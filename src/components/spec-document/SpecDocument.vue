@@ -24,6 +24,13 @@ const props = defineProps({
     type: Object as PropType<ServiceNode>,
     required: true,
   },
+  /**
+   * URL to fetch spec document from
+   */
+  specUrl: {
+    type: String,
+    default: '',
+  },
   currentPath: {
     type: String,
     required: true,
@@ -39,12 +46,22 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+     * Do not show  Insomnia option in TryIt
+  */
+  hideInsomniaTryIt: {
+    type: Boolean,
+    default: false,
+  },
+
 })
 const serviceNode = ref<ServiceNode | null>(null)
 
 // to be consumed in multi-level child components
+provide<Ref<string>>('spec-url', computed((): string => props.specUrl))
 provide<Ref<string>>('base-path', computed((): string => props.basePath))
 provide<Ref<boolean>>('hide-tryit', computed((): boolean => props.hideTryIt))
+provide<Ref<boolean>>('hide-insomnia-tryit', computed((): boolean => props.hideInsomniaTryIt))
 
 const emit = defineEmits < {
   (e: 'path-not-found', requestedPath: string): void

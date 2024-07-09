@@ -10,9 +10,7 @@
         size="small"
       />
       <span class="path">{{ data.path }}</span>
-
       <TryItButton
-        class="tryit-btn"
         :data="data"
         @tryit-api-call="doApiCall"
       />
@@ -213,9 +211,6 @@ watch(() => (props.data.id), () => {
     padding: var(--kui-space-50, $kui-space-50);
     .path {
       margin-left: var(--kui-space-20, $kui-space-20);
-    }
-    .tryit-btn {
-      margin-left: auto;
     }
   }
 
