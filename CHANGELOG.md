@@ -1,3 +1,10 @@
+## [1.42.1](https://github.com/Kong/spec-renderer/compare/v1.42.0...v1.42.1) (2024-07-09)
+
+
+### Bug Fixes
+
+* use selectdropdown component [KHCP-12513] ([#187](https://github.com/Kong/spec-renderer/issues/187)) ([369da1d](https://github.com/Kong/spec-renderer/commit/369da1d68f78ec00169101d36881b8aed1b9b75f))
+
 # [1.42.0](https://github.com/Kong/spec-renderer/compare/v1.41.0...v1.42.0) (2024-07-09)
 
 
