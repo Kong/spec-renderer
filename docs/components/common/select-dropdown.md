@@ -61,9 +61,19 @@ Default trigger button text.
 
 ### `trigger-content`
 
+Slot props:
+
+* `item`
+  * type: `SelectItem`
+
 Slot for passing custom content that will be rendered inside the trigger button in front of the caret. Content passed through this slot will take precedence over any component data, including [`triggerButton` prop](#triggerbutton) value (e.g. by default SelectDropdown will render selected item label when an item is selected but if `trigger-content` slot is provided, content passed through the slot will be rendered instead).
 
 ### `*-item-content`
+
+Slot props:
+
+* `item`
+  * type: `SelectItem`
 
 Slot for passing custom item content. Use this slot when you just need to give an item some custom look (e.g. display an icon in front of label). If you need to bind a custom click handler to your item or need to make it a link, use [`*-item` slot](#-item).
 
