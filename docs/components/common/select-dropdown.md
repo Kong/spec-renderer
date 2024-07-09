@@ -61,11 +61,6 @@ Default trigger button text.
 
 ### `trigger-content`
 
-Slot props:
-
-* `item`
-  * type: `SelectItem`
-
 Slot for passing custom content that will be rendered inside the trigger button in front of the caret. Content passed through this slot will take precedence over any component data, including [`triggerButton` prop](#triggerbutton) value (e.g. by default SelectDropdown will render selected item label when an item is selected but if `trigger-content` slot is provided, content passed through the slot will be rendered instead).
 
 ### `*-item-content`
@@ -97,6 +92,11 @@ _Item 1_ will not have an slot for custom item content since `item.key` is not p
 **When item that has custom content provided though this slot is selected, content provided though the slot will be displayed in the dropdown trigger button in front of the caret icon.**
 
 ### `*-item`
+
+Slot props:
+
+* `item`
+  * type: `SelectItem`
 
 This slot takes precedence over [`*-item-content` slot](#-item-content) but follows a similar approach. Use this slot when you either:
 
