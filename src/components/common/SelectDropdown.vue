@@ -58,7 +58,7 @@
                   :item="item"
                   :name="`${item.key}-item-content`"
                 >
-                  {{ item.label }}
+                  <span>{{ item.label }}</span>
                 </slot>
               </button>
             </slot>
@@ -207,6 +207,10 @@ watch(selectValue, (newValue: string) => {
           @include dropdown-item;
 
           text-align: left;
+
+          span {
+            @include truncate;
+          }
         }
 
         :slotted(a) {
