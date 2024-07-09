@@ -126,9 +126,9 @@ onUnmounted(() => {
     }
 
     .slideout-header {
+      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
       display: flex;
       padding: var(--kui-space-40, $kui-space-40);
-      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
 
       .slideout-title {
         display: flex;
