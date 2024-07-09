@@ -13,10 +13,9 @@
 
     <div
       v-if="variantSelectItemList.length"
-      class="nested-model-node"
+      class="selected-variant-container"
     >
       <ModelProperty
-        class="variant-model-property"
         :property="selectedSchemaModel"
         :property-name="selectedSchemaModel.title || variantSelectItemList[selectedVariantIndex].label"
         :required-fields="selectedSchemaModel.required"
@@ -210,8 +209,13 @@ const orderedFieldList = computed(() => {
     }
   }
 
-  .variant-model-property {
-    padding-left: var(--kui-space-60, $kui-space-60);
+  .selected-variant-container {
+    @include tree-nesting;
+
+    .model-property {
+      // left padding for space between the tree-branch and model-property
+      padding-left: var(--kui-space-40, $kui-space-40);
+    }
   }
 
   .nested-model-node {
