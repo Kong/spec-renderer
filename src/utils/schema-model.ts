@@ -18,7 +18,7 @@ export function filterSchemaObjectArray(candidate: unknown): Array<SchemaObject>
   return Array.isArray(candidate) ? candidate.filter(isValidSchemaObject) : []
 }
 
-const resolveAllOf = (schema: SchemaObject) => schema.allOf ? merge(schema) as SchemaObject : schema
+const resolveAllOf = (schema: SchemaObject): SchemaObject => Array.isArray(schema.allOf) && schema.allOf.length > 0 ? merge(schema) as SchemaObject : schema
 
 /**
  * util to compute from where to extract the fields of the candidate object
