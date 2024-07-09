@@ -149,7 +149,7 @@ watch(tokenValues, (newValues) => {
   margin-left: auto !important;
 }
 
-input {
+input[type=text] {
   @include input-default;
 }
 </style>
