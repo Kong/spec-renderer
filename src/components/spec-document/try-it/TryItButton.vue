@@ -88,10 +88,10 @@ const onChange = () => {
 
 <style lang="scss" scoped>
 .tryit-btn-wrapper {
-  display: flex;
-  margin-left: auto;
   align-items: center;
+  display: flex;
   justify-content: center;
+  margin-left: auto;
 
   .tryit-btn {
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
