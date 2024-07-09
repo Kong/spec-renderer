@@ -162,10 +162,10 @@ watch(selectValue, (newValue: string) => {
 
     .select-chevron-icon {
       color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
+      flex-shrink: 0;
       height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
       pointer-events: none;
       width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
-      flex-shrink: 0;
     }
 
     &:hover:not(:disabled):not(:focus):not(:active) {
