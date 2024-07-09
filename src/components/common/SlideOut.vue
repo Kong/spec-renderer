@@ -104,12 +104,10 @@ onUnmounted(() => {
     flex-grow: 1;
     gap: var(--kui-space-50, $kui-space-50);
     height: 100vh;
-    left: 0;
-    max-width: 100vw; // take up full screen on mobile
+    inset: 0;
     overflow-y: auto;
     padding: var(--kui-space-70, $kui-space-70) var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0) var(--kui-space-70, $kui-space-70);
     position: fixed;
-    top: 0;
     width: 100%;
     z-index: 1000;
 
