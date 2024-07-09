@@ -1,3 +1,10 @@
+# [1.43.0](https://github.com/Kong/spec-renderer/compare/v1.42.2...v1.43.0) (2024-07-09)
+
+
+### Features
+
+* **spec-renderer:** responsive toc [KHCP-12290] ([#182](https://github.com/Kong/spec-renderer/issues/182)) ([0422c3f](https://github.com/Kong/spec-renderer/commit/0422c3f81a31af7c8f6e02535a20baddfac5622c))
+
 ## [1.42.2](https://github.com/Kong/spec-renderer/compare/v1.42.1...v1.42.2) (2024-07-09)
 
 
