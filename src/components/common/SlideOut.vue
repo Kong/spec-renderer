@@ -15,6 +15,12 @@
         data-testid="slideout-container"
       >
         <div class="slideout-header">
+          <span
+            v-if="title"
+            class="slideout-title"
+          >
+            {{ title }}
+          </span>
           <button
             aria-label="Close"
             class="slideout-close-icon"
@@ -44,6 +50,10 @@ const props = defineProps({
   visible: {
     type: Boolean,
     default: false,
+  },
+  title: {
+    type: String,
+    default: '',
   },
   /**
    * Max width of SlideOut container.
@@ -117,8 +127,18 @@ onUnmounted(() => {
 
     .slideout-header {
       display: flex;
-      padding: var(--kui-space-40, $kui-space-40) var(--kui-space-70, $kui-space-70) var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
+      padding: var(--kui-space-40, $kui-space-40);
       border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+
+      .slideout-title {
+        display: flex;
+        flex: 1;
+        font-family: var(--kui-font-family-text, $kui-font-family-text);
+        font-size: var(--kui-font-size-50, $kui-font-size-50);
+        font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+        gap: var(--kui-space-40, $kui-space-40);
+        line-height: var(--kui-line-height-40, $kui-line-height-40);
+      }
 
       .slideout-close-icon {
         @include default-button-reset;

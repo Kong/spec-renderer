@@ -10,6 +10,12 @@ SlideOut is an overlay container with backdrop that displays content over the pa
 * required: `false`
 * default: `false`
 
+### `title`
+
+* type: `string`
+* required: `false`
+* default: `''`
+
 ### `maxWidth`
 
 * type: `string`
