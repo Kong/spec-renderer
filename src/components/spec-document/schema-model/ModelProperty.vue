@@ -14,6 +14,7 @@
     <div
       v-if="variantSelectItemList.length"
       class="selected-variant-container"
+      :data-testid="`${dataTestId}-${inheritanceTypeLabel}`"
     >
       <ModelProperty
         :property="selectedSchemaModel"
@@ -81,7 +82,7 @@ const nestedPropertiesExpanded = ref(false)
 const dataTestId = computed(() => `model-property-${props.propertyName.replaceAll(' ', '-')}`)
 
 const resolvedSchemaObject = computed(() => resolveSchemaObjectFields(props.property))
-const { variantSelectItemList, selectedSchemaModel, selectedVariantIndex } = useSchemaVariants(resolvedSchemaObject)
+const { variantSelectItemList, selectedSchemaModel, selectedVariantIndex, inheritanceTypeLabel } = useSchemaVariants(resolvedSchemaObject)
 
 const nestedPropertiesPresent = computed<boolean>(() =>{
   if (selectedSchemaModel.value?.properties) {

@@ -4,10 +4,21 @@ import type { SchemaObject, SelectItem } from '@/types'
 import { inheritedPropertyName, isValidSchemaObject } from '@/utils'
 
 export default function useSchemaVariants(schemaModel: ComputedRef<SchemaObject>) {
+  const inheritanceTypeLabel = computed(() =>
+    schemaModel.value?.oneOf?.length
+      ? 'oneOf'
+      : schemaModel.value?.anyOf?.length
+        ? 'anyOf'
+        : '',
+  )
 
   // get the list of variants, from oneOf or anyOf, or an empty array in case neither are present
-  const schemaVariantList = computed(() => (schemaModel.value?.oneOf || schemaModel.value?.anyOf || []).filter(
-    isValidSchemaObject))
+  const schemaVariantList = computed(() =>
+    (schemaModel.value?.oneOf || schemaModel.value?.anyOf || []).filter(
+      isValidSchemaObject,
+    ),
+  )
+
   // get the list of items to show in variant select dropdown
   const variantSelectItemList = computed((): Array<SelectItem> => {
     return schemaVariantList.value.map((variant, index) => {
@@ -29,6 +40,7 @@ export default function useSchemaVariants(schemaModel: ComputedRef<SchemaObject>
   })
 
   return {
+    inheritanceTypeLabel,
     variantSelectItemList,
     selectedVariantIndex,
     selectedSchemaModel,
