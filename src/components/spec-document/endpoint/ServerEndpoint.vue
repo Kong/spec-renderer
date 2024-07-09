@@ -19,7 +19,9 @@
         :items="selectItems"
       >
         <template #trigger-content>
-          {{ selectedServerUrl }}
+          <span class="endpoint-body">
+            {{ selectedServerUrl }}
+          </span>
 
           <span
             class="endpoint-path"
@@ -35,7 +37,9 @@
         class="server-url-with-path"
         :data-testid="`server-url-${dataTestId}`"
       >
-        <span>{{ serverUrl }}</span>
+        <span class="endpoint-body">
+          {{ serverUrl }}
+        </span>
         <span
           class="endpoint-path"
           data-testid="endpoint-path"
@@ -109,6 +113,7 @@ watch(serverUrl, (newUrl) => {
     font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
     gap: var(--kui-space-20, $kui-space-20);
     line-height: var(--kui-line-height-40, $kui-line-height-40);
+    max-width: 80%;
 
     .server-select-dropdown {
       :deep(.trigger-button) {
@@ -125,14 +130,30 @@ watch(serverUrl, (newUrl) => {
 
     .server-url-with-path {
       color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+      display: flex;
       font-family: var(--kui-font-family-code, $kui-font-family-code);
       gap: var(--kui-space-20, $kui-space-20);
+    }
+
+    .endpoint-body {
+      @include truncate;
+
+      max-width: 50%;
+
+      @media (min-width: $kui-breakpoint-tablet) {
+        max-width: fit-content;
+      }
     }
 
     .endpoint-path {
       color: var(--kui-color-text, $kui-color-text);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       margin-left: 1px; // to give a bit of spacing between server url and path
+      white-space: nowrap;
+    }
+
+    @media (min-width: $kui-breakpoint-tablet) {
+      max-width: fit-content;
     }
   }
 }
