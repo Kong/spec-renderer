@@ -8,6 +8,15 @@
       data-testid="property-field-title"
     >
       {{ title }}
+
+      <SelectDropdown
+        v-if="variantsList.length"
+        :id="`${title}-variant-select-dropdown`"
+        v-model="selectedVariant"
+        :items="variantsList"
+        @change="handleSelectChange"
+      />
+
     </span>
     <span class="property-type">
       <span
@@ -38,8 +47,10 @@
 </template>
 
 <script setup lang="ts">
-import type { SchemaObject } from '@/types'
+import { ref } from 'vue'
+import type { SchemaObject, SelectItem } from '@/types'
 import type { PropType } from 'vue'
+import SelectDropdown from '@/components/common/SelectDropdown.vue'
 
 defineProps({
   title: {
@@ -62,7 +73,21 @@ defineProps({
     type: Array as PropType<string[]>,
     default: () => [],
   },
+  variantsList: {
+    type: Array as PropType<Array<SelectItem>>,
+    default: () => [],
+  },
 })
+
+const selectedVariant = ref('0')
+
+const emit = defineEmits<{
+  (e: 'variant-changed', variant: number): void
+}>()
+
+function handleSelectChange(selecteditem: SelectItem) {
+  emit('variant-changed', Number((selecteditem.value)))
+}
 </script>
 
 <style lang="scss" scoped>

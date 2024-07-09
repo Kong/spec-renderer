@@ -247,3 +247,11 @@ watch(isVisible, (val) => {
   }
 })
 </script>
+
+<style lang="scss" scoped>
+.popover {
+  .popover-container {
+    z-index: 1000;
+  }
+}
+</style>
