@@ -86,13 +86,13 @@ const startApiCall = () => {
 .tryit-dropdown {
   :deep(.trigger-button) {
     border-color: var(--kui-color-border, $kui-color-border);
-    border-width: var(--kui-border-width-20, $kui-border-width-20);
-    border-style: solid;
     border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    padding-top: var(--kui-space-20, $kui-space-20);
-    padding-bottom: var(--kui-space-20, $kui-space-20);
-    white-space: nowrap;
+    border-style: solid;
+    border-width: var(--kui-border-width-20, $kui-border-width-20);
     font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    padding-bottom: var(--kui-space-20, $kui-space-20);
+    padding-top: var(--kui-space-20, $kui-space-20);
+    white-space: nowrap;
   }
 
   &.get {
