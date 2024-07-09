@@ -51,6 +51,7 @@
       <!-- body -->
       <RequiredToggle
         v-if="hideTryIt"
+        v-model="excludeNotRequired"
         :data="data"
       />
       <div class="wide">
@@ -115,6 +116,11 @@ const props = defineProps({
     type: String,
     default: '',
   },
+})
+
+const excludeNotRequired = defineModel({
+  type: Boolean,
+  default: true,
 })
 
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))

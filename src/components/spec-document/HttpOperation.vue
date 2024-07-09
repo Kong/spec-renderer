@@ -62,7 +62,7 @@
         :data-testid="`http-operation-right-${data.id}`"
       >
         <TryIt
-          v-model="excludeNotRequired"
+          v-model="excludeNotRequiredInTryIt"
           :data="data"
           :request-body="currentRequestBody"
           :server-url="selectedServerURL"
@@ -73,6 +73,7 @@
           @server-url-changed="setServerUrl"
         />
         <RequestSample
+          v-model="excludeNotRequiredInSample"
           :auth-headers="authHeaders"
           :auth-query="authQuery"
           :data="data"
@@ -88,8 +89,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import type { PropType } from 'vue'
+import { ref, computed, watch, inject } from 'vue'
+import type { PropType, Ref } from 'vue'
 import type { IHttpOperation } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpResponse from './endpoint/HttpResponse.vue'
@@ -107,9 +108,17 @@ const props = defineProps({
     required: true,
   },
 })
+
+const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
+
 const authHeaders = ref<Array<Record<string, string>>>()
 const authQuery = ref<string>('')
-const excludeNotRequired = ref<boolean>(true)
+const excludeNotRequiredInTryIt = ref<boolean>(true)
+const excludeNotRequiredInSample = ref<boolean>(true)
+
+const excludeNotRequired = computed((): boolean => {
+  return hideTryIt.value ? excludeNotRequiredInSample.value : excludeNotRequiredInTryIt.value
+})
 
 const setAuthHeaders = (newHeaders: Array<Record<string, string>>, newAuthQuery: string) => {
   authHeaders.value = newHeaders
