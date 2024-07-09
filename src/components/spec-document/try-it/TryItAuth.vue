@@ -152,11 +152,7 @@ watch(tokenValues, (newValues) => {
   margin-left: auto !important;
 
   :deep(.trigger-button) {
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    font-family: var(--kui-font-family-code, $kui-font-family-code);
-    font-size: var(--kui-font-size-20, $kui-font-size-20);
-    line-height: var(--kui-line-height-20, $kui-line-height-20);
-    padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
+    @include small-bordered-trigger-button;
   }
 }
 
