@@ -8,13 +8,16 @@
     trigger-button="Try It"
   >
     <template #browser-item="{ item }">
-      <button @click="startApiCall">
+      <button
+        data-testid="tryit-send-request"
+        @click="startApiCall"
+      >
         <NetworkIcon />
         {{ item.label }}
       </button>
     </template>
     <template #insomnia-item="{ item }">
-      <button>
+      <button data-testid="tryit-insomnia">
         <InsomniaIcon />
         {{ item.label }}
       </button>
