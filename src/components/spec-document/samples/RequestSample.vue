@@ -289,9 +289,6 @@ watch(() => ({
     label {
       margin-left: var(--kui-space-10, $kui-space-10) !important;
     }
-    input[type=checkbox] {
-      margin-right: var(--kui-space-30, $kui-space-30) !important;
-    }
   }
 }
 </style>

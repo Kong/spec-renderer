@@ -3,19 +3,21 @@
     v-if="showToggle"
     class="wide required-only-wrapper"
   >
-    <InputLabel>
+    <InputLabel
+      :for="`required-toggle-switch-${data.id}`"
+    >
       Show only required parameters
     </InputLabel>
 
     <ToggleSwitch
-      id="sandbox-toggle-switch"
+      :id="`required-toggle-switch-${data.id}`"
       v-model="toggleValue"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpOperation } from '@stoplight/types'
 import InputLabel from '@/components/common/InputLabel.vue'
