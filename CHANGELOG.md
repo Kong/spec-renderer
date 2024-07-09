@@ -1,3 +1,10 @@
+## [1.42.2](https://github.com/Kong/spec-renderer/compare/v1.42.1...v1.42.2) (2024-07-09)
+
+
+### Bug Fixes
+
+* **body-content-list:** resolve schema object before trying to remove readonly fields from it ([#194](https://github.com/Kong/spec-renderer/issues/194)) ([971dbb9](https://github.com/Kong/spec-renderer/commit/971dbb972786958dacb021d737071d28dbb2fab9))
+
 ## [1.42.1](https://github.com/Kong/spec-renderer/compare/v1.42.0...v1.42.1) (2024-07-09)
 
 
