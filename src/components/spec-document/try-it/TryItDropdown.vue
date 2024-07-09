@@ -1,5 +1,6 @@
 <template>
   <SelectDropdown
+    :id="`tryit-dropdown-${data.id}`"
     class="tryit-dropdown"
     :class="`${data.method}`"
     :data-testid="`tryit-dropdown-${data.id}`"

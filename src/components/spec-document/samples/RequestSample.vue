@@ -11,6 +11,7 @@
       <template #header>
         <div class="select-wrapper">
           <SelectDropdown
+            :id="`language-select-${data.id}`"
             v-model="selectedLang"
             class="language-selector"
             :items="requestConfigsSelectItems"
@@ -61,6 +62,7 @@
 
           <SelectDropdown
             v-if="requestSamplesSelectOptions && requestSamplesSelectOptions.length && selectedRequestSample"
+            :id="`request-sample-select-${data.id}`"
             v-model="selectedRequestSample"
             class="request-sample-selector"
             :items="requestSamplesSelectOptions"

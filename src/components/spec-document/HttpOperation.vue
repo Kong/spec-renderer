@@ -40,6 +40,7 @@
           <div class="http-response-header-menu">
             <SelectDropdown
               v-for="component in responseSelectComponentList"
+              :id="`http-response-header-dropdown-${data.id}`"
               :key="component.name"
               :items="component.optionList"
               :model-value="component.value"

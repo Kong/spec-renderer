@@ -15,6 +15,7 @@
 
       <SelectDropdown
         v-if="securitySchemeList.length > 1"
+        :id="`tryit-scheme-selector-${data.id}`"
         v-model="activeScheme"
         class="scheme-selector"
         :items="securitySchemeSelectItems"

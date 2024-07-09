@@ -14,11 +14,11 @@
   >
     <button
       class="trigger-button"
-      v-bind="attrs.id ? { id: String(attrs.id) } : {}"
       data-select-dropdown-trigger="true"
       data-testid="trigger-button"
       :disabled="disabled ? true : undefined"
       type="button"
+      v-bind="attrs.id ? { id: String(attrs.id) } : {}"
     >
       <slot name="trigger-content">
         <slot

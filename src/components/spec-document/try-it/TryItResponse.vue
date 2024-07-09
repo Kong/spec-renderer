@@ -17,6 +17,7 @@
         </span>
       </h5>
       <SelectDropdown
+        :id="`response-option-select-${dataId}`"
         v-model="selectedResOption"
         class="res-option-selector"
         :items="resultOptions"
