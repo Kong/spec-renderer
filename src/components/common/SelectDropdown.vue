@@ -1,6 +1,5 @@
 <template>
   <Popover
-    v-bind="sanitizedAttrs"
     ref="selectPopoverRef"
     :aria-activedescendant="selectedItem ? `${selectedItem.key ? selectedItem.key : selectedItem.value}-item` : undefined"
     :aria-labelledby="attrs.id ? String(attrs.id) : undefined"
@@ -10,6 +9,7 @@
     :placement="placement"
     :popover-offset="10"
     width="300px"
+    v-bind="sanitizedAttrs"
   >
     <button
       class="trigger-button"

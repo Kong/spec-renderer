@@ -91,7 +91,7 @@ const securitySchemeSelectItems = computed((): Array<SelectItem> => {
   })) ?? []
 })
 
-const activeScheme = ref<string>(securitySchemeSelectItems.value[0].value)
+const activeScheme = ref<string>(securitySchemeSelectItems.value[0]?.value)
 
 // this is details for selected from the list - we grab all elements for schemeIdx
 const securityScheme = ref<HttpSecurityScheme[] | undefined>([])
