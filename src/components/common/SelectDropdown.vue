@@ -1,5 +1,6 @@
 <template>
   <Popover
+    ref="selectPopoverRef"
     :aria-activedescendant="selectedItem ? `${selectedItem.key ? selectedItem.key : selectedItem.value}-item` : undefined"
     :aria-labelledby="attrs.id ? String(attrs.id) : undefined"
     class="select-dropdown"
@@ -13,16 +14,26 @@
   >
     <button
       class="trigger-button"
+      data-select-dropdown-trigger="true"
       data-testid="trigger-button"
       :disabled="disabled ? true : undefined"
+      type="button"
       v-bind="attrs.id ? { id: String(attrs.id) } : {}"
     >
       <slot name="trigger-content">
-        <slot :name="`${selectedItem?.key}-item-content`">
-          {{ selectedItem?.label || triggerButton }}
+        <slot
+          :item="selectedItem"
+          :name="`${selectedItem?.key}-item-content`"
+        >
+          <span>
+            {{ selectedItem?.label || triggerButton }}
+          </span>
         </slot>
       </slot>
-      <ChevronDownIcon class="chevron-icon" />
+      <ChevronDownIcon
+        class="select-chevron-icon"
+        decorative
+      />
     </button>
     <template #content>
       <div class="select-items-container">
@@ -37,13 +48,19 @@
             :data-testid="item.key ? `${item.key}-item` : 'select-item'"
             role="option"
           >
-            <slot :name="`${item.key}-item`">
+            <slot
+              :item="item"
+              :name="`${item.key}-item`"
+            >
               <button
                 :data-testid="item.key ? `${item.key}-item-trigger` : 'select-item-trigger'"
-                @click="selectValue = item.value"
+                @click.stop="selectItem(item.value)"
               >
-                <slot :name="`${item.key}-item-content`">
-                  {{ item.label }}
+                <slot
+                  :item="item"
+                  :name="`${item.key}-item-content`"
+                >
+                  <span>{{ item.label }}</span>
                 </slot>
               </button>
             </slot>
@@ -66,6 +83,7 @@ import { ChevronDownIcon } from '@kong/icons'
 import type { SelectItem } from '@/types'
 import type { Placement } from '@floating-ui/vue'
 import { PopoverPlacementVariants } from '@/types'
+import { ref } from 'vue'
 
 const props = defineProps({
   triggerButton: {
@@ -106,6 +124,14 @@ const sanitizedAttrs = computed(() => {
 
 const selectValue = defineModel<string>({ default: '' })
 
+const selectPopoverRef = ref<InstanceType<typeof Popover> | null>(null)
+
+const selectItem = (value: string) => {
+  selectValue.value = value
+
+  selectPopoverRef.value?.hidePopover()
+}
+
 const selectedItem = computed((): SelectItem | undefined => {
   return props.items.find((item) => item.value === selectValue.value)
 })
@@ -116,6 +142,7 @@ watch(selectValue, (newValue: string) => {
     emit('change', selectedItem)
   }
 })
+
 </script>
 
 <style lang="scss" scoped>
@@ -133,9 +160,11 @@ watch(selectValue, (newValue: string) => {
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
 
-    .chevron-icon {
+    .select-chevron-icon {
       color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
+      flex-shrink: 0;
       height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
+      pointer-events: none;
       width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
     }
 
@@ -154,7 +183,7 @@ watch(selectValue, (newValue: string) => {
       color: var(--kui-color-text-disabled, $kui-color-text-disabled);
       cursor: not-allowed;
 
-      .chevron-icon {
+      .select-chevron-icon {
         color: var(--kui-color-text-disabled, $kui-color-text-disabled) !important;
       }
     }

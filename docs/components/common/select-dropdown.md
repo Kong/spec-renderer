@@ -65,6 +65,11 @@ Slot for passing custom content that will be rendered inside the trigger button 
 
 ### `*-item-content`
 
+Slot props:
+
+* `item`
+  * type: `SelectItem`
+
 Slot for passing custom item content. Use this slot when you just need to give an item some custom look (e.g. display an icon in front of label). If you need to bind a custom click handler to your item or need to make it a link, use [`*-item` slot](#-item).
 
 To use this slot, you need to provide `item.key`. For example, let's say SelectDropdown receives this array as value provided through the [`items` prop](#items):
@@ -87,6 +92,11 @@ _Item 1_ will not have an slot for custom item content since `item.key` is not p
 **When item that has custom content provided though this slot is selected, content provided though the slot will be displayed in the dropdown trigger button in front of the caret icon.**
 
 ### `*-item`
+
+Slot props:
+
+* `item`
+  * type: `SelectItem`
 
 This slot takes precedence over [`*-item-content` slot](#-item-content) but follows a similar approach. Use this slot when you either:
 

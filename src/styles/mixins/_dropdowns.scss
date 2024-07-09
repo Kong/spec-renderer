@@ -6,6 +6,10 @@
   font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
   gap: var(--kui-space-40, $kui-space-40);
   line-height: var(--kui-line-height-40, $kui-line-height-40);
+
+  span {
+    @include truncate;
+  }
 }
 
 @mixin dropdown-item {

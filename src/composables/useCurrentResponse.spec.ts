@@ -43,7 +43,18 @@ describe('useCurrentResponse', () => {
     } = useCurrentResponse(responseList)
 
     it('should return the list of response codes', () => {
-      expect(responseCodeList.value).toEqual(['200', '400'])
+      expect(responseCodeList.value).toEqual([
+        {
+          value: '200',
+          label: '200',
+          key: '2xx',
+        },
+        {
+          value: '400',
+          label: '400',
+          key: '4xx',
+        },
+      ])
     })
     it('should return the first response code as the default', () => {
       expect(activeResponseCode.value).toBe('200')
@@ -61,7 +72,18 @@ describe('useCurrentResponse', () => {
     } = useCurrentResponse(responseList)
 
     it('should return the list of content types', () => {
-      expect(contentTypeList.value).toEqual(['application/json', 'application/xml'])
+      expect(contentTypeList.value).toEqual([
+        {
+          value: 'application/json',
+          label: 'application/json',
+          key: 'application-json',
+        },
+        {
+          value: 'application/xml',
+          label: 'application/xml',
+          key: 'application-xml',
+        },
+      ])
     })
     it('should return the first content type as the default', () => {
       expect(activeContentType.value).toBe('application/json')

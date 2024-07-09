@@ -6,20 +6,47 @@
     <h5>REQUEST SAMPLE</h5>
     <CollapsablePanel
       :collapsible="false"
-      :content-to-copy="requestCode as string"
+      :content-to-copy="(requestCode as string)"
     >
       <template #header>
         <div class="select-wrapper">
-          <select v-model="selectedLang">
-            <option
-              v-for="lang in requestConfigs"
-              :key="lang.httpSnippetLanguage"
-              :value="lang.httpSnippetLanguage"
-            >
-              {{ lang.label }}
-            </option>
-          </select>
+          <SelectDropdown
+            :id="`language-select-${data.id}`"
+            v-model="selectedLang"
+            class="language-selector"
+            :items="requestConfigsSelectItems"
+          >
+            <template #shell-item-content="{ item }">
+              <LanguageIcon lang="bash" />
+              {{ item.label }}
+            </template>
+            <template #python-item-content="{ item }">
+              <LanguageIcon lang="python" />
+              {{ item.label }}
+            </template>
+            <template #node-item-content="{ item }">
+              <LanguageIcon lang="node" />
+              {{ item.label }}
+            </template>
+            <template #javascript-item-content="{ item }">
+              <LanguageIcon lang="python" />
+              {{ item.label }}
+            </template>
+            <template #go-item-content="{ item }">
+              <LanguageIcon lang="go" />
+              {{ item.label }}
+            </template>
+            <template #java-item-content="{ item }">
+              <LanguageIcon lang="java" />
+              {{ item.label }}
+            </template>
+            <template #ruby-item-content="{ item }">
+              <LanguageIcon lang="ruby" />
+              {{ item.label }}
+            </template>
+          </SelectDropdown>
           &nbsp;
+          <!-- TODO: use SelectDropdown here when we start supporting libraries -->
           <select
             v-if="selectedLangLibraries.length"
             v-model="selectedLangLibrary"
@@ -33,19 +60,14 @@
             </option>
           </select>
 
-          <select
-            v-if="requestSamples && requestSamples.length"
+          <SelectDropdown
+            v-if="requestSamplesSelectOptions && requestSamplesSelectOptions.length && selectedRequestSample"
+            :id="`request-sample-select-${data.id}`"
             v-model="selectedRequestSample"
             class="request-sample-selector"
-          >
-            <option
-              v-for="sample in requestSamples"
-              :key="sample.key"
-              :value="sample.key"
-            >
-              {{ sample.key }}
-            </option>
-          </select>
+            :items="requestSamplesSelectOptions"
+            placement="bottom-end"
+          />
         </div>
       </template>
       <!-- body -->
@@ -57,7 +79,7 @@
       <div class="wide">
         <CodeBlock
           v-if="requestCode && selectedLang"
-          :code="requestCode as string"
+          :code="(requestCode as string)"
           :lang="selectedLang"
         />
       </div>
@@ -76,6 +98,9 @@ import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import type { LanguageCode } from '@/types/request-languages'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet-lite'
+import SelectDropdown from '@/components/common/SelectDropdown.vue'
+import LanguageIcon from '@/components/common/LanguageIcon.vue'
+import type { SelectItem } from '@/types'
 import RequiredToggle from '../try-it/RequiredToggle.vue'
 
 
@@ -130,7 +155,6 @@ const emit = defineEmits<{
 }>()
 
 const requestConfigs = computed(() => {
-
   if (!hideTryIt.value) {
     return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
   }
@@ -142,7 +166,14 @@ const requestConfigs = computed(() => {
 
   // in all other cases we filter json out
   return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
+})
 
+const requestConfigsSelectItems = computed(() => {
+  return requestConfigs.value.map(c => ({
+    label: c.label,
+    value: c.httpSnippetLanguage,
+    key: c.httpSnippetLanguage,
+  }))
 })
 
 const selectedLang = ref<LanguageCode>()
@@ -175,6 +206,14 @@ const requestSamples = computed((): INodeExample[] => {
   } else {
     return []
   }
+})
+
+const requestSamplesSelectOptions = computed((): Array<SelectItem> => {
+  return requestSamples.value.map(s => ({
+    label: s.key,
+    value: s.key,
+    key: s.key,
+  }))
 })
 
 watch(requestSamples, (newValue: INodeExample[]) => {
@@ -268,7 +307,6 @@ watch(() => ({
     }
   }
 }, { immediate: true, deep: true })
-
 </script>
 
 <style lang="scss" scoped>
@@ -277,12 +315,30 @@ watch(() => ({
   h5 {
     margin: var(--kui-space-60, $kui-space-60) var(--kui-space-30, $kui-space-30) var(--kui-space-30, $kui-space-30);
   }
+
   .select-wrapper {
     display: flex;
     flex: 1;
+
+    .language-selector {
+      :deep(.trigger-button) {
+        padding-bottom: var(--kui-space-20, $kui-space-20);
+        padding-top: var(--kui-space-20, $kui-space-20);
+      }
+    }
+
     .request-sample-selector {
       margin-left: auto;
+      place-self: center;
+
+      :deep(.trigger-button) {
+        @include small-bordered-trigger-button;
+      }
     }
+  }
+
+  :deep(.panel-body .wide) {
+    margin: var(--kui-space-0, $kui-space-0);
   }
 
   :deep(.required-only-wrapper) {

@@ -1,3 +1,18 @@
+# [1.42.0](https://github.com/Kong/spec-renderer/compare/v1.41.0...v1.42.0) (2024-07-09)
+
+
+### Features
+
+* oneof/anyof select-input [KHCP-12371] ([#183](https://github.com/Kong/spec-renderer/issues/183)) ([ef8eff7](https://github.com/Kong/spec-renderer/commit/ef8eff7fd4ee30f86cdd0e510f1cfdeca5cd2d70))
+
+# [1.41.0](https://github.com/Kong/spec-renderer/compare/v1.40.4...v1.41.0) (2024-07-09)
+
+
+### Features
+
+* add support for `allOf` [KHCP-11831] ([#188](https://github.com/Kong/spec-renderer/issues/188)) ([4ec424a](https://github.com/Kong/spec-renderer/commit/4ec424a73b554b32716a75ae8cbc6ead7dc2935d))
+* requiredOnly toggle for TryIt and request sample [KHCP-12452] ([#180](https://github.com/Kong/spec-renderer/issues/180)) ([18dd284](https://github.com/Kong/spec-renderer/commit/18dd28473d9db872716e5c9c290a03c6923d46db))
+
 ## [1.40.4](https://github.com/Kong/spec-renderer/compare/v1.40.3...v1.40.4) (2024-07-09)
 
 
