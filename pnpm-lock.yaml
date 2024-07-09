@@ -41,6 +41,9 @@ importers:
       '@vueuse/core':
         specifier: ^10.11.0
         version: 10.11.0(vue@3.4.31(typescript@5.5.3))
+      allof-merge:
+        specifier: ^0.6.6
+        version: 0.6.6
       httpsnippet-lite:
         specifier: ^3.0.5
         version: 3.0.5
@@ -678,7 +681,6 @@ packages:
 
   '@evilmartians/lefthook@1.6.18':
     resolution: {integrity: sha512-nvJ1uYgz/F1DbykTMIiI2nUZctVmijUYkqdGqmGkrL0ImEKFjWxk1jZg6pULJ5vWxsArfUFJiFuOhUnUhyMbig==}
-    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -1422,6 +1424,9 @@ packages:
 
   ajv@8.14.0:
     resolution: {integrity: sha512-oYs1UUtO97ZO2lJ4bwnWeQW8/zvOIQLGKcvPTsWmvc2SYgBb+upuNS5NxoLaMU4h8Ju3Nbj6Cq8mD2LQoqVKFA==}
+
+  allof-merge@0.6.6:
+    resolution: {integrity: sha512-116eZBf2he0/J4Tl7EYMz96I5Anaeio+VL0j/H2yxW9CoYQAMMv8gYcwkVRoO7XfIOv/qzSTfVzDVGAYxKFi3g==}
 
   ansi-align@3.0.1:
     resolution: {integrity: sha512-IOfwwBF5iczOjp/WeY4YxyjqAFMQoZufdQWDd19SEExbVLNXqvpzSJ/M7Za4/sCPmQ0+GRquoA7bGcINcxew6w==}
@@ -3008,6 +3013,10 @@ packages:
 
   json-buffer@3.0.1:
     resolution: {integrity: sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==}
+
+  json-crawl@0.5.3:
+    resolution: {integrity: sha512-BEjjCw8c7SxzNK4orhlWD5cXQh8vCk2LqDr4WgQq4CV+5dvopeYwt1Tskg67SuSLKvoFH5g0yuYtg7rcfKV6YA==}
+    engines: {node: '>=14.0.0'}
 
   json-parse-better-errors@1.0.2:
     resolution: {integrity: sha512-mrqyZKfX5EhL7hvqcV6WG1yYjnjeuYDzDhhcAAUrq8Po85NBQBJP+ZDUT75qZQ98IkUoBqdkExkukOU7Ts2wrw==}
@@ -6414,6 +6423,10 @@ snapshots:
       require-from-string: 2.0.2
       uri-js: 4.4.1
 
+  allof-merge@0.6.6:
+    dependencies:
+      json-crawl: 0.5.3
+
   ansi-align@3.0.1:
     dependencies:
       string-width: 4.2.3
@@ -8221,6 +8234,8 @@ snapshots:
   jsesc@2.5.2: {}
 
   json-buffer@3.0.1: {}
+
+  json-crawl@0.5.3: {}
 
   json-parse-better-errors@1.0.2: {}
 

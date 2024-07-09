@@ -105,6 +105,36 @@ describe('resolveSchemaObjectFields', () => {
       expect(resolveSchemaObjectFields(invalidSchemaObject)).toBe(null)
     }
   })
+  it('returns Schema Object with merged allOf fields', () => {
+    const firstAllOfObject: SchemaObject = {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+        },
+      },
+      required: ['name'],
+    }
+    const secondAllOfObject: SchemaObject = {
+      type: 'object',
+      properties: {
+        age: {
+          type: 'number',
+        },
+      },
+      required: ['age'],
+    }
+    const schemaObject: SchemaObject = {
+      type: 'object',
+      allOf: [firstAllOfObject, secondAllOfObject],
+    }
+    const expectedSchemaObject: SchemaObject = {
+      type: 'object',
+      properties: { ...firstAllOfObject.properties, ...secondAllOfObject.properties },
+      required: [...(secondAllOfObject.required as string[]), ...(firstAllOfObject.required as string[])],
+    }
+    expect(resolveSchemaObjectFields(schemaObject)).toStrictEqual(expectedSchemaObject)
+  })
 })
 
 describe('filterSchemaObjectArray', () => {
