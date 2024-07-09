@@ -1,4 +1,5 @@
 import type { SchemaObject } from '@/types'
+import { merge } from 'allof-merge'
 
 /**
  * Type guard for verifying object is of type SchemaObject
@@ -18,14 +19,27 @@ export function filterSchemaObjectArray(candidate: unknown): Array<SchemaObject>
 }
 
 /**
+ * Utility to resolve allOf fields in a schema object.
+ *
+ * If allOf is present, we merge the sub-schemas in allOf into the current schema object
+ * @param {SchemaObject} schema
+ * @returns {SchemaObject}
+ */
+const resolveAllOf = (schema: SchemaObject): SchemaObject =>
+  Array.isArray(schema.allOf) && schema.allOf.length > 0
+    ? (merge(schema) as SchemaObject)
+    : schema
+
+/**
  * util to compute from where to extract the fields of the candidate object
  * - if it's a valid Schema Object, we can directly use it, as it is
  * - if candidate is of type array, we can extract the fields from items field
+ *
+ * it also resolves allOf fields, if present
  * @param candidate
  * @returns {SchemaObject | null}
  */
 export const resolveSchemaObjectFields = (candidate: unknown) => {
-
   // if the candidate is not a valid schema object, we return null
   if (!isValidSchemaObject(candidate)) return null
 
@@ -35,13 +49,14 @@ export const resolveSchemaObjectFields = (candidate: unknown) => {
   */
   if (candidate.type === 'array') {
     if (isValidSchemaObject(candidate.items)) {
-      return candidate.items
+      return resolveAllOf(candidate.items)
     } else {
       // if the items field is not a valid schema object, we return null
       return null
     }
   }
-  return candidate
+  const schema = resolveAllOf(candidate)
+  return schema
 }
 
 // only needed till we figure out how to add title field to anyOf/oneOf objects while parsing

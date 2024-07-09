@@ -77,7 +77,7 @@ watch(fieldValues, () => {
 </script>
 
 <style lang="scss" scoped>
-input {
+input[type=text] {
   @include input-default;
 }
 </style>

@@ -156,7 +156,7 @@ watch(tokenValues, (newValues) => {
   }
 }
 
-input {
+input[type=text] {
   @include input-default;
 }
 </style>

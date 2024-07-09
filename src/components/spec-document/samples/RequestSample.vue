@@ -68,6 +68,11 @@
         </div>
       </template>
       <!-- body -->
+      <RequiredToggle
+        v-if="hideTryIt"
+        v-model="excludeNotRequired"
+        :data="data"
+      />
       <div class="wide">
         <CodeBlock
           v-if="requestCode && selectedLang"
@@ -93,6 +98,8 @@ import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'https
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import LanguageIcon from '@/components/common/LanguageIcon.vue'
 import type { SelectItem } from '@/types'
+import RequiredToggle from '../try-it/RequiredToggle.vue'
+
 
 const props = defineProps({
   data: {
@@ -131,6 +138,11 @@ const props = defineProps({
     type: String,
     default: '',
   },
+})
+
+const excludeNotRequired = defineModel({
+  type: Boolean,
+  default: true,
 })
 
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
@@ -184,7 +196,9 @@ const getFirstSampleKey = (examples: INodeExample[]): string | null => {
 const selectedRequestSample = ref<string | null>(props.data?.request?.body?.contents && props.data.request.body.contents.length ? getFirstSampleKey(props.data.request.body.contents[0].examples as INodeExample[]) : null)
 
 const requestSamples = computed((): INodeExample[] => {
-  if (props.data?.request?.body?.contents && props.data.request.body.contents.length && Array.isArray(props.data.request.body.contents[0].examples) && props.data.request.body.contents[0].examples.length) {
+  if (props.data?.request?.body?.contents && props.data.request.body.contents.length &&
+    Array.isArray(props.data.request.body.contents[0].examples) &&
+    props.data.request.body.contents[0].examples.length) {
     return props.data.request.body.contents[0].examples as INodeExample[]
   } else {
     return []
@@ -322,6 +336,12 @@ watch(() => ({
 
   :deep(.panel-body .wide) {
     margin: var(--kui-space-0, $kui-space-0);
+  }
+
+  :deep(.required-only-wrapper) {
+    label {
+      margin-left: var(--kui-space-10, $kui-space-10) !important;
+    }
   }
 }
 </style>

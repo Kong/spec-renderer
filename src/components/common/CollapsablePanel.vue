@@ -23,7 +23,7 @@
             class="chevron-icon"
           />
           <ChevronDownIcon
-            v-if="!isCollapsed"
+            v-else
             class="chevron-icon"
           />
         </button>
@@ -53,9 +53,13 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  startCollapsed: {
+    type: Boolean,
+    default: true,
+  },
 })
 
-const isCollapsed = ref<boolean>(props.collapsible)
+const isCollapsed = ref<boolean>(props.collapsible && props.startCollapsed)
 const toggleState = (e: Event) => {
   if (props.collapsible && !(e.target as HTMLElement).dataset.selectDropdownTrigger) {
     isCollapsed.value = !isCollapsed.value
