@@ -80,6 +80,7 @@ const showToggle = computed((): boolean => {
 
 <style lang="scss" scoped>
 .required-only-wrapper {
+  align-items: center;
   flex-direction: row !important;
   label {
     display: inline !important;
