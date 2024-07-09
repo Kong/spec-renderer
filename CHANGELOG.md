@@ -1,3 +1,10 @@
+# [1.42.0](https://github.com/Kong/spec-renderer/compare/v1.41.0...v1.42.0) (2024-07-09)
+
+
+### Features
+
+* oneof/anyof select-input [KHCP-12371] ([#183](https://github.com/Kong/spec-renderer/issues/183)) ([ef8eff7](https://github.com/Kong/spec-renderer/commit/ef8eff7fd4ee30f86cdd0e510f1cfdeca5cd2d70))
+
 # [1.41.0](https://github.com/Kong/spec-renderer/compare/v1.40.4...v1.41.0) (2024-07-09)
 
 
