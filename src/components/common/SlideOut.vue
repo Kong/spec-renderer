@@ -106,7 +106,7 @@ onUnmounted(() => {
     height: 100vh;
     inset: 0;
     overflow-y: auto;
-    padding: var(--kui-space-70, $kui-space-70) var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0) var(--kui-space-70, $kui-space-70);
+    padding-left: var(--kui-space-70, $kui-space-70);
     position: fixed;
     width: 100%;
     z-index: 1000;
@@ -117,7 +117,8 @@ onUnmounted(() => {
 
     .slideout-header {
       display: flex;
-      padding-right: var(--kui-space-70, $kui-space-70);
+      padding: var(--kui-space-40, $kui-space-40) var(--kui-space-70, $kui-space-70) var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
+      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
 
       .slideout-close-icon {
         @include default-button-reset;
