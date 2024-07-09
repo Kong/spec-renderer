@@ -19,7 +19,9 @@ export default function useSchemaVariants(schemaModel: ComputedRef<SchemaObject>
     ),
   )
 
-  // get the list of items to show in variant select dropdown
+  /**
+   * If the schema model has variants, it returns the list of variants, else it returns an empty array
+   */
   const variantSelectItemList = computed((): Array<SelectItem> => {
     return schemaVariantList.value.map((variant, index) => {
       const variantTitle = inheritedPropertyName(index, variant.title)
@@ -33,7 +35,9 @@ export default function useSchemaVariants(schemaModel: ComputedRef<SchemaObject>
 
   // ref to store the index of the selected variant
   const selectedVariantIndex = ref<number>(0)
-  // computed to get the selected variant schema object
+  /**
+   * If the schema model has variants, it returns the selected variant, else it returns the schema model itself
+   */
   const selectedSchemaModel = computed(() => {
     const schemaVariant = schemaVariantList.value[selectedVariantIndex.value]
     return schemaVariant ?? schemaModel.value
