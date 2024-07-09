@@ -25,7 +25,9 @@
           :item="selectedItem"
           :name="`${selectedItem?.key}-item-content`"
         >
-          {{ selectedItem?.label || triggerButton }}
+          <span>
+            {{ selectedItem?.label || triggerButton }}
+          </span>
         </slot>
       </slot>
       <ChevronDownIcon
@@ -163,6 +165,7 @@ watch(selectValue, (newValue: string) => {
       height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
       pointer-events: none;
       width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
+      flex-shrink: 0;
     }
 
     &:hover:not(:disabled):not(:focus):not(:active) {
@@ -207,10 +210,6 @@ watch(selectValue, (newValue: string) => {
           @include dropdown-item;
 
           text-align: left;
-
-          span {
-            @include truncate;
-          }
         }
 
         :slotted(a) {
