@@ -1,6 +1,6 @@
 {
   "name": "@kong/spec-renderer-dev",
-  "version": "1.40.2",
+  "version": "1.40.4",
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
   "type": "module",
@@ -48,7 +48,7 @@
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "^11.6.4",
     "@floating-ui/vue": "^1.0.7",
-    "@kong/icons": "^1.14.1",
+    "@kong/icons": "^1.14.2",
     "@scalar/openapi-parser": "^0.7.1",
     "@seriousme/openapi-schema-validator": "^2.2.1",
     "@stoplight/http-spec": "^7.1.0",
@@ -61,7 +61,7 @@
     "lodash-es": "^4.17.21",
     "oas-normalize": "^11.1.1",
     "openapi3-ts": "4.3.3",
-    "shiki": "^1.9.1"
+    "shiki": "^1.10.0"
   },
   "resolutions": {
     "openapi3-ts": "4.3.3"
@@ -89,7 +89,7 @@
     "commitizen": "^4.3.0",
     "cross-env": "^7.0.3",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^9.5.0",
+    "eslint": "^9.6.0",
     "jsdom": "^24.1.0",
     "postcss": "^8.4.38",
     "postcss-html": "^1.7.0",
@@ -109,7 +109,7 @@
     "vite": "^5.3.2",
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-replace": "^0.1.1",
-    "vite-plugin-vue-devtools": "^7.3.4",
+    "vite-plugin-vue-devtools": "^7.3.5",
     "vitest": "1.6.0",
     "vue": "^3.4.31",
     "vue-router": "^4.4.0",
