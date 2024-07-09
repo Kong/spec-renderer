@@ -8,10 +8,23 @@
       v-for="field in orderedFieldList"
       :key="field.key"
       v-bind="field.props"
+      v-on="field.eventHandlers"
     />
 
+    <div
+      v-if="variantSelectItemList.length"
+      class="selected-variant-container"
+      :data-testid="`${dataTestId}-${inheritanceTypeLabel}`"
+    >
+      <ModelProperty
+        :property="selectedSchemaModel"
+        :property-name="selectedSchemaModel.title || variantSelectItemList[selectedVariantIndex].label"
+        :required-fields="selectedSchemaModel.required"
+      />
+    </div>
+
     <details
-      v-if="nestedPropertiesPresent"
+      v-else-if="nestedPropertiesPresent"
     >
       <summary
         class="nested-fields-summary"
@@ -25,9 +38,9 @@
         <span>{{ nestedPropertiesExpanded ? 'Hide' : 'Show' }} Child Parameters</span>
       </summary>
       <ModelNode
-        v-if="resolvedModelProperty && nestedPropertiesExpanded"
+        v-if="nestedPropertiesExpanded"
         class="nested-model-node"
-        :schema="resolvedModelProperty"
+        :schema="selectedSchemaModel"
         :title="propertyName"
       />
     </details>
@@ -48,6 +61,7 @@ import PropertyInfo from './property-fields/PropertyInfo.vue'
 import PropertyEnum from './property-fields/PropertyEnum.vue'
 import PropertyPattern from './property-fields/PropertyPattern.vue'
 import PropertyRange from './property-fields/PropertyRange.vue'
+import useSchemaVariants from '@/composables/useSchemaVariants'
 
 const props = defineProps({
   property: {
@@ -65,15 +79,16 @@ const props = defineProps({
 })
 const nestedPropertiesExpanded = ref(false)
 
-const resolvedModelProperty = computed(() => resolveSchemaObjectFields(props.property))
-
 const dataTestId = computed(() => `model-property-${props.propertyName.replaceAll(' ', '-')}`)
 
+const resolvedSchemaObject = computed(() => resolveSchemaObjectFields(props.property))
+const { variantSelectItemList, selectedSchemaModel, selectedVariantIndex, inheritanceTypeLabel } = useSchemaVariants(resolvedSchemaObject)
+
 const nestedPropertiesPresent = computed<boolean>(() =>{
-  if (resolvedModelProperty.value?.properties) {
-    return Boolean(Object.keys(resolvedModelProperty.value?.properties).length)
+  if (selectedSchemaModel.value?.properties) {
+    return Boolean(Object.keys(selectedSchemaModel.value?.properties).length)
   }
-  return Boolean(resolvedModelProperty.value?.anyOf?.length) || Boolean(resolvedModelProperty.value?.oneOf?.length)
+  return false
 })
 
 const orderedFieldList = computed(() => {
@@ -81,7 +96,7 @@ const orderedFieldList = computed(() => {
 
   if (!isValidSchemaObject(props.property)) return []
 
-  if (props.property.title || props.propertyName) {
+  if (props.property.title || props.propertyName || props.property.type) {
     fields.push({
       component: PropertyInfo,
       props: {
@@ -93,6 +108,12 @@ const orderedFieldList = computed(() => {
               ? props.property.items.type
               : '',
         requiredFields: props.requiredFields,
+        variantsList: variantSelectItemList.value,
+      },
+      eventHandlers: {
+        'variant-changed': (index: number) => {
+          selectedVariantIndex.value = index
+        },
       },
       key: 'property-info',
     })
@@ -103,6 +124,7 @@ const orderedFieldList = computed(() => {
       props: {
         description: props.property.description,
       },
+      eventHandlers:{},
       key: 'property-description',
     })
   }
@@ -112,6 +134,7 @@ const orderedFieldList = computed(() => {
       props: {
         enumValueList: props.property.enum,
       },
+      eventHandlers:{},
       key: 'property-enum',
     })
   }
@@ -121,6 +144,7 @@ const orderedFieldList = computed(() => {
       props: {
         pattern: props.property.pattern,
       },
+      eventHandlers:{},
       key: 'property-pattern',
     })
   }
@@ -131,22 +155,22 @@ const orderedFieldList = computed(() => {
         max: props.property.maximum,
         min: props.property.minimum,
       },
+      eventHandlers:{},
       key: 'property-range',
     })
   }
-  if (props.property.examples) {
+  if (props.property.examples || props.property.example) {
     fields.push({
       component: PropertyExample,
       props: {
-        example: props.property.examples,
+        example: props.property.examples || props.property.example,
       },
+      eventHandlers:{},
       key: 'property-example',
     })
   }
   return fields
 })
-
-
 </script>
 
 <style lang="scss" scoped>
@@ -183,6 +207,15 @@ const orderedFieldList = computed(() => {
         $width: var(--kui-icon-size-30, $kui-icon-size-30),
         $rotateDegree: 45deg,
       );
+    }
+  }
+
+  .selected-variant-container {
+    @include tree-nesting;
+
+    .model-property {
+      // left padding for space between the tree-branch and model-property
+      padding-left: var(--kui-space-40, $kui-space-40);
     }
   }
 

@@ -13,19 +13,14 @@
         Authentication
       </h5>
 
-      <select
+      <SelectDropdown
         v-if="securitySchemeList.length > 1"
-        v-model="schemeIdx"
+        :id="`tryit-scheme-selector-${data.id}`"
+        v-model="activeScheme"
         class="scheme-selector"
-      >
-        <option
-          v-for="(scheme, i) in securitySchemeList"
-          :key="scheme.id"
-          :value="i"
-        >
-          {{ scheme.key }} ({{ scheme.type }})
-        </option>
-      </select>
+        :items="securitySchemeSelectItems"
+        placement="bottom-end"
+      />
     </template>
 
     <!-- body -->
@@ -63,6 +58,8 @@ import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import { useDebounceFn } from '@vueuse/core'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
+import SelectDropdown from '@/components/common/SelectDropdown.vue'
+import type { SelectItem } from '@/types'
 
 const props = defineProps({
   data: {
@@ -75,23 +72,30 @@ const emit = defineEmits<{
   (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>, authQuery: string): void
 }>()
 
-const schemeIdx = ref<number>(0)
-
-
 // this is the list, we grab first element for each scheme to present in the scheme selector
 const securitySchemeList = computed((): HttpSecurityScheme[] | undefined => {
-
-  const secArray:Array<HttpSecurityScheme> = []
+  const secArray: Array<HttpSecurityScheme> = []
   if (props.data.security) {
     props.data.security.forEach((secGroup: HttpSecurityScheme[]) => {
       secArray.push(secGroup[0])
     })
   }
+
   return secArray
 })
 
+const securitySchemeSelectItems = computed((): Array<SelectItem> => {
+  return securitySchemeList.value?.map((scheme) => ({
+    label: `${scheme.key} (${scheme.type})`,
+    value: scheme.key,
+    key: scheme.key,
+  })) ?? []
+})
+
+const activeScheme = ref<string>(securitySchemeSelectItems.value[0]?.value)
+
 // this is details for selected from the list - we grab all elements for schemeIdx
-const securityScheme = ref < HttpSecurityScheme[] | undefined>([])
+const securityScheme = ref<HttpSecurityScheme[] | undefined>([])
 
 const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): string => {
   //@ts-ignore `name` is valid property
@@ -101,8 +105,8 @@ const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): strin
 const tokenValues = ref<string[]>([])
 
 // when different security scheme selected we need to re-draw the form and reset the tokenValues
-watch(schemeIdx, (newIdx) => {
-  securityScheme.value = props.data.security?.[newIdx]
+watch(activeScheme, (newIdx) => {
+  securityScheme.value = props.data.security?.find((secGroup) => secGroup[0].key === newIdx)
   tokenValues.value = Array.from({ length: securityScheme.value?.length || 0 }, () => '')
 }, { immediate: true })
 
@@ -147,9 +151,13 @@ watch(tokenValues, (newValues) => {
 
 .scheme-selector {
   margin-left: auto !important;
+
+  :deep(.trigger-button) {
+    @include small-bordered-trigger-button;
+  }
 }
 
-input {
+input[type=text] {
   @include input-default;
 }
 </style>

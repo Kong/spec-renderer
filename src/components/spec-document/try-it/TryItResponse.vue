@@ -1,5 +1,8 @@
 <template>
-  <CollapsablePanel :data-testid="`tryit-response-${dataId}`">
+  <CollapsablePanel
+    :collapsible="false"
+    :data-testid="`tryit-response-${dataId}`"
+  >
     <template #header>
       <h5>
         <span v-if="!response?.status">
@@ -13,19 +16,13 @@
           {{ response?.status }}
         </span>
       </h5>
-      <select
-        v-if="selectedResOption?.length"
+      <SelectDropdown
+        :id="`response-option-select-${dataId}`"
         v-model="selectedResOption"
         class="res-option-selector"
-      >
-        <option
-          v-for="resOpt in resultOptions"
-          :key="resOpt.value"
-          :value="resOpt.value"
-        >
-          {{ resOpt.label }}
-        </option>
-      </select>
+        :items="resultOptions"
+        placement="bottom-end"
+      />
     </template>
 
     <div class="wide">
@@ -64,6 +61,8 @@ import { computed, watch, ref } from 'vue'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import type { PropType } from 'vue'
+import SelectDropdown from '@/components/common/SelectDropdown.vue'
+import type { SelectItem } from '@/types'
 
 const props = defineProps({
   dataId: {
@@ -97,7 +96,7 @@ const headersText = computed((): string => {
 
 const responseText = ref<string>('')
 
-const resultOptions = computed(():Array<Record<string, string>> => {
+const resultOptions = computed((): Array<SelectItem> => {
   const opts = []
   if (responseText.value) {
     opts.push({ value: 'body', label: 'Result' })
@@ -110,6 +109,7 @@ const resultOptions = computed(():Array<Record<string, string>> => {
   if (errorText.value) {
     opts.push({ value: 'error', label: 'Error' })
   }
+
   return opts
 })
 
@@ -160,8 +160,12 @@ watch(() => props.response, async (res) => {
   padding: var(--kui-space-40, $kui-space-40);
 }
 .res-option-selector {
-  margin-left: auto!important;
+  margin-left: auto !important;
   width: 100px;
+
+  :deep(.trigger-button) {
+    @include small-bordered-trigger-button;
+  }
 }
 :deep(.response-body pre) {
   max-height: 200px;

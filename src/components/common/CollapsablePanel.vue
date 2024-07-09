@@ -1,8 +1,9 @@
 <template>
   <div class="collapsable-panel">
     <div
-      :class="{ 'panel-header': 'true', 'collapsed': isCollapsed, 'collapsible': collapsible }"
-      @click.stop="toggleState"
+      class="panel-header"
+      :class="{ 'collapsed': isCollapsed, 'collapsible': collapsible }"
+      @click="toggleState"
     >
       <slot name="header" />
 
@@ -22,7 +23,7 @@
             class="chevron-icon"
           />
           <ChevronDownIcon
-            v-if="!isCollapsed"
+            v-else
             class="chevron-icon"
           />
         </button>
@@ -52,11 +53,15 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  startCollapsed: {
+    type: Boolean,
+    default: true,
+  },
 })
 
-const isCollapsed = ref<boolean>(props.collapsible)
+const isCollapsed = ref<boolean>(props.collapsible && props.startCollapsed)
 const toggleState = (e: Event) => {
-  if (props.collapsible && (e.target as HTMLElement).nodeName !== 'SELECT') {
+  if (props.collapsible && !(e.target as HTMLElement).dataset.selectDropdownTrigger) {
     isCollapsed.value = !isCollapsed.value
   }
 }
@@ -67,6 +72,7 @@ const toggleState = (e: Event) => {
   margin-top: var(--kui-space-40, $kui-space-40)!important;
 
   .panel-header {
+    align-items: center;
     background-color: var(--kui-color-background, $kui-color-background);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
@@ -82,19 +88,20 @@ const toggleState = (e: Event) => {
     &.collapsed {
       border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
       border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-      :deep(select) {
+
+      :deep(.select-dropdown) {
         display: none;
       }
     }
     .btn-container {
-      align-self: flex-end;
       padding-left: var(--kui-space-30, $kui-space-30);
 
       .collapse-trigger-btn {
         background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
         border: none;
         cursor: pointer;
-        padding: 0px;
+        padding: var(--kui-space-0, $kui-space-0);
+
         .chevron-icon {
           @include toggle-icon;
         }

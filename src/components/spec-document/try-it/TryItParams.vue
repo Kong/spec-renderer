@@ -1,8 +1,9 @@
 <template>
   <CollapsablePanel
-    v-if="params&& Object.keys(params).length"
+    v-show="params && Object.keys(params).length"
     :content-to-copy="contentToCopy"
     :data-testid="`tryit-params-${paramType}-${data.id}`"
+    :start-collapsed="paramType !== 'body'"
   >
     <template #header>
       <h5>
@@ -11,7 +12,7 @@
     </template>
 
     <div
-      v-if="paramType !== 'body'"
+      v-if="paramType !== 'body'&& params && Object.keys(params).length"
       class="wide"
     >
       <div
@@ -36,9 +37,14 @@
       </div>
     </div>
     <div
-      v-else
+      v-if="paramType === 'body' && params && Object.keys(params).length"
       class="wide"
     >
+      <RequiredToggle
+        v-model="excludeNotRequired"
+        :data="data"
+      />
+
       <EditableCodeBlock
         :code="fieldValues.body"
         lang="json"
@@ -58,6 +64,7 @@ import type { RequestParamTypes } from '@/types'
 import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
+import RequiredToggle from './RequiredToggle.vue'
 
 /**
  * This components handles path parameters, query parameters and body.
@@ -79,6 +86,11 @@ const props = defineProps({
   },
 })
 
+const excludeNotRequired = defineModel({
+  type: Boolean,
+  default: true,
+})
+
 const emit = defineEmits<{
   (e: 'request-path-changed', newPath: string): void
   (e: 'request-query-changed', newQuery: string): void
@@ -90,6 +102,7 @@ const compTitles = {
   query: 'Query Parameters',
   body: 'Body',
 }
+
 
 // params schema props extracted from data (schema) or received from outside controls (reqBody)
 const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Record<string, any>> | undefined => {
@@ -151,7 +164,7 @@ watch(fieldValues, (newFieldValues) => {
   margin-bottom: var(--kui-space-40, $kui-space-40) !important;
 }
 
-input {
+input[type=text] {
   @include input-default;
 }
 </style>

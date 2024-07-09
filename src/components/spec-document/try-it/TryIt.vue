@@ -11,8 +11,8 @@
       />
       <span class="path">{{ data.path }}</span>
 
-      <TryItButton
-        class="tryit-btn"
+      <TryItDropdown
+        class="tryit-dropdown"
         :data="data"
         @tryit-api-call="doApiCall"
       />
@@ -42,6 +42,7 @@
         @request-query-changed="requestQueryChanged"
       />
       <TryItParams
+        v-model="excludeNotRequired"
         :data="data"
         param-type="body"
         :request-body="currentRequestBody"
@@ -60,7 +61,7 @@
 <script setup lang="ts">
 import { inject, computed, ref, watch } from 'vue'
 import type { PropType, Ref } from 'vue'
-import TryItButton from './TryItButton.vue'
+import TryItDropdown from './TryItDropdown.vue'
 import { getRequestHeaders } from '@/utils'
 import type { IHttpOperation } from '@stoplight/types'
 import MethodBadge from '@/components/common/MethodBadge.vue'
@@ -84,6 +85,11 @@ const props = defineProps({
     type: String,
     default: '',
   },
+})
+
+const excludeNotRequired = defineModel({
+  type: Boolean,
+  default: true,
 })
 
 const emit = defineEmits<{
@@ -188,6 +194,7 @@ watch(() => (props.data.id), () => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
   response.value = undefined
+  responseError.value = undefined
 }, { immediate: true })
 
 </script>
@@ -207,7 +214,7 @@ watch(() => (props.data.id), () => {
     .path {
       margin-left: var(--kui-space-20, $kui-space-20);
     }
-    .tryit-btn {
+    .tryit-dropdown {
       margin-left: auto;
     }
   }
@@ -221,7 +228,7 @@ watch(() => (props.data.id), () => {
   }
 }
 /* using deep as this thing is used in multiple child components */
-:deep(.panel-body input), :deep(.panel-body select) {
+:deep(.panel-body input[type=text]), :deep(.panel-body select) {
   border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   box-sizing: border-box;

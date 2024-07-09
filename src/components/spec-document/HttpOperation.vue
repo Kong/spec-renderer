@@ -38,22 +38,29 @@
           :description="activeResponseDescription"
         >
           <div class="http-response-header-menu">
-            <select
+            <SelectDropdown
               v-for="component in responseSelectComponentList"
+              :id="`http-response-header-dropdown-${data.id}`"
               :key="component.name"
-              :name="component.name"
-              :value="component.value"
-              @change="(event) => handleSelectInputChange(event, component.name)"
-              @click.stop
+              :items="component.optionList"
+              :model-value="component.value"
+              @change="(item) => handleSelectInputChange(item, component.name)"
             >
-              <option
-                v-for="option in component.optionList"
-                :key="option"
-                :value="option"
-              >
-                {{ option }}
-              </option>
-            </select>
+              <template #2xx-item-content="{ item }">
+                <ResponseCodeDot
+                  v-if="item?.key"
+                  response-code="2xx"
+                />
+                {{ item?.label }}
+              </template>
+              <template #4xx-item-content="{ item }">
+                <ResponseCodeDot
+                  v-if="item?.key"
+                  response-code="4xx"
+                />
+                {{ item?.label }}
+              </template>
+            </SelectDropdown>
           </div>
         </HttpResponse>
       </div>
@@ -62,6 +69,7 @@
         :data-testid="`http-operation-right-${data.id}`"
       >
         <TryIt
+          v-model="excludeNotRequiredInTryIt"
           :data="data"
           :request-body="currentRequestBody"
           :server-url="selectedServerURL"
@@ -72,6 +80,7 @@
           @server-url-changed="setServerUrl"
         />
         <RequestSample
+          v-model="excludeNotRequiredInSample"
           :auth-headers="authHeaders"
           :auth-query="authQuery"
           :data="data"
@@ -87,8 +96,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import type { PropType } from 'vue'
+import { ref, computed, watch, inject } from 'vue'
+import type { PropType, Ref } from 'vue'
 import type { IHttpOperation } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpResponse from './endpoint/HttpResponse.vue'
@@ -99,6 +108,9 @@ import PageHeader from '../common/PageHeader.vue'
 import { getSamplePath, getSampleQuery, getSampleBody, removeTrailingSlash } from '@/utils'
 import composables from '@/composables'
 import { ResponseSelectComponent } from '@/types'
+import SelectDropdown from '@/components/common/SelectDropdown.vue'
+import ResponseCodeDot from '@/components/common/ResponseCodeDot.vue'
+import type { SelectItem } from '@/types'
 
 const props = defineProps({
   data: {
@@ -106,8 +118,17 @@ const props = defineProps({
     required: true,
   },
 })
+
+const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
+
 const authHeaders = ref<Array<Record<string, string>>>()
 const authQuery = ref<string>('')
+const excludeNotRequiredInTryIt = ref<boolean>(true)
+const excludeNotRequiredInSample = ref<boolean>(true)
+
+const excludeNotRequired = computed((): boolean => {
+  return hideTryIt.value ? excludeNotRequiredInSample.value : excludeNotRequiredInTryIt.value
+})
 
 const setAuthHeaders = (newHeaders: Array<Record<string, string>>, newAuthQuery: string) => {
   authHeaders.value = newHeaders
@@ -133,12 +154,11 @@ const {
   responseSelectComponentList,
 } = composables.useCurrentResponse(responseList)
 
-function handleSelectInputChange(event: Event, componentName: ResponseSelectComponent) {
-  const newValue = (event.target as HTMLSelectElement).value
+function handleSelectInputChange(item: SelectItem, componentName: ResponseSelectComponent) {
   if (componentName === ResponseSelectComponent.ResponseCodeSelectMenu) {
-    activeResponseCode.value = newValue
+    activeResponseCode.value = item.value
   } else if (componentName === ResponseSelectComponent.ContentTypeSelectMenu) {
-    activeContentType.value = newValue
+    activeContentType.value = item.value
   }
 }
 
@@ -159,7 +179,7 @@ const setRequestBody = (newBody: string) => {
 }
 
 const setRequestBodyByIdx = (newSampleIdx: number) => {
-  currentRequestBody.value = getSampleBody(props.data, newSampleIdx)
+  currentRequestBody.value = getSampleBody(props.data, { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value }, newSampleIdx)
 }
 
 function updateSelectedServerURL(url: string) {
@@ -167,10 +187,10 @@ function updateSelectedServerURL(url: string) {
   currentServerUrl.value = url
 }
 
-watch(() => (props.data.id), () => {
+watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value } ), (newValue) => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
-  currentRequestBody.value = getSampleBody(props.data, 0)
+  currentRequestBody.value = getSampleBody(props.data, { excludeReadonly: true, excludeNotRequired: newValue.excludeNotRequired }, 0)
 }, { immediate: true })
 </script>
 
@@ -205,15 +225,8 @@ watch(() => (props.data.id), () => {
         display: inline-flex;
         gap: var(--kui-space-20, $kui-space-20);
 
-        select {
-          border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-          border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-          color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
-          font-family: var(--kui-font-family-code, $kui-font-family-code);
-          font-size: var(--kui-font-size-20, $kui-font-size-20);
-          line-height: var(--kui-line-height-20, $kui-line-height-20);
-          outline: none;
-          padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
+        :deep(.trigger-button) {
+          @include small-bordered-trigger-button;
         }
       }
     }

@@ -1,4 +1,4 @@
-import type { JSONSchema7 } from 'json-schema'
+import type { JSONSchema7, JSONSchema7Type } from 'json-schema'
 
 export interface SpecRendererProps {
   modelValue: string
@@ -9,7 +9,9 @@ export interface SpecRendererProps {
  * This way it'll be easy to replace out this library with some other library, or even our own implementation,
  * without requiring major refactoring.
  */
-export interface SchemaObject extends JSONSchema7 { }
+export interface SchemaObject extends JSONSchema7 {
+  example?: JSONSchema7Type
+}
 
 export interface ParseOptions {
   /**
