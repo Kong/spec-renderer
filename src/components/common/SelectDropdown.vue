@@ -160,11 +160,14 @@ watch(selectValue, (newValue: string) => {
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
 
+    * {
+      pointer-events: none; // disable pointer events on children to make sure the button is the only clickable element
+    }
+
     .select-chevron-icon {
       color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
       flex-shrink: 0;
       height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
-      pointer-events: none;
       width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
     }
 
