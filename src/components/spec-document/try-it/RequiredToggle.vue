@@ -1,4 +1,5 @@
 <template>
+  {{ showToggle }}
   <div
     v-if="showToggle"
     class="wide required-only-wrapper"
@@ -17,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpOperation } from '@stoplight/types'
 import InputLabel from '@/components/common/InputLabel.vue'
@@ -75,6 +76,12 @@ const showToggle = computed((): boolean => {
   return crawlForRequired((props.data.request.body.contents[0].schema) as Record<string, any>, '', 0)
 })
 
+watch(showToggle, (nV: boolean) => {
+  // when we do not show toggle, we want to make sure all (not ony required) fields are shown
+  if (nV === false) {
+    toggleValue.value = false
+  }
+}, { immediate: true })
 
 </script>
 
