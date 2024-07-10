@@ -63,7 +63,7 @@ import type { IMediaTypeContent } from '@stoplight/types'
 import ModelNode from '../schema-model/ModelNode.vue'
 import CollapsibleSection from './CollapsibleSection.vue'
 import type { SchemaObject } from '@/types'
-import { removeFieldsFromSchemaObject } from '@/utils'
+import { removeFieldsFromSchemaObject, resolveSchemaObjectFields } from '@/utils'
 
 const props = defineProps({
   description: {
@@ -81,7 +81,8 @@ const props = defineProps({
 })
 
 function parseSchema(schema: SchemaObject) {
-  return props.readonlyVisible ? schema : removeFieldsFromSchemaObject(schema)
+  const resolvedSchema = resolveSchemaObjectFields(schema)
+  return props.readonlyVisible ? resolvedSchema : removeFieldsFromSchemaObject(resolvedSchema)
 }
 </script>
 

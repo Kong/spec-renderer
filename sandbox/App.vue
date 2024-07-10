@@ -23,10 +23,6 @@
   font-family: $kui-font-family-text;
 }
 
-.page-main {
-  padding: 6px;
-}
-
 .page-header {
   background-color: $kui-color-background-primary-strongest;
   color: $kui-color-text-inverse;

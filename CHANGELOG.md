@@ -1,3 +1,31 @@
+## [1.43.1](https://github.com/Kong/spec-renderer/compare/v1.43.0...v1.43.1) (2024-07-10)
+
+
+### Bug Fixes
+
+* **headless-popover:** add flip middleware [KHCP-12552] ([#195](https://github.com/Kong/spec-renderer/issues/195)) ([1db1eb6](https://github.com/Kong/spec-renderer/commit/1db1eb69c591952341d92af898eff6a34cf7b262))
+
+# [1.43.0](https://github.com/Kong/spec-renderer/compare/v1.42.2...v1.43.0) (2024-07-09)
+
+
+### Features
+
+* **spec-renderer:** responsive toc [KHCP-12290] ([#182](https://github.com/Kong/spec-renderer/issues/182)) ([0422c3f](https://github.com/Kong/spec-renderer/commit/0422c3f81a31af7c8f6e02535a20baddfac5622c))
+
+## [1.42.2](https://github.com/Kong/spec-renderer/compare/v1.42.1...v1.42.2) (2024-07-09)
+
+
+### Bug Fixes
+
+* **body-content-list:** resolve schema object before trying to remove readonly fields from it ([#194](https://github.com/Kong/spec-renderer/issues/194)) ([971dbb9](https://github.com/Kong/spec-renderer/commit/971dbb972786958dacb021d737071d28dbb2fab9))
+
+## [1.42.1](https://github.com/Kong/spec-renderer/compare/v1.42.0...v1.42.1) (2024-07-09)
+
+
+### Bug Fixes
+
+* use selectdropdown component [KHCP-12513] ([#187](https://github.com/Kong/spec-renderer/issues/187)) ([369da1d](https://github.com/Kong/spec-renderer/commit/369da1d68f78ec00169101d36881b8aed1b9b75f))
+
 # [1.42.0](https://github.com/Kong/spec-renderer/compare/v1.41.0...v1.42.0) (2024-07-09)
 
 

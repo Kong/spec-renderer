@@ -11,3 +11,23 @@
 .spec-renderer-fade-leave-to {
   opacity: 0;
 }
+
+// slide in transition/animation
+
+@keyframes spec-renderer-slide-in {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.spec-renderer-slide-in-enter-active {
+  animation: spec-renderer-slide-in var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
+}
+
+.spec-renderer-slide-in-leave-active {
+  animation: spec-renderer-slide-in var(--kui-animation-duration-20, $kui-animation-duration-20) ease reverse;
+}

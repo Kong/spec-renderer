@@ -92,11 +92,13 @@ const tocNavRef = ref<HTMLElement | null>(null)
 <style lang="scss" scoped>
 .table-of-contents {
   background-color: var(--kui-color-background-transparent, $kui-color-background-transparent); // transparent so that it doesn't interfere with the parent's background
+  box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: auto;
   width: 100%;
 
   > ul {
+    margin: var(--kui-space-0, $kui-space-0);
     padding-left: var(--kui-space-0, $kui-space-0);
 
     > *:first-child + * {

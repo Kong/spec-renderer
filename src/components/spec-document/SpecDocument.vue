@@ -103,6 +103,7 @@ const docComponent = computed(() => {
 <style lang="scss" scoped>
 .spec-renderer-document {
   background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+  box-sizing: border-box;
   color: var(--kui-color-text, $kui-color-text);
 }
 </style>
