@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, computed, watch, useAttrs } from 'vue'
 import type { PropType } from 'vue'
-import { useFloating, autoUpdate, offset } from '@floating-ui/vue'
+import { useFloating, autoUpdate, offset, flip } from '@floating-ui/vue'
 import type { Placement } from '@floating-ui/vue'
 import { PopoverPlacementVariants } from '@/types'
 
@@ -174,7 +174,7 @@ const popoverStyles = computed(() => {
 
 const { floatingStyles, update: updatePosition } = useFloating(popoverTrigger, popoverRef, {
   placement: props.placement,
-  middleware: [offset(props.popoverOffset)],
+  middleware: [offset(props.popoverOffset), flip()],
   strategy: 'fixed',
   transform: false,
 })
