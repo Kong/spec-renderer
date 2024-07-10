@@ -4,18 +4,20 @@
     :data-testid="`tryit-response-${dataId}`"
   >
     <template #header>
-      <h5>
-        <span v-if="!response?.status">
-          Response
-        </span>
+      <div class="h-wrapper">
+        <h5>
+          <span v-if="!response?.status">
+            Response
+          </span>
 
-        <span
-          v-if="response?.status"
-          :class="`response-status ${response?.ok}`"
-        >
-          {{ response?.status }}
-        </span>
-      </h5>
+          <span
+            v-if="response?.status"
+            :class="`response-status ${response?.ok}`"
+          >
+            {{ response?.status }}
+          </span>
+        </h5>
+      </div>
       <SelectDropdown
         :id="`response-option-select-${dataId}`"
         v-model="selectedResOption"
@@ -141,6 +143,10 @@ watch(() => props.response, async (res) => {
 </script>
 
 <style lang="scss" scoped>
+.h-wrapper {
+  display:flex;
+  flex: 1;
+}
 .response-status:before {
   color: var(--kui-color-text-danger, $kui-color-text-danger);
   content: '\25CF';
@@ -160,8 +166,6 @@ watch(() => props.response, async (res) => {
   padding: var(--kui-space-40, $kui-space-40);
 }
 .res-option-selector {
-  margin-left: auto !important;
-  width: 100px;
 
   :deep(.trigger-button) {
     @include small-bordered-trigger-button;

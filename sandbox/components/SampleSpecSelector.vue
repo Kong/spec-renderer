@@ -63,8 +63,9 @@ const savedSpec = ref()
 const fName = ref<string>('Drop your own spec file')
 
 const optionsArray = [
-  { url: '/spec-renderer/specs/stoplight.yaml', label: 'Stoplight ToDo' },
-  { url: '/spec-renderer/specs/konnect-api.yaml', label: 'Konnect Api' },
+  { url: `${window.location.origin}/spec-renderer/specs/stoplight.yaml`, label: 'Stoplight ToDo' },
+  {
+    url: `${window.location.origin}/spec-renderer/specs/konnect-api.yaml`, label: 'Konnect Api' },
   { url: '/spec-renderer/specs/callback.yaml', label: 'Callbacks' },
   { url: '/spec-renderer/specs/cloudflare.json', label: 'CloudFlare' },
   { url: '/spec-renderer/specs/beer-and-coffee.yaml', label: 'Beer-and-coffee (e50ca83c443b.us)' },
