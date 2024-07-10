@@ -5,6 +5,7 @@
   >
     <button
       :class="{'call-button': true, 'no-dropdown': !showInsomnia}"
+      :data-testid="`tryit-call-button-${data.id}`"
       @click="startApiCall"
     >
       <component :is="selectedTryItMethodKey== 'browser' ? NetworkIcon : InsomniaIcon" />
@@ -22,7 +23,7 @@
     >
       <template #browser-item="{ item }">
         <button
-          data-testid="tryit-send-request"
+          :data-testid="`tryit-send-request-${data.id}`"
           @click="selectionChanged(item)"
         >
           <NetworkIcon />
@@ -31,8 +32,8 @@
       </template>
       <template #insomnia-item="{ item }">
         <button
-          data-testid="tryit-insomnia"
-          @click="selectionChanged(item)"
+          :data-testid="`tryit-insomnia-${data.id}`"
+          @click=" selectionChanged(item)"
         >
           <InsomniaIcon />
           {{ item.label }}
