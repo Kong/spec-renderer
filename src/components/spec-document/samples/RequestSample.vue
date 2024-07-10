@@ -29,7 +29,7 @@
               {{ item.label }}
             </template>
             <template #javascript-item-content="{ item }">
-              <LanguageIcon lang="python" />
+              <LanguageIcon lang="javascript" />
               {{ item.label }}
             </template>
             <template #go-item-content="{ item }">
