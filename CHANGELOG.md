@@ -1,3 +1,10 @@
+## [1.43.2](https://github.com/Kong/spec-renderer/compare/v1.43.1...v1.43.2) (2024-07-10)
+
+
+### Bug Fixes
+
+* **select-dropdown:** fix trigger pointer events ([#197](https://github.com/Kong/spec-renderer/issues/197)) ([fd4820f](https://github.com/Kong/spec-renderer/commit/fd4820f1a022092de4b687c2a97db4baf78d82d8))
+
 ## [1.43.1](https://github.com/Kong/spec-renderer/compare/v1.43.0...v1.43.1) (2024-07-10)
 
 
