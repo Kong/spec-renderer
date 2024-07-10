@@ -1,3 +1,10 @@
+## [1.43.1](https://github.com/Kong/spec-renderer/compare/v1.43.0...v1.43.1) (2024-07-10)
+
+
+### Bug Fixes
+
+* **headless-popover:** add flip middleware [KHCP-12552] ([#195](https://github.com/Kong/spec-renderer/issues/195)) ([1db1eb6](https://github.com/Kong/spec-renderer/commit/1db1eb69c591952341d92af898eff6a34cf7b262))
+
 # [1.43.0](https://github.com/Kong/spec-renderer/compare/v1.42.2...v1.43.0) (2024-07-09)
 
 
