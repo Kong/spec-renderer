@@ -7,7 +7,7 @@ import { MAX_NESTED_LEVELS } from '@/constants'
  * @param key
  * @returns
  */
-export const extractSampleForParam = (paramData: Record<string, any> | undefined, key: string): string | boolean => {
+export const extractSampleForParam = (paramData: Record<string, any> | undefined, key: string): string | boolean | number => {
   if (!paramData) {
     return ''
   }
@@ -43,9 +43,9 @@ export const extractSampleForParam = (paramData: Record<string, any> | undefined
     case 'boolean':
       return false
     case 'integer':
-      return '0'
+      return 0
     case 'number':
-      return '0'
+      return 0
     case 'string':
       return key
     case 'object':
