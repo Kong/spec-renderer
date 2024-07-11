@@ -119,6 +119,17 @@ function handleVariantSelectChange(selecteditem: SelectItem) {
         padding: var(--kui-space-50, $kui-space-50);
       }
     }
+
+  }
+
+  @media (max-width: ($kui-breakpoint-laptop - 1px)) {
+    .http-model-content {
+      grid-template-columns: 1fr;
+
+      .http-model-example-container {
+        margin-top: var(--kui-space-40, $kui-space-40);
+      }
+    }
   }
 }
 </style>
