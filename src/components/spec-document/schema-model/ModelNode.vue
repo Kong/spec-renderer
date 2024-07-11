@@ -3,6 +3,13 @@
     class="model-node-container"
     :data-testid="dataTestId"
   >
+    <ModelProperty
+      v-if="resolvedSchemaObject?.oneOf || resolvedSchemaObject?.anyOf"
+      :property="resolvedSchemaObject"
+      :property-name="title"
+      :required-fields="resolvedSchemaObject?.required"
+    />
+
     <template
       v-for="(property, propertyName) in resolvedSchemaObject?.properties"
       :key="propertyName"
