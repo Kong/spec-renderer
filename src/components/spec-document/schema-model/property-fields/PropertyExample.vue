@@ -27,7 +27,7 @@ const stringifiedExample = computed(() => {
     props.example.forEach((example, index) => {
       stringToRender +=
         typeof(example) === 'object' ? JSON.stringify(example) : example +
-        `${index < props.example.length - 1 ? ',' : ''}`
+        `${index < props.example.length - 1 ? ', ' : ''}`
     })
   } else if (typeof props.example === 'object') {
     stringToRender = JSON.stringify(props.example)
