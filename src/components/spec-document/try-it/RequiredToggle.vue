@@ -1,5 +1,4 @@
 <template>
-  {{ showToggle }}
   <div
     v-if="showToggle"
     class="wide required-only-wrapper"
