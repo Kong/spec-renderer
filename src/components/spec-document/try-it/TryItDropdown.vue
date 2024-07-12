@@ -8,7 +8,7 @@
       :data-testid="`tryit-call-button-${data.id}`"
       @click="startApiCall"
     >
-      <component :is="selectedTryItMethodKey== 'browser' ? NetworkIcon : InsomniaIcon" />
+      <component :is="selectedTryItMethodKey === 'browser' ? NetworkIcon : InsomniaIcon" />
       Try It!
     </button>
 
