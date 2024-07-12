@@ -41,14 +41,14 @@ const props = defineProps({
   },
   /**
    * Do not show TryIt section
-  */
+   */
   hideTryIt: {
     type: Boolean,
     default: false,
   },
   /**
-     * Do not show  Insomnia option in TryIt
-  */
+   * Do not show  Insomnia option in TryIt
+   */
   hideInsomniaTryIt: {
     type: Boolean,
     default: false,
