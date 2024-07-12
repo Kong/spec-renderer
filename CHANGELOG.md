@@ -1,3 +1,10 @@
+# [1.45.0](https://github.com/Kong/spec-renderer/compare/v1.44.0...v1.45.0) (2024-07-12)
+
+
+### Features
+
+* tryIt button with dropdown when needed [KHCP-12089] ([#193](https://github.com/Kong/spec-renderer/issues/193)) ([25a3178](https://github.com/Kong/spec-renderer/commit/25a3178b2b510fa79cb22113ca030541d71db47d))
+
 # [1.44.0](https://github.com/Kong/spec-renderer/compare/v1.43.3...v1.44.0) (2024-07-12)
 
 
