@@ -122,8 +122,3 @@ export const getSampleBody = (data: IHttpOperation, filteringOptions: Record<str
     2,
   )
 }
-
-/**
- * Returns true if body of operation has at least one required field
- * @param data operation
- */

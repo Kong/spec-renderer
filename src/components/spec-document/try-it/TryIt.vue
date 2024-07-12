@@ -204,21 +204,26 @@ watch(() => (props.data.id), () => {
 .tryit-wrapper {
 
   .tryit-header {
-    align-items: center;
     background-color: var(--kui-color-background, $kui-color-background);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     border-top-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    display: flex;
+    display: block;
     padding: var(--kui-space-50, $kui-space-50);
     .path {
       margin-left: var(--kui-space-20, $kui-space-20);
+      margin-right: var(--kui-space-20, $kui-space-20);
     }
     .tryit-dropdown {
       margin-left: auto;
     }
   }
-
+  @media (min-width: $kui-breakpoint-mobile) {
+    .tryit-header {
+      align-items: center;
+      display: flex;
+    }
+  }
   .tryit-body {
     background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
@@ -235,4 +240,5 @@ watch(() => (props.data.id), () => {
   padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
   width: 100%;
 }
+
 </style>

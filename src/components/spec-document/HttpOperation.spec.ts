@@ -21,7 +21,7 @@ describe('<HttpOperation />', () => {
           },
         },
       })
-      expect(wrapper.findTestId('tryit-dropdown-123').exists()).toBe(true)
+      expect(wrapper.findTestId('tryit-call-button-123').exists()).toBe(true)
     })
 
     it('TryIt is not rendered when hideTryIt is true', () => {
