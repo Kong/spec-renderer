@@ -1,3 +1,10 @@
+# [1.44.0](https://github.com/Kong/spec-renderer/compare/v1.43.3...v1.44.0) (2024-07-12)
+
+
+### Features
+
+* schema model example section [KHCP-12221, KHCP-12569] ([#199](https://github.com/Kong/spec-renderer/issues/199)) ([5847cca](https://github.com/Kong/spec-renderer/commit/5847cca208b7aff2e5c1ca434582666d4530f432))
+
 ## [1.43.3](https://github.com/Kong/spec-renderer/compare/v1.43.2...v1.43.3) (2024-07-11)
 
 
