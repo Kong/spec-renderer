@@ -9,6 +9,7 @@
       ref="editableInput"
       class="editable-code"
       contenteditable="true"
+      spellcheck="false"
       @focusout="handleFocusOut"
       @input="handleInput"
     >{{ editableCode }}</code>
