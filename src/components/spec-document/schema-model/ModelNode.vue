@@ -3,20 +3,24 @@
     class="model-node-container"
     :data-testid="dataTestId"
   >
-    <SelectDropdown
-      v-if="variantSelectItemList.length"
-      :id="`${dataTestId}-variant-select-dropdown`"
-      v-model="selectedVariantOption"
-      class="model-node-variant-select"
-      :items="variantSelectItemList"
-      @change="handleVariantSelectChange"
-    />
-    <ModelProperty
-      v-if="selectedSchemaModel?.oneOf || selectedSchemaModel?.anyOf"
-      :property="selectedSchemaModel"
-      :property-name="selectedSchemaModel.title || variantSelectItemList[selectedVariantIndex].label"
-      :required-fields="selectedSchemaModel?.required"
-    />
+    <template v-if="variantSelectItemList.length">
+      <SelectDropdown
+        :id="`${dataTestId}-variant-select-dropdown`"
+        class="model-node-variant-select"
+        :items="variantSelectItemList"
+        :model-value="selectedVariantIndex.toString()"
+        @change="handleVariantSelectChange"
+      />
+      <!-- if the schema model has variants, render the selected variant -->
+      <ModelProperty
+        v-if="selectedSchemaModel?.oneOf || selectedSchemaModel?.anyOf"
+        :property="selectedSchemaModel"
+        :property-name="selectedSchemaModel.title || variantSelectItemList[selectedVariantIndex].label"
+        :required-fields="selectedSchemaModel?.required"
+      />
+    </template>
+
+    <!-- render all properties of the schema model -->
     <template
       v-for="(property, propertyName, index) in selectedSchemaModel?.properties"
       :key="propertyName"
@@ -34,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 import type { PropType } from 'vue'
 import ModelProperty from './ModelProperty.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
@@ -55,7 +59,7 @@ const props = defineProps({
 
 const resolvedSchemaObject = computed(() => resolveSchemaObjectFields(props.schema))
 const { variantSelectItemList, selectedSchemaModel, selectedVariantIndex } = useSchemaVariants(resolvedSchemaObject)
-const selectedVariantOption = ref('0')
+
 function handleVariantSelectChange(selecteditem: SelectItem) {
   selectedVariantIndex.value = Number(selecteditem.value)
 }
