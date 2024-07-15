@@ -139,19 +139,19 @@ const selectionChanged = (item: SelectItem) => {
   @include default-button-reset;
 
   align-items: center;
+  background-color: var(--kui-color-background, $kui-color-background);
   border-color: var(--kui-color-border, $kui-color-border);
   border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   border-style: solid;
   border-width: var(--kui-border-width-20, $kui-border-width-20);
   display: flex;
-  gap: var(--kui-space-30, $kui-space-30);
+  font-size: var(--kui-font-size-30, $kui-font-size-30);
   font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+  gap: var(--kui-space-30, $kui-space-30);
   justify-content: center;
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
   padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
   white-space: nowrap;
-  background-color: var(--kui-color-background, $kui-color-background);
-  font-size: var(--kui-font-size-30, $kui-font-size-30);
-  line-height: var(--kui-line-height-30, $kui-line-height-30);
 
   &.unhover {
     &:hover {
@@ -165,7 +165,6 @@ const selectionChanged = (item: SelectItem) => {
   }
 
   .tryit-method-icon {
-    width: var(--kui-icon-size-40, $kui-icon-size-40) !important;
     width: var(--kui-icon-size-40, $kui-icon-size-40) !important;
   }
 
