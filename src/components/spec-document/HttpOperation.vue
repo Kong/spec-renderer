@@ -90,6 +90,14 @@
           :server-url="currentServerUrl"
           @request-body-sample-idx-changed="setRequestBodyByIdx"
         />
+        <SchemaExample
+          v-if="activeResponseSample"
+          :schema-example-json="activeResponseSample"
+        >
+          <template #header-left>
+            Response
+          </template>
+        </SchemaExample>
       </div>
     </section>
   </div>
@@ -103,10 +111,11 @@ import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpResponse from './endpoint/HttpResponse.vue'
 import TryIt from './try-it/TryIt.vue'
 import RequestSample from './samples/RequestSample.vue'
+import SchemaExample from '../common/SchemaExample.vue'
 import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import PageHeader from '../common/PageHeader.vue'
 import { getSamplePath, getSampleQuery, getSampleBody, removeTrailingSlash } from '@/utils'
-import composables from '@/composables'
+import useCurrentResponse from '@/composables/useCurrentResponse'
 import { ResponseSelectComponent } from '@/types'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import ResponseCodeDot from '@/components/common/ResponseCodeDot.vue'
@@ -152,7 +161,8 @@ const {
   activeContentType,
   activeResponseContentList,
   responseSelectComponentList,
-} = composables.useCurrentResponse(responseList)
+  activeResponseSample,
+} = useCurrentResponse(responseList)
 
 function handleSelectInputChange(item: SelectItem, componentName: ResponseSelectComponent) {
   if (componentName === ResponseSelectComponent.ResponseCodeSelectMenu) {
