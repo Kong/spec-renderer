@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "^11.6.4",
-    "@floating-ui/vue": "^1.1.0",
+    "@floating-ui/vue": "^1.1.1",
     "@kong/icons": "^1.14.3",
     "@scalar/openapi-parser": "^0.7.1",
     "@seriousme/openapi-schema-validator": "^2.2.1",
@@ -62,7 +62,7 @@
     "lodash-es": "^4.17.21",
     "oas-normalize": "^11.1.1",
     "openapi3-ts": "4.3.3",
-    "shiki": "^1.10.0"
+    "shiki": "^1.10.1"
   },
   "resolutions": {
     "openapi3-ts": "4.3.3"
@@ -107,14 +107,14 @@
     "tsc-alias": "^1.8.10",
     "tslib": "^2.6.3",
     "typescript": "^5.5.3",
-    "vite": "^5.3.2",
+    "vite": "^5.3.3",
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-replace": "^0.1.1",
     "vite-plugin-vue-devtools": "^7.3.5",
     "vitest": "1.6.0",
     "vue": "^3.4.31",
     "vue-router": "^4.4.0",
-    "vue-tsc": "^2.0.24"
+    "vue-tsc": "^2.0.26"
   },
   "repository": {
     "type": "git",
