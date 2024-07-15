@@ -57,6 +57,14 @@ Default trigger button text.
 * required: `false`
 * default: `false`
 
+### `popoverOffset`
+
+* type: `number`
+* required: `false`
+* default: `10`
+
+Number of pixels to offset popover from the trigger.
+
 ## Slots
 
 ### `trigger-content`

@@ -8,7 +8,7 @@
     data-testid="select-dropdown"
     :disabled="disabled"
     :placement="placement"
-    :popover-offset="10"
+    :popover-offset="popoverOffset"
     width="300px"
     v-bind="sanitizedAttrs"
   >
@@ -25,7 +25,7 @@
           :item="selectedItem"
           :name="`${selectedItem?.key}-item-content`"
         >
-          <span>
+          <span v-if="selectedItem?.label || triggerButton">
             {{ selectedItem?.label || triggerButton }}
           </span>
         </slot>
@@ -102,6 +102,10 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false,
+  },
+  popoverOffset: {
+    type: Number,
+    default: 10,
   },
 })
 
