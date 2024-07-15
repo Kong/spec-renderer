@@ -1,4 +1,5 @@
 import { MAX_NESTED_LEVELS } from '@/constants'
+import { resolveSchemaObjectFields } from './schema-model'
 
 /**
  * Returning sample value for single parameter
@@ -109,12 +110,14 @@ export const crawl = ({ objData, parentKey, nestedLevel, filteringOptions }: Cra
         return
       }
     }
-    const oData = objData.properties[key]
+    const oData = resolveSchemaObjectFields(objData.properties[key])
     if (filteringOptions.excludeReadonly && oData.readOnly) {
       return
     }
-    if (oData.anyOf && Array.isArray(oData.anyOf) && oData.anyOf.length) {
+    if (Array.isArray(oData.anyOf) && typeof(oData.anyOf[0]) === 'object') {
       sampleObj[key] = crawl({ objData: oData.anyOf[0] || {}, parentKey: key, nestedLevel, filteringOptions })
+    } else if (Array.isArray(oData.oneOf) && typeof(oData.oneOf[0]) === 'object') {
+      sampleObj[key] = crawl({ objData: oData.oneOf[0] || {}, parentKey: key, nestedLevel, filteringOptions })
     } else if (oData.type === 'object' || oData.allOf) {
       const res = crawl({ objData: oData || {}, parentKey: key, nestedLevel: nestedLevel++, filteringOptions })
       if (res !== null) {
