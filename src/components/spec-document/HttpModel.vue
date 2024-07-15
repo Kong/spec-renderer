@@ -11,8 +11,9 @@
 
     <div class="http-model-content">
       <ModelNode
-        :schema="resolvedSchemaObject"
+        :schema="data"
         :title="title"
+        @selected-model-changed="(newModel: SchemaObject) => activeSchemaModel = newModel"
       />
       <div
         v-if="exampleModel"
@@ -35,14 +36,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 import ModelNode from './schema-model/ModelNode.vue'
 import PageHeader from '../common/PageHeader.vue'
 import CodeBlock from '../common/CodeBlock.vue'
 import CopyButton from '../common/CopyButton.vue'
-import { crawl, resolveSchemaObjectFields } from '@/utils'
+import { crawl } from '@/utils'
 
 const props = defineProps({
   data: {
@@ -56,10 +57,10 @@ const props = defineProps({
 })
 
 const dataTestId = computed(() => `http-model-${props.title.replaceAll(' ', '-')}`)
-const resolvedSchemaObject = computed(() => resolveSchemaObjectFields(props.data))
+const activeSchemaModel = ref<SchemaObject>(props.data)
 const exampleModel = computed(() => {
   const crawledExample = crawl({
-    objData: resolvedSchemaObject.value,
+    objData: activeSchemaModel.value,
     parentKey: '',
     nestedLevel: 0,
     filteringOptions: { excludeReadonly: false, excludeNotRequired: false },

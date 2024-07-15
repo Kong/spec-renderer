@@ -18,11 +18,12 @@
       :required-fields="selectedSchemaModel?.required"
     />
     <template
-      v-for="(property, propertyName) in selectedSchemaModel?.properties"
+      v-for="(property, propertyName, index) in selectedSchemaModel?.properties"
       :key="propertyName"
     >
       <ModelProperty
         v-if="isValidSchemaObject(property)"
+        :class="{ 'model-node-property': index !== 0 }"
         :data-testid="`model-property-${propertyName}`"
         :property="property"
         :property-name="propertyName.toString()"
@@ -33,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import ModelProperty from './ModelProperty.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
@@ -59,6 +60,16 @@ function handleVariantSelectChange(selecteditem: SelectItem) {
   selectedVariantIndex.value = Number(selecteditem.value)
 }
 
+const emit = defineEmits < {
+  (e: 'selected-model-changed', newModel: SchemaObject): void
+}>()
+
+watch(selectedSchemaModel, (newModel) => {
+  emit('selected-model-changed', newModel)
+}, {
+  immediate: true,
+})
+
 const dataTestId = computed(() => `model-node-${props.title.replaceAll(' ', '-')}`)
 </script>
 
@@ -71,8 +82,8 @@ const dataTestId = computed(() => `model-node-${props.title.replaceAll(' ', '-')
     which is applied to a ModelNode that's nested inside ModelProperty.
    */
   &:not(.nested-model-node) {
-    > :not(:last-child, .model-node-variant-select){
-      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    >.model-node-property {
+      border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     }
   }
 }
