@@ -48,7 +48,7 @@
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "^11.6.4",
     "@floating-ui/vue": "^1.1.0",
-    "@kong/icons": "^1.14.2",
+    "@kong/icons": "^1.14.3",
     "@scalar/openapi-parser": "^0.7.1",
     "@seriousme/openapi-schema-validator": "^2.2.1",
     "@stoplight/http-spec": "^7.1.0",
@@ -73,7 +73,7 @@
     "@commitlint/config-conventional": "^19.2.2",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
     "@evilmartians/lefthook": "^1.6.18",
-    "@kong/design-tokens": "^1.15.1",
+    "@kong/design-tokens": "^1.15.2",
     "@kong/eslint-config-kong-ui": "1.1.1",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
