@@ -1,5 +1,6 @@
-import type { IHttpOperation } from '@stoplight/types'
+import type { IHttpOperation, IMediaTypeContent } from '@stoplight/types'
 import { crawl, extractSampleForParam } from './schema-example'
+import { resolveSchemaObjectFields } from './schema-model'
 import { CODE_INDENT_SPACES } from '@/constants'
 
 const getAcceptHeader = (data: IHttpOperation): string => {
@@ -98,23 +99,23 @@ export const getSampleQuery = (data: IHttpOperation, fieldValues?: Record<string
  * @param sampleIdx index of example to be used
  * @returns query string
  */
-export const getSampleBody = (data: IHttpOperation, filteringOptions: Record<string, boolean> = { excludeReadonly: true, excludeNotRequired: false }, sampleIdx: number = 0): string => {
-  if (!data.request?.body?.contents?.length || !data.request.body.contents[0]) {
+export const getSampleBody = (contents: Array<IMediaTypeContent>, filteringOptions: Record<string, boolean> = { excludeReadonly: true, excludeNotRequired: false }, sampleIdx: number = 0): string => {
+  if (!contents.length || !contents[0]) {
     return ''
   }
   if (sampleIdx !== undefined) {
-    if (Array.isArray(data.request.body.contents[0].examples) &&
+    if (Array.isArray(contents[0].examples) &&
       // @ts-ignore value is valid property of example
-      data.request.body.contents[0].examples[sampleIdx]?.value
+      contents[0].examples[sampleIdx]?.value
     ) {
       // @ts-ignore value is valid property of example
-      return JSON.stringify(data.request.body.contents[0].examples[sampleIdx].value as Record<string, any>, null, CODE_INDENT_SPACES)
+      return JSON.stringify(contents[0].examples[sampleIdx].value as Record<string, any>, null, CODE_INDENT_SPACES)
     }
   }
 
   return JSON.stringify(
     crawl({
-      objData: data.request.body.contents[0].schema as Record<string, any>,
+      objData: resolveSchemaObjectFields(contents[0].schema) as Record<string, any>,
       parentKey: '',
       nestedLevel: 0,
       filteringOptions,
