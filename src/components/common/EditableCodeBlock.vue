@@ -253,7 +253,7 @@ watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.
         setCursorPosition(cursorPosition.value, true)
       }
     }
-  }, { immediate: false })
+  })
 
 </script>
 
