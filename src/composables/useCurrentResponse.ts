@@ -1,7 +1,7 @@
 import { computed, ref, watch, type ComputedRef } from 'vue'
 import type { IHttpOperationResponse } from '@stoplight/types'
 import { ResponseSelectComponent } from '@/types'
-import { getResponseCodeKey, getSampleBody } from '@/utils'
+import { getResponseCodeKey } from '@/utils'
 
 export default function useResponseCode(responseList: ComputedRef<Array<IHttpOperationResponse>>) {
   // returns content type key, e.g. 'application/json' -> 'application-json'
@@ -34,19 +34,6 @@ export default function useResponseCode(responseList: ComputedRef<Array<IHttpOpe
     return activeResponse.value?.contents?.filter(content => content.mediaType === activeContentType.value)
   })
 
-  const activeReponseSampleIdx = ref(0)
-  const activeResponseSample = computed(() => {
-    if (activeResponseContentList.value?.length) {
-      return getSampleBody(
-        activeResponseContentList.value,
-        {},
-        activeReponseSampleIdx.value,
-      )
-    }
-    return undefined
-  })
-
-
   const responseSelectComponentList = computed(() => {
     const componentList = [{
       name: ResponseSelectComponent.ResponseCodeSelectMenu,
@@ -78,8 +65,6 @@ export default function useResponseCode(responseList: ComputedRef<Array<IHttpOpe
     activeResponse,
     activeResponseDescription,
     activeContentType,
-    activeReponseSampleIdx,
-    activeResponseSample,
     contentTypeList,
     activeResponseContentList,
     responseSelectComponentList,

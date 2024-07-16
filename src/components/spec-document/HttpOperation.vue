@@ -91,9 +91,10 @@
           @request-body-sample-idx-changed="setRequestBodyByIdx"
         />
         <ResponseSample
-          v-if="activeResponseSample"
+          v-if="activeResponseContentList"
+          :content-list="activeResponseContentList"
+          :content-type="activeContentType"
           :response-code="activeResponseCode"
-          :response-sample="activeResponseSample"
         />
       </div>
     </section>
@@ -158,7 +159,6 @@ const {
   activeContentType,
   activeResponseContentList,
   responseSelectComponentList,
-  activeResponseSample,
 } = useCurrentResponse(responseList)
 
 function handleSelectInputChange(item: SelectItem, componentName: ResponseSelectComponent) {

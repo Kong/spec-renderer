@@ -3,15 +3,12 @@
     class="schema-example"
   >
     <div class="schema-example-header">
-      <slot name="header-left">
+      <slot>
         <span>Example</span>
-      </slot>
-      <div>
-        <slot name="header-right" />
         <CopyButton
           :content="schemaExampleJson"
         />
-      </div>
+      </slot>
     </div>
     <CodeBlock
       :code="schemaExampleJson"
