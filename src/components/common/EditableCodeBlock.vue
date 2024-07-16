@@ -23,6 +23,7 @@
 
 import { ref, watch } from 'vue'
 import CodeBlock from './CodeBlock.vue'
+import { CODE_INDENT_SPACES } from '@/constants'
 
 const props = defineProps({
   code: {
@@ -176,7 +177,7 @@ const handleInput = (e: Event) => {
 
         // if previous line ends with `{` or `[` - indent more
         if (prevLine.endsWith('{') || prevLine.endsWith('[')) {
-          paddings += 2
+          paddings += CODE_INDENT_SPACES
         }
 
         if (paddings > 0) {
@@ -235,7 +236,7 @@ const formatCode = (codeToFormat: string, codeLang: string): string => {
   codeError.value = false
   if (codeLang === 'json') {
     try {
-      formattedCode = JSON.stringify(JSON.parse(codeToFormat), null, 2)
+      formattedCode = JSON.stringify(JSON.parse(codeToFormat), null, CODE_INDENT_SPACES)
     } catch (err) {
       codeError.value = true
     }
