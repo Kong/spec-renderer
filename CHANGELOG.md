@@ -1,3 +1,10 @@
+## [1.46.1](https://github.com/Kong/spec-renderer/compare/v1.46.0...v1.46.1) (2024-07-16)
+
+
+### Bug Fixes
+
+* handle indentation and deletions in editable code block [KHCP-12487] ([#207](https://github.com/Kong/spec-renderer/issues/207)) ([d369f7a](https://github.com/Kong/spec-renderer/commit/d369f7a9907a55a9733e4cfe210ccef395222c73))
+
 # [1.46.0](https://github.com/Kong/spec-renderer/compare/v1.45.1...v1.46.0) (2024-07-15)
 
 
