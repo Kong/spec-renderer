@@ -13,7 +13,7 @@
     <div class="response-sample-header-right">
       <span class="content-type-label">{{ contentType }}</span>
       <SelectDropdown
-        v-if="exampleSelectList && exampleSelectList.length"
+        v-if="exampleSelectList && exampleSelectList.length > 1"
         id="response-sample-select"
         v-model="activeResponseSampleIndex"
         class="response-sample-selector"
