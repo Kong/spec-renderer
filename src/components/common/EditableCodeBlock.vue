@@ -13,7 +13,6 @@
       spellcheck="false"
       @focusout="handleFocusOut"
       @input="handleInput"
-      @keyup="handleKeyUp"
     >
       {{ editableCode }}
     </div>
@@ -21,7 +20,6 @@
 </template>
 
 <script setup lang="ts">
-/* TODO: style it as a code block including higlighting */
 
 import { ref, watch } from 'vue'
 import CodeBlock from './CodeBlock.vue'
@@ -41,15 +39,26 @@ const emit = defineEmits<{
   (e: 'request-body-changed', newBody: string): void
 }>()
 
+// ref to contentEditable element
 const editableInput = ref<HTMLDivElement | null>()
 
+// to hold editable code content
 const editableCode = ref<string>()
+
+// to hold presented code content
 const presentedCode = ref<string>()
 
+// holds codeError
 const codeError = ref<boolean>(false)
+
+// holds current cursor position
 const cursorPosition = ref<number>(0)
 
-
+/**
+ * Setting cursor position on editableInput
+ * @param customPosition
+ * @param eol  (boolean, when true cursor is set to the end of the line)
+ */
 const setCursorPosition = (customPosition: number, eol: boolean) => {
   if (typeof window === 'undefined' || !editableInput.value || !editableInput.value.childNodes[0]) {
     return
@@ -61,9 +70,7 @@ const setCursorPosition = (customPosition: number, eol: boolean) => {
   const selectedRange = document.createRange()
   let rangeNode = 0
   let rangePos = customPosition
-  console.log('editableInput.value.childNodes:', editableInput.value.childNodes)
   for (let i = 0; editableInput.value.childNodes.length; i++) {
-    console.log('editableInput.value.childNodes[i]', i, editableInput.value.childNodes[i])
     const contentLen = (editableInput.value.childNodes[i].textContent || '').length
     if (rangePos - contentLen <= 0) {
       break
@@ -78,7 +85,6 @@ const setCursorPosition = (customPosition: number, eol: boolean) => {
   if (eol) {
     rangePos = editableInput.value.childNodes[rangeNode].textContent?.length || 0
   }
-  console.log('setting to:', rangeNode, rangePos)
   selectedRange.setStart(editableInput.value.childNodes[rangeNode], rangePos)
   // collapse the range at boundaries
   selectedRange.collapse(true)
@@ -106,42 +112,19 @@ const getCursorPosition = () => {
   if (!selection) {
     return 0
   }
-  //console.log('row selection:', selection, selection.anchorNode?.textContent)
   const currentArray = editableInput.value.innerText.split('')
 
   const range = selection.rangeCount > 0 ? selection?.getRangeAt(0) : null
   if (range) {
-    //    console.log(range)
     const clonedRange = range?.cloneRange()
     clonedRange?.selectNodeContents(editableInput.value)
     clonedRange?.setEnd(range.endContainer, range?.endOffset)
 
-    // here we have a string but to carridge returns , so we would need to count number of \n  returns in this fragment
+    // here we have a string but no \n -s , so we would need to count number of \n  in this fragment
     let clonedRangeString = clonedRange.toString()
     const clonnedArray = clonedRangeString.split('')
     let currentPos = clonedRangeString.length
-    // console.log('cloned:', JSON.stringify(clonnedArray), currentPos)
-    // console.log('cArray:', JSON.stringify(currentArray))
 
-    let idx = 0
-    /*
-    while (clonedRangeString && idx < editableInput.value.childNodes.length) {
-      const cNode = editableInput.value.childNodes[idx]
-      console.log('xxx:', idx, clonedRangeString, cNode.textContent?.length)
-      if (clonedRangeString) {
-        if (cNode.textContent?.length) {
-          clonedRangeString = clonedRangeString.substring(cNode.textContent?.length)
-        }
-      }
-      if (cNode.nodeName === 'BR') {
-        console.log('increasing currentPos:', currentPos)
-        currentPos++
-      }
-      idx++
-    }
-
-    return currentPos
-    */
     let currentIdx = 0
     for (let i = 0; i < clonnedArray.length; i++) {
       if (clonnedArray[i] !== '\n' && currentArray[currentIdx] === '\n') {
@@ -150,6 +133,8 @@ const getCursorPosition = () => {
       }
       currentIdx++
     }
+    // this is the trick. when first line is `{` and custsor is on the begining on second line  we need to
+    // increase position
     if (selection.anchorOffset === 0 && currentArray[currentIdx] === '\n') {
       currentPos++
     }
@@ -158,51 +143,53 @@ const getCursorPosition = () => {
   return 0
 }
 
-const handleKeyUp = (e: Event) => {
-  console.log('cp:', getCursorPosition())
-}
-
+/**
+ * Handle Enter and backspace clicks
+ *
+ * @param e event
+ */
 const handleInput = (e: Event) => {
   let cText = (e.target as HTMLElement).innerText
-  console.log(e)
+
+  // On Enter do auto-indent
   if ((e as InputEvent).inputType === 'insertParagraph') {
     cursorPosition.value = getCursorPosition()
-    console.log('cursorPosition.value', cursorPosition.value)
+
+    // get the previous line and see how much it was indented
     if (cursorPosition.value > 1 && presentedCode.value) {
       const linesArray = presentedCode.value.split('\n')
 
-      console.log(linesArray:', JSON.stringify(linesArray))
       let prevLine = ''
       let currentIdx = 0
       let lineIdx = 0
       // let's fine prev line where Enter was clicked
       do {
-        console.log('starting:', lineIdx, linesArray[lineIdx], linesArray[lineIdx].length)
-        currentIdx += linesArray[lineIdx].length
-        console.log('starting:', lineIdx, linesArray[lineIdx].length)
+        currentIdx += (linesArray[lineIdx].length + 1)
         if (currentIdx >= cursorPosition.value) {
-          prevLine = linesArray[lineIdx === 0 ? 0 : lineIdx - 1]
+          prevLine = linesArray[lineIdx]
         }
         lineIdx++
       } while (prevLine === '' && lineIdx <= linesArray.length - 1)
 
-      console.log('prevLine:', prevLine)
       if (prevLine) {
         let paddings = prevLine.replace(/[^\s].*/, '').length
+
+        // if previous line ends with `{` or `[` - indent more
         if (prevLine.endsWith('{') || prevLine.endsWith('[')) {
           paddings += 2
         }
-        console.log('paddings:', paddings)
+
         if (paddings > 0) {
-          // let's find number of spaces in the beginning and if more than 0 - increase the cursor position
-          console.log('sp:', JSON.stringify(cText.substring(0, cursorPosition.value).split('')))
-          console.log('ep:', JSON.stringify(cText.substring(cursorPosition.value).split('')))
+          // inject indentations
+
           cText = cText.substring(0, cursorPosition.value) + Array(paddings + 1).join(' ') + cText.substring(cursorPosition.value)
-          console.log('re:', JSON.stringify(cText.split('')))
           if (editableInput.value) {
             editableInput.value.innerText = cText
           }
+          // force presented code to the resulting one
           presentedCode.value = cText
+
+          // force cursor postion to the end of the line
           setCursorPosition(cursorPosition.value, true)
         }
       }
@@ -210,12 +197,15 @@ const handleInput = (e: Event) => {
     presentedCode.value = cText
     return
   }
+
+
   if ((e as InputEvent).inputType === 'deleteContentBackward') {
     presentedCode.value = cText
     return
   }
 
-  //return
+  // on any other input cleating error, attempting to format and emitting change event
+  // so that our requiest sample reactivly changes as we type
   codeError.value = false
   let resText = formatCode(cText, props.lang)
   presentedCode.value = resText
@@ -223,6 +213,11 @@ const handleInput = (e: Event) => {
   emit('request-body-changed', resText)
 }
 
+/**
+ * handle focus out
+ *
+ * @param e
+ */
 const handleFocusOut = (e: Event) => {
   codeError.value = false
   const cText = (e.target as HTMLElement).innerText
@@ -248,18 +243,17 @@ const formatCode = (codeToFormat: string, codeLang: string): string => {
   return formattedCode
 }
 
-watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.value }), ({ code: newCode, lang: newLang, editableInput: newEditableInput }) => {
-  //  console.log('in watch:', newCode, newLang, newEditableInput?.innerText)
-  if (newCode !== newEditableInput?.innerText) {
-    editableCode.value = formatCode(newCode, newLang)
-    presentedCode.value = editableCode.value
-    //    console.log('aaqaa:', newEditableInput)
-    if (newEditableInput) {
-      newEditableInput.innerText = editableCode.value
-      setCursorPosition(0, false)
+watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.value }),
+  ({ code: newCode, lang: newLang, editableInput: newEditableInput }) => {
+    if (newCode !== newEditableInput?.innerText) {
+      editableCode.value = formatCode(newCode, newLang)
+      presentedCode.value = editableCode.value
+      if (newEditableInput) {
+        newEditableInput.innerText = editableCode.value
+        setCursorPosition(cursorPosition.value, true)
+      }
     }
-  }
-}, { immediate: false })
+  }, { immediate: false })
 
 </script>
 
@@ -274,7 +268,7 @@ watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.
   .editable-code {
     background: transparent;
     caret-color: black;
-    //color: transparent;
+    color: transparent;
     font-family: var(--kui-font-family-code, $kui-font-family-code);
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
@@ -282,7 +276,7 @@ watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.
     line-height: var(--kui-line-height-30, $kui-line-height-30);
     min-width: fit-content;
     outline: none;
-    // position: absolute;
+    position: absolute;
     top: 8px;
     white-space: break-spaces;
     word-wrap: break-word;
