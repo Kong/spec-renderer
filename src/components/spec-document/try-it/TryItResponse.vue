@@ -65,6 +65,7 @@ import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import type { PropType } from 'vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import type { SelectItem } from '@/types'
+import { CODE_INDENT_SPACES } from '@/constants'
 
 const props = defineProps({
   dataId: {
@@ -93,7 +94,7 @@ const headersText = computed((): string => {
       headers[pair[0]] = pair[1]
     }
   }
-  return Object.keys(headers).length ? JSON.stringify(headers, null, 2) : ''
+  return Object.keys(headers).length ? JSON.stringify(headers, null, CODE_INDENT_SPACES) : ''
 })
 
 const responseText = ref<string>('')
@@ -128,7 +129,7 @@ const requestLang = ref<string>('')
 watch(() => props.response, async (res) => {
   if (res) {
     if (res.headers.get('content-type')?.includes('/json')) {
-      responseText.value = JSON.stringify(await res.json(), null, 2)
+      responseText.value = JSON.stringify(await res.json(), null, CODE_INDENT_SPACES)
       requestLang.value = 'json'
     } else {
       responseText.value = await res.text()

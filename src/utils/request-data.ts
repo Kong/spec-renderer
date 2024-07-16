@@ -1,5 +1,6 @@
 import type { IHttpOperation } from '@stoplight/types'
 import { crawl, extractSampleForParam } from './schema-example'
+import { CODE_INDENT_SPACES } from '@/constants'
 
 const getAcceptHeader = (data: IHttpOperation): string => {
   const headers = new Set()
@@ -107,7 +108,7 @@ export const getSampleBody = (data: IHttpOperation, filteringOptions: Record<str
       data.request.body.contents[0].examples[sampleIdx]?.value
     ) {
       // @ts-ignore value is valid property of example
-      return JSON.stringify(data.request.body.contents[0].examples[sampleIdx].value as Record<string, any>, null, 2)
+      return JSON.stringify(data.request.body.contents[0].examples[sampleIdx].value as Record<string, any>, null, CODE_INDENT_SPACES)
     }
   }
 
@@ -119,6 +120,6 @@ export const getSampleBody = (data: IHttpOperation, filteringOptions: Record<str
       filteringOptions,
     }),
     null,
-    2,
+    CODE_INDENT_SPACES,
   )
 }

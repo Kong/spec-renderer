@@ -44,6 +44,7 @@ import PageHeader from '../common/PageHeader.vue'
 import CodeBlock from '../common/CodeBlock.vue'
 import CopyButton from '../common/CopyButton.vue'
 import { crawl } from '@/utils'
+import { CODE_INDENT_SPACES } from '@/constants'
 
 const props = defineProps({
   data: {
@@ -65,7 +66,7 @@ const exampleModel = computed(() => {
     nestedLevel: 0,
     filteringOptions: { excludeReadonly: false, excludeNotRequired: false },
   })
-  return crawledExample && Object.keys(crawledExample).length ? JSON.stringify(crawledExample, null, 2) : ''
+  return crawledExample && Object.keys(crawledExample).length ? JSON.stringify(crawledExample, null, CODE_INDENT_SPACES) : ''
 })
 </script>
 
