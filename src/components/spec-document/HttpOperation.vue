@@ -236,6 +236,10 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
     .right {
       background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
       padding: var(--kui-space-0, $kui-space-0);
+
+      > :not(:first-child) {
+        margin-top: var(--kui-space-70, $kui-space-70);
+      }
     }
 
     .http-operation-response {
