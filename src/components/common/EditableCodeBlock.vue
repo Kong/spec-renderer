@@ -134,7 +134,7 @@ const getCursorPosition = () => {
       }
       currentIdx++
     }
-    // this is the trick. when first line is `{` and custsor is on the begining on second line  we need to
+    // this is the trick. when first line is `{` and cursor is on the begining on second line  we need to
     // increase position
     if (selection.anchorOffset === 0 && currentArray[currentIdx] === '\n') {
       currentPos++
@@ -254,7 +254,7 @@ watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.
         setCursorPosition(cursorPosition.value, true)
       }
     }
-  }, { immediate: false })
+  })
 
 </script>
 
