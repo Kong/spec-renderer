@@ -90,14 +90,11 @@
           :server-url="currentServerUrl"
           @request-body-sample-idx-changed="setRequestBodyByIdx"
         />
-        <SchemaExample
+        <ResponseSample
           v-if="activeResponseSample"
-          :schema-example-json="activeResponseSample"
-        >
-          <template #header-left>
-            Response
-          </template>
-        </SchemaExample>
+          :response-code="activeResponseCode"
+          :response-sample="activeResponseSample"
+        />
       </div>
     </section>
   </div>
@@ -111,14 +108,14 @@ import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpResponse from './endpoint/HttpResponse.vue'
 import TryIt from './try-it/TryIt.vue'
 import RequestSample from './samples/RequestSample.vue'
-import SchemaExample from '../common/SchemaExample.vue'
+import ResponseSample from './samples/ResponseSample.vue'
 import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import PageHeader from '../common/PageHeader.vue'
+import SelectDropdown from '@/components/common/SelectDropdown.vue'
+import ResponseCodeDot from '@/components/common/ResponseCodeDot.vue'
 import { getSamplePath, getSampleQuery, getSampleBody, removeTrailingSlash } from '@/utils'
 import useCurrentResponse from '@/composables/useCurrentResponse'
 import { ResponseSelectComponent } from '@/types'
-import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import ResponseCodeDot from '@/components/common/ResponseCodeDot.vue'
 import type { SelectItem } from '@/types'
 
 const props = defineProps({

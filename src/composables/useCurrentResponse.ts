@@ -1,11 +1,9 @@
 import { computed, ref, watch, type ComputedRef } from 'vue'
 import type { IHttpOperationResponse } from '@stoplight/types'
 import { ResponseSelectComponent } from '@/types'
-import { getSampleBody } from '@/utils'
+import { getResponseCodeKey, getSampleBody } from '@/utils'
 
 export default function useResponseCode(responseList: ComputedRef<Array<IHttpOperationResponse>>) {
-  // returns hundreds of response codes, e.g. 200 -> 2xx, 401 -> 4xx
-  const getResponseCodeKey = (code: string) => code[0] + 'xx'
   // returns content type key, e.g. 'application/json' -> 'application-json'
   const getContentTypeKey = (contentType: string) => contentType.replace('/', '-')
 
