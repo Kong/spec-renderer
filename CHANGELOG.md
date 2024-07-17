@@ -1,3 +1,10 @@
+# [1.47.0](https://github.com/Kong/spec-renderer/compare/v1.46.2...v1.47.0) (2024-07-17)
+
+
+### Features
+
+* response example section [KHCP-12156] ([#208](https://github.com/Kong/spec-renderer/issues/208)) ([57f8e16](https://github.com/Kong/spec-renderer/commit/57f8e161598c519ecae7940b59f0c4a376a895e4))
+
 ## [1.46.2](https://github.com/Kong/spec-renderer/compare/v1.46.1...v1.46.2) (2024-07-17)
 
 
