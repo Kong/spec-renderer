@@ -313,7 +313,8 @@ watch(() => ({
 
 .request-sample-wrapper {
   h5 {
-    margin: var(--kui-space-60, $kui-space-60) var(--kui-space-30, $kui-space-30) var(--kui-space-30, $kui-space-30);
+    margin: var(--kui-space-30, $kui-space-30);
+    margin-top: var(--kui-space-0, $kui-space-0);
   }
 
   .select-wrapper {

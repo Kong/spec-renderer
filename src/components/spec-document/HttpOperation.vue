@@ -90,6 +90,12 @@
           :server-url="currentServerUrl"
           @request-body-sample-idx-changed="setRequestBodyByIdx"
         />
+        <ResponseSample
+          v-if="activeResponseContentList"
+          :content-list="activeResponseContentList"
+          :content-type="activeContentType"
+          :response-code="activeResponseCode"
+        />
       </div>
     </section>
   </div>
@@ -103,13 +109,14 @@ import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpResponse from './endpoint/HttpResponse.vue'
 import TryIt from './try-it/TryIt.vue'
 import RequestSample from './samples/RequestSample.vue'
+import ResponseSample from './samples/ResponseSample.vue'
 import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import PageHeader from '../common/PageHeader.vue'
-import { getSamplePath, getSampleQuery, getSampleBody, removeTrailingSlash } from '@/utils'
-import composables from '@/composables'
-import { ResponseSelectComponent } from '@/types'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import ResponseCodeDot from '@/components/common/ResponseCodeDot.vue'
+import { getSamplePath, getSampleQuery, getSampleBody, removeTrailingSlash } from '@/utils'
+import useCurrentResponse from '@/composables/useCurrentResponse'
+import { ResponseSelectComponent } from '@/types'
 import type { SelectItem } from '@/types'
 
 const props = defineProps({
@@ -152,7 +159,7 @@ const {
   activeContentType,
   activeResponseContentList,
   responseSelectComponentList,
-} = composables.useCurrentResponse(responseList)
+} = useCurrentResponse(responseList)
 
 function handleSelectInputChange(item: SelectItem, componentName: ResponseSelectComponent) {
   if (componentName === ResponseSelectComponent.ResponseCodeSelectMenu) {
@@ -179,7 +186,13 @@ const setRequestBody = (newBody: string) => {
 }
 
 const setRequestBodyByIdx = (newSampleIdx: number) => {
-  currentRequestBody.value = getSampleBody(props.data, { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value }, newSampleIdx)
+  currentRequestBody.value = props.data.request?.body?.contents
+    ? getSampleBody(
+      props.data.request?.body?.contents,
+      { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value },
+      newSampleIdx,
+    )
+    : ''
 }
 
 function updateSelectedServerURL(url: string) {
@@ -190,7 +203,13 @@ function updateSelectedServerURL(url: string) {
 watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value } ), (newValue) => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
-  currentRequestBody.value = getSampleBody(props.data, { excludeReadonly: true, excludeNotRequired: newValue.excludeNotRequired }, 0)
+  currentRequestBody.value = props.data.request?.body?.contents
+    ? getSampleBody(
+      props.data.request?.body?.contents,
+      { excludeReadonly: true, excludeNotRequired: newValue.excludeNotRequired },
+      0,
+    )
+    : ''
 }, { immediate: true })
 </script>
 
@@ -217,6 +236,10 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
     .right {
       background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
       padding: var(--kui-space-0, $kui-space-0);
+
+      > :not(:first-child) {
+        margin-top: var(--kui-space-70, $kui-space-70);
+      }
     }
 
     .http-operation-response {
