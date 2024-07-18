@@ -10,6 +10,13 @@
       <a href="/spec-renderer/stoplight/">
         Stoplight-Playground
       </a>
+
+      <SandboxSpecSettings
+        @show-schemas-change="hideSchemas = !$event"
+        @show-try-it-change="hideTryIt = !$event"
+        @spec-text-change="specText = $event"
+        @spec-url-change="specUrl = $event"
+      />
     </header>
     <main class="page-main">
       <router-view />
@@ -17,6 +24,20 @@
   </div>
 </template>
 
+<script setup lang="ts">
+import { provide, ref } from 'vue'
+import SandboxSpecSettings from './components/SandboxSpecSettings.vue'
+
+const specUrl = ref<string>('')
+const specText = ref<string>('')
+const hideSchemas = ref<boolean>(false)
+const hideTryIt = ref<boolean>(false)
+
+provide('spec-url', specUrl)
+provide('spec-text', specText)
+provide('hide-schemas', hideSchemas)
+provide('hide-try-it', hideTryIt)
+</script>
 
 <style lang="scss" scoped>
 .sandbox-container {
@@ -27,7 +48,7 @@
   background-color: $kui-color-background-primary-strongest;
   color: $kui-color-text-inverse;
 
-  align-items: baseline;
+  align-items: center;
   gap: $kui-space-70;
   margin-bottom: $kui-space-70;
 
@@ -50,10 +71,6 @@
     display: inline-block;
     text-decoration: none;
     padding: 10px;
-
-    &:hover {
-      //color: $kui-color-text-primary-stronger;
-    }
 
     &.router-link-exact-active {
       color: $kui-color-text-primary-strongest;
