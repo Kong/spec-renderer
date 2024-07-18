@@ -44,27 +44,30 @@
         >
           {{ license.name }} License
         </component>
+        <!-- eslint-disable vue/no-v-html -->
         <a
           v-if="externalDocs?.url"
           class="overview-additional-info-external-docs"
           :href="externalDocs.url"
           rel="noopener noreferrer"
           target="_blank"
-        >
-          {{ externalDocs.description || externalDocs.url }}
-        </a>
+          v-html="externalDocsDescription"
+        />
+        <!-- eslint-enable vue/no-v-html -->
       </div>
     </template>
   </OverviewPanel>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpService } from '@stoplight/types'
 import { InfoIcon } from '@kong/icons'
 import OverviewPanel from './OverviewPanel.vue'
+import useMarkdown from '@/composables/useMarkdown'
 
-defineProps({
+const props = defineProps({
   contact: {
     type: Object as PropType<IHttpService['contact']>,
     default: () => ({}),
@@ -78,6 +81,13 @@ defineProps({
     default: () => ({}),
   },
 })
+
+const { mdRender } = useMarkdown()
+const externalDocsDescription = computed(() =>
+  props.externalDocs?.description
+    ? mdRender(props.externalDocs.description)
+    : props.externalDocs?.url ?? '',
+)
 </script>
 
 <style lang="scss" scoped>

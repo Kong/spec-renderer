@@ -16,9 +16,9 @@
           :data-testid="`overview-security-scheme-${scheme.id}`"
           :title="`${scheme.key} (${scheme.type})`"
         >
-          <p>
-            {{ getDescription(scheme) }}
-          </p>
+          <!-- eslint-disable vue/no-v-html -->
+          <p v-html="getDescription(scheme)" />
+          <!-- eslint-enable vue/no-v-html -->
         </OverviewCollapsiblePanel>
       </div>
     </template>
@@ -32,6 +32,7 @@ import { LockIcon } from '@kong/icons'
 import OverviewPanel from './OverviewPanel.vue'
 import OverviewCollapsiblePanel from './OverviewCollapsiblePanel.vue'
 import { getDefaultDescription } from '@/stoplight/elements-core/utils/securitySchemes'
+import useMarkdown from '@/composables/useMarkdown'
 
 
 defineProps({
@@ -41,11 +42,11 @@ defineProps({
   },
 })
 
+const { mdRender } = useMarkdown()
 const getDescription = (scheme: HttpSecurityScheme): string => {
-  if (scheme.description) {
-    return scheme.description
-  }
-  return getDefaultDescription(scheme)
+  return scheme.description
+    ? mdRender(scheme.description)
+    : getDefaultDescription(scheme)
 }
 </script>
 

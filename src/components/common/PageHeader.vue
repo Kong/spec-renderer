@@ -9,19 +9,23 @@
     >
       {{ title }}
     </h1>
+    <!-- eslint-disable vue/no-v-html -->
     <p
-      v-if="description"
+      v-if="renderedDescription"
       class="page-header-description"
       data-testid="spec-renderer-page-header-description"
-    >
-      {{ description }}
-    </p>
+      v-html="renderedDescription"
+    />
+    <!-- eslint-enable vue/no-v-html -->
     <slot />
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps({
+import useMarkdown from '@/composables/useMarkdown'
+import { computed } from 'vue'
+
+const props = defineProps({
   title: {
     type: String,
     required: true,
@@ -31,6 +35,13 @@ defineProps({
     default: '',
   },
 })
+
+const { mdRender } = useMarkdown()
+const renderedDescription = computed(() =>
+  props.description
+    ? mdRender(props.description)
+    : '',
+)
 </script>
 
 <style lang="scss" scoped>

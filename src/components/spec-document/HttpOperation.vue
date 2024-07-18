@@ -91,7 +91,7 @@
           @request-body-sample-idx-changed="setRequestBodyByIdx"
         />
         <ResponseSample
-          v-if="activeResponseContentList"
+          v-if="Array.isArray(activeResponseContentList) && activeResponseContentList.length"
           :content-list="activeResponseContentList"
           :content-type="activeContentType"
           :response-code="activeResponseCode"

@@ -1,19 +1,24 @@
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <p
     class="property-field-description"
     data-testid="property-field-description"
-  >
-    {{ description }}
-  </p>
+    v-html="mdRender(description)"
+  />
+  <!-- eslint-enable vue/no-v-html -->
 </template>
 
 <script setup lang="ts">
+import useMarkdown from '@/composables/useMarkdown'
+
 defineProps({
   description: {
     type: String,
     required: true,
   },
 })
+
+const { mdRender } = useMarkdown()
 </script>
 
 <style lang="scss" scoped>
