@@ -251,7 +251,9 @@ watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.
       presentedCode.value = editableCode.value
       if (newEditableInput) {
         newEditableInput.innerText = editableCode.value
-        setCursorPosition(cursorPosition.value, true)
+        if (cursorPosition.value !== 0) {
+          setCursorPosition(cursorPosition.value, true)
+        }
       }
     }
   })
