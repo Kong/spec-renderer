@@ -19,7 +19,11 @@ export default function useMarkdown() {
 
   function mdRender(text: string): string {
     initializeMarkdown()
-    return md.value?.render(text) || text
+    try {
+      return md.value?.render(text) || text
+    } catch (error) {
+      return text
+    }
   }
 
   return {
