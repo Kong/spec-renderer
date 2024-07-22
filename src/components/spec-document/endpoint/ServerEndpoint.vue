@@ -119,8 +119,8 @@ watch(serverUrl, (newUrl) => {
         color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
         font-family: var(--kui-font-family-code, $kui-font-family-code);
         gap: var(--kui-space-0, $kui-space-0);
-        padding: var(--kui-space-0, $kui-space-0) var(--kui-space-10, $kui-space-20);
         max-width: 30ch;
+        padding: var(--kui-space-0, $kui-space-0) var(--kui-space-10, $kui-space-20);
 
         .select-chevron-icon {
           margin-left: var(--kui-space-40, $kui-space-40);
@@ -157,9 +157,9 @@ watch(serverUrl, (newUrl) => {
 
     .endpoint-path {
       @include truncate;
+      color: var(--kui-color-text, $kui-color-text);
 
       display: none;
-      color: var(--kui-color-text, $kui-color-text);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       margin-left: 1px; // to give a bit of spacing between server url and path
 
