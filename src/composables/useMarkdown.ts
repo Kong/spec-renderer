@@ -18,6 +18,9 @@ export default function useMarkdown() {
   }
 
   function mdRender(text: string): string {
+    if (!String(text || '').trim()) {
+      return ''
+    }
     initializeMarkdown()
     try {
       return md.value?.render(text) || text

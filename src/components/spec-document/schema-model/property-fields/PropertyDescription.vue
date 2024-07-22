@@ -1,15 +1,14 @@
 <template>
-  <!-- eslint-disable vue/no-v-html -->
-  <p
+  <MarkdownRenderer
+    v-if="description"
     class="property-field-description"
     data-testid="property-field-description"
-    v-html="mdRender(description)"
+    :markdown="description"
   />
-  <!-- eslint-enable vue/no-v-html -->
 </template>
 
 <script setup lang="ts">
-import useMarkdown from '@/composables/useMarkdown'
+import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 
 defineProps({
   description: {
@@ -17,8 +16,6 @@ defineProps({
     required: true,
   },
 })
-
-const { mdRender } = useMarkdown()
 </script>
 
 <style lang="scss" scoped>

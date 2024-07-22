@@ -17,13 +17,10 @@
     </PageHeader>
 
     <section class="overview-page-content">
-      <!-- eslint-disable vue/no-v-html -->
-      <p
-        v-if="renderedDescription"
-        class="overview-page-content-description"
-        v-html="renderedDescription"
+      <MarkdownRenderer
+        v-if="data.description"
+        :markdown="data.description"
       />
-      <!-- eslint-enable vue/no-v-html -->
       <ServerList
         v-if="Array.isArray(data.servers) && data.servers.length"
         :server-list="data.servers"
@@ -43,7 +40,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpService } from '@stoplight/types'
 import ServerList from './overview/ServerList.vue'
@@ -51,9 +47,9 @@ import SecurityList from './overview/SecurityList.vue'
 import AdditionalInfo from './overview/AdditionalInfo.vue'
 import VersionBadge from '../common/VersionBadge.vue'
 import PageHeader from '../common/PageHeader.vue'
-import useMarkdown from '@/composables/useMarkdown'
+import MarkdownRenderer from '../common/MarkdownRenderer.vue'
 
-const props = defineProps({
+defineProps({
   data: {
     type: Object as PropType<IHttpService>,
     required: true,
@@ -63,13 +59,6 @@ const props = defineProps({
     required: true,
   },
 })
-
-const { mdRender } = useMarkdown()
-const renderedDescription = computed(() =>
-  props.data.description
-    ? mdRender(props.data.description)
-    : '',
-)
 </script>
 
 <style lang="scss" scoped>

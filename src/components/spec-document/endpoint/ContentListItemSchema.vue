@@ -1,12 +1,10 @@
 <template>
   <div class="content-list-item-schema">
-    <!-- eslint-disable vue/no-v-html -->
-    <p
-      v-if="renderedDescription"
+    <MarkdownRenderer
+      v-if="schema.description"
       class="content-list-item-schema-description"
-      v-html="renderedDescription"
+      :markdown="schema.description"
     />
-    <!-- eslint-enable vue/no-v-html -->
     <ModelNode
       :schema="schema"
       :title="schema.title"
@@ -15,23 +13,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { PropType } from 'vue'
 import type { SchemaObject } from '@/types'
-import useMarkdown from '@/composables/useMarkdown'
 import ModelNode from '../schema-model/ModelNode.vue'
+import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 
-const props = defineProps({
+defineProps({
   schema: {
     type: Object as PropType<SchemaObject>,
     required: true,
   },
 })
-
-const { mdRender } = useMarkdown()
-const renderedDescription = computed(() =>
-  props.schema.description ? mdRender(props.schema.description) : '',
-)
 </script>
 
 <style lang="scss" scoped>

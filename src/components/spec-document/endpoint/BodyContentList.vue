@@ -3,13 +3,11 @@
     class="body-content-list"
     data-testid="endpoint-body-content-list"
   >
-    <!-- eslint-disable vue/no-v-html -->
-    <p
-      v-if="renderedDescription"
+    <MarkdownRenderer
+      v-if="description"
       class="body-content-list-description"
-      v-html="renderedDescription"
+      :markdown="description"
     />
-    <!-- eslint-enable vue/no-v-html -->
     <template
       v-for="content in contents"
       :key="content.id"
@@ -37,13 +35,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue'
+import type { PropType } from 'vue'
 import type { IMediaTypeContent } from '@stoplight/types'
 import CollapsibleSection from './CollapsibleSection.vue'
 import ContentListItemSchema from './ContentListItemSchema.vue'
+import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import type { SchemaObject } from '@/types'
 import { removeFieldsFromSchemaObject, resolveSchemaObjectFields } from '@/utils'
-import useMarkdown from '@/composables/useMarkdown'
 
 const props = defineProps({
   description: {
@@ -64,9 +62,6 @@ function parseSchema(schema: SchemaObject) {
   const resolvedSchema = resolveSchemaObjectFields(schema)
   return props.readonlyVisible ? resolvedSchema : removeFieldsFromSchemaObject(resolvedSchema)
 }
-
-const { mdRender } = useMarkdown()
-const renderedDescription = computed(() => mdRender(props.description))
 </script>
 
 <style lang="scss" scoped>
