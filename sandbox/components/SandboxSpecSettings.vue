@@ -6,7 +6,7 @@
     width="400px"
   >
     <button class="trigger-button">
-      <CogIcon />
+      <CogIcon :size="KUI_ICON_SIZE_40" />
     </button>
 
     <template #content>
@@ -50,6 +50,7 @@ import Popover from '../../src/components/common/HeadlessPopover.vue'
 import { CogIcon, UploadIcon } from '@kong/icons'
 import SelectDropdown from '../../src/components/common/SelectDropdown.vue'
 import ToggleSwitch from '../../src/components/common/ToggleSwitch.vue'
+import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 
 const emit = defineEmits<{
   (e: 'spec-url-change', url: string): void,
@@ -160,7 +161,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .sandbox-spec-settings-popover {
-  margin-left: auto;
   margin-right: $kui-space-40;
 
   .trigger-button {

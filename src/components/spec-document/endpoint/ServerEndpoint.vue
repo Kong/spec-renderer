@@ -113,7 +113,6 @@ watch(serverUrl, (newUrl) => {
     font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
     gap: var(--kui-space-20, $kui-space-20);
     line-height: var(--kui-line-height-40, $kui-line-height-40);
-    max-width: 80%;
 
     .server-select-dropdown {
       :deep(.trigger-button) {
@@ -121,9 +120,22 @@ watch(serverUrl, (newUrl) => {
         font-family: var(--kui-font-family-code, $kui-font-family-code);
         gap: var(--kui-space-0, $kui-space-0);
         padding: var(--kui-space-0, $kui-space-0) var(--kui-space-10, $kui-space-20);
+        max-width: 30ch;
 
-        .chevron-icon {
+        .select-chevron-icon {
           margin-left: var(--kui-space-40, $kui-space-40);
+        }
+
+        @media (min-width: $kui-breakpoint-mobile) {
+          max-width: 60ch;
+        }
+
+        @media (min-width: $kui-breakpoint-laptop) {
+          max-width: 80ch;
+        }
+
+        @media (min-width: $kui-breakpoint-desktop) {
+          max-width: fit-content;
         }
       }
     }
@@ -138,18 +150,22 @@ watch(serverUrl, (newUrl) => {
     .endpoint-body {
       @include truncate;
 
-      max-width: 50%;
-
       @media (min-width: $kui-breakpoint-tablet) {
-        max-width: fit-content;
+        overflow: initial;
       }
     }
 
     .endpoint-path {
+      @include truncate;
+
+      display: none;
       color: var(--kui-color-text, $kui-color-text);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       margin-left: 1px; // to give a bit of spacing between server url and path
-      white-space: nowrap;
+
+      @media (min-width: $kui-breakpoint-tablet) {
+        display: inline;
+      }
     }
 
     @media (min-width: $kui-breakpoint-tablet) {

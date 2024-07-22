@@ -223,14 +223,20 @@ watch(() => (props.data.id), () => {
     .path {
       @include truncate;
 
+      max-width: 30ch;
       font-family: var(--kui-font-family-code, $kui-font-family-code);
       font-size: var(--kui-font-size-30, $kui-font-size-30);
-      line-height: var(--kui-line-height-40, $kui-line-height-40);
+      line-height: var(--kui-line-height-30, $kui-line-height-30);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+
+      @media (min-width: $kui-breakpoint-mobile) {
+        max-width: 45ch;
+      }
     }
 
     @media (min-width: $kui-breakpoint-mobile) {
       flex-direction: row;
+      align-items: center;
 
       .tryit-dropdown {
         margin-left: var(--kui-space-auto, $kui-space-auto);

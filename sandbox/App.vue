@@ -62,6 +62,7 @@ provide('hide-try-it', hideTryIt)
     margin-bottom: $kui-space-20;
     margin-top: $kui-space-0;
     margin-left: $kui-space-40;
+    font-size: $kui-font-size-40;
 
     @media (min-width: $kui-breakpoint-mobile) {
       margin-bottom: $kui-space-0;
@@ -73,6 +74,7 @@ provide('hide-try-it', hideTryIt)
     display: inline-block;
     text-decoration: none;
     padding: 10px;
+    font-size: $kui-font-size-20;
 
     &.router-link-exact-active {
       color: $kui-color-text-primary-strongest;
