@@ -2,14 +2,16 @@
   <div class="sandbox-container">
     <header class="page-header">
       <h1><code>@kong/spec-renderer-dev</code></h1>
-      <router-link
-        to="/"
-      >
-        Kong Spec-Renderer
-      </router-link>
-      <a href="/spec-renderer/stoplight/">
-        Stoplight-Playground
-      </a>
+      <div>
+        <router-link
+          to="/"
+        >
+          Kong Spec-Renderer
+        </router-link>
+        <a href="/spec-renderer/stoplight/">
+          Stoplight-Playground
+        </a>
+      </div>
 
       <SandboxSpecSettings
         @show-schemas-change="hideSchemas = !$event"
@@ -47,11 +49,13 @@ provide('hide-try-it', hideTryIt)
 .page-header {
   background-color: $kui-color-background-primary-strongest;
   color: $kui-color-text-inverse;
-  align-items: center;
   gap: $kui-space-70;
+  display: flex;
+  flex-direction: column;
 
   @media (min-width: $kui-breakpoint-mobile) {
-    display: flex;
+    align-items: center;
+    flex-direction: row;
   }
 
   h1 {

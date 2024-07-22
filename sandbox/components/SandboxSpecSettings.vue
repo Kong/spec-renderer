@@ -160,43 +160,43 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .sandbox-spec-settings-popover {
-    margin-left: auto;
-    margin-right: $kui-space-40;
+  margin-left: auto;
+  margin-right: $kui-space-40;
 
-    .trigger-button {
-      @include default-button-reset;
+  .trigger-button {
+    @include default-button-reset;
 
-      color: $kui-color-text-inverse;
+    color: $kui-color-text-inverse;
 
-      &:hover {
-        color: $kui-color-text-neutral-weaker;
-      }
+    &:hover {
+      color: $kui-color-text-neutral-weaker;
     }
+  }
 
-    .spec-settings-container {
-      background-color: $kui-color-background;
-      border-radius: $kui-border-radius-30;
-      box-shadow: $kui-shadow;
-      display: flex;
-      flex-direction: column;
-      gap: $kui-space-50;
+  .spec-settings-container {
+    background-color: $kui-color-background;
+    border-radius: $kui-border-radius-30;
+    box-shadow: $kui-shadow;
+    display: flex;
+    flex-direction: column;
+    gap: $kui-space-50;
+    width: 100%;
+    padding: $kui-space-40;
+    box-sizing: border-box;
+  }
+
+  .spec-selector {
+    width: 100%;
+
+    :deep(.popover-trigger-wrapper) {
       width: 100%;
-      padding: $kui-space-40;
-      box-sizing: border-box;
-    }
 
-    .spec-selector {
-      width: 100%;
-
-      :deep(.popover-trigger-wrapper) {
+      .trigger-button {
+        border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
         width: 100%;
-
-        .trigger-button {
-          border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-          width: 100%;
-          justify-content: space-between;
-        }
+        justify-content: space-between;
       }
     }
   }
+}
 </style>

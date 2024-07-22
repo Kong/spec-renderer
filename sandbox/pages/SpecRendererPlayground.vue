@@ -19,7 +19,6 @@ import SpecRenderer from '../../src/components/SpecRenderer.vue'
 import { useRoute as useVueRoute } from 'vue-router'
 
 const route = useVueRoute()
-const key = ref<number>(0)
 
 const currentPath = ref<string>(route.path)
 
