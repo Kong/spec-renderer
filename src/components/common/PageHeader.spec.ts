@@ -18,7 +18,7 @@ describe('<PageHeader />', () => {
     expect(wrapper.findTestId('spec-renderer-page-header-description').exists()).toBe(false)
   })
 
-  it.only('renders with all props', () => {
+  it('renders with all props', () => {
     const wrapper = mount(PageHeader, {
       props: {
         title: 'sample title',
