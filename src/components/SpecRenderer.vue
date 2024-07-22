@@ -264,10 +264,10 @@ watch(specRendererTocRef, async (val) => {
     display: none;
     flex-shrink: 0;
     height: 100vh;
-    position: sticky;
-    top: 0;
     left: 0;
     overflow: visible;
+    position: sticky;
+    top: 0;
     width: 320px;
 
     @media (min-width: $kui-breakpoint-tablet) {
