@@ -218,16 +218,19 @@ watch(() => (props.data.id), () => {
       margin-left: auto;
     }
   }
+
   @media (min-width: $kui-breakpoint-mobile) {
     .tryit-header {
       align-items: center;
       display: flex;
     }
   }
+
   .tryit-body {
     background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    border-radius: 0;
+    border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     border-top: 0px;
     padding: var(--kui-space-40, $kui-space-40);
   }
