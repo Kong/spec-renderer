@@ -347,5 +347,10 @@ watch(() => ({
       margin-left: var(--kui-space-10, $kui-space-10) !important;
     }
   }
+
+  :deep(.code-block pre) {
+    border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+  }
 }
 </style>

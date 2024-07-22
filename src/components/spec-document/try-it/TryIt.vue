@@ -5,11 +5,13 @@
     :data-testid="`tryit-wrapper-${data.id}`"
   >
     <div class="tryit-header">
-      <MethodBadge
-        :method="data.method"
-        size="small"
-      />
-      <span class="path">{{ data.path }}</span>
+      <div class="method-path">
+        <MethodBadge
+          :method="data.method"
+          size="small"
+        />
+        <span class="path">{{ data.path }}</span>
+      </div>
 
       <TryItDropdown
         class="tryit-dropdown"
@@ -208,21 +210,31 @@ watch(() => (props.data.id), () => {
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     border-top-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: var(--kui-space-30, $kui-space-30);
     padding: var(--kui-space-50, $kui-space-50);
-    .path {
-      margin-left: var(--kui-space-20, $kui-space-20);
-      margin-right: var(--kui-space-20, $kui-space-20);
-    }
-    .tryit-dropdown {
-      margin-left: auto;
-    }
-  }
 
-  @media (min-width: $kui-breakpoint-mobile) {
-    .tryit-header {
-      align-items: center;
+    .method-path {
       display: flex;
+      gap: var(--kui-space-30, $kui-space-30);
+    }
+
+    .path {
+      @include truncate;
+
+      font-family: var(--kui-font-family-code, $kui-font-family-code);
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      line-height: var(--kui-line-height-40, $kui-line-height-40);
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    }
+
+    @media (min-width: $kui-breakpoint-mobile) {
+      flex-direction: row;
+
+      .tryit-dropdown {
+        margin-left: var(--kui-space-auto, $kui-space-auto);
+      }
     }
   }
 
