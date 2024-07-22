@@ -239,7 +239,7 @@ watch(specRendererTocRef, async (val) => {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
 
   @media (min-width: $kui-breakpoint-tablet) {
@@ -262,13 +262,16 @@ watch(specRendererTocRef, async (val) => {
 
   aside {
     display: none;
+    flex-shrink: 0;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    left: 0;
+    overflow: visible;
+    width: 320px;
 
     @media (min-width: $kui-breakpoint-tablet) {
       display: flex;
-      flex-shrink: 0;
-      height: 100%;
-      overflow: visible;
-      width: 320px;
     }
   }
 

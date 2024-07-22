@@ -47,10 +47,8 @@ provide('hide-try-it', hideTryIt)
 .page-header {
   background-color: $kui-color-background-primary-strongest;
   color: $kui-color-text-inverse;
-
   align-items: center;
   gap: $kui-space-70;
-  margin-bottom: $kui-space-70;
 
   @media (min-width: $kui-breakpoint-mobile) {
     display: flex;
