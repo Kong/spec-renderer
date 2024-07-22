@@ -17,9 +17,14 @@ const props = defineProps({
     type: String,
     default: 'p',
   },
+  dataTestid: {
+    type: String,
+    default: '',
+  },
 })
 
 const render = () => h(props.tag, {
   innerHTML: mdRender(props.markdown),
+  'data-testid': props.dataTestid,
 })
 </script>
