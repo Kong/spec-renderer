@@ -12,34 +12,12 @@
           Stoplight-Playground
         </a>
       </div>
-
-      <SandboxSpecSettings
-        @show-schemas-change="hideSchemas = !$event"
-        @show-try-it-change="hideTryIt = !$event"
-        @spec-text-change="specText = $event"
-        @spec-url-change="specUrl = $event"
-      />
     </header>
     <main class="page-main">
       <router-view />
     </main>
   </div>
 </template>
-
-<script setup lang="ts">
-import { provide, ref } from 'vue'
-import SandboxSpecSettings from './components/SandboxSpecSettings.vue'
-
-const specUrl = ref<string>('')
-const specText = ref<string>('')
-const hideSchemas = ref<boolean>(false)
-const hideTryIt = ref<boolean>(false)
-
-provide('spec-url', specUrl)
-provide('spec-text', specText)
-provide('hide-schemas', hideSchemas)
-provide('hide-try-it', hideTryIt)
-</script>
 
 <style lang="scss" scoped>
 .sandbox-container {

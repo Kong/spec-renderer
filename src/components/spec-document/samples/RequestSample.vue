@@ -334,6 +334,13 @@ watch(() => ({
 
       :deep(.trigger-button) {
         @include small-bordered-trigger-button;
+        @include truncate;
+
+        max-width: 25ch;
+
+        @media (min-width: $kui-breakpoint-tablet) {
+          max-width: 40ch;
+        }
       }
     }
   }
