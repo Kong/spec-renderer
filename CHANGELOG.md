@@ -1,3 +1,10 @@
+# [1.48.0](https://github.com/Kong/spec-renderer/compare/v1.47.3...v1.48.0) (2024-07-23)
+
+
+### Features
+
+* markdown support [KHCP-11785] ([#213](https://github.com/Kong/spec-renderer/issues/213)) ([0805cb7](https://github.com/Kong/spec-renderer/commit/0805cb75b47e64b7e68e6e2c01e8c37fdfa8cd18))
+
 ## [1.47.3](https://github.com/Kong/spec-renderer/compare/v1.47.2...v1.47.3) (2024-07-22)
 
 
