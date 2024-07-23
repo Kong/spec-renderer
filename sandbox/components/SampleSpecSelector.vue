@@ -167,14 +167,22 @@ onMounted(() => {
   margin-bottom: 20px;
   display: flex;
   align-items: center;
+  flex-direction: column;
+  gap: 8px;
   justify-content: center;
+
   select {
     -webkit-appearance: auto;
   }
+
   .dropzone {
     background: red;
     margin-left:40px;
     padding: 20px;
+  }
+
+  @media (min-width: $kui-breakpoint-mobile) {
+    flex-direction: row;
   }
 }
 </style>

@@ -226,7 +226,7 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
   .http-operation-container  {
     display: grid;
     gap: var(--kui-space-10, $kui-space-10);
-    grid-template-columns: 1.2fr 0.8fr;
+    grid-template-columns: auto 575px;
     width: 100%;
 
     .left {

@@ -239,7 +239,7 @@ watch(specRendererTocRef, async (val) => {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
 
   @media (min-width: $kui-breakpoint-tablet) {
@@ -262,13 +262,15 @@ watch(specRendererTocRef, async (val) => {
 
   aside {
     display: none;
+    flex-shrink: 0;
+    height: 100vh;
+    left: 0;
+    position: sticky;
+    top: 0;
+    width: 320px;
 
     @media (min-width: $kui-breakpoint-tablet) {
       display: flex;
-      flex-shrink: 0;
-      height: 100%;
-      overflow: visible;
-      width: 320px;
     }
   }
 
@@ -349,6 +351,12 @@ Otherwise host app should have control over these styles.
 .slideout-toc {
   .spec-renderer-toc {
     @include standalone-spec-renderer-toc($itemPadding: var(--kui-space-40, $kui-space-40));
+
+    :deep(>) {
+      ul > *:last-child {
+        padding-bottom: var(--kui-space-0, $kui-space-0);
+      }
+    }
   }
 }
 </style>

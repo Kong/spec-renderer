@@ -24,7 +24,6 @@
         @keydown.space.prevent
         @keyup.space="propagateInputEvent"
       >
-
         <!-- white vertical bar that is visible when switch is enabled -->
         <span class="switch-control-enabled-bar" />
       </span>
@@ -144,11 +143,11 @@ const handleChange = (event: Event): void => {
       background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
       border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
       cursor: pointer;
-      height: 22px;
+      height: 20px;
       padding: $toggleSwitchPadding;
       position: relative;
       transition: background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
-      width: 44px;
+      width: 40px;
 
       &:hover:not(.disabled) {
         background-color: var(--kui-color-background-neutral-weak, $kui-color-background-neutral-weak);
@@ -210,7 +209,7 @@ const handleChange = (event: Event): void => {
 
         &::before {
           box-shadow: 0px 0px 0px var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border-primary-strong, $kui-color-border-primary-strong) inset;
-          transform: translateY(-50%) translateX(22px);
+          transform: translateY(-50%) translateX(20px);
         }
       }
 
