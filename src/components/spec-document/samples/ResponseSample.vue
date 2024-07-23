@@ -65,7 +65,7 @@ const activeResponseSample = computed(() => {
   return ''
 })
 const exampleSelectList = computed((): Array<SelectItem> => {
-  if (props.contentList[0].examples) {
+  if (props.contentList[0]?.examples) {
     return props.contentList[0].examples.map((s, index) => {
       return {
         label: s.key,

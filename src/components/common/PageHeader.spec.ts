@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import PageHeader from './PageHeader.vue'
 
 describe('<PageHeader />', () => {
   it('renders with only required props', () => {
-    const wrapper = shallowMount(PageHeader, {
+    const wrapper = mount(PageHeader, {
       props: {
         title: 'sample title',
       },
@@ -19,7 +19,7 @@ describe('<PageHeader />', () => {
   })
 
   it('renders with all props', () => {
-    const wrapper = shallowMount(PageHeader, {
+    const wrapper = mount(PageHeader, {
       props: {
         title: 'sample title',
         description: 'sample content',
@@ -32,7 +32,7 @@ describe('<PageHeader />', () => {
   })
 
   it('renders slots correctly', () => {
-    const wrapper = shallowMount(PageHeader, {
+    const wrapper = mount(PageHeader, {
       props: {
         title: 'sample title',
       },

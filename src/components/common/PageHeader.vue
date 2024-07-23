@@ -9,18 +9,19 @@
     >
       {{ title }}
     </h1>
-    <p
+    <MarkdownRenderer
       v-if="description"
       class="page-header-description"
       data-testid="spec-renderer-page-header-description"
-    >
-      {{ description }}
-    </p>
+      :markdown="description"
+    />
     <slot />
   </div>
 </template>
 
 <script setup lang="ts">
+import MarkdownRenderer from './MarkdownRenderer.vue'
+
 defineProps({
   title: {
     type: String,

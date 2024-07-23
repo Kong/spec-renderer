@@ -17,12 +17,10 @@
     </PageHeader>
 
     <section class="overview-page-content">
-      <p
+      <MarkdownRenderer
         v-if="data.description"
-        class="overview-page-content-description"
-      >
-        {{ data.description }}
-      </p>
+        :markdown="data.description"
+      />
       <ServerList
         v-if="Array.isArray(data.servers) && data.servers.length"
         :server-list="data.servers"
@@ -49,6 +47,7 @@ import SecurityList from './overview/SecurityList.vue'
 import AdditionalInfo from './overview/AdditionalInfo.vue'
 import VersionBadge from '../common/VersionBadge.vue'
 import PageHeader from '../common/PageHeader.vue'
+import MarkdownRenderer from '../common/MarkdownRenderer.vue'
 
 defineProps({
   data: {

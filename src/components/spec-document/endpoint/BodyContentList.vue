@@ -3,12 +3,11 @@
     class="body-content-list"
     data-testid="endpoint-body-content-list"
   >
-    <p
+    <MarkdownRenderer
       v-if="description"
       class="body-content-list-description"
-    >
-      {{ description }}
-    </p>
+      :markdown="description"
+    />
     <template
       v-for="content in contents"
       :key="content.id"
@@ -25,34 +24,12 @@
             {{ content.schema.title }}
           </h3>
         </template>
-        <div class="content-list-schema-content">
-          <p
-            v-if="content.schema.description"
-            class="content-list-schema-description"
-          >
-            {{ content.schema.description }}
-          </p>
-          <ModelNode
-            :schema="parseSchema(content.schema)"
-            :title="content.schema.title"
-          />
-        </div>
+        <ContentListItemSchema :schema="parseSchema(content.schema)" />
       </CollapsibleSection>
-      <div
+      <ContentListItemSchema
         v-else-if="content.schema"
-        class="content-list-schema-content"
-      >
-        <p
-          v-if="content.schema.description"
-          class="content-list-schema-description"
-        >
-          {{ content.schema.description }}
-        </p>
-        <ModelNode
-          :schema="parseSchema(content.schema)"
-          :title="content.schema.title"
-        />
-      </div>
+        :schema="parseSchema(content.schema)"
+      />
     </template>
   </div>
 </template>
@@ -60,8 +37,9 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import type { IMediaTypeContent } from '@stoplight/types'
-import ModelNode from '../schema-model/ModelNode.vue'
 import CollapsibleSection from './CollapsibleSection.vue'
+import ContentListItemSchema from './ContentListItemSchema.vue'
+import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import type { SchemaObject } from '@/types'
 import { removeFieldsFromSchemaObject, resolveSchemaObjectFields } from '@/utils'
 
@@ -100,12 +78,6 @@ function parseSchema(schema: SchemaObject) {
   .content-list-schema-title {
     font-size: var(--kui-font-size-30, $kui-font-size-30);
     line-height: var(--kui-line-height-30, $kui-line-height-30);
-  }
-
-  .content-list-schema-content {
-    .content-list-schema-description {
-      margin-bottom: var(--kui-space-40, $kui-space-40);
-    }
   }
 }
 </style>

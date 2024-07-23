@@ -1,13 +1,15 @@
 <template>
-  <p
+  <MarkdownRenderer
+    v-if="description"
     class="property-field-description"
     data-testid="property-field-description"
-  >
-    {{ description }}
-  </p>
+    :markdown="description"
+  />
 </template>
 
 <script setup lang="ts">
+import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
+
 defineProps({
   description: {
     type: String,
