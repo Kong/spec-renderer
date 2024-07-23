@@ -1,6 +1,6 @@
 # SlideOut
 
-SlideOut is an overlay container with backdrop that displays content over the page area. Upon opening SlideOut component adds `spec-renderer-no-scroll` to `body` and `html` elements which makes those elements not scrollable behind the SlideOut overlay.
+SlideOut is an overlay container with backdrop that displays content over the page area. Upon opening SlideOut component adds `spec-renderer-no-scroll` to element that scrolls the document, which makes those elements not scrollable behind the SlideOut overlay.
 
 ## Props
 

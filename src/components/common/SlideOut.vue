@@ -91,11 +91,9 @@ const toggleEventListeners = (isActive: boolean): void => {
 const toggleBodyScroll = (isActive: boolean): void => {
   if (typeof document !== 'undefined') {
     if (isActive) {
-      document.documentElement.classList.add('spec-renderer-no-scroll')
-      document.body.classList.add('spec-renderer-no-scroll')
+      document.scrollingElement?.classList.add('spec-renderer-no-scroll')
     } else {
-      document.documentElement.classList.remove('spec-renderer-no-scroll')
-      document.body.classList.remove('spec-renderer-no-scroll')
+      document.scrollingElement?.classList.remove('spec-renderer-no-scroll')
     }
   }
 }
