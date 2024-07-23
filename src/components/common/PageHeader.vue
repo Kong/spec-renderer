@@ -5,7 +5,6 @@
   >
     <div class="page-header-title">
       <h1
-        class="page-header-title"
         data-testid="spec-renderer-page-header-title"
       >
         {{ title }}
