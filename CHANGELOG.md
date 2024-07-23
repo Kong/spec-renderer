@@ -1,3 +1,10 @@
+## [1.48.1](https://github.com/Kong/spec-renderer/compare/v1.48.0...v1.48.1) (2024-07-23)
+
+
+### Bug Fixes
+
+* spec renderer responsiveness fixes [KHCP-12604] ([#219](https://github.com/Kong/spec-renderer/issues/219)) ([ba2cf0e](https://github.com/Kong/spec-renderer/commit/ba2cf0e57c4f7a0a06d19cf09880693c087ee2ea))
+
 # [1.48.0](https://github.com/Kong/spec-renderer/compare/v1.47.3...v1.48.0) (2024-07-23)
 
 
