@@ -15,7 +15,7 @@ const props = defineProps({
   },
   tag: {
     type: String,
-    default: 'p',
+    default: 'div',
   },
   dataTestid: {
     type: String,
