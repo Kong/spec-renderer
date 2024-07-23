@@ -88,16 +88,31 @@ const toggleEventListeners = (isActive: boolean): void => {
   }
 }
 
+const toggleBodyScroll = (isActive: boolean): void => {
+  if (typeof document !== 'undefined') {
+    if (isActive) {
+      document.documentElement.classList.add('spec-renderer-no-scroll')
+      document.body.classList.add('spec-renderer-no-scroll')
+    } else {
+      document.documentElement.classList.remove('spec-renderer-no-scroll')
+      document.body.classList.remove('spec-renderer-no-scroll')
+    }
+  }
+}
+
 watch(() => props.visible, async (visible: boolean): Promise<void> => {
   if (visible) {
     toggleEventListeners(true)
+    toggleBodyScroll(true)
   } else {
     toggleEventListeners(false)
+    toggleBodyScroll(false)
   }
 }, { immediate: true })
 
 onUnmounted(() => {
   toggleEventListeners(false)
+  toggleBodyScroll(false)
 })
 </script>
 
@@ -112,7 +127,6 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    gap: var(--kui-space-50, $kui-space-50);
     height: 100vh;
     inset: 0;
     overflow-y: auto;
@@ -184,5 +198,12 @@ onUnmounted(() => {
     position: fixed;
     z-index: 1000;
   }
+}
+</style>
+
+<style lang="scss">
+// must be unscoped since it's targeting the body element
+.spec-renderer-no-scroll {
+  overflow: hidden;
 }
 </style>

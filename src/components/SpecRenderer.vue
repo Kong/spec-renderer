@@ -265,7 +265,6 @@ watch(specRendererTocRef, async (val) => {
     flex-shrink: 0;
     height: 100vh;
     left: 0;
-    overflow: visible;
     position: sticky;
     top: 0;
     width: 320px;
@@ -352,6 +351,12 @@ Otherwise host app should have control over these styles.
 .slideout-toc {
   .spec-renderer-toc {
     @include standalone-spec-renderer-toc($itemPadding: var(--kui-space-40, $kui-space-40));
+
+    :deep(>) {
+      ul > *:last-child {
+        padding-bottom: var(--kui-space-0, $kui-space-0);
+      }
+    }
   }
 }
 </style>
