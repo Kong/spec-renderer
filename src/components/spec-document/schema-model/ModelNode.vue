@@ -20,6 +20,13 @@
       />
     </template>
 
+    <PropertyFieldList
+      :hidden-field-list="hiddenFieldList"
+      :property="selectedSchemaModel"
+      :property-name="title"
+      :required-fields="selectedSchemaModel?.required"
+    />
+
     <!-- render all properties of the schema model -->
     <template
       v-for="(property, propertyName, index) in selectedSchemaModel?.properties"
@@ -42,7 +49,8 @@ import { computed, watch } from 'vue'
 import type { PropType } from 'vue'
 import ModelProperty from './ModelProperty.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import type { SchemaObject, SelectItem } from '@/types'
+import PropertyFieldList from './PropertyFieldList.vue'
+import type { SchemaModelPropertyField, SchemaObject, SelectItem } from '@/types'
 import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 import useSchemaVariants from '@/composables/useSchemaVariants'
 
@@ -54,6 +62,14 @@ const props = defineProps({
   title: {
     type: String,
     default: '',
+  },
+  /**
+   * Hides the example field from the model node
+   * in case example is already shown on the page
+   */
+  hideExampleField: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -75,6 +91,11 @@ watch(selectedSchemaModel, (newModel) => {
 })
 
 const dataTestId = computed(() => `model-node-${props.title.replaceAll(' ', '-')}`)
+const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
+  props.hideExampleField
+    ? ['info', 'description', 'example']
+    : ['info', 'description'],
+)
 </script>
 
 <style lang="scss" scoped>

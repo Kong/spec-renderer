@@ -11,6 +11,7 @@
 
     <div class="http-model-content">
       <ModelNode
+        :hide-example-field="Boolean(exampleModel)"
         :schema="data"
         :title="title"
         @selected-model-changed="(newModel: SchemaObject) => activeSchemaModel = newModel"
