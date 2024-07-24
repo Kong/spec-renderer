@@ -136,8 +136,12 @@ const nestedPropertiesPresent = computed<boolean>(() =>{
   .nested-model-node {
     @include tree-nesting;
 
-    // left padding for the nested model-node tree
-    padding-left: var(--kui-space-40, $kui-space-40);
+    // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+    // stylelint-disable-next-line no-duplicate-selectors
+    & {
+      // left padding for the nested model-node tree
+      padding-left: var(--kui-space-40, $kui-space-40);
+    }
 
     .model-property {
       // left padding for space between the tree-branch and model-property

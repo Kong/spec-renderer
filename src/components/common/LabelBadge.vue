@@ -31,12 +31,17 @@ defineProps({
 <style lang="scss" scoped>
 .label-badge {
   @include badge-appearance;
-  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-  display: inline-block;
-  font-size: var(--kui-font-size-20, $kui-font-size-20);
-  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-  line-height: var(--kui-line-height-20, $kui-line-height-20);
-  padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
+
+  // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+  // stylelint-disable-next-line no-duplicate-selectors
+  & {
+    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+    display: inline-block;
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    line-height: var(--kui-line-height-20, $kui-line-height-20);
+    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
+  }
 
   &.neutral {
     @include badge-appearance(
