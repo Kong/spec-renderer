@@ -13,6 +13,7 @@
     Try It!
 
     <SelectDropdown
+      v-cloak
       v-if="showInsomnia"
       :id="`tryit-dropdown-${data.id}`"
       class="tryit-dropdown"

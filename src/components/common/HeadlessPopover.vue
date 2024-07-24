@@ -6,6 +6,7 @@
     v-bind="sanitizedAttrs"
   >
     <div
+      v-cloak
       ref="triggerWrapperRef"
       class="popover-trigger-wrapper"
     >
