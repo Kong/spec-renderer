@@ -3,7 +3,6 @@
     class="request-sample-wrapper"
     :data-testid="`request-sample-${data.id}`"
   >
-    <h5>REQUEST SAMPLE</h5>
     <CollapsablePanel
       :collapsible="false"
       :content-to-copy="(requestCode as string)"
@@ -312,11 +311,6 @@ watch(() => ({
 <style lang="scss" scoped>
 
 .request-sample-wrapper {
-  h5 {
-    margin: var(--kui-space-30, $kui-space-30);
-    margin-top: var(--kui-space-0, $kui-space-0);
-  }
-
   .select-wrapper {
     display: flex;
     flex: 1;

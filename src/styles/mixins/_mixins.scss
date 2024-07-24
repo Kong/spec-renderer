@@ -7,6 +7,7 @@
 @import "@/styles/mixins/inputs";
 @import "@/styles/mixins/labels";
 @import "@/styles/mixins/dropdowns";
+@import "@/styles/mixins/typography";
 
 // common mixins; to be used in varied places
 @mixin truncate($lines: 0) {

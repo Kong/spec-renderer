@@ -6,9 +6,9 @@
     :start-collapsed="paramType !== 'body'"
   >
     <template #header>
-      <h5>
+      <h3>
         {{ compTitles[props.paramType] }}
-      </h5>
+      </h3>
     </template>
 
     <div

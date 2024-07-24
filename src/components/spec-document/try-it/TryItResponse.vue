@@ -5,7 +5,7 @@
   >
     <template #header>
       <div class="h-wrapper">
-        <h5>
+        <h3>
           <span v-if="!response?.status">
             Response
           </span>
@@ -16,7 +16,7 @@
           >
             {{ response?.status }}
           </span>
-        </h5>
+        </h3>
       </div>
       <SelectDropdown
         :id="`response-option-select-${dataId}`"
@@ -166,15 +166,16 @@ watch(() => props.response, async (res) => {
   color: var(--kui-color-text-danger-strong, $kui-color-text-danger-strong);
   padding: var(--kui-space-40, $kui-space-40);
 }
+
 .res-option-selector {
 
   :deep(.trigger-button) {
     @include small-bordered-trigger-button;
   }
 }
+
 :deep(.response-body pre) {
   max-height: 200px;
   overflow-y: auto;
 }
-
 </style>

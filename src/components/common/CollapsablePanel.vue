@@ -95,6 +95,7 @@ const toggleState = (e: Event) => {
     }
     .btn-container {
       padding-left: var(--kui-space-30, $kui-space-30);
+      align-self: flex-end;
 
       .collapse-trigger-btn {
         background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
@@ -108,10 +109,10 @@ const toggleState = (e: Event) => {
       }
     }
 
-    :deep(>h5) {
-      color: var(--kui-color-text, $kui-color-text);
+    :deep(> h3) {
+      @include collapsible-section-title;
+
       flex: 1;
-      font-size: var(--kui-font-size-30, $kui-font-size-30)!important;
       padding: var(--kui-space-0, $kui-space-0);
     }
   }

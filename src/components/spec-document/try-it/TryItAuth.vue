@@ -9,9 +9,9 @@
         :color="KUI_COLOR_TEXT_NEUTRAL"
         :size="20"
       />
-      <h5>
+      <h3>
         Authentication
-      </h5>
+      </h3>
 
       <SelectDropdown
         v-if="securitySchemeList.length > 1"

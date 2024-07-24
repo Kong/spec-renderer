@@ -4,9 +4,9 @@
     :data-testid="`tryit-server-${data.id}`"
   >
     <template #header>
-      <h5>
+      <h3>
         Server
-      </h5>
+      </h3>
     </template>
 
     <div
