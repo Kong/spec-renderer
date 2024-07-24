@@ -14,7 +14,7 @@
       :key="key"
       class="short"
     >
-      <InputLabel>
+      <InputLabel :for="`server-input-${key}-${data.id}`">
         {{ key }}
         <Tooltip
           v-if="serverVariables[key].description"
@@ -23,6 +23,7 @@
         />
       </InputLabel>
       <input
+        :id="`server-input-${key}-${data.id}`"
         v-model="fieldValues[key]"
         :aria-describedby="`server-tooltip-${key}-${data.id}`"
         autocomplete="off"

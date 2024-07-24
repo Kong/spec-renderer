@@ -20,7 +20,11 @@
     </button>
 
     <Transition name="spec-renderer-fade">
-      <ul v-show="isExpanded" :id="collapseGroupId">
+      <ul
+        v-show="isExpanded"
+        :id="collapseGroupId"
+        :aria-hidden="!isExpanded"
+      >
         <component
           :is="itemComponent(child)"
           v-for="(child, idx) in item.items"

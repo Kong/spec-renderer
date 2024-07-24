@@ -15,6 +15,7 @@
         <button
           v-if="collapsible"
           :aria-expanded="!isCollapsed"
+          aria-label="Toggle content"
           class="collapse-trigger-btn"
           type="button"
         >
@@ -32,6 +33,7 @@
     <!-- TODO ADD expand/collapse/copy content-->
     <div
       v-show="!isCollapsed"
+      :aria-hidden="isCollapsed"
       class="panel-body"
     >
       <slot />
