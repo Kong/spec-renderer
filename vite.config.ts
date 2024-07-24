@@ -31,7 +31,7 @@ const SCSS_Logger = {
     }
 
     // List all other warnings
-    console.warn(`Warning: ${message}`);
+    console.warn(`Warning: ${message}`)
   },
 }
 
