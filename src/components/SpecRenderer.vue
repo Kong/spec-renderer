@@ -49,6 +49,7 @@
     <div class="doc">
       <SpecDocument
         v-if="parsedDocument && currentPath"
+        :allow-scrolling="allowScrolling"
         :base-path="basePath"
         :current-path="currentPath"
         :document="parsedDocument"
@@ -148,6 +149,13 @@ const props = defineProps({
   withCredentials: {
     type: Boolean,
     default: false,
+  },
+  /**
+   * Allow scrolling trough operations/schemas
+   */
+  allowScrolling: {
+    type: Boolean,
+    default: true,
   },
 })
 

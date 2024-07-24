@@ -1,18 +1,44 @@
 <template>
-  <div class="spec-renderer-document">
+  <div
+    v-if="!allowScrolling"
+    class="spec-renderer-document"
+  >
     <component
       :is="docComponent.component"
-      v-if="docComponent.component"
+      v-if="docComponent.component !== null"
       v-bind="docComponent.props"
     />
+  </div>
+  <div
+    v-else
+    class="scrolling-container"
+  >
+    <component
+      :is="rootDocumentComponent.component"
+      v-if="rootDocumentComponent.component !== null"
+      v-bind="rootDocumentComponent.props"
+    />
+
+    <div
+      v-for="doc in document.children"
+      :key="(doc.data as IHttpOperation).id"
+      class="spec-renderer-document"
+    >
+      <component
+        :is="getDocumentComponent(doc).component"
+        v-if="getDocumentComponent(doc).component"
+        v-bind="getDocumentComponent(doc).props"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { watch, ref, provide, computed } from 'vue'
 import type { PropType, Ref } from 'vue'
+import type { IHttpOperation } from '@stoplight/types'
 import { NodeType } from '@stoplight/types'
-import type { ServiceNode } from '../../stoplight/elements/utils/oas/types'
+import type { ServiceNode, ServiceChildNode } from '../../stoplight/elements/utils/oas/types'
 import HttpService from './HttpService.vue'
 import HttpOperation from './HttpOperation.vue'
 import HttpModel from './HttpModel.vue'
@@ -53,8 +79,15 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-
+  /**
+   * Allow scrolling trough operations/schemas
+   */
+  allowScrolling: {
+    type: Boolean,
+    default: true,
+  },
 })
+
 const serviceNode = ref<ServiceNode | null>(null)
 
 // to be consumed in multi-level child components
@@ -70,6 +103,7 @@ const emit = defineEmits < {
 /** we show tryIt section when it's requested to be hidden and when node */
 
 watch(() => ({ pathname: props.currentPath, document: props.document }), ({ pathname, document }) => {
+  console.log('zzzz:', document)
   const isRootPath = !pathname || pathname === '/'
   serviceNode.value = <ServiceNode>(isRootPath ? document : document.children.find((child:any) => child.uri === pathname))
   if (!serviceNode.value) {
@@ -77,27 +111,36 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), ({ path
   }
 }, { immediate: true })
 
-const docComponent = computed(() => {
-  if (!serviceNode.value) return {}
+const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null) => {
+  if (!forServiceNode) return {}
 
   const defaultProps = {
-    data: serviceNode.value.data,
+    data: forServiceNode.data,
   }
 
-  switch (serviceNode.value.type as NodeType) {
+  switch (forServiceNode.type as NodeType) {
     case NodeType.Article:
       return { component: ArticleNode, props: defaultProps }
     case NodeType.HttpOperation:
     case NodeType.HttpWebhook:
       return { component: HttpOperation, props: defaultProps }
     case NodeType.HttpService:
-      return { component: HttpService, props: { ...defaultProps, specVersion: serviceNode.value.specVersion } }
+      return { component: HttpService, props: { ...defaultProps, specVersion: (<ServiceNode>forServiceNode).specVersion } }
     case NodeType.Model:
-      return { component: HttpModel, props: { ...defaultProps, title: serviceNode.value.name } }
+      return { component: HttpModel, props: { ...defaultProps, title: forServiceNode.name } }
     default:
       return { component: UnknownNode, props: defaultProps }
   }
+}
+
+const docComponent = computed(() => {
+  return getDocumentComponent(serviceNode.value)
 })
+
+const rootDocumentComponent = computed(() => {
+  return getDocumentComponent(<ServiceNode>props.document)
+})
+
 </script>
 
 <style lang="scss" scoped>
@@ -105,5 +148,11 @@ const docComponent = computed(() => {
   background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
   box-sizing: border-box;
   color: var(--kui-color-text, $kui-color-text);
+}
+
+.scrolling-container {
+  .overview-page {
+    padding-bottom: var(--kui-space-100, $kui-space-100);
+  }
 }
 </style>
