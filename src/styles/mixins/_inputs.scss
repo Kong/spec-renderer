@@ -32,6 +32,7 @@
   &::placeholder {
     @include input-text;
 
+    // stylelint-disable-next-line no-duplicate-selectors
     & {
       color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     }

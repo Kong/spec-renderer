@@ -44,6 +44,7 @@ defineProps({
 .method-badge {
   @include badge-appearance;
 
+  // stylelint-disable-next-line no-duplicate-selectors
   & {
     border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
     font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);

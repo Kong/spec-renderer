@@ -160,10 +160,12 @@ watch(selectValue, (newValue: string) => {
   .trigger-button {
     @include default-button-reset;
 
+    // stylelint-disable-next-line no-duplicate-selectors
     & {
       @include dropdown-item-container;
     }
 
+    // stylelint-disable-next-line no-duplicate-selectors
     & {
       border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
       padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
@@ -219,14 +221,17 @@ watch(selectValue, (newValue: string) => {
         :slotted(a) {
           @include default-button-reset;
 
+          // stylelint-disable-next-line no-duplicate-selectors
           & {
             @include dropdown-item-container;
           }
 
+          // stylelint-disable-next-line no-duplicate-selectors
           & {
             @include dropdown-item;
           }
 
+          // stylelint-disable-next-line no-duplicate-selectors
           & {
             text-align: left;
           }

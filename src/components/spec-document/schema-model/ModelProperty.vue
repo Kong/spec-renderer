@@ -136,6 +136,7 @@ const nestedPropertiesPresent = computed<boolean>(() =>{
   .nested-model-node {
     @include tree-nesting;
 
+    // stylelint-disable-next-line no-duplicate-selectors
     & {
       // left padding for the nested model-node tree
       padding-left: var(--kui-space-40, $kui-space-40);

@@ -32,6 +32,7 @@ defineProps({
 .label-badge {
   @include badge-appearance;
 
+  // stylelint-disable-next-line no-duplicate-selectors
   & {
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     display: inline-block;

@@ -67,6 +67,7 @@ const expanded = ref(true)
     .chevron-icon {
       @include toggle-icon;
 
+      // stylelint-disable-next-line no-duplicate-selectors
       & {
         color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
       }
