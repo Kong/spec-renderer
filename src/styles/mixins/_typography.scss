@@ -1,6 +1,6 @@
 @mixin collapsible-section-title {
   color: var(--kui-color-text, $kui-color-text);
   font-size: var(--kui-font-size-30, $kui-font-size-30);
-  line-height: var(--kui-line-height-40, $kui-line-height-40);
   font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+  line-height: var(--kui-line-height-40, $kui-line-height-40);
 }

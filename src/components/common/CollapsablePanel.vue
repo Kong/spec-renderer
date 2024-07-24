@@ -94,8 +94,8 @@ const toggleState = (e: Event) => {
       }
     }
     .btn-container {
-      padding-left: var(--kui-space-30, $kui-space-30);
       align-self: flex-end;
+      padding-left: var(--kui-space-30, $kui-space-30);
 
       .collapse-trigger-btn {
         background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
