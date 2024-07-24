@@ -14,8 +14,7 @@
       </div>
 
       <TryItDropdown
-        v-if="false"
-        class="tryit-dropdown"
+        class="tryit-button-dropdown"
         :data="data"
         @tryit-api-call="doApiCall"
       />
@@ -239,7 +238,7 @@ watch(() => (props.data.id), () => {
       align-items: center;
       flex-direction: row;
 
-      .tryit-dropdown {
+      .tryit-button-dropdown {
         margin-left: var(--kui-space-auto, $kui-space-auto);
       }
     }

@@ -6,7 +6,7 @@ import TryIt from './TryIt.vue'
 
 describe('<TryIt />', () => {
   vi.stubGlobal('open', vi.fn())
-  it.skip('KHCP-12161 - should call fetch with correct url', async () => {
+  it('KHCP-12161 - should call fetch with correct url', async () => {
     const wrapper = mount(TryIt, {
       props: {
         data: {
@@ -35,7 +35,7 @@ describe('<TryIt />', () => {
     })
   })
 
-  it.skip('should provide dropdown for tryIt options', async () => {
+  it('should provide dropdown for tryIt options', async () => {
     const wrapper = mount(TryIt, {
       props: {
         data: {
