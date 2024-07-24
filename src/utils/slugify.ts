@@ -5,6 +5,10 @@
  * @returns {string}
  */
 export function slugify(input: string): string {
+  if (!input) {
+    return ''
+  }
+
   return input
     .toLowerCase() // Convert to lowercase
     .trim() // Remove any leading or trailing whitespace

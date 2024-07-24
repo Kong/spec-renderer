@@ -41,4 +41,8 @@ describe('slugify', () => {
   it('should handle string with only numbers', () => {
     expect(slugify('1234567890')).toBe('1234567890')
   })
+
+  it('should handle undefined value', () => {
+    expect(slugify(undefined!)).toBe('')
+  })
 })
