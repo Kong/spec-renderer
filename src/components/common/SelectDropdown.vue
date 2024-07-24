@@ -160,11 +160,13 @@ watch(selectValue, (newValue: string) => {
   .trigger-button {
     @include default-button-reset;
 
+    // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
     // stylelint-disable-next-line no-duplicate-selectors
     & {
       @include dropdown-item-container;
     }
 
+    // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
     // stylelint-disable-next-line no-duplicate-selectors
     & {
       border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
@@ -221,16 +223,19 @@ watch(selectValue, (newValue: string) => {
         :slotted(a) {
           @include default-button-reset;
 
+          // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
           // stylelint-disable-next-line no-duplicate-selectors
           & {
             @include dropdown-item-container;
           }
 
+          // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
           // stylelint-disable-next-line no-duplicate-selectors
           & {
             @include dropdown-item;
           }
 
+          // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
           // stylelint-disable-next-line no-duplicate-selectors
           & {
             text-align: left;
