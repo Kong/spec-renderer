@@ -159,10 +159,15 @@ watch(selectValue, (newValue: string) => {
 
   .trigger-button {
     @include default-button-reset;
-    @include dropdown-item-container;
 
-    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-    padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
+    & {
+      @include dropdown-item-container;
+    }
+
+    & {
+      border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+      padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
+    }
 
     * {
       pointer-events: none; // disable pointer events on children to make sure the button is the only clickable element
@@ -213,10 +218,18 @@ watch(selectValue, (newValue: string) => {
         :slotted(button),
         :slotted(a) {
           @include default-button-reset;
-          @include dropdown-item-container;
-          @include dropdown-item;
 
-          text-align: left;
+          & {
+            @include dropdown-item-container;
+          }
+
+          & {
+            @include dropdown-item;
+          }
+
+          & {
+            text-align: left;
+          }
         }
 
         :slotted(a) {

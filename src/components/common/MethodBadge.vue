@@ -44,11 +44,13 @@ defineProps({
 .method-badge {
   @include badge-appearance;
 
-  border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
-  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-  letter-spacing: var(--kui-letter-spacing-minus-30, $kui-letter-spacing-minus-30);
-  line-height: var(--kui-line-height-20, $kui-line-height-20);
-  text-transform: uppercase;
+  & {
+    border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    letter-spacing: var(--kui-letter-spacing-minus-30, $kui-letter-spacing-minus-30);
+    line-height: var(--kui-line-height-20, $kui-line-height-20);
+    text-transform: uppercase;
+  }
 
   &.get {
     @include badge-appearance(var(--kui-method-color-background-get, $kui-method-color-background-get),
