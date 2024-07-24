@@ -218,6 +218,7 @@ watch(() => (props.data.id), () => {
     .method-path {
       display: flex;
       gap: var(--kui-space-30, $kui-space-30);
+      align-items: center;
     }
 
     .path {
