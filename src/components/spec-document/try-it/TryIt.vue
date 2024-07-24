@@ -14,6 +14,7 @@
       </div>
 
       <TryItDropdown
+        v-if="false"
         class="tryit-dropdown"
         :data="data"
         @tryit-api-call="doApiCall"
