@@ -13,6 +13,7 @@
     v-bind="sanitizedAttrs"
   >
     <button
+      v-cloak
       class="trigger-button"
       data-select-dropdown-trigger="true"
       data-testid="trigger-button"
