@@ -328,9 +328,18 @@ watch(() => ({
 
       :deep(.trigger-button) {
         @include small-bordered-trigger-button;
-        @include truncate;
 
-        max-width: 25ch;
+        // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+        // stylelint-disable-next-line no-duplicate-selectors
+        * {
+          @include truncate;
+        }
+
+        // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+        // stylelint-disable-next-line no-duplicate-selectors
+        * {
+          max-width: 25ch;
+        }
 
         @media (min-width: $kui-breakpoint-tablet) {
           max-width: 40ch;
