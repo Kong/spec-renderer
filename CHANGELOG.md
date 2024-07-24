@@ -1,3 +1,10 @@
+# [1.49.0](https://github.com/Kong/spec-renderer/compare/v1.48.1...v1.49.0) (2024-07-24)
+
+
+### Features
+
+* show schema model fields [KHCP-12688] ([#223](https://github.com/Kong/spec-renderer/issues/223)) ([1f9c96c](https://github.com/Kong/spec-renderer/commit/1f9c96cc505003502d617bba5c7c2a002e5f99db))
+
 ## [1.48.1](https://github.com/Kong/spec-renderer/compare/v1.48.0...v1.48.1) (2024-07-23)
 
 

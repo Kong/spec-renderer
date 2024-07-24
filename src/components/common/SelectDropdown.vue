@@ -159,10 +159,19 @@ watch(selectValue, (newValue: string) => {
 
   .trigger-button {
     @include default-button-reset;
-    @include dropdown-item-container;
 
-    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-    padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
+    // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+    // stylelint-disable-next-line no-duplicate-selectors
+    & {
+      @include dropdown-item-container;
+    }
+
+    // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+    // stylelint-disable-next-line no-duplicate-selectors
+    & {
+      border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+      padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
+    }
 
     * {
       pointer-events: none; // disable pointer events on children to make sure the button is the only clickable element
@@ -213,10 +222,24 @@ watch(selectValue, (newValue: string) => {
         :slotted(button),
         :slotted(a) {
           @include default-button-reset;
-          @include dropdown-item-container;
-          @include dropdown-item;
 
-          text-align: left;
+          // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+          // stylelint-disable-next-line no-duplicate-selectors
+          & {
+            @include dropdown-item-container;
+          }
+
+          // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+          // stylelint-disable-next-line no-duplicate-selectors
+          & {
+            @include dropdown-item;
+          }
+
+          // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+          // stylelint-disable-next-line no-duplicate-selectors
+          & {
+            text-align: left;
+          }
         }
 
         :slotted(a) {

@@ -15,22 +15,28 @@
 @mixin input-default {
   @include input-text;
 
-  -webkit-appearance: none; // need this to allow box-shadow to apply on mobile
-  appearance: none;
-  background-color: var(--kui-color-background, $kui-color-background);
-  border: 0;
-  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-  box-shadow: var(--kui-shadow-border, $kui-shadow-border);
-  box-sizing: border-box; // Ensure the padding is calculated in the element's width
-  outline: none;
-  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
-  transition: box-shadow var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
-  width: 100%;
+  & {
+    -webkit-appearance: none; // need this to allow box-shadow to apply on mobile
+    appearance: none;
+    background-color: var(--kui-color-background, $kui-color-background);
+    border: 0;
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    box-shadow: var(--kui-shadow-border, $kui-shadow-border);
+    box-sizing: border-box; // Ensure the padding is calculated in the element's width
+    outline: none;
+    padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
+    transition: box-shadow var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
+    width: 100%;
+  }
 
   &::placeholder {
     @include input-text;
 
-    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+    // stylelint-disable-next-line no-duplicate-selectors
+    & {
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    }
   }
 
   &:hover {

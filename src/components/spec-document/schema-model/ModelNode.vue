@@ -55,6 +55,14 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  /**
+   * Hides the example field from the model node
+   * in case example is already shown on the page
+   */
+  hideExampleField: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const resolvedSchemaObject = computed(() => resolveSchemaObjectFields(props.schema))

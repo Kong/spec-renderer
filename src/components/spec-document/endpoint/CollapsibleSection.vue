@@ -66,7 +66,12 @@ const expanded = ref(true)
 
     .chevron-icon {
       @include toggle-icon;
-      color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+
+      // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+      // stylelint-disable-next-line no-duplicate-selectors
+      & {
+        color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+      }
     }
   }
 
