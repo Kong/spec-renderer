@@ -178,4 +178,8 @@ watch(() => props.response, async (res) => {
   max-height: 200px;
   overflow-y: auto;
 }
+
+h3 {
+  @include collapsible-section-title;
+}
 </style>
