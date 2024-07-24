@@ -5,16 +5,25 @@
   >
     <PageHeader
       class="http-model-header"
+      :data-type="data.type?.toString()"
       :description="data.description"
       :title="title"
     />
 
     <div class="http-model-content">
-      <ModelNode
-        :schema="data"
-        :title="title"
-        @selected-model-changed="(newModel: SchemaObject) => activeSchemaModel = newModel"
-      />
+      <div>
+        <PropertyFieldList
+          :hidden-field-list="hiddenFieldList"
+          :property="activeSchemaModel"
+          :property-name="title"
+          :required-fields="activeSchemaModel?.required"
+        />
+        <ModelNode
+          :schema="data"
+          :title="title"
+          @selected-model-changed="(newModel: SchemaObject) => activeSchemaModel = newModel"
+        />
+      </div>
       <SchemaExample
         v-if="exampleModel"
         :schema-example-json="exampleModel"
@@ -26,10 +35,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { PropType } from 'vue'
-import type { SchemaObject } from '@/types'
+import type { SchemaModelPropertyField, SchemaObject } from '@/types'
 import ModelNode from './schema-model/ModelNode.vue'
 import PageHeader from '../common/PageHeader.vue'
 import SchemaExample from '../common/SchemaExample.vue'
+import PropertyFieldList from './schema-model/PropertyFieldList.vue'
 import { crawl } from '@/utils'
 import { CODE_INDENT_SPACES } from '@/constants'
 
@@ -55,6 +65,12 @@ const exampleModel = computed(() => {
   })
   return crawledExample && Object.keys(crawledExample).length ? JSON.stringify(crawledExample, null, CODE_INDENT_SPACES) : ''
 })
+
+const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
+  exampleModel.value
+    ? ['info', 'description', 'example']
+    : ['info', 'description'],
+)
 </script>
 
 <style lang="scss" scoped>

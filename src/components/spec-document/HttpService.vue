@@ -5,13 +5,13 @@
       :title="data.name"
     >
       <div class="overview-page-versions">
-        <VersionBadge
+        <LabelBadge
+          :label="`v${data.version}`"
           type="primary"
-          :version="`v${data.version}`"
         />
-        <VersionBadge
+        <LabelBadge
+          :label="specVersion"
           type="neutral"
-          :version="specVersion"
         />
       </div>
     </PageHeader>
@@ -45,7 +45,7 @@ import type { IHttpService } from '@stoplight/types'
 import ServerList from './overview/ServerList.vue'
 import SecurityList from './overview/SecurityList.vue'
 import AdditionalInfo from './overview/AdditionalInfo.vue'
-import VersionBadge from '../common/VersionBadge.vue'
+import LabelBadge from '../common/LabelBadge.vue'
 import PageHeader from '../common/PageHeader.vue'
 import MarkdownRenderer from '../common/MarkdownRenderer.vue'
 

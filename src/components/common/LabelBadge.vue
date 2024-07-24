@@ -1,35 +1,35 @@
 <template>
   <span
-    class="version-badge"
+    class="label-badge"
     :class="type"
-    data-testid="version-badge"
+    data-testid="label-badge"
   >
-    {{ version }}
+    {{ label }}
   </span>
 </template>
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import type { VersionBadgeType } from '@/types'
-import { VersionBadgeTypeVariants } from '@/types'
+import type { LabelBadgeType } from '@/types'
+import { LabelBadgeTypeVariants } from '@/types'
 
 defineProps({
-  version: {
+  label: {
     type: String,
     default: '',
   },
   type: {
-    type: String as PropType<VersionBadgeType>,
+    type: String as PropType<LabelBadgeType>,
     required: true,
-    validator: (value: VersionBadgeType): boolean => {
-      return VersionBadgeTypeVariants.includes(value)
+    validator: (value: LabelBadgeType): boolean => {
+      return LabelBadgeTypeVariants.includes(value)
     },
   },
 })
 </script>
 
 <style lang="scss" scoped>
-.version-badge {
+.label-badge {
   @include badge-appearance;
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   display: inline-block;

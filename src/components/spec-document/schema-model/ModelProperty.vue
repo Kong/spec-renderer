@@ -3,12 +3,12 @@
     class="model-property"
     :data-testid="dataTestId"
   >
-    <component
-      :is="field.component"
-      v-for="field in orderedFieldList"
-      :key="field.key"
-      v-bind="field.props"
-      v-on="field.eventHandlers"
+    <PropertyFieldList
+      :property="resolvedSchemaObject"
+      :property-name="propertyName"
+      :required-fields="requiredFields"
+      :variant-select-item-list="variantSelectItemList"
+      @variant-changed="(index: number) => selectedVariantIndex = index"
     />
 
     <div
@@ -50,18 +50,13 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { AddIcon } from '@kong/icons'
-import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
+import { resolveSchemaObjectFields } from '@/utils'
 import type { PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 
 import ModelNode from './ModelNode.vue'
-import PropertyDescription from './property-fields/PropertyDescription.vue'
-import PropertyExample from './property-fields/PropertyExample.vue'
-import PropertyInfo from './property-fields/PropertyInfo.vue'
-import PropertyEnum from './property-fields/PropertyEnum.vue'
-import PropertyPattern from './property-fields/PropertyPattern.vue'
-import PropertyRange from './property-fields/PropertyRange.vue'
 import useSchemaVariants from '@/composables/useSchemaVariants'
+import PropertyFieldList from './PropertyFieldList.vue'
 
 const props = defineProps({
   property: {
@@ -89,87 +84,6 @@ const nestedPropertiesPresent = computed<boolean>(() =>{
     return Boolean(Object.keys(selectedSchemaModel.value?.properties).length)
   }
   return false
-})
-
-const orderedFieldList = computed(() => {
-  const fields = []
-
-  if (!isValidSchemaObject(props.property)) return []
-
-  if (props.property.title || props.propertyName || props.property.type) {
-    fields.push({
-      component: PropertyInfo,
-      props: {
-        title: props.propertyName || props.property.title,
-        propertyType: props.property.type,
-        format: props.property.format,
-        propertyItemType:
-            isValidSchemaObject(props.property.items) && props.property.items.type
-              ? props.property.items.type
-              : '',
-        requiredFields: props.requiredFields,
-        variantsList: variantSelectItemList.value,
-      },
-      eventHandlers: {
-        'variant-changed': (index: number) => {
-          selectedVariantIndex.value = index
-        },
-      },
-      key: 'property-info',
-    })
-  }
-  if (props.property.description) {
-    fields.push({
-      component: PropertyDescription,
-      props: {
-        description: props.property.description,
-      },
-      eventHandlers:{},
-      key: 'property-description',
-    })
-  }
-  if (props.property.enum) {
-    fields.push({
-      component: PropertyEnum,
-      props: {
-        enumValueList: props.property.enum,
-      },
-      eventHandlers:{},
-      key: 'property-enum',
-    })
-  }
-  if (props.property.pattern) {
-    fields.push({
-      component: PropertyPattern,
-      props: {
-        pattern: props.property.pattern,
-      },
-      eventHandlers:{},
-      key: 'property-pattern',
-    })
-  }
-  if (props.property.maximum || props.property.minimum) {
-    fields.push({
-      component: PropertyRange,
-      props: {
-        max: props.property.maximum,
-        min: props.property.minimum,
-      },
-      eventHandlers:{},
-      key: 'property-range',
-    })
-  }
-  if (props.property.examples || props.property.example) {
-    fields.push({
-      component: PropertyExample,
-      props: {
-        example: props.property.examples || props.property.example,
-      },
-      eventHandlers:{},
-      key: 'property-example',
-    })
-  }
-  return fields
 })
 </script>
 
