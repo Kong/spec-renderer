@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import AdditionalInfo from './AdditionalInfo.vue'
 
 describe('<AdditionalInfo />', () => {
@@ -18,7 +18,7 @@ describe('<AdditionalInfo />', () => {
       url: 'https://stoplight.io/external-docs',
     }
 
-    const wrapper = shallowMount(AdditionalInfo, {
+    const wrapper = mount(AdditionalInfo, {
       props: {
         contact,
         license,
@@ -44,7 +44,7 @@ describe('<AdditionalInfo />', () => {
       name: 'sample license',
     }
 
-    const wrapper = shallowMount(AdditionalInfo, {
+    const wrapper = mount(AdditionalInfo, {
       props: {
         license,
       },

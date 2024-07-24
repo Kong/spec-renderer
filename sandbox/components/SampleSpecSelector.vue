@@ -63,9 +63,14 @@ const savedSpec = ref()
 const fName = ref<string>('Drop your own spec file')
 
 const optionsArray = [
-  { url: '/spec-renderer/specs/stoplight.yaml', label: 'Stoplight ToDo' },
-  { url: '/spec-renderer/specs/konnect-api.yaml', label: 'Konnect Api' },
-  { url: '/spec-renderer/specs/callback.yaml', label: 'Callbacks' },
+  { url: `${window.location.origin}/spec-renderer/specs/stoplight.yaml`, label: 'Stoplight ToDo' },
+  {
+    url: `${window.location.origin}/spec-renderer/specs/konnect-api.yaml`, label: 'Konnect Api' },
+  {
+    url: `${window.location.origin}/spec-renderer/specs/callback.yaml`, label: 'Callbacks' },
+  {
+    url: `${window.location.origin}/spec-renderer/specs/cloudflare.json`, label: 'CloudFlare' },
+  { url: `${window.location.origin}/spec-renderer/specs/beer-and-coffee.yaml`, label: 'Beer-and-coffee (e50ca83c443b.us)' },
   { url: 'https://raw.githubusercontent.com/digitalocean/openapi/main/specification/DigitalOcean-public.v2.yaml', label: 'Digital Ocean' },
   { url: 'https://raw.githubusercontent.com/stoplightio/Public-APIs/master/reference/zoom/openapi.yaml', label: 'Zoom' },
   { url: 'https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/ghes-3.0/ghes-3.0.json', label: 'GitHub' },
@@ -74,6 +79,15 @@ const optionsArray = [
   { url: 'https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.json', label: 'Stripe' },
 ]
 
+const trySetStorage = (str: string) => {
+  try {
+    window.sessionStorage.setItem('spec-renderer-playground', str)
+  } catch (err) {
+    console.error(err)
+    window.sessionStorage.removeItem('spec-renderer-playground')
+  }
+
+}
 const onDrop = async (files: File[] | null) => {
   // called when files are dropped on zone
   if (specSelector.value) {
@@ -82,7 +96,7 @@ const onDrop = async (files: File[] | null) => {
   if (files) {
     fName.value = files[0].name
     const t = await files[0].text()
-    window.sessionStorage.setItem('spec-renderer-playground', JSON.stringify({ spec: t, fName: fName.value }))
+    trySetStorage(JSON.stringify({ spec: t, fName: fName.value }))
 
     emit('sample-spec-uploaded', t, true)
   }
@@ -99,7 +113,7 @@ const finputChange = () => {
         emit('sample-spec-uploaded', e.target?.result?.toString(), true)
 
         fName.value = file.name
-        window.sessionStorage.setItem('spec-renderer-playground', JSON.stringify({ spec: e.target.result, fName: fName.value }))
+        trySetStorage( JSON.stringify({ spec: e.target.result, fName: fName.value }))
         if (specSelector.value) {
           specSelector.value.value = ''
         }
@@ -116,7 +130,7 @@ useDropZone(dropZoneRef, {
 const specSelected = async () => {
   fName.value = 'Drop your own spec file'
 
-  window.sessionStorage.setItem('spec-renderer-playground', JSON.stringify({ url: specSelector.value?.value }))
+  trySetStorage( JSON.stringify({ url: specSelector.value?.value }))
   window.history.pushState({}, '', '/spec-renderer/')
 
   emit('sample-spec-selected', specSelector.value?.value, true)
@@ -141,7 +155,9 @@ onMounted(() => {
 
       emit('sample-spec-selected', savedSpec.value?.url, false)
     }
-  } catch (e) { console.error(e) }
+  } catch (e) {
+    console.error(e)
+  }
 })
 
 </script>
@@ -151,14 +167,22 @@ onMounted(() => {
   margin-bottom: 20px;
   display: flex;
   align-items: center;
+  flex-direction: column;
+  gap: 8px;
   justify-content: center;
+
   select {
     -webkit-appearance: auto;
   }
+
   .dropzone {
     background: red;
     margin-left:40px;
     padding: 20px;
+  }
+
+  @media (min-width: $kui-breakpoint-mobile) {
+    flex-direction: row;
   }
 }
 </style>

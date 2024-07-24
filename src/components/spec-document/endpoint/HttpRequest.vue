@@ -1,6 +1,5 @@
 <template>
   <section data-testid="endpoint-http-request">
-    <h4>Request</h4>
     <template
       v-for="{ component, componentProps, key } in componentList"
       :key="key"
@@ -20,7 +19,7 @@ import type { PropType } from 'vue'
 import type { IHttpOperationRequestBody, IHttpPathParam, IHttpQueryParam } from '@stoplight/types'
 import QueryParamList from './QueryParamList.vue'
 import PathParamList from './PathParamList.vue'
-import BodyContentList from './BodyContentList.vue'
+import RequestBody from './RequestBody.vue'
 
 const props = defineProps({
   query: {
@@ -62,11 +61,10 @@ const componentList = computed(() => {
   }
   if (body.value?.contents?.length) {
     list.push({
-      component: BodyContentList,
+      component: RequestBody,
       componentProps: {
         description: body.value.description,
         contents: body.value.contents,
-        defaultModelTitle: 'Request Body Schema Model',
         readonlyVisible: false,
       },
       key: 'body',

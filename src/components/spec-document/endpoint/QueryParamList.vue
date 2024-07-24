@@ -1,28 +1,30 @@
 <template>
-  <div
+  <CollapsibleSection
     class="query-param-list"
     data-testid="endpoint-query-param-list"
+    title="Query Parameters"
   >
-    <h5>Query Parameters</h5>
-    <div
-      v-for="queryParam in queryParamList"
-      :key="queryParam.id"
-      class="query-param-list-item"
-    >
-      <ModelProperty
-        v-if="queryParam.schema"
-        :property="{...queryParam.schema, ...populateQueryParamProperty(queryParam) }"
-        :property-name="queryParam.name"
-        :required-fields="queryParamItemRequiredFields(queryParam)"
-      />
+    <div class="query-param-list-items">
+      <template
+        v-for="queryParam in queryParamList"
+        :key="queryParam.id"
+      >
+        <ModelProperty
+          v-if="queryParam.schema"
+          :property="{...queryParam.schema, ...populateQueryParamProperty(queryParam) }"
+          :property-name="queryParam.name"
+          :required-fields="queryParamItemRequiredFields(queryParam)"
+        />
+      </template>
     </div>
-  </div>
+  </CollapsibleSection>
 </template>
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import type { IHttpQueryParam } from '@stoplight/types'
-import ModelProperty from '../ModelProperty.vue'
+import ModelProperty from '../schema-model/ModelProperty.vue'
+import CollapsibleSection from './CollapsibleSection.vue'
 import type { SchemaObject } from '@/types'
 
 defineProps({
@@ -57,3 +59,12 @@ const queryParamItemRequiredFields = (queryParam: IHttpQueryParam) => {
   return queryParam.required ? [queryParam.name] : []
 }
 </script>
+
+<style lang="scss" scoped>
+.query-param-list {
+  .query-param-list-items {
+    padding-bottom: var(--kui-space-60, $kui-space-60);
+    padding-top: var(--kui-space-40, $kui-space-40);
+  }
+}
+</style>

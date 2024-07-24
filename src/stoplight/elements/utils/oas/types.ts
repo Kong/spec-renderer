@@ -25,10 +25,16 @@ type Node<T, D> = {
   name: string;
   data: D;
   tags: string[];
-};
+}
 
-export type OperationNode = Node<NodeType.HttpOperation, IHttpOperation>;
-export type WebhookNode = Node<NodeType.HttpWebhook, IHttpWebhookOperation>;
-export type SchemaNode = Node<NodeType.Model, JSONSchema7>;
-export type ServiceChildNode = OperationNode | WebhookNode | SchemaNode;
-export type ServiceNode = Node<NodeType.HttpService, IHttpService> & { children: ServiceChildNode[] };
+export enum SpecVersion {
+  OAS2 = 'OAS 2.0',
+  OAS3 = 'OAS 3.0',
+  OAS31 = 'OAS 3.1',
+}
+
+export type OperationNode = Node<NodeType.HttpOperation, IHttpOperation>
+export type WebhookNode = Node<NodeType.HttpWebhook, IHttpWebhookOperation>
+export type SchemaNode = Node<NodeType.Model, JSONSchema7>
+export type ServiceChildNode = OperationNode | WebhookNode | SchemaNode
+export type ServiceNode = Node<NodeType.HttpService, IHttpService> & { children: ServiceChildNode[] } & { specVersion: SpecVersion }

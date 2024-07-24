@@ -7,6 +7,9 @@ import SpecRenderer from './SpecRenderer.vue'
 describe('<SpecRenderer />', () => {
   it('renders', () => {
     const wrapper = mount(SpecRenderer, {
+      props: {
+        spec: '[]',
+      },
     })
 
     expect(wrapper.exists()).toBe(true)

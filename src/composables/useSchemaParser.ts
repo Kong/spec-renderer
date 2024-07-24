@@ -16,16 +16,16 @@ const trace = (doTrace: boolean, ...args: any) => {
   }
 }
 
-export default function useSchemaParser():any {
+export default function useSchemaParser(): any {
 
   const parsedDocument = ref<ServiceNode | null>()
-  const jsonDocument = ref<Record<string, any>|undefined>()
+  const jsonDocument = ref<Record<string, any> | undefined>()
 
   const tableOfContents = ref<TableOfContentsItem[]>()
-  const validationResults = ref < ValidateResult | undefined>()
+  const validationResults = ref<ValidateResult | undefined>()
 
   function tryParseYamlOrObject(yamlOrObject: unknown): Record<string, unknown> | undefined {
-    if (typeof yamlOrObject === 'object' && yamlOrObject !== null) return <Record < string, unknown >>yamlOrObject
+    if (typeof yamlOrObject === 'object' && yamlOrObject !== null) return <Record<string, unknown>>yamlOrObject
     if (typeof yamlOrObject === 'string') {
       if (yamlOrObject.startsWith('{')) {
         try {
@@ -41,6 +41,7 @@ export default function useSchemaParser():any {
         }
       }
     }
+
     return undefined
   }
 
@@ -53,7 +54,7 @@ export default function useSchemaParser():any {
 
     const refsSet = new Set()
 
-    const deepGet = (obj:Record<string, any>, keys:Array<string>) => keys.reduce((xs, x) => xs?.[x] ?? null, obj)
+    const deepGet = (obj: Record<string, any>, keys: Array<string>) => keys.reduce((xs, x) => xs?.[x] ?? null, obj)
 
     const doResolve = (fragment: Record<string, any>): Record<string, any> => {
       Object.keys(fragment).forEach(key => {
@@ -67,6 +68,7 @@ export default function useSchemaParser():any {
           refsSet.add(fragment[key])
         }
       })
+
       return fragment
     }
 
@@ -79,7 +81,7 @@ export default function useSchemaParser():any {
   const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}) => {
 
     // we want to leave console.logs for parsing
-    if (options.specUrl) {
+    if (options.specUrl && !spec) {
       // fetches spec by URL provided and resolves all external references
       jsonDocument.value = await refParser.bundle(options.specUrl, {
         resolve: {
@@ -115,6 +117,7 @@ export default function useSchemaParser():any {
     } catch (err) {
       console.error('error in validate:', err)
     }
+
     trace(options.traceParsing, 'validated')
 
     // resolve the titles for internal refs
@@ -140,6 +143,7 @@ export default function useSchemaParser():any {
     } catch (err) {
       console.error('error dereferencing:', err)
     }
+
     trace(options.traceParsing, 'dereferenced')
 
     try {
@@ -154,11 +158,12 @@ export default function useSchemaParser():any {
     try {
       if (parsedDocument.value) {
         // generate table of contents
-        tableOfContents.value = computeAPITree(parsedDocument.value, { hideSchemas: options?.hideSchemas, hideInternal: options?.hideInternal })
+        tableOfContents.value = computeAPITree(parsedDocument.value, { hideSchemas: options?.hideSchemas, hideInternal: options?.hideInternal, currentPath: options?.currentPath })
       }
     } catch (err) {
       console.error('error in computeAPITree:', err)
     }
+
     trace(options.traceParsing, 'APITree computed')
   }
 

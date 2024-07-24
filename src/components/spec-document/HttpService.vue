@@ -1,25 +1,41 @@
 <template>
-  <div>
-    <h3>{{ data.name }}</h3>
-    <p>v{{ data.version }}</p>
-    <p v-if="data.description">
-      {{ data.description }}
-    </p>
+  <div class="overview-page">
+    <PageHeader
+      class="overview-page-header"
+      :title="data.name"
+    >
+      <div class="overview-page-versions">
+        <VersionBadge
+          type="primary"
+          :version="`v${data.version}`"
+        />
+        <VersionBadge
+          type="neutral"
+          :version="specVersion"
+        />
+      </div>
+    </PageHeader>
 
-    <ServerList
-      v-if="Array.isArray(data.servers) && data.servers.length"
-      :server-list="data.servers"
-    />
-    <SecurityList
-      v-if="Array.isArray(data.securitySchemes) && data.securitySchemes.length"
-      :security-scheme-list="data.securitySchemes"
-    />
-    <AdditionalInfo
-      v-if="data.externalDocs || data.contact || data.license"
-      :contact="data.contact"
-      :external-docs="data.externalDocs"
-      :license="data.license"
-    />
+    <section class="overview-page-content">
+      <MarkdownRenderer
+        v-if="data.description"
+        :markdown="data.description"
+      />
+      <ServerList
+        v-if="Array.isArray(data.servers) && data.servers.length"
+        :server-list="data.servers"
+      />
+      <SecurityList
+        v-if="Array.isArray(data.securitySchemes) && data.securitySchemes.length"
+        :security-scheme-list="data.securitySchemes"
+      />
+      <AdditionalInfo
+        v-if="data.externalDocs || data.contact || data.license"
+        :contact="data.contact"
+        :external-docs="data.externalDocs"
+        :license="data.license"
+      />
+    </section>
   </div>
 </template>
 
@@ -29,11 +45,46 @@ import type { IHttpService } from '@stoplight/types'
 import ServerList from './overview/ServerList.vue'
 import SecurityList from './overview/SecurityList.vue'
 import AdditionalInfo from './overview/AdditionalInfo.vue'
+import VersionBadge from '../common/VersionBadge.vue'
+import PageHeader from '../common/PageHeader.vue'
+import MarkdownRenderer from '../common/MarkdownRenderer.vue'
 
 defineProps({
   data: {
     type: Object as PropType<IHttpService>,
     required: true,
   },
+  specVersion: {
+    type: String,
+    required: true,
+  },
 })
 </script>
+
+<style lang="scss" scoped>
+.overview-page {
+  * {
+    margin: 0;
+  }
+  .overview-page-header {
+    margin-bottom: var(--kui-space-90, $kui-space-90);
+    .overview-page-versions {
+      align-items: center;
+      display: flex;
+      gap: var(--kui-space-50, $kui-space-50);
+    }
+  }
+  .overview-page-content {
+    // add spacing between content components, via margin
+    > :not(:first-child) {
+      margin-top: var(--kui-space-70, $kui-space-70);
+    }
+
+    .overview-page-content-description {
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+      line-height: var(--kui-line-height-40, $kui-line-height-40);
+    }
+  }
+}
+</style>

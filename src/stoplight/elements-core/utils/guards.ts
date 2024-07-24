@@ -1,7 +1,7 @@
-// @ts-nocheck
+// @ts-nocheck external file
 import type { IHttpOperation, IHttpService, IHttpWebhookOperation, INode } from '@stoplight/types'
 import type { JSONSchema7 } from 'json-schema'
-import { isObject, isPlainObject } from 'lodash'
+import { isObject, isPlainObject } from 'lodash-es'
 /*
 interface IMarkdownViewerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onError'> {
   markdown: string;
@@ -46,7 +46,7 @@ export function isHttpWebhookOperation(
 }
 
 const properUrl =
-// eslint-disable-next-line no-useless-escape
+  // eslint-disable-next-line no-useless-escape
   /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/
 
 export function isProperUrl(url: string) {

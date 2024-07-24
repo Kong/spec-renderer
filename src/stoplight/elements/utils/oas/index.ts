@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck external file
 import { slugify } from '../../../elements-core/utils/string'
 import type {
   Oas2HttpOperationTransformer,
@@ -18,7 +18,7 @@ import { encodePointerFragment, pointerToPath } from '@stoplight/json'
 import type { IHttpOperation, IHttpWebhookOperation } from '@stoplight/types'
 
 import { NodeType } from '@stoplight/types'
-import { get, isObject, last } from 'lodash'
+import { get, isObject, last } from 'lodash-es'
 
 import type { OpenAPIObject as _OpenAPIObject, PathObject } from 'openapi3-ts'
 import type { Spec } from 'swagger-schema-official'
@@ -27,10 +27,10 @@ import { oas2SourceMap } from './oas2'
 import { oas3SourceMap } from './oas3'
 
 import type { ISourceNodeMap, ServiceChildNode, ServiceNode } from './types'
-import { NodeTypes } from './types'
+import { NodeTypes, SpecVersion } from './types'
 type OpenAPIObject = _OpenAPIObject & {
   webhooks?: PathObject;
-};
+}
 
 const isOas2 = (parsed: unknown): parsed is Spec =>
   isObject(parsed) &&
@@ -56,12 +56,13 @@ export function transformOasToServiceNode(apiDescriptionDocument: unknown) {
       oas3SourceMap,
       transformOas3Service,
       transformOas3Operation,
+      SpecVersion.OAS31,
     )
   }
   if (isOas3(apiDescriptionDocument)) {
-    return computeServiceNode(apiDescriptionDocument, oas3SourceMap, transformOas3Service, transformOas3Operation)
+    return computeServiceNode(apiDescriptionDocument, oas3SourceMap, transformOas3Service, transformOas3Operation, SpecVersion.OAS3)
   } else if (isOas2(apiDescriptionDocument)) {
-    return computeServiceNode(apiDescriptionDocument, oas2SourceMap, transformOas2Service, transformOas2Operation)
+    return computeServiceNode(apiDescriptionDocument, oas2SourceMap, transformOas2Service, transformOas2Operation, SpecVersion.OAS2)
   }
 
   return null
@@ -71,6 +72,7 @@ function computeServiceNode(
   map: ISourceNodeMap[],
   transformService: Oas2HttpServiceTransformer | Oas3HttpServiceTransformer,
   transformOperation: Oas2HttpOperationTransformer | Oas3HttpEndpointOperationTransformer,
+  specVersion: SpecVersion,
 ) {
   const serviceDocument = transformService({ document })
   const serviceNode: ServiceNode = {
@@ -80,6 +82,7 @@ function computeServiceNode(
     data: serviceDocument,
     tags: serviceDocument.tags?.map(tag => tag.name) || [],
     children: computeChildNodes(document, document, map, transformOperation),
+    specVersion,
   }
 
   return serviceNode
@@ -181,7 +184,7 @@ function findMapMatch(key: string | number, map: ISourceNodeMap[]): ISourceNodeM
   if (typeof key === 'number') return
   for (const entry of map) {
     const escapedKey = key.replace(/[\\^$*+?.()|[\]{}]/g, '\\$&')
-    // eslint-disable-next-line
+
     if (!!entry.match?.match(escapedKey) || (entry.notMatch !== void 0 && !entry.notMatch.match(escapedKey))) {
       return entry
     }

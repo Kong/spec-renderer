@@ -7,7 +7,7 @@
       v-if="!item.hideTitle"
       ref="collapseTriggerRef"
       :aria-controls="collapseGroupId"
-      :aria-expanded="!isCollapsed"
+      :aria-expanded="isExpanded"
       type="button"
       @click="onClick"
     >
@@ -15,24 +15,19 @@
 
       <ChevronRightIcon
         class="chevron-icon"
-        :class="{ 'expanded': !isCollapsed }"
+        :class="{ 'expanded': isExpanded }"
       />
     </button>
 
     <Transition name="spec-renderer-fade">
-      <ul
-        v-show="!isCollapsed"
-        :id="collapseGroupId"
-      >
+      <ul v-show="isExpanded" :id="collapseGroupId">
         <component
           :is="itemComponent(child)"
           v-for="(child, idx) in item.items"
           :key="idx + ' ' + child.title+child"
           :item="child"
           :root="isGroup(child) ? false : undefined"
-          @expand="onExpand"
           @item-selected="selectItem"
-          @trigger-scroll="($event) => emitElement($event as HTMLElement)"
         />
       </ul>
     </Transition>
@@ -58,53 +53,31 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  /**
-   * Initial state of collapse
-   */
-  collapsed: {
-    type: Boolean,
-    default: true,
-  },
 })
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
-  (e: 'trigger-scroll', element: HTMLElement): void,
-  (e: 'expand'): void,
 }>()
 
 // make sure the collapse group id is unique
 const collapseGroupId = `spec-renderer-toc-group-${slugify(props.item.title)}-${slugify(props.item.items[0].title)}`
 
 const selectItem = (id: any) => {
-  isCollapsed.value = false
-
   emit('item-selected', id)
 }
 
-const emitElement = (element: HTMLElement) => {
-  emit('trigger-scroll', element)
-}
-
-const isCollapsed = ref<boolean>(props.item.hideTitle ? false : props.collapsed)
+const isExpanded = ref<boolean>(props.item.hideTitle || props.item.initiallyExpanded)
 const collapseTriggerRef = ref<HTMLElement | null>(null)
 
 const onClick = (event: Event) => {
   if (collapseTriggerRef.value === event.target) {
-    isCollapsed.value = !isCollapsed.value
+    isExpanded.value = !isExpanded.value
   }
-}
-
-const onExpand = () => {
-  isCollapsed.value = false
-
-  emit('expand')
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/styles/styles';
-@import '@/styles/mixins/mixins';
 
 @mixin group-spacing {
   display: flex;
@@ -129,11 +102,8 @@ const onExpand = () => {
   }
 
   &.root {
-    padding: var(--kui-space-70, $kui-space-70);
-
-    &:first-of-type {
-      background-color: red;
-    }
+    padding-bottom: var(--kui-space-70, $kui-space-70);
+    padding-top: var(--kui-space-70, $kui-space-70);
 
     & + .group-item.root {
       border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);

@@ -1,18 +1,21 @@
 <template>
   <li
-    ref="nodeItemRef"
     class="node-item"
+    :data-spec-renderer-toc-active="isActive ? true : undefined"
   >
     <a
       :class="{ 'single-word': isSingleWord, 'active': isActive }"
       :href="`${basePath}${item.id}`"
       @click.prevent="selectItem(item.id)"
     >
-      {{ item.title }}
+      <span class="node-item-title">
+        {{ item.title }}
+      </span>
 
       <MethodBadge
         v-if="item.type === NodeType.HttpOperation"
         class="http-operation-badge"
+        :inverted="isActive"
         :method="item.meta"
       />
     </a>
@@ -20,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, ref } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { TableOfContentsNode } from '../../stoplight/elements-core/components/Docs/types'
 import MethodBadge from '../common/MethodBadge.vue'
@@ -38,15 +41,7 @@ const currentPath = inject<Ref<string>>('current-path', ref<string>(''))
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
-  /**
-   * Fires when an element is selected passively (e.g. page load), used for scrolling to the element.
-   * We want a separate event for this because element might not be there in the DOM sometimes - so we don't want to hang 'item-selected' event on that.
-   */
-  (e: 'trigger-scroll', element: HTMLElement): void,
-  (e: 'expand'): void,
 }>()
-
-const nodeItemRef = ref<HTMLElement | null>(null)
 
 const selectItem = (id: string): void => {
   emit('item-selected', id)
@@ -54,31 +49,9 @@ const selectItem = (id: string): void => {
 
 const isSingleWord = computed(() => !props.item.title?.trim()?.includes(' '))
 const isActive = computed(() => currentPath.value === props.item.id)
-
-/**
- * Watch current path and emit the event if the current path matches the item.
- */
-watch(currentPath, (val) => {
-  if (val && val === props.item.id) {
-    emit('expand')
-  }
-}, { immediate: true })
-
-/**
- * Once element is in the DOM, check if it's the selected element and emit the event.
- */
-watch(nodeItemRef, (val) => {
-  if (val) {
-    if (isActive.value) {
-      emit('trigger-scroll', val)
-    }
-  }
-})
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/mixins/mixins';
-
 .node-item {
   list-style-type: none;
 
@@ -86,9 +59,11 @@ watch(nodeItemRef, (val) => {
     @include toc-item;
 
     &.single-word {
-      @include truncate;
+      .node-item-title {
+        @include truncate;
 
-      display: block;
+        display: block;
+      }
     }
 
     .http-operation-badge {

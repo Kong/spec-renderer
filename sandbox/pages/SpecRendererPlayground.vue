@@ -12,16 +12,25 @@
           type="checkbox"
         >
         <label for="hide-schemas">Hide schemas</label>
+        |
+        <input
+          id="hide-tryit"
+          v-model="hideTryIt"
+          type="checkbox"
+        >
+        <label for="hide-tryit">Hide TryIt</label>
       </div>
     </div>
     <SpecRenderer
       v-if="specText || specUrl"
       base-path="/spec-renderer"
+      :current-path="currentPath"
       :hide-schemas="hideSchemas"
-      :selected-path="selectedPath"
+      :hide-try-it="hideTryIt"
       :spec="specText"
       :spec-url="specUrl"
       :trace-parsing="true"
+      @path-not-found="handlePathNotFound"
     />
   </div>
 </template>
@@ -37,14 +46,19 @@ const route = useVueRoute()
 
 const specText = ref<string>('')
 const specUrl = ref<string>('')
-const selectedPath = ref<string>(route.path)
+const currentPath = ref<string>(route.path)
 const hideSchemas = ref<boolean>(false)
+const hideTryIt = ref<boolean>(false)
+
+const handlePathNotFound = (requestedPath: string) => {
+  console.error(`${requestedPath} not found. App to redirect to it's own 404`)
+}
 
 const sampleSpecSelected = async (sampleSpecUrl: string, resetPath: boolean) => {
   specText.value = ''
   specUrl.value = sampleSpecUrl
   if (resetPath) {
-    selectedPath.value = '/'
+    currentPath.value = '/'
   }
 }
 
@@ -52,7 +66,7 @@ const sampleSpecUploaded = (sampleSpecText: string, resetPath: boolean) => {
   specUrl.value = ''
   specText.value = sampleSpecText
   if (resetPath) {
-    selectedPath.value = '/'
+    currentPath.value = '/'
   }
 }
 </script>

@@ -1,0 +1,42 @@
+@import "@/styles/mixins/buttons";
+@import "@/styles/mixins/select";
+@import "@/styles/mixins/badges";
+@import "@/styles/mixins/schema-model";
+@import "@/styles/mixins/toc";
+@import "@/styles/mixins/tree";
+@import "@/styles/mixins/inputs";
+@import "@/styles/mixins/labels";
+@import "@/styles/mixins/dropdowns";
+
+// common mixins; to be used in varied places
+@mixin truncate($lines: 0) {
+  // if lines is 0, truncate with ellipsis, otherwise truncate with line clamp
+  @if $lines == 0 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    overflow: hidden;
+  }
+}
+
+@mixin toggle-icon(
+  $textColor: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong),
+  $height: var(--kui-icon-size-30, $kui-icon-size-30),
+  $width: var(--kui-icon-size-30, $kui-icon-size-30),
+  $rotateDegree: 90deg
+) {
+  color: $textColor !important;
+  flex-shrink: 0;
+  height: $height !important;
+  pointer-events: none;
+  transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
+  width: $width !important;
+
+  &.expanded {
+    transform: rotate($rotateDegree);
+  }
+}

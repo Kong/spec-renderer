@@ -1,0 +1,7 @@
+@mixin default-button-reset {
+  background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+  border: none;
+  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+  cursor: pointer;
+  padding: var(--kui-space-0, $kui-space-0);
+}
