@@ -1,3 +1,10 @@
+## [1.49.1](https://github.com/Kong/spec-renderer/compare/v1.49.0...v1.49.1) (2024-07-24)
+
+
+### Bug Fixes
+
+* fix sass mixed declarations warning [KHCP-12715]  [@portik](https://github.com/portik)M ([#225](https://github.com/Kong/spec-renderer/issues/225)) ([75d438b](https://github.com/Kong/spec-renderer/commit/75d438b888772fe8fe553d7b0babffc2d63f3873))
+
 # [1.49.0](https://github.com/Kong/spec-renderer/compare/v1.48.1...v1.49.0) (2024-07-24)
 
 
