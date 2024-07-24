@@ -14,6 +14,7 @@
       </div>
 
       <TryItDropdown
+        v-cloak
         class="tryit-button-dropdown"
         :data="data"
         @tryit-api-call="doApiCall"
