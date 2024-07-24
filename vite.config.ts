@@ -23,6 +23,18 @@ if (!process.env.USE_SANDBOX) {
   externalDependencies.push('vue')
 }
 
+const SCSS_Logger = {
+  warn(message, options) {
+    // Mute "Mixed Declarations" warning
+    if (options.deprecation && message.includes('mixed-decls')) {
+      return
+    }
+
+    // List all other warnings
+    console.warn(`Warning: ${message}`);
+  },
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -87,6 +99,7 @@ export default defineConfig({
         // Inject the @kong/design-tokens SCSS variables to make them available for all components.
         // This is not needed in host applications.
         additionalData: '@use "sass:color";@import "@kong/design-tokens/tokens/scss/variables";@import "@/styles/mixins/mixins";',
+        logger: SCSS_Logger,
       },
     },
   },
