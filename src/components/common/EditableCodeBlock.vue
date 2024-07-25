@@ -283,6 +283,7 @@ watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.
     top: 8px;
     white-space: break-spaces;
     word-wrap: break-word;
+    width: 100%;
   }
 
   &.error-wrapper {
