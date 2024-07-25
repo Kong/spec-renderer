@@ -1,11 +1,13 @@
 <template>
-  <component
-    :is="field.component"
-    v-for="field in orderedFieldList"
-    :key="field.key"
-    v-bind="field.props"
-    v-on="field.eventHandlers"
-  />
+  <div class="property-field-list">
+    <component
+      :is="field.component"
+      v-for="field in orderedFieldList"
+      :key="field.key"
+      v-bind="field.props"
+      v-on="field.eventHandlers"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -129,3 +131,12 @@ const orderedFieldList = computed(() => {
   return fields
 })
 </script>
+
+<style lang="scss" scoped>
+.property-field-list {
+  overflow-wrap: anywhere;
+  > :not(:first-child) {
+    margin-top: var(--kui-space-50, $kui-space-50);
+  }
+}
+</style>
