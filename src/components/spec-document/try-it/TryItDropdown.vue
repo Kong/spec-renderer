@@ -1,7 +1,7 @@
 <template>
   <button
     class="call-button"
-    :class="[data.method, { 'unhover': isHoveringDropdown, 'no-dropdown': !showInsomnia }]"
+    :class="[data.method, { 'no-dropdown': !showInsomnia }]"
     :data-testid="`tryit-call-button-${data.id}`"
     @click="startApiCall"
   >
@@ -11,39 +11,37 @@
       class="tryit-method-icon"
     />
     Try It!
-
-    <SelectDropdown
-      v-if="showInsomnia"
-      :id="`tryit-dropdown-${data.id}`"
-      class="tryit-dropdown"
-      :data-testid="`tryit-dropdown-${data.id}`"
-      :items="items"
-      placement="bottom-end"
-      :popover-offset="15"
-      trigger-button=""
-      @mouseenter="isHoveringDropdown = true"
-      @mouseleave="isHoveringDropdown = false"
-    >
-      <template #browser-item="{ item }">
-        <button
-          :data-testid="`tryit-send-request-${data.id}`"
-          @click="selectionChanged(item)"
-        >
-          <NetworkIcon />
-          {{ item.label }}
-        </button>
-      </template>
-      <template #insomnia-item="{ item }">
-        <button
-          :data-testid="`tryit-insomnia-${data.id}`"
-          @click=" selectionChanged(item)"
-        >
-          <InsomniaIcon />
-          {{ item.label }}
-        </button>
-      </template>
-    </SelectDropdown>
   </button>
+
+  <SelectDropdown
+    v-if="showInsomnia"
+    :id="`tryit-dropdown-${data.id}`"
+    class="tryit-dropdown"
+    :data-testid="`tryit-dropdown-${data.id}`"
+    :items="items"
+    placement="bottom-end"
+    :popover-offset="15"
+    trigger-button=""
+  >
+    <template #browser-item="{ item }">
+      <button
+        :data-testid="`tryit-send-request-${data.id}`"
+        @click="selectionChanged(item)"
+      >
+        <NetworkIcon />
+        {{ item.label }}
+      </button>
+    </template>
+    <template #insomnia-item="{ item }">
+      <button
+        :data-testid="`tryit-insomnia-${data.id}`"
+        @click=" selectionChanged(item)"
+      >
+        <InsomniaIcon />
+        {{ item.label }}
+      </button>
+    </template>
+  </SelectDropdown>
 </template>
 
 <script setup lang="ts">
@@ -88,7 +86,6 @@ const showInsomnia = computed((): boolean => {
 })
 
 const selectedTryItMethodKey = ref<string>('browser')
-const isHoveringDropdown = ref<boolean>(false)
 
 const startApiCall = (event?: Event) => {
   if (!event || !(event.target as HTMLElement).dataset.selectDropdownTrigger) {
@@ -152,12 +149,6 @@ const selectionChanged = (item: SelectItem) => {
   line-height: var(--kui-line-height-30, $kui-line-height-30);
   padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
   white-space: nowrap;
-
-  &.unhover {
-    &:hover {
-      background-color: var(--kui-color-background, $kui-color-background) !important;
-    }
-  }
 
   &.no-dropdown {
     padding-left: var(--kui-space-40, $kui-space-40);
