@@ -65,6 +65,27 @@
             </SelectDropdown>
           </div>
         </HttpResponse>
+
+        <section v-if="data.callbacks">
+          <h3 style="margin-bottom: 8px;">
+            Callbacks
+          </h3>
+          <!-- {{ data.callbacks }} -->
+
+          <template
+            v-for="callback in data.callbacks"
+            :key="callback.id"
+          >
+            <div>
+              <h4>{{ callback.key }}</h4>
+              <code>{{ callback.path }}</code>
+              <HttpRequest
+                v-if="callback.request"
+                v-bind="callback.request"
+              />
+            </div>
+          </template>
+        </section>
       </div>
       <div
         class="right"

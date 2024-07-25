@@ -96,6 +96,8 @@ const optionsArrayOAS = [
   {
     url: `${window.location.origin}/spec-renderer/specs/callback.yaml`, label: 'Callbacks' },
   {
+    url: `${window.location.origin}/spec-renderer/specs/callback-example-2.yaml`, label: 'Callbacks example 2' },
+  {
     url: `${window.location.origin}/spec-renderer/specs/cloudflare.json`, label: 'CloudFlare' },
   { url: `${window.location.origin}/spec-renderer/specs/beer-and-coffee.yaml`, label: 'Beer-and-coffee (e50ca83c443b.us)' },
   { url: 'https://raw.githubusercontent.com/digitalocean/openapi/main/specification/DigitalOcean-public.v2.yaml', label: 'Digital Ocean' },
