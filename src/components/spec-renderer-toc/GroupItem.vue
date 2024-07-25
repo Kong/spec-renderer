@@ -23,7 +23,6 @@
       <ul
         v-show="isExpanded"
         :id="collapseGroupId"
-        :aria-hidden="!isExpanded"
       >
         <component
           :is="itemComponent(child)"

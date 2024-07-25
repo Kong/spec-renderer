@@ -74,6 +74,8 @@ const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/styles';
+
 .http-model {
   * {
     margin: var(--kui-space-0, $kui-space-0);
@@ -86,7 +88,7 @@ const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
   .http-model-content {
     display: grid;
     gap: var(--kui-space-130, $kui-space-130);
-    grid-template-columns: auto 575px;
+    grid-template-columns: auto $spec-renderer-secondary-column-width;
   }
 
   @media (max-width: ($kui-breakpoint-laptop - 1px)) {

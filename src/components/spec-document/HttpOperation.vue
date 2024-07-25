@@ -214,6 +214,8 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/styles';
+
 .http-operation {
   * {
     margin: var(--kui-space-0, $kui-space-0);
@@ -226,7 +228,7 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
   .http-operation-container  {
     display: grid;
     gap: var(--kui-space-10, $kui-space-10);
-    grid-template-columns: auto 575px;
+    grid-template-columns: auto $spec-renderer-secondary-column-width;
     width: 100%;
 
     .left {

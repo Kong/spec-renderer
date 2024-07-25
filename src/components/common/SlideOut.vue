@@ -11,7 +11,6 @@
       <div
         v-show="visible"
         ref="slideoutContainerRef"
-        :aria-hidden="!visible"
         class="slideout-container"
         data-testid="slideout-container"
       >

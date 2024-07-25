@@ -33,7 +33,6 @@
     <!-- TODO ADD expand/collapse/copy content-->
     <div
       v-show="!isCollapsed"
-      :aria-hidden="isCollapsed"
       class="panel-body"
     >
       <slot />
