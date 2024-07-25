@@ -214,8 +214,6 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/styles';
-
 .http-operation {
   * {
     margin: var(--kui-space-0, $kui-space-0);

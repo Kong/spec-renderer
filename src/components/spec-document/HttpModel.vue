@@ -74,8 +74,6 @@ const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/styles';
-
 .http-model {
   * {
     margin: var(--kui-space-0, $kui-space-0);
