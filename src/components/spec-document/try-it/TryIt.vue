@@ -221,17 +221,11 @@ watch(() => (props.data.id), () => {
     }
 
     .path {
-      @include truncate;
-
       font-family: var(--kui-font-family-code, $kui-font-family-code);
       font-size: var(--kui-font-size-30, $kui-font-size-30);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       line-height: var(--kui-line-height-30, $kui-line-height-30);
-      max-width: 30ch;
-
-      @media (min-width: $kui-breakpoint-mobile) {
-        max-width: 45ch;
-      }
+      overflow-wrap: anywhere;
     }
 
     @media (min-width: $kui-breakpoint-mobile) {
