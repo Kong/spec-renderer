@@ -120,9 +120,9 @@ watch(serverUrl, (newUrl) => {
         color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
         font-family: var(--kui-font-family-code, $kui-font-family-code);
         gap: var(--kui-space-0, $kui-space-0);
+        overflow-wrap: anywhere;
         padding: var(--kui-space-0, $kui-space-0) var(--kui-space-10, $kui-space-20);
         text-align: left;
-        overflow-wrap: anywhere;
 
         .select-chevron-icon {
           margin-left: var(--kui-space-40, $kui-space-40);
@@ -142,8 +142,8 @@ watch(serverUrl, (newUrl) => {
     }
 
     .endpoint-path {
-      display: contents;
       color: var(--kui-color-text, $kui-color-text);
+      display: contents;
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     }
   }
