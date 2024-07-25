@@ -225,9 +225,9 @@ const selectionChanged = (item: SelectItem) => {
   @include default-button-reset;
 
   align-items: center;
-  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   background-color: var(--kui-color-background, $kui-color-background);
   border-color: var(--kui-color-border, $kui-color-border);
+  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   border-style: solid;
   border-width: var(--kui-border-width-20, $kui-border-width-20);
   display: flex;
@@ -241,14 +241,14 @@ const selectionChanged = (item: SelectItem) => {
   width: 100%;
 
   @media (min-width: $kui-breakpoint-mobile) {
-    border-right-width: var(--kui-border-width-0, $kui-border-width-0);
     border-bottom-right-radius: var(--kui-border-radius-0, $kui-border-radius-0);
+    border-right-width: var(--kui-border-width-0, $kui-border-width-0);
     border-top-right-radius: var(--kui-border-radius-0, $kui-border-radius-0);
   }
 
   &.no-dropdown {
-    border-right-width: var(--kui-border-width-20, $kui-border-width-20);
     border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    border-right-width: var(--kui-border-width-20, $kui-border-width-20);
     padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
   }
 
@@ -261,18 +261,18 @@ const selectionChanged = (item: SelectItem) => {
   display: flex;
 
   :deep(.trigger-button) {
-    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
-    height: 100%;
     border-color: var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     border-style: solid;
     border-width: var(--kui-border-width-20, $kui-border-width-20);
-    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    height: 100%;
+    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
 
     @media (min-width: $kui-breakpoint-mobile) {
-      padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30) var(--kui-space-20, $kui-space-20) var(--kui-space-20, $kui-space-20);
-      border-left-width: var(--kui-border-width-0, $kui-border-width-0);
       border-bottom-left-radius: var(--kui-border-radius-0, $kui-border-radius-0);
+      border-left-width: var(--kui-border-width-0, $kui-border-width-0);
       border-top-left-radius: var(--kui-border-radius-0, $kui-border-radius-0);
+      padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30) var(--kui-space-20, $kui-space-20) var(--kui-space-20, $kui-space-20);
     }
   }
 }
