@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="tryit-wrapper"
-    :class="data.method"
-  >
+  <div class="tryit-wrapper">
     <button
       class="call-button"
       :class="{ 'no-dropdown': !showInsomnia }"
@@ -109,35 +106,31 @@ const selectionChanged = (item: SelectItem) => {
 </script>
 
 <style lang="scss" scoped>
-@mixin method-appearance(
-  $methodColor: var(--kui-method-color-text-get, $kui-method-color-text-get),
-  $hoverBg: var(--kui-method-color-background-get, $kui-method-color-background-get),
-  $textColor: $methodColor,
-) {
+@mixin tryit-button-appearance {
   .call-button {
-    border-color: $methodColor;
-    color: $textColor;
+    border-color: var(--kui-color-border-primary, $kui-color-border-primary);
+    color: var(--kui-color-text-primary, $kui-color-text-primary);
 
     &:hover,
     &:focus,
     &:active {
-      background-color: $hoverBg;
+      background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
     }
   }
 
   .tryit-dropdown {
     :deep(.trigger-button) {
-      border-color: $methodColor;
+      border-color: var(--kui-color-border-primary, $kui-color-border-primary);
 
       .select-chevron-icon {
-        color: $textColor !important;
+        color: var(--kui-color-text-primary, $kui-color-text-primary) !important;
       }
 
       &:hover,
       &:focus,
       &:active {
-        background-color: $hoverBg !important;
-        color: $textColor !important;
+        background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest) !important;
+        color: var(--kui-color-text-primary, $kui-color-text-primary) !important;
       }
     }
   }
@@ -151,74 +144,7 @@ const selectionChanged = (item: SelectItem) => {
     gap: var(--kui-space-0, $kui-space-0);
   }
 
-  @include method-appearance(
-    var(--kui-color-border, $kui-color-border),
-    var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest),
-    var(--kui-color-text-neutral, $kui-color-text-neutral),
-  );
-
-  &.get {
-    @include method-appearance(
-      var(--kui-method-color-text-get, $kui-method-color-text-get),
-      var(--kui-method-color-background-get, $kui-method-color-background-get),
-    );
-  }
-
-  &.post {
-    @include method-appearance(
-      var(--kui-method-color-text-post, $kui-method-color-text-post),
-      var(--kui-method-color-background-post, $kui-method-color-background-post),
-    );
-  }
-
-  &.put {
-    @include method-appearance(
-      var(--kui-method-color-text-put, $kui-method-color-text-put),
-      var(--kui-method-color-background-put, $kui-method-color-background-put),
-    );
-  }
-
-  &.delete {
-    @include method-appearance(
-      var(--kui-method-color-text-delete, $kui-method-color-text-delete),
-      var(--kui-method-color-background-delete, $kui-method-color-background-delete),
-    );
-  }
-
-  &.patch {
-    @include method-appearance(
-      var(--kui-method-color-text-patch, $kui-method-color-text-patch),
-      var(--kui-method-color-background-patch, $kui-method-color-background-patch),
-    );
-  }
-
-  &.options {
-    @include method-appearance(
-      var(--kui-method-color-text-options, $kui-method-color-text-options),
-      var(--kui-method-color-background-options, $kui-method-color-background-options),
-    );
-  }
-
-  &.head {
-    @include method-appearance(
-      var(--kui-method-color-text-head, $kui-method-color-text-head),
-      var(--kui-method-color-background-head, $kui-method-color-background-head),
-    );
-  }
-
-  &.connect {
-    @include method-appearance(
-      var(--kui-method-color-text-connect, $kui-method-color-text-connect),
-      var(--kui-method-color-background-connect, $kui-method-color-background-connect),
-    );
-  }
-
-  &.trace {
-    @include method-appearance(
-      var(--kui-method-color-text-trace, $kui-method-color-text-trace),
-      var(--kui-method-color-background-trace, $kui-method-color-background-trace),
-    );
-  }
+  @include tryit-button-appearance;
 }
 
 .call-button {
