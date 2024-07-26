@@ -16,12 +16,14 @@
     <component
       :is="rootDocumentComponent.component"
       v-if="rootDocumentComponent.component !== null"
+      id="-1-nodecontainter"
       v-bind="rootDocumentComponent.props"
     />
 
     <div
       v-for="(node, idx) in nodesList"
-      :key="`${node.doc.id}-${idx}`"
+      :id="`${idx}-nodecontainter`"
+      :key="`${node.doc.data.id}-${idx}`"
       class="spec-renderer-document"
     >
       <div
@@ -48,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, provide, computed, nextTick } from 'vue'
+import { watch, ref, provide, computed, nextTick, onBeforeMount } from 'vue'
 import type { PropType, Ref } from 'vue'
 import { NodeType } from '@stoplight/types'
 import type { ServiceNode, ServiceChildNode } from '../../stoplight/elements/utils/oas/types'
@@ -59,6 +61,7 @@ import ArticleNode from './ArticleNode.vue'
 import UnknownNode from './UnknownNode.vue'
 import { vElementVisibility } from '@vueuse/components'
 import { SECTIONS_TO_RENDER } from '@/constants'
+import composables from '@/composables'
 
 const props = defineProps({
   document: {
@@ -103,6 +106,8 @@ const props = defineProps({
   },
 })
 
+const { createHighlighter } = composables.useShiki()
+
 const serviceNode = ref<ServiceNode | null>(null)
 
 // to be consumed in multi-level child components
@@ -117,6 +122,9 @@ const emit = defineEmits < {
 
 // forced - assumed visible (rendered) even when hidden
 const currentlyRendered = ref<Array<'true' | 'false' | 'forced'>>([])
+
+// hold the values of previous onElementVisibility call to avoid endless loop
+const prevVisibilityCall = ref<Record<string, any>>()
 
 const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null) => {
   if (!forServiceNode) return {}
@@ -188,6 +196,14 @@ const onElementVisibility = (state: boolean, path: string, idx: number) => {
     return
   }
 
+  // to avoid endless loop (same section changes from true to false and back)
+  console.log({ state, path, idx, prev: prevVisibilityCall.value })
+  if (prevVisibilityCall.value && prevVisibilityCall.value.idx === idx && state === false && prevVisibilityCall.value.state === true) {
+    return
+  }
+
+  prevVisibilityCall.value = { state, path, idx }
+
   console.log('onElementVisibility', state, path, idx)
 
   const currentRenderState = [...currentlyRendered.value]
@@ -230,7 +246,7 @@ const onElementVisibility = (state: boolean, path: string, idx: number) => {
 watch(() => ({ pathname: props.currentPath, document: props.document }), async (newValue, oldValue) => {
 
   const { pathname, document } = newValue
-  const { document: oldDocument } = oldValue || {}
+  const { pathname: oldPathname, document: oldDocument } = oldValue || {}
 
   if (oldDocument !== document) {
     currentlyRendered.value = []
@@ -241,13 +257,27 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), async (
   if (!serviceNode.value) {
     emit('path-not-found', pathname)
   }
+
+  if (!props.allowContentScrolling) {
+    return
+  }
+
   await nextTick()
   // we need to give the the path and it's neighbors visible state
   const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
   console.log('pathIdx:' ,pathIdx)
   onElementVisibility(true, pathname, pathIdx)
+
+  if (window?.document && oldPathname !== pathname) {
+    await nextTick()
+    console.log('AAAAAAA', `${pathIdx}-nodecontainter`, window.document.getElementById(`${pathIdx}-nodecontainter`))
+    window.document.getElementById(`${pathIdx}-nodecontainter`)?.scrollIntoView()
+  }
 }, { immediate: true })
 
+onBeforeMount(async ()=> {
+  await createHighlighter()
+})
 </script>
 
 <style lang="scss" scoped>

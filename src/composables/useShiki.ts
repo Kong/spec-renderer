@@ -1,17 +1,19 @@
+import type { Ref, DeepReadonly } from 'vue'
+import { ref, readonly } from 'vue'
 import { createHighlighterCore } from 'shiki/core'
 import type { HighlighterCore } from 'shiki/core'
 
-let shikiInstance: HighlighterCore
 
-export default function useShiki() {
+const shikiInstance = ref<HighlighterCore>()
 
-  const createHighlighter = async (): Promise<HighlighterCore> => {
+export default function useShiki(): {
+  highlighter: DeepReadonly<Ref<HighlighterCore | undefined>>,
+  createHighlighter: () => Promise<void>
+} {
 
-    if (shikiInstance) {
-      return shikiInstance
-    }
+  const createHighlighter = async (): Promise<void> => {
 
-    shikiInstance = await createHighlighterCore({
+    shikiInstance.value = await createHighlighterCore({
       themes: [
         import('shiki/themes/material-theme-lighter.mjs'),
         import('shiki/themes/material-theme-palenight.mjs'),
@@ -37,10 +39,10 @@ export default function useShiki() {
         }
       },
     })
-    return shikiInstance
   }
 
   return {
+    highlighter: readonly(shikiInstance),
     createHighlighter,
   }
 }
