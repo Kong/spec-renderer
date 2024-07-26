@@ -3,10 +3,10 @@
     class="group-item"
     :class="{ root: root }"
   >
-    <!-- TODO: a11y aria-controls -->
     <button
       v-if="!item.hideTitle"
       ref="collapseTriggerRef"
+      :aria-controls="collapseGroupId"
       :aria-expanded="isExpanded"
       type="button"
       @click="onClick"
@@ -20,8 +20,10 @@
     </button>
 
     <Transition name="spec-renderer-fade">
-      <!-- TODO: a11y id (aria-controls) -->
-      <ul v-show="isExpanded">
+      <ul
+        v-show="isExpanded"
+        :id="collapseGroupId"
+      >
         <component
           :is="itemComponent(child)"
           v-for="(child, idx) in item.items"
@@ -40,6 +42,7 @@ import { ref, type PropType } from 'vue'
 import type { TableOfContentsGroup } from '../../stoplight/elements-core/components/Docs/types'
 import { itemComponent, isGroup } from './index'
 import { ChevronRightIcon } from '@kong/icons'
+import { slugify } from '@/utils'
 
 const props = defineProps({
   item: {
@@ -58,6 +61,9 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
 }>()
+
+// make sure the collapse group id is unique
+const collapseGroupId = `spec-renderer-toc-group-${slugify(props.item.title)}-${slugify(props.item.items[0].title)}`
 
 const selectItem = (id: any) => {
   emit('item-selected', id)

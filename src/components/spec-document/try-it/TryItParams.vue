@@ -6,9 +6,9 @@
     :start-collapsed="paramType !== 'body'"
   >
     <template #header>
-      <h5>
+      <h3>
         {{ compTitles[props.paramType] }}
-      </h5>
+      </h3>
     </template>
 
     <div
@@ -19,7 +19,10 @@
         v-for="pKey in Object.keys(params)"
         :key="`${params[pKey].name}${paramType}`"
       >
-        <InputLabel class="param-label">
+        <InputLabel
+          class="param-label"
+          :for="`request-${paramType}-input-${params[pKey].name || pKey}-${data.id}`"
+        >
           {{ params[pKey].name || pKey }}
           <Tooltip
             v-if="params[pKey].description"
@@ -28,6 +31,7 @@
           />
         </InputLabel>
         <input
+          :id="`request-${paramType}-input-${params[pKey].name || pKey}-${data.id}`"
           v-model="fieldValues[pKey]"
           :aria-describedby="`request-${paramType}-tooltip-${params[pKey].name || pKey}-${data.id}`"
           autocomplete="off"

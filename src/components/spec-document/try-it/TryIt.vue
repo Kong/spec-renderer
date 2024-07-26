@@ -216,6 +216,7 @@ watch(() => (props.data.id), () => {
     padding: var(--kui-space-50, $kui-space-50);
 
     .method-path {
+      align-items: center;
       display: flex;
       gap: var(--kui-space-30, $kui-space-30);
     }
