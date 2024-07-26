@@ -16,5 +16,9 @@
   font-family: var(--kui-font-family-code, $kui-font-family-code);
   font-size: var(--kui-font-size-20, $kui-font-size-20);
   line-height: var(--kui-line-height-20, $kui-line-height-20);
-  padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
+  padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
+
+  @media (min-width: $kui-breakpoint-mobile) {
+    padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
+  }
 }

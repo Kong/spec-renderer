@@ -13,6 +13,7 @@
     v-bind="sanitizedAttrs"
   >
     <button
+      :aria-label="selectedItem?.label || triggerButton ? undefined : 'Select one option'"
       class="trigger-button"
       data-select-dropdown-trigger="true"
       data-testid="trigger-button"

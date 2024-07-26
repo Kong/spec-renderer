@@ -1,7 +1,8 @@
 <template>
   <div class="sample-spec-selector">
-    <div>Select spec sample:&nbsp;</div>
+    <label for="spec-selector">Select spec sample:&nbsp;</label>
     <select
+      id="spec-selector"
       ref="specSelector"
       value=""
       @change="specSelected"

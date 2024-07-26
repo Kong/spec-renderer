@@ -1,3 +1,10 @@
+## [1.49.2](https://github.com/Kong/spec-renderer/compare/v1.49.1...v1.49.2) (2024-07-26)
+
+
+### Bug Fixes
+
+* a11y improvements [KHCP-12605] ([#94](https://github.com/Kong/spec-renderer/issues/94)) ([b6ba644](https://github.com/Kong/spec-renderer/commit/b6ba64446e3508babc86114c431eafd41763c6dc))
+
 ## [1.49.1](https://github.com/Kong/spec-renderer/compare/v1.49.0...v1.49.1) (2024-07-24)
 
 

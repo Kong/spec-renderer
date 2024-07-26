@@ -1,6 +1,7 @@
 <template>
   <Popover
     class="tooltip-popover"
+    max-width="300px"
     open-on-mouseover
     :placement="placement"
     role="tooltip"

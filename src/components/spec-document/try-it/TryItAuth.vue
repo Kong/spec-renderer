@@ -9,9 +9,9 @@
         :color="KUI_COLOR_TEXT_NEUTRAL"
         :size="20"
       />
-      <h5>
+      <h3>
         Authentication
-      </h5>
+      </h3>
 
       <SelectDropdown
         v-if="securitySchemeList.length > 1"
@@ -29,7 +29,7 @@
       :key="scheme.id"
       class="wide"
     >
-      <InputLabel>
+      <InputLabel :for="`auth-token-input-${getSchemeLabel(scheme)}-${data.id}`">
         {{ getSchemeLabel(scheme) }}
         <Tooltip
           v-if="scheme.description"
@@ -38,6 +38,7 @@
         />
       </InputLabel>
       <input
+        :id="`auth-token-input-${getSchemeLabel(scheme)}-${data.id}`"
         v-model="tokenValues[i]"
         :aria-describedby="`auth-token-tooltip-${getSchemeLabel(scheme)}-${data.id}`"
         autocomplete="off"
