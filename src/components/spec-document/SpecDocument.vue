@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="!allowScrolling"
+    v-if="!allowContentScrolling"
     class="spec-renderer-document"
   >
     <component
@@ -20,23 +20,36 @@
     />
 
     <div
-      v-for="doc in document.children"
-      :key="(doc.data as IHttpOperation).id"
+      v-for="(node, idx) in nodesList"
+      :key="`${node.doc.id}-${idx}`"
       class="spec-renderer-document"
     >
-      <component
-        :is="getDocumentComponent(doc).component"
-        v-if="getDocumentComponent(doc).component"
-        v-bind="getDocumentComponent(doc).props"
-      />
+      <div
+        v-if="node.component"
+        v-element-visibility=" (state: boolean)=> {onElementVisibility(state, node.doc.uri, idx)}"
+      >
+        <component
+          :is="node.component"
+          v-if="['true', 'forced'].includes(currentlyRendered[idx])"
+          v-bind="node.props"
+        />
+        <div
+          v-else
+          class="placeholder"
+        >
+          <h1>
+            {{ node.doc.name }} {{ idx }}
+          </h1>
+          Not visible
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { watch, ref, provide, computed } from 'vue'
+import { watch, ref, provide, computed, nextTick } from 'vue'
 import type { PropType, Ref } from 'vue'
-import type { IHttpOperation } from '@stoplight/types'
 import { NodeType } from '@stoplight/types'
 import type { ServiceNode, ServiceChildNode } from '../../stoplight/elements/utils/oas/types'
 import HttpService from './HttpService.vue'
@@ -44,6 +57,8 @@ import HttpOperation from './HttpOperation.vue'
 import HttpModel from './HttpModel.vue'
 import ArticleNode from './ArticleNode.vue'
 import UnknownNode from './UnknownNode.vue'
+import { vElementVisibility } from '@vueuse/components'
+import { SECTIONS_TO_RENDER } from '@/constants'
 
 const props = defineProps({
   document: {
@@ -82,7 +97,7 @@ const props = defineProps({
   /**
    * Allow scrolling trough operations/schemas
    */
-  allowScrolling: {
+  allowContentScrolling: {
     type: Boolean,
     default: true,
   },
@@ -100,16 +115,8 @@ const emit = defineEmits < {
   (e: 'path-not-found', requestedPath: string): void
 }>()
 
-/** we show tryIt section when it's requested to be hidden and when node */
-
-watch(() => ({ pathname: props.currentPath, document: props.document }), ({ pathname, document }) => {
-  console.log('zzzz:', document)
-  const isRootPath = !pathname || pathname === '/'
-  serviceNode.value = <ServiceNode>(isRootPath ? document : document.children.find((child:any) => child.uri === pathname))
-  if (!serviceNode.value) {
-    emit('path-not-found', pathname)
-  }
-}, { immediate: true })
+// forced - assumed visible (rendered) even when hidden
+const currentlyRendered = ref<Array<'true' | 'false' | 'forced'>>([])
 
 const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null) => {
   if (!forServiceNode) return {}
@@ -120,16 +127,16 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
 
   switch (forServiceNode.type as NodeType) {
     case NodeType.Article:
-      return { component: ArticleNode, props: defaultProps }
+      return { component: ArticleNode, props: defaultProps, doc: forServiceNode }
     case NodeType.HttpOperation:
     case NodeType.HttpWebhook:
-      return { component: HttpOperation, props: defaultProps }
+      return { component: HttpOperation, props: defaultProps, doc: forServiceNode }
     case NodeType.HttpService:
-      return { component: HttpService, props: { ...defaultProps, specVersion: (<ServiceNode>forServiceNode).specVersion } }
+      return { component: HttpService, props: { ...defaultProps, specVersion: (<ServiceNode>forServiceNode).specVersion }, doc: forServiceNode }
     case NodeType.Model:
-      return { component: HttpModel, props: { ...defaultProps, title: forServiceNode.name } }
+      return { component: HttpModel, props: { ...defaultProps, title: forServiceNode.name }, doc: forServiceNode }
     default:
-      return { component: UnknownNode, props: defaultProps }
+      return { component: UnknownNode, props: defaultProps, doc: forServiceNode }
   }
 }
 
@@ -140,6 +147,106 @@ const docComponent = computed(() => {
 const rootDocumentComponent = computed(() => {
   return getDocumentComponent(<ServiceNode>props.document)
 })
+
+
+const nodesList = computed(() => {
+//  console.log('zzzzz', props.document)
+  let nList = <any[]>[]
+  // first all without tags, but not schemas
+  nList.push(...props.document.children.filter(child => (child.tags || []).length === 0 && child.type !== 'model'))
+
+  // next by tag ordered
+  props.document.tags.forEach((t: string) => {
+    nList.push(...props.document.children.filter((child: any) => (child.tags || []).includes(t)))
+  })
+
+  // next - where tag is not matching list of tags
+  nList.push(...props.document.children.filter(child => {
+    if (!child.tags || child.tags.length === 0) {
+      return false
+    }
+    return !!child.tags.find( (childTag) => (!props.document.tags.includes(childTag)))
+  }))
+
+
+  // very last - schemas
+  nList.push(...props.document.children.filter(child => (child.tags || []).length === 0 && child.type === 'model'))
+
+
+  // transforming to components
+  for (let i = 0; i < nList.length; i++) {
+    nList[i] = getDocumentComponent(nList[i])
+  }
+
+  return nList
+})
+
+
+const onElementVisibility = (state: boolean, path: string, idx: number) => {
+  // nothing was changed
+  if (!state && (!currentlyRendered.value[idx] || currentlyRendered.value[idx] === 'false')) {
+    return
+  }
+
+  console.log('onElementVisibility', state, path, idx)
+
+  const currentRenderState = [...currentlyRendered.value]
+  currentRenderState[idx === -1 ? 0 : idx] = state ? 'true' : 'false'
+
+  // first case: when there are no true, we set first one true
+  if (currentRenderState.findIndex(c => c === 'true') === -1) {
+    currentRenderState[0] = 'true'
+  }
+  // now we rest all 'forced' to false
+  for (let i = 0; i < currentRenderState.length; i++) {
+    if (currentRenderState[i] === 'forced') {
+      currentRenderState[i] = 'false'
+    }
+  }
+
+  // now we add 'forced' from the left and right of true
+  const idxToForce = []
+  for (let i = 0; i < currentRenderState.length; i++) {
+    if (currentRenderState[i] === 'true') {
+      //        console.log('found visible at', i, currentRenderState[i])
+      for (let j = 1; j <= SECTIONS_TO_RENDER; j++) {
+        idxToForce.push(i - j)
+        idxToForce.push(i + j)
+      }
+    }
+  }
+  //    console.log('idxToForce:', idxToForce)
+  for (let i = 0 ; i < idxToForce.length; i++) {
+    if (idxToForce[i] >= 0 && currentRenderState[idxToForce[i]] !== 'true') {
+      currentRenderState[idxToForce[i]] = 'forced'
+    }
+  }
+  // so it's only one change
+  currentlyRendered.value = [...currentRenderState]
+  //console.log('after idx:', idx, 'state:', state, currentlyRendered.value)
+}
+
+/** we show tryIt section when it's requested to be hidden and when node */
+watch(() => ({ pathname: props.currentPath, document: props.document }), async (newValue, oldValue) => {
+
+  const { pathname, document } = newValue
+  const { document: oldDocument } = oldValue || {}
+
+  if (oldDocument !== document) {
+    currentlyRendered.value = []
+  }
+
+  const isRootPath = !pathname || pathname === '/'
+  serviceNode.value = <ServiceNode>(isRootPath ? document : document.children.find((child: any) => child.uri === pathname))
+  if (!serviceNode.value) {
+    emit('path-not-found', pathname)
+  }
+  await nextTick()
+  // we need to give the the path and it's neighbors visible state
+  const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
+  console.log('pathIdx:' ,pathIdx)
+  onElementVisibility(true, pathname, pathIdx)
+}, { immediate: true })
 
 </script>
 
@@ -153,6 +260,11 @@ const rootDocumentComponent = computed(() => {
 .scrolling-container {
   .overview-page {
     padding-bottom: var(--kui-space-100, $kui-space-100);
+  }
+
+  .placeholder {
+    //background-color: red;
+    min-height: 600px;
   }
 }
 </style>

@@ -19,10 +19,18 @@
           type="checkbox"
         >
         <label for="hide-tryit">Hide TryIt</label>
+        |
+        <input
+          id="allow-content-scrolling"
+          v-model="allowContentScrolling"
+          type="checkbox"
+        >
+        <label for="allow-content-scrolling">Allow Content Scrolling</label>
       </div>
     </div>
     <SpecRenderer
       v-if="specText || specUrl"
+      :allow-content-scrolling="allowContentScrolling"
       base-path="/spec-renderer"
       :current-path="currentPath"
       :hide-schemas="hideSchemas"
@@ -49,6 +57,7 @@ const specUrl = ref<string>('')
 const currentPath = ref<string>(route.path)
 const hideSchemas = ref<boolean>(false)
 const hideTryIt = ref<boolean>(false)
+const allowContentScrolling = ref<boolean>(true)
 
 const handlePathNotFound = (requestedPath: string) => {
   console.error(`${requestedPath} not found. App to redirect to it's own 404`)

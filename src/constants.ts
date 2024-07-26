@@ -125,3 +125,6 @@ export const requestSampleConfigs: RequestSampleConfigs = [
 export const MAX_NESTED_LEVELS = 10
 
 export const CODE_INDENT_SPACES = 2
+
+// how many sections to render around visible during  scrolling
+export const SECTIONS_TO_RENDER = 2
