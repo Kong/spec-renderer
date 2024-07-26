@@ -86,7 +86,7 @@ const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
   .http-model-content {
     display: grid;
     gap: var(--kui-space-130, $kui-space-130);
-    grid-template-columns: 1.2fr 0.8fr;
+    grid-template-columns: auto $spec-renderer-secondary-column-width;
   }
 
   @media (max-width: ($kui-breakpoint-laptop - 1px)) {
