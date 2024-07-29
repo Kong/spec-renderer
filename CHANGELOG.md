@@ -1,3 +1,10 @@
+## [1.49.3](https://github.com/Kong/spec-renderer/compare/v1.49.2...v1.49.3) (2024-07-29)
+
+
+### Bug Fixes
+
+* **try-it:** try it dropdown and server endpoint styling [KHCP-12696] ([#226](https://github.com/Kong/spec-renderer/issues/226)) ([d7e6362](https://github.com/Kong/spec-renderer/commit/d7e63624e34f10e92f14b7523f39d843990f6751))
+
 ## [1.49.2](https://github.com/Kong/spec-renderer/compare/v1.49.1...v1.49.2) (2024-07-26)
 
 
