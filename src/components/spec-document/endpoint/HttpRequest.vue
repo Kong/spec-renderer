@@ -16,9 +16,8 @@
 <script setup lang="ts">
 import { computed, toRefs } from 'vue'
 import type { PropType } from 'vue'
-import type { IHttpOperationRequestBody, IHttpPathParam, IHttpQueryParam } from '@stoplight/types'
-import QueryParamList from './QueryParamList.vue'
-import PathParamList from './PathParamList.vue'
+import type { IHttpOperationRequestBody, IHttpPathParam, IHttpQueryParam, IHttpHeaderParam } from '@stoplight/types'
+import RequestParamList from './RequestParamList.vue'
 import RequestBody from './RequestBody.vue'
 
 const props = defineProps({
@@ -34,29 +33,48 @@ const props = defineProps({
     type: Object as PropType<IHttpOperationRequestBody>,
     default: () => {},
   },
+  headers: {
+    type: Array as PropType<Array<IHttpHeaderParam>>,
+    default: () => [],
+  },
 })
 
 const componentList = computed(() => {
   const list: Array<{ component: any; componentProps: any; key: string }> = []
 
-  const { body, query, path } = toRefs(props)
+  const { body, query, path, headers } = toRefs(props)
 
   if (query.value?.length) {
     list.push({
-      component: QueryParamList,
+      component: RequestParamList,
       componentProps: {
-        queryParamList: query.value,
+        paramList: query.value,
+        title: 'Query Parameters',
+        'data-testid': 'endpoint-query-param-list',
       },
       key: 'query',
     })
   }
   if (path.value?.length) {
     list.push({
-      component: PathParamList,
+      component: RequestParamList,
       componentProps: {
-        pathParamList: path.value,
+        paramList: path.value,
+        title: 'Path Parameters',
+        'data-testid': 'endpoint-path-param-list',
       },
       key: 'path',
+    })
+  }
+  if (headers.value?.length) {
+    list.push({
+      component: RequestParamList,
+      componentProps: {
+        paramList: headers.value,
+        title: 'Headers',
+        'data-testid': 'endpoint-header-param-list',
+      },
+      key: 'headers',
     })
   }
   if (body.value?.contents?.length) {
