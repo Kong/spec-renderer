@@ -7,7 +7,6 @@ import type { IHttpOperation, IServer } from '@stoplight/types'
 
 describe('<HttpOperation />', () => {
   describe('TryIt section', () => {
-
     it('TryIt is shown for operation', () => {
       const wrapper = mount(HttpOperation, {
         props: {

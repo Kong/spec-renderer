@@ -1,16 +1,18 @@
 <template>
-  <button
-    class="call-button"
-    :class="[data.method, { 'unhover': isHoveringDropdown, 'no-dropdown': !showInsomnia }]"
-    :data-testid="`tryit-call-button-${data.id}`"
-    @click="startApiCall"
-  >
-    <component
-      :is="selectedTryItMethodKey === 'browser' ? NetworkIcon : InsomniaIcon"
-      v-if="showInsomnia"
-      class="tryit-method-icon"
-    />
-    Try It!
+  <div class="tryit-wrapper">
+    <button
+      class="call-button"
+      :class="{ 'no-dropdown': !showInsomnia }"
+      :data-testid="`tryit-call-button-${data.id}`"
+      @click="startApiCall"
+    >
+      <component
+        :is="selectedTryItMethodKey === 'browser' ? NetworkIcon : InsomniaIcon"
+        v-if="showInsomnia"
+        class="tryit-method-icon"
+      />
+      Try It!
+    </button>
 
     <SelectDropdown
       v-if="showInsomnia"
@@ -19,10 +21,7 @@
       :data-testid="`tryit-dropdown-${data.id}`"
       :items="items"
       placement="bottom-end"
-      :popover-offset="15"
       trigger-button=""
-      @mouseenter="isHoveringDropdown = true"
-      @mouseleave="isHoveringDropdown = false"
     >
       <template #browser-item="{ item }">
         <button
@@ -43,7 +42,7 @@
         </button>
       </template>
     </SelectDropdown>
-  </button>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -88,7 +87,6 @@ const showInsomnia = computed((): boolean => {
 })
 
 const selectedTryItMethodKey = ref<string>('browser')
-const isHoveringDropdown = ref<boolean>(false)
 
 const startApiCall = (event?: Event) => {
   if (!event || !(event.target as HTMLElement).dataset.selectDropdownTrigger) {
@@ -108,31 +106,45 @@ const selectionChanged = (item: SelectItem) => {
 </script>
 
 <style lang="scss" scoped>
-@mixin method-appearance(
-  $methodColor: var(--kui-color-border, $kui-color-border),
-  $hoverBg: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest),
-) {
-  border-color: $methodColor;
-  color: $methodColor;
-
-  &:hover,
-  &:focus,
-  &:active {
-    background-color: $hoverBg;
-  }
-
-  .tryit-dropdown :deep(.trigger-button) {
-    .select-chevron-icon {
-      color: $methodColor !important;
-    }
+@mixin tryit-button-appearance {
+  .call-button {
+    border-color: var(--kui-color-border-primary, $kui-color-border-primary);
+    color: var(--kui-color-text-primary, $kui-color-text-primary);
 
     &:hover,
     &:focus,
     &:active {
-      background-color: $hoverBg !important;
-      color: $methodColor !important;
+      background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
     }
   }
+
+  .tryit-dropdown {
+    :deep(.trigger-button) {
+      border-color: var(--kui-color-border-primary, $kui-color-border-primary);
+
+      .select-chevron-icon {
+        color: var(--kui-color-text-primary, $kui-color-text-primary) !important;
+      }
+
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest) !important;
+        color: var(--kui-color-text-primary, $kui-color-text-primary) !important;
+      }
+    }
+  }
+}
+
+.tryit-wrapper {
+  display: flex;
+  gap: var(--kui-space-40, $kui-space-40);
+
+  @media (min-width: $kui-breakpoint-mobile) {
+    gap: var(--kui-space-0, $kui-space-0);
+  }
+
+  @include tryit-button-appearance;
 }
 
 .call-button {
@@ -152,90 +164,41 @@ const selectionChanged = (item: SelectItem) => {
   line-height: var(--kui-line-height-30, $kui-line-height-30);
   padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
   white-space: nowrap;
+  width: 100%;
 
-  &.unhover {
-    &:hover {
-      background-color: var(--kui-color-background, $kui-color-background) !important;
-    }
+  @media (min-width: $kui-breakpoint-mobile) {
+    border-bottom-right-radius: var(--kui-border-radius-0, $kui-border-radius-0);
+    border-right-width: var(--kui-border-width-0, $kui-border-width-0);
+    border-top-right-radius: var(--kui-border-radius-0, $kui-border-radius-0);
   }
 
   &.no-dropdown {
-    padding-left: var(--kui-space-40, $kui-space-40);
-    padding-right: var(--kui-space-40, $kui-space-40);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    border-right-width: var(--kui-border-width-20, $kui-border-width-20);
+    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
   }
 
   .tryit-method-icon {
     width: var(--kui-icon-size-40, $kui-icon-size-40) !important;
   }
+}
 
-  &.get {
-    @include method-appearance(
-      var(--kui-method-color-text-get, $kui-method-color-text-get),
-      var(--kui-method-color-background-get, $kui-method-color-background-get),
-    )
-  }
+.tryit-dropdown {
+  display: flex;
 
-  &.post {
-    @include method-appearance(
-      var(--kui-method-color-text-post, $kui-method-color-text-post),
-      var(--kui-method-color-background-post, $kui-method-color-background-post),
-    )
-  }
+  :deep(.trigger-button) {
+    border-color: var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    border-style: solid;
+    border-width: var(--kui-border-width-20, $kui-border-width-20);
+    height: 100%;
+    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
 
-  &.put {
-    @include method-appearance(
-      var(--kui-method-color-text-put, $kui-method-color-text-put),
-      var(--kui-method-color-background-put, $kui-method-color-background-put),
-    )
-  }
-
-  &.delete {
-    @include method-appearance(
-      var(--kui-method-color-text-delete, $kui-method-color-text-delete),
-      var(--kui-method-color-background-delete, $kui-method-color-background-delete),
-    )
-  }
-
-  &.patch {
-    @include method-appearance(
-      var(--kui-method-color-text-patch, $kui-method-color-text-patch),
-      var(--kui-method-color-background-patch, $kui-method-color-background-patch),
-    )
-  }
-
-  &.options {
-    @include method-appearance(
-      var(--kui-method-color-text-options, $kui-method-color-text-options),
-      var(--kui-method-color-background-options, $kui-method-color-background-options),
-    )
-  }
-
-  &.head {
-    @include method-appearance(
-      var(--kui-method-color-text-head, $kui-method-color-text-head),
-      var(--kui-method-color-background-head, $kui-method-color-background-head),
-    )
-  }
-
-  &.connect {
-    @include method-appearance(
-      var(--kui-method-color-text-connect, $kui-method-color-text-connect),
-      var(--kui-method-color-background-connect, $kui-method-color-background-connect),
-    )
-  }
-
-  &.trace {
-    @include method-appearance(
-      var(--kui-method-color-text-trace, $kui-method-color-text-trace),
-      var(--kui-method-color-background-trace, $kui-method-color-background-trace),
-    )
-  }
-
-  .tryit-dropdown {
-    display: flex;
-
-    :deep(.trigger-button) {
-      padding: var(--kui-space-10, $kui-space-10);
+    @media (min-width: $kui-breakpoint-mobile) {
+      border-bottom-left-radius: var(--kui-border-radius-0, $kui-border-radius-0);
+      border-left-width: var(--kui-border-width-0, $kui-border-width-0);
+      border-top-left-radius: var(--kui-border-radius-0, $kui-border-radius-0);
+      padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30) var(--kui-space-20, $kui-space-20) var(--kui-space-20, $kui-space-20);
     }
   }
 }

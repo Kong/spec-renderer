@@ -103,6 +103,7 @@ watch(serverUrl, (newUrl) => {
   border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   display: flex;
+  gap: var(--kui-space-30, $kui-space-30);
   justify-content: space-between;
   padding: var(--kui-space-50, $kui-space-50);
 
@@ -119,23 +120,12 @@ watch(serverUrl, (newUrl) => {
         color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
         font-family: var(--kui-font-family-code, $kui-font-family-code);
         gap: var(--kui-space-0, $kui-space-0);
-        max-width: 30ch;
+        overflow-wrap: anywhere;
         padding: var(--kui-space-0, $kui-space-0) var(--kui-space-10, $kui-space-20);
+        text-align: left;
 
         .select-chevron-icon {
           margin-left: var(--kui-space-40, $kui-space-40);
-        }
-
-        @media (min-width: $kui-breakpoint-mobile) {
-          max-width: 60ch;
-        }
-
-        @media (min-width: $kui-breakpoint-laptop) {
-          max-width: 80ch;
-        }
-
-        @media (min-width: $kui-breakpoint-desktop) {
-          max-width: fit-content;
         }
       }
     }
@@ -148,28 +138,13 @@ watch(serverUrl, (newUrl) => {
     }
 
     .endpoint-body {
-      @include truncate;
-
-      @media (min-width: $kui-breakpoint-tablet) {
-        overflow: initial;
-      }
+      display: contents;
     }
 
     .endpoint-path {
-      @include truncate;
       color: var(--kui-color-text, $kui-color-text);
-
-      display: none;
+      display: contents;
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-      margin-left: 1px; // to give a bit of spacing between server url and path
-
-      @media (min-width: $kui-breakpoint-tablet) {
-        display: inline;
-      }
-    }
-
-    @media (min-width: $kui-breakpoint-tablet) {
-      max-width: fit-content;
     }
   }
 }

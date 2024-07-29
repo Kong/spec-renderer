@@ -14,7 +14,7 @@
       </div>
 
       <TryItDropdown
-        class="tryit-dropdown"
+        class="tryit-button-dropdown"
         :data="data"
         @tryit-api-call="doApiCall"
       />
@@ -222,24 +222,18 @@ watch(() => (props.data.id), () => {
     }
 
     .path {
-      @include truncate;
       font-family: var(--kui-font-family-code, $kui-font-family-code);
       font-size: var(--kui-font-size-30, $kui-font-size-30);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       line-height: var(--kui-line-height-30, $kui-line-height-30);
-
-      max-width: 30ch;
-
-      @media (min-width: $kui-breakpoint-mobile) {
-        max-width: 45ch;
-      }
+      overflow-wrap: anywhere;
     }
 
     @media (min-width: $kui-breakpoint-mobile) {
       align-items: center;
       flex-direction: row;
 
-      .tryit-dropdown {
+      .tryit-button-dropdown {
         margin-left: var(--kui-space-auto, $kui-space-auto);
       }
     }
@@ -254,13 +248,4 @@ watch(() => (props.data.id), () => {
     padding: var(--kui-space-40, $kui-space-40);
   }
 }
-/* using deep as this thing is used in multiple child components */
-:deep(.panel-body input[type=text]), :deep(.panel-body select) {
-  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-  box-sizing: border-box;
-  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
-  width: 100%;
-}
-
 </style>
