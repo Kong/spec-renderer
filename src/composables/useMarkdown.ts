@@ -8,7 +8,7 @@ export default function useMarkdown() {
 
   function initializeMarkdown() {
     if (!md.value) {
-      md.value = markdownit('commonmark', {
+      md.value = markdownit({
         html: false, // Keep disabled to prevent XSS
         xhtmlOut: true, // Use '/' to close single tags (<br />)
         breaks: true, // Convert '\n' in paragraphs into <br>
