@@ -1,3 +1,10 @@
+## [1.50.1](https://github.com/Kong/spec-renderer/compare/v1.50.0...v1.50.1) (2024-07-30)
+
+
+### Bug Fixes
+
+* **property-field-list:** add overflow-wrap for property fields ([#229](https://github.com/Kong/spec-renderer/issues/229)) ([6406e95](https://github.com/Kong/spec-renderer/commit/6406e95b7b6f81690abe10688ac064bc78b56b79))
+
 # [1.50.0](https://github.com/Kong/spec-renderer/compare/v1.49.3...v1.50.0) (2024-07-30)
 
 
