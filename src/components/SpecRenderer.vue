@@ -8,11 +8,13 @@
       @close="slideoutTocVisible = false"
     >
       <SpecRendererToc
-        ref="specRendererSlideoutTocRef"
+        v-if="slideoutTocVisible"
         :base-path="basePath"
         class="spec-renderer-toc"
         :control-browser-url="controlBrowserUrl"
-        :current-path="currentPath"
+        :current-path="currentPathTOC"
+        :scroll-direction="scrollDirection"
+        scrolling-container="self"
         :table-of-contents="tableOfContents"
         @item-selected="itemSelected"
       />
@@ -20,12 +22,13 @@
 
     <aside>
       <SpecRendererToc
-        v-if="tableOfContents"
-        ref="specRendererTocRef"
+        v-if="tableOfContents && !slideoutTocVisible"
         :base-path="basePath"
         class="spec-renderer-toc"
         :control-browser-url="controlBrowserUrl"
-        :current-path="currentPath"
+        :current-path="currentPathTOC"
+        :scroll-direction="scrollDirection"
+        scrolling-container="self"
         :table-of-contents="tableOfContents"
         @item-selected="itemSelected"
       />
@@ -51,12 +54,13 @@
         v-if="parsedDocument && currentPath"
         :allow-content-scrolling="allowContentScrolling"
         :base-path="basePath"
-        :current-path="currentPath"
+        :current-path="currentPathDOC"
         :document="parsedDocument"
         :hide-insomnia-try-it="hideInsomniaTryIt"
         :hide-try-it="hideTryIt"
         :json="jsonDocument"
         :spec-url="specUrl"
+        @content-scrolled="onDocumentScroll"
         @path-not-found="relayPathNotFound"
       />
     </div>
@@ -160,12 +164,14 @@ const props = defineProps({
 })
 
 // TODO: introduce and handle isParsed. show parsing state while parsing
-const { parseSpecDocument, parsedDocument, jsonDocument, tableOfContents, validationResults } = composables.useSchemaParser()
+const { parseSpecDocument, parsedDocument, jsonDocument, tableOfContents, validationResults, setExpanded } = composables.useSchemaParser()
 
-const currentPath = ref<string>(props.currentPath)
+const currentPathTOC = ref<string>(props.currentPath)
+const currentPathDOC = ref<string>(props.currentPath)
 
 const itemSelected = (id: any) => {
-  currentPath.value = id
+  currentPathTOC.value = id
+  currentPathDOC.value = id
 
   slideoutTocVisible.value = false
 }
@@ -175,10 +181,8 @@ const emit = defineEmits<{
 }>()
 
 
-const specRendererTocRef = ref<InstanceType<typeof SpecRendererToc> | null>(null)
-const specRendererSlideoutTocRef = ref<InstanceType<typeof SpecRendererToc> | null>(null)
 const slideoutTocVisible = ref<boolean>(false)
-
+const scrollDirection = ref<'up' | 'down'>()
 /**
  * re-emits path-not-found event so application that consumes SpecRender component can handle 404
  */
@@ -188,15 +192,16 @@ const relayPathNotFound = (requestedPath: string): void => {
 
 const openSlideoutToc = async (): Promise<void> => {
   slideoutTocVisible.value = true
+}
 
-  await nextTick() // wait for slideout to open
-
-  if (specRendererSlideoutTocRef.value?.$el?.scrollTo) {
-    const scrollPosition = await specRendererSlideoutTocRef.value?.getActiveItemScrollPosition()
-
-    specRendererSlideoutTocRef.value?.$el.scrollTo({
-      top: scrollPosition - 50, // offset 50px so it doesn't stick to the top
-    })
+const onDocumentScroll = (path: string, direction: 'up' | 'down' | undefined) => {
+  console.log('onDOcumentScroll')
+  currentPathTOC.value = path
+  // we need to re-calculate initiallyExpanded property based on the new path
+  setExpanded(path)
+  scrollDirection.value = direction
+  if (props.controlBrowserUrl) {
+    window.history.pushState({}, '', props.basePath + path)
   }
 }
 
@@ -209,7 +214,8 @@ watch(() => ({
 
   // we want to reset currentPath if document changed. if new document is getting loadedm we want to keep the path
   if (prev && (changed.spec !== prev?.spec || changed.specUrl !== prev?.specUrl)) {
-    currentPath.value = '/'
+    currentPathDOC.value = '/'
+    currentPathTOC.value = '/'
   }
 
   await parseSpecDocument(changed.spec, {
@@ -218,7 +224,7 @@ watch(() => ({
     traceParsing: props.traceParsing,
     ...(changed.specUrl ? { specUrl: changed.specUrl } : null),
     withCredentials: props.withCredentials,
-    currentPath: currentPath.value,
+    currentPath: currentPathTOC.value,
   })
 
   if (props.traceParsing) {
@@ -227,19 +233,6 @@ watch(() => ({
     console.log('validationResults:', validationResults.value)
   }
 }, { immediate: true })
-
-/**
- * Once element is in the DOM, trigger scroll to active item in TOC.
- */
-watch(specRendererTocRef, async (val) => {
-  if (val?.$el?.scrollTo) {
-    const scrollPosition = await val.getActiveItemScrollPosition()
-
-    val.$el.scrollTo({
-      top: scrollPosition - 50, // offset 50px so it doesn't stick to the top
-    })
-  }
-})
 </script>
 
 <style lang="scss" scoped>

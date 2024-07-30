@@ -3,12 +3,13 @@ import { transformOasToServiceNode } from '../stoplight/elements/utils/oas'
 import type { ServiceNode } from '../stoplight/elements/utils/oas/types'
 import { parse as parseYaml } from '@stoplight/yaml'
 import { computeAPITree } from '../stoplight/elements/components/API/utils'
-import type { TableOfContentsItem } from '../stoplight/elements-core/components/Docs/types'
+import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup, TableOfContentsGroupItem } from '../stoplight/elements-core/components/Docs/types'
 import type { ParseOptions } from '../types'
 // import { validate } from '@scalar/openapi-parser'
 import type { ValidateResult } from '@scalar/openapi-parser'
 import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
+import type { T } from 'vitest/dist/reporters-BU_vXAUX.js'
 
 const trace = (doTrace: boolean, ...args: any) => {
   if (doTrace) {
@@ -167,11 +168,31 @@ export default function useSchemaParser(): any {
     trace(options.traceParsing, 'APITree computed')
   }
 
+  const setExpanded = (path: string) : void=> {
+    if (!tableOfContents.value) {
+      return
+    }
+    const crawl = (item: TableOfContentsGroup, path: string): void => {
+      if (!Array.isArray(item.items)) {
+        return
+      }
+      for (let i = 0; i < item.items.length; i++) {
+        if ((item.items[i] as TableOfContentsNode).id === path) {
+          item.initiallyExpanded = true
+        }
+        crawl((item.items[i] as TableOfContentsGroup), path)
+      }
+    }
+    crawl({ title: '', initiallyExpanded: false, items:tableOfContents.value }, path)
+  }
+
   return {
     parseSpecDocument,
     parsedDocument,
     jsonDocument,
     tableOfContents,
     validationResults,
+    computeAPITree,
+    setExpanded,
   }
 }

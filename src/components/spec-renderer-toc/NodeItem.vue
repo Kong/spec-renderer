@@ -28,32 +28,37 @@ import type { PropType, Ref } from 'vue'
 import type { TableOfContentsNode } from '../../stoplight/elements-core/components/Docs/types'
 import MethodBadge from '../common/MethodBadge.vue'
 import { NodeType } from '@stoplight/types'
-
 const props = defineProps({
   item: {
     type: Object as PropType<TableOfContentsNode>,
     required: true,
   },
+  activePath: {
+    type: String,
+    default: '/',
+  },
 })
 
 const basePath = inject<Ref<string>>('base-path', ref<string>(''))
-const currentPath = inject<Ref<string>>('current-path', ref<string>(''))
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
 }>()
 
+const isSingleWord = computed(() => !props.item.title?.trim()?.includes(' '))
+const isActive = computed(() => props.activePath === props.item.id)
+
+
 const selectItem = (id: string): void => {
   emit('item-selected', id)
 }
-
-const isSingleWord = computed(() => !props.item.title?.trim()?.includes(' '))
-const isActive = computed(() => currentPath.value === props.item.id)
 </script>
 
 <style lang="scss" scoped>
 .node-item {
   list-style-type: none;
+  scroll-margin-bottom: var(--kui-space-40, $kui-space-40);
+  scroll-margin-top: var(--kui-space-40, $kui-space-40);
 
   a {
     @include toc-item;

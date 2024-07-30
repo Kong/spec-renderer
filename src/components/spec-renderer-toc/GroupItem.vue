@@ -28,6 +28,7 @@
           :is="itemComponent(child)"
           v-for="(child, idx) in item.items"
           :key="idx + ' ' + child.title+child"
+          :active-path="activePath"
           :item="child"
           :root="isGroup(child) ? false : undefined"
           @item-selected="selectItem"
@@ -38,7 +39,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, type PropType } from 'vue'
+import { ref, watch } from 'vue'
+import type { PropType } from 'vue'
 import type { TableOfContentsGroup } from '../../stoplight/elements-core/components/Docs/types'
 import { itemComponent, isGroup } from './index'
 import { ChevronRightIcon } from '@kong/icons'
@@ -56,6 +58,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  activePath: {
+    type: String,
+    default: '/',
+  },
 })
 
 const emit = defineEmits<{
@@ -72,11 +78,16 @@ const selectItem = (id: any) => {
 const isExpanded = ref<boolean>(props.item.hideTitle || props.item.initiallyExpanded)
 const collapseTriggerRef = ref<HTMLElement | null>(null)
 
+
 const onClick = (event: Event) => {
   if (collapseTriggerRef.value === event.target) {
+    console.log('onClick, setting:', !isExpanded.value)
     isExpanded.value = !isExpanded.value
   }
 }
+watch(()=>(props.item.initiallyExpanded), (newValue) => {
+  isExpanded.value = newValue
+})
 </script>
 
 <style lang="scss" scoped>

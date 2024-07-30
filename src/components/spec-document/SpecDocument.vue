@@ -10,16 +10,9 @@
     />
   </div>
   <div
-    v-else
+    v-else-if="serviceNode"
     class="scrolling-container"
   >
-    <component
-      :is="rootDocumentComponent.component"
-      v-if="rootDocumentComponent.component !== null"
-      id="-1-nodecontainter"
-      v-bind="rootDocumentComponent.props"
-    />
-
     <div
       v-for="(node, idx) in nodesList"
       :id="`${idx}-nodecontainter`"
@@ -28,7 +21,7 @@
     >
       <div
         v-if="node.component"
-        v-element-visibility=" (state: boolean)=> {onElementVisibility(state, node.doc.uri, idx)}"
+        v-element-visibility=" (state: boolean)=> {onElementVisibility(state, node.doc.uri, idx, false)}"
       >
         <component
           :is="node.component"
@@ -40,9 +33,9 @@
           class="placeholder"
         >
           <h1>
-            {{ node.doc.name }} {{ idx }}
+            {{ node.doc.name }}
+            {{ currentlyRendered[idx] }}
           </h1>
-          Not visible
         </div>
       </div>
     </div>
@@ -60,6 +53,7 @@ import HttpModel from './HttpModel.vue'
 import ArticleNode from './ArticleNode.vue'
 import UnknownNode from './UnknownNode.vue'
 import { vElementVisibility } from '@vueuse/components'
+import { useWindowScroll } from '@vueuse/core'
 import { SECTIONS_TO_RENDER } from '@/constants'
 import composables from '@/composables'
 
@@ -117,11 +111,12 @@ provide<Ref<boolean>>('hide-tryit', computed((): boolean => props.hideTryIt))
 provide<Ref<boolean>>('hide-insomnia-tryit', computed((): boolean => props.hideInsomniaTryIt))
 
 const emit = defineEmits < {
-  (e: 'path-not-found', requestedPath: string): void
+  (e: 'path-not-found', requestedPath: string): void,
+  (e: 'content-scrolled', path: string, direction: 'up' | 'down' | undefined): void,
 }>()
 
 // forced - assumed visible (rendered) even when hidden
-const currentlyRendered = ref<Array<'true' | 'false' | 'forced'>>([])
+const currentlyRendered = ref<Array<'true' | 'false' | 'forced'>>(['true', 'forced', 'forced'])
 
 // hold the values of previous onElementVisibility call to avoid endless loop
 const prevVisibilityCall = ref<Record<string, any>>()
@@ -148,18 +143,34 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
   }
 }
 
+
+const processScroll = ref<boolean>(false)
+const scrollDirection = ref<'up' | 'down'>()
+
+const { y: scrollYPosition } = useWindowScroll()
+watch(scrollYPosition, (newValue, oldValue) => {
+
+  if (!processScroll.value) {
+    setTimeout(()=>{
+      processScroll.value = true
+    }, 1000)
+  } else {
+    scrollDirection.value = newValue > oldValue ? 'down' : 'up'
+  }
+})
+
 const docComponent = computed(() => {
   return getDocumentComponent(serviceNode.value)
 })
 
-const rootDocumentComponent = computed(() => {
-  return getDocumentComponent(<ServiceNode>props.document)
-})
 
 
 const nodesList = computed(() => {
-//  console.log('zzzzz', props.document)
   let nList = <any[]>[]
+  // first one - overview
+  nList.push(...[props.document])
+  console.log('nList here:', nList)
+
   // first all without tags, but not schemas
   nList.push(...props.document.children.filter(child => (child.tags || []).length === 0 && child.type !== 'model'))
 
@@ -185,37 +196,56 @@ const nodesList = computed(() => {
   for (let i = 0; i < nList.length; i++) {
     nList[i] = getDocumentComponent(nList[i])
   }
-
+  console.log('nList', nList)
   return nList
 })
 
 
-const onElementVisibility = (state: boolean, path: string, idx: number) => {
-  // nothing was changed
+const onElementVisibility = async (state: boolean, path: string, idx: number, forceExact: boolean) => {
+
+  if (!forceExact && !processScroll.value) {
+    return
+  }
+
+  console.log({ state, path, idx, prev: prevVisibilityCall.value })
+
+  // nothing was changed for state = false
   if (!state && (!currentlyRendered.value[idx] || currentlyRendered.value[idx] === 'false')) {
     return
   }
 
-  // to avoid endless loop (same section changes from true to false and back)
-  console.log({ state, path, idx, prev: prevVisibilityCall.value })
-  if (prevVisibilityCall.value && prevVisibilityCall.value.idx === idx && state === false && prevVisibilityCall.value.state === true) {
+  // nothing was changed for state = true
+  if (state && currentlyRendered.value[idx] === 'true') {
     return
   }
+
+  // to avoid endless loop (same section changes from true to false and back)
+  if (
+    prevVisibilityCall.value && prevVisibilityCall.value.idx === idx &&
+    (
+      (state === false && prevVisibilityCall.value.state === true) ||
+      (state === true && prevVisibilityCall.value.state === false)
+    )
+  ) {
+    console.log('endlress loop???')
+    //return
+  }
+
 
   prevVisibilityCall.value = { state, path, idx }
 
   console.log('onElementVisibility', state, path, idx)
 
   const currentRenderState = [...currentlyRendered.value]
-  currentRenderState[idx === -1 ? 0 : idx] = state ? 'true' : 'false'
+  currentRenderState[idx] = state ? 'true' : 'false'
 
-  // first case: when there are no true, we set first one true
-  if (currentRenderState.findIndex(c => c === 'true') === -1) {
-    currentRenderState[0] = 'true'
-  }
   // now we rest all 'forced' to false
   for (let i = 0; i < currentRenderState.length; i++) {
     if (currentRenderState[i] === 'forced') {
+      currentRenderState[i] = 'false'
+    }
+    // we want to keep values for 10 neighbors ofo current idx
+    if (['forced', 'true'].includes(currentRenderState[i]) && (i < idx - 10 || i > idx + 10)) {
       currentRenderState[i] = 'false'
     }
   }
@@ -237,8 +267,20 @@ const onElementVisibility = (state: boolean, path: string, idx: number) => {
       currentRenderState[idxToForce[i]] = 'forced'
     }
   }
-  // so it's only one change
+
   currentlyRendered.value = [...currentRenderState]
+
+  // now we find first visible path and fire scrolled
+  const firstVisibleIdx = forceExact ? idx : currentRenderState.findIndex(s=>s === 'true')
+  const firstVisiblePath = nodesList.value[firstVisibleIdx]?.doc.uri
+  if (firstVisiblePath ) {
+    console.log('!!!!!!!', firstVisiblePath, prevVisibilityCall.value, currentRenderState)
+    if (processScroll.value || forceExact) {
+      console.log('emmitting:' )
+      emit('content-scrolled', firstVisiblePath, scrollDirection.value)
+    }
+  }
+  // so it's only one change
   //console.log('after idx:', idx, 'state:', state, currentlyRendered.value)
 }
 
@@ -248,32 +290,46 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), async (
   const { pathname, document } = newValue
   const { pathname: oldPathname, document: oldDocument } = oldValue || {}
 
-  if (oldDocument !== document) {
-    currentlyRendered.value = []
-  }
 
   const isRootPath = !pathname || pathname === '/'
   serviceNode.value = <ServiceNode>(isRootPath ? document : document.children.find((child: any) => child.uri === pathname))
+
   if (!serviceNode.value) {
     emit('path-not-found', pathname)
+    return
   }
 
   if (!props.allowContentScrolling) {
+    // case when scrolling is not enabled - we do not need to do anything else
     return
+  }
+
+  if (oldDocument !== document) {
+    // first one (service, and two bellow should be rendered by default)
+    currentlyRendered.value = ['true', 'forced', 'forced']
+    processScroll.value = false
+  }
+  if (oldPathname) {
+    processScroll.value = false
   }
 
   await nextTick()
   // we need to give the the path and it's neighbors visible state
   const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
   console.log('pathIdx:' ,pathIdx)
-  onElementVisibility(true, pathname, pathIdx)
+
+  if (pathIdx === -1) {
+    emit('path-not-found', pathname)
+    return
+  }
+  onElementVisibility(true, pathname, pathIdx, true)
 
   if (window?.document && oldPathname !== pathname) {
-    await nextTick()
-    console.log('AAAAAAA', `${pathIdx}-nodecontainter`, window.document.getElementById(`${pathIdx}-nodecontainter`))
+    console.log('?????', 'scrolling into', pathIdx)
     window.document.getElementById(`${pathIdx}-nodecontainter`)?.scrollIntoView()
   }
 }, { immediate: true })
+
 
 onBeforeMount(async ()=> {
   await createHighlighter()
@@ -288,7 +344,7 @@ onBeforeMount(async ()=> {
 }
 
 .scrolling-container {
-  .overview-page {
+  .overview-page, .spec-renderer-document {
     padding-bottom: var(--kui-space-100, $kui-space-100);
   }
 
