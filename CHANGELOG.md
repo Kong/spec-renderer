@@ -1,3 +1,10 @@
+# [1.50.0](https://github.com/Kong/spec-renderer/compare/v1.49.3...v1.50.0) (2024-07-30)
+
+
+### Features
+
+* **use-markdown:** allow support for all markdown flavours ([#234](https://github.com/Kong/spec-renderer/issues/234)) ([07a9229](https://github.com/Kong/spec-renderer/commit/07a9229e579c60356a56d4db1ce354610c267fd8))
+
 ## [1.49.3](https://github.com/Kong/spec-renderer/compare/v1.49.2...v1.49.3) (2024-07-29)
 
 
