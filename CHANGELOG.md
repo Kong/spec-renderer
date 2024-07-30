@@ -1,3 +1,10 @@
+# [1.51.0](https://github.com/Kong/spec-renderer/compare/v1.50.1...v1.51.0) (2024-07-30)
+
+
+### Features
+
+* **use-markdown:** enable support for raw HTML with sanitization [KHCP-12730] ([#228](https://github.com/Kong/spec-renderer/issues/228)) ([566547c](https://github.com/Kong/spec-renderer/commit/566547c1ec00adcd46de5a1a7faa3f61c54d0869))
+
 ## [1.50.1](https://github.com/Kong/spec-renderer/compare/v1.50.0...v1.50.1) (2024-07-30)
 
 
