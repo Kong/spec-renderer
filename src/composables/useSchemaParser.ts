@@ -3,13 +3,12 @@ import { transformOasToServiceNode } from '../stoplight/elements/utils/oas'
 import type { ServiceNode } from '../stoplight/elements/utils/oas/types'
 import { parse as parseYaml } from '@stoplight/yaml'
 import { computeAPITree } from '../stoplight/elements/components/API/utils'
-import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup, TableOfContentsGroupItem } from '../stoplight/elements-core/components/Docs/types'
+import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '../stoplight/elements-core/components/Docs/types'
 import type { ParseOptions } from '../types'
 // import { validate } from '@scalar/openapi-parser'
 import type { ValidateResult } from '@scalar/openapi-parser'
 import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
-import type { T } from 'vitest/dist/reporters-BU_vXAUX.js'
 
 const trace = (doTrace: boolean, ...args: any) => {
   if (doTrace) {
