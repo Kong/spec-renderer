@@ -73,7 +73,7 @@
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
-    "@evilmartians/lefthook": "^1.7.3",
+    "@evilmartians/lefthook": "^1.7.4",
     "@kong/design-tokens": "^1.15.3",
     "@kong/eslint-config-kong-ui": "1.1.1",
     "@semantic-release/changelog": "^6.0.3",
@@ -114,7 +114,7 @@
     "vite-plugin-replace": "^0.1.1",
     "vite-plugin-vue-devtools": "^7.3.6",
     "vitest": "2.0.3",
-    "vue": "^3.4.32",
+    "vue": "^3.4.33",
     "vue-router": "^4.4.0",
     "vue-tsc": "^2.0.26"
   },

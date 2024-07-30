@@ -79,8 +79,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1(@types/node@20.14.13)(typescript@5.5.3)
       '@evilmartians/lefthook':
-        specifier: ^1.7.3
-        version: 1.7.3
+        specifier: ^1.7.4
+        version: 1.7.11
       '@kong/design-tokens':
         specifier: ^1.15.3
         version: 1.15.3
@@ -202,7 +202,7 @@ importers:
         specifier: 2.0.3
         version: 2.0.3(@types/node@20.14.13)(@vitest/ui@2.0.4)(jsdom@24.1.0)(sass@1.77.8)
       vue:
-        specifier: ^3.4.32
+        specifier: ^3.4.33
         version: 3.4.34(typescript@5.5.3)
       vue-router:
         specifier: ^4.4.0
@@ -702,8 +702,8 @@ packages:
     resolution: {integrity: sha512-BsWiH1yFGjXXS2yvrf5LyuoSIIbPrGUWob917o+BTKuZ7qJdxX8aJLRxs1fS9n6r7vESrq1OUqb68dANcFXuQQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@evilmartians/lefthook@1.7.3':
-    resolution: {integrity: sha512-DEhTJxy5sNjchj/nMXpqyUzjUrB07nIFOJzbAVEjOrj0ap3q4SwUKcHtgYC5q9Lyta1h6ZfuKU6wc+0NbTTnpg==}
+  '@evilmartians/lefthook@1.7.11':
+    resolution: {integrity: sha512-zlpiLMfO5CmCRgRPq7gJiQ0yr5gt/O0QVefj9o6pMZPc83jpeA2Cjt/z3MZpxkKqRObwBjeekLFi8SUonD6BdQ==}
     cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
@@ -1338,14 +1338,8 @@ packages:
   '@vue/compiler-dom@3.4.34':
     resolution: {integrity: sha512-3PUOTS1h5cskdOJMExCu2TInXuM0j60DRPpSCJDqOCupCfUZCJoyQmKtRmA8EgDNZ5kcEE7vketamRZfrEuVDw==}
 
-  '@vue/compiler-sfc@3.4.31':
-    resolution: {integrity: sha512-einJxqEw8IIJxzmnxmJBuK2usI+lJonl53foq+9etB2HAzlPjAS/wa7r0uUpXw5ByX3/0uswVSrjNb17vJm1kQ==}
-
   '@vue/compiler-sfc@3.4.34':
     resolution: {integrity: sha512-x6lm0UrM03jjDXTPZgD9Ad8bIVD1ifWNit2EaWQIZB5CULr46+FbLQ5RpK7AXtDHGjx9rmvC7QRCTjsiGkAwRw==}
-
-  '@vue/compiler-ssr@3.4.31':
-    resolution: {integrity: sha512-RtefmITAje3fJ8FSg1gwgDhdKhZVntIVbwupdyZDSifZTRMiWxWehAOTCc8/KZDnBOcYQ4/9VWxsTbd3wT0hAA==}
 
   '@vue/compiler-ssr@3.4.34':
     resolution: {integrity: sha512-8TDBcLaTrFm5rnF+Qm4BlliaopJgqJ28Nsrc80qazynm5aJO+Emu7y0RWw34L8dNnTRdcVBpWzJxhGYzsoVu4g==}
@@ -5519,7 +5513,7 @@ snapshots:
 
   '@eslint/object-schema@2.1.4': {}
 
-  '@evilmartians/lefthook@1.7.3': {}
+  '@evilmartians/lefthook@1.7.11': {}
 
   '@exodus/schemasafe@1.3.0': {}
 
@@ -6300,7 +6294,7 @@ snapshots:
       '@babel/helper-module-imports': 7.22.15
       '@babel/helper-plugin-utils': 7.24.0
       '@babel/parser': 7.24.7
-      '@vue/compiler-sfc': 3.4.31
+      '@vue/compiler-sfc': 3.4.34
 
   '@vue/compiler-core@3.4.31':
     dependencies:
@@ -6328,18 +6322,6 @@ snapshots:
       '@vue/compiler-core': 3.4.34
       '@vue/shared': 3.4.34
 
-  '@vue/compiler-sfc@3.4.31':
-    dependencies:
-      '@babel/parser': 7.24.7
-      '@vue/compiler-core': 3.4.31
-      '@vue/compiler-dom': 3.4.31
-      '@vue/compiler-ssr': 3.4.31
-      '@vue/shared': 3.4.31
-      estree-walker: 2.0.2
-      magic-string: 0.30.10
-      postcss: 8.4.39
-      source-map-js: 1.2.0
-
   '@vue/compiler-sfc@3.4.34':
     dependencies:
       '@babel/parser': 7.24.7
@@ -6351,11 +6333,6 @@ snapshots:
       magic-string: 0.30.10
       postcss: 8.4.39
       source-map-js: 1.2.0
-
-  '@vue/compiler-ssr@3.4.31':
-    dependencies:
-      '@vue/compiler-dom': 3.4.31
-      '@vue/shared': 3.4.31
 
   '@vue/compiler-ssr@3.4.34':
     dependencies:
@@ -10061,7 +10038,7 @@ snapshots:
       '@babel/plugin-syntax-import-meta': 7.10.4(@babel/core@7.24.4)
       '@babel/plugin-transform-typescript': 7.24.4(@babel/core@7.24.4)
       '@vue/babel-plugin-jsx': 1.2.2(@babel/core@7.24.4)
-      '@vue/compiler-dom': 3.4.31
+      '@vue/compiler-dom': 3.4.34
       kolorist: 1.8.0
       magic-string: 0.30.10
       vite: 5.3.5(@types/node@20.14.13)(sass@1.77.8)
