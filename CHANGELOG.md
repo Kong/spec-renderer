@@ -1,3 +1,31 @@
+# [1.51.0](https://github.com/Kong/spec-renderer/compare/v1.50.1...v1.51.0) (2024-07-30)
+
+
+### Features
+
+* **use-markdown:** enable support for raw HTML with sanitization [KHCP-12730] ([#228](https://github.com/Kong/spec-renderer/issues/228)) ([566547c](https://github.com/Kong/spec-renderer/commit/566547c1ec00adcd46de5a1a7faa3f61c54d0869))
+
+## [1.50.1](https://github.com/Kong/spec-renderer/compare/v1.50.0...v1.50.1) (2024-07-30)
+
+
+### Bug Fixes
+
+* **property-field-list:** add overflow-wrap for property fields ([#229](https://github.com/Kong/spec-renderer/issues/229)) ([6406e95](https://github.com/Kong/spec-renderer/commit/6406e95b7b6f81690abe10688ac064bc78b56b79))
+
+# [1.50.0](https://github.com/Kong/spec-renderer/compare/v1.49.3...v1.50.0) (2024-07-30)
+
+
+### Features
+
+* **use-markdown:** allow support for all markdown flavours ([#234](https://github.com/Kong/spec-renderer/issues/234)) ([07a9229](https://github.com/Kong/spec-renderer/commit/07a9229e579c60356a56d4db1ce354610c267fd8))
+
+## [1.49.3](https://github.com/Kong/spec-renderer/compare/v1.49.2...v1.49.3) (2024-07-29)
+
+
+### Bug Fixes
+
+* **try-it:** try it dropdown and server endpoint styling [KHCP-12696] ([#226](https://github.com/Kong/spec-renderer/issues/226)) ([d7e6362](https://github.com/Kong/spec-renderer/commit/d7e63624e34f10e92f14b7523f39d843990f6751))
+
 ## [1.49.2](https://github.com/Kong/spec-renderer/compare/v1.49.1...v1.49.2) (2024-07-26)
 
 

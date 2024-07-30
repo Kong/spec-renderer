@@ -282,6 +282,7 @@ watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.
     position: absolute;
     top: 8px;
     white-space: break-spaces;
+    width: 100%;
     word-wrap: break-word;
   }
 
