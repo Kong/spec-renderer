@@ -1,1 +1,1 @@
-export type RequestParamTypes = 'path' | 'query' | 'body'
+export type RequestParamTypes = 'path' | 'query' | 'body' | 'headers'

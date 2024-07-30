@@ -43,6 +43,14 @@
         param-type="query"
         @request-query-changed="requestQueryChanged"
       />
+
+      <TryItParams
+        :data="data"
+        :exclude-header-list="authHeaderNameList"
+        param-type="headers"
+        @request-headers-changed="requestHeadersChanged"
+      />
+
       <TryItParams
         v-model="excludeNotRequired"
         :data="data"
@@ -99,6 +107,7 @@ const emit = defineEmits<{
   (e: 'server-url-changed', serverUrl: string): void
   (e: 'request-path-changed', newPath: string): void
   (e: 'request-query-changed', newPath: string): void
+  (e: 'request-headers-changed', newHeaders: Array<Record<string, string>>): void
   (e: 'request-body-changed', newBody: string): void
 }>()
 
@@ -115,6 +124,8 @@ const currentRequestPath = ref<string>('')
 
 const currentRequestQuery = ref<string>('')
 
+const currentRequestHeaders = ref<Array<Record<string, string>>>([])
+
 const currentRequestBody = ref<string>('')
 
 const requestPathChanged = (newPath: string) => {
@@ -125,6 +136,11 @@ const requestPathChanged = (newPath: string) => {
 const requestQueryChanged = (newQuery: string) => {
   currentRequestQuery.value = newQuery
   emit('request-query-changed', newQuery)
+}
+
+const requestHeadersChanged = (newHeaderList: Array<Record<string, string>>) => {
+  currentRequestHeaders.value = newHeaderList
+  emit('request-headers-changed', newHeaderList)
 }
 
 const requestBodyChanged = (newBody: string) => {
@@ -160,6 +176,7 @@ const doApiCall = async () => {
       headers: [
         ...(authHeaders?.value || []),
         ...getRequestHeaders(props.data),
+        ...currentRequestHeaders.value,
       ].reduce((acc, current) => {
         acc[current.name] = current.value; return acc
       }
@@ -184,6 +201,8 @@ const showTryIt = computed((): boolean => {
   return !hideTryIt.value && Array.isArray(props.data.servers) && !!props.data.servers.length
 })
 
+const authHeaderNameList = computed(() => authHeaders.value?.map(({ name }) => name) ?? [])
+
 watch(() => props.serverUrl, () => {
   currentServerUrl.value = props.serverUrl
 })
@@ -195,6 +214,7 @@ watch(() => props.requestBody, (body) => {
 watch(() => (props.data.id), () => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
+  currentRequestHeaders.value = []
   response.value = undefined
   responseError.value = undefined
 }, { immediate: true })
