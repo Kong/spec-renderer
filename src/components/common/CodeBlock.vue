@@ -47,7 +47,6 @@ const highlightedCode = computed(():string => {
 onMounted(async ()=> {
   highlighter.value = await createHighlighter()
 })
-
 </script>
 
 <style lang="scss" scoped>
@@ -61,6 +60,8 @@ onMounted(async ()=> {
     margin: var(--kui-space-0, $kui-space-0);
     padding: var(--kui-space-40, $kui-space-40);
     white-space: break-spaces;
+    max-height: 300px;
+    overflow-y: auto;
 
     code {
       background: transparent !important;
@@ -68,7 +69,7 @@ onMounted(async ()=> {
       word-wrap: break-word;
     }
 
-    $codeblock-line-count-width: 20px;
+    $codeblock-line-count-width: 4ch;
     $codeblock-line-gap: 1px;
 
 
@@ -83,7 +84,7 @@ onMounted(async ()=> {
       position: relative;
       word-break: break-all;
 
-      &:after {
+      &::after {
         background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
         bottom: 0;
         color: var(--kui-color-text-neutral, $kui-color-text-neutral-weak);
