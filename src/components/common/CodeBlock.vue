@@ -56,10 +56,10 @@ onMounted(async ()=> {
     font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
     line-height: var(--kui-line-height-30, $kui-line-height-30);
     margin: var(--kui-space-0, $kui-space-0);
-    padding: var(--kui-space-40, $kui-space-40);
-    white-space: break-spaces;
     max-height: 300px;
     overflow-y: auto;
+    padding: var(--kui-space-40, $kui-space-40);
+    white-space: break-spaces;
 
     code {
       background: transparent !important;

@@ -269,9 +269,9 @@ watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.
   font-size: var(--kui-font-size-20, $kui-font-size-20);
   font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
   line-height: var(--kui-line-height-30, $kui-line-height-30);
-  position: relative;
   max-height: 300px;
   overflow-y: auto;
+  position: relative;
 
   // unset max-height and overflow-y in CodeBlock so that it's controlled by .editable-code-wrapper instead
   :deep(.code-block pre) {
