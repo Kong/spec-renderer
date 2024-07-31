@@ -111,6 +111,7 @@ const useDefaultMDStyling = inject<Ref<boolean>>('use-default-md-styling', ref(t
         padding-right: var(--kui-space-20, $kui-space-20);
         position: absolute;
         text-decoration: none;
+        // stylelint-disable-next-line @kong/design-tokens/use-proper-token
         top: calc(var(--kui-space-80, $kui-space-80) + 2px);
         transition: opacity 0.2s ease-in-out;
         user-select: none;
