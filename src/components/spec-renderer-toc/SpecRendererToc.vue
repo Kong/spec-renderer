@@ -21,32 +21,51 @@ import type { PropType, Ref } from 'vue'
 import type { TableOfContentsItem } from '../../stoplight/elements-core/components/Docs/types'
 import { itemComponent } from './index'
 import { getOffsetTopRelativeToParent } from '@/utils'
+import type { NavigationTypes } from '@/types'
 
 const props = defineProps({
   tableOfContents: {
     type: Array as PropType<TableOfContentsItem[]>,
     required: true,
   },
+  /**
+   * Path of the page where spec-renderer is loaded on.
+   * his is needed to compute path to individual specification details
+   */
   basePath: {
     type: String,
     default: '',
   },
-  controlBrowserUrl: {
-    type: Boolean,
-    default: false,
-  },
   /**
-   * Selected path to load document with
+   * Selected path of the spec section (ui)
    */
   currentPath: {
     type: String,
     default: '/',
+  },
+  /**
+   * Allow component itself to control URL in browser URL.
+   * When false it becomes the responsibility of consuming app
+   */
+  controlAddressBar: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+      Defines how links are specified in toc
+        path - id becomes part of the URL path.
+        hash - uses the hash portion of the URL to keep the UI in sync with the URL.
+  */
+  navigationType: {
+    type: String as PropType<NavigationTypes>,
+    default: 'path',
   },
 })
 
 // to be consumed in multi-level child components
 provide<Ref<string>>('base-path', computed((): string => props.basePath))
 provide<Ref<string>>('current-path', computed((): string => props.currentPath))
+provide<Ref<NavigationTypes>>('navigation-type', computed((): NavigationTypes => props.navigationType))
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
@@ -79,8 +98,10 @@ defineExpose({
 })
 
 const selectItem = (id: any) => {
-  if (props.controlBrowserUrl) {
-    window.history.pushState({}, '', props.basePath + id)
+  if (props.controlAddressBar) {
+    // we only have path and hash for now
+    const newPath = props.navigationType === 'path' ? props.basePath + id : props.basePath + '#' + id
+    window.history.pushState({}, '', newPath)
   }
 
   emit('item-selected', id)

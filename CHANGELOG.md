@@ -1,3 +1,10 @@
+# [1.53.0](https://github.com/Kong/spec-renderer/compare/v1.52.1...v1.53.0) (2024-07-31)
+
+
+### Features
+
+* support hash navigation type [KHCP-12813] ([#238](https://github.com/Kong/spec-renderer/issues/238)) ([38f2e2b](https://github.com/Kong/spec-renderer/commit/38f2e2b2c1f5a28b4c0656ae04c9d7fd4511ab0e))
+
 ## [1.52.1](https://github.com/Kong/spec-renderer/compare/v1.52.0...v1.52.1) (2024-07-31)
 
 
