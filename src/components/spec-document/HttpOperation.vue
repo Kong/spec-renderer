@@ -75,6 +75,7 @@
           :server-url="selectedServerURL"
           @access-tokens-changed="setAuthHeaders"
           @request-body-changed="setRequestBody"
+          @request-headers-changed="setRequestHeaders"
           @request-path-changed="setRequestPath"
           @request-query-changed="setRequestQuery"
           @server-url-changed="setServerUrl"
@@ -83,6 +84,7 @@
           v-model="excludeNotRequiredInSample"
           :auth-headers="authHeaders"
           :auth-query="authQuery"
+          :custom-headers="currentRequestHeaders"
           :data="data"
           :request-body="currentRequestBody"
           :request-path="currentRequestPath"
@@ -149,6 +151,7 @@ const selectedServerURL = ref<string>(serverList.value?.[0] ?? '')
 const currentServerUrl = ref<string>(serverList.value?.[0] ?? '')
 const currentRequestPath = ref<string>('')
 const currentRequestQuery = ref<string>('')
+const currentRequestHeaders = ref<Array<Record<string, string>>>([])
 const currentRequestBody = ref<string>('')
 
 // refs and computed properties to manage currently active response object
@@ -177,8 +180,13 @@ const setServerUrl = (newServerUrl: string) => {
 const setRequestPath = (newPath: string) => {
   currentRequestPath.value = newPath
 }
+
 const setRequestQuery = (newQuery: string) => {
   currentRequestQuery.value = newQuery
+}
+
+const setRequestHeaders = (newHeaders: Array<Record<string, string>>) => {
+  currentRequestHeaders.value = newHeaders
 }
 
 const setRequestBody = (newBody: string) => {
@@ -203,6 +211,7 @@ function updateSelectedServerURL(url: string) {
 watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value } ), (newValue) => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
+  currentRequestHeaders.value = []
   currentRequestBody.value = props.data.request?.body?.contents
     ? getSampleBody(
       props.data.request?.body?.contents,

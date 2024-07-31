@@ -1,16 +1,16 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import PathParamList from './PathParamList.vue'
+import RequestParamList from './RequestParamList.vue'
 import { HttpParamStyles } from '@stoplight/types'
 
-describe('<PathParamList />', () => {
-  const wrapper = mount(PathParamList, {
+describe('<RequestParamList />', () => {
+  const wrapper = mount(RequestParamList, {
     props: {
-      pathParamList: [
+      paramList: [
         {
-          name: 'path1',
-          id: 'path1',
-          style: HttpParamStyles.Simple,
+          name: 'param1',
+          id: 'param1',
+          style: HttpParamStyles.Form,
           schema: {
             type: 'object',
             properties: {
@@ -21,9 +21,9 @@ describe('<PathParamList />', () => {
           },
         },
         {
-          name: 'path2',
-          id: 'path2',
-          style: HttpParamStyles.Label,
+          name: 'param2',
+          id: 'param2',
+          style: HttpParamStyles.SpaceDelimited,
           schema: {
             type: 'object',
             properties: {
@@ -34,18 +34,20 @@ describe('<PathParamList />', () => {
           },
         },
       ],
+      title: 'sample-title',
+    },
+    attrs: {
+      'data-testid': 'endpoint-request-param-list',
     },
   })
 
-  expect(wrapper.findTestId('endpoint-path-param-list').exists()).toBe(true)
-
   const componentList = [
     // the component itself is rendered
-    'endpoint-path-param-list',
-    // the model property component renders for both path params
-    'model-property-path1',
-    'model-property-path2',
-  ]
+    'endpoint-request-param-list',
+    // the model property component renders for both request params
+    'model-property-param1',
+    'model-property-param2',
+  ] as const
 
   for (const component of componentList) {
     it(`renders ${component} correctly`, () => {

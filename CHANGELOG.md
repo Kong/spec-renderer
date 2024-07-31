@@ -1,3 +1,10 @@
+# [1.52.0](https://github.com/Kong/spec-renderer/compare/v1.51.0...v1.52.0) (2024-07-31)
+
+
+### Features
+
+* support for endpoint custom headers [KHCP-12753] ([#235](https://github.com/Kong/spec-renderer/issues/235)) ([dd642d0](https://github.com/Kong/spec-renderer/commit/dd642d0d5dae6c608e61cc5504a4fbf7ed4b2638))
+
 # [1.51.0](https://github.com/Kong/spec-renderer/compare/v1.50.1...v1.51.0) (2024-07-30)
 
 
