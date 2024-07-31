@@ -56,6 +56,7 @@
         :hide-try-it="hideTryIt"
         :json="jsonDocument"
         :spec-url="specUrl"
+        :use-default-md-styling="useDefaultMdStyling"
         @path-not-found="relayPathNotFound"
       />
     </div>
@@ -123,14 +124,14 @@ const props = defineProps({
   },
   /**
    * Do not show TryIt section
-  */
+   */
   hideTryIt: {
     type: Boolean,
     default: false,
   },
   /**
-     * Do not show  Insomnia option in TryIt
-  */
+   * Do not show  Insomnia option in TryIt
+   */
   hideInsomniaTryIt: {
     type: Boolean,
     default: false,
@@ -148,6 +149,13 @@ const props = defineProps({
   withCredentials: {
     type: Boolean,
     default: false,
+  },
+  /**
+   * Use default markdown styling
+   */
+  useDefaultMdStyling: {
+    type: Boolean,
+    default: true,
   },
 })
 
