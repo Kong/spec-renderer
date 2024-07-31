@@ -95,7 +95,7 @@
     "cross-env": "^7.0.3",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.7.0",
-    "jsdom": "^24.1.0",
+    "jsdom": "^24.1.1",
     "postcss": "^8.4.39",
     "postcss-html": "^1.7.0",
     "rimraf": "^6.0.1",
