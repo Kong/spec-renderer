@@ -1,5 +1,8 @@
 <template>
-  <div :class="{ 'editable-code-wrapper': true, 'error-wrapper': codeError }">
+  <div
+    class="editable-code-wrapper"
+    :class="{ 'error-wrapper': codeError }"
+  >
     <CodeBlock
       :code="presentedCode || ''"
       :lang="lang"
@@ -267,6 +270,14 @@ watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.
   font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
   line-height: var(--kui-line-height-30, $kui-line-height-30);
   position: relative;
+  max-height: 300px;
+  overflow-y: auto;
+
+  // unset max-height and overflow-y in CodeBlock so that it's controlled by .editable-code-wrapper instead
+  :deep(.code-block pre) {
+    max-height: unset;
+    overflow-y: visible;
+  }
 
   .editable-code {
     background: transparent;
@@ -275,14 +286,13 @@ watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.
     font-family: var(--kui-font-family-code, $kui-font-family-code);
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
-    left: 34px;
+    left: calc(4ch + 14px);
     line-height: var(--kui-line-height-30, $kui-line-height-30);
     min-width: fit-content;
     outline: none;
     position: absolute;
     top: 8px;
     white-space: break-spaces;
-    width: 100%;
     word-wrap: break-word;
   }
 

@@ -17,8 +17,6 @@ import { requestSampleConfigs } from '@/constants'
 import type { LanguageCode } from '@/types/request-languages'
 import type { HighlighterCore } from 'shiki/core'
 
-
-
 const props = defineProps({
   code: {
     type: String,
@@ -71,7 +69,6 @@ onMounted(async ()=> {
 
     $codeblock-line-count-width: 4ch;
     $codeblock-line-gap: 1px;
-
 
     span.line {
       counter-increment: codeblock-line;
