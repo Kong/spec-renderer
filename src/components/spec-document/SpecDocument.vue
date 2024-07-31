@@ -56,7 +56,7 @@ const props = defineProps({
   /**
    * Use default markdown styling
    */
-  useDefaultMdStyling: {
+  markdownStyles: {
     type: Boolean,
     default: true,
   },
@@ -68,7 +68,7 @@ provide<Ref<string>>('spec-url', computed((): string => props.specUrl))
 provide<Ref<string>>('base-path', computed((): string => props.basePath))
 provide<Ref<boolean>>('hide-tryit', computed((): boolean => props.hideTryIt))
 provide<Ref<boolean>>('hide-insomnia-tryit', computed((): boolean => props.hideInsomniaTryIt))
-provide<Ref<boolean>>('use-default-md-styling', computed((): boolean => props.useDefaultMdStyling))
+provide<Ref<boolean>>('markdown-styles', computed((): boolean => props.markdownStyles))
 
 const emit = defineEmits < {
   (e: 'path-not-found', requestedPath: string): void

@@ -1,7 +1,7 @@
 <template>
   <component
     :is="render"
-    :class="{ 'default-markdown': useDefaultMDStyling }"
+    :class="{ 'default-markdown': markdownStyles }"
   />
 </template>
 
@@ -32,7 +32,7 @@ const render = () => h(props.tag, {
   'data-testid': props.dataTestid,
 })
 
-const useDefaultMDStyling = inject<Ref<boolean>>('use-default-md-styling', ref(true))
+const markdownStyles = inject<Ref<boolean>>('markdown-styles', ref(true))
 </script>
 
 <style lang="scss" scoped>
@@ -49,7 +49,6 @@ const useDefaultMDStyling = inject<Ref<boolean>>('use-default-md-styling', ref(t
     h5,
     h6 {
       color: var(--kui-color-text, $kui-color-text);
-      font-family: var(--kui-font-family-text, $kui-font-family-text);
       font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
       margin-top: var(--kui-space-0, $kui-space-0);
     }

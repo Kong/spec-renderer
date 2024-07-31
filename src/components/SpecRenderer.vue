@@ -57,8 +57,8 @@
         :hide-insomnia-try-it="hideInsomniaTryIt"
         :hide-try-it="hideTryIt"
         :json="jsonDocument"
+        :markdown-styles="markdownStyles"
         :spec-url="specUrl"
-        :use-default-md-styling="useDefaultMdStyling"
         @path-not-found="relayPathNotFound"
       />
     </div>
@@ -168,7 +168,7 @@ const props = defineProps({
   /**
    * Use default markdown styling
    */
-  useDefaultMdStyling: {
+  markdownStyles: {
     type: Boolean,
     default: true,
   },
