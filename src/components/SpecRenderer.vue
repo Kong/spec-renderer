@@ -13,7 +13,6 @@
         class="spec-renderer-toc"
         :control-browser-url="controlBrowserUrl"
         :current-path="currentPathTOC"
-        :scroll-direction="scrollDirection"
         scrolling-container="self"
         :table-of-contents="tableOfContents"
         @item-selected="itemSelected"
@@ -27,7 +26,6 @@
         class="spec-renderer-toc"
         :control-browser-url="controlBrowserUrl"
         :current-path="currentPathTOC"
-        :scroll-direction="scrollDirection"
         scrolling-container="self"
         :table-of-contents="tableOfContents"
         @item-selected="itemSelected"
@@ -182,7 +180,6 @@ const emit = defineEmits<{
 
 
 const slideoutTocVisible = ref<boolean>(false)
-const scrollDirection = ref<'up' | 'down'>()
 /**
  * re-emits path-not-found event so application that consumes SpecRender component can handle 404
  */
@@ -194,12 +191,11 @@ const openSlideoutToc = async (): Promise<void> => {
   slideoutTocVisible.value = true
 }
 
-const onDocumentScroll = (path: string, direction: 'up' | 'down' | undefined) => {
+const onDocumentScroll = (path: string) => {
   console.log('onDOcumentScroll')
   currentPathTOC.value = path
   // we need to re-calculate initiallyExpanded property based on the new path
   setExpanded(path)
-  scrollDirection.value = direction
   if (props.controlBrowserUrl) {
     window.history.pushState({}, '', props.basePath + path)
   }

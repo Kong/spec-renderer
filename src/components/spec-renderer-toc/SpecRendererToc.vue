@@ -51,10 +51,6 @@ const props = defineProps({
     type: String as PropType<'self' | 'parent'>,
     default: 'parent',
   },
-  scrollDirection: {
-    type: String as PropType<'up' | 'down'>,
-    default: 'down',
-  },
 })
 
 // to be consumed in multi-level child components
@@ -74,24 +70,20 @@ const { y: yPosition } = useScroll(scrollableContainerRef)
 
 
 watch(() => ({ path: props.currentPath, navRef: tocNavRef.value }), async (newValue) => {
+  //TODO verify if needed
   await nextTick()
-  console.log('yPos: activeItem changed', newValue.path, newValue.navRef)
   if (!newValue.navRef) {
-    console.log('no navRef')
     return
   }
   scrollableContainerRef.value = props.scrollingContainer === 'self' ? newValue.navRef : newValue.navRef.parentElement
   if (!scrollableContainerRef.value) {
-    console.log('yPos: no container')
     return
   }
   const activeItem = scrollableContainerRef.value.querySelector('li[data-spec-renderer-toc-active="true"]') as HTMLElement || null
 
   if (!activeItem) {
-    console.log('yPos: no activeItem')
     return
   }
-  console.log('yPos:', yPosition.value, ' aH:', activeItem.offsetHeight, ' aT:', activeItem.offsetTop, ' cH:', scrollableContainerRef.value.offsetHeight, scrollableContainerRef.value, activeItem)
 
   // we are too far above visible part, let's bring it back
   if (activeItem.offsetTop < yPosition.value) {
@@ -110,7 +102,6 @@ watch(() => ({ path: props.currentPath, navRef: tocNavRef.value }), async (newVa
 
 
 const selectItem = (id: any) => {
-  console.log('inside of TOC selectItem')
   if (props.controlBrowserUrl) {
     window.history.pushState({}, '', props.basePath + id)
   }

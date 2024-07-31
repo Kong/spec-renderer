@@ -11,6 +11,7 @@
   </div>
   <div
     v-else-if="serviceNode"
+    ref="scrollableContainerRef"
     class="scrolling-container"
   >
     <div
@@ -19,13 +20,10 @@
       :key="`${node.doc.data.id}-${idx}`"
       class="spec-renderer-document"
     >
-      <div
-        v-if="node.component"
-        v-element-visibility=" (state: boolean)=> {onElementVisibility(state, node.doc.uri, idx, false)}"
-      >
+      <div v-if="node.component">
         <component
           :is="node.component"
-          v-if="['true', 'forced'].includes(currentlyRendered[idx])"
+          v-if="['true', 'forced'].includes(toRenderer[idx])"
           v-bind="node.props"
         />
         <div
@@ -34,7 +32,6 @@
         >
           <h1>
             {{ node.doc.name }}
-            {{ currentlyRendered[idx] }}
           </h1>
         </div>
       </div>
@@ -52,9 +49,9 @@ import HttpOperation from './HttpOperation.vue'
 import HttpModel from './HttpModel.vue'
 import ArticleNode from './ArticleNode.vue'
 import UnknownNode from './UnknownNode.vue'
-import { vElementVisibility } from '@vueuse/components'
-import { useWindowScroll } from '@vueuse/core'
-import { SECTIONS_TO_RENDER } from '@/constants'
+//import { vElementVisibility } from '@vueuse/components'
+import { useWindowScroll, useWindowSize } from '@vueuse/core'
+import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE } from '@/constants'
 import composables from '@/composables'
 
 const props = defineProps({
@@ -112,14 +109,15 @@ provide<Ref<boolean>>('hide-insomnia-tryit', computed((): boolean => props.hideI
 
 const emit = defineEmits < {
   (e: 'path-not-found', requestedPath: string): void,
-  (e: 'content-scrolled', path: string, direction: 'up' | 'down' | undefined): void,
+  (e: 'content-scrolled', path: string): void,
 }>()
 
 // forced - assumed visible (rendered) even when hidden
-const currentlyRendered = ref<Array<'true' | 'false' | 'forced'>>(['true', 'forced', 'forced'])
+const toRenderer = ref<Array<'true' | 'false' | 'forced'>>(['true', 'forced', 'forced'])
+const lastY = ref<number>()
 
-// hold the values of previous onElementVisibility call to avoid endless loop
-const prevVisibilityCall = ref<Record<string, any>>()
+const scrollableContainerRef = ref<HTMLElement | null>(null)
+
 
 const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null) => {
   if (!forServiceNode) return {}
@@ -144,20 +142,10 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
 }
 
 
-const processScroll = ref<boolean>(false)
-const scrollDirection = ref<'up' | 'down'>()
 
-const { y: scrollYPosition } = useWindowScroll()
-watch(scrollYPosition, (newValue, oldValue) => {
+const { y: yPosition } = useWindowScroll()
+const { height: windowHeight, width: windowWidth } = useWindowSize()
 
-  if (!processScroll.value) {
-    setTimeout(()=>{
-      processScroll.value = true
-    }, 1000)
-  } else {
-    scrollDirection.value = newValue > oldValue ? 'down' : 'up'
-  }
-})
 
 const docComponent = computed(() => {
   return getDocumentComponent(serviceNode.value)
@@ -201,88 +189,139 @@ const nodesList = computed(() => {
 })
 
 
-const onElementVisibility = async (state: boolean, path: string, idx: number, forceExact: boolean) => {
+watch(() => ({ nodesList: nodesList.value,
+  yPosition: yPosition.value,
+  scrollableRef: scrollableContainerRef.value,
+  wHeight: windowHeight.value,
+  wWidth: windowWidth.value }), (newValue, oldValue) => {
+  console.log('currentlyVisible changed: ', newValue.yPosition, lastY.value)
 
-  if (!forceExact && !processScroll.value) {
+  if (!newValue.nodesList) {
     return
   }
 
-  console.log({ state, path, idx, prev: prevVisibilityCall.value })
+  if (!newValue.scrollableRef) {
+    return
+  }
+  if (oldValue?.wHeight !== newValue.wHeight || oldValue?.wWidth != newValue.wWidth ) {
+    lastY.value = undefined
+  }
 
-  // nothing was changed for state = false
-  if (!state && (!currentlyRendered.value[idx] || currentlyRendered.value[idx] === 'false')) {
+  if (lastY.value != undefined
+    && Math.abs(newValue.yPosition - lastY.value) < MIN_SCROLL_DIFFERENCE) {
     return
   }
 
-  // nothing was changed for state = true
-  if (state && currentlyRendered.value[idx] === 'true') {
-    return
-  }
-
-  // to avoid endless loop (same section changes from true to false and back)
-  if (
-    prevVisibilityCall.value && prevVisibilityCall.value.idx === idx &&
-    (
-      (state === false && prevVisibilityCall.value.state === true) ||
-      (state === true && prevVisibilityCall.value.state === false)
-    )
-  ) {
-    console.log('endlress loop???')
-    //return
-  }
-
-
-  prevVisibilityCall.value = { state, path, idx }
-
-  console.log('onElementVisibility', state, path, idx)
-
-  const currentRenderState = [...currentlyRendered.value]
-  currentRenderState[idx] = state ? 'true' : 'false'
-
-  // now we rest all 'forced' to false
-  for (let i = 0; i < currentRenderState.length; i++) {
-    if (currentRenderState[i] === 'forced') {
-      currentRenderState[i] = 'false'
+  const visibleEls = Array.from(newValue.scrollableRef.children).filter((c, i) => {
+    const cEl = c as HTMLElement
+    console.log('checking:', i, ' cEl.offsetTop:', cEl.offsetTop, ' container.offsetHeight: ', newValue.wHeight)
+    if (cEl.offsetTop + newValue.yPosition > newValue.wHeight) {
+      return false
     }
-    // we want to keep values for 10 neighbors ofo current idx
-    if (['forced', 'true'].includes(currentRenderState[i]) && (i < idx - 10 || i > idx + 10)) {
-      currentRenderState[i] = 'false'
-    }
-  }
+    return true
 
-  // now we add 'forced' from the left and right of true
-  const idxToForce = []
-  for (let i = 0; i < currentRenderState.length; i++) {
-    if (currentRenderState[i] === 'true') {
-      //        console.log('found visible at', i, currentRenderState[i])
-      for (let j = 1; j <= SECTIONS_TO_RENDER; j++) {
-        idxToForce.push(i - j)
-        idxToForce.push(i + j)
-      }
-    }
-  }
-  //    console.log('idxToForce:', idxToForce)
-  for (let i = 0 ; i < idxToForce.length; i++) {
-    if (idxToForce[i] >= 0 && currentRenderState[idxToForce[i]] !== 'true') {
-      currentRenderState[idxToForce[i]] = 'forced'
-    }
-  }
+  })
+  console.log('visibleEls: ', visibleEls)
 
-  currentlyRendered.value = [...currentRenderState]
+  lastY.value = newValue.yPosition
 
-  // now we find first visible path and fire scrolled
-  const firstVisibleIdx = forceExact ? idx : currentRenderState.findIndex(s=>s === 'true')
-  const firstVisiblePath = nodesList.value[firstVisibleIdx]?.doc.uri
-  if (firstVisiblePath ) {
-    console.log('!!!!!!!', firstVisiblePath, prevVisibilityCall.value, currentRenderState)
-    if (processScroll.value || forceExact) {
-      console.log('emmitting:' )
-      emit('content-scrolled', firstVisiblePath, scrollDirection.value)
-    }
-  }
-  // so it's only one change
-  //console.log('after idx:', idx, 'state:', state, currentlyRendered.value)
-}
+  // we look trough elements and find the one that should be visible
+}, { immediate: true })
+
+// watch(yPosition, (newValue, oldValue) => {
+
+//   if (!processScroll.value) {
+//     setTimeout(()=>{
+//       processScroll.value = true
+//     }, 1000)
+//   } else {
+//     scrollDirection.value = newValue > oldValue ? 'down' : 'up'
+//   }
+// })
+
+
+// const onElementVisibility = async (state: boolean, path: string, idx: number, forceExact: boolean) => {
+
+//   if (!forceExact && !processScroll.value) {
+//     return
+//   }
+
+//   console.log({ state, path, idx, prev: prevVisibilityCall.value })
+
+//   // nothing was changed for state = false
+//   if (!state && (!currentlyRendered.value[idx] || currentlyRendered.value[idx] === 'false')) {
+//     return
+//   }
+
+//   // nothing was changed for state = true
+//   if (state && currentlyRendered.value[idx] === 'true') {
+//     return
+//   }
+
+//   // to avoid endless loop (same section changes from true to false and back)
+//   if (
+//     prevVisibilityCall.value && prevVisibilityCall.value.idx === idx &&
+//     (
+//       (state === false && prevVisibilityCall.value.state === true) ||
+//       (state === true && prevVisibilityCall.value.state === false)
+//     )
+//   ) {
+//     console.log('endlress loop???')
+//     //return
+//   }
+
+
+//   prevVisibilityCall.value = { state, path, idx }
+
+//   console.log('onElementVisibility', state, path, idx)
+
+//   const currentRenderState = [...currentlyRendered.value]
+//   currentRenderState[idx] = state ? 'true' : 'false'
+
+//   // now we rest all 'forced' to false
+//   for (let i = 0; i < currentRenderState.length; i++) {
+//     if (currentRenderState[i] === 'forced') {
+//       currentRenderState[i] = 'false'
+//     }
+//     // we want to keep values for 10 neighbors ofo current idx
+//     if (['forced', 'true'].includes(currentRenderState[i]) && (i < idx - 10 || i > idx + 10)) {
+//       currentRenderState[i] = 'false'
+//     }
+//   }
+
+//   // now we add 'forced' from the left and right of true
+//   const idxToForce = []
+//   for (let i = 0; i < currentRenderState.length; i++) {
+//     if (currentRenderState[i] === 'true') {
+//       //        console.log('found visible at', i, currentRenderState[i])
+//       for (let j = 1; j <= SECTIONS_TO_RENDER; j++) {
+//         idxToForce.push(i - j)
+//         idxToForce.push(i + j)
+//       }
+//     }
+//   }
+//   //    console.log('idxToForce:', idxToForce)
+//   for (let i = 0 ; i < idxToForce.length; i++) {
+//     if (idxToForce[i] >= 0 && currentRenderState[idxToForce[i]] !== 'true') {
+//       currentRenderState[idxToForce[i]] = 'forced'
+//     }
+//   }
+
+//   currentlyRendered.value = [...currentRenderState]
+
+//   // now we find first visible path and fire scrolled
+//   const firstVisibleIdx = forceExact ? idx : currentRenderState.findIndex(s=>s === 'true')
+//   const firstVisiblePath = nodesList.value[firstVisibleIdx]?.doc.uri
+//   if (firstVisiblePath ) {
+//     console.log('!!!!!!!', firstVisiblePath, prevVisibilityCall.value, currentRenderState)
+//     if (processScroll.value || forceExact) {
+//       console.log('emmitting:' )
+//       emit('content-scrolled', firstVisiblePath, scrollDirection.value)
+//     }
+//   }
+//   // so it's only one change
+//   //console.log('after idx:', idx, 'state:', state, currentlyRendered.value)
+// }
 
 /** we show tryIt section when it's requested to be hidden and when node */
 watch(() => ({ pathname: props.currentPath, document: props.document }), async (newValue, oldValue) => {
@@ -306,28 +345,28 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), async (
 
   if (oldDocument !== document) {
     // first one (service, and two bellow should be rendered by default)
-    currentlyRendered.value = ['true', 'forced', 'forced']
-    processScroll.value = false
+    toRenderer.value = ['true', 'forced', 'forced']
+    //processScroll.value = false
   }
   if (oldPathname) {
-    processScroll.value = false
+    //processScroll.value = false
   }
 
-  await nextTick()
-  // we need to give the the path and it's neighbors visible state
-  const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
-  console.log('pathIdx:' ,pathIdx)
+  // await nextTick()
+  // // we need to give the the path and it's neighbors visible state
+  // const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
+  // console.log('pathIdx:' ,pathIdx)
 
-  if (pathIdx === -1) {
-    emit('path-not-found', pathname)
-    return
-  }
-  onElementVisibility(true, pathname, pathIdx, true)
+  // if (pathIdx === -1) {
+  //   emit('path-not-found', pathname)
+  //   return
+  // }
+  // onElementVisibility(true, pathname, pathIdx, true)
 
-  if (window?.document && oldPathname !== pathname) {
-    console.log('?????', 'scrolling into', pathIdx)
-    window.document.getElementById(`${pathIdx}-nodecontainter`)?.scrollIntoView()
-  }
+  // if (window?.document && oldPathname !== pathname) {
+  //   console.log('?????', 'scrolling into', pathIdx)
+  //   window.document.getElementById(`${pathIdx}-nodecontainter`)?.scrollIntoView()
+  // }
 }, { immediate: true })
 
 

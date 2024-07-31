@@ -128,3 +128,6 @@ export const CODE_INDENT_SPACES = 2
 
 // how many sections to render around visible during  content scrolling
 export const SECTIONS_TO_RENDER = 2
+
+// start recalculating visibility on scroll more than N pixels
+export const MIN_SCROLL_DIFFERENCE = 20
