@@ -1,3 +1,10 @@
+## [1.52.1](https://github.com/Kong/spec-renderer/compare/v1.52.0...v1.52.1) (2024-07-31)
+
+
+### Bug Fixes
+
+* **code-block:** max height and line number width [KHCP-12705] ([#237](https://github.com/Kong/spec-renderer/issues/237)) ([cab82d4](https://github.com/Kong/spec-renderer/commit/cab82d4df03471932180388fbbc77a4c563e7451))
+
 # [1.52.0](https://github.com/Kong/spec-renderer/compare/v1.51.0...v1.52.0) (2024-07-31)
 
 
