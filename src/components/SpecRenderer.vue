@@ -264,6 +264,8 @@ watch(specRendererTocRef, async (val) => {
   flex-direction: column;
   min-height: 100vh;
   position: relative;
+  width: 100%;
+  container-name: spec-renderer;
 
   @media (min-width: $kui-breakpoint-tablet) {
     flex-direction: row;

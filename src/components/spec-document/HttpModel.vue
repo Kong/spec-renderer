@@ -86,16 +86,18 @@ const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
   .http-model-content {
     display: grid;
     gap: var(--kui-space-130, $kui-space-130);
-    grid-template-columns: auto $spec-renderer-secondary-column-width;
-  }
+    grid-template-columns: 1fr;
 
-  @media (max-width: ($kui-breakpoint-laptop - 1px)) {
-    .http-model-content {
-      grid-template-columns: 1fr;
+    @media (min-width: $kui-breakpoint-laptop) {
+      grid-template-columns: auto $spec-renderer-secondary-column-width;
 
       .http-model-example-container {
-        margin-top: var(--kui-space-40, $kui-space-40);
+        margin-top: var(--kui-space-0, $kui-space-0);
       }
+    }
+
+    .http-model-example-container {
+      margin-top: var(--kui-space-40, $kui-space-40);
     }
   }
 }

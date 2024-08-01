@@ -235,16 +235,26 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
   .http-operation-container  {
     display: grid;
     gap: var(--kui-space-10, $kui-space-10);
-    grid-template-columns: auto $spec-renderer-secondary-column-width;
+    grid-template-columns: 1fr;
     width: 100%;
+
+    @media (min-width: $kui-breakpoint-laptop) {
+      grid-template-columns: auto $spec-renderer-secondary-column-width;
+
+      .right {
+        margin-top: var(--kui-space-0, $kui-space-0);
+      }
+    }
 
     .left {
       color: var(--kui-color-text, $kui-color-text);
       padding-right: var(--kui-space-50, $kui-space-50);
     }
+
     .right {
       background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
       padding: var(--kui-space-0, $kui-space-0);
+      margin-top: var(--kui-space-40, $kui-space-40);
 
       > :not(:first-child) {
         margin-top: var(--kui-space-70, $kui-space-70);
@@ -260,16 +270,6 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
         :deep(.trigger-button) {
           @include small-bordered-trigger-button;
         }
-      }
-    }
-  }
-  // TODO change when we have floating TOC for smaller width
-  @media (max-width: ($kui-breakpoint-laptop - 1px)) {
-    .http-operation-container {
-      grid-template-columns: 1fr;
-
-      .right {
-        margin-top: var(--kui-space-40, $kui-space-40);
       }
     }
   }

@@ -125,7 +125,15 @@ const toggleState = (e: Event) => {
     border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     border-top: 0;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
+
+    @media (min-width: $kui-breakpoint-mobile) {
+      grid-template-columns: 1fr 1fr;
+
+      :deep(.wide) {
+        grid-column: 1 / 3;
+      }
+    }
 
     :deep(.short) {
       display: flex;
@@ -137,18 +145,9 @@ const toggleState = (e: Event) => {
     :deep(.wide) {
       display: flex;
       flex-direction: column;
-      grid-column: 1 / 3;
+      grid-column: 1;
       margin: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
       row-gap: var(--kui-space-40, $kui-space-40);
-    }
-  }
-
-  @media (max-width: ($kui-breakpoint-mobile - 1px)) {
-    .panel-body {
-      grid-template-columns: 1fr;
-      :deep(.wide) {
-        grid-column: 1;
-      }
     }
   }
 }
