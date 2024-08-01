@@ -33,7 +33,7 @@ const getHighlightLanguage = (snippetLang: LanguageCode | null | undefined): str
 }
 
 const highlightedCode = computed(():string => {
-  if (highlighter?.value && props.lang) {
+  if (highlighter.value && props.lang) {
     const hightLightLang = getHighlightLanguage(props.lang as LanguageCode)
     return highlighter.value.codeToHtml(props.code, { lang: hightLightLang as string, theme: 'material-theme-lighter' })
   }
