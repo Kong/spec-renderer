@@ -9,7 +9,8 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, provide, computed } from 'vue'
+import { watch, ref, provide, computed, onBeforeMount } from 'vue'
+import composables from '@/composables'
 import type { PropType, Ref } from 'vue'
 import { NodeType } from '@stoplight/types'
 import type { ServiceNode } from '../../stoplight/elements/utils/oas/types'
@@ -61,6 +62,9 @@ const props = defineProps({
     default: true,
   },
 })
+
+const { createHighlighter } = composables.useShiki()
+
 const serviceNode = ref<ServiceNode | null>(null)
 
 // to be consumed in multi-level child components
@@ -105,6 +109,11 @@ const docComponent = computed(() => {
       return { component: UnknownNode, props: defaultProps }
   }
 })
+
+onBeforeMount(async () => {
+  await createHighlighter()
+})
+
 </script>
 
 <style lang="scss" scoped>
