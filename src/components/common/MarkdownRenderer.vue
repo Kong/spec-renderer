@@ -1,8 +1,5 @@
 <template>
-  <div
-    :class="{ 'default-markdown': markdownStyles }"
-    :data-testid="dataTestid ? dataTestid : undefined"
-  >
+  <div :class="{ 'default-markdown': markdownStyles }">
     <component :is="render" />
   </div>
 </template>
@@ -22,10 +19,6 @@ const props = defineProps({
   tag: {
     type: String,
     default: 'div',
-  },
-  dataTestid: {
-    type: String,
-    default: '',
   },
 })
 
