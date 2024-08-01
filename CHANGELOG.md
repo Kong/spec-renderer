@@ -1,3 +1,10 @@
+## [1.53.2](https://github.com/Kong/spec-renderer/compare/v1.53.1...v1.53.2) (2024-08-01)
+
+
+### Bug Fixes
+
+* try it bugs and improvements ([#244](https://github.com/Kong/spec-renderer/issues/244)) ([262c4a9](https://github.com/Kong/spec-renderer/commit/262c4a9a5c135980938fc33ee34a9bf17f621c91))
+
 ## [1.53.1](https://github.com/Kong/spec-renderer/compare/v1.53.0...v1.53.1) (2024-08-01)
 
 
