@@ -19,6 +19,13 @@
           type="checkbox"
         >
         <label for="hide-tryit">Hide TryIt</label>
+        |
+        <input
+          id="default-md-styling"
+          v-model="markdownStyles"
+          type="checkbox"
+        >
+        <label for="default-md-styling">Default markdown styling</label>
 
         |
         <label for="navigation-type">Navigation: &nbsp;</label>
@@ -42,6 +49,7 @@
       :current-path="currentPath"
       :hide-schemas="hideSchemas"
       :hide-try-it="hideTryIt"
+      :markdown-styles="markdownStyles"
       :navigation-type="navigationType"
       :spec="specText"
       :spec-url="specUrl"
@@ -67,6 +75,7 @@ const specUrl = ref<string>('')
 const currentPath = ref<string>(navigationType.value === 'path' ? route.path : route.hash.replace('#', ''))
 const hideSchemas = ref<boolean>(false)
 const hideTryIt = ref<boolean>(false)
+const markdownStyles = ref<boolean>(true)
 
 const handlePathNotFound = (requestedPath: string) => {
   console.error(`${requestedPath} not found. App to redirect to it's own 404`)
