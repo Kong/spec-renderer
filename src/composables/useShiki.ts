@@ -16,7 +16,7 @@ export default function useShiki(): {
     if (shikiInstance.value) {
       return
     }
-    console.log('actually creating shiki instance')
+
     shikiInstance.value = await createHighlighterCore({
       themes: [
         import('shiki/themes/material-theme-lighter.mjs'),

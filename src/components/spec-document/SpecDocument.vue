@@ -1,58 +1,24 @@
 <template>
-  <div
-    v-if="!allowContentScrolling"
-    class="spec-renderer-document"
-  >
+  <div class="spec-renderer-document">
     <component
       :is="docComponent.component"
-      v-if="docComponent.component !== null"
+      v-if="docComponent.component"
       v-bind="docComponent.props"
     />
-  </div>
-  <div
-    v-else-if="serviceNode"
-    ref="scrollableContainerRef"
-    class="scrolling-container"
-  >
-    <div
-      v-for="(node, idx) in nodesList"
-      :id="`${idx}-nodecontainter`"
-      :key="`${node.doc.data.id}-${idx}`"
-      class="spec-renderer-document"
-    >
-      <div v-if="node.component">
-        <component
-          :is="node.component"
-          v-if="['true', 'forced'].includes(toRenderer[idx])"
-          v-bind="node.props"
-        />
-        <div
-          v-else
-          class="placeholder"
-        >
-          <h1>
-            {{ node.doc.name }}
-          </h1>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { watch, ref, provide, computed, nextTick, onBeforeMount } from 'vue'
+import { watch, ref, provide, computed, onBeforeMount } from 'vue'
+import composables from '@/composables'
 import type { PropType, Ref } from 'vue'
 import { NodeType } from '@stoplight/types'
-import type { ServiceNode, ServiceChildNode } from '../../stoplight/elements/utils/oas/types'
+import type { ServiceNode } from '../../stoplight/elements/utils/oas/types'
 import HttpService from './HttpService.vue'
 import HttpOperation from './HttpOperation.vue'
 import HttpModel from './HttpModel.vue'
 import ArticleNode from './ArticleNode.vue'
 import UnknownNode from './UnknownNode.vue'
-//import { vElementVisibility } from '@vueuse/components'
-import { useWindowScroll, useWindowSize } from '@vueuse/core'
-import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE } from '@/constants'
-import composables from '@/composables'
 
 const props = defineProps({
   document: {
@@ -88,21 +54,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  /**
-   * Allow scrolling trough operations/schemas
-   */
-  allowContentScrolling: {
-    type: Boolean,
-    default: true,
-  },
-  /**
-   * Allow component itself to control URL in browser URL.
-   * When false it becomes the responsibility of consuming app
-   */
-  controlAddressBar: {
-    type: Boolean,
-    default: false,
-  },
+
 })
 
 const { createHighlighter } = composables.useShiki()
@@ -116,323 +68,45 @@ provide<Ref<boolean>>('hide-tryit', computed((): boolean => props.hideTryIt))
 provide<Ref<boolean>>('hide-insomnia-tryit', computed((): boolean => props.hideInsomniaTryIt))
 
 const emit = defineEmits < {
-  (e: 'path-not-found', requestedPath: string): void,
-  (e: 'content-scrolled', path: string): void,
+  (e: 'path-not-found', requestedPath: string): void
 }>()
 
-// forced - assumed visible (rendered) even when hidden
-const toRenderer = ref<Array<'true' | 'false' | 'forced'>>(['true', 'forced', 'forced'])
-const lastY = ref<number>()
-const processScrolling = ref<boolean>(false)
-
-const scrollableContainerRef = ref<HTMLElement | null>(null)
-
-
-const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null) => {
-  if (!forServiceNode) return {}
-
-  const defaultProps = {
-    data: forServiceNode.data,
-  }
-
-  switch (forServiceNode.type as NodeType) {
-    case NodeType.Article:
-      return { component: ArticleNode, props: defaultProps, doc: forServiceNode }
-    case NodeType.HttpOperation:
-    case NodeType.HttpWebhook:
-      return { component: HttpOperation, props: defaultProps, doc: forServiceNode }
-    case NodeType.HttpService:
-      return { component: HttpService, props: { ...defaultProps, specVersion: (<ServiceNode>forServiceNode).specVersion }, doc: forServiceNode }
-    case NodeType.Model:
-      return { component: HttpModel, props: { ...defaultProps, title: forServiceNode.name }, doc: forServiceNode }
-    default:
-      return { component: UnknownNode, props: defaultProps, doc: forServiceNode }
-  }
-}
-
-
-
-const { y: yPosition } = useWindowScroll()
-const { height: windowHeight, width: windowWidth } = useWindowSize()
-
-const docComponent = computed(() => {
-  return getDocumentComponent(serviceNode.value)
-})
-
-
-
-const nodesList = computed(() => {
-  if (!props.allowContentScrolling) {
-    return []
-  }
-
-  let nList = <any[]>[]
-  // first one - overview
-  nList.push(...[props.document])
-  console.log('nList here:', nList)
-
-  // first all without tags, but not schemas
-  nList.push(...props.document.children.filter(child => (child.tags || []).length === 0 && child.type !== 'model'))
-
-  // next by tag ordered
-  props.document.tags.forEach((t: string) => {
-    nList.push(...props.document.children.filter((child: any) => (child.tags || []).includes(t)))
-  })
-
-  // next - where tag is not matching list of tags
-  nList.push(...props.document.children.filter(child => {
-    if (!child.tags || child.tags.length === 0) {
-      return false
-    }
-    return !!child.tags.find( (childTag) => (!props.document.tags.includes(childTag)))
-  }))
-
-
-  // very last - schemas
-  nList.push(...props.document.children.filter(child => (child.tags || []).length === 0 && child.type === 'model'))
-
-
-  // transforming to components
-  for (let i = 0; i < nList.length; i++) {
-    nList[i] = getDocumentComponent(nList[i])
-  }
-  console.log('nList', nList)
-  return nList
-})
-
-const forceRenderer = (idx: number) => {
-  const newToRenderer = Array(nodesList.value.length).fill('false', 0)
-
-  for (let i = 0; i < newToRenderer.length; i++) {
-    if (i === idx) {
-      newToRenderer[i] = 'true'
-    } else if (i - idx <= SECTIONS_TO_RENDER && idx - i <= SECTIONS_TO_RENDER) {
-      newToRenderer[i] = 'forced'
-    } else {
-      newToRenderer[i] = 'false'
-    }
-  }
-  toRenderer.value = newToRenderer
-  console.log('troRender: for ', idx, nodesList.value.length, toRenderer.value)
-}
-
-
-watch(() => ({ nodesList: nodesList.value,
-  yPosition: yPosition.value,
-  scrollableRef: scrollableContainerRef.value,
-  wHeight: windowHeight.value,
-  wWidth: windowWidth.value }), (newValue, oldValue) => {
-
-  if (!processScrolling.value) {
-    return
-  }
-
-  console.log('currentlyVisible changed: ', newValue.yPosition, lastY.value)
-
-  if (!newValue.nodesList) {
-    return
-  }
-
-  if (!newValue.scrollableRef) {
-    return
-  }
-  if (oldValue?.wHeight !== newValue.wHeight || oldValue?.wWidth != newValue.wWidth ) {
-    lastY.value = undefined
-  }
-
-  if (lastY.value != undefined
-    && Math.abs(newValue.yPosition - lastY.value) < MIN_SCROLL_DIFFERENCE) {
-    return
-  }
-  const visibleEls:Array<Record<string, any>> = []
-  Array.from(newValue.scrollableRef.children).forEach((c, i) => {
-    const cEl = c as HTMLElement
-
-    // this is below visible
-    if (cEl.offsetTop - newValue.yPosition > newValue.wHeight) {
-      return
-    }
-    // this is above visible
-    if (cEl.offsetTop + cEl.offsetHeight < newValue.yPosition) {
-      return
-    }
-    visibleEls.push({ idx: i, cEl })
-  })
-  console.log('visibleEls: ', visibleEls, visibleEls.length)
-
-  if (visibleEls.length === 0) {
-    lastY.value = newValue.yPosition
-    return
-  }
-
-
-  // now out of all elements in visibleEls we  need to find the one that is most visible
-  const mostVisibleIdx = visibleEls[0].idx
-  forceRenderer(mostVisibleIdx)
-  console.log('emitting:', nodesList.value[mostVisibleIdx].doc.uri)
-  emit('content-scrolled', nodesList.value[mostVisibleIdx].doc.uri)
-  lastY.value = newValue.yPosition
-
-  // we look trough elements and find the one that should be visible
-}, { immediate: true })
-
-
-
-// watch(yPosition, (newValue, oldValue) => {
-
-//   if (!processScroll.value) {
-//     setTimeout(()=>{
-//       processScroll.value = true
-//     }, 1000)
-//   } else {
-//     scrollDirection.value = newValue > oldValue ? 'down' : 'up'
-//   }
-// })
-
-
-// const onElementVisibility = async (state: boolean, path: string, idx: number, forceExact: boolean) => {
-
-//   if (!forceExact && !processScroll.value) {
-//     return
-//   }
-
-//   console.log({ state, path, idx, prev: prevVisibilityCall.value })
-
-//   // nothing was changed for state = false
-//   if (!state && (!currentlyRendered.value[idx] || currentlyRendered.value[idx] === 'false')) {
-//     return
-//   }
-
-//   // nothing was changed for state = true
-//   if (state && currentlyRendered.value[idx] === 'true') {
-//     return
-//   }
-
-//   // to avoid endless loop (same section changes from true to false and back)
-//   if (
-//     prevVisibilityCall.value && prevVisibilityCall.value.idx === idx &&
-//     (
-//       (state === false && prevVisibilityCall.value.state === true) ||
-//       (state === true && prevVisibilityCall.value.state === false)
-//     )
-//   ) {
-//     console.log('endlress loop???')
-//     //return
-//   }
-
-
-//   prevVisibilityCall.value = { state, path, idx }
-
-//   console.log('onElementVisibility', state, path, idx)
-
-//   const currentRenderState = [...currentlyRendered.value]
-//   currentRenderState[idx] = state ? 'true' : 'false'
-
-//   // now we rest all 'forced' to false
-//   for (let i = 0; i < currentRenderState.length; i++) {
-//     if (currentRenderState[i] === 'forced') {
-//       currentRenderState[i] = 'false'
-//     }
-//     // we want to keep values for 10 neighbors ofo current idx
-//     if (['forced', 'true'].includes(currentRenderState[i]) && (i < idx - 10 || i > idx + 10)) {
-//       currentRenderState[i] = 'false'
-//     }
-//   }
-
-//   // now we add 'forced' from the left and right of true
-//   const idxToForce = []
-//   for (let i = 0; i < currentRenderState.length; i++) {
-//     if (currentRenderState[i] === 'true') {
-//       //        console.log('found visible at', i, currentRenderState[i])
-//       for (let j = 1; j <= SECTIONS_TO_RENDER; j++) {
-//         idxToForce.push(i - j)
-//         idxToForce.push(i + j)
-//       }
-//     }
-//   }
-//   //    console.log('idxToForce:', idxToForce)
-//   for (let i = 0 ; i < idxToForce.length; i++) {
-//     if (idxToForce[i] >= 0 && currentRenderState[idxToForce[i]] !== 'true') {
-//       currentRenderState[idxToForce[i]] = 'forced'
-//     }
-//   }
-
-//   currentlyRendered.value = [...currentRenderState]
-
-//   // now we find first visible path and fire scrolled
-//   const firstVisibleIdx = forceExact ? idx : currentRenderState.findIndex(s=>s === 'true')
-//   const firstVisiblePath = nodesList.value[firstVisibleIdx]?.doc.uri
-//   if (firstVisiblePath ) {
-//     console.log('!!!!!!!', firstVisiblePath, prevVisibilityCall.value, currentRenderState)
-//     if (processScroll.value || forceExact) {
-//       console.log('emmitting:' )
-//       emit('content-scrolled', firstVisiblePath, scrollDirection.value)
-//     }
-//   }
-//   // so it's only one change
-//   //console.log('after idx:', idx, 'state:', state, currentlyRendered.value)
-// }
-
 /** we show tryIt section when it's requested to be hidden and when node */
-watch(() => ({ pathname: props.currentPath, document: props.document }), async (newValue, oldValue) => {
 
-  const { pathname, document } = newValue
-  const { pathname: oldPathname, document: oldDocument } = oldValue || {}
-
-
+watch(() => ({ pathname: props.currentPath, document: props.document }), ({ pathname, document }) => {
   const isRootPath = !pathname || pathname === '/'
-  serviceNode.value = <ServiceNode>(isRootPath ? document : document.children.find((child: any) => child.uri === pathname))
-
+  serviceNode.value = <ServiceNode>(isRootPath ? document : document.children.find((child:any) => child.uri === pathname))
   if (!serviceNode.value) {
     emit('path-not-found', pathname)
-    return
   }
-
-  if (!props.allowContentScrolling) {
-    // case when scrolling is not enabled - we do not need to do anything else
-    return
-  }
-  processScrolling.value = false
-
-  const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
-
-  forceRenderer(pathIdx)
-  await nextTick()
-
-  // now we want to find postion of the active element and if it is not visible force it to be visible
-  const activeSectionEl = window.document.getElementById(`${pathIdx}-nodecontainter`)
-  if (activeSectionEl) {
-    lastY.value = activeSectionEl.offsetTop
-    yPosition.value = lastY.value
-  }
-  setTimeout(()=>{
-    processScrolling.value = true
-  }, 1000)
-  //if (oldPathname) {
-  //processScroll.value = false
-  //}
-
-  // await nextTick()
-  // // we need to give the the path and it's neighbors visible state
-  // console.log('pathIdx:' ,pathIdx)
-
-  // if (pathIdx === -1) {
-  //   emit('path-not-found', pathname)
-  //   return
-  // }
-  // onElementVisibility(true, pathname, pathIdx, true)
-
-  // if (window?.document && oldPathname !== pathname) {
-  //   console.log('?????', 'scrolling into', pathIdx)
-  //   window.document.getElementById(`${pathIdx}-nodecontainter`)?.scrollIntoView()
-  // }
 }, { immediate: true })
 
+const docComponent = computed(() => {
+  if (!serviceNode.value) return {}
 
-onBeforeMount(async ()=> {
-  console.log('creating shiki instance???')
+  const defaultProps = {
+    data: serviceNode.value.data,
+  }
+
+  switch (serviceNode.value.type as NodeType) {
+    case NodeType.Article:
+      return { component: ArticleNode, props: defaultProps }
+    case NodeType.HttpOperation:
+    case NodeType.HttpWebhook:
+      return { component: HttpOperation, props: defaultProps }
+    case NodeType.HttpService:
+      return { component: HttpService, props: { ...defaultProps, specVersion: serviceNode.value.specVersion } }
+    case NodeType.Model:
+      return { component: HttpModel, props: { ...defaultProps, title: serviceNode.value.name } }
+    default:
+      return { component: UnknownNode, props: defaultProps }
+  }
+})
+
+onBeforeMount(async () => {
   await createHighlighter()
 })
+
 </script>
 
 <style lang="scss" scoped>
@@ -440,16 +114,5 @@ onBeforeMount(async ()=> {
   background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
   box-sizing: border-box;
   color: var(--kui-color-text, $kui-color-text);
-}
-
-.scrolling-container {
-  .overview-page, .spec-renderer-document {
-    padding-bottom: var(--kui-space-100, $kui-space-100);
-  }
-
-  .placeholder {
-    //background-color: red;
-    min-height: 600px;
-  }
 }
 </style>

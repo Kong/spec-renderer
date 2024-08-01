@@ -38,9 +38,6 @@ importers:
       '@stoplight/yaml':
         specifier: ^4.3.0
         version: 4.3.0
-      '@vueuse/components':
-        specifier: ^10.11.0
-        version: 10.11.0(vue@3.4.34(typescript@5.5.3))
       '@vueuse/core':
         specifier: ^10.11.0
         version: 10.11.0(vue@3.4.34(typescript@5.5.3))
@@ -1396,9 +1393,6 @@ packages:
 
   '@vue/tsconfig@0.5.1':
     resolution: {integrity: sha512-VcZK7MvpjuTPx2w6blwnwZAu5/LgBUtejFOi3pPGQFXQN5Ela03FUtd2Qtg4yWGGissVL0dr6Ro1LfOFh+PCuQ==}
-
-  '@vueuse/components@10.11.0':
-    resolution: {integrity: sha512-ZvLZI23d5ZAtva5fGyYh/jQtZO8l+zJ5tAXyYNqHJZkq1o5yWyqZhENvSv5mfDmN5IuAOp4tq02mRmX/ipFGcg==}
 
   '@vueuse/core@10.11.0':
     resolution: {integrity: sha512-x3sD4Mkm7PJ+pcq3HX8PLPBadXCAlSDR/waK87dz0gQE+qJnaaFhc/dZVfJz+IUYzTMVGum2QlR7ImiJQN4s6g==}
@@ -6425,15 +6419,6 @@ snapshots:
       vue-component-type-helpers: 2.0.14
 
   '@vue/tsconfig@0.5.1': {}
-
-  '@vueuse/components@10.11.0(vue@3.4.34(typescript@5.5.3))':
-    dependencies:
-      '@vueuse/core': 10.11.0(vue@3.4.34(typescript@5.5.3))
-      '@vueuse/shared': 10.11.0(vue@3.4.34(typescript@5.5.3))
-      vue-demi: 0.14.8(vue@3.4.34(typescript@5.5.3))
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
 
   '@vueuse/core@10.11.0(vue@3.4.34(typescript@5.5.3))':
     dependencies:

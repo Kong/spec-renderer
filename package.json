@@ -55,7 +55,6 @@
     "@stoplight/json": "^3.21.3",
     "@stoplight/types": "^14.1.1",
     "@stoplight/yaml": "^4.3.0",
-    "@vueuse/components": "^10.11.0",
     "@vueuse/core": "^10.11.0",
     "allof-merge": "^0.6.6",
     "httpsnippet-lite": "^3.0.5",
