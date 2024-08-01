@@ -1,8 +1,10 @@
 <template>
-  <component
-    :is="render"
+  <div
     :class="{ 'default-markdown': markdownStyles }"
-  />
+    :data-testid="dataTestid ? dataTestid : undefined"
+  >
+    <component :is="render" />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -29,7 +31,6 @@ const props = defineProps({
 
 const render = () => h(props.tag, {
   innerHTML: mdRender(props.markdown),
-  'data-testid': props.dataTestid,
 })
 
 const markdownStyles = inject<Ref<boolean>>('markdown-styles', ref(true))
