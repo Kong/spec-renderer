@@ -368,6 +368,8 @@ watch(() => ({
   :deep(.code-block pre) {
     border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    border-top-left-radius: var(--kui-border-radius-0, $kui-border-radius-0);
+    border-top-right-radius: var(--kui-border-radius-0, $kui-border-radius-0);
   }
 }
 </style>

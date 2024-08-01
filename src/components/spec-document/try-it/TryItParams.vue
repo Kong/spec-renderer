@@ -40,6 +40,7 @@
         >
       </div>
     </div>
+
     <div
       v-if="paramType === 'body' && params && Object.keys(params).length"
       class="wide"
@@ -123,11 +124,13 @@ const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Re
     }, {})
 
   }
+
   if (props.paramType === 'path') {
     return props.data.request?.path?.reduce((acc: Record<string, IHttpPathParam>, current: IHttpPathParam) => {
       (acc[current.name] = current); return acc
     }, {})
   }
+
   if (props.paramType === 'headers') {
     return props.data.request?.headers?.reduce((acc: Record<string, IHttpPathParam>, current: IHttpPathParam) => {
       if (!props.excludeHeaderList.includes(current.name)) {
@@ -136,9 +139,11 @@ const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Re
       return acc
     }, {})
   }
+
   if (props.requestBody) {
     return <Record<string, any>>{ body: { example: props.requestBody } }
   }
+
   return <Record<string, any>>{}
 })
 
@@ -163,7 +168,9 @@ watch(params, (newParams) => {
 }, { immediate: true })
 
 const requestBodyChanged = (newBody: string) => {
-  emit('request-body-changed', newBody)
+  if (newBody) {
+    emit('request-body-changed', newBody)
+  }
 }
 
 // this is to fire event when fieldValues changed
