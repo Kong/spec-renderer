@@ -265,6 +265,9 @@ watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.
 
 <style lang="scss" scoped>
 .editable-code-wrapper {
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
+  border-radius: var(--kui-border-radius-40, $kui-border-radius-40);
+  box-sizing: border-box;
   font-family: var(--kui-font-family-code, $kui-font-family-code);
   font-size: var(--kui-font-size-20, $kui-font-size-20);
   font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
@@ -272,9 +275,6 @@ watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.
   max-height: 300px;
   overflow-y: auto;
   position: relative;
-  box-sizing: border-box;
-  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
-  border-radius: var(--kui-border-radius-40, $kui-border-radius-40);
 
   // unset max-height and overflow-y in CodeBlock so that it's controlled by .editable-code-wrapper instead
   :deep(.code-block pre) {
@@ -296,8 +296,8 @@ watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.
     position: absolute;
     top: 8px;
     white-space: break-spaces;
-    word-wrap: break-word;
     width: calc(100% - calc(4ch + 14px) - 8px); // 100% - left offset - 8px padding
+    word-wrap: break-word;
   }
 
   &.error-wrapper {
