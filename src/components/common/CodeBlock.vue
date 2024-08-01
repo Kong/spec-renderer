@@ -11,11 +11,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed } from 'vue'
 import composables from '@/composables'
 import { requestSampleConfigs } from '@/constants'
 import type { LanguageCode } from '@/types/request-languages'
-import type { HighlighterCore } from 'shiki/core'
 
 const props = defineProps({
   code: {
@@ -27,8 +26,7 @@ const props = defineProps({
     default: '',
   },
 })
-const { createHighlighter } = composables.useShiki()
-const highlighter = ref<HighlighterCore>()
+const { highlighter } = composables.useShiki()
 
 const getHighlightLanguage = (snippetLang: LanguageCode | null | undefined): string | null | undefined => {
   return requestSampleConfigs.find(c => c.httpSnippetLanguage === snippetLang)?.highlightLanguage
@@ -41,20 +39,15 @@ const highlightedCode = computed(():string => {
   }
   return ''
 })
-
-onMounted(async ()=> {
-  highlighter.value = await createHighlighter()
-})
 </script>
 
 <style lang="scss" scoped>
 .code-block {
   :deep(pre) {
+    @include pre;
+
     border: none;
-    font-family: var(--kui-font-family-code, $kui-font-family-code);
     font-size: var(--kui-font-size-20, $kui-font-size-20);
-    font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
-    line-height: var(--kui-line-height-30, $kui-line-height-30);
     margin: var(--kui-space-0, $kui-space-0);
     max-height: 300px;
     overflow-y: auto;

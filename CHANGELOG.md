@@ -1,3 +1,10 @@
+## [1.53.1](https://github.com/Kong/spec-renderer/compare/v1.53.0...v1.53.1) (2024-08-01)
+
+
+### Bug Fixes
+
+* add default markdown styling via prop [KHCP-12710] ([#239](https://github.com/Kong/spec-renderer/issues/239)) ([84beee0](https://github.com/Kong/spec-renderer/commit/84beee0078f84cac346005ae15912e22bd4865f6))
+
 # [1.53.0](https://github.com/Kong/spec-renderer/compare/v1.52.1...v1.53.0) (2024-07-31)
 
 
