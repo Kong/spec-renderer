@@ -122,5 +122,6 @@ onBeforeMount(async () => {
   box-sizing: border-box;
   color: var(--kui-color-text, $kui-color-text);
   container-name: spec-document;
+  container-type: size;
 }
 </style>

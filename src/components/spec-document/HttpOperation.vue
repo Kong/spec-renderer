@@ -223,6 +223,14 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
 </script>
 
 <style lang="scss" scoped>
+@mixin httpOperationContainerLargeScreen {
+  grid-template-columns: auto $spec-renderer-secondary-column-width;
+
+  .right {
+    margin-top: var(--kui-space-0, $kui-space-0);
+  }
+}
+
 .http-operation {
   * {
     margin: var(--kui-space-0, $kui-space-0);
@@ -238,12 +246,13 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
     grid-template-columns: 1fr;
     width: 100%;
 
-    @media (min-width: $kui-breakpoint-laptop) {
-      grid-template-columns: auto $spec-renderer-secondary-column-width;
+    @container spec-document (min-width: #{$kui-breakpoint-laptop}) {
+      @include httpOperationContainerLargeScreen;
+    }
 
-      .right {
-        margin-top: var(--kui-space-0, $kui-space-0);
-      }
+    // regular media query fallback
+    @media (min-width: $kui-breakpoint-laptop) {
+      @include httpOperationContainerLargeScreen;
     }
 
     .left {
@@ -253,8 +262,8 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
 
     .right {
       background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-      padding: var(--kui-space-0, $kui-space-0);
       margin-top: var(--kui-space-40, $kui-space-40);
+      padding: var(--kui-space-0, $kui-space-0);
 
       > :not(:first-child) {
         margin-top: var(--kui-space-70, $kui-space-70);

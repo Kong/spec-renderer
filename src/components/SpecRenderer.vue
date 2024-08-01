@@ -260,12 +260,12 @@ watch(specRendererTocRef, async (val) => {
 <style lang="scss" scoped>
 .spec-renderer-wrapper {
   box-sizing: border-box;
+  container-name: spec-renderer;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   position: relative;
   width: 100%;
-  container-name: spec-renderer;
 
   @media (min-width: $kui-breakpoint-tablet) {
     flex-direction: row;
