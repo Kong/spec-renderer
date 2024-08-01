@@ -176,9 +176,9 @@ watch(() => props.response, async (res) => {
   padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
 
   .cors-error {
-    margin-top: var(--kui-space-40, $kui-space-40);
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     line-height: var(--kui-line-height-20, $kui-line-height-20);
+    margin-top: var(--kui-space-40, $kui-space-40);
   }
 }
 
