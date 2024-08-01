@@ -57,6 +57,7 @@
         :hide-insomnia-try-it="hideInsomniaTryIt"
         :hide-try-it="hideTryIt"
         :json="jsonDocument"
+        :markdown-styles="markdownStyles"
         :spec-url="specUrl"
         @path-not-found="relayPathNotFound"
       />
@@ -138,14 +139,14 @@ const props = defineProps({
   },
   /**
    * Do not show TryIt section
-  */
+   */
   hideTryIt: {
     type: Boolean,
     default: false,
   },
   /**
-     * Do not show  Insomnia option in TryIt
-  */
+   * Do not show  Insomnia option in TryIt
+   */
   hideInsomniaTryIt: {
     type: Boolean,
     default: false,
@@ -163,6 +164,13 @@ const props = defineProps({
   withCredentials: {
     type: Boolean,
     default: false,
+  },
+  /**
+   * Use default markdown styling. If your host application provides its own default styles, you may want to set to `false`.
+   */
+  markdownStyles: {
+    type: Boolean,
+    default: true,
   },
 })
 

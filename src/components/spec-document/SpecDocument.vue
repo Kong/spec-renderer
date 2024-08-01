@@ -53,7 +53,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-
+  /**
+   * Use default markdown styling
+   */
+  markdownStyles: {
+    type: Boolean,
+    default: true,
+  },
 })
 const serviceNode = ref<ServiceNode | null>(null)
 
@@ -62,6 +68,7 @@ provide<Ref<string>>('spec-url', computed((): string => props.specUrl))
 provide<Ref<string>>('base-path', computed((): string => props.basePath))
 provide<Ref<boolean>>('hide-tryit', computed((): boolean => props.hideTryIt))
 provide<Ref<boolean>>('hide-insomnia-tryit', computed((): boolean => props.hideInsomniaTryIt))
+provide<Ref<boolean>>('markdown-styles', computed((): boolean => props.markdownStyles))
 
 const emit = defineEmits < {
   (e: 'path-not-found', requestedPath: string): void
