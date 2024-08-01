@@ -27,30 +27,37 @@
       />
     </template>
 
-    <div class="wide">
+    <div
+      v-if="responseText && selectedResOption === 'body'"
+      class="wide"
+    >
       <CodeBlock
-        v-show="responseText && selectedResOption === 'body'"
         class="response-body"
         :code="responseText"
         lang="json"
       />
     </div>
 
-    <div class="wide">
-      <div
-        v-show="errorText && selectedResOption === 'error'"
-        class="error-panel"
-      >
+    <div
+      v-if="errorText && selectedResOption === 'error'"
+      class="wide"
+    >
+      <div class="error-panel">
         {{ errorText }}
-        <div v-if="!response">
+        <div
+          v-if="!response"
+          class="cors-error"
+        >
           Make sure CORS is enabled for the server
         </div>
       </div>
     </div>
 
-    <div class="wide">
+    <div
+      v-if="headersText && selectedResOption === 'headers'"
+      class="wide"
+    >
       <CodeBlock
-        v-show="headersText && selectedResOption === 'headers'"
         :code="headersText"
         lang="json"
       />
@@ -162,9 +169,16 @@ watch(() => props.response, async (res) => {
 .error-panel {
   background-color: var( --kui-color-background-danger-weaker, $kui-color-background-danger-weaker);
   border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   color: var(--kui-color-text-danger-strong, $kui-color-text-danger-strong);
-  padding: var(--kui-space-40, $kui-space-40);
+  padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
+  font-family: var(--kui-font-family-code, $kui-font-family-code);
+  font-size: var(--kui-font-size-30, $kui-font-size-30);
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
+
+  .cors-error {
+    margin-top: var(--kui-space-40, $kui-space-40);
+  }
 }
 
 .res-option-selector {
