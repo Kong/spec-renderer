@@ -107,17 +107,32 @@ const orderedFieldList = computed(() => {
       key: 'property-pattern',
     })
   }
-  if (!props.hiddenFieldList.includes('range') && (props.property.maximum || props.property.minimum)) {
+
+  const rangeProps = {
+    max: props.property.maximum,
+    min: props.property.minimum,
+    maxLength: props.property.maxLength,
+    minLength: props.property.minLength,
+    exclusiveMaximum: props.property.exclusiveMaximum,
+    exclusiveMinimum: props.property.exclusiveMinimum,
+    multipleOf: props.property.multipleOf,
+    maxItems: props.property.maxItems,
+    minItems: props.property.minItems,
+  }
+
+  if (
+    !props.hiddenFieldList.includes('range') &&
+    Object.values(rangeProps).some(value => value !== undefined)
+  ) {
     fields.push({
       component: PropertyRange,
-      props: {
-        max: props.property.maximum,
-        min: props.property.minimum,
-      },
-      eventHandlers:{},
+      props: rangeProps,
+      eventHandlers: {},
       key: 'property-range',
     })
   }
+
+
   if (!props.hiddenFieldList.includes('example') && (props.property.examples || props.property.example)) {
     fields.push({
       component: PropertyExample,
