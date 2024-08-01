@@ -1,0 +1,17 @@
+@mixin pre {
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+  border-radius: var(--kui-border-radius-40, $kui-border-radius-40);
+  font-family: var(--kui-font-family-code, $kui-font-family-code);
+  font-size: var(--kui-font-size-30, $kui-font-size-30);
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
+  margin: var(--kui-space-0, $kui-space-0);
+  margin-bottom: var(--kui-space-70, $kui-space-70);
+  overflow-wrap: break-word;
+  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+  overflow-x: auto;
+  padding: var(--kui-space-70, $kui-space-70);
+  white-space: pre;
+  word-break: normal;
+  word-spacing: normal;
+  word-wrap: normal;
+}

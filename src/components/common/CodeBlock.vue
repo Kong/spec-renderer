@@ -50,16 +50,15 @@ onMounted(async ()=> {
 <style lang="scss" scoped>
 .code-block {
   :deep(pre) {
+    @include pre;
+
     border: none;
-    font-family: var(--kui-font-family-code, $kui-font-family-code);
     font-size: var(--kui-font-size-20, $kui-font-size-20);
-    font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
-    line-height: var(--kui-line-height-30, $kui-line-height-30);
-    margin: var(--kui-space-0, $kui-space-0);
     max-height: 300px;
     overflow-y: auto;
     padding: var(--kui-space-40, $kui-space-40);
     white-space: break-spaces;
+    margin: var(--kui-space-0, $kui-space-0);
 
     code {
       background: transparent !important;
