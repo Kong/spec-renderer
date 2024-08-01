@@ -123,6 +123,7 @@ const emit = defineEmits < {
 // forced - assumed visible (rendered) even when hidden
 const toRenderer = ref<Array<'true' | 'false' | 'forced'>>(['true', 'forced', 'forced'])
 const lastY = ref<number>()
+const processScrolling = ref<boolean>(false)
 
 const scrollableContainerRef = ref<HTMLElement | null>(null)
 
@@ -154,7 +155,6 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
 const { y: yPosition } = useWindowScroll()
 const { height: windowHeight, width: windowWidth } = useWindowSize()
 
-
 const docComponent = computed(() => {
   return getDocumentComponent(serviceNode.value)
 })
@@ -162,6 +162,10 @@ const docComponent = computed(() => {
 
 
 const nodesList = computed(() => {
+  if (!props.allowContentScrolling) {
+    return []
+  }
+
   let nList = <any[]>[]
   // first one - overview
   nList.push(...[props.document])
@@ -196,12 +200,33 @@ const nodesList = computed(() => {
   return nList
 })
 
+const forceRenderer = (idx: number) => {
+  const newToRenderer = Array(nodesList.value.length).fill('false', 0)
+
+  for (let i = 0; i < newToRenderer.length; i++) {
+    if (i === idx) {
+      newToRenderer[i] = 'true'
+    } else if (i - idx <= SECTIONS_TO_RENDER && idx - i <= SECTIONS_TO_RENDER) {
+      newToRenderer[i] = 'forced'
+    } else {
+      newToRenderer[i] = 'false'
+    }
+  }
+  toRenderer.value = newToRenderer
+  console.log('troRender: for ', idx, nodesList.value.length, toRenderer.value)
+}
+
 
 watch(() => ({ nodesList: nodesList.value,
   yPosition: yPosition.value,
   scrollableRef: scrollableContainerRef.value,
   wHeight: windowHeight.value,
   wWidth: windowWidth.value }), (newValue, oldValue) => {
+
+  if (!processScrolling.value) {
+    return
+  }
+
   console.log('currentlyVisible changed: ', newValue.yPosition, lastY.value)
 
   if (!newValue.nodesList) {
@@ -219,22 +244,39 @@ watch(() => ({ nodesList: nodesList.value,
     && Math.abs(newValue.yPosition - lastY.value) < MIN_SCROLL_DIFFERENCE) {
     return
   }
-
-  const visibleEls = Array.from(newValue.scrollableRef.children).filter((c, i) => {
+  const visibleEls:Array<Record<string, any>> = []
+  Array.from(newValue.scrollableRef.children).forEach((c, i) => {
     const cEl = c as HTMLElement
-    console.log('checking:', i, ' cEl.offsetTop:', cEl.offsetTop, ' container.offsetHeight: ', newValue.wHeight)
-    if (cEl.offsetTop + newValue.yPosition > newValue.wHeight) {
-      return false
+
+    // this is below visible
+    if (cEl.offsetTop - newValue.yPosition > newValue.wHeight) {
+      return
     }
-    return true
-
+    // this is above visible
+    if (cEl.offsetTop + cEl.offsetHeight < newValue.yPosition) {
+      return
+    }
+    visibleEls.push({ idx: i, cEl })
   })
-  console.log('visibleEls: ', visibleEls)
+  console.log('visibleEls: ', visibleEls, visibleEls.length)
 
+  if (visibleEls.length === 0) {
+    lastY.value = newValue.yPosition
+    return
+  }
+
+
+  // now out of all elements in visibleEls we  need to find the one that is most visible
+  const mostVisibleIdx = visibleEls[0].idx
+  forceRenderer(mostVisibleIdx)
+  console.log('emitting:', nodesList.value[mostVisibleIdx].doc.uri)
+  emit('content-scrolled', nodesList.value[mostVisibleIdx].doc.uri)
   lastY.value = newValue.yPosition
 
   // we look trough elements and find the one that should be visible
 }, { immediate: true })
+
+
 
 // watch(yPosition, (newValue, oldValue) => {
 
@@ -350,19 +392,28 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), async (
     // case when scrolling is not enabled - we do not need to do anything else
     return
   }
+  processScrolling.value = false
 
-  if (oldDocument !== document) {
-    // first one (service, and two bellow should be rendered by default)
-    toRenderer.value = ['true', 'forced', 'forced']
-    //processScroll.value = false
+  const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
+
+  forceRenderer(pathIdx)
+  await nextTick()
+
+  // now we want to find postion of the active element and if it is not visible force it to be visible
+  const activeSectionEl = window.document.getElementById(`${pathIdx}-nodecontainter`)
+  if (activeSectionEl) {
+    lastY.value = activeSectionEl.offsetTop
+    yPosition.value = lastY.value
   }
-  if (oldPathname) {
-    //processScroll.value = false
-  }
+  setTimeout(()=>{
+    processScrolling.value = true
+  }, 1000)
+  //if (oldPathname) {
+  //processScroll.value = false
+  //}
 
   // await nextTick()
   // // we need to give the the path and it's neighbors visible state
-  // const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
   // console.log('pathIdx:' ,pathIdx)
 
   // if (pathIdx === -1) {
@@ -379,6 +430,7 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), async (
 
 
 onBeforeMount(async ()=> {
+  console.log('creating shiki instance???')
   await createHighlighter()
 })
 </script>
