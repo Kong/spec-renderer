@@ -2,18 +2,18 @@ import { describe, it, expect, vi } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import RequestSample from './RequestSample.vue'
 import composables from '@/composables'
-import type { HighlighterCore } from 'shiki/core'
 
 
 describe('<RequestSample />', () => {
   it('Should use correct url in the request sample', async () => {
+
+    //@ts-ignore we only need to spyOn one specific method
     vi.spyOn(composables, 'useShiki').mockImplementation(() => {
       return {
-        createHighlighter: (): Promise<HighlighterCore> => {
-          return {
-            //@ts-ignore irrelavent for mocking purposes
-            codeToHtml: (c: string) => (c),
-          }
+        highlighter: {
+          value: {
+            codeToHtml: (s)=> (s),
+          },
         },
       }
       // whatever suites you from first two examples

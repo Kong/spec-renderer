@@ -41,6 +41,7 @@
 
 <script setup lang="ts">
 import { watch, ref, provide, computed, nextTick, onBeforeMount } from 'vue'
+import composables from '@/composables'
 import type { PropType, Ref } from 'vue'
 import { NodeType } from '@stoplight/types'
 import type { ServiceNode, ServiceChildNode } from '../../stoplight/elements/utils/oas/types'
@@ -52,7 +53,6 @@ import UnknownNode from './UnknownNode.vue'
 //import { vElementVisibility } from '@vueuse/components'
 import { useWindowScroll, useWindowSize } from '@vueuse/core'
 import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE } from '@/constants'
-import composables from '@/composables'
 
 const props = defineProps({
   document: {
@@ -103,6 +103,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * Use default markdown styling
+   */
+  markdownStyles: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const { createHighlighter } = composables.useShiki()
@@ -114,6 +121,7 @@ provide<Ref<string>>('spec-url', computed((): string => props.specUrl))
 provide<Ref<string>>('base-path', computed((): string => props.basePath))
 provide<Ref<boolean>>('hide-tryit', computed((): boolean => props.hideTryIt))
 provide<Ref<boolean>>('hide-insomnia-tryit', computed((): boolean => props.hideInsomniaTryIt))
+provide<Ref<boolean>>('markdown-styles', computed((): boolean => props.markdownStyles))
 
 const emit = defineEmits < {
   (e: 'path-not-found', requestedPath: string): void,
@@ -429,10 +437,10 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), async (
 }, { immediate: true })
 
 
-onBeforeMount(async ()=> {
-  console.log('creating shiki instance???')
+onBeforeMount(async () => {
   await createHighlighter()
 })
+
 </script>
 
 <style lang="scss" scoped>
