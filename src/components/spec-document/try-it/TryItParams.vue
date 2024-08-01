@@ -163,7 +163,9 @@ watch(params, (newParams) => {
 }, { immediate: true })
 
 const requestBodyChanged = (newBody: string) => {
-  emit('request-body-changed', newBody)
+  if (newBody) {
+    emit('request-body-changed', newBody)
+  }
 }
 
 // this is to fire event when fieldValues changed

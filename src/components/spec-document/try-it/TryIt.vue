@@ -58,6 +58,7 @@
         :request-body="currentRequestBody"
         @request-body-changed="requestBodyChanged"
       />
+
       <TryItResponse
         v-if="response || responseError"
         :data-id="data.id"
