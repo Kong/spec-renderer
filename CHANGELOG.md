@@ -1,3 +1,24 @@
+# [1.53.0](https://github.com/Kong/spec-renderer/compare/v1.52.1...v1.53.0) (2024-07-31)
+
+
+### Features
+
+* support hash navigation type [KHCP-12813] ([#238](https://github.com/Kong/spec-renderer/issues/238)) ([38f2e2b](https://github.com/Kong/spec-renderer/commit/38f2e2b2c1f5a28b4c0656ae04c9d7fd4511ab0e))
+
+## [1.52.1](https://github.com/Kong/spec-renderer/compare/v1.52.0...v1.52.1) (2024-07-31)
+
+
+### Bug Fixes
+
+* **code-block:** max height and line number width [KHCP-12705] ([#237](https://github.com/Kong/spec-renderer/issues/237)) ([cab82d4](https://github.com/Kong/spec-renderer/commit/cab82d4df03471932180388fbbc77a4c563e7451))
+
+# [1.52.0](https://github.com/Kong/spec-renderer/compare/v1.51.0...v1.52.0) (2024-07-31)
+
+
+### Features
+
+* support for endpoint custom headers [KHCP-12753] ([#235](https://github.com/Kong/spec-renderer/issues/235)) ([dd642d0](https://github.com/Kong/spec-renderer/commit/dd642d0d5dae6c608e61cc5504a4fbf7ed4b2638))
+
 # [1.51.0](https://github.com/Kong/spec-renderer/compare/v1.50.1...v1.51.0) (2024-07-30)
 
 

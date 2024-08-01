@@ -95,6 +95,14 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  /**
+   * Allow component itself to control URL in browser URL.
+   * When false it becomes the responsibility of consuming app
+   */
+  controlAddressBar: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { createHighlighter } = composables.useShiki()

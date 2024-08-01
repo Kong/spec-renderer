@@ -5,7 +5,7 @@
   >
     <a
       :class="{ 'single-word': isSingleWord, 'active': isActive }"
-      :href="`${basePath}${item.id}`"
+      :href="`${basePath}${navigationType==='hash' ? '#' : ''}${item.id}`"
       @click.prevent="selectItem(item.id)"
     >
       <span class="node-item-title">
@@ -28,6 +28,8 @@ import type { PropType, Ref } from 'vue'
 import type { TableOfContentsNode } from '../../stoplight/elements-core/components/Docs/types'
 import MethodBadge from '../common/MethodBadge.vue'
 import { NodeType } from '@stoplight/types'
+import type { NavigationTypes } from '@/types'
+
 const props = defineProps({
   item: {
     type: Object as PropType<TableOfContentsNode>,
@@ -40,6 +42,7 @@ const props = defineProps({
 })
 
 const basePath = inject<Ref<string>>('base-path', ref<string>(''))
+const navigationType = inject<Ref<NavigationTypes>>('navigation-type', ref<NavigationTypes>('path'))
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void,

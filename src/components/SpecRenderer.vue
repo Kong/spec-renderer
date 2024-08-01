@@ -11,8 +11,9 @@
         v-if="slideoutTocVisible"
         :base-path="basePath"
         class="spec-renderer-toc"
-        :control-browser-url="controlBrowserUrl"
+        :control-address-bar="controlAddressBar"
         :current-path="currentPathTOC"
+        :navigation-type="navigationType"
         scrolling-container="self"
         :table-of-contents="tableOfContents"
         @item-selected="itemSelected"
@@ -24,8 +25,9 @@
         v-if="tableOfContents && !slideoutTocVisible"
         :base-path="basePath"
         class="spec-renderer-toc"
-        :control-browser-url="controlBrowserUrl"
+        :control-address-bar="controlAddressBar"
         :current-path="currentPathTOC"
+        :navigation-type="navigationType"
         scrolling-container="self"
         :table-of-contents="tableOfContents"
         @item-selected="itemSelected"
@@ -52,6 +54,7 @@
         v-if="parsedDocument && currentPath"
         :allow-content-scrolling="allowContentScrolling"
         :base-path="basePath"
+        :control-address-bar="controlAddressBar"
         :current-path="currentPathDOC"
         :document="parsedDocument"
         :hide-insomnia-try-it="hideInsomniaTryIt"
@@ -66,12 +69,14 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, nextTick } from 'vue'
+import { watch, ref } from 'vue'
+import type { PropType } from 'vue'
 import composables from '../composables'
 import SpecRendererToc from './spec-renderer-toc/SpecRendererToc.vue'
 import SpecDocument from './spec-document/SpecDocument.vue'
 import { MenuIcon } from '@kong/icons'
 import SlideOut from './common/SlideOut.vue'
+import type { NavigationTypes } from '@/types'
 
 const props = defineProps({
   /**
@@ -82,14 +87,15 @@ const props = defineProps({
     required: true,
   },
   /**
-   * Path of the page where spec-renderer is loaded on. This is needed to compute path to individual specification details
+   * Path of the page where spec-renderer is loaded on.
+   * his is needed to compute path to individual specification details
    */
   basePath: {
     type: String,
     default: '',
   },
   /**
-   * selected path to load document with
+   * Selected path of the spec section (ui)
    */
   currentPath: {
     type: String,
@@ -103,11 +109,21 @@ const props = defineProps({
     default: '',
   },
   /**
-   * Allow component itself to control browser URL. When false it becomes the responsibility of consuming app
+   * Allow component itself to control URL in browser URL.
+   * When false it becomes the responsibility of consuming app
    */
-  controlBrowserUrl: {
+  controlAddressBar: {
     type: Boolean,
     default: true,
+  },
+  /**
+      Defines how links are specified in toc
+        path - id becomes part of the URL path.
+        hash - uses the hash portion of the URL to keep the UI in sync with the URL.
+  */
+  navigationType: {
+    type: String as PropType<NavigationTypes>,
+    default: 'path',
   },
   /**
    * hide schemas from TOC
@@ -196,7 +212,7 @@ const onDocumentScroll = (path: string) => {
   currentPathTOC.value = path
   // we need to re-calculate initiallyExpanded property based on the new path
   setExpanded(path)
-  if (props.controlBrowserUrl) {
+  if (props.controlAddressBar) {
     window.history.pushState({}, '', props.basePath + path)
   }
 }

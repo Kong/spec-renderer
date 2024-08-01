@@ -88,6 +88,11 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  /** list of headers to exclude from TryIt */
+  excludeHeaderList: {
+    type: Array as PropType<Array<string>>,
+    default: () => [],
+  },
 })
 
 const excludeNotRequired = defineModel({
@@ -98,6 +103,7 @@ const excludeNotRequired = defineModel({
 const emit = defineEmits<{
   (e: 'request-path-changed', newPath: string): void
   (e: 'request-query-changed', newQuery: string): void
+  (e: 'request-headers-changed', newHeaders: Array<Record<string, string>>): void
   (e: 'request-body-changed', newBody: string): void
 }>()
 
@@ -105,6 +111,7 @@ const compTitles = {
   path: 'Path Parameters',
   query: 'Query Parameters',
   body: 'Body',
+  headers: 'Headers',
 }
 
 
@@ -119,6 +126,14 @@ const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Re
   if (props.paramType === 'path') {
     return props.data.request?.path?.reduce((acc: Record<string, IHttpPathParam>, current: IHttpPathParam) => {
       (acc[current.name] = current); return acc
+    }, {})
+  }
+  if (props.paramType === 'headers') {
+    return props.data.request?.headers?.reduce((acc: Record<string, IHttpPathParam>, current: IHttpPathParam) => {
+      if (!props.excludeHeaderList.includes(current.name)) {
+        acc[current.name] = current
+      }
+      return acc
     }, {})
   }
   if (props.requestBody) {
@@ -159,6 +174,15 @@ watch(fieldValues, (newFieldValues) => {
   }
   if (props.paramType === 'query') {
     emit('request-query-changed', getSampleQuery(props.data, newFieldValues))
+  }
+  if (props.paramType === 'headers') {
+    const headerList = Object.keys(newFieldValues).map(key => {
+      return {
+        name: key,
+        value: newFieldValues[key],
+      }
+    }).filter(({ value }) => Boolean(value))
+    emit('request-headers-changed', headerList)
   }
 }, { deep: true })
 </script>

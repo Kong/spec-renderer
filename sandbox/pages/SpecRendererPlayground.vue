@@ -26,15 +26,30 @@
           type="checkbox"
         >
         <label for="allow-content-scrolling">Allow Content Scrolling</label>
+        |
+        <label for="navigation-type">Navigation: &nbsp;</label>
+        <select
+          id="navigation-type"
+          v-model="navigationType"
+        >
+          <option value="path">
+            path
+          </option>
+          <option value="hash">
+            hash
+          </option>
+        </select>
       </div>
     </div>
     <SpecRenderer
       v-if="specText || specUrl"
       :allow-content-scrolling="allowContentScrolling"
       base-path="/spec-renderer"
+      :control-address-bar="true"
       :current-path="currentPath"
       :hide-schemas="hideSchemas"
       :hide-try-it="hideTryIt"
+      :navigation-type="navigationType"
       :spec="specText"
       :spec-url="specUrl"
       :trace-parsing="true"
@@ -47,14 +62,16 @@
 import { ref } from 'vue'
 import SampleSpecSelector from '../components/SampleSpecSelector.vue'
 import SpecRenderer from '../../src/components/SpecRenderer.vue'
-
+import type { NavigationTypes } from '../../src/types'
 import { useRoute as useVueRoute } from 'vue-router'
 
 const route = useVueRoute()
 
+const navigationType = ref<NavigationTypes>(route.hash ? 'hash' : 'path')
+
 const specText = ref<string>('')
 const specUrl = ref<string>('')
-const currentPath = ref<string>(route.path)
+const currentPath = ref<string>(navigationType.value === 'path' ? route.path : route.hash.replace('#', ''))
 const hideSchemas = ref<boolean>(false)
 const hideTryIt = ref<boolean>(false)
 const allowContentScrolling = ref<boolean>(true)
