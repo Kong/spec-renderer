@@ -166,7 +166,7 @@ const props = defineProps({
     default: false,
   },
   /**
-   * Use default markdown styling
+   * Use default markdown styling. If your host application provides its own default styles, you may want to set to `false`.
    */
   markdownStyles: {
     type: Boolean,
