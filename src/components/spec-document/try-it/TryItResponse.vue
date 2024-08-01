@@ -170,10 +170,10 @@ watch(() => props.response, async (res) => {
   background-color: var( --kui-color-background-danger-weaker, $kui-color-background-danger-weaker);
   border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   color: var(--kui-color-text-danger-strong, $kui-color-text-danger-strong);
-  padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
   font-family: var(--kui-font-family-code, $kui-font-family-code);
   font-size: var(--kui-font-size-30, $kui-font-size-30);
   line-height: var(--kui-line-height-30, $kui-line-height-30);
+  padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
 
   .cors-error {
     margin-top: var(--kui-space-40, $kui-space-40);

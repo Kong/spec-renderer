@@ -4,7 +4,10 @@
     class="tryit-wrapper"
     :data-testid="`tryit-wrapper-${data.id}`"
   >
-    <div class="tryit-header">
+    <div
+      class="tryit-header"
+      :class="{ 'no-body': sectionBodyEmpty }"
+    >
       <div class="method-path">
         <MethodBadge
           :method="data.method"
@@ -19,9 +22,12 @@
         @tryit-api-call="doApiCall"
       />
     </div>
-    <div class="tryit-body">
+
+    <div
+      v-if="!sectionBodyEmpty"
+      class="tryit-body"
+    >
       <TryItAuth
-        v-if="showTryIt"
         :data="data"
         @access-tokens-changed="accessTokenChanged"
       />
@@ -129,6 +135,17 @@ const currentRequestHeaders = ref<Array<Record<string, string>>>([])
 
 const currentRequestBody = ref<string>('')
 
+// hide body section if none of the params are present
+const sectionBodyEmpty = computed((): boolean =>
+  (!props.data.servers || !props.data.servers.some(s => s.variables)) &&
+  (!props.data.request?.query || !props.data.request?.query.length) &&
+  (!props.data.request?.path || !props.data.request?.path.length) &&
+  (!props.data.request?.headers || !props.data.request?.headers.length) &&
+  !currentRequestBody.value &&
+  !response.value &&
+  !responseError.value,
+)
+
 const requestPathChanged = (newPath: string) => {
   currentRequestPath.value = newPath
   emit('request-path-changed', newPath)
@@ -223,9 +240,7 @@ watch(() => (props.data.id), () => {
 </script>
 
 <style lang="scss" scoped>
-
 .tryit-wrapper {
-
   .tryit-header {
     background-color: var(--kui-color-background, $kui-color-background);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
@@ -257,6 +272,11 @@ watch(() => (props.data.id), () => {
       .tryit-button-dropdown {
         margin-left: var(--kui-space-auto, $kui-space-auto);
       }
+    }
+
+    &.no-body {
+      border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+      border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     }
   }
 
