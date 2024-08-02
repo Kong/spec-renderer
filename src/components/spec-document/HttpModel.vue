@@ -74,6 +74,25 @@ const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
 </script>
 
 <style lang="scss" scoped>
+@mixin http-model-content-small {
+  grid-template-columns: 1fr;
+
+  .http-model-example-container {
+    margin-top: var(--kui-space-40, $kui-space-40);
+  }
+}
+
+@mixin http-model-content-queries {
+  @container spec-document (max-width: #{$kui-breakpoint-tablet - 1px}) {
+    @include http-model-content-small;
+  }
+
+  // regular media query fallback
+  @media (max-width: ($kui-breakpoint-laptop - 1px)) {
+    @include http-model-content-small;
+  }
+}
+
 .http-model {
   * {
     margin: var(--kui-space-0, $kui-space-0);
@@ -87,16 +106,8 @@ const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
     display: grid;
     gap: var(--kui-space-130, $kui-space-130);
     grid-template-columns: auto $spec-renderer-secondary-column-width;
-  }
 
-  @media (max-width: ($kui-breakpoint-laptop - 1px)) {
-    .http-model-content {
-      grid-template-columns: 1fr;
-
-      .http-model-example-container {
-        margin-top: var(--kui-space-40, $kui-space-40);
-      }
-    }
+    @include http-model-content-queries;
   }
 }
 </style>

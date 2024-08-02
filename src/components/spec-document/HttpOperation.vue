@@ -223,6 +223,25 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
 </script>
 
 <style lang="scss" scoped>
+@mixin http-operation-container-small {
+  grid-template-columns: 1fr;
+
+  .right {
+    margin-top: var(--kui-space-40, $kui-space-40);
+  }
+}
+
+@mixin http-operation-container-queries {
+  @container spec-document (max-width: #{$kui-breakpoint-tablet - 1px}) {
+    @include http-operation-container-small;
+  }
+
+  // regular media query fallback
+  @media (max-width: ($kui-breakpoint-laptop - 1px)) {
+    @include http-operation-container-small;
+  }
+}
+
 .http-operation {
   * {
     margin: var(--kui-space-0, $kui-space-0);
@@ -262,16 +281,8 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
         }
       }
     }
-  }
-  // TODO change when we have floating TOC for smaller width
-  @media (max-width: ($kui-breakpoint-laptop - 1px)) {
-    .http-operation-container {
-      grid-template-columns: 1fr;
 
-      .right {
-        margin-top: var(--kui-space-40, $kui-space-40);
-      }
-    }
+    @include http-operation-container-queries;
   }
 }
 </style>
