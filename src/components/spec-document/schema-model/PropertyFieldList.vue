@@ -61,13 +61,11 @@ const orderedFieldList = computed(() => {
       props: {
         title: props.propertyName || props.property.title,
         propertyType: props.property.type,
-        format: props.property.format,
-        propertyItemType:
-            isValidSchemaObject(props.property.items) && props.property.items.type
-              ? props.property.items.type
-              : '',
+        uniqueItems: props.property.uniqueItems,
         requiredFields: props.requiredFields,
         variantsList: props.variantSelectItemList,
+        // if property is of array type, we use format to display the item type, else we use format as it is
+        ...(props.property.type === 'array' ? { propertyItemType: props.property.format } : { format: props.property.format }),
       },
       eventHandlers: {
         'variant-changed': (index: number) => {
