@@ -288,6 +288,7 @@ watch(specRendererTocRef, async (val) => {
 }
 
 .spec-renderer-wrapper {
+  width: 100%;
   box-sizing: border-box;
   container: spec-renderer / inline-size;
 
@@ -295,7 +296,6 @@ watch(specRendererTocRef, async (val) => {
     display: flex;
     min-height: 100vh;
     position: relative;
-    width: 100%;
 
     .slideout-toc {
       display: none;
