@@ -277,7 +277,7 @@ watch(specRendererTocRef, async (val) => {
 }
 
 @mixin spec-renderer-content-queries {
-  @container (max-width: #{$kui-breakpoint-tablet - 1px}) {
+  @container spec-renderer (max-width: #{$kui-breakpoint-tablet - 1px}) {
     @include spec-renderer-content-small;
   }
 
