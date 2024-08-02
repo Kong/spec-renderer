@@ -47,9 +47,11 @@ export const resolveSchemaObjectFields = (candidate: unknown): SchemaObject => {
    * If the candidate is an array, we need to derive the fields from its `items` field.
    * Else, we can directly use the fields from the candidate.
   */
-  if (candidate.type === 'array') {
+  if (candidate.type === 'array' && candidate.items) {
     if (isValidSchemaObject(candidate.items)) {
       return { ...resolveAllOf(candidate.items), type: 'array', format: candidate.items.type?.toString() }
+    } else {
+      return {}
     }
   }
   const schema = resolveAllOf(candidate)
