@@ -123,8 +123,8 @@ const rangeItemList = computed(() => {
 .property-field-range {
   @include model-property-additional-field;
 
-  > :first-child {
-    margin-right: var(--kui-space-40, $kui-space-40);
+  > :not(:first-child) {
+    margin-left: var(--kui-space-40, $kui-space-40);
   }
 
   .property-field-range-value {
