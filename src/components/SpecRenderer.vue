@@ -277,6 +277,8 @@ watch(specRendererTocRef, async (val) => {
 }
 
 @mixin spec-renderer-content-queries {
+  // need to use interpolation for the token here because otherwise the query don't work
+  // VSCode doesn't like it, but it's correct
   @container spec-renderer (max-width: #{$kui-breakpoint-tablet - 1px}) {
     @include spec-renderer-content-small;
   }

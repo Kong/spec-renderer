@@ -83,6 +83,8 @@ const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
 }
 
 @mixin http-model-content-queries {
+  // need to use interpolation for the token here because otherwise the query don't work
+  // VSCode doesn't like it, but it's correct
   @container spec-document (max-width: #{$kui-breakpoint-tablet - 1px}) {
     @include http-model-content-small;
   }

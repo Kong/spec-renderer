@@ -232,6 +232,8 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
 }
 
 @mixin http-operation-container-queries {
+  // need to use interpolation for the token here because otherwise the query don't work
+  // VSCode doesn't like it, but it's correct
   @container spec-document (max-width: #{$kui-breakpoint-tablet - 1px}) {
     @include http-operation-container-small;
   }
@@ -261,6 +263,7 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
       color: var(--kui-color-text, $kui-color-text);
       padding-right: var(--kui-space-50, $kui-space-50);
     }
+
     .right {
       background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
       padding: var(--kui-space-0, $kui-space-0);
