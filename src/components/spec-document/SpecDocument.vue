@@ -29,11 +29,7 @@
         <div
           v-else
           class="placeholder"
-        >
-          <h1>
-            {{ node.doc.name }}
-          </h1>
-        </div>
+        />
       </div>
     </div>
   </div>
@@ -264,9 +260,18 @@ watch(() => ({ nodesList: nodesList.value,
     if (cEl.offsetTop + cEl.offsetHeight < newValue.yPosition) {
       return
     }
-    visibleEls.push({ idx: i, cEl })
+    const cutFromTop = newValue.yPosition - cEl.offsetTop
+    const cutFromBottom = cEl.offsetTop + cEl.offsetHeight - (newValue.yPosition + newValue.wHeight)
+    const visibleHeight = cEl.offsetHeight - (cutFromTop < 0 ? 0 : cutFromTop) - (cutFromBottom < 0 ? 0 : cutFromBottom)
+    const visibleHeightP:number = visibleHeight * 100 / cEl.offsetHeight
+    //console.log({ i }, ' cutFromTop:', cutFromTop < 0 ? 0 : cutFromTop, ' cutFromBottom:', cutFromBottom, ' visibleH:', visibleHeightP)
+    visibleEls.push({ idx: i, cEl, vHp: visibleHeightP | 0 })
   })
-  console.log('visibleEls: ', visibleEls, visibleEls.length)
+  visibleEls.sort((e1, e2) => {
+    return e1.vHp === e2.vHp ? 0 : e1.vHp > e2.vHp ? -1 : 1
+  })
+
+  console.log('visibleEls: ', JSON.stringify(visibleEls), visibleEls.length)
 
   if (visibleEls.length === 0) {
     lastY.value = newValue.yPosition
@@ -285,115 +290,22 @@ watch(() => ({ nodesList: nodesList.value,
 }, { immediate: true })
 
 
-
-// watch(yPosition, (newValue, oldValue) => {
-
-//   if (!processScroll.value) {
-//     setTimeout(()=>{
-//       processScroll.value = true
-//     }, 1000)
-//   } else {
-//     scrollDirection.value = newValue > oldValue ? 'down' : 'up'
-//   }
-// })
-
-
-// const onElementVisibility = async (state: boolean, path: string, idx: number, forceExact: boolean) => {
-
-//   if (!forceExact && !processScroll.value) {
-//     return
-//   }
-
-//   console.log({ state, path, idx, prev: prevVisibilityCall.value })
-
-//   // nothing was changed for state = false
-//   if (!state && (!currentlyRendered.value[idx] || currentlyRendered.value[idx] === 'false')) {
-//     return
-//   }
-
-//   // nothing was changed for state = true
-//   if (state && currentlyRendered.value[idx] === 'true') {
-//     return
-//   }
-
-//   // to avoid endless loop (same section changes from true to false and back)
-//   if (
-//     prevVisibilityCall.value && prevVisibilityCall.value.idx === idx &&
-//     (
-//       (state === false && prevVisibilityCall.value.state === true) ||
-//       (state === true && prevVisibilityCall.value.state === false)
-//     )
-//   ) {
-//     console.log('endlress loop???')
-//     //return
-//   }
-
-
-//   prevVisibilityCall.value = { state, path, idx }
-
-//   console.log('onElementVisibility', state, path, idx)
-
-//   const currentRenderState = [...currentlyRendered.value]
-//   currentRenderState[idx] = state ? 'true' : 'false'
-
-//   // now we rest all 'forced' to false
-//   for (let i = 0; i < currentRenderState.length; i++) {
-//     if (currentRenderState[i] === 'forced') {
-//       currentRenderState[i] = 'false'
-//     }
-//     // we want to keep values for 10 neighbors ofo current idx
-//     if (['forced', 'true'].includes(currentRenderState[i]) && (i < idx - 10 || i > idx + 10)) {
-//       currentRenderState[i] = 'false'
-//     }
-//   }
-
-//   // now we add 'forced' from the left and right of true
-//   const idxToForce = []
-//   for (let i = 0; i < currentRenderState.length; i++) {
-//     if (currentRenderState[i] === 'true') {
-//       //        console.log('found visible at', i, currentRenderState[i])
-//       for (let j = 1; j <= SECTIONS_TO_RENDER; j++) {
-//         idxToForce.push(i - j)
-//         idxToForce.push(i + j)
-//       }
-//     }
-//   }
-//   //    console.log('idxToForce:', idxToForce)
-//   for (let i = 0 ; i < idxToForce.length; i++) {
-//     if (idxToForce[i] >= 0 && currentRenderState[idxToForce[i]] !== 'true') {
-//       currentRenderState[idxToForce[i]] = 'forced'
-//     }
-//   }
-
-//   currentlyRendered.value = [...currentRenderState]
-
-//   // now we find first visible path and fire scrolled
-//   const firstVisibleIdx = forceExact ? idx : currentRenderState.findIndex(s=>s === 'true')
-//   const firstVisiblePath = nodesList.value[firstVisibleIdx]?.doc.uri
-//   if (firstVisiblePath ) {
-//     console.log('!!!!!!!', firstVisiblePath, prevVisibilityCall.value, currentRenderState)
-//     if (processScroll.value || forceExact) {
-//       console.log('emmitting:' )
-//       emit('content-scrolled', firstVisiblePath, scrollDirection.value)
-//     }
-//   }
-//   // so it's only one change
-//   //console.log('after idx:', idx, 'state:', state, currentlyRendered.value)
-// }
-
 /** we show tryIt section when it's requested to be hidden and when node */
 watch(() => ({ pathname: props.currentPath, document: props.document }), async (newValue, oldValue) => {
 
-  const { pathname, document } = newValue
-  const { pathname: oldPathname, document: oldDocument } = oldValue || {}
+  const { pathname, document: newDocument } = newValue
+  const { document: oldDocument } = oldValue || {}
 
 
   const isRootPath = !pathname || pathname === '/'
-  serviceNode.value = <ServiceNode>(isRootPath ? document : document.children.find((child: any) => child.uri === pathname))
+  serviceNode.value = <ServiceNode>(isRootPath ? newDocument : newDocument.children.find((child: any) => child.uri === pathname))
 
   if (!serviceNode.value) {
     emit('path-not-found', pathname)
     return
+  }
+  if (oldDocument !== newDocument) {
+    lastY.value = 0
   }
 
   if (!props.allowContentScrolling) {
@@ -407,33 +319,19 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), async (
   forceRenderer(pathIdx)
   await nextTick()
 
-  // now we want to find postion of the active element and if it is not visible force it to be visible
-  const activeSectionEl = window.document.getElementById(`${pathIdx}-nodecontainter`)
-  if (activeSectionEl) {
-    lastY.value = activeSectionEl.offsetTop
-    yPosition.value = lastY.value
+
+  // now we want to find position of the active element and if it is not visible force it to be visible
+  if (document) {
+    setTimeout(() => {
+      if (pathIdx !== 0 || (lastY.value || 0) > 0) {
+        const activeSectionEl = document.getElementById(`${pathIdx}-nodecontainter`)
+        if (activeSectionEl) {
+          activeSectionEl.scrollIntoView()
+        }
+      }
+      processScrolling.value = true
+    }, 100)
   }
-  setTimeout(()=>{
-    processScrolling.value = true
-  }, 1000)
-  //if (oldPathname) {
-  //processScroll.value = false
-  //}
-
-  // await nextTick()
-  // // we need to give the the path and it's neighbors visible state
-  // console.log('pathIdx:' ,pathIdx)
-
-  // if (pathIdx === -1) {
-  //   emit('path-not-found', pathname)
-  //   return
-  // }
-  // onElementVisibility(true, pathname, pathIdx, true)
-
-  // if (window?.document && oldPathname !== pathname) {
-  //   console.log('?????', 'scrolling into', pathIdx)
-  //   window.document.getElementById(`${pathIdx}-nodecontainter`)?.scrollIntoView()
-  // }
 }, { immediate: true })
 
 
