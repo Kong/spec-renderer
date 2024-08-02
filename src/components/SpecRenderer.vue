@@ -288,9 +288,9 @@ watch(specRendererTocRef, async (val) => {
 }
 
 .spec-renderer-wrapper {
-  width: 100%;
   box-sizing: border-box;
   container: spec-renderer / inline-size;
+  width: 100%;
 
   .spec-renderer-content {
     display: flex;
