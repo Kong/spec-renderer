@@ -87,4 +87,16 @@ describe('<PropertyRange />', () => {
     expect(wrapper.findTestId('property-field-range').exists()).toBe(true)
     expect(wrapper.text()).toEqual('>= 2 items<= 5 items')
   })
+
+  it('renders with minLength and maxLength', () => {
+    const wrapper = shallowMount(PropertyRange, {
+      props: {
+        minLength: 2,
+        maxLength: 5,
+      },
+    })
+
+    expect(wrapper.findTestId('property-field-range').exists()).toBe(true)
+    expect(wrapper.text()).toEqual('>= 2 characters<= 5 characters')
+  })
 })
