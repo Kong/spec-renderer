@@ -1,3 +1,10 @@
+# [1.54.0](https://github.com/Kong/spec-renderer/compare/v1.53.2...v1.54.0) (2024-08-03)
+
+
+### Features
+
+* **property-range:** add support for all range type fields [KHCP-12811] ([#242](https://github.com/Kong/spec-renderer/issues/242)) ([5187681](https://github.com/Kong/spec-renderer/commit/518768185321fa113894a20ab07aae00b1233cef))
+
 ## [1.53.2](https://github.com/Kong/spec-renderer/compare/v1.53.1...v1.53.2) (2024-08-01)
 
 
