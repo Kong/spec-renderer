@@ -8,7 +8,10 @@
       :href="`${basePath}${navigationType==='hash' ? '#' : ''}${item.id}`"
       @click.prevent="selectItem(item.id)"
     >
-      <span class="node-item-title">
+      <span
+        class="node-item-title"
+        :class="{ 'deprecated-node-item': item.deprecated }"
+      >
         {{ item.title }}
       </span>
 
@@ -66,6 +69,10 @@ const isActive = computed(() => currentPath.value === props.item.id)
 
         display: block;
       }
+    }
+
+    > .deprecated-node-item {
+      text-decoration: line-through;
     }
 
     .http-operation-badge {
