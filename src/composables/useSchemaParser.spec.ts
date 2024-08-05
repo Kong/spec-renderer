@@ -144,6 +144,7 @@ paths:
   /devices:
     get:
       description: here we go
+      deprecated: true
       x-internal: true
 components:
   schemas:
@@ -160,6 +161,7 @@ components:
       slug: '/paths/devices/get',
       title: '/devices',
       type: 'http_operation',
+      deprecated: true,
     }]
 
     const schemaId = '/schemas/ApiResponse'

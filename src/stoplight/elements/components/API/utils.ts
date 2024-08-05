@@ -191,7 +191,7 @@ const addTagGroupsToTree = <T extends GroupableNode>(
       title: node.name,
       type: node.type,
       meta: isHttpOperation(node.data) || isHttpWebhookOperation(node.data) ? node.data.method : '',
-      deprecated: isHttpOperation(node.data) ? node.data.deprecated : false,
+      ...(isHttpOperation(node.data) && node.data.deprecated ? { deprecated: true } : {}),
     })
   })
 
@@ -207,7 +207,7 @@ const addTagGroupsToTree = <T extends GroupableNode>(
         title: node.name,
         type: node.type,
         meta: isHttpOperation(node.data) || isHttpWebhookOperation(node.data) ? node.data.method : '',
-        deprecated: isHttpOperation(node.data) ? node.data.deprecated : false,
+        ...(isHttpOperation(node.data) && node.data.deprecated ? { deprecated: true } : {}),
       }
     })
 
