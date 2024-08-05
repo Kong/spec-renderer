@@ -78,7 +78,9 @@ const securitySchemeList = computed((): HttpSecurityScheme[] | undefined => {
   const secArray: Array<HttpSecurityScheme> = []
   if (props.data.security) {
     props.data.security.forEach((secGroup: HttpSecurityScheme[]) => {
-      secArray.push(secGroup[0])
+      if (secGroup.length) {
+        secArray.push(secGroup[0])
+      }
     })
   }
 
@@ -107,7 +109,7 @@ const tokenValues = ref<string[]>([])
 
 // when different security scheme selected we need to re-draw the form and reset the tokenValues
 watch(activeScheme, (newIdx) => {
-  securityScheme.value = props.data.security?.find((secGroup) => secGroup[0].key === newIdx)
+  securityScheme.value = props.data.security?.find((secGroup) => secGroup[0]?.key === newIdx)
   tokenValues.value = Array.from({ length: securityScheme.value?.length || 0 }, () => '')
 }, { immediate: true })
 
