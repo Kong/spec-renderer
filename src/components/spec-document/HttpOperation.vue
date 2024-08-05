@@ -6,6 +6,7 @@
     <PageHeader
       v-if="data.summary"
       class="http-operation-header"
+      :deprecated="data.deprecated"
       :description="data.description"
       :title="data.summary"
     >

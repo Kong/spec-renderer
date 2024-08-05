@@ -5,6 +5,7 @@
   >
     <div class="page-header-title">
       <h1
+        :class="{ deprecated }"
         data-testid="spec-renderer-page-header-title"
       >
         {{ title }}
@@ -12,6 +13,11 @@
       <LabelBadge
         v-if="dataType"
         :label="dataType"
+        type="neutral"
+      />
+      <LabelBadge
+        v-if="deprecated"
+        label="DEPRECATED"
         type="neutral"
       />
     </div>
@@ -43,6 +49,10 @@ defineProps({
     type: String,
     default: '',
   },
+  deprecated: {
+    type: Boolean,
+    default: false,
+  },
 })
 </script>
 
@@ -56,6 +66,10 @@ defineProps({
       font-size: var(--kui-font-size-80, $kui-font-size-80);
       font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
       line-height: var(--kui-line-height-70, $kui-line-height-70);
+
+      &.deprecated {
+        text-decoration: line-through;
+      }
     }
   }
   .page-header-description {
