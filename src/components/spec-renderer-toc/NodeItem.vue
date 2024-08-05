@@ -6,6 +6,7 @@
     <a
       :class="{ 'single-word': isSingleWord, 'active': isActive }"
       :href="`${basePath}${navigationType==='hash' ? '#' : ''}${item.id}`"
+      :title="itemTitle"
       @click.prevent="selectItem(item.id)"
     >
       <span
@@ -54,6 +55,7 @@ const selectItem = (id: string): void => {
 
 const isSingleWord = computed(() => !props.item.title?.trim()?.includes(' '))
 const isActive = computed(() => currentPath.value === props.item.id)
+const itemTitle = computed(() => props.item.deprecated ? `${props.item.title} (deprecated)` : props.item.title)
 </script>
 
 <style lang="scss" scoped>

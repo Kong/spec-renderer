@@ -16,6 +16,9 @@ describe('<PageHeader />', () => {
     expect(wrapper.findTestId('spec-renderer-page-header-title').exists()).toBe(true)
     // the description is not rendered
     expect(wrapper.findTestId('spec-renderer-page-header-description').exists()).toBe(false)
+    // the data type and deprecated labels are not rendered
+    expect(wrapper.findTestId('data-type-badge').exists()).toBe(false)
+    expect(wrapper.findTestId('deprecated-badge').exists()).toBe(false)
   })
 
   it('renders with all props', () => {
@@ -23,12 +26,17 @@ describe('<PageHeader />', () => {
       props: {
         title: 'sample title',
         description: 'sample content',
+        dataType: 'object',
+        deprecated: true,
       },
     })
 
     // the title and description, both are rendered
     expect(wrapper.findTestId('spec-renderer-page-header-title').exists()).toBe(true)
     expect(wrapper.findTestId('spec-renderer-page-header-description').exists()).toBe(true)
+    // the data type and deprecated labels are rendered
+    expect(wrapper.findTestId('data-type-badge').exists()).toBe(true)
+    expect(wrapper.findTestId('deprecated-badge').exists()).toBe(true)
   })
 
   it('renders slots correctly', () => {
