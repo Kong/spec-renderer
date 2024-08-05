@@ -191,6 +191,19 @@ components:
         expect.arrayContaining([{ title: 'Schemas', items: schemas, initiallyExpanded: false }]))
     })
 
+    it('should include deprecated endpoints by default', async () => {
+      const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
+      await parseSpecDocument(specText)
+      expect(tableOfContents.value).toEqual(
+        expect.arrayContaining([{ title: 'Endpoints', items: endpoints, initiallyExpanded: true }]))
+    })
+
+    it('should exclude deprecated endpoints when param passed', async () => {
+      const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
+      await parseSpecDocument(specText, { hideDeprecated: true })
+      expect(tableOfContents.value).not.toEqual([{ title: 'Endpoints', items: endpoints, initiallyExpanded: true }])
+    })
+
     it('should include internal endpoints by default', async () => {
       const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
       await parseSpecDocument(specText)

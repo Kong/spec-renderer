@@ -5,7 +5,6 @@ import { parse as parseYaml } from '@stoplight/yaml'
 import { computeAPITree } from '../stoplight/elements/components/API/utils'
 import type { TableOfContentsItem } from '../stoplight/elements-core/components/Docs/types'
 import type { ParseOptions } from '../types'
-// import { validate } from '@scalar/openapi-parser'
 import type { ValidateResult } from '@scalar/openapi-parser'
 import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
@@ -158,7 +157,12 @@ export default function useSchemaParser(): any {
     try {
       if (parsedDocument.value) {
         // generate table of contents
-        tableOfContents.value = computeAPITree(parsedDocument.value, { hideSchemas: options?.hideSchemas, hideInternal: options?.hideInternal, currentPath: options?.currentPath })
+        tableOfContents.value = computeAPITree(parsedDocument.value, {
+          hideSchemas: options?.hideSchemas,
+          hideInternal: options?.hideInternal,
+          hideDeprecated: options?.hideDeprecated,
+          currentPath: options?.currentPath,
+        })
       }
     } catch (err) {
       console.error('error in computeAPITree:', err)

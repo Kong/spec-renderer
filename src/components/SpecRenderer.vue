@@ -129,11 +129,17 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-
   /**
    * hide internal endpoints from TOC
    */
   hideInternal: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * hide deprecated endpoints from TOC
+   */
+  hideDeprecated: {
     type: Boolean,
     default: false,
   },
@@ -220,6 +226,7 @@ watch(() => ({
   spec: props.spec,
   hideSchemas: props.hideSchemas,
   hideInternal: props.hideInternal,
+  hideDeprecated: props.hideDeprecated,
 }), async (changed, prev) => {
 
   // we want to reset currentPath if document changed. if new document is getting loadedm we want to keep the path
@@ -230,6 +237,7 @@ watch(() => ({
   await parseSpecDocument(changed.spec, {
     hideSchemas: changed.hideSchemas,
     hideInternal: changed.hideInternal,
+    hideDeprecated: changed.hideDeprecated,
     traceParsing: props.traceParsing,
     ...(changed.specUrl ? { specUrl: changed.specUrl } : null),
     withCredentials: props.withCredentials,

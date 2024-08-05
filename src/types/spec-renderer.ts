@@ -31,6 +31,10 @@ export interface ParseOptions {
    */
   hideInternal: boolean
   /**
+   * do not include deprecated methods into parsing results
+   */
+  hideDeprecated: boolean
+  /**
    * console.logs the progress of parsing steps
    */
   traceParsing: boolean
