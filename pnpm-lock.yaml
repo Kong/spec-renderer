@@ -115,8 +115,8 @@ importers:
         specifier: ^2.11.0
         version: 2.11.0
       '@vitejs/plugin-vue':
-        specifier: ^5.0.5
-        version: 5.0.5(vite@5.3.5(@types/node@20.14.13)(sass@1.77.8))(vue@3.4.34(typescript@5.5.4))
+        specifier: ^5.1.0
+        version: 5.1.2(vite@5.3.5(@types/node@20.14.13)(sass@1.77.8))(vue@3.4.34(typescript@5.5.4))
       '@vitest/ui':
         specifier: ^2.0.4
         version: 2.0.4(vitest@2.0.4)
@@ -1274,8 +1274,8 @@ packages:
     resolution: {integrity: sha512-k/Bfne7lrP7hcb7m9zSsgcBmo+8eicqqfNAJ7uUY+jkTFpKeH2FSkWpFRtimBxgkyvqfu9jTPRbYOvud6isdXA==}
     engines: {node: ^18.18.0 || >=20.0.0}
 
-  '@vitejs/plugin-vue@5.0.5':
-    resolution: {integrity: sha512-LOjm7XeIimLBZyzinBQ6OSm3UBCNVCpLkxGC0oWmm2YPzVZoxMsdvNVimLTBzpAnR9hl/yn1SHGuRfe6/Td9rQ==}
+  '@vitejs/plugin-vue@5.1.2':
+    resolution: {integrity: sha512-nY9IwH12qeiJqumTCLJLE7IiNx7HZ39cbHaysEUd+Myvbz9KAqd2yq+U01Kab1R/H1BmiyM2ShTYlNH32Fzo3A==}
     engines: {node: ^18.0.0 || >=20.0.0}
     peerDependencies:
       vite: ^5.0.0
@@ -6207,7 +6207,7 @@ snapshots:
       '@typescript-eslint/types': 7.13.1
       eslint-visitor-keys: 3.4.3
 
-  '@vitejs/plugin-vue@5.0.5(vite@5.3.5(@types/node@20.14.13)(sass@1.77.8))(vue@3.4.34(typescript@5.5.4))':
+  '@vitejs/plugin-vue@5.1.2(vite@5.3.5(@types/node@20.14.13)(sass@1.77.8))(vue@3.4.34(typescript@5.5.4))':
     dependencies:
       vite: 5.3.5(@types/node@20.14.13)(sass@1.77.8)
       vue: 3.4.34(typescript@5.5.4)

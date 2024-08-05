@@ -85,7 +85,7 @@
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^20.14.12",
     "@types/sanitize-html": "^2.11.0",
-    "@vitejs/plugin-vue": "^5.0.5",
+    "@vitejs/plugin-vue": "^5.1.0",
     "@vitest/ui": "^2.0.4",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.5.1",
@@ -173,7 +173,7 @@
     "node": ">=18.17.0"
   },
   "volta": {
-    "node": "20.15.1",
+    "node": "20.16.0",
     "pnpm": "9.6.0"
   },
   "config": {
