@@ -231,19 +231,6 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
   }
 }
 
-@mixin http-operation-container-queries {
-  // need to use interpolation for the token here because otherwise the query don't work
-  // VSCode doesn't like it, but it's correct
-  @container spec-document (max-width: #{$kui-breakpoint-tablet - 1px}) {
-    @include http-operation-container-small;
-  }
-
-  // regular media query fallback
-  @media (max-width: ($kui-breakpoint-laptop - 1px)) {
-    @include http-operation-container-small;
-  }
-}
-
 .http-operation {
   * {
     margin: var(--kui-space-0, $kui-space-0);
@@ -285,7 +272,19 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
       }
     }
 
-    @include http-operation-container-queries;
+    @supports (container: inline-size) {
+    // need to use interpolation for the token here because otherwise the query don't work
+      @container spec-document (max-width: #{$kui-breakpoint-tablet - 1px}) {
+        @include http-operation-container-small;
+      }
+    }
+
+    // regular media query fallback
+    @supports not (container: inline-size) {
+      @media (max-width: ($kui-breakpoint-laptop - 1px)) {
+        @include http-operation-container-small;
+      }
+    }
   }
 }
 </style>

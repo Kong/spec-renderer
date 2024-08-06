@@ -82,19 +82,6 @@ const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
   }
 }
 
-@mixin http-model-content-queries {
-  // need to use interpolation for the token here because otherwise the query don't work
-  // VSCode doesn't like it, but it's correct
-  @container spec-document (max-width: #{$kui-breakpoint-tablet - 1px}) {
-    @include http-model-content-small;
-  }
-
-  // regular media query fallback
-  @media (max-width: ($kui-breakpoint-laptop - 1px)) {
-    @include http-model-content-small;
-  }
-}
-
 .http-model {
   * {
     margin: var(--kui-space-0, $kui-space-0);
@@ -109,7 +96,19 @@ const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
     gap: var(--kui-space-130, $kui-space-130);
     grid-template-columns: auto $spec-renderer-secondary-column-width;
 
-    @include http-model-content-queries;
+    @supports (container: inline-size) {
+      // need to use interpolation for the token here because otherwise the query don't work
+      @container spec-document (max-width: #{$kui-breakpoint-tablet - 1px}) {
+        @include http-model-content-small;
+      }
+    }
+
+    // regular media query fallback
+    @supports not (container: inline-size) {
+      @media (max-width: ($kui-breakpoint-laptop - 1px)) {
+        @include http-model-content-small;
+      }
+    }
   }
 }
 </style>

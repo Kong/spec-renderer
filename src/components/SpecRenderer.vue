@@ -34,7 +34,6 @@
         />
       </aside>
 
-      <!-- small screen menu button - hidden on kui-breakpoint-tablet -->
       <div
         v-if="tableOfContents"
         class="spec-renderer-small-screen-header"
@@ -276,19 +275,6 @@ watch(specRendererTocRef, async (val) => {
   }
 }
 
-@mixin spec-renderer-content-queries {
-  // need to use interpolation for the token here because otherwise the query don't work
-  // VSCode doesn't like it, but it's correct
-  @container spec-renderer (max-width: #{$kui-breakpoint-tablet - 1px}) {
-    @include spec-renderer-content-small;
-  }
-
-  // regular media query fallback
-  @media (max-width: ($kui-breakpoint-tablet - 1px)) {
-    @include spec-renderer-content-small;
-  }
-}
-
 .spec-renderer-wrapper {
   box-sizing: border-box;
   container: spec-renderer / inline-size;
@@ -361,7 +347,19 @@ watch(specRendererTocRef, async (val) => {
       padding: var(--kui-space-60, $kui-space-60);
     }
 
-    @include spec-renderer-content-queries;
+    @supports (container: inline-size) {
+      // need to use interpolation for the token here because otherwise the query don't work
+      @container spec-renderer (max-width: #{$kui-breakpoint-tablet - 1px}) {
+        @include spec-renderer-content-small;
+      }
+    }
+
+    // regular media query fallback
+    @supports not (container: inline-size) {
+      @media (max-width: ($kui-breakpoint-tablet - 1px)) {
+        @include spec-renderer-content-small;
+      }
+    }
   }
 }
 
