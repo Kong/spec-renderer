@@ -94,7 +94,7 @@ const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
   .http-model-content {
     display: grid;
     gap: var(--kui-space-130, $kui-space-130);
-    grid-template-columns: auto $spec-renderer-secondary-column-width;
+    grid-template-columns: auto clamp($spec-renderer-secondary-column-min-width, 40%, $spec-renderer-secondary-column-max-width);
 
     @supports (container: inline-size) {
       // need to use interpolation for the token here because otherwise the query don't work

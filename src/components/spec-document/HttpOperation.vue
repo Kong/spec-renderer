@@ -243,7 +243,7 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
   .http-operation-container  {
     display: grid;
     gap: var(--kui-space-10, $kui-space-10);
-    grid-template-columns: auto $spec-renderer-secondary-column-width;
+    grid-template-columns: auto clamp($spec-renderer-secondary-column-min-width, 40%, $spec-renderer-secondary-column-max-width);
     width: 100%;
 
     .left {
