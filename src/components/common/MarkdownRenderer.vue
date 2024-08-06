@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'default-markdown': markdownStyles }">
-    <component :is="render" />
+    <component :is="render()" />
   </div>
 </template>
 
@@ -24,9 +24,11 @@ const props = defineProps({
 
 const renderedMarkdown = computed(() => mdRender(props.markdown))
 
-const render = () => h(props.tag, {
-  innerHTML: renderedMarkdown.value,
-})
+const render = () => {
+  return h(props.tag, {
+    innerHTML: renderedMarkdown.value,
+  })
+}
 
 const markdownStyles = inject<Ref<boolean>>('markdown-styles', ref(true))
 </script>
