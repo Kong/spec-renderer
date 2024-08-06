@@ -1,3 +1,10 @@
+## [1.55.2](https://github.com/Kong/spec-renderer/compare/v1.55.1...v1.55.2) (2024-08-06)
+
+
+### Bug Fixes
+
+* responsive container queries ([#247](https://github.com/Kong/spec-renderer/issues/247)) ([43f9304](https://github.com/Kong/spec-renderer/commit/43f930444f1cdb95be15a31a46bfbf019c6641fd))
+
 ## [1.55.1](https://github.com/Kong/spec-renderer/compare/v1.55.0...v1.55.1) (2024-08-06)
 
 
