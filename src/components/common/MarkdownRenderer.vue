@@ -37,7 +37,7 @@ const markdownStyles = inject<Ref<boolean>>('markdown-styles', ref(true))
 .default-markdown {
   :deep() {
     // Base font size and line height
-    font-size: var(--kui-font-size-40, $kui-font-size-40);
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
     line-height: var(--kui-line-height-40, $kui-line-height-40);
 
     h1,
@@ -139,10 +139,6 @@ const markdownStyles = inject<Ref<boolean>>('markdown-styles', ref(true))
         background-size: 16px 16px;
         padding-right: var(--kui-space-60, $kui-space-60);
       }
-    }
-
-    p {
-      margin: var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0) var(--kui-space-70, $kui-space-70);
     }
 
     small {

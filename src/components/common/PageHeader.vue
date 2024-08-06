@@ -22,7 +22,6 @@
     </div>
     <MarkdownRenderer
       v-if="description"
-      class="page-header-description"
       data-testid="spec-renderer-page-header-description"
       :markdown="description"
     />
@@ -66,10 +65,6 @@ defineProps({
       font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
       line-height: var(--kui-line-height-70, $kui-line-height-70);
     }
-  }
-  .page-header-description {
-    font-size: var(--kui-font-size-30, $kui-font-size-30);
-    line-height: var(--kui-line-height-40, $kui-line-height-40);
   }
 
   > :not(:first-child) {
