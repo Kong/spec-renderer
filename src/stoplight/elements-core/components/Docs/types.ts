@@ -22,6 +22,7 @@ export type TableOfContentsNode<
   type: T;
   meta: string;
   version?: string;
+  deprecated ?: boolean
 }
 
 

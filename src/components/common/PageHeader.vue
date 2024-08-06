@@ -4,14 +4,19 @@
     data-testid="spec-renderer-page-header"
   >
     <div class="page-header-title">
-      <h1
-        data-testid="spec-renderer-page-header-title"
-      >
+      <h1 data-testid="spec-renderer-page-header-title">
         {{ title }}
       </h1>
       <LabelBadge
         v-if="dataType"
+        data-testid="data-type-badge"
         :label="dataType"
+        type="neutral"
+      />
+      <LabelBadge
+        v-if="deprecated"
+        data-testid="deprecated-badge"
+        label="DEPRECATED"
         type="neutral"
       />
     </div>
@@ -42,6 +47,10 @@ defineProps({
   dataType: {
     type: String,
     default: '',
+  },
+  deprecated: {
+    type: Boolean,
+    default: false,
   },
 })
 </script>
