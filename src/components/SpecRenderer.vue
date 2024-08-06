@@ -1,66 +1,67 @@
 <template>
   <div class="spec-renderer-wrapper">
-    <SlideOut
-      v-if="tableOfContents"
-      class="slideout-toc"
-      :title="parsedDocument?.name || 'Table of Contents'"
-      :visible="slideoutTocVisible"
-      @close="slideoutTocVisible = false"
-    >
-      <SpecRendererToc
-        ref="specRendererSlideoutTocRef"
-        :base-path="basePath"
-        class="spec-renderer-toc"
-        :control-address-bar="controlAddressBar"
-        :current-path="currentPath"
-        :navigation-type="navigationType"
-        :table-of-contents="tableOfContents"
-        @item-selected="itemSelected"
-      />
-    </SlideOut>
-
-    <aside>
-      <SpecRendererToc
+    <div class="spec-renderer-content">
+      <SlideOut
         v-if="tableOfContents"
-        ref="specRendererTocRef"
-        :base-path="basePath"
-        class="spec-renderer-toc"
-        :control-address-bar="controlAddressBar"
-        :current-path="currentPath"
-        :navigation-type="navigationType"
-        :table-of-contents="tableOfContents"
-        @item-selected="itemSelected"
-      />
-    </aside>
-
-    <!-- small screen menu button - hidden on kui-breakpoint-tablet -->
-    <div
-      v-if="tableOfContents"
-      class="spec-renderer-small-screen-header"
-    >
-      <button
-        class="slideout-toc-trigger-button"
-        type="button"
-        @click="openSlideoutToc"
+        class="slideout-toc"
+        :title="parsedDocument?.name || 'Table of Contents'"
+        :visible="slideoutTocVisible"
+        @close="slideoutTocVisible = false"
       >
-        <MenuIcon class="menu-icon" />
-        Menu
-      </button>
-    </div>
+        <SpecRendererToc
+          ref="specRendererSlideoutTocRef"
+          :base-path="basePath"
+          class="spec-renderer-toc"
+          :control-address-bar="controlAddressBar"
+          :current-path="currentPath"
+          :navigation-type="navigationType"
+          :table-of-contents="tableOfContents"
+          @item-selected="itemSelected"
+        />
+      </SlideOut>
 
-    <div class="doc">
-      <SpecDocument
-        v-if="parsedDocument && currentPath"
-        :base-path="basePath"
-        :current-path="currentPath"
-        :document="parsedDocument"
-        :hide-insomnia-try-it="hideInsomniaTryIt"
-        :hide-try-it="hideTryIt"
-        :json="jsonDocument"
-        :markdown-styles="markdownStyles"
-        :spec-url="specUrl"
-        @path-not-found="relayPathNotFound"
-      />
+      <aside>
+        <SpecRendererToc
+          v-if="tableOfContents"
+          ref="specRendererTocRef"
+          :base-path="basePath"
+          class="spec-renderer-toc"
+          :control-address-bar="controlAddressBar"
+          :current-path="currentPath"
+          :navigation-type="navigationType"
+          :table-of-contents="tableOfContents"
+          @item-selected="itemSelected"
+        />
+      </aside>
+
+      <div
+        v-if="tableOfContents"
+        class="spec-renderer-small-screen-header"
+      >
+        <button
+          class="slideout-toc-trigger-button"
+          type="button"
+          @click="openSlideoutToc"
+        >
+          <MenuIcon class="menu-icon" />
+          Menu
+        </button>
+      </div>
+
+      <div class="doc">
+        <SpecDocument
+          v-if="parsedDocument && currentPath"
+          :base-path="basePath"
+          :current-path="currentPath"
+          :document="parsedDocument"
+          :hide-insomnia-try-it="hideInsomniaTryIt"
+          :hide-try-it="hideTryIt"
+          :json="jsonDocument"
+          :markdown-styles="markdownStyles"
+          :spec-url="specUrl"
+          @path-not-found="relayPathNotFound"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -266,87 +267,107 @@ watch(specRendererTocRef, async (val) => {
 </script>
 
 <style lang="scss" scoped>
-.spec-renderer-wrapper {
-  box-sizing: border-box;
-  display: flex;
+@mixin spec-renderer-content-small {
   flex-direction: column;
-  min-height: 100vh;
-  position: relative;
-
-  @media (min-width: $kui-breakpoint-tablet) {
-    flex-direction: row;
-  }
 
   .slideout-toc {
-    :deep(.slideout-container) {
-      padding-left: var(--kui-space-0, $kui-space-0);
-
-      .slideout-content {
-        padding-right: var(--kui-space-0, $kui-space-0);
-      }
-    }
-
-    @media (min-width: $kui-breakpoint-tablet) {
-      display: none;
-    }
+    display: block;
   }
 
   aside {
     display: none;
-    flex-shrink: 0;
-    height: 100vh;
-    left: 0;
-    position: sticky;
-    top: 0;
-    width: 320px;
-
-    @media (min-width: $kui-breakpoint-tablet) {
-      display: flex;
-    }
   }
 
   .spec-renderer-small-screen-header {
-    background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     display: flex;
-    padding: var(--kui-space-30, $kui-space-30);
+  }
+}
 
-    .slideout-toc-trigger-button {
-      @include default-button-reset;
+.spec-renderer-wrapper {
+  box-sizing: border-box;
+  container: spec-renderer / inline-size;
+  width: 100%;
 
-      align-items: center;
-      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
-      display: flex;
-      font-size: var(--kui-font-size-30, $kui-font-size-30);
-      font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
-      gap: var(--kui-space-20, $kui-space-20);
-      line-height: var(--kui-line-height-30, $kui-line-height-30);
-      padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
+  .spec-renderer-content {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
 
-      .menu-icon {
-        color: var(--kui-color-text-neutral, $kui-color-text-neutral) !important;
-        height: var(--kui-icon-size-40, $kui-icon-size-40) !important;
-        width: var(--kui-icon-size-40, $kui-icon-size-40) !important;
-      }
+    .slideout-toc {
+      display: none;
 
-      &:hover,
-      &:focus {
-        color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+      :deep(.slideout-container) {
+        padding-left: var(--kui-space-0, $kui-space-0);
 
-        .menu-icon {
-          color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
+        .slideout-content {
+          padding-right: var(--kui-space-0, $kui-space-0);
         }
       }
     }
 
-    @media (min-width: $kui-breakpoint-tablet) {
-      display: none;
+    aside {
+      display: flex;
+      flex-shrink: 0;
+      height: 100vh;
+      left: 0;
+      position: sticky;
+      top: 0;
+      width: 320px;
     }
-  }
 
-  .doc {
-    flex: 1;
-    overflow: visible;
-    padding: var(--kui-space-60, $kui-space-60);
+    .spec-renderer-small-screen-header {
+      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+      display: none;
+      padding: var(--kui-space-30, $kui-space-30);
+
+      .slideout-toc-trigger-button {
+        @include default-button-reset;
+
+        align-items: center;
+        color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+        display: flex;
+        font-size: var(--kui-font-size-30, $kui-font-size-30);
+        font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+        gap: var(--kui-space-20, $kui-space-20);
+        line-height: var(--kui-line-height-30, $kui-line-height-30);
+        padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
+
+        .menu-icon {
+          color: var(--kui-color-text-neutral, $kui-color-text-neutral) !important;
+          height: var(--kui-icon-size-40, $kui-icon-size-40) !important;
+          width: var(--kui-icon-size-40, $kui-icon-size-40) !important;
+        }
+
+        &:hover,
+        &:focus {
+          color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+
+          .menu-icon {
+            color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
+          }
+        }
+      }
+    }
+
+    .doc {
+      flex: 1;
+      overflow: visible;
+      padding: var(--kui-space-60, $kui-space-60);
+    }
+
+    @supports (container: inline-size) {
+      // need to use interpolation for the token here because otherwise the query don't work
+      @container spec-renderer (max-width: #{$kui-breakpoint-tablet - 1px}) {
+        @include spec-renderer-content-small;
+      }
+    }
+
+    // regular media query fallback
+    @supports not (container: inline-size) {
+      @media (max-width: ($kui-breakpoint-tablet - 1px)) {
+        @include spec-renderer-content-small;
+      }
+    }
   }
 }
 

@@ -121,5 +121,6 @@ onBeforeMount(async () => {
   background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
   box-sizing: border-box;
   color: var(--kui-color-text, $kui-color-text);
+  container: spec-document / inline-size;
 }
 </style>
