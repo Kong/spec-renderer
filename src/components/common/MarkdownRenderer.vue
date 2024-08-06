@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { h, inject, ref } from 'vue'
+import { computed, h, inject, ref } from 'vue'
 import type { Ref } from 'vue'
 import useMarkdown from '@/composables/useMarkdown'
 
@@ -22,8 +22,10 @@ const props = defineProps({
   },
 })
 
+const renderedMarkdown = computed(() => mdRender(props.markdown))
+
 const render = () => h(props.tag, {
-  innerHTML: mdRender(props.markdown),
+  innerHTML: renderedMarkdown.value,
 })
 
 const markdownStyles = inject<Ref<boolean>>('markdown-styles', ref(true))
@@ -194,7 +196,7 @@ const markdownStyles = inject<Ref<boolean>>('markdown-styles', ref(true))
       background: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
       border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
       color: var(--kui-color-text, $kui-color-text);
-      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
       padding: var(--kui-space-10, $kui-space-10) var(--kui-space-20, $kui-space-20);
       white-space: break-spaces;
       word-wrap: break-word;
