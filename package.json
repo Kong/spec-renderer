@@ -1,6 +1,6 @@
 {
   "name": "@kong/spec-renderer-dev",
-  "version": "1.53.2",
+  "version": "1.54.0",
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
   "type": "module",
@@ -52,7 +52,7 @@
     "@scalar/openapi-parser": "^0.7.2",
     "@seriousme/openapi-schema-validator": "^2.2.1",
     "@stoplight/http-spec": "^7.1.0",
-    "@stoplight/json": "^3.21.3",
+    "@stoplight/json": "^3.21.4",
     "@stoplight/types": "^14.1.1",
     "@stoplight/yaml": "^4.3.0",
     "@vueuse/core": "^10.11.0",
@@ -64,7 +64,7 @@
     "oas-normalize": "^11.1.1",
     "openapi3-ts": "4.3.3",
     "sanitize-html": "^2.13.0",
-    "shiki": "^1.11.0"
+    "shiki": "^1.11.2"
   },
   "resolutions": {
     "openapi3-ts": "4.3.3"
@@ -74,7 +74,7 @@
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
-    "@evilmartians/lefthook": "^1.7.5",
+    "@evilmartians/lefthook": "^1.7.7",
     "@kong/design-tokens": "^1.15.3",
     "@kong/eslint-config-kong-ui": "1.1.1",
     "@semantic-release/changelog": "^6.0.3",
@@ -82,10 +82,10 @@
     "@stylistic/stylelint-plugin": "^2.1.2",
     "@types/jsdom": "^21.1.7",
     "@types/json-schema": "^7.0.15",
-    "@types/markdown-it": "^14.1.1",
-    "@types/node": "^20.14.11",
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^20.14.12",
     "@types/sanitize-html": "^2.11.0",
-    "@vitejs/plugin-vue": "^5.0.5",
+    "@vitejs/plugin-vue": "^5.1.0",
     "@vitest/ui": "^2.0.4",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.5.1",
@@ -96,7 +96,7 @@
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.7.0",
     "jsdom": "^24.1.1",
-    "postcss": "^8.4.39",
+    "postcss": "^8.4.40",
     "postcss-html": "^1.7.0",
     "rimraf": "^6.0.1",
     "rollup-plugin-visualizer": "^5.12.0",
@@ -111,14 +111,14 @@
     "tsc-alias": "^1.8.10",
     "tslib": "^2.6.3",
     "typescript": "^5.5.4",
-    "vite": "^5.3.4",
+    "vite": "^5.3.5",
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-replace": "^0.1.1",
-    "vite-plugin-vue-devtools": "^7.3.6",
+    "vite-plugin-vue-devtools": "^7.3.7",
     "vitest": "2.0.4",
-    "vue": "^3.4.33",
+    "vue": "^3.4.34",
     "vue-router": "^4.4.0",
-    "vue-tsc": "^2.0.28"
+    "vue-tsc": "^2.0.29"
   },
   "repository": {
     "type": "git",
@@ -173,7 +173,7 @@
     "node": ">=18.17.0"
   },
   "volta": {
-    "node": "20.15.1",
+    "node": "20.16.0",
     "pnpm": "9.6.0"
   },
   "config": {
