@@ -273,7 +273,7 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
     }
 
     @supports (container: inline-size) {
-    // need to use interpolation for the token here because otherwise the query don't work
+      // need to use interpolation for the token here because otherwise the query don't work
       @container spec-document (max-width: #{$kui-breakpoint-tablet - 1px}) {
         @include http-operation-container-small;
       }
