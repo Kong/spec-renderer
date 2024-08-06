@@ -1,3 +1,10 @@
+# [1.55.0](https://github.com/Kong/spec-renderer/compare/v1.54.0...v1.55.0) (2024-08-06)
+
+
+### Features
+
+* styling for deprecated endpoint [KHCP-12844] ([#250](https://github.com/Kong/spec-renderer/issues/250)) ([f704b95](https://github.com/Kong/spec-renderer/commit/f704b950f3addfb4309d2f4157249f54d11547f6))
+
 # [1.54.0](https://github.com/Kong/spec-renderer/compare/v1.53.2...v1.54.0) (2024-08-03)
 
 
