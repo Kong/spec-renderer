@@ -1,3 +1,10 @@
+## [1.55.1](https://github.com/Kong/spec-renderer/compare/v1.55.0...v1.55.1) (2024-08-06)
+
+
+### Bug Fixes
+
+* markdown fixes [KHCP-12854] ([#251](https://github.com/Kong/spec-renderer/issues/251)) ([2f08520](https://github.com/Kong/spec-renderer/commit/2f085209bb41b6986a4fe0503ba551f8f6f4a97c))
+
 # [1.55.0](https://github.com/Kong/spec-renderer/compare/v1.54.0...v1.55.0) (2024-08-06)
 
 
