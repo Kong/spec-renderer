@@ -48,7 +48,7 @@ const props = defineProps({
    * this is designed scrolling container for TOC, by default it's 'self', but it can be 'parent' like in case of portal
    * If this is not enough we could pass actual selector for this via another prop.
    */
-  scrollingContainer: {
+  tocScrollingContainer: {
     type: String as PropType<'self' | 'parent'>,
     default: 'parent',
   },
@@ -91,10 +91,13 @@ const { y: yPosition } = useScroll(scrollableContainerRef)
 watch(() => ({ path: props.currentPath, navRef: tocNavRef.value }), async (newValue) => {
   //TODO verify if needed
   await nextTick()
+
+
   if (!newValue.navRef) {
     return
   }
-  scrollableContainerRef.value = props.scrollingContainer === 'self' ? newValue.navRef : newValue.navRef.parentElement
+  scrollableContainerRef.value = props.tocScrollingContainer === 'self' ? newValue.navRef : newValue.navRef.parentElement
+  console.log('scrollableContainerRef.value:', scrollableContainerRef.value)
   if (!scrollableContainerRef.value) {
     return
   }
@@ -103,15 +106,16 @@ watch(() => ({ path: props.currentPath, navRef: tocNavRef.value }), async (newVa
   if (!activeItem) {
     return
   }
-
+  console.log('in TOC:', ' offsetTop:', activeItem.offsetTop, ' offsetHeight:', activeItem.offsetHeight, '  yPos:', yPosition.value, ' containerHeight:', scrollableContainerRef.value.offsetHeight )
   // we are too far above visible part, let's bring it back
   if (activeItem.offsetTop < yPosition.value) {
     activeItem.scrollIntoView({ behavior: 'instant', block: 'start' })
     return
   }
 
-  if ((yPosition.value + scrollableContainerRef.value.offsetHeight) < (activeItem.offsetTop + 2 * activeItem.offsetHeight)) {
+  if ((yPosition.value + (scrollableContainerRef.value.offsetHeight)) < (activeItem.offsetTop + 2 * activeItem.offsetHeight)) {
     activeItem.scrollIntoView({ behavior: 'instant', block: 'end' })
+    scrollableContainerRef.value.scrollIntoView({ behavior: 'instant' })
     return
   }
 

@@ -11,8 +11,8 @@
   </div>
   <div
     v-else-if="serviceNode"
-    ref="scrollableContainerRef"
-    class="scrolling-container"
+    ref="wrapperRef"
+    class="nodes-wrapper"
   >
     <div
       v-for="(node, idx) in nodesList"
@@ -46,9 +46,9 @@ import HttpOperation from './HttpOperation.vue'
 import HttpModel from './HttpModel.vue'
 import ArticleNode from './ArticleNode.vue'
 import UnknownNode from './UnknownNode.vue'
-//import { vElementVisibility } from '@vueuse/components'
-import { useWindowScroll, useWindowSize } from '@vueuse/core'
+import { useWindowScroll, useWindowSize, useElementSize, useScroll } from '@vueuse/core'
 import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE } from '@/constants'
+import type { NavigationTypes } from '@/types'
 
 const props = defineProps({
   document: {
@@ -92,12 +92,29 @@ const props = defineProps({
     default: true,
   },
   /**
+   * scrolling container that holds SpecDocument, use window by default
+   */
+  documentScrollingContainer: {
+    type: String,
+    default: '',
+  },
+
+  /**
    * Allow component itself to control URL in browser URL.
    * When false it becomes the responsibility of consuming app
    */
   controlAddressBar: {
     type: Boolean,
     default: false,
+  },
+  /**
+      Defines how links are specified in toc
+        path - id becomes part of the URL path.
+        hash - uses the hash portion of the URL to keep the UI in sync with the URL.
+  */
+  navigationType: {
+    type: String as PropType<NavigationTypes>,
+    default: 'path',
   },
   /**
    * Use default markdown styling
@@ -129,7 +146,7 @@ const toRenderer = ref<Array<'true' | 'false' | 'forced'>>(['true', 'forced', 'f
 const lastY = ref<number>()
 const processScrolling = ref<boolean>(false)
 
-const scrollableContainerRef = ref<HTMLElement | null>(null)
+const wrapperRef = ref<HTMLElement | null>(null)
 
 
 const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null) => {
@@ -155,9 +172,33 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
 }
 
 
+const scrollingContainerEl = computed(():HTMLElement | null => {
+  console.log('1111111')
+  if (!window || !document) {
+    console.log('2222')
+    return null
+  }
+  if (!props.documentScrollingContainer) {
+    console.log('333')
+    return null
+  }
+  console.log('AAAAA:', document.querySelector(props.documentScrollingContainer))
+  return document.querySelector(props.documentScrollingContainer)
+})
 
-const { y: yPosition } = useWindowScroll()
-const { height: windowHeight, width: windowWidth } = useWindowSize()
+const { y: yPositionWindow } = useWindowScroll()
+const { y: yPositionContainer } = useScroll(scrollingContainerEl.value)
+
+const windowSize = useWindowSize()
+const scrollableContainerSize = useElementSize(scrollingContainerEl.value)
+
+const yPosition = computed(() => {
+  return scrollingContainerEl.value ? yPositionContainer.value : yPositionWindow.value
+})
+
+const containerSize = computed(()=> {
+  return scrollingContainerEl.value ? scrollableContainerSize : windowSize
+})
 
 const docComponent = computed(() => {
   return getDocumentComponent(serviceNode.value)
@@ -223,9 +264,10 @@ const forceRenderer = (idx: number) => {
 
 watch(() => ({ nodesList: nodesList.value,
   yPosition: yPosition.value,
-  scrollableRef: scrollableContainerRef.value,
-  wHeight: windowHeight.value,
-  wWidth: windowWidth.value }), (newValue, oldValue) => {
+  wrapperRef: wrapperRef.value,
+  wHeight: containerSize.value.height.value,
+  wWidth: containerSize.value.width.value,
+}), (newValue, oldValue) => {
 
   if (!processScrolling.value) {
     return
@@ -237,7 +279,7 @@ watch(() => ({ nodesList: nodesList.value,
     return
   }
 
-  if (!newValue.scrollableRef) {
+  if (!newValue.wrapperRef) {
     return
   }
   if (oldValue?.wHeight !== newValue.wHeight || oldValue?.wWidth != newValue.wWidth ) {
@@ -249,7 +291,7 @@ watch(() => ({ nodesList: nodesList.value,
     return
   }
   const visibleEls:Array<Record<string, any>> = []
-  Array.from(newValue.scrollableRef.children).forEach((c, i) => {
+  Array.from(newValue.wrapperRef.children).forEach((c, i) => {
     const cEl = c as HTMLElement
 
     // this is below visible
@@ -282,8 +324,15 @@ watch(() => ({ nodesList: nodesList.value,
   // now out of all elements in visibleEls we  need to find the one that is most visible
   const mostVisibleIdx = visibleEls[0].idx
   forceRenderer(mostVisibleIdx)
-  console.log('emitting:', nodesList.value[mostVisibleIdx].doc.uri)
-  emit('content-scrolled', nodesList.value[mostVisibleIdx].doc.uri)
+  const newUri = nodesList.value[mostVisibleIdx].doc.uri
+  console.log('emitting:', newUri)
+  emit('content-scrolled', newUri)
+  if (props.controlAddressBar) {
+    // we only have path and hash for now
+    const newPath = props.navigationType === 'path' ? props.basePath + newUri : props.basePath + '#' + newUri
+    window.history.pushState({}, '', newPath)
+  }
+
   lastY.value = newValue.yPosition
 
   // we look trough elements and find the one that should be visible
@@ -348,7 +397,7 @@ onBeforeMount(async () => {
   color: var(--kui-color-text, $kui-color-text);
 }
 
-.scrolling-container {
+.nodes-wrapper {
   .overview-page, .spec-renderer-document {
     padding-bottom: var(--kui-space-100, $kui-space-100);
   }

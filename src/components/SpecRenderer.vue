@@ -14,8 +14,8 @@
         :control-address-bar="controlAddressBar"
         :current-path="currentPathTOC"
         :navigation-type="navigationType"
-        scrolling-container="self"
         :table-of-contents="tableOfContents"
+        toc-scrolling-container="self"
         @item-selected="itemSelected"
       />
     </SlideOut>
@@ -28,8 +28,8 @@
         :control-address-bar="controlAddressBar"
         :current-path="currentPathTOC"
         :navigation-type="navigationType"
-        scrolling-container="self"
         :table-of-contents="tableOfContents"
+        toc-scrolling-container="self"
         @item-selected="itemSelected"
       />
     </aside>
@@ -57,10 +57,12 @@
         :control-address-bar="controlAddressBar"
         :current-path="currentPathDOC"
         :document="parsedDocument"
+        :document-scrolling-container="documentScrollingContainer"
         :hide-insomnia-try-it="hideInsomniaTryIt"
         :hide-try-it="hideTryIt"
         :json="jsonDocument"
         :markdown-styles="markdownStyles"
+        :navigation-type="navigationType"
         :spec-url="specUrl"
         @content-scrolled="onDocumentScroll"
         @path-not-found="relayPathNotFound"
@@ -175,6 +177,13 @@ const props = defineProps({
   allowContentScrolling: {
     type: Boolean,
     default: true,
+  },
+  /**
+   * scrolling container that holds SpecDocument, use window by default
+   */
+  documentScrollingContainer: {
+    type: String,
+    default: '',
   },
   /**
    * Use default markdown styling. If your host application provides its own default styles, you may want to set to `false`.
