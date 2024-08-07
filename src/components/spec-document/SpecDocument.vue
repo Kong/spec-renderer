@@ -145,7 +145,7 @@ const emit = defineEmits < {
 const toRenderer = ref<Array<'true' | 'false' | 'forced'>>(['true', 'forced', 'forced'])
 const lastY = ref<number>()
 const processScrolling = ref<boolean>(false)
-
+const lastPath = ref<string>()
 const wrapperRef = ref<HTMLElement | null>(null)
 
 
@@ -325,14 +325,16 @@ watch(() => ({ nodesList: nodesList.value,
   const mostVisibleIdx = visibleEls[0].idx
   forceRenderer(mostVisibleIdx)
   const newUri = nodesList.value[mostVisibleIdx].doc.uri
-  console.log('emitting:', newUri)
-  emit('content-scrolled', newUri)
-  if (props.controlAddressBar) {
+  if (newUri !== lastPath.value) {
+    console.log('emitting:', newUri, lastPath.value)
+    emit('content-scrolled', newUri)
+    if (props.controlAddressBar) {
     // we only have path and hash for now
-    const newPath = props.navigationType === 'path' ? props.basePath + newUri : props.basePath + '#' + newUri
-    window.history.pushState({}, '', newPath)
+      const newPath = props.navigationType === 'path' ? props.basePath + newUri : props.basePath + '#' + newUri
+      window.history.pushState({}, '', newPath)
+    }
+    lastPath.value = newUri
   }
-
   lastY.value = newValue.yPosition
 
   // we look trough elements and find the one that should be visible
