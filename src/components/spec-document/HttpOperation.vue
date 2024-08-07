@@ -1,21 +1,21 @@
 <template>
   <div
     class="http-operation"
-    :data-testid="`http-operation-${data.id}`"
+    :data-testid="`http-operation-${operationData.id}`"
   >
     <PageHeader
-      v-if="data.summary"
+      v-if="operationData.name"
       class="http-operation-header"
-      :deprecated="data.deprecated"
-      :description="data.description"
-      :title="data.summary"
+      :deprecated="operationData.deprecated"
+      :description="operationData.description"
+      :title="operationData.name"
     >
       <ServerEndpoint
-        v-if="serverList.length"
+        v-if="operationData.path"
         class="http-operation-server-endpoint"
-        :data-testid="`server-endpoint-${data.id}`"
-        :method="data.method"
-        :path="data.path"
+        :data-testid="`server-endpoint-${operationData.id}`"
+        :method="operationData.method"
+        :path="operationData.path"
         :selected-server-url="selectedServerURL"
         :server-url-list="serverList"
         @selected-server-changed="updateSelectedServerURL"
@@ -26,11 +26,11 @@
     <section class="http-operation-container">
       <div
         class="left"
-        :data-testid="`http-operation-left-${data.id}`"
+        :data-testid="`http-operation-left-${operationData.id}`"
       >
         <HttpRequest
-          v-if="data.request"
-          v-bind="data.request"
+          v-if="operationData.request"
+          v-bind="operationData.request"
         />
 
         <HttpResponse
@@ -41,7 +41,7 @@
           <div class="http-response-header-menu">
             <SelectDropdown
               v-for="component in responseSelectComponentList"
-              :id="`http-response-header-dropdown-${data.id}`"
+              :id="`http-response-header-dropdown-${operationData.id}`"
               :key="component.name"
               :items="component.optionList"
               :model-value="component.value"
@@ -67,11 +67,11 @@
       </div>
       <div
         class="right"
-        :data-testid="`http-operation-right-${data.id}`"
+        :data-testid="`http-operation-right-${operationData.id}`"
       >
         <TryIt
           v-model="excludeNotRequiredInTryIt"
-          :data="data"
+          :data="operationData"
           :request-body="currentRequestBody"
           :server-url="selectedServerURL"
           @access-tokens-changed="setAuthHeaders"
@@ -82,11 +82,12 @@
           @server-url-changed="setServerUrl"
         />
         <RequestSample
+          v-if="currentServerUrl && currentRequestPath"
           v-model="excludeNotRequiredInSample"
           :auth-headers="authHeaders"
           :auth-query="authQuery"
           :custom-headers="currentRequestHeaders"
-          :data="data"
+          :data="operationData"
           :request-body="currentRequestBody"
           :request-path="currentRequestPath"
           :request-query="currentRequestQuery"
@@ -107,7 +108,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, inject } from 'vue'
 import type { PropType, Ref } from 'vue'
-import type { IHttpOperation } from '@stoplight/types'
+import type { IHttpOperation, IHttpWebhookOperation } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpResponse from './endpoint/HttpResponse.vue'
 import TryIt from './try-it/TryIt.vue'
@@ -124,7 +125,7 @@ import type { SelectItem } from '@/types'
 
 const props = defineProps({
   data: {
-    type: Object as PropType<IHttpOperation>,
+    type: Object as PropType<IHttpOperation | IHttpWebhookOperation>,
     required: true,
   },
 })
@@ -135,6 +136,12 @@ const authHeaders = ref<Array<Record<string, string>>>()
 const authQuery = ref<string>('')
 const excludeNotRequiredInTryIt = ref<boolean>(true)
 const excludeNotRequiredInSample = ref<boolean>(true)
+
+const operationData = computed(() => ({
+  ...props.data,
+  name: 'name' in props.data ? props.data.name : props.data.summary || props.data.iid || props.data.path,
+  path: 'path' in props.data ? props.data.path : '',
+}))
 
 const excludeNotRequired = computed((): boolean => {
   return hideTryIt.value ? excludeNotRequiredInSample.value : excludeNotRequiredInTryIt.value
@@ -210,8 +217,8 @@ function updateSelectedServerURL(url: string) {
 }
 
 watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value } ), (newValue) => {
-  currentRequestPath.value = getSamplePath(props.data)
-  currentRequestQuery.value = getSampleQuery(props.data)
+  currentRequestPath.value = getSamplePath(operationData.value)
+  currentRequestQuery.value = getSampleQuery(operationData.value)
   currentRequestHeaders.value = []
   currentRequestBody.value = props.data.request?.body?.contents
     ? getSampleBody(
