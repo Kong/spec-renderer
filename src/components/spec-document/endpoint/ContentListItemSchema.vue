@@ -27,8 +27,8 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-.content-list-schema {
-  .content-list-schema-description {
+.content-list-item-schema {
+  .content-list-item-schema-description {
     margin-bottom: var(--kui-space-40, $kui-space-40);
   }
 }

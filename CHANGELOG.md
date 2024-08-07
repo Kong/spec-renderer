@@ -1,3 +1,31 @@
+## [1.55.2](https://github.com/Kong/spec-renderer/compare/v1.55.1...v1.55.2) (2024-08-06)
+
+
+### Bug Fixes
+
+* responsive container queries ([#247](https://github.com/Kong/spec-renderer/issues/247)) ([43f9304](https://github.com/Kong/spec-renderer/commit/43f930444f1cdb95be15a31a46bfbf019c6641fd))
+
+## [1.55.1](https://github.com/Kong/spec-renderer/compare/v1.55.0...v1.55.1) (2024-08-06)
+
+
+### Bug Fixes
+
+* markdown fixes [KHCP-12854] ([#251](https://github.com/Kong/spec-renderer/issues/251)) ([2f08520](https://github.com/Kong/spec-renderer/commit/2f085209bb41b6986a4fe0503ba551f8f6f4a97c))
+
+# [1.55.0](https://github.com/Kong/spec-renderer/compare/v1.54.0...v1.55.0) (2024-08-06)
+
+
+### Features
+
+* styling for deprecated endpoint [KHCP-12844] ([#250](https://github.com/Kong/spec-renderer/issues/250)) ([f704b95](https://github.com/Kong/spec-renderer/commit/f704b950f3addfb4309d2f4157249f54d11547f6))
+
+# [1.54.0](https://github.com/Kong/spec-renderer/compare/v1.53.2...v1.54.0) (2024-08-03)
+
+
+### Features
+
+* **property-range:** add support for all range type fields [KHCP-12811] ([#242](https://github.com/Kong/spec-renderer/issues/242)) ([5187681](https://github.com/Kong/spec-renderer/commit/518768185321fa113894a20ab07aae00b1233cef))
+
 ## [1.53.2](https://github.com/Kong/spec-renderer/compare/v1.53.1...v1.53.2) (2024-08-01)
 
 

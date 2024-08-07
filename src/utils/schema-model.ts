@@ -39,7 +39,7 @@ const resolveAllOf = (schema: SchemaObject): SchemaObject =>
  * @param candidate
  * @returns {SchemaObject | null}
  */
-export const resolveSchemaObjectFields = (candidate: unknown) => {
+export const resolveSchemaObjectFields = (candidate: unknown): SchemaObject => {
   // if the candidate is not a valid schema object, we return empty object
   if (!isValidSchemaObject(candidate)) return {}
 
@@ -47,11 +47,10 @@ export const resolveSchemaObjectFields = (candidate: unknown) => {
    * If the candidate is an array, we need to derive the fields from its `items` field.
    * Else, we can directly use the fields from the candidate.
   */
-  if (candidate.type === 'array') {
+  if (candidate.type === 'array' && candidate.items) {
     if (isValidSchemaObject(candidate.items)) {
-      return resolveAllOf(candidate.items)
+      return { ...resolveAllOf(candidate.items), type: 'array', format: candidate.items.type?.toString() }
     } else {
-      // if the items field is not a valid schema object, we return null
       return {}
     }
   }

@@ -6,9 +6,13 @@
     <a
       :class="{ 'single-word': isSingleWord, 'active': isActive }"
       :href="`${basePath}${navigationType==='hash' ? '#' : ''}${item.id}`"
+      :title="itemTitle"
       @click.prevent="selectItem(item.id)"
     >
-      <span class="node-item-title">
+      <span
+        class="node-item-title"
+        :class="{ 'deprecated-node-item': item.deprecated }"
+      >
         {{ item.title }}
       </span>
 
@@ -50,6 +54,7 @@ const emit = defineEmits<{
 
 const isSingleWord = computed(() => !props.item.title?.trim()?.includes(' '))
 const isActive = computed(() => props.activePath === props.item.id)
+const itemTitle = computed(() => props.item.deprecated ? `${props.item.title} (deprecated)` : props.item.title)
 
 
 const selectItem = (id: string): void => {
@@ -72,6 +77,10 @@ const selectItem = (id: string): void => {
 
         display: block;
       }
+    }
+
+    > .deprecated-node-item {
+      text-decoration: line-through;
     }
 
     .http-operation-badge {

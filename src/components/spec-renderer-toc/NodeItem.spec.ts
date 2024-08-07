@@ -8,7 +8,7 @@ import { ref } from 'vue'
 
 describe('<NodeItem />', () => {
 
-  it('KHCP-11715 renderers a tag with correct href', () => {
+  it('renderers a tag with correct href', () => {
     const wrapper = mount(NodeItem, {
       props: {
         item: <TableOfContentsNode>{ id: '/operation-path/method', title: 'xxx' },

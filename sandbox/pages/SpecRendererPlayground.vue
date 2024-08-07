@@ -14,6 +14,13 @@
         <label for="hide-schemas">Hide schemas</label>
         |
         <input
+          id="hide-deprecated"
+          v-model="hideDeprecated"
+          type="checkbox"
+        >
+        <label for="hide-deprecated">Hide deprecated</label>
+        |
+        <input
           id="hide-tryit"
           v-model="hideTryIt"
           type="checkbox"
@@ -54,6 +61,7 @@
       base-path="/spec-renderer"
       :control-address-bar="true"
       :current-path="currentPath"
+      :hide-deprecated="hideDeprecated"
       :hide-schemas="hideSchemas"
       :hide-try-it="hideTryIt"
       :markdown-styles="markdownStyles"
@@ -81,6 +89,7 @@ const specText = ref<string>('')
 const specUrl = ref<string>('')
 const currentPath = ref<string>(navigationType.value === 'path' ? route.path : route.hash.replace('#', ''))
 const hideSchemas = ref<boolean>(false)
+const hideDeprecated = ref<boolean>(false)
 const hideTryIt = ref<boolean>(false)
 const allowContentScrolling = ref<boolean>(true)
 const markdownStyles = ref<boolean>(true)
@@ -108,10 +117,10 @@ const sampleSpecUploaded = (sampleSpecText: string, resetPath: boolean) => {
 
 <style land="scss" scoped>
 .sandbox-controls-container {
+  align-items: center;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  align-items: center;
   padding: 16px 0;
 }
 </style>

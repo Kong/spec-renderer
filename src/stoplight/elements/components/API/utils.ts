@@ -75,11 +75,13 @@ interface ComputeAPITreeConfig {
   hideSchemas?: boolean;
   hideInternal?: boolean;
   currentPath?: string;
+  hideDeprecated?: boolean;
 }
 
 const defaultComputerAPITreeConfig = {
   hideSchemas: false,
   hideInternal: false,
+  hideDeprecated: false,
   currentPath: '',
 }
 
@@ -106,7 +108,14 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
       initiallyExpanded: true, // Endpoints are always expanded by default
     })
 
-    addTagGroupsToTree(groups, ungrouped, tree.at(-1).items, NodeType.HttpOperation, mergedConfig.hideInternal)
+    addTagGroupsToTree({
+      groups,
+      ungrouped,
+      tree: tree.at(-1).items,
+      itemsType: NodeType.HttpOperation,
+      hideInternal: mergedConfig.hideInternal,
+      hideDeprecated: mergedConfig.hideDeprecated,
+    })
   }
 
   const hasWebhookNodes = serviceNode.children.some(node => node.type === NodeType.HttpWebhook)
@@ -119,7 +128,14 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
       initiallyExpanded: groups.some(group => group.initiallyExpanded) || ungrouped.some(node => node.uri === mergedConfig.currentPath),
     })
 
-    addTagGroupsToTree(groups, ungrouped, tree.at(-1).items, NodeType.HttpWebhook, mergedConfig.hideInternal)
+    addTagGroupsToTree({
+      groups,
+      ungrouped,
+      tree: tree.at(-1).items,
+      itemsType: NodeType.HttpWebhook,
+      hideInternal: mergedConfig.hideInternal,
+      hideDeprecated: mergedConfig.hideDeprecated,
+    })
   }
 
   let schemaNodes = serviceNode.children.filter(node => node.type === NodeType.Model)
@@ -136,7 +152,13 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
       initiallyExpanded: groups.some(group => group.initiallyExpanded) || ungrouped.some(node => node.uri === mergedConfig.currentPath),
     })
 
-    addTagGroupsToTree(groups, ungrouped, tree.at(-1).items, NodeType.Model, mergedConfig.hideInternal)
+    addTagGroupsToTree({
+      groups,
+      ungrouped,
+      tree: tree.at(-1).items,
+      itemsType: NodeType.Model,
+      hideInternal: mergedConfig.hideInternal,
+    })
   }
 
   return tree
@@ -172,16 +194,39 @@ export const isInternal = (node: ServiceChildNode | ServiceNode): boolean => {
   return !!data['x-internal']
 }
 
-const addTagGroupsToTree = <T extends GroupableNode>(
-  groups: TagGroup<T>[],
-  ungrouped: T[],
-  tree: TableOfContentsItem[],
-  itemsType: TableOfContentsGroup['itemsType'],
-  hideInternal: boolean,
-) => {
+const isDeprecated = (node: ServiceChildNode | ServiceNode): boolean => {
+  const data = node.data
+
+  if (isHttpOperation(data) || isHttpWebhookOperation(data)) {
+    return data.deprecated ?? false
+  }
+
+  return false
+}
+
+interface AddTagGroupsToTreeParams<T extends GroupableNode> {
+  groups: TagGroup<T>[]
+  ungrouped: T[]
+  tree: TableOfContentsItem[]
+  itemsType: TableOfContentsGroup['itemsType']
+  hideInternal: boolean
+  hideDeprecated: boolean
+}
+
+const addTagGroupsToTree = <T extends GroupableNode>({
+  groups,
+  ungrouped,
+  tree,
+  itemsType,
+  hideInternal,
+  hideDeprecated,
+}: AddTagGroupsToTreeParams<T>) => {
   // Show ungrouped nodes above tag groups
-  ungrouped.forEach(node => {
-    if (hideInternal && isInternal(node)) {
+  ungrouped.forEach((node) => {
+    if (
+      (hideInternal && isInternal(node)) ||
+      (hideDeprecated && isDeprecated(node))
+    ) {
       return
     }
 
@@ -190,13 +235,20 @@ const addTagGroupsToTree = <T extends GroupableNode>(
       slug: node.uri,
       title: node.name,
       type: node.type,
-      meta: isHttpOperation(node.data) || isHttpWebhookOperation(node.data) ? node.data.method : '',
+      meta:
+        isHttpOperation(node.data) || isHttpWebhookOperation(node.data)
+          ? node.data.method
+          : '',
+      ...(isDeprecated(node) ? { deprecated: true } : {}),
     })
   })
 
-  groups.forEach(group => {
-    const items = group.items.flatMap(node => {
-      if (hideInternal && isInternal(node)) {
+  groups.forEach((group) => {
+    const items = group.items.flatMap((node) => {
+      if (
+        (hideInternal && isInternal(node)) ||
+        (hideDeprecated && isDeprecated(node))
+      ) {
         return []
       }
 
@@ -205,7 +257,11 @@ const addTagGroupsToTree = <T extends GroupableNode>(
         slug: node.uri,
         title: node.name,
         type: node.type,
-        meta: isHttpOperation(node.data) || isHttpWebhookOperation(node.data) ? node.data.method : '',
+        meta:
+          isHttpOperation(node.data) || isHttpWebhookOperation(node.data)
+            ? node.data.method
+            : '',
+        ...(isDeprecated(node) ? { deprecated: true } : {}),
       }
     })
 

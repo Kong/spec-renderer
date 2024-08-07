@@ -1,45 +1,47 @@
 <template>
-  <div class="slideout">
-    <Transition name="spec-renderer-fade">
-      <div
-        v-show="visible"
-        class="slideout-backdrop"
-        @click="emit('close')"
-      />
-    </Transition>
-    <Transition name="spec-renderer-slide-in">
-      <div
-        v-show="visible"
-        ref="slideoutContainerRef"
-        class="slideout-container"
-        data-testid="slideout-container"
-      >
-        <div class="slideout-header">
-          <span
-            v-if="title"
-            class="slideout-title"
-          >
-            {{ title }}
-          </span>
-          <button
-            aria-label="Close"
-            class="slideout-close-icon"
-            data-testid="slideout-close-icon"
-            type="button"
-            @click="$emit('close')"
-          >
-            <CloseIcon
-              class="close-icon"
-              decorative
-            />
-          </button>
+  <Teleport to="body">
+    <div class="slideout">
+      <Transition name="spec-renderer-fade">
+        <div
+          v-show="visible"
+          class="slideout-backdrop"
+          @click="emit('close')"
+        />
+      </Transition>
+      <Transition name="spec-renderer-slide-in">
+        <div
+          v-show="visible"
+          ref="slideoutContainerRef"
+          class="slideout-container"
+          data-testid="slideout-container"
+        >
+          <div class="slideout-header">
+            <span
+              v-if="title"
+              class="slideout-title"
+            >
+              {{ title }}
+            </span>
+            <button
+              aria-label="Close"
+              class="slideout-close-icon"
+              data-testid="slideout-close-icon"
+              type="button"
+              @click="$emit('close')"
+            >
+              <CloseIcon
+                class="close-icon"
+                decorative
+              />
+            </button>
+          </div>
+          <div class="slideout-content">
+            <slot />
+          </div>
         </div>
-        <div class="slideout-content">
-          <slot />
-        </div>
-      </div>
-    </Transition>
-  </div>
+      </Transition>
+    </div>
+  </Teleport>
 </template>
 
 <script lang="ts" setup>
@@ -128,7 +130,6 @@ onUnmounted(() => {
     height: 100vh;
     inset: 0;
     overflow-y: auto;
-    padding-left: var(--kui-space-70, $kui-space-70);
     position: fixed;
     width: 100%;
     z-index: 1000;
@@ -182,7 +183,6 @@ onUnmounted(() => {
       font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
       line-height: var(--kui-line-height-30, $kui-line-height-30);
       overflow-y: auto;
-      padding-right: var(--kui-space-70, $kui-space-70);
 
       :deep(> *:last-child) {
         padding-bottom: var(--kui-space-70, $kui-space-70); // add padding to the last child to add some spacing before bottom of the container

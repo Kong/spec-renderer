@@ -6,6 +6,7 @@
     <PageHeader
       v-if="data.summary"
       class="http-operation-header"
+      :deprecated="data.deprecated"
       :description="data.description"
       :title="data.summary"
     >
@@ -223,6 +224,14 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
 </script>
 
 <style lang="scss" scoped>
+@mixin http-operation-container-small {
+  grid-template-columns: 1fr;
+
+  .right {
+    margin-top: var(--kui-space-40, $kui-space-40);
+  }
+}
+
 .http-operation {
   * {
     margin: var(--kui-space-0, $kui-space-0);
@@ -235,13 +244,14 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
   .http-operation-container  {
     display: grid;
     gap: var(--kui-space-10, $kui-space-10);
-    grid-template-columns: auto $spec-renderer-secondary-column-width;
+    grid-template-columns: auto clamp($spec-renderer-secondary-column-min-width, 40%, $spec-renderer-secondary-column-max-width);
     width: 100%;
 
     .left {
       color: var(--kui-color-text, $kui-color-text);
       padding-right: var(--kui-space-50, $kui-space-50);
     }
+
     .right {
       background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
       padding: var(--kui-space-0, $kui-space-0);
@@ -262,14 +272,18 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
         }
       }
     }
-  }
-  // TODO change when we have floating TOC for smaller width
-  @media (max-width: ($kui-breakpoint-laptop - 1px)) {
-    .http-operation-container {
-      grid-template-columns: 1fr;
 
-      .right {
-        margin-top: var(--kui-space-40, $kui-space-40);
+    @supports (container: inline-size) {
+      // need to use interpolation for the token here because otherwise the query don't work
+      @container spec-document (max-width: #{$kui-breakpoint-tablet - 1px}) {
+        @include http-operation-container-small;
+      }
+    }
+
+    // regular media query fallback
+    @supports not (container: inline-size) {
+      @media (max-width: ($kui-breakpoint-laptop - 1px)) {
+        @include http-operation-container-small;
       }
     }
   }

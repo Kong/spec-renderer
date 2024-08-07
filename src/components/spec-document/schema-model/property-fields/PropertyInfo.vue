@@ -42,6 +42,10 @@
         class="required-property"
         data-testid="property-field-required"
       >required</span>
+      <span
+        v-if="uniqueItems"
+        data-testid="property-field-unique-items"
+      >unique-items</span>
     </span>
   </div>
 </template>
@@ -68,6 +72,10 @@ defineProps({
   propertyItemType: {
     type: [Array, String] as PropType<SchemaObject['type']>,
     default: '',
+  },
+  uniqueItems: {
+    type: Boolean,
+    default: false,
   },
   requiredFields: {
     type: Array as PropType<string[]>,
