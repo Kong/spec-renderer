@@ -10,6 +10,7 @@ describe('<SpecDocument />', () => {
       props: {
         document: {
           children: [],
+          tags: [],
         } as unknown as ServiceNode,
         currentPath: '/some-bogus-path',
       },
