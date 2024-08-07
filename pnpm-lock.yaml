@@ -66,7 +66,7 @@ importers:
         specifier: ^2.13.0
         version: 2.13.0
       shiki:
-        specifier: ^1.11.2
+        specifier: ^1.12.0
         version: 1.12.0
     devDependencies:
       '@babel/types':
@@ -82,7 +82,7 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1(@types/node@20.14.13)(typescript@5.5.4)
       '@evilmartians/lefthook':
-        specifier: ^1.7.7
+        specifier: ^1.7.9
         version: 1.7.11
       '@kong/design-tokens':
         specifier: ^1.15.3
@@ -115,7 +115,7 @@ importers:
         specifier: ^2.11.0
         version: 2.11.0
       '@vitejs/plugin-vue':
-        specifier: ^5.1.0
+        specifier: ^5.1.1
         version: 5.1.2(vite@5.3.5(@types/node@20.14.13)(sass@1.77.8))(vue@3.4.34(typescript@5.5.4))
       '@vitest/ui':
         specifier: ^2.0.4
