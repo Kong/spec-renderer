@@ -11,7 +11,7 @@
       :title="operationData.name"
     >
       <ServerEndpoint
-        v-if="operationData.path"
+        v-if="serverList.length && operationData.path"
         class="http-operation-server-endpoint"
         :data-testid="`server-endpoint-${operationData.id}`"
         :method="operationData.method"
