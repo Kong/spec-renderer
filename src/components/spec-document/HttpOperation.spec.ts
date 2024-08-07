@@ -96,5 +96,43 @@ describe('<HttpOperation />', () => {
       // server endpoint is not rendered
       expect(wrapper.findTestId(`server-endpoint-${data.id}`).exists()).toBe(false)
     })
+
+    it('is not rendered when path is not defined in the spec', () => {
+      const data = {
+        id: '123',
+        method: 'get',
+        servers: [{
+          id: 'sample-server-id',
+          url: 'https://global.api.konghq.com/v2',
+        }],
+        path: '',
+        responses: [],
+      }
+      const wrapper = mount(HttpOperation, {
+        props: {
+          data,
+        },
+      })
+
+      // server endpoint is not rendered
+      expect(wrapper.findTestId(`server-endpoint-${data.id}`).exists()).toBe(false)
+    })
+
+    it('is not rendered when server list and path is not defined in the spec', () => {
+      const data = {
+        id: '123',
+        method: 'get',
+        path: '',
+        responses: [],
+      }
+      const wrapper = mount(HttpOperation, {
+        props: {
+          data,
+        },
+      })
+
+      // server endpoint is not rendered
+      expect(wrapper.findTestId(`server-endpoint-${data.id}`).exists()).toBe(false)
+    })
   })
 })
