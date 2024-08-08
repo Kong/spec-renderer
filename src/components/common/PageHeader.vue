@@ -8,9 +8,9 @@
         {{ title }}
       </h1>
       <LabelBadge
-        v-if="dataType"
+        v-if="type"
         data-testid="data-type-badge"
-        :label="dataType"
+        :label="type"
         type="neutral"
       />
       <LabelBadge
@@ -43,7 +43,7 @@ defineProps({
     type: String,
     default: '',
   },
-  dataType: {
+  type: {
     type: String,
     default: '',
   },

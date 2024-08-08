@@ -9,6 +9,7 @@
       :deprecated="operationData.deprecated"
       :description="operationData.description"
       :title="operationData.name"
+      :type="isWebhookOperation ? 'webhook' : ''"
     >
       <ServerEndpoint
         v-if="serverList.length && operationData.path"
@@ -142,6 +143,8 @@ const operationData = computed(() => ({
   name: 'name' in props.data ? props.data.name : props.data.summary || props.data.iid || props.data.path,
   path: 'path' in props.data ? props.data.path : '',
 }))
+
+const isWebhookOperation = computed(() => 'name' in props.data)
 
 const excludeNotRequired = computed((): boolean => {
   return hideTryIt.value ? excludeNotRequiredInSample.value : excludeNotRequiredInTryIt.value
