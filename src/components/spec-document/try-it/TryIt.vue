@@ -17,6 +17,7 @@
       </div>
 
       <TryItDropdown
+        v-if="data.path"
         class="tryit-button-dropdown"
         :data="data"
         @tryit-api-call="doApiCall"

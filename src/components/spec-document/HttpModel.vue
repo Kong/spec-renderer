@@ -5,9 +5,9 @@
   >
     <PageHeader
       class="http-model-header"
-      :data-type="data.type?.toString()"
       :description="data.description"
       :title="title"
+      :type="data.type?.toString()"
     />
 
     <div class="http-model-content">

@@ -26,7 +26,7 @@ describe('<PageHeader />', () => {
       props: {
         title: 'sample title',
         description: 'sample content',
-        dataType: 'object',
+        type: 'object',
         deprecated: true,
       },
     })

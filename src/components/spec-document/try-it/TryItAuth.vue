@@ -1,6 +1,6 @@
 <template>
   <CollapsablePanel
-    v-if="securitySchemeList?.length"
+    v-if="securitySchemeList?.length && data.path"
     :data-testid="`tryit-auth-${data.id}`"
   >
     <template #header>

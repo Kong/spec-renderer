@@ -12,6 +12,7 @@ describe('<HttpOperation />', () => {
         props: {
           data: <IHttpOperation>{
             id: '123',
+            path: '/sample-path',
             servers: <Array<IServer>>[{
               id: 'sample-server-id',
               url: 'https://stoplight.io/api',
@@ -41,6 +42,22 @@ describe('<HttpOperation />', () => {
           },
         },
 
+      })
+      expect(wrapper.findTestId('tryit-dropdown-123').exists()).toBe(false)
+    })
+
+    it('TryIt dropdown is not rendered when path is not provided', () => {
+      const wrapper = mount(HttpOperation, {
+        props: {
+          data: <IHttpOperation>{
+            id: '123',
+            servers: <Array<IServer>>[{
+              id: 'sample-server-id',
+              url: 'https://stoplight.io/api',
+              description: 'sample description',
+            }],
+          },
+        },
       })
       expect(wrapper.findTestId('tryit-dropdown-123').exists()).toBe(false)
     })
@@ -85,6 +102,44 @@ describe('<HttpOperation />', () => {
         id: '123',
         method: 'get',
         path: '/sample-path',
+        responses: [],
+      }
+      const wrapper = mount(HttpOperation, {
+        props: {
+          data,
+        },
+      })
+
+      // server endpoint is not rendered
+      expect(wrapper.findTestId(`server-endpoint-${data.id}`).exists()).toBe(false)
+    })
+
+    it('is not rendered when path is not defined in the spec', () => {
+      const data = {
+        id: '123',
+        method: 'get',
+        servers: [{
+          id: 'sample-server-id',
+          url: 'https://global.api.konghq.com/v2',
+        }],
+        path: '',
+        responses: [],
+      }
+      const wrapper = mount(HttpOperation, {
+        props: {
+          data,
+        },
+      })
+
+      // server endpoint is not rendered
+      expect(wrapper.findTestId(`server-endpoint-${data.id}`).exists()).toBe(false)
+    })
+
+    it('is not rendered when server list and path is not defined in the spec', () => {
+      const data = {
+        id: '123',
+        method: 'get',
+        path: '',
         responses: [],
       }
       const wrapper = mount(HttpOperation, {

@@ -17,7 +17,7 @@
       </span>
 
       <MethodBadge
-        v-if="item.type === NodeType.HttpOperation"
+        v-if="item.type === NodeType.HttpOperation || item.type === NodeType.HttpWebhook"
         class="http-operation-badge"
         :inverted="isActive"
         :method="item.meta"
