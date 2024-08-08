@@ -1,3 +1,11 @@
+## [1.55.3](https://github.com/Kong/spec-renderer/compare/v1.55.2...v1.55.3) (2024-08-08)
+
+
+### Bug Fixes
+
+* **schema-example:** schema example generation bugs [KHCP-12906] ([#257](https://github.com/Kong/spec-renderer/issues/257)) ([e71c106](https://github.com/Kong/spec-renderer/commit/e71c106f0fdb718fc9d8d19ab90f3f2092543071))
+* webhook support [KHCP-12852] ([#254](https://github.com/Kong/spec-renderer/issues/254)) ([14102a9](https://github.com/Kong/spec-renderer/commit/14102a9a1078469cb6bf224b9df15ee5ae8fd8ef))
+
 ## [1.55.2](https://github.com/Kong/spec-renderer/compare/v1.55.1...v1.55.2) (2024-08-06)
 
 
