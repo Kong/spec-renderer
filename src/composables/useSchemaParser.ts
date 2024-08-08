@@ -171,24 +171,6 @@ export default function useSchemaParser(): any {
     trace(options.traceParsing, 'APITree computed')
   }
 
-  const setExpanded = (path: string) : void=> {
-    if (!tableOfContents.value) {
-      return
-    }
-    const crawl = (item: TableOfContentsGroup, path: string): void => {
-      if (!Array.isArray(item.items)) {
-        return
-      }
-      for (let i = 0; i < item.items.length; i++) {
-        if ((item.items[i] as TableOfContentsNode).id === path) {
-          item.initiallyExpanded = true
-        }
-        crawl((item.items[i] as TableOfContentsGroup), path)
-      }
-    }
-    crawl({ title: '', initiallyExpanded: false, items:tableOfContents.value }, path)
-  }
-
   return {
     parseSpecDocument,
     parsedDocument,
@@ -196,6 +178,5 @@ export default function useSchemaParser(): any {
     tableOfContents,
     validationResults,
     computeAPITree,
-    setExpanded,
   }
 }

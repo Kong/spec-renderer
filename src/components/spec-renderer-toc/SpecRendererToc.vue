@@ -6,7 +6,7 @@
     <ul>
       <component
         :is="itemComponent(item)"
-        v-for="(item, idx) in tableOfContents"
+        v-for="(item, idx) in toc"
         :key="idx + '_' + item.title"
         :active-path="currentPath"
         :item="item"
@@ -19,10 +19,10 @@
 <script setup lang="ts">
 import { provide, computed, ref, watch, nextTick } from 'vue'
 import type { PropType, Ref } from 'vue'
-import type { TableOfContentsItem } from '../../stoplight/elements-core/components/Docs/types'
 import { itemComponent } from './index'
 import { useScroll } from '@vueuse/core'
 import type { NavigationTypes } from '@/types'
+import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '../../stoplight/elements-core/components/Docs/types'
 
 const props = defineProps({
   tableOfContents: {
@@ -87,6 +87,27 @@ const scrollableContainerRef = ref<HTMLElement | null>(null)
 
 const { y: yPosition } = useScroll(scrollableContainerRef)
 
+const toc = computed((): TableOfContentsItem[] | undefined => {
+  if (!props.tableOfContents) {
+    return undefined
+  }
+  const newToc = props.tableOfContents
+
+  const crawl = (item: TableOfContentsGroup, path: string): void => {
+    if (!Array.isArray(item.items)) {
+      return
+    }
+    for (let i = 0; i < item.items.length; i++) {
+      if ((item.items[i] as TableOfContentsNode).id === path) {
+        item.initiallyExpanded = true
+      }
+      crawl((item.items[i] as TableOfContentsGroup), path)
+    }
+  }
+  crawl({ title: '', initiallyExpanded: false, items: newToc }, props.currentPath)
+
+  return newToc
+})
 
 watch(() => ({ path: props.currentPath, navRef: tocNavRef.value }), async (newValue) => {
   //TODO verify if needed

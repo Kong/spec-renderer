@@ -204,7 +204,7 @@ const props = defineProps({
 })
 
 // TODO: introduce and handle isParsed. show parsing state while parsing
-const { parseSpecDocument, parsedDocument, jsonDocument, tableOfContents, validationResults, setExpanded } = composables.useSchemaParser()
+const { parseSpecDocument, parsedDocument, jsonDocument, tableOfContents, validationResults } = composables.useSchemaParser()
 
 const currentPathTOC = ref<string>(props.currentPath)
 const currentPathDOC = ref<string>(props.currentPath)
@@ -237,7 +237,6 @@ const onDocumentScroll = (path: string) => {
   console.log('onDOcumentScroll')
   currentPathTOC.value = path
   // we need to re-calculate initiallyExpanded property based on the new path
-  setExpanded(path)
   if (props.controlAddressBar) {
     window.history.pushState({}, '', props.basePath + path)
   }
