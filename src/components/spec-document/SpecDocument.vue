@@ -401,7 +401,7 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), async (
     }, 100)
     setTimeout(() => {
       renderPlain.value = true
-    }, 10500)
+    }, 500)
   }
 }, { immediate: true })
 
