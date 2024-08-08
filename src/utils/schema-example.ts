@@ -115,11 +115,11 @@ export const crawl = ({ objData, parentKey, nestedLevel, filteringOptions }: Cra
       return
     }
     if (Array.isArray(oData.anyOf) && typeof(oData.anyOf[0]) === 'object') {
-      sampleObj[key] = crawl({ objData: oData.anyOf[0] || {}, parentKey: key, nestedLevel, filteringOptions })
+      sampleObj[key] = crawl({ objData: oData.anyOf[0] || {}, parentKey: key, nestedLevel: nestedLevel + 1, filteringOptions })
     } else if (Array.isArray(oData.oneOf) && typeof(oData.oneOf[0]) === 'object') {
-      sampleObj[key] = crawl({ objData: oData.oneOf[0] || {}, parentKey: key, nestedLevel, filteringOptions })
+      sampleObj[key] = crawl({ objData: oData.oneOf[0] || {}, parentKey: key, nestedLevel: nestedLevel + 1, filteringOptions })
     } else if (oData.type === 'object' || oData.allOf) {
-      const res = crawl({ objData: oData || {}, parentKey: key, nestedLevel: nestedLevel++, filteringOptions })
+      const res = crawl({ objData: oData || {}, parentKey: key, nestedLevel: nestedLevel + 1, filteringOptions })
       if (res !== null) {
         sampleObj[key] = res
       }
