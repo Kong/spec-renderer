@@ -24,8 +24,15 @@
         <component
           :is="node.component"
           v-if="['true', 'forced'].includes(toRenderer[idx])"
+          :class="{placeholder: toRenderer[idx]=='forced'}"
           v-bind="node.props"
         />
+        <div
+          v-else-if="renderPlain"
+          class="placeholder"
+        >
+          {{ stringify(node.doc) }}
+        </div>
         <div
           v-else
           class="placeholder"
@@ -49,6 +56,7 @@ import UnknownNode from './UnknownNode.vue'
 import { useWindowScroll, useWindowSize, useElementSize, useScroll } from '@vueuse/core'
 import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE } from '@/constants'
 import type { NavigationTypes } from '@/types'
+import { stringify } from 'flatted'
 
 const props = defineProps({
   document: {
@@ -142,12 +150,12 @@ const emit = defineEmits < {
 }>()
 
 // forced - assumed visible (rendered) even when hidden
-const toRenderer = ref<Array<'true' | 'false' | 'forced'>>(['true', 'forced', 'forced'])
+const toRenderer = ref<Array<'true' | 'false' | 'forced'>>([])
 const lastY = ref<number>()
 const processScrolling = ref<boolean>(false)
 const lastPath = ref<string>()
 const wrapperRef = ref<HTMLElement | null>(null)
-
+const renderPlain = ref<boolean>(false)
 
 const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null) => {
   if (!forServiceNode) return {}
@@ -214,7 +222,7 @@ const nodesList = computed(() => {
   let nList = <any[]>[]
   // first one - overview
   nList.push(...[props.document])
-  console.log('nList here:', nList)
+  //  console.log('nList here:', nList)
 
   // first all without tags, but not schemas
   nList.push(...props.document.children.filter(child => (child.tags || []).length === 0 && child.type !== 'model'))
@@ -241,24 +249,28 @@ const nodesList = computed(() => {
   for (let i = 0; i < nList.length; i++) {
     nList[i] = getDocumentComponent(nList[i])
   }
-  console.log('nList', nList)
+  //  console.log('nList', nList)
   return nList
 })
 
-const forceRenderer = (idx: number) => {
+const forceRenderer = (visibleIdx: number[]) => {
   const newToRenderer = Array(nodesList.value.length).fill('false', 0)
+  visibleIdx.sort()
+  //  console.log('visibleIdx:', visibleIdx, toRenderer.value)
 
   for (let i = 0; i < newToRenderer.length; i++) {
-    if (i === idx) {
+    newToRenderer[i] = toRenderer.value[i]
+    if (visibleIdx.includes(i)) {
       newToRenderer[i] = 'true'
-    } else if (i - idx <= SECTIONS_TO_RENDER && idx - i <= SECTIONS_TO_RENDER) {
+    } else if (newToRenderer[i] !== 'true' && ((i - visibleIdx[visibleIdx.length - 1]) <= SECTIONS_TO_RENDER) && ((visibleIdx[0] - i) <= SECTIONS_TO_RENDER)) {
       newToRenderer[i] = 'forced'
     } else {
-      newToRenderer[i] = 'false'
+      // to remove already rendered uncomment this line
+      //newToRenderer[i] = 'false'
     }
   }
   toRenderer.value = newToRenderer
-  console.log('troRender: for ', idx, nodesList.value.length, toRenderer.value)
+//  console.log('troRender: for ', visibleIdx, nodesList.value.length, toRenderer.value)
 }
 
 
@@ -291,6 +303,7 @@ watch(() => ({ nodesList: nodesList.value,
     return
   }
   const visibleEls:Array<Record<string, any>> = []
+  const visibleIndexes: Array<number> = []
   Array.from(newValue.wrapperRef.children).forEach((c, i) => {
     const cEl = c as HTMLElement
 
@@ -308,6 +321,7 @@ watch(() => ({ nodesList: nodesList.value,
     const visibleHeightP:number = visibleHeight * 100 / cEl.offsetHeight
     //console.log({ i }, ' cutFromTop:', cutFromTop < 0 ? 0 : cutFromTop, ' cutFromBottom:', cutFromBottom, ' visibleH:', visibleHeightP)
     visibleEls.push({ idx: i, cEl, vHp: visibleHeightP | 0 })
+    visibleIndexes.push(i)
   })
   visibleEls.sort((e1, e2) => {
     return e1.vHp === e2.vHp ? 0 : e1.vHp > e2.vHp ? -1 : 1
@@ -323,7 +337,7 @@ watch(() => ({ nodesList: nodesList.value,
 
   // now out of all elements in visibleEls we  need to find the one that is most visible
   const mostVisibleIdx = visibleEls[0].idx
-  forceRenderer(mostVisibleIdx)
+  forceRenderer(visibleIndexes)
   const newUri = nodesList.value[mostVisibleIdx].doc.uri
   if (newUri !== lastPath.value) {
     console.log('emitting:', newUri, lastPath.value)
@@ -357,6 +371,7 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), async (
   }
   if (oldDocument !== newDocument) {
     lastY.value = 0
+    renderPlain.value = false
   }
 
   if (!props.allowContentScrolling) {
@@ -367,21 +382,26 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), async (
 
   const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
 
-  forceRenderer(pathIdx)
+  forceRenderer([pathIdx])
   await nextTick()
 
 
   // now we want to find position of the active element and if it is not visible force it to be visible
   if (document) {
-    setTimeout(() => {
+    setTimeout(async () => {
       if (pathIdx !== 0 || (lastY.value || 0) > 0) {
         const activeSectionEl = document.getElementById(`${pathIdx}-nodecontainter`)
         if (activeSectionEl) {
           activeSectionEl.scrollIntoView()
         }
       }
+      console.log('start additional rendering')
+      // now as we have our current section visible start re-drawing all the sections
       processScrolling.value = true
     }, 100)
+    setTimeout(() => {
+      renderPlain.value = true
+    }, 10500)
   }
 }, { immediate: true })
 
@@ -406,8 +426,11 @@ onBeforeMount(async () => {
   }
 
   .placeholder {
-    //background-color: red;
-    min-height: 600px;
+    background-color: red;
+    height: 800px;
+    max-height: 800px;
+    overflow: hidden;
+    opacity: 0;
   }
 }
 </style>

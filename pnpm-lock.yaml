@@ -44,6 +44,9 @@ importers:
       allof-merge:
         specifier: ^0.6.6
         version: 0.6.6
+      flatted:
+        specifier: ^3.3.1
+        version: 3.3.1
       httpsnippet-lite:
         specifier: ^3.0.5
         version: 3.0.5
@@ -706,7 +709,6 @@ packages:
 
   '@evilmartians/lefthook@1.7.11':
     resolution: {integrity: sha512-zlpiLMfO5CmCRgRPq7gJiQ0yr5gt/O0QVefj9o6pMZPc83jpeA2Cjt/z3MZpxkKqRObwBjeekLFi8SUonD6BdQ==}
-    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
