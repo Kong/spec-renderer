@@ -9,7 +9,7 @@
       :deprecated="operationData.deprecated"
       :description="operationData.description"
       :title="operationData.name"
-      :type="isWebhookOperation ? 'webhook' : ''"
+      :type="isWebhookOperation ? 'WEBHOOK' : ''"
     >
       <ServerEndpoint
         v-if="serverList.length && operationData.path"
