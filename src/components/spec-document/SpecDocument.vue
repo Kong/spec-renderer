@@ -429,8 +429,8 @@ onBeforeMount(async () => {
     background-color: red;
     height: 800px;
     max-height: 800px;
-    overflow: hidden;
     opacity: 0;
+    overflow: hidden;
   }
 }
 </style>
