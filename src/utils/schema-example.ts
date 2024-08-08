@@ -102,6 +102,8 @@ export const crawl = ({ objData, parentKey, nestedLevel, filteringOptions }: Cra
     }
 
     if (oData.type === 'array') {
+      // if it's an array of objects, we'll generate the sample array item by crawling again
+      // else, if there's no inherited fields, we'll generate the sample array item using extractSampleForParam
       sampleObj[key] =
         oData.format === 'object'
           ? [crawl({
@@ -134,6 +136,12 @@ export const crawl = ({ objData, parentKey, nestedLevel, filteringOptions }: Cra
   return sampleObj
 }
 
+/**
+ * util to generate example for inherited fields like allOf, anyOf, oneOf
+ *
+ * @param {CrawlOptions} CrawlOptions
+ * @returns {Record<string, any> | null}
+ */
 const crawlInheritedProperties = ({ objData, parentKey, nestedLevel, filteringOptions }: CrawlOptions): Record<string, any> | null => {
   if (typeof objData === 'undefined') {
     return null
