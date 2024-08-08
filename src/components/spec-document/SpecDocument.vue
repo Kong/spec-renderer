@@ -426,7 +426,6 @@ onBeforeMount(async () => {
   }
 
   .placeholder {
-    background-color: red;
     height: 800px;
     max-height: 800px;
     opacity: 0;
