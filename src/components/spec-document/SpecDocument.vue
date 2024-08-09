@@ -24,7 +24,6 @@
         <component
           :is="node.component"
           v-if="['true', 'forced'].includes(toRenderer[idx])"
-          :class="{placeholder: toRenderer[idx]=='forced'}"
           v-bind="node.props"
         />
         <div
@@ -181,16 +180,13 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
 
 
 const scrollingContainerEl = computed(():HTMLElement | null => {
-  console.log('1111111')
   if (!window || !document) {
-    console.log('2222')
     return null
   }
   if (!props.documentScrollingContainer) {
-    console.log('333')
     return null
   }
-  console.log('AAAAA:', document.querySelector(props.documentScrollingContainer))
+  console.log('documentScrollingContainer:', document.querySelector(props.documentScrollingContainer))
   return document.querySelector(props.documentScrollingContainer)
 })
 
@@ -270,7 +266,7 @@ const forceRenderer = (visibleIdx: number[]) => {
     }
   }
   toRenderer.value = newToRenderer
-//  console.log('troRender: for ', visibleIdx, nodesList.value.length, toRenderer.value)
+  //console.log('troRender: for ', visibleIdx, nodesList.value.length, toRenderer.value)
 }
 
 
@@ -284,7 +280,6 @@ watch(() => ({ nodesList: nodesList.value,
   if (!processScrolling.value) {
     return
   }
-
   console.log('currentlyVisible changed: ', newValue.yPosition, lastY.value)
 
   if (!newValue.nodesList) {
@@ -350,7 +345,6 @@ watch(() => ({ nodesList: nodesList.value,
     lastPath.value = newUri
   }
   lastY.value = newValue.yPosition
-
   // we look trough elements and find the one that should be visible
 }, { immediate: true })
 
@@ -392,15 +386,17 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), async (
       if (pathIdx !== 0 || (lastY.value || 0) > 0) {
         const activeSectionEl = document.getElementById(`${pathIdx}-nodecontainter`)
         if (activeSectionEl) {
-          activeSectionEl.scrollIntoView()
+          console.log('scrollIntoView:', activeSectionEl)
+          activeSectionEl.scrollIntoView({ behavior: 'instant' })
         }
       }
-      console.log('start additional rendering')
+    }, 200)
+    setTimeout(async () => {
       // now as we have our current section visible start re-drawing all the sections
-      processScrolling.value = true
-    }, 100)
-    setTimeout(() => {
+      console.log('start additional rendering')
       renderPlain.value = true
+      await nextTick()
+      processScrolling.value = true
     }, 500)
   }
 }, { immediate: true })
@@ -418,13 +414,16 @@ onBeforeMount(async () => {
   box-sizing: border-box;
   color: var(--kui-color-text, $kui-color-text);
   container: spec-document / inline-size;
+  padding-top: var(--kui-space-40, $kui-space-40);
 }
 
 .nodes-wrapper {
   .overview-page, .spec-renderer-document {
     padding-bottom: var(--kui-space-100, $kui-space-100);
   }
-
+  .spec-renderer-document {
+    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+  }
   .placeholder {
     height: 800px;
     max-height: 800px;

@@ -118,7 +118,6 @@ watch(() => ({ path: props.currentPath, navRef: tocNavRef.value }), async (newVa
     return
   }
   scrollableContainerRef.value = props.tocScrollingContainer === 'self' ? newValue.navRef : newValue.navRef.parentElement
-  console.log('scrollableContainerRef.value:', scrollableContainerRef.value)
   if (!scrollableContainerRef.value) {
     return
   }
@@ -136,7 +135,6 @@ watch(() => ({ path: props.currentPath, navRef: tocNavRef.value }), async (newVa
 
   if ((yPosition.value + (scrollableContainerRef.value.offsetHeight)) < (activeItem.offsetTop + 2 * activeItem.offsetHeight)) {
     activeItem.scrollIntoView({ behavior: 'instant', block: 'end' })
-    scrollableContainerRef.value.scrollIntoView({ behavior: 'instant' })
     return
   }
 
