@@ -16,6 +16,11 @@
         :contents="contentList"
         :description="description"
       />
+      <HttpResponseDescription
+        v-else
+        :description="description"
+        :response-code="responseCode"
+      />
     </CollapsibleSection>
   </section>
 </template>
@@ -25,8 +30,13 @@ import type { PropType } from 'vue'
 import type { IHttpOperationResponse } from '@stoplight/types'
 import CollapsibleSection from './CollapsibleSection.vue'
 import BodyContentList from './BodyContentList.vue'
+import HttpResponseDescription from './HttpResponseDescription.vue'
 
 defineProps({
+  responseCode: {
+    type: String,
+    required: true,
+  },
   description: {
     type: String,
     default: '',
@@ -50,13 +60,8 @@ defineProps({
     gap: var(--kui-space-50, $kui-space-50);
   }
 
-  .http-response-body {
-    .http-response-body-description {
-      margin-top: var(--kui-space-60, $kui-space-60);
-    }
-    .http-response-body-content {
-      margin-top: var(--kui-space-40, $kui-space-40);
-    }
+  .http-response-description {
+    margin-top: var(--kui-space-40, $kui-space-40);
   }
 }
 </style>

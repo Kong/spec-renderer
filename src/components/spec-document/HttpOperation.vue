@@ -38,6 +38,7 @@
           class="http-operation-response"
           :content-list="activeResponseContentList"
           :description="activeResponseDescription"
+          :response-code="activeResponseCode"
         >
           <div class="http-response-header-menu">
             <SelectDropdown
