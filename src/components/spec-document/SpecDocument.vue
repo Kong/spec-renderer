@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, provide, computed, nextTick, onBeforeMount } from 'vue'
+import { watch, ref, provide, computed, nextTick, onBeforeMount, onMounted } from 'vue'
 import composables from '@/composables'
 import type { PropType, Ref } from 'vue'
 import { NodeType } from '@stoplight/types'
@@ -186,7 +186,7 @@ const scrollingContainerEl = computed(():HTMLElement | null => {
   if (!props.documentScrollingContainer) {
     return null
   }
-  console.log('documentScrollingContainer:', document.querySelector(props.documentScrollingContainer))
+  // console.log('documentScrollingContainer:', document.querySelector(props.documentScrollingContainer))
   return document.querySelector(props.documentScrollingContainer)
 })
 
@@ -280,7 +280,7 @@ watch(() => ({ nodesList: nodesList.value,
   if (!processScrolling.value) {
     return
   }
-  console.log('currentlyVisible changed: ', newValue.yPosition, lastY.value)
+  // console.log('currentlyVisible changed: ', newValue.yPosition, lastY.value)
 
   if (!newValue.nodesList) {
     return
@@ -322,7 +322,7 @@ watch(() => ({ nodesList: nodesList.value,
     return e1.vHp === e2.vHp ? 0 : e1.vHp > e2.vHp ? -1 : 1
   })
 
-  console.log('visibleEls: ', JSON.stringify(visibleEls), visibleEls.length)
+  // console.log('visibleEls: ', JSON.stringify(visibleEls), visibleEls.length)
 
   if (visibleEls.length === 0) {
     lastY.value = newValue.yPosition
@@ -335,7 +335,7 @@ watch(() => ({ nodesList: nodesList.value,
   forceRenderer(visibleIndexes)
   const newUri = nodesList.value[mostVisibleIdx].doc.uri
   if (newUri !== lastPath.value) {
-    console.log('emitting:', newUri, lastPath.value)
+    // console.log('emitting:', newUri, lastPath.value)
     emit('content-scrolled', newUri)
     if (props.controlAddressBar) {
     // we only have path and hash for now
@@ -350,7 +350,9 @@ watch(() => ({ nodesList: nodesList.value,
 
 
 /** we show tryIt section when it's requested to be hidden and when node */
-watch(() => ({ pathname: props.currentPath, document: props.document }), async (newValue, oldValue) => {
+watch(() => ({
+  pathname: props.currentPath,
+  document: props.document }), async (newValue, oldValue) => {
 
   const { pathname, document: newDocument } = newValue
   const { document: oldDocument } = oldValue || {}
@@ -372,6 +374,16 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), async (
     // case when scrolling is not enabled - we do not need to do anything else
     return
   }
+  if (lastPath.value == pathname) {
+    // console.log('just return because its scrolling')
+    return
+  }
+  if (pathname === oldValue?.pathname && oldValue?.pathname) {
+    // console.log('pathname did not change')
+    return
+  }
+
+  // console.log('!!!!!! in SpecDocument watcher:', newValue, oldValue, lastPath.value)
   processScrolling.value = false
 
   const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
@@ -382,18 +394,18 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), async (
 
   // now we want to find position of the active element and if it is not visible force it to be visible
   if (document) {
-    setTimeout(async () => {
-      if (pathIdx !== 0 || (lastY.value || 0) > 0) {
+    if (pathIdx !== 0 || oldValue?.pathname) {
+      setTimeout(async () => {
         const activeSectionEl = document.getElementById(`${pathIdx}-nodecontainter`)
         if (activeSectionEl) {
-          console.log('scrollIntoView:', activeSectionEl)
+          // console.log('scrollIntoView:', activeSectionEl)
           activeSectionEl.scrollIntoView({ behavior: 'instant' })
         }
-      }
-    }, 200)
+      }, 200)
+    }
     setTimeout(async () => {
       // now as we have our current section visible start re-drawing all the sections
-      console.log('start additional rendering')
+      // console.log('start additional rendering')
       renderPlain.value = true
       await nextTick()
       processScrolling.value = true
@@ -404,6 +416,10 @@ watch(() => ({ pathname: props.currentPath, document: props.document }), async (
 
 onBeforeMount(async () => {
   await createHighlighter()
+})
+
+onMounted(()=> {
+  // console.log('!!! SpecDocument on mounted !!!!!!!!')
 })
 
 </script>

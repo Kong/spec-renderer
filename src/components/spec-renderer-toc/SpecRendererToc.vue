@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { provide, computed, ref, watch, nextTick } from 'vue'
+import { provide, computed, ref, watch, nextTick, onMounted } from 'vue'
 import type { PropType, Ref } from 'vue'
 import { itemComponent } from './index'
 import { useScroll } from '@vueuse/core'
@@ -153,6 +153,9 @@ const selectItem = (id: any) => {
   emit('item-selected', id)
 }
 
+onMounted(() => {
+  console.log('!!!!! TOC on mounted !!!!!!!!')
+})
 
 </script>
 
