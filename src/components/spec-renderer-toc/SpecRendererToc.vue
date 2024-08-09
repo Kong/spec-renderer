@@ -45,12 +45,12 @@ const props = defineProps({
     default: '/',
   },
   /**
-   * this is designed scrolling container for TOC, by default it's 'self', but it can be 'parent' like in case of portal
-   * If this is not enough we could pass actual selector for this via another prop.
+   * this is designed scrolling container for TOC, by default it's '',meaning tocNavRef scrollable.
+   * If toc is part of some external list and that list is scrollable - we need a selector for that scollable container
    */
   tocScrollingContainer: {
-    type: String as PropType<'self' | 'parent'>,
-    default: 'parent',
+    type: String,
+    default: '',
   },
   /**
    * Allow component itself to control URL in browser URL.
@@ -114,10 +114,12 @@ watch(() => ({ path: props.currentPath, navRef: tocNavRef.value }), async (newVa
   await nextTick()
 
 
-  if (!newValue.navRef) {
+  if (!newValue.navRef || !document) {
     return
   }
-  scrollableContainerRef.value = props.tocScrollingContainer === 'self' ? newValue.navRef : newValue.navRef.parentElement
+  if (!scrollableContainerRef.value) {
+    scrollableContainerRef.value = props.tocScrollingContainer === '' ? newValue.navRef : document.querySelector(props.tocScrollingContainer)
+  }
   if (!scrollableContainerRef.value) {
     return
   }
@@ -126,14 +128,16 @@ watch(() => ({ path: props.currentPath, navRef: tocNavRef.value }), async (newVa
   if (!activeItem) {
     return
   }
-  console.log('in TOC:', ' offsetTop:', activeItem.offsetTop, ' offsetHeight:', activeItem.offsetHeight, '  yPos:', yPosition.value, ' containerHeight:', scrollableContainerRef.value.offsetHeight )
+  //console.log('in TOC:', ' offsetTop:', activeItem.offsetTop, ' offsetHeight:', activeItem.offsetHeight, '  yPos:', yPosition.value, ' containerHeight:', scrollableContainerRef.value.offsetHeight )
   // we are too far above visible part, let's bring it back
   if (activeItem.offsetTop < yPosition.value) {
+    // console.log('scrollIntoView start')
     activeItem.scrollIntoView({ behavior: 'instant', block: 'start' })
     return
   }
 
   if ((yPosition.value + (scrollableContainerRef.value.offsetHeight)) < (activeItem.offsetTop + 2 * activeItem.offsetHeight)) {
+    // console.log('scrollIntoView end')
     activeItem.scrollIntoView({ behavior: 'instant', block: 'end' })
     return
   }

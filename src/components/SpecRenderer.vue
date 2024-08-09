@@ -17,7 +17,6 @@
           :current-path="currentPathTOC"
           :navigation-type="navigationType"
           :table-of-contents="tableOfContents"
-          toc-scrolling-container="self"
           @item-selected="itemSelected"
         />
       </SlideOut>
@@ -32,7 +31,6 @@
           :current-path="currentPathTOC"
           :navigation-type="navigationType"
           :table-of-contents="tableOfContents"
-          toc-scrolling-container="self"
           @item-selected="itemSelected"
         />
       </aside>
