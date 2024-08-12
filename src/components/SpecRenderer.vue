@@ -322,8 +322,12 @@ watch(() => ({
 
     .spec-renderer-small-screen-header {
       background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
       display: none;
       padding: var(--kui-space-30, $kui-space-30);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
 
       .slideout-toc-trigger-button {
         @include default-button-reset;
