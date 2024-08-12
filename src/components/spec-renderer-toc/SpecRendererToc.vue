@@ -128,16 +128,13 @@ watch(() => ({ path: props.currentPath, navRef: tocNavRef.value }), async (newVa
   if (!activeItem) {
     return
   }
-  //console.log('in TOC:', ' offsetTop:', activeItem.offsetTop, ' offsetHeight:', activeItem.offsetHeight, '  yPos:', yPosition.value, ' containerHeight:', scrollableContainerRef.value.offsetHeight )
   // we are too far above visible part, let's bring it back
   if (activeItem.offsetTop < yPosition.value) {
-    // console.log('scrollIntoView start')
     activeItem.scrollIntoView({ behavior: 'instant', block: 'start' })
     return
   }
 
   if ((yPosition.value + (scrollableContainerRef.value.offsetHeight)) < (activeItem.offsetTop + 2 * activeItem.offsetHeight)) {
-    // console.log('scrollIntoView end')
     activeItem.scrollIntoView({ behavior: 'instant', block: 'end' })
     return
   }
@@ -156,10 +153,6 @@ const selectItem = (id: any) => {
 
   emit('item-selected', id)
 }
-
-onMounted(() => {
-  console.log('!!!!! TOC on mounted !!!!!!!!')
-})
 
 </script>
 

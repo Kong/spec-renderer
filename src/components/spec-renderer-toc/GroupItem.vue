@@ -81,7 +81,6 @@ const collapseTriggerRef = ref<HTMLElement | null>(null)
 
 const onClick = (event: Event) => {
   if (collapseTriggerRef.value === event.target) {
-    // console.log('onClick, setting:', !isExpanded.value)
     isExpanded.value = !isExpanded.value
   }
 }

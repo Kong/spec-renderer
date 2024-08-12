@@ -186,7 +186,6 @@ const scrollingContainerEl = computed(():HTMLElement | null => {
   if (!props.documentScrollingContainer) {
     return null
   }
-  // console.log('documentScrollingContainer:', document.querySelector(props.documentScrollingContainer))
   return document.querySelector(props.documentScrollingContainer)
 })
 
@@ -218,7 +217,6 @@ const nodesList = computed(() => {
   let nList = <any[]>[]
   // first one - overview
   nList.push(...[props.document])
-  //  console.log('nList here:', nList)
 
   // first all without tags, but not schemas
   nList.push(...props.document.children.filter(child => (child.tags || []).length === 0 && child.type !== 'model'))
@@ -245,14 +243,12 @@ const nodesList = computed(() => {
   for (let i = 0; i < nList.length; i++) {
     nList[i] = getDocumentComponent(nList[i])
   }
-  //  console.log('nList', nList)
   return nList
 })
 
 const forceRenderer = (visibleIdx: number[]) => {
   const newToRenderer = Array(nodesList.value.length).fill('false', 0)
   visibleIdx.sort()
-  //  console.log('visibleIdx:', visibleIdx, toRenderer.value)
 
   for (let i = 0; i < newToRenderer.length; i++) {
     newToRenderer[i] = toRenderer.value[i]
@@ -266,7 +262,6 @@ const forceRenderer = (visibleIdx: number[]) => {
     }
   }
   toRenderer.value = newToRenderer
-  //console.log('troRender: for ', visibleIdx, nodesList.value.length, toRenderer.value)
 }
 
 
@@ -280,7 +275,6 @@ watch(() => ({ nodesList: nodesList.value,
   if (!processScrolling.value) {
     return
   }
-  // console.log('currentlyVisible changed: ', newValue.yPosition, lastY.value)
 
   if (!newValue.nodesList) {
     return
@@ -314,15 +308,12 @@ watch(() => ({ nodesList: nodesList.value,
     const cutFromBottom = cEl.offsetTop + cEl.offsetHeight - (newValue.yPosition + newValue.wHeight)
     const visibleHeight = cEl.offsetHeight - (cutFromTop < 0 ? 0 : cutFromTop) - (cutFromBottom < 0 ? 0 : cutFromBottom)
     const visibleHeightP:number = visibleHeight * 100 / cEl.offsetHeight
-    //console.log({ i }, ' cutFromTop:', cutFromTop < 0 ? 0 : cutFromTop, ' cutFromBottom:', cutFromBottom, ' visibleH:', visibleHeightP)
     visibleEls.push({ idx: i, cEl, vHp: visibleHeightP | 0 })
     visibleIndexes.push(i)
   })
   visibleEls.sort((e1, e2) => {
     return e1.vHp === e2.vHp ? 0 : e1.vHp > e2.vHp ? -1 : 1
   })
-
-  // console.log('visibleEls: ', JSON.stringify(visibleEls), visibleEls.length)
 
   if (visibleEls.length === 0) {
     lastY.value = newValue.yPosition
@@ -335,7 +326,6 @@ watch(() => ({ nodesList: nodesList.value,
   forceRenderer(visibleIndexes)
   const newUri = nodesList.value[mostVisibleIdx].doc.uri
   if (newUri !== lastPath.value) {
-    // console.log('emitting:', newUri, lastPath.value)
     emit('content-scrolled', newUri)
     if (props.controlAddressBar) {
     // we only have path and hash for now
@@ -375,15 +365,12 @@ watch(() => ({
     return
   }
   if (lastPath.value == pathname) {
-    // console.log('just return because its scrolling')
     return
   }
   if (pathname === oldValue?.pathname && oldValue?.pathname) {
-    // console.log('pathname did not change')
     return
   }
 
-  // console.log('!!!!!! in SpecDocument watcher:', newValue, oldValue, lastPath.value)
   processScrolling.value = false
 
   const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
@@ -398,14 +385,12 @@ watch(() => ({
       setTimeout(async () => {
         const activeSectionEl = document.getElementById(`${pathIdx}-nodecontainter`)
         if (activeSectionEl) {
-          // console.log('scrollIntoView:', activeSectionEl)
           activeSectionEl.scrollIntoView({ behavior: 'instant' })
         }
       }, 200)
     }
     setTimeout(async () => {
       // now as we have our current section visible start re-drawing all the sections
-      // console.log('start additional rendering')
       renderPlain.value = true
       await nextTick()
       processScrolling.value = true
@@ -416,10 +401,6 @@ watch(() => ({
 
 onBeforeMount(async () => {
   await createHighlighter()
-})
-
-onMounted(()=> {
-  // console.log('!!! SpecDocument on mounted !!!!!!!!')
 })
 
 </script>

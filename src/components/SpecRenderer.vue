@@ -232,7 +232,6 @@ const openSlideoutToc = async (): Promise<void> => {
 }
 
 const onDocumentScroll = (path: string) => {
-  // console.log('onDOcumentScroll')
   currentPathTOC.value = path
   // we need to re-calculate initiallyExpanded property based on the new path
   if (props.controlAddressBar) {
