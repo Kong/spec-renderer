@@ -1,3 +1,10 @@
+# [1.56.0](https://github.com/Kong/spec-renderer/compare/v1.55.5...v1.56.0) (2024-08-12)
+
+
+### Features
+
+* main content scrolling [KHCP-12617] ([#231](https://github.com/Kong/spec-renderer/issues/231)) ([15a87cb](https://github.com/Kong/spec-renderer/commit/15a87cb4e3c539c081ce7f0ba905d6f91dd7718f))
+
 ## [1.55.5](https://github.com/Kong/spec-renderer/compare/v1.55.4...v1.55.5) (2024-08-12)
 
 
