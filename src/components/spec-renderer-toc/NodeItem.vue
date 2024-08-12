@@ -39,28 +39,34 @@ const props = defineProps({
     type: Object as PropType<TableOfContentsNode>,
     required: true,
   },
+  activePath: {
+    type: String,
+    default: '/',
+  },
 })
 
 const basePath = inject<Ref<string>>('base-path', ref<string>(''))
-const currentPath = inject<Ref<string>>('current-path', ref<string>(''))
 const navigationType = inject<Ref<NavigationTypes>>('navigation-type', ref<NavigationTypes>('path'))
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
 }>()
 
+const isSingleWord = computed(() => !props.item.title?.trim()?.includes(' '))
+const isActive = computed(() => props.activePath === props.item.id)
+const itemTitle = computed(() => props.item.deprecated ? `${props.item.title} (deprecated)` : props.item.title)
+
+
 const selectItem = (id: string): void => {
   emit('item-selected', id)
 }
-
-const isSingleWord = computed(() => !props.item.title?.trim()?.includes(' '))
-const isActive = computed(() => currentPath.value === props.item.id)
-const itemTitle = computed(() => props.item.deprecated ? `${props.item.title} (deprecated)` : props.item.title)
 </script>
 
 <style lang="scss" scoped>
 .node-item {
   list-style-type: none;
+  scroll-margin-bottom: var(--kui-space-40, $kui-space-40);
+  scroll-margin-top: var(--kui-space-40, $kui-space-40);
 
   a {
     @include toc-item;

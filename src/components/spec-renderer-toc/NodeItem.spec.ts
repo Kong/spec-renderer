@@ -31,11 +31,7 @@ describe('<NodeItem />', () => {
     const wrapper = mount(NodeItem, {
       props: {
         item: <TableOfContentsNode>{ id: currentPath, title: 'xxx' },
-      },
-      global: {
-        provide: {
-          'current-path': ref(currentPath),
-        },
+        activePath: currentPath,
       },
     })
 

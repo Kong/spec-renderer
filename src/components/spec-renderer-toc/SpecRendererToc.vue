@@ -6,8 +6,9 @@
     <ul>
       <component
         :is="itemComponent(item)"
-        v-for="(item, idx) in tableOfContents"
-        :key="idx+'_'+item.title"
+        v-for="(item, idx) in toc"
+        :key="idx + '_' + item.title"
+        :active-path="currentPath"
         :item="item"
         @item-selected="selectItem"
       />
@@ -16,12 +17,12 @@
 </template>
 
 <script setup lang="ts">
-import { provide, computed, ref } from 'vue'
+import { provide, computed, ref, watch } from 'vue'
 import type { PropType, Ref } from 'vue'
-import type { TableOfContentsItem } from '../../stoplight/elements-core/components/Docs/types'
 import { itemComponent } from './index'
-import { getOffsetTopRelativeToParent } from '@/utils'
+import { useScroll } from '@vueuse/core'
 import type { NavigationTypes } from '@/types'
+import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '../../stoplight/elements-core/components/Docs/types'
 
 const props = defineProps({
   tableOfContents: {
@@ -42,6 +43,14 @@ const props = defineProps({
   currentPath: {
     type: String,
     default: '/',
+  },
+  /**
+   * this is designed scrolling container for TOC, by default it's '',meaning tocNavRef scrollable.
+   * If toc is part of some external list and that list is scrollable - we need a selector for that scollable container
+   */
+  tocScrollingContainer: {
+    type: String,
+    default: '',
   },
   /**
    * Allow component itself to control URL in browser URL.
@@ -71,31 +80,67 @@ const emit = defineEmits<{
   (e: 'item-selected', id: string): void,
 }>()
 
-const getActiveItemScrollPosition = (scrollableAncestor: HTMLElement = tocNavRef.value as HTMLElement): number => {
-  if (scrollableAncestor) {
-    const activeItem = scrollableAncestor.querySelector('li[data-spec-renderer-toc-active="true"]') as HTMLElement || null
+const tocNavRef = ref<HTMLElement | null>(null)
 
-    if (!activeItem) {
-      return 0
+const scrollableContainerRef = ref<HTMLElement | null>(null)
+
+
+const { y: yPosition } = useScroll(scrollableContainerRef)
+
+const toc = computed((): TableOfContentsItem[] | undefined => {
+  if (!props.tableOfContents) {
+    return undefined
+  }
+  const newToc = props.tableOfContents
+
+  const crawl = (item: TableOfContentsGroup, path: string): void => {
+    if (!Array.isArray(item.items)) {
+      return
     }
+    for (let i = 0; i < item.items.length; i++) {
+      if ((item.items[i] as TableOfContentsNode).id === path) {
+        item.initiallyExpanded = true
+      }
+      crawl((item.items[i] as TableOfContentsGroup), path)
+    }
+  }
+  crawl({ title: '', initiallyExpanded: false, items: newToc }, props.currentPath)
 
-    return getOffsetTopRelativeToParent(activeItem, scrollableAncestor) || 0
+  return newToc
+})
+
+watch(() => ({ path: props.currentPath, navRef: tocNavRef.value }), async (newValue) => {
+
+
+  if (!newValue.navRef || !document) {
+    return
+  }
+  if (!scrollableContainerRef.value) {
+    scrollableContainerRef.value = props.tocScrollingContainer === '' ? newValue.navRef : document.querySelector(props.tocScrollingContainer)
+  }
+  if (!scrollableContainerRef.value) {
+    return
+  }
+  const activeItem = scrollableContainerRef.value.querySelector('li[data-spec-renderer-toc-active="true"]') as HTMLElement || null
+
+  if (!activeItem) {
+    return
+  }
+  // we are too far above visible part, let's bring it back
+  if (activeItem.offsetTop < yPosition.value) {
+    activeItem.scrollIntoView({ behavior: 'instant', block: 'start' })
+    return
   }
 
-  return 0
-}
+  if ((yPosition.value + (scrollableContainerRef.value.offsetHeight)) < (activeItem.offsetTop + 2 * activeItem.offsetHeight)) {
+    activeItem.scrollIntoView({ behavior: 'instant', block: 'end' })
+    return
+  }
 
-defineExpose({
-  // comment has to stay here for intellisense to work
-  /**
-   * @description Get the scroll position of the active item within the scrollable ancestor.
-   * Relies on the `data-spec-renderer-toc-active` attribute to determine the active item.
-   * Because it uses HTMLElement: offsetParent property - it relies on the parent element to have a `position` other than `static` (ideally `relative`).
-   * @param scrollableAncestor - the element to scroll within (optional, defaults to the root element of the component)
-   * @returns the scroll position of the active item
-   */
-  getActiveItemScrollPosition,
-})
+
+  // now we want to see if activeItem is visible and if not - we want to scroll it intoView
+}, { immediate: true })
+
 
 const selectItem = (id: any) => {
   if (props.controlAddressBar) {
@@ -107,7 +152,6 @@ const selectItem = (id: any) => {
   emit('item-selected', id)
 }
 
-const tocNavRef = ref<HTMLElement | null>(null)
 </script>
 
 <style lang="scss" scoped>

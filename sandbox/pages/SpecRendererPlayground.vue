@@ -28,12 +28,18 @@
         <label for="hide-tryit">Hide TryIt</label>
         |
         <input
+          id="allow-content-scrolling"
+          v-model="allowContentScrolling"
+          type="checkbox"
+        >
+        <label for="allow-content-scrolling">Allow Content Scrolling</label>
+        |
+        <input
           id="default-md-styling"
           v-model="markdownStyles"
           type="checkbox"
         >
         <label for="default-md-styling">Default markdown styling</label>
-
         |
         <label for="navigation-type">Navigation: &nbsp;</label>
         <select
@@ -51,6 +57,7 @@
     </div>
     <SpecRenderer
       v-if="specText || specUrl"
+      :allow-content-scrolling="allowContentScrolling"
       base-path="/spec-renderer"
       :control-address-bar="true"
       :current-path="currentPath"
@@ -84,6 +91,7 @@ const currentPath = ref<string>(navigationType.value === 'path' ? route.path : r
 const hideSchemas = ref<boolean>(false)
 const hideDeprecated = ref<boolean>(false)
 const hideTryIt = ref<boolean>(false)
+const allowContentScrolling = ref<boolean>(true)
 const markdownStyles = ref<boolean>(true)
 
 const handlePathNotFound = (requestedPath: string) => {

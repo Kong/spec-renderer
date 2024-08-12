@@ -9,11 +9,12 @@
         @close="slideoutTocVisible = false"
       >
         <SpecRendererToc
+          v-if="slideoutTocVisible"
           ref="specRendererSlideoutTocRef"
           :base-path="basePath"
           class="spec-renderer-toc"
           :control-address-bar="controlAddressBar"
-          :current-path="currentPath"
+          :current-path="currentPathTOC"
           :navigation-type="navigationType"
           :table-of-contents="tableOfContents"
           @item-selected="itemSelected"
@@ -22,12 +23,12 @@
 
       <aside>
         <SpecRendererToc
-          v-if="tableOfContents"
+          v-if="tableOfContents && !slideoutTocVisible"
           ref="specRendererTocRef"
           :base-path="basePath"
           class="spec-renderer-toc"
           :control-address-bar="controlAddressBar"
-          :current-path="currentPath"
+          :current-path="currentPathTOC"
           :navigation-type="navigationType"
           :table-of-contents="tableOfContents"
           @item-selected="itemSelected"
@@ -51,14 +52,19 @@
       <div class="doc">
         <SpecDocument
           v-if="parsedDocument && currentPath"
+          :allow-content-scrolling="allowContentScrolling"
           :base-path="basePath"
-          :current-path="currentPath"
+          :control-address-bar="controlAddressBar"
+          :current-path="currentPathDOC"
           :document="parsedDocument"
+          :document-scrolling-container="documentScrollingContainer"
           :hide-insomnia-try-it="hideInsomniaTryIt"
           :hide-try-it="hideTryIt"
           :json="jsonDocument"
           :markdown-styles="markdownStyles"
+          :navigation-type="navigationType"
           :spec-url="specUrl"
+          @content-scrolled="onDocumentScroll"
           @path-not-found="relayPathNotFound"
         />
       </div>
@@ -67,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, nextTick } from 'vue'
+import { watch, ref } from 'vue'
 import type { PropType } from 'vue'
 import composables from '../composables'
 import SpecRendererToc from './spec-renderer-toc/SpecRendererToc.vue'
@@ -173,6 +179,20 @@ const props = defineProps({
     default: false,
   },
   /**
+   * Allow scrolling trough operations/schemas
+   */
+  allowContentScrolling: {
+    type: Boolean,
+    default: true,
+  },
+  /**
+   * scrolling container that holds SpecDocument, use window by default
+   */
+  documentScrollingContainer: {
+    type: String,
+    default: '',
+  },
+  /**
    * Use default markdown styling. If your host application provides its own default styles, you may want to set to `false`.
    */
   markdownStyles: {
@@ -184,10 +204,12 @@ const props = defineProps({
 // TODO: introduce and handle isParsed. show parsing state while parsing
 const { parseSpecDocument, parsedDocument, jsonDocument, tableOfContents, validationResults } = composables.useSchemaParser()
 
-const currentPath = ref<string>(props.currentPath)
+const currentPathTOC = ref<string>(props.currentPath)
+const currentPathDOC = ref<string>(props.currentPath)
 
 const itemSelected = (id: any) => {
-  currentPath.value = id
+  currentPathTOC.value = id
+  currentPathDOC.value = id
 
   slideoutTocVisible.value = false
 }
@@ -197,10 +219,7 @@ const emit = defineEmits<{
 }>()
 
 
-const specRendererTocRef = ref<InstanceType<typeof SpecRendererToc> | null>(null)
-const specRendererSlideoutTocRef = ref<InstanceType<typeof SpecRendererToc> | null>(null)
 const slideoutTocVisible = ref<boolean>(false)
-
 /**
  * re-emits path-not-found event so application that consumes SpecRender component can handle 404
  */
@@ -210,15 +229,13 @@ const relayPathNotFound = (requestedPath: string): void => {
 
 const openSlideoutToc = async (): Promise<void> => {
   slideoutTocVisible.value = true
+}
 
-  await nextTick() // wait for slideout to open
-
-  if (specRendererSlideoutTocRef.value?.$el?.scrollTo) {
-    const scrollPosition = await specRendererSlideoutTocRef.value?.getActiveItemScrollPosition()
-
-    specRendererSlideoutTocRef.value?.$el.scrollTo({
-      top: scrollPosition - 50, // offset 50px so it doesn't stick to the top
-    })
+const onDocumentScroll = (path: string) => {
+  currentPathTOC.value = path
+  // we need to re-calculate initiallyExpanded property based on the new path
+  if (props.controlAddressBar) {
+    window.history.pushState({}, '', props.basePath + path)
   }
 }
 
@@ -232,7 +249,8 @@ watch(() => ({
 
   // we want to reset currentPath if document changed. if new document is getting loadedm we want to keep the path
   if (prev && (changed.spec !== prev?.spec || changed.specUrl !== prev?.specUrl)) {
-    currentPath.value = '/'
+    currentPathDOC.value = '/'
+    currentPathTOC.value = '/'
   }
 
   await parseSpecDocument(changed.spec, {
@@ -242,7 +260,7 @@ watch(() => ({
     traceParsing: props.traceParsing,
     ...(changed.specUrl ? { specUrl: changed.specUrl } : null),
     withCredentials: props.withCredentials,
-    currentPath: currentPath.value,
+    currentPath: currentPathTOC.value,
   })
 
   if (props.traceParsing) {
@@ -251,19 +269,6 @@ watch(() => ({
     console.log('validationResults:', validationResults.value)
   }
 }, { immediate: true })
-
-/**
- * Once element is in the DOM, trigger scroll to active item in TOC.
- */
-watch(specRendererTocRef, async (val) => {
-  if (val?.$el?.scrollTo) {
-    const scrollPosition = await val.getActiveItemScrollPosition()
-
-    val.$el.scrollTo({
-      top: scrollPosition - 50, // offset 50px so it doesn't stick to the top
-    })
-  }
-})
 </script>
 
 <style lang="scss" scoped>
@@ -317,8 +322,12 @@ watch(specRendererTocRef, async (val) => {
 
     .spec-renderer-small-screen-header {
       background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
       display: none;
       padding: var(--kui-space-30, $kui-space-30);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
 
       .slideout-toc-trigger-button {
         @include default-button-reset;

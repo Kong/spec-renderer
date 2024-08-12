@@ -177,5 +177,6 @@ export default function useSchemaParser(): any {
     jsonDocument,
     tableOfContents,
     validationResults,
+    computeAPITree,
   }
 }
