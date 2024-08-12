@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, provide, computed, nextTick, onBeforeMount, onMounted } from 'vue'
+import { watch, ref, provide, computed, nextTick, onBeforeMount } from 'vue'
 import composables from '@/composables'
 import type { PropType, Ref } from 'vue'
 import { NodeType } from '@stoplight/types'

@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { provide, computed, ref, watch, nextTick, onMounted } from 'vue'
+import { provide, computed, ref, watch } from 'vue'
 import type { PropType, Ref } from 'vue'
 import { itemComponent } from './index'
 import { useScroll } from '@vueuse/core'
