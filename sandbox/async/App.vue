@@ -5,12 +5,12 @@
       <a href="/spec-renderer">
         Kong Spec-Renderer
       </a>
-      <router-link to="/">
+      <a href="/spec-renderer/stoplight/">
         Stoplight-Playground
-      </router-link>
-      <a href="/spec-renderer/async/">
-        Async-Playground
       </a>
+      <router-link to="/">
+        Async-PLayground
+      </router-link>
     </header>
     <main class="page-main">
       <router-view />

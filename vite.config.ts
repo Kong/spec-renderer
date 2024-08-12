@@ -68,7 +68,7 @@ export default defineConfig({
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) => tag.startsWith('elements-api'),
+          isCustomElement: (tag) => ['asyncapi-component', 'elements-api'].includes(tag),
         },
       },
     }),

@@ -1,5 +1,7 @@
 <template>
   <SampleSpecSelector
+    base-path="/stoplight"
+    spec-type="oas"
     @sample-spec-selected="sampleSpecSelected"
     @sample-spec-uploaded="sampleSpecUploaded"
   />
