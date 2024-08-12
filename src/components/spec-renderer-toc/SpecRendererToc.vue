@@ -110,8 +110,6 @@ const toc = computed((): TableOfContentsItem[] | undefined => {
 })
 
 watch(() => ({ path: props.currentPath, navRef: tocNavRef.value }), async (newValue) => {
-  //TODO verify if needed
-  await nextTick()
 
 
   if (!newValue.navRef || !document) {
