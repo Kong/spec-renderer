@@ -85,12 +85,11 @@ export default function useSchemaParser(): any {
     if (options.specUrl && !spec) {
       specToParse = await (await fetch(options.specUrl)).text()
     }
-    const { document, diagnostics } = await asyncParser.parse(specToParse)
-    console.log({ document, diagnostics })
+    const { document/*, diagnostics*/ } = await asyncParser.parse(specToParse)
     if (!document) {
       return false
     }
-    // now as we have document we could create TOC
+    // now as we have document we could create TOC and document
     const { toc, document: parsed } = transformAsync(document, {
       hideSchemas: options?.hideSchemas,
       hideInternal: options?.hideInternal,

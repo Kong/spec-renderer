@@ -49,7 +49,6 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
 } => {
 
   const info = document.info()
-  console.log({ info })
   const specV = document.version()
   const version = specV.localeCompare('2.6.0', undefined, { numeric: true })
   const isAsyncAPIv2 = version === 0
@@ -77,8 +76,7 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
   // showServers ?: 'byDefault' | 'bySpecTags' | 'byServersTags';
   // showOperations ?: 'byDefault' | 'bySpecTags' | 'byOperationsTags';
 
-  const tags = info.tags().all()
-  console.log({ tags })
+  //  const tags = info.tags().all()
 
   if (info) {
     resTOC.push(
@@ -87,7 +85,6 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
 
 
   const servers = document.allServers()
-  console.log({ servers })
   if (servers && servers.length) {
     const serversGroup = {
       title: 'Servers', items: <TableOfContentsItem[]>[], hideTitle: false, initiallyExpanded: true,
@@ -108,7 +105,6 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
   }
 
   const operations = document.allOperations()
-  console.log({ operations })
   if (operations && operations.length) {
     const operationsGroup = {
       title: 'Operations', items: <TableOfContentsItem[]>[], hideTitle: false, initiallyExpanded: true,
@@ -129,7 +125,6 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
   }
 
   const messages = document.allMessages()
-  console.log(messages)
   if (messages && messages.length) {
     const messagesGroup = {
       title: 'Messages', items: <TableOfContentsItem[]>[], hideTitle: false, initiallyExpanded: true,
@@ -150,7 +145,6 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
   }
 
   const schemas = document.components().schemas().all()
-  console.log(schemas)
   if (schemas && schemas.length && !transformOptions.hideSchemas) {
     const schemasGroup = {
       title: 'Schemas', items: <TableOfContentsItem[]>[], hideTitle: false, initiallyExpanded: false,
@@ -169,6 +163,5 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
     })
     resTOC.push(schemasGroup)
   }
-  console.log({ resTOC, resDOC })
   return { toc: resTOC, document: resDOC }
 }
