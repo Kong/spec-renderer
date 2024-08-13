@@ -63,7 +63,7 @@ export default defineConfig({
      * during the build
      */
     nodePolyfills({
-      include: ['util', 'path'],
+      include: ['util', 'path', 'fs', 'url'],
     }),
     vue({
       template: {

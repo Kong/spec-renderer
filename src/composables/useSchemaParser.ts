@@ -8,7 +8,7 @@ import type { ParseOptions } from '../types'
 import type { ValidateResult } from '@scalar/openapi-parser'
 import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
-import { Parser as AsyncParser, fromURL } from '@asyncapi/parser'
+import AsyncParser, { fromURL } from '@asyncapi/parser/browser'
 import type { ParseOutput } from '@asyncapi/parser'
 import { transform as transformAsync } from '@/utils/async-to-oas-transformer'
 
@@ -81,17 +81,11 @@ export default function useSchemaParser(): any {
   const parseAsyncDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):Promise<boolean> => {
     const asyncParser = new AsyncParser()
 
-    const getParsed = async ():Promise<ParseOutput> => {
-      if (options.specUrl && !spec) {
-        return await fromURL(
-          asyncParser,
-          options.specUrl,
-        ).parse()
-      }
-      return await asyncParser.parse(spec)
+    let specToParse = spec
+    if (options.specUrl && !spec) {
+      specToParse = await (await fetch(options.specUrl)).text()
     }
-
-    const { document, diagnostics } = await getParsed()
+    const { document, diagnostics } = await asyncParser.parse(specToParse)
     console.log({ document, diagnostics })
     if (!document) {
       return false
