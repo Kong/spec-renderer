@@ -8,8 +8,7 @@ import type { ParseOptions } from '../types'
 import type { ValidateResult } from '@scalar/openapi-parser'
 import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
-import AsyncParser, { fromURL } from '@asyncapi/parser/browser'
-import type { ParseOutput } from '@asyncapi/parser'
+import AsyncParser from '@asyncapi/parser/browser'
 import { transform as transformAsync } from '@/utils/async-to-oas-transformer'
 
 const trace = (doTrace: boolean, ...args: any) => {
