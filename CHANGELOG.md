@@ -1,3 +1,10 @@
+## [1.57.1](https://github.com/Kong/spec-renderer/compare/v1.57.0...v1.57.1) (2024-08-13)
+
+
+### Bug Fixes
+
+* fix async sandbox build. add more async samples [KHCP-11659] ([#269](https://github.com/Kong/spec-renderer/issues/269)) ([12e6e17](https://github.com/Kong/spec-renderer/commit/12e6e17356a448b5c99c061e9247c5da5d60b770))
+
 # [1.57.0](https://github.com/Kong/spec-renderer/compare/v1.56.1...v1.57.0) (2024-08-13)
 
 
