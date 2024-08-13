@@ -3,7 +3,6 @@
     <div class="spec-renderer-content">
       <SlideOut
         v-if="tableOfContents"
-        class="slideout-toc"
         :title="parsedDocument?.name || 'Table of Contents'"
         :visible="slideoutTocVisible"
         @close="slideoutTocVisible = false"
@@ -274,10 +273,6 @@ watch(() => ({
 <style lang="scss" scoped>
 @mixin spec-renderer-content-small {
   flex-direction: column;
-
-  .slideout-toc {
-    display: block;
-  }
 
   aside {
     display: none;
