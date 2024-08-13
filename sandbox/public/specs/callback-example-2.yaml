@@ -55,10 +55,89 @@ paths:
                   description: |
                     Your server implementation should return this HTTP status code
                     if the data was received successfully
+                  content:
+                    application/json:
+                      schema:
+                        type: object
+                        properties:
+                          202-onData-message:
+                            type: string
+                    application/xml:
+                      schema:
+                        type: object
+                        properties:
+                          202-onData-message-xml:
+                            type: string
                 '204':
                   description: |
                     Your server should return this HTTP status code if no longer interested
                     in further updates
+                  content:
+                    application/json:
+                      schema:
+                        type: object
+                        properties:
+                          204-onData-message:
+                            type: string
+        onNotification:
+          '{$request.query.callbackUrl}/notification':
+            post:
+              requestBody:
+                description: notification payload
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+              responses:
+                '202':
+                  description: |
+                    Your server implementation should return this HTTP status code
+                    if the data was received successfully
+                  content:
+                    application/json:
+                      schema:
+                        type: object
+                        properties:
+                          202-onNotification-message:
+                            type: string
+                '404':
+                  description: |
+                    Your server should return this HTTP status code if no longer interested
+                    in further updates
+                  content:
+                    application/json:
+                      schema:
+                        type: object
+                        properties:
+                          404-onNotification-message:
+                            type: string
+        onError:
+          '{$request.query.callbackUrl}/error':
+            post:
+              requestBody:
+                description: error payload
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+              responses:
+                '401':
+                  description: |
+                    Your server implementation should return this HTTP status code
+                    if the data was received successfully
+                  content:
+                    application/json:
+                      schema:
+                        type: object
+                        properties:
+                          401-onError-message:
+                            type: string
   /process-order:
     post:
       summary: Submit an order for processing

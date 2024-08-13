@@ -6,7 +6,7 @@
     <CollapsibleSection>
       <template #title>
         <div class="http-response-header">
-          <h2>Response</h2>
+          <h2>{{ title ||'Response' }}</h2>
           <slot />
         </div>
       </template>
@@ -28,6 +28,10 @@ import BodyContentList from './BodyContentList.vue'
 
 defineProps({
   description: {
+    type: String,
+    default: '',
+  },
+  title: {
     type: String,
     default: '',
   },

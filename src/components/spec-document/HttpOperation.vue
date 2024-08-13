@@ -66,26 +66,18 @@
           </div>
         </HttpResponse>
 
-        <section v-if="data.callbacks">
-          <h3 style="margin-bottom: 8px;">
-            Callbacks
-          </h3>
-          <!-- {{ data.callbacks }} -->
-
-          <template
-            v-for="callback in data.callbacks"
-            :key="callback.id"
-          >
-            <div>
-              <h4>{{ callback.key }}</h4>
-              <code>{{ callback.path }}</code>
-              <HttpRequest
-                v-if="callback.request"
-                v-bind="callback.request"
-              />
-            </div>
-          </template>
-        </section>
+        <HttpCallbacks
+          v-if="callbackList.length"
+          :callback="activeCallback"
+          class="http-operation-callbacks"
+        >
+          <SelectDropdown
+            :id="`http-callback-select-dropdown-${operationData.id}`"
+            v-model="activeCallbackKey"
+            class="http-callback-select-dropdown"
+            :items="callbackKeyList"
+          />
+        </HttpCallbacks>
       </div>
       <div
         class="right"
@@ -133,6 +125,7 @@ import type { PropType, Ref } from 'vue'
 import type { IHttpOperation, IHttpWebhookOperation } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpResponse from './endpoint/HttpResponse.vue'
+import HttpCallbacks from './endpoint/HttpCallbacks.vue'
 import TryIt from './try-it/TryIt.vue'
 import RequestSample from './samples/RequestSample.vue'
 import ResponseSample from './samples/ResponseSample.vue'
@@ -142,6 +135,7 @@ import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import ResponseCodeDot from '@/components/common/ResponseCodeDot.vue'
 import { getSamplePath, getSampleQuery, getSampleBody, removeTrailingSlash } from '@/utils'
 import useCurrentResponse from '@/composables/useCurrentResponse'
+import composables from '@/composables'
 import { ResponseSelectComponent } from '@/types'
 import type { SelectItem } from '@/types'
 
@@ -195,6 +189,9 @@ const {
   activeResponseContentList,
   responseSelectComponentList,
 } = useCurrentResponse(responseList)
+
+const callbackList = computed(() => props.data.callbacks ?? [])
+const { activeCallbackKey, callbackKeyList, activeCallback } = composables.useCurrentCallback(callbackList)
 
 function handleSelectInputChange(item: SelectItem, componentName: ResponseSelectComponent) {
   if (componentName === ResponseSelectComponent.ResponseCodeSelectMenu) {
@@ -298,6 +295,14 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
         display: inline-flex;
         gap: var(--kui-space-20, $kui-space-20);
 
+        :deep(.trigger-button) {
+          @include small-bordered-trigger-button;
+        }
+      }
+    }
+
+    .http-operation-callbacks {
+      .http-callback-select-dropdown {
         :deep(.trigger-button) {
           @include small-bordered-trigger-button;
         }
