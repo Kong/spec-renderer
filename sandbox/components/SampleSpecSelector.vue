@@ -15,14 +15,28 @@
       </option>
 
       <option
+        v-if="specType=='all' || specType=='oas'"
         disabled
-        value=""
       >
-        ------------------
+        -------------------- OAS --------------------
       </option>
 
       <option
-        v-for="(o) in optionsArray"
+        v-for="(o) in specType=='all' || specType=='oas' ? optionsArrayOAS : []"
+        :key="o.url"
+        :value="o.url"
+      >
+        {{ o.label }}
+      </option>
+
+      <option
+        v-if="specType=='all' || specType=='async'"
+        disabled
+      >
+        -------------------- ASYNC --------------------
+      </option>
+      <option
+        v-for="(o) in specType=='all' || specType=='async' ? optionsArrayASYNC : []"
         :key="o.url"
         :value="o.url"
       >
@@ -49,7 +63,19 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import type { PropType } from 'vue'
 import { useDropZone } from '@vueuse/core'
+
+const props = defineProps({
+  basePath: {
+    type: String,
+    default: '/',
+  },
+  specType: {
+    type: String as PropType<'oas' | 'async' | 'all'>,
+    default: 'all',
+  },
+})
 
 const emit = defineEmits<{
   (e: 'sample-spec-selected', specUrl: string, resetPath: boolean): void,
@@ -63,7 +89,7 @@ const savedSpec = ref()
 
 const fName = ref<string>('Drop your own spec file')
 
-const optionsArray = [
+const optionsArrayOAS = [
   { url: `${window.location.origin}/spec-renderer/specs/stoplight.yaml`, label: 'Stoplight ToDo' },
   {
     url: `${window.location.origin}/spec-renderer/specs/konnect-api.yaml`, label: 'Konnect Api' },
@@ -78,6 +104,12 @@ const optionsArray = [
   { url: 'https://raw.githubusercontent.com/stoplightio/Public-APIs/master/reference/netlify/openapi.yaml', label: 'Netlify' },
   { url: 'https://api.apis.guru/v2/specs/instagram.com/1.0.0/swagger.yaml', label: 'Instagram' },
   { url: 'https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.json', label: 'Stripe' },
+]
+
+
+const optionsArrayASYNC = [
+  { url: 'https://raw.githubusercontent.com/asyncapi/spec/master/examples/correlation-id-asyncapi.yml', label: 'Correlation ID Example' },
+  { url: 'https://raw.githubusercontent.com/asyncapi/spec/master/examples/websocket-gemini-asyncapi.yml', label: 'Gemini Market Data Websocket API' },
 ]
 
 const trySetStorage = (str: string) => {
@@ -132,7 +164,7 @@ const specSelected = async () => {
   fName.value = 'Drop your own spec file'
 
   trySetStorage( JSON.stringify({ url: specSelector.value?.value }))
-  window.history.pushState({}, '', '/spec-renderer/')
+  window.history.pushState({}, '', `/spec-renderer${props.basePath}`)
 
   emit('sample-spec-selected', specSelector.value?.value, true)
 
