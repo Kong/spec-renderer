@@ -78,7 +78,7 @@ export default function useSchemaParser(): any {
   }
 
 
-  const parseAsyncDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):boolean => {
+  const parseAsyncDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):Promise<boolean> => {
     const asyncParser = new AsyncParser()
 
     const getParsed = async ():Promise<ParseOutput> => {
@@ -108,7 +108,7 @@ export default function useSchemaParser(): any {
     return true
   }
   /**
-    Parsing spec (sepcText) or by URL prodiced in  ParseOptions
+    Parsing spec (sepcText) or by URL produced in  ParseOptions
   */
   const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}) => {
 
