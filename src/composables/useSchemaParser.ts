@@ -8,6 +8,9 @@ import type { ParseOptions } from '../types'
 import type { ValidateResult } from '@scalar/openapi-parser'
 import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
+import { Parser as AsyncParser, fromURL } from '@asyncapi/parser'
+import type { ParseOutput } from '@asyncapi/parser'
+import { transform as transformAsync } from '@/utils/async-to-oas-transformer'
 
 const trace = (doTrace: boolean, ...args: any) => {
   if (doTrace) {
@@ -74,11 +77,47 @@ export default function useSchemaParser(): any {
     return doResolve(json)
   }
 
+
+  const parseAsyncDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):boolean => {
+    const asyncParser = new AsyncParser()
+
+    const getParsed = async ():Promise<ParseOutput> => {
+      if (options.specUrl && !spec) {
+        return await fromURL(
+          asyncParser,
+          options.specUrl,
+        ).parse()
+      }
+      return await asyncParser.parse(spec)
+    }
+
+    const { document, diagnostics } = await getParsed()
+    console.log({ document, diagnostics })
+    if (!document) {
+      return false
+    }
+    // now as we have document we could create TOC
+    const { toc, document: parsed } = transformAsync(document, {
+      hideSchemas: options?.hideSchemas,
+      hideInternal: options?.hideInternal,
+      hideDeprecated: options?.hideDeprecated,
+      currentPath: options?.currentPath,
+    })
+    tableOfContents.value = toc
+    parsedDocument.value = parsed
+    return true
+  }
   /**
     Parsing spec (sepcText) or by URL prodiced in  ParseOptions
   */
   const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}) => {
 
+    const isAsync = await parseAsyncDocument(spec, options)
+    if (isAsync) {
+      return
+    }
+
+    // let's
     // we want to leave console.logs for parsing
     if (options.specUrl && !spec) {
       // fetches spec by URL provided and resolves all external references
@@ -145,6 +184,8 @@ export default function useSchemaParser(): any {
 
     trace(options.traceParsing, 'dereferenced')
 
+
+    // it was not async, let's try openAPI
     try {
       // convert to AST for ui layer to use
       parsedDocument.value = transformOasToServiceNode(jsonDocument.value)
@@ -174,9 +215,7 @@ export default function useSchemaParser(): any {
   return {
     parseSpecDocument,
     parsedDocument,
-    jsonDocument,
     tableOfContents,
     validationResults,
-    computeAPITree,
   }
 }
