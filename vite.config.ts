@@ -108,6 +108,7 @@ export default defineConfig({
         ? {
           kong: path.resolve(__dirname, './sandbox/index.html'),
           stoplight: path.resolve(__dirname, './sandbox/stoplight/index.html'),
+          async: path.resolve(__dirname, './sandbox/async/index.html'),
         }
         : path.resolve(__dirname, './src/index.ts'),
       external: externalDependencies,
