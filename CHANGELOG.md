@@ -1,3 +1,17 @@
+# [1.57.0](https://github.com/Kong/spec-renderer/compare/v1.56.1...v1.57.0) (2024-08-13)
+
+
+### Features
+
+* async spec renderer in sandbox [KHCP-11659] ([#265](https://github.com/Kong/spec-renderer/issues/265)) ([9362bca](https://github.com/Kong/spec-renderer/commit/9362bcaf4e21e99801509a0ca0bd6ef3cd49e2fc))
+
+## [1.56.1](https://github.com/Kong/spec-renderer/compare/v1.56.0...v1.56.1) (2024-08-13)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#266](https://github.com/Kong/spec-renderer/issues/266)) ([3ecce1b](https://github.com/Kong/spec-renderer/commit/3ecce1b6f94cd045e47732f2135d80564a5fa29e))
+
 # [1.56.0](https://github.com/Kong/spec-renderer/compare/v1.55.5...v1.56.0) (2024-08-12)
 
 
