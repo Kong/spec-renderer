@@ -81,7 +81,7 @@ paths:
                             type: string
         onNotification:
           '{$request.query.callbackUrl}/notification':
-            post:
+            get:
               requestBody:
                 description: notification payload
                 content:
@@ -116,7 +116,7 @@ paths:
                             type: string
         onError:
           '{$request.query.callbackUrl}/error':
-            post:
+            delete:
               requestBody:
                 description: error payload
                 content:
