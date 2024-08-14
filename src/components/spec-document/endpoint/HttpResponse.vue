@@ -6,7 +6,7 @@
     <CollapsibleSection>
       <template #title>
         <div class="http-response-header">
-          <h2>{{ title ||'Response' }}</h2>
+          <h2>{{ title }}</h2>
           <slot />
         </div>
       </template>
@@ -33,7 +33,7 @@ defineProps({
   },
   title: {
     type: String,
-    default: '',
+    default: 'Response',
   },
   contentList: {
     type: Array as PropType<IHttpOperationResponse['contents']>,
