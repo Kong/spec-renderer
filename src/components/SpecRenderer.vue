@@ -3,6 +3,7 @@
     <div class="spec-renderer-content">
       <SlideOut
         v-if="tableOfContents"
+        class="slideout-toc"
         :title="parsedDocument?.name || 'Table of Contents'"
         :visible="slideoutTocVisible"
         @close="slideoutTocVisible = false"
