@@ -4,6 +4,7 @@ import { SpecVersion } from '../stoplight/elements/utils/oas/types'
 import type { AsyncAPIDocumentInterface, OperationInterface } from '@asyncapi/parser'
 import { PayloadType } from '@/types'
 import { NodeType } from '@stoplight/types'
+import type { IHttpService, HttpSecurityScheme } from '@stoplight/types'
 
 const getOperationTypeLabel = ({
   type,
@@ -62,15 +63,32 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
     uri: '/',
     tags:[],
     children: [],
-    data: {
+    data: <IHttpService>{
       id: 'undefined',
       version: info.version(),
       name: info.title(),
       description: info.description(),
+      ...(info.hasExternalDocs() ? {
+        externalDocs: {
+          url: info.externalDocs()?.url(),
+          description: info.externalDocs()?.description() || 'External Docs',
+        },
+      } : null),
+      ...(info.hasContact() ? {
+        contact: {
+          name: info.contact()?.name(),
+          email: info.contact()?.email(),
+          url: info.contact()?.url(),
+        },
+      } : null),
+      ...(info.hasLicense() ? {
+        license: {
+          name: info.license()?.name(),
+          url: info.license()?.url(),
+        },
+      } : null),
     },
   }
-
-
 
   //TODO: see if we need to support group by tag
   // showServers ?: 'byDefault' | 'bySpecTags' | 'byServersTags';
@@ -80,12 +98,30 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
 
   if (info) {
     resTOC.push(
-      { id: '/', slug: '/', title: 'Introduction', type: 'overview', meta: '' })
+      { id: '/', slug: '/', title: 'Overview', type: 'overview', meta: '' })
   }
+  const securitySchemes: HttpSecurityScheme[] = []
 
+  const securitySchemesAsync = document.securitySchemes()
+  if (securitySchemesAsync && securitySchemesAsync.length) {
+    securitySchemesAsync.forEach(securityScheme => {
+      securitySchemes.push({
+        id: securityScheme.id(),
+        key: securityScheme.id(),
+        //@ts-ignore converting string to enum
+        in: securityScheme.in(),
+        name: securityScheme.name() || securityScheme.id(),
+        //@ts-ignore converting string to enum
+        type: securityScheme.type(),
+        description: securityScheme.description() || securityScheme.openIdConnectUrl(),
+      })
+    })
+    resDOC.data.securitySchemes = securitySchemes
+  }
 
   const servers = document.allServers()
   if (servers && servers.length) {
+    resDOC.data.servers = []
     const serversGroup = {
       title: 'Servers', items: <TableOfContentsItem[]>[], hideTitle: false, initiallyExpanded: true,
     }
@@ -93,6 +129,7 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
       if (!serversGroup.initiallyExpanded && `/server-${server.id()}` === transformOptions.currentPath) {
         serversGroup.initiallyExpanded = true
       }
+      resDOC.data.servers?.push({ id: server.id(), url: server.url(), name: server.id(), description: server.description() })
       serversGroup.items.push({
         id: `/operation-${server.id()}`,
         slug: `/operation-${server.id()}`,
@@ -101,7 +138,8 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
         meta: '',
       })
     })
-    resTOC.push(serversGroup)
+    // we do not need servers in TOC, we show servers in Overview
+    //resTOC.push(serversGroup)
   }
 
   const operations = document.allOperations()

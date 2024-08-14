@@ -16,7 +16,10 @@
           class="overview-server-list-item"
           :data-testid="`overview-server-list-item-${server.id}`"
         >
-          <span>Server {{ index + 1 }}:</span><span>{{ server.url }}</span>
+          <span>Server {{ index + 1 }}:</span>
+          <span>{{ server.url }}</span>
+          <span v-if="server.name"> [{{ server.name }}]</span>
+          <span v-if="server.description"> ({{ server.description }})</span>
         </li>
       </ul>
     </template>

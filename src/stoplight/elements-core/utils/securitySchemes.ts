@@ -18,6 +18,7 @@ const oauthFlowNames: Record<keyof IOauthFlowObjects, string> = {
 export function getDefaultDescription(scheme: HttpSecurityScheme) {
   switch (scheme.type) {
     case 'apiKey':
+    case 'httpApiKey':
       return getApiKeyDescription(scheme.in, scheme.name)
     case 'http':
       switch (scheme.scheme) {
