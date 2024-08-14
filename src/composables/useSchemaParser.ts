@@ -16,6 +16,7 @@ const trace = (doTrace: boolean, ...args: any) => {
     console.log(...args)
   }
 }
+const asyncParser = new AsyncParser()
 
 export default function useSchemaParser(): any {
 
@@ -78,7 +79,6 @@ export default function useSchemaParser(): any {
 
 
   const parseAsyncDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):Promise<boolean> => {
-    const asyncParser = new AsyncParser()
 
     let specToParse = spec
     if (options.specUrl && !spec) {
