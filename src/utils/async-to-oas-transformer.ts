@@ -90,8 +90,6 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
     },
   }
 
-  console.log('securitySchemes:', document.securitySchemes())
-
   //TODO: see if we need to support group by tag
   // showServers ?: 'byDefault' | 'bySpecTags' | 'byServersTags';
   // showOperations ?: 'byDefault' | 'bySpecTags' | 'byOperationsTags';
