@@ -1,3 +1,10 @@
+# [1.58.0](https://github.com/Kong/spec-renderer/compare/v1.57.1...v1.58.0) (2024-08-14)
+
+
+### Features
+
+* parsing async document. toc for async document [KHCP-12978] ([#271](https://github.com/Kong/spec-renderer/issues/271)) ([da81e8a](https://github.com/Kong/spec-renderer/commit/da81e8aa7f295b58b417dcb7b6cc386a8f9b1991))
+
 ## [1.57.1](https://github.com/Kong/spec-renderer/compare/v1.57.0...v1.57.1) (2024-08-13)
 
 
