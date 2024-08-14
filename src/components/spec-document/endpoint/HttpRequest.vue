@@ -37,19 +37,24 @@ const props = defineProps({
     type: Array as PropType<Array<IHttpHeaderParam>>,
     default: () => [],
   },
+  titlePrefix: {
+    type: String,
+    default: '',
+  },
 })
 
 const componentList = computed(() => {
   const list: Array<{ component: any; componentProps: any; key: string }> = []
 
   const { body, query, path, headers } = toRefs(props)
+  const titlePrefixWithSpace = props.titlePrefix + ' '
 
   if (query.value?.length) {
     list.push({
       component: RequestParamList,
       componentProps: {
         paramList: query.value,
-        title: 'Query Parameters',
+        title: `${titlePrefixWithSpace}Query Parameters`,
         'data-testid': 'endpoint-query-param-list',
       },
       key: 'query',
@@ -60,7 +65,7 @@ const componentList = computed(() => {
       component: RequestParamList,
       componentProps: {
         paramList: path.value,
-        title: 'Path Parameters',
+        title: `${titlePrefixWithSpace}Path Parameters`,
         'data-testid': 'endpoint-path-param-list',
       },
       key: 'path',
@@ -71,7 +76,7 @@ const componentList = computed(() => {
       component: RequestParamList,
       componentProps: {
         paramList: headers.value,
-        title: 'Headers',
+        title: `${titlePrefixWithSpace}Headers`,
         'data-testid': 'endpoint-header-param-list',
       },
       key: 'headers',
@@ -84,6 +89,7 @@ const componentList = computed(() => {
         description: body.value.description,
         contents: body.value.contents,
         readonlyVisible: false,
+        title: `${titlePrefixWithSpace}Body`,
       },
       key: 'body',
     })

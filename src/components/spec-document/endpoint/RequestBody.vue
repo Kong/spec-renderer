@@ -1,7 +1,7 @@
 <template>
   <CollapsibleSection
     class="endpoint-body-content-list"
-    title="Body"
+    :title="title"
   >
     <BodyContentList
       :contents="contents"
@@ -29,6 +29,10 @@ defineProps({
   readonlyVisible: {
     type: Boolean,
     default: true,
+  },
+  title: {
+    type: String,
+    default: 'Body',
   },
 })
 </script>

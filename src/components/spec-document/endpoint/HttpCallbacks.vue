@@ -23,6 +23,7 @@
         <HttpRequest
           v-if="callback.request"
           v-bind="callback.request"
+          title-prefix="Callback"
         />
         <HttpResponse
           v-if="responseList.length"
