@@ -3,7 +3,7 @@
     class="endpoint-http-callbacks"
     data-testid="endpoint-http-callbacks"
   >
-    <CollapsibleSection>
+    <CollapsibleSection :border-visible="false">
       <template #title>
         <div class="http-callbacks-header">
           <h2>Callbacks</h2>
@@ -112,8 +112,10 @@ function handleSelectInputChange(item: SelectItem, componentName: ResponseSelect
   }
 
   .callback-collapsible-section-content {
-    padding: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0);
-    padding-left: var(--kui-space-40, $kui-space-40);
+    background: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    margin-top: var(--kui-space-20, $kui-space-20);
+    padding: var(--kui-space-50, $kui-space-50);
 
     .callback-path-container {
       align-items: center;
