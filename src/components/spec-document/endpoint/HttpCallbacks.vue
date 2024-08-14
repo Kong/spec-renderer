@@ -12,14 +12,12 @@
       </template>
 
       <div class="callback-collapsible-section-content">
-        <div class="callback-path-container">
-          <MethodBadge
-            :method="callback.method"
-            size="small"
-          />
-          <span class="callback-path">{{ callback.path }}</span>
-        </div>
-
+        <ServerEndpoint
+          class="callback-path-url"
+          :method="callback.method"
+          :selected-server-url="callback.path"
+          :server-url-list="[callback.path]"
+        />
         <HttpRequest
           v-if="callback.request"
           v-bind="callback.request"
@@ -70,7 +68,7 @@ import type { IHttpCallbackOperation } from '@stoplight/types'
 import CollapsibleSection from './CollapsibleSection.vue'
 import HttpRequest from './HttpRequest.vue'
 import HttpResponse from './HttpResponse.vue'
-import MethodBadge from '@/components/common/MethodBadge.vue'
+import ServerEndpoint from './ServerEndpoint.vue'
 import ResponseCodeDot from '@/components/common/ResponseCodeDot.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import useCurrentResponse from '@/composables/useCurrentResponse'
@@ -117,21 +115,9 @@ function handleSelectInputChange(item: SelectItem, componentName: ResponseSelect
     margin-top: var(--kui-space-20, $kui-space-20);
     padding: var(--kui-space-50, $kui-space-50);
 
-    .callback-path-container {
-      align-items: center;
-      border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-      border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-      display: inline-flex;
-      gap: var(--kui-space-40, $kui-space-40);
-      margin-bottom: var(--kui-space-40, $kui-space-40);
-      padding: var(--kui-space-30, $kui-space-30);
-
-      .callback-path {
-        color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
-        font-family: var(--kui-font-family-code, $kui-font-family-code);
-        font-size: var(--kui-font-size-20, $kui-font-size-20);
-        line-height: var(--kui-line-height-20, $kui-line-height-20);
-      }
+    .callback-path-url {
+      background: var(--kui-color-background, $kui-color-background);
+      padding: var(--kui-space-40, $kui-space-40);
     }
 
     .http-callback-response {
