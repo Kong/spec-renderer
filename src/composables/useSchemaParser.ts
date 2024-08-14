@@ -8,12 +8,15 @@ import type { ParseOptions } from '../types'
 import type { ValidateResult } from '@scalar/openapi-parser'
 import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
+import AsyncParser from '@asyncapi/parser/browser'
+import { transform as transformAsync } from '@/utils/async-to-oas-transformer'
 
 const trace = (doTrace: boolean, ...args: any) => {
   if (doTrace) {
     console.log(...args)
   }
 }
+const asyncParser = new AsyncParser()
 
 export default function useSchemaParser(): any {
 
@@ -74,11 +77,63 @@ export default function useSchemaParser(): any {
     return doResolve(json)
   }
 
+
+  const parseAsyncDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):Promise<boolean> => {
+
+    let specToParse = spec
+    if (options.specUrl && !spec) {
+      try {
+        specToParse = await (await fetch(options.specUrl)).text()
+      } catch (e) {
+        console.error(`Error fetching async document from ${options.specUrl}`, e)
+        return false
+      }
+      trace(options.traceParsing, 'async document fetched')
+    }
+
+    let parsed = null
+    try {
+      const { document/*, diagnostics*/ } = await asyncParser.parse(specToParse)
+      if (!document) {
+        return false
+      }
+      parsed = document
+    } catch (e) {
+      console.error('Error parsing async document', e)
+      return false
+    }
+    trace(options.traceParsing, 'async document parsed')
+
+    // now as we have document we could create TOC and document
+    try {
+      const { toc, document: transformed } = transformAsync(parsed, {
+        hideSchemas: options?.hideSchemas,
+        hideInternal: options?.hideInternal,
+        hideDeprecated: options?.hideDeprecated,
+        currentPath: options?.currentPath,
+      })
+
+      trace(options.traceParsing, 'async document transformed')
+
+      tableOfContents.value = toc
+      parsedDocument.value = transformed
+      return true
+    } catch (e) {
+      console.error('Error transforming async document', e)
+      return false
+    }
+  }
   /**
-    Parsing spec (sepcText) or by URL prodiced in  ParseOptions
+    Parsing spec (sepcText) or by URL produced in  ParseOptions
   */
   const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}) => {
 
+    const isAsync = await parseAsyncDocument(spec, options)
+    if (isAsync) {
+      return
+    }
+
+    // let's
     // we want to leave console.logs for parsing
     if (options.specUrl && !spec) {
       // fetches spec by URL provided and resolves all external references
@@ -145,6 +200,8 @@ export default function useSchemaParser(): any {
 
     trace(options.traceParsing, 'dereferenced')
 
+
+    // it was not async, let's try openAPI
     try {
       // convert to AST for ui layer to use
       parsedDocument.value = transformOasToServiceNode(jsonDocument.value)
@@ -174,9 +231,7 @@ export default function useSchemaParser(): any {
   return {
     parseSpecDocument,
     parsedDocument,
-    jsonDocument,
     tableOfContents,
     validationResults,
-    computeAPITree,
   }
 }

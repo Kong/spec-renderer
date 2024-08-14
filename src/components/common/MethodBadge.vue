@@ -54,32 +54,32 @@ defineProps({
     text-transform: uppercase;
   }
 
-  &.get {
+  &.get, &.SEND {
     @include badge-appearance(var(--kui-method-color-background-get, $kui-method-color-background-get),
     var(--kui-method-color-text-get, $kui-method-color-text-get));
   }
 
-  &.post {
+  &.post, &.RECEIVE {
     @include badge-appearance(var(--kui-method-color-background-post, $kui-method-color-background-post),
     var(--kui-method-color-text-post, $kui-method-color-text-post));
   }
 
-  &.put {
+  &.put, &.REPLY {
     @include badge-appearance(var(--kui-method-color-background-put, $kui-method-color-background-put),
     var(--kui-method-color-text-put, $kui-method-color-text-put));
   }
 
-  &.delete {
+  &.delete, &.SUBSCRIBE, &.SUB {
     @include badge-appearance(var(--kui-method-color-background-delete, $kui-method-color-background-delete),
     var(--kui-method-color-text-delete, $kui-method-color-text-delete));
   }
 
-  &.patch {
+  &.patch, &.REQUEST {
     @include badge-appearance(var(--kui-method-color-background-patch, $kui-method-color-background-patch),
     var(--kui-method-color-text-patch, $kui-method-color-text-patch));
   }
 
-  &.options {
+  &.options, &.PUBLISH, &.PUB {
     @include badge-appearance(var(--kui-method-color-background-options, $kui-method-color-background-options),
     var(--kui-method-color-text-options, $kui-method-color-text-options));
   }
