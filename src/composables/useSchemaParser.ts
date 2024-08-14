@@ -82,22 +82,46 @@ export default function useSchemaParser(): any {
 
     let specToParse = spec
     if (options.specUrl && !spec) {
-      specToParse = await (await fetch(options.specUrl)).text()
+      try {
+        specToParse = await (await fetch(options.specUrl)).text()
+      } catch (e) {
+        console.error(`Error fetching async document from ${options.specUrl}`, e)
+        return false
+      }
+      trace(options.traceParsing, 'async document fetched')
     }
-    const { document/*, diagnostics*/ } = await asyncParser.parse(specToParse)
-    if (!document) {
+
+    let parsed = null
+    try {
+      const { document/*, diagnostics*/ } = await asyncParser.parse(specToParse)
+      if (!document) {
+        return false
+      }
+      parsed = document
+    } catch (e) {
+      console.error('Error parsing async document', e)
       return false
     }
+    trace(options.traceParsing, 'async document parsed')
+
     // now as we have document we could create TOC and document
-    const { toc, document: parsed } = transformAsync(document, {
-      hideSchemas: options?.hideSchemas,
-      hideInternal: options?.hideInternal,
-      hideDeprecated: options?.hideDeprecated,
-      currentPath: options?.currentPath,
-    })
-    tableOfContents.value = toc
-    parsedDocument.value = parsed
-    return true
+    try {
+      const { toc, document: transformed } = transformAsync(parsed, {
+        hideSchemas: options?.hideSchemas,
+        hideInternal: options?.hideInternal,
+        hideDeprecated: options?.hideDeprecated,
+        currentPath: options?.currentPath,
+      })
+
+      trace(options.traceParsing, 'async document transformed')
+
+      tableOfContents.value = toc
+      parsedDocument.value = transformed
+      return true
+    } catch (e) {
+      console.error('Error transforming async document', e)
+      return false
+    }
   }
   /**
     Parsing spec (sepcText) or by URL produced in  ParseOptions
