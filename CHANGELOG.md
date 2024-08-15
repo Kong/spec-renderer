@@ -1,3 +1,10 @@
+# [1.60.0](https://github.com/Kong/spec-renderer/compare/v1.59.0...v1.60.0) (2024-08-15)
+
+
+### Features
+
+* support callbacks [KHCP-11623] ([#268](https://github.com/Kong/spec-renderer/issues/268)) ([653e5a5](https://github.com/Kong/spec-renderer/commit/653e5a5094a03bbfbcbb1a3f9ce28d30ac960c44))
+
 # [1.59.0](https://github.com/Kong/spec-renderer/compare/v1.58.0...v1.59.0) (2024-08-14)
 
 
