@@ -34,6 +34,12 @@
         :required-fields="selectedSchemaModel?.required"
       />
     </template>
+    <div v-if="schema.additionalProperties === true">
+      Additional properties are allowed.
+    </div>
+    <div v-if="schema.additionalProperties === false">
+      Additional properties are <b>NOT</b> allowed.
+    </div>
   </div>
 </template>
 

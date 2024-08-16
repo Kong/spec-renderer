@@ -1,11 +1,18 @@
 import type { TableOfContentsItem } from '../stoplight/elements-core/components/Docs/types'
-import type { ServiceNode } from '../stoplight/elements/utils/oas/types'
+import type { ServiceNode , SchemaNode } from '../stoplight/elements/utils/oas/types'
 import { SpecVersion } from '../stoplight/elements/utils/oas/types'
-import type { AsyncAPIDocumentInterface, OperationInterface } from '@asyncapi/parser'
+import type { AsyncAPIDocumentInterface, OperationInterface, SchemaInterface } from '@asyncapi/parser'
+import type { SchemaObject } from '@/types'
 import { PayloadType } from '@/types'
 import { NodeType } from '@stoplight/types'
-import type { IHttpService, HttpSecurityScheme } from '@stoplight/types'
+import type { IHttpService, IHttpOperation, HttpSecurityScheme } from '@stoplight/types'
 
+/**
+ * return label for opetation type
+ *
+ * @param param0
+ * @returns
+ */
 const getOperationTypeLabel = ({
   type,
   isAsyncAPIv2,
@@ -29,6 +36,11 @@ const getOperationTypeLabel = ({
     : 'SUB'
 }
 
+/**
+ *
+ * @param operation Return operation type
+ * @returns
+ */
 const getOperationType = (operation: OperationInterface) =>{
   if (operation.isSend()) {
     if (operation.reply() !== undefined) {
@@ -43,7 +55,79 @@ const getOperationType = (operation: OperationInterface) =>{
   return PayloadType.RECEIVE
 }
 
+/**
+ *
+ * @param schema transform properties
+ * @returns
+ */
+const transformSchema = (schema: SchemaInterface):Record<string, any> => {
 
+
+  const resProps = <Record<string, any>>{
+    ...(schema.description() ? { description: schema.description() } : null),
+    ...(schema.examples() ? { examples: schema.examples() } : null),
+    ...(schema.format() ? { format: schema.format() } : null),
+    ...(schema.pattern() ? { pattern: schema.pattern() } : null),
+    ...(schema.title() ? { title: schema.title() } : null),
+    ...(schema.required() ? { required: schema.required() } : null),
+    ...(schema.type() ? { type: schema.type() } : null),
+    ...((schema.additionalProperties !== undefined) ? { additionalProperties: schema.additionalProperties() } : null),
+    ...(schema.enum() ? { enum: schema.enum() } : null),
+    ...(schema.isCircular() ? { isCircular: schema.isCircular() } : null),
+    ...(schema.const() ? { const: schema.const() } : null),
+    ...((schema.default() !== undefined) ? { default: schema.default() } : null),
+
+  }
+
+  // parsing props
+  const props = schema.properties()
+  if (props) {
+    resProps.properties = {}
+    Object.keys(props).forEach(propKey => {
+      resProps.properties[propKey] = transformSchema(props[propKey])
+    })
+  }
+
+  // parsing items
+  const items = schema.items()
+  if (items) {
+    if (Array.isArray(items)) {
+      resProps.items = []
+      for (let i = 0; i < items.length; i++) {
+        resProps.push(transformSchema(items[i]))
+      }
+    } else {
+      resProps.items = transformSchema(items)
+    }
+  }
+
+  // parsing allOf
+  const allOf = schema.allOf()
+  if (allOf) {
+    resProps.allOf = []
+    for (let i = 0; i < allOf.length; i++) {
+      resProps.allOf.push(transformSchema(allOf[i]))
+    }
+  }
+
+  // parsing anyOf
+  const anyOf = schema.anyOf()
+  if (anyOf) {
+    resProps.anyOf = []
+    for (let i = 0; i < anyOf.length; i++) {
+      resProps.anyOf.push(transformSchema(anyOf[i]))
+    }
+  }
+
+  return resProps
+}
+
+/**
+ * Transofrm async document into stoplight AST
+ * @param document
+ * @param transformOptions
+ * @returns
+ */
 export const transform = (document: AsyncAPIDocumentInterface, transformOptions: Record<string, any>): {
   document: ServiceNode
   toc: TableOfContentsItem[]
@@ -158,6 +242,18 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
         type: 'http_operation',
         meta: getOperationTypeLabel({ type: getOperationType(operation), isAsyncAPIv2 }),
       })
+
+      //TODO: KHCP-12989
+      //@ts-ignore fix when time to develop
+      resDOC.children.push(<IHttpOperation>{
+        type: 'http_operation',
+        uri: `/operation-${operation.id()}`,
+        name: operation.id() || '',
+        data: {
+          description: operation.description(),
+        },
+      })
+
     })
     resTOC.push(operationsGroup)
   }
@@ -177,6 +273,15 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
         title: message.id() || '',
         type: 'model',
         meta: '',
+      })
+      //TODO: KHCP-12989
+      resDOC.children.push(<SchemaNode>{
+        type: 'model',
+        uri: `/message-${message.id()}`,
+        name: message.id() || '',
+        data: <SchemaObject>{
+          description: message.description(),
+        },
       })
     })
     resTOC.push(messagesGroup)
@@ -198,8 +303,16 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
         type: 'model',
         meta: '',
       })
+      resDOC.children.push(<SchemaNode>{
+        type: 'model',
+        uri: `/schema-${schema.id()}`,
+        name: schema.id() || '',
+        data: <SchemaObject>transformSchema(schema),
+      })
+
     })
     resTOC.push(schemasGroup)
   }
   return { toc: resTOC, document: resDOC }
 }
+
