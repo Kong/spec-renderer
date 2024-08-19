@@ -45,7 +45,7 @@
 import { watch, ref, provide, computed, nextTick, onBeforeMount } from 'vue'
 import composables from '@/composables'
 import type { PropType, Ref } from 'vue'
-import { NodeType } from '@stoplight/types'
+import type { NodeType } from '@/types'
 import type { ServiceNode, ServiceChildNode } from '../../stoplight/elements/utils/oas/types'
 import HttpService from './HttpService.vue'
 import HttpOperation from './HttpOperation.vue'

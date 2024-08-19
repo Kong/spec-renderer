@@ -4,7 +4,7 @@ import { SpecVersion } from '../stoplight/elements/utils/oas/types'
 import type { AsyncAPIDocumentInterface, OperationInterface, SchemaInterface } from '@asyncapi/parser'
 import type { SchemaObject } from '@/types'
 import { PayloadType } from '@/types'
-import { NodeType } from '@stoplight/types'
+import { NodeType } from '@/types'
 import type { IHttpService, IHttpOperation, HttpSecurityScheme } from '@stoplight/types'
 
 /**
