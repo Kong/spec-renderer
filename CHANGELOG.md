@@ -1,3 +1,10 @@
+# [1.61.0](https://github.com/Kong/spec-renderer/compare/v1.60.0...v1.61.0) (2024-08-19)
+
+
+### Features
+
+* transform and present async schemas  [KHCP-12990] ([#274](https://github.com/Kong/spec-renderer/issues/274)) ([8700aa4](https://github.com/Kong/spec-renderer/commit/8700aa48a5749a6740927ef4bd1e8b5e773f2e2c))
+
 # [1.60.0](https://github.com/Kong/spec-renderer/compare/v1.59.0...v1.60.0) (2024-08-15)
 
 
