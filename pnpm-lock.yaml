@@ -91,8 +91,8 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       '@kong/design-tokens':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: ^1.17.2
+        version: 1.17.2
       '@kong/eslint-config-kong-ui':
         specifier: 1.1.1
         version: 1.1.1(eslint@9.9.0(jiti@1.21.0))(typescript@5.5.4)
@@ -705,6 +705,7 @@ packages:
 
   '@evilmartians/lefthook@1.7.11':
     resolution: {integrity: sha512-zlpiLMfO5CmCRgRPq7gJiQ0yr5gt/O0QVefj9o6pMZPc83jpeA2Cjt/z3MZpxkKqRObwBjeekLFi8SUonD6BdQ==}
+    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -782,9 +783,9 @@ packages:
     peerDependencies:
       jsep: ^0.4.0||^1.0.0
 
-  '@kong/design-tokens@1.17.0':
-    resolution: {integrity: sha512-vH2NXEUy2vYgfX6gyIGlVVlHhGTcnk3eNaClSL2Dp5GM8Y5sZL5x8LXeg3EHTdANjCQEKpyNQ5MD+DiKMj7fAg==}
-    engines: {node: '>=18.20.4'}
+  '@kong/design-tokens@1.17.2':
+    resolution: {integrity: sha512-979FHvvqPkjdUmbUL7Q2+z04GiVLXqu+OgucD3krAczuTWGfbFG6mOzbO6QIZ7/YlFMbe/N7TH85yJ+YfA/uUg==}
+    engines: {node: '>=18.19.1', pnpm: '>=9.7.0'}
 
   '@kong/eslint-config-kong-ui@1.1.1':
     resolution: {integrity: sha512-L66Nqif4KcWlaSX9xb9WToMh9JbcxGrRb6tF1hz36GsZZaBsk6cHdVKVXUjPA7jgtkE1aUHpzQO1IM/UMLQCQg==}
@@ -5835,7 +5836,7 @@ snapshots:
     dependencies:
       jsep: 1.3.9
 
-  '@kong/design-tokens@1.17.0': {}
+  '@kong/design-tokens@1.17.2': {}
 
   '@kong/eslint-config-kong-ui@1.1.1(eslint@9.9.0(jiti@1.21.0))(typescript@5.5.4)':
     dependencies:
