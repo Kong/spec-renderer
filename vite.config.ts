@@ -54,7 +54,20 @@ export default defineConfig({
           from: 'exports.getCwd = () => location.origin + location.pathname;',
           to: 'exports.getCwd = () => typeof location !== "undefined" ? location.origin + location.pathname:"";',
         },
-
+        /**
+         * prevent @asyncapi/parser/browser/index.js to throw an error when window object is not found in ssr more
+         */
+        {
+          from: 'throw new Error("unable to locate global object")',
+          to: 'return {fetch:()=>{}}',
+        },
+        /**
+         * prevent @asyncapi/parser/browser/index.js to throw an error when attempting to manipulate with AbortController/AbortSignal in ssr mode
+         */
+        {
+          from: 'const{AbortController:t,AbortSignal:i}="undefined"!=typeof self?self:"undefined"!=typeof window?window:void 0',
+          to: 'const{AbortController:t,AbortSignal:i}="undefined"!=typeof self?self:"undefined"!=typeof window?window:{AbortController:{},AbortSignal:{}}',
+        },
       ],
     }),
     /**
