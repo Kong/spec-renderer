@@ -10,7 +10,7 @@ import {
   isHttpWebhookOperation,
 } from '../../../elements-core/utils/guards'
 
-import type { NodeType } from '@stoplight/types'
+import { NodeType } from '@stoplight/types'
 
 import type { OperationNode, SchemaNode, ServiceChildNode, ServiceNode, WebhookNode } from '../../utils/oas/types'
 
