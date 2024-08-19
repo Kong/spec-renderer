@@ -1,10 +1,8 @@
-import type { NodeType as OasNodeType } from '@stoplight/types'
+import { NodeType as OasNodeType } from '@stoplight/types'
 
-export enum AsyncNodeType {
-  AsyncMessage = 'async_message',
-  AsyncOperation = 'async_operations',
-}
+export const NodeType = {
+  ...OasNodeType,
+  AsyncMessage: 'async_message',
+  AsyncOperation: 'async_operations',
+} as const
 
-
-type AllNodeType = OasNodeType | AsyncNodeType
-export let NodeType:AllNodeType

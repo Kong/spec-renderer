@@ -174,7 +174,7 @@ components:
       type: 'model',
     }]
 
-    it('should include schemas by default', async () => {
+    it.only('should include schemas by default', async () => {
       const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
       await parseSpecDocument(specText)
 

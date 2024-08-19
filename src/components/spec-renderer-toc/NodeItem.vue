@@ -31,7 +31,7 @@ import { computed, inject, ref } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { TableOfContentsNode } from '../../stoplight/elements-core/components/Docs/types'
 import MethodBadge from '../common/MethodBadge.vue'
-import { NodeType } from '@stoplight/types'
+import { NodeType } from '@/types'
 import type { NavigationTypes } from '@/types'
 
 const props = defineProps({
