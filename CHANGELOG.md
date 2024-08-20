@@ -1,3 +1,10 @@
+## [1.61.1](https://github.com/Kong/spec-renderer/compare/v1.61.0...v1.61.1) (2024-08-19)
+
+
+### Bug Fixes
+
+* async parsing in ssr mode [KHCP-13024] ([#276](https://github.com/Kong/spec-renderer/issues/276)) ([162797f](https://github.com/Kong/spec-renderer/commit/162797ff66ed178eb4b8cbc27546498133819c52))
+
 # [1.61.0](https://github.com/Kong/spec-renderer/compare/v1.60.0...v1.61.0) (2024-08-19)
 
 
