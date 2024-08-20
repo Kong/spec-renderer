@@ -4,7 +4,7 @@
   >
     <div class="schema-example-header">
       <slot>
-        <span>Example</span>
+        <span>{{ title }}</span>
         <CopyButton
           :content="schemaExampleJson"
         />
@@ -25,6 +25,10 @@ defineProps({
   schemaExampleJson: {
     type: String,
     required: true,
+  },
+  title: {
+    type: String,
+    default: 'Example',
   },
 })
 </script>

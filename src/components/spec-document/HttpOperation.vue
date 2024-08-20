@@ -100,6 +100,10 @@
             @update-response-code="(newResponseCode) => activeResponseCode = newResponseCode"
           />
         </ResponseSample>
+        <CallbackSample
+          v-if="activeCallback"
+          :active-callback="activeCallback"
+        />
       </div>
     </section>
   </div>
@@ -115,6 +119,7 @@ import HttpCallbacks from './endpoint/HttpCallbacks.vue'
 import TryIt from './try-it/TryIt.vue'
 import RequestSample from './samples/RequestSample.vue'
 import ResponseSample from './samples/ResponseSample.vue'
+import CallbackSample from './samples/CallbackSample.vue'
 import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import ResponseTypeSelect from './endpoint/ResponseTypeSelect.vue'
 import PageHeader from '../common/PageHeader.vue'
