@@ -13,13 +13,13 @@
       v-if="data.messageId"
       class="message-prop"
     >
-      <b>Message Id:</b> {{ data.messageId }}
+      Message Id: <b>{{ data.messageId }}</b>
     </div>
     <div
       v-if="data.correlationId"
       class="message-prop"
     >
-      <b>Correlation Id:</b> {{ data.correlationId }}
+      Correlation Id: <b>{{ data.correlationId }}</b>
     </div>
 
     <MarkdownRenderer
