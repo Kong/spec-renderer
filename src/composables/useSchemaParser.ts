@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { transformOasToServiceNode } from '../stoplight/elements/utils/oas'
-import type { ServiceNode } from '../stoplight/elements/utils/oas/types'
+import type { ServiceNode } from '@/types'
 import { parse as parseYaml } from '@stoplight/yaml'
 import { computeAPITree } from '../stoplight/elements/components/API/utils'
 import type { TableOfContentsItem } from '../stoplight/elements-core/components/Docs/types'

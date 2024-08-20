@@ -19,7 +19,7 @@ export interface ISourceNodeMap {
   children?: ISourceNodeMap[];
 }
 
-type Node<T, D> = {
+export type Node<T, D> = {
   type: T;
   uri: string;
   name: string;

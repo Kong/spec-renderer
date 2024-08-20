@@ -13,6 +13,15 @@ export interface SchemaObject extends JSONSchema7 {
   example?: JSONSchema7Type
 }
 
+export interface AsyncMessageObject extends SchemaObject {
+  example?: JSONSchema7Type
+  payload?: SchemaObject
+  summary?: string
+  messageId?: string
+  correlationId?: string
+}
+
+
 export interface ParseOptions {
   /**
    * Url to fetch spec (if not defined by spec blob (text))

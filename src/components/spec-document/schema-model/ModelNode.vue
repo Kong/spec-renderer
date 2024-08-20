@@ -34,11 +34,17 @@
         :required-fields="selectedSchemaModel?.required"
       />
     </template>
-    <div v-if="schema.additionalProperties === true">
-      Additional properties are allowed.
+    <div
+      v-if="schema.additionalProperties === true"
+      class="footprint"
+    >
+      * Additional properties are allowed.
     </div>
-    <div v-if="schema.additionalProperties === false">
-      Additional properties are <b>NOT</b> allowed.
+    <div
+      v-if="schema.additionalProperties === false"
+      class="footprint"
+    >
+      * Additional properties are <b>NOT</b> allowed.
     </div>
   </div>
 </template>
@@ -103,6 +109,10 @@ const dataTestId = computed(() => `model-node-${props.title.replaceAll(' ', '-')
     >.model-node-property {
       border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     }
+  }
+  .footprint {
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    padding-top: var(--kui-space-40, $kui-space-40);
   }
 }
 </style>
