@@ -14,9 +14,14 @@ export default {
   },
 }
 
-export * from './utils'
-export * from './types'
+// we need to expose refs to parsed document/toc and parseSpecDocument method to outside word
+export * from './utils/schema-parser'
 
+// those are types that used in properties of components exposed to outside word
+export type { ServiceNode, NavigationTypes, ParseOptions } from './types'
+export type { TableOfContentsItem } from '@/stoplight/elements-core/components/Docs/types'
+
+// expose components
 export {
   SpecRenderer,
   SpecDocument,

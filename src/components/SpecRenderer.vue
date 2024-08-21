@@ -60,7 +60,6 @@
           :document-scrolling-container="documentScrollingContainer"
           :hide-insomnia-try-it="hideInsomniaTryIt"
           :hide-try-it="hideTryIt"
-          :json="jsonDocument"
           :markdown-styles="markdownStyles"
           :navigation-type="navigationType"
           :spec-url="specUrl"
@@ -202,7 +201,7 @@ const props = defineProps({
 })
 
 // TODO: introduce and handle isParsed. show parsing state while parsing
-const { parseSpecDocument, parsedDocument, jsonDocument, tableOfContents, validationResults } = composables.useSchemaParser()
+const { parseSpecDocument, parsedDocument, tableOfContents, validationResults } = composables.useSchemaParser()
 
 const currentPathTOC = ref<string>(props.currentPath)
 const currentPathDOC = ref<string>(props.currentPath)

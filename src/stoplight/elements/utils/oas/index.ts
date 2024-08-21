@@ -65,7 +65,7 @@ export function transformOasToServiceNode(apiDescriptionDocument: unknown) {
     return computeServiceNode(apiDescriptionDocument, oas2SourceMap, transformOas2Service, transformOas2Operation, SpecVersion.OAS2)
   }
 
-  return null
+  return undefined
 }
 function computeServiceNode(
   document: Spec | OpenAPIObject,
