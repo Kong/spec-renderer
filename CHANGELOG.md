@@ -1,3 +1,10 @@
+# [1.62.0](https://github.com/Kong/spec-renderer/compare/v1.61.1...v1.62.0) (2024-08-21)
+
+
+### Features
+
+* async message section parsing and rendering [KHCP-12989] ([#277](https://github.com/Kong/spec-renderer/issues/277)) ([28c4dff](https://github.com/Kong/spec-renderer/commit/28c4dff3ab543aacd7e5a84cc09658ecdc913888))
+
 ## [1.61.1](https://github.com/Kong/spec-renderer/compare/v1.61.0...v1.61.1) (2024-08-19)
 
 
