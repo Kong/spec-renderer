@@ -120,12 +120,8 @@ export default (): {
       })
 
       trace(options.traceParsing, 'async document transformed')
-      if (toc) {
-        tableOfContents.value = toc
-      }
-      if (transformed) {
-        parsedDocument.value = transformed
-      }
+      tableOfContents.value = toc
+      parsedDocument.value = transformed
       return true
     } catch (e) {
       console.error('Error transforming async document', e)
@@ -213,10 +209,7 @@ export default (): {
     // it was not async, let's try openAPI
     try {
       // convert to AST for ui layer to use
-      const tr = await transformOasToServiceNode(jsonDocument.value)
-      if (tr) {
-        parsedDocument.value = tr
-      }
+      parsedDocument.value = transformOasToServiceNode(jsonDocument.value) || undefined
     } catch (err) {
       console.error('error in transformOasToServiceNode:', err)
     }
