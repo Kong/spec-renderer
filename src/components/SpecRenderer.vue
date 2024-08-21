@@ -373,8 +373,8 @@ aside {
     background-color: var(--kui-color-background, $kui-color-background);
     position: relative; // important, need this for scrolling to selected item
 
-    // overview item
     :deep(>) {
+      // overview item
       ul > *:first-child {
         padding: var(--kui-space-70, $kui-space-70);
         padding-bottom: var(--kui-space-0, $kui-space-0);
@@ -401,11 +401,18 @@ Otherwise host app should have control over these styles.
   .spec-renderer-toc {
     position: relative; // important, need this for scrolling to selected item
 
-    // overview item
     > {
-      ul > *:first-child {
-        padding: var(--kui-space-40, $kui-space-40);
-        padding-bottom: var(--kui-space-0, $kui-space-0);
+      ul > * {
+        // overview item
+        &:first-child {
+          padding: var(--kui-space-40, $kui-space-40);
+          padding-bottom: var(--kui-space-0, $kui-space-0);
+        }
+
+        // last item (usually schemas)
+        &:last-child {
+          padding-bottom: var(--kui-space-0, $kui-space-0);
+        }
       }
     }
 
@@ -413,14 +420,6 @@ Otherwise host app should have control over these styles.
       &.root {
         padding-left: var(--kui-space-40, $kui-space-40);
         padding-right: var(--kui-space-40, $kui-space-40);
-      }
-    }
-
-
-    // last item (usually schemas)
-    > {
-      ul > *:last-child {
-        padding-bottom: var(--kui-space-0, $kui-space-0);
       }
     }
   }
