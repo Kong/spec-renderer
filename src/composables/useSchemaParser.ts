@@ -84,7 +84,7 @@ export default (): {
   }
 
 
-  const parseAsyncDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):Promise<boolean> => {
+  const parseAsyncDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<boolean> => {
 
     let specToParse = spec
     if (options.specUrl && !spec) {
