@@ -1,3 +1,10 @@
+## [1.63.1](https://github.com/Kong/spec-renderer/compare/v1.63.0...v1.63.1) (2024-08-21)
+
+
+### Bug Fixes
+
+* fixing package exports [KHCP-13083] ([#280](https://github.com/Kong/spec-renderer/issues/280)) ([c75ce05](https://github.com/Kong/spec-renderer/commit/c75ce05ec9628b740d1b574c143343bc1713c251))
+
 # [1.63.0](https://github.com/Kong/spec-renderer/compare/v1.62.0...v1.63.0) (2024-08-21)
 
 

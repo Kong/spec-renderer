@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import type { Ref } from 'vue'
 import { transformOasToServiceNode } from '../stoplight/elements/utils/oas'
 import type { ServiceNode } from '@/types'
 import { parse as parseYaml } from '@stoplight/yaml'
@@ -11,19 +12,24 @@ import { isLocalRef } from '@stoplight/json'
 import AsyncParser from '@asyncapi/parser/browser'
 import { transform as transformAsync } from '@/utils/async-to-oas-transformer'
 
-const trace = (doTrace: boolean, ...args: any) => {
+const trace = (doTrace: boolean | undefined, ...args: any) => {
   if (doTrace) {
     console.log(...args)
   }
 }
 const asyncParser = new AsyncParser()
 
-export default function useSchemaParser(): any {
+export default (): {
+  parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
+  parsedDocument: Ref<ServiceNode | undefined>
+  tableOfContents: Ref<TableOfContentsItem[] | undefined>
+  validationResults: Ref<ValidateResult | undefined>
+} => {
 
-  const parsedDocument = ref<ServiceNode | null>()
+  const parsedDocument = ref<ServiceNode | undefined>()
   const jsonDocument = ref<Record<string, any> | undefined>()
 
-  const tableOfContents = ref<TableOfContentsItem[]>()
+  const tableOfContents = ref<TableOfContentsItem[] | undefined>()
   const validationResults = ref<ValidateResult | undefined>()
 
   function tryParseYamlOrObject(yamlOrObject: unknown): Record<string, unknown> | undefined {
@@ -78,7 +84,7 @@ export default function useSchemaParser(): any {
   }
 
 
-  const parseAsyncDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):Promise<boolean> => {
+  const parseAsyncDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<boolean> => {
 
     let specToParse = spec
     if (options.specUrl && !spec) {
@@ -114,7 +120,6 @@ export default function useSchemaParser(): any {
       })
 
       trace(options.traceParsing, 'async document transformed')
-
       tableOfContents.value = toc
       parsedDocument.value = transformed
       return true
@@ -126,7 +131,7 @@ export default function useSchemaParser(): any {
   /**
     Parsing spec (sepcText) or by URL produced in  ParseOptions
   */
-  const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}) => {
+  const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):Promise<void> => {
 
     const isAsync = await parseAsyncDocument(spec, options)
     if (isAsync) {
