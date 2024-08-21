@@ -14,7 +14,6 @@ export interface SchemaObject extends JSONSchema7 {
 }
 
 export interface AsyncMessageObject extends SchemaObject {
-  example?: JSONSchema7Type
   payload?: SchemaObject
   summary?: string
   messageId?: string
