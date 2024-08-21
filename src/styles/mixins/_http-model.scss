@@ -6,6 +6,7 @@
   }
 }
 
+// re-used in HttpModel and AsyncMessage
 @mixin http-model {
   * {
     margin: var(--kui-space-0, $kui-space-0);
