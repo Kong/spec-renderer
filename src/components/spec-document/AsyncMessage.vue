@@ -77,7 +77,7 @@ const props = defineProps({
     required: true,
   },
 })
-const dataTestId = computed(() => `http-model-${props.title.replaceAll(' ', '-')}`)
+const dataTestId = computed(() => `http-async-message-${props.title.replaceAll(' ', '-')}`)
 const activeSchemaModel = ref<SchemaObject>(props.data.payload || {})
 const exampleModel = computed(() => {
   const crawledExample = crawl({
