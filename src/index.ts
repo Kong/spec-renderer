@@ -2,6 +2,7 @@ import type { App } from 'vue'
 import SpecRenderer from '@/components/SpecRenderer.vue'
 import SpecDocument from './components/spec-document/SpecDocument.vue'
 import SpecRendererToc from './components/spec-renderer-toc/SpecRendererToc.vue'
+import ModelNode from './components/spec-document/schema-model/ModelNode.vue'
 
 // Export Vue plugin as the default
 export default {
@@ -26,4 +27,5 @@ export {
   SpecRenderer,
   SpecDocument,
   SpecRendererToc,
+  ModelNode,
 }
