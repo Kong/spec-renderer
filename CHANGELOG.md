@@ -1,3 +1,10 @@
+# [1.63.0](https://github.com/Kong/spec-renderer/compare/v1.62.0...v1.63.0) (2024-08-21)
+
+
+### Features
+
+* **property-default:** add component to show default values ([#279](https://github.com/Kong/spec-renderer/issues/279)) ([29713af](https://github.com/Kong/spec-renderer/commit/29713afc5881b73c6a815e9e2e4325645ebe4b55))
+
 # [1.62.0](https://github.com/Kong/spec-renderer/compare/v1.61.1...v1.62.0) (2024-08-21)
 
 
