@@ -294,18 +294,6 @@ watch(() => ({
     min-height: 100vh;
     position: relative;
 
-    .slideout-toc {
-      display: none;
-
-      :deep(.slideout-container) {
-        padding-left: var(--kui-space-0, $kui-space-0);
-
-        .slideout-content {
-          padding-right: var(--kui-space-0, $kui-space-0);
-        }
-      }
-    }
-
     aside {
       display: flex;
       flex-shrink: 0;
@@ -377,39 +365,60 @@ watch(() => ({
 }
 
 /*
-Styles for SpecRendererToc that need to live here so that they apply to the TOC
-when it's rendered in the context of the SpecRenderer.
+Styles for SpecRendererToc that need to live here so that they apply to the TOC when it's rendered in the context of the SpecRenderer.
 Otherwise host app should have control over these styles.
 */
-@mixin standalone-spec-renderer-toc($itemPadding: var(--kui-space-70, $kui-space-70)) {
-  background-color: var(--kui-color-background, $kui-color-background);
-  position: relative; // important, need this for scrolling to selected item
+aside {
+  .spec-renderer-toc {
+    background-color: var(--kui-color-background, $kui-color-background);
+    position: relative; // important, need this for scrolling to selected item
 
-  :deep(>) {
-    ul > *:first-child {
-      // overview item
-      padding: $itemPadding;
-      padding-bottom: var(--kui-space-0, $kui-space-0);
+    // overview item
+    :deep(>) {
+      ul > *:first-child {
+        padding: var(--kui-space-70, $kui-space-70);
+        padding-bottom: var(--kui-space-0, $kui-space-0);
+      }
     }
-  }
 
-  :deep(.group-item) {
-    &.root {
-      padding-left: $itemPadding;
-      padding-right: $itemPadding;
+    :deep(.group-item) {
+      &.root {
+        padding-left: var(--kui-space-70, $kui-space-70);
+        padding-right: var(--kui-space-70, $kui-space-70);
+      }
     }
   }
 }
+</style>
 
-.spec-renderer-toc {
-  @include standalone-spec-renderer-toc;
-}
-
+<style lang="scss">
+/*
+! Needs to be unscoped because .slideout-toc is teleported to the body.
+Styles for SpecRendererToc that need to live here so that they apply to the TOC when it's rendered in the context of the SpecRenderer.
+Otherwise host app should have control over these styles.
+*/
 .slideout-toc {
   .spec-renderer-toc {
-    @include standalone-spec-renderer-toc($itemPadding: var(--kui-space-40, $kui-space-40));
+    position: relative; // important, need this for scrolling to selected item
 
-    :deep(>) {
+    // overview item
+    > {
+      ul > *:first-child {
+        padding: var(--kui-space-40, $kui-space-40);
+        padding-bottom: var(--kui-space-0, $kui-space-0);
+      }
+    }
+
+    .group-item {
+      &.root {
+        padding-left: var(--kui-space-40, $kui-space-40);
+        padding-right: var(--kui-space-40, $kui-space-40);
+      }
+    }
+
+
+    // last item (usually schemas)
+    > {
       ul > *:last-child {
         padding-bottom: var(--kui-space-0, $kui-space-0);
       }
