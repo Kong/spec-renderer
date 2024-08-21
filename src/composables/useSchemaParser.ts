@@ -12,7 +12,7 @@ import { isLocalRef } from '@stoplight/json'
 import AsyncParser from '@asyncapi/parser/browser'
 import { transform as transformAsync } from '@/utils/async-to-oas-transformer'
 
-const trace = (doTrace: boolean, ...args: any) => {
+const trace = (doTrace: boolean | undefined, ...args: any) => {
   if (doTrace) {
     console.log(...args)
   }
@@ -20,7 +20,7 @@ const trace = (doTrace: boolean, ...args: any) => {
 const asyncParser = new AsyncParser()
 
 export default (): {
-  parseSpecDocument: (spec: string, options?: ParseOptions)=>Promise<void>
+  parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
   parsedDocument: Ref<ServiceNode | undefined>
   tableOfContents: Ref<TableOfContentsItem[] | undefined>
   validationResults: Ref<ValidateResult | undefined>

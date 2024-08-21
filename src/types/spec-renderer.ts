@@ -33,23 +33,23 @@ export interface ParseOptions {
   /**
    * Do not include schemas (models) into parsing results
    */
-  hideSchemas: boolean
+  hideSchemas?: boolean
   /**
    * do not include internal methods into parsing results
    */
-  hideInternal: boolean
+  hideInternal?: boolean
   /**
    * do not include deprecated methods into parsing results
    */
-  hideDeprecated: boolean
+  hideDeprecated?: boolean
   /**
    * console.logs the progress of parsing steps
    */
-  traceParsing: boolean
+  traceParsing?: boolean
   /**
    * when fetching http reference - using withCredentials directive
    */
-  withCredentials: boolean
+  withCredentials?: boolean
 }
 
 export type SchemaModelPropertyField = 'info' | 'description' | 'enum' | 'pattern' | 'range' | 'example' | 'default'
