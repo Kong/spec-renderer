@@ -12,7 +12,8 @@ import {
 
 import { NodeType } from '@stoplight/types'
 
-import type { OperationNode, SchemaNode, ServiceChildNode, ServiceNode, WebhookNode } from '../../utils/oas/types'
+import type { OperationNode, SchemaNode, WebhookNode } from '../../utils/oas/types'
+import type { ServiceNode, ServiceChildNode } from '@/types'
 
 const defaults = (...args) =>
   args.reverse().reduce((acc, obj) => ({ ...acc, ...obj }), {})

@@ -1,10 +1,11 @@
 import type { TableOfContentsItem } from '../stoplight/elements-core/components/Docs/types'
-import type { ServiceNode , SchemaNode } from '../stoplight/elements/utils/oas/types'
+import type { SchemaNode } from '../stoplight/elements/utils/oas/types'
+import type { ServiceNode, AsyncMessageNode } from '@/types'
 import { SpecVersion } from '../stoplight/elements/utils/oas/types'
 import type { AsyncAPIDocumentInterface, OperationInterface, SchemaInterface } from '@asyncapi/parser'
-import type { SchemaObject } from '@/types'
+import type { SchemaObject, AsyncMessageObject } from '@/types'
 import { PayloadType } from '@/types'
-import { NodeType } from '@stoplight/types'
+import { NodeType } from '@/types'
 import type { IHttpService, IHttpOperation, HttpSecurityScheme } from '@stoplight/types'
 
 /**
@@ -60,8 +61,10 @@ const getOperationType = (operation: OperationInterface) =>{
  * @param schema transform properties
  * @returns
  */
-const transformSchema = (schema: SchemaInterface):Record<string, any> => {
-
+const transformSchema = (schema: SchemaInterface | undefined):Record<string, any> => {
+  if (!schema) {
+    return {}
+  }
 
   const resProps = <Record<string, any>>{
     ...(schema.description() ? { description: schema.description() } : null),
@@ -76,7 +79,6 @@ const transformSchema = (schema: SchemaInterface):Record<string, any> => {
     ...(schema.isCircular() ? { isCircular: schema.isCircular() } : null),
     ...(schema.const() ? { const: schema.const() } : null),
     ...((schema.default() !== undefined) ? { default: schema.default() } : null),
-
   }
 
   // parsing props
@@ -116,6 +118,14 @@ const transformSchema = (schema: SchemaInterface):Record<string, any> => {
     resProps.anyOf = []
     for (let i = 0; i < anyOf.length; i++) {
       resProps.anyOf.push(transformSchema(anyOf[i]))
+    }
+  }
+  // parsing oneOf
+  const oneOf = schema.oneOf()
+  if (oneOf) {
+    resProps.oneOf = []
+    for (let i = 0; i < oneOf.length; i++) {
+      resProps.oneOf.push(transformSchema(oneOf[i]))
     }
   }
 
@@ -271,16 +281,21 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
         id: `/message-${message.id()}`,
         slug: `/message-${message.id()}`,
         title: message.id() || '',
-        type: 'model',
+        type: NodeType.Model,
         meta: '',
       })
-      //TODO: KHCP-12989
-      resDOC.children.push(<SchemaNode>{
-        type: 'model',
+      resDOC.children.push(<AsyncMessageNode>{
+        type: NodeType.AsyncMessage,
         uri: `/message-${message.id()}`,
         name: message.id() || '',
-        data: <SchemaObject>{
+        data: <AsyncMessageObject>{
           description: message.description(),
+          summary: message.summary(),
+          correlationId: message.correlationId()?.location(),
+          title: message.title(),
+          messageId: message.id(),
+          ...(message.hasPayload() ? {
+            payload: <SchemaObject>transformSchema(message.payload()) } : null),
         },
       })
     })
@@ -300,11 +315,11 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
         id: `/schema-${schema.id()}`,
         slug: `/schema-${schema.id()}`,
         title: schema.id() || '',
-        type: 'model',
+        type: NodeType.Model,
         meta: '',
       })
       resDOC.children.push(<SchemaNode>{
-        type: 'model',
+        type: NodeType.Model,
         uri: `/schema-${schema.id()}`,
         name: schema.id() || '',
         data: <SchemaObject>transformSchema(schema),
