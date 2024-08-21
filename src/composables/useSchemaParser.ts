@@ -29,7 +29,7 @@ export default (): {
   const parsedDocument = ref<ServiceNode | undefined>()
   const jsonDocument = ref<Record<string, any> | undefined>()
 
-  const tableOfContents = ref<TableOfContentsItem[]>()
+  const tableOfContents = ref<TableOfContentsItem[] | undefined>()
   const validationResults = ref<ValidateResult | undefined>()
 
   function tryParseYamlOrObject(yamlOrObject: unknown): Record<string, unknown> | undefined {
@@ -120,9 +120,12 @@ export default (): {
       })
 
       trace(options.traceParsing, 'async document transformed')
-
-      tableOfContents.value = toc
-      parsedDocument.value = transformed
+      if (toc) {
+        tableOfContents.value = toc
+      }
+      if (transformed) {
+        parsedDocument.value = transformed
+      }
       return true
     } catch (e) {
       console.error('Error transforming async document', e)
@@ -210,7 +213,10 @@ export default (): {
     // it was not async, let's try openAPI
     try {
       // convert to AST for ui layer to use
-      parsedDocument.value = transformOasToServiceNode(jsonDocument.value) || undefined
+      const tr = await transformOasToServiceNode(jsonDocument.value)
+      if (tr) {
+        parsedDocument.value = tr
+      }
     } catch (err) {
       console.error('error in transformOasToServiceNode:', err)
     }
