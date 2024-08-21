@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import type { Ref } from 'vue'
 import { transformOasToServiceNode } from '../stoplight/elements/utils/oas'
 import type { ServiceNode } from '@/types'
 import { parse as parseYaml } from '@stoplight/yaml'
@@ -18,9 +19,14 @@ const trace = (doTrace: boolean, ...args: any) => {
 }
 const asyncParser = new AsyncParser()
 
-export default function useSchemaParser(): any {
+export default (): {
+  parseSpecDocument: (spec: string, options?: ParseOptions)=>Promise<void>
+  parsedDocument: Ref<ServiceNode | undefined>
+  tableOfContents: Ref<TableOfContentsItem[] | undefined>
+  validationResults: Ref<ValidateResult | undefined>
+} => {
 
-  const parsedDocument = ref<ServiceNode | null>()
+  const parsedDocument = ref<ServiceNode | undefined>()
   const jsonDocument = ref<Record<string, any> | undefined>()
 
   const tableOfContents = ref<TableOfContentsItem[]>()
@@ -126,7 +132,7 @@ export default function useSchemaParser(): any {
   /**
     Parsing spec (sepcText) or by URL produced in  ParseOptions
   */
-  const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}) => {
+  const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):Promise<void> => {
 
     const isAsync = await parseAsyncDocument(spec, options)
     if (isAsync) {
@@ -204,7 +210,7 @@ export default function useSchemaParser(): any {
     // it was not async, let's try openAPI
     try {
       // convert to AST for ui layer to use
-      parsedDocument.value = transformOasToServiceNode(jsonDocument.value)
+      parsedDocument.value = transformOasToServiceNode(jsonDocument.value) || undefined
     } catch (err) {
       console.error('error in transformOasToServiceNode:', err)
     }
