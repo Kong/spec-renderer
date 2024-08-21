@@ -52,4 +52,4 @@ export interface ParseOptions {
   withCredentials: boolean
 }
 
-export type SchemaModelPropertyField = 'info' | 'description' | 'enum' | 'pattern' | 'range' | 'example'
+export type SchemaModelPropertyField = 'info' | 'description' | 'enum' | 'pattern' | 'range' | 'example' | 'default'
