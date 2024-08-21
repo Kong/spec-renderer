@@ -74,41 +74,7 @@ const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
 </script>
 
 <style lang="scss" scoped>
-@mixin http-model-content-small {
-  grid-template-columns: 1fr;
-
-  .http-model-example-container {
-    margin-top: var(--kui-space-40, $kui-space-40);
-  }
-}
-
 .http-model {
-  * {
-    margin: var(--kui-space-0, $kui-space-0);
-  }
-
-  .http-model-header {
-    margin-bottom: var(--kui-space-90, $kui-space-90);
-  }
-
-  .http-model-content {
-    display: grid;
-    gap: var(--kui-space-130, $kui-space-130);
-    grid-template-columns: auto clamp($spec-renderer-secondary-column-min-width, 40%, $spec-renderer-secondary-column-max-width);
-
-    @supports (container: inline-size) {
-      // need to use interpolation for the token here because otherwise the query don't work
-      @container spec-document (max-width: #{$kui-breakpoint-tablet - 1px}) {
-        @include http-model-content-small;
-      }
-    }
-
-    // regular media query fallback
-    @supports not (container: inline-size) {
-      @media (max-width: ($kui-breakpoint-laptop - 1px)) {
-        @include http-model-content-small;
-      }
-    }
-  }
+  @include http-model;
 }
 </style>
