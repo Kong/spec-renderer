@@ -19,7 +19,7 @@ export interface ISourceNodeMap {
   children?: ISourceNodeMap[];
 }
 
-type Node<T, D> = {
+export type Node<T, D> = {
   type: T;
   uri: string;
   name: string;
@@ -31,6 +31,7 @@ export enum SpecVersion {
   OAS2 = 'OAS 2.0',
   OAS3 = 'OAS 3.0',
   OAS31 = 'OAS 3.1',
+  ASYNC = 'ASYNC',
 }
 
 export type OperationNode = Node<NodeType.HttpOperation, IHttpOperation>

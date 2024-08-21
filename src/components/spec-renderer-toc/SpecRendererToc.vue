@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { provide, computed, ref, watch } from 'vue'
+import { provide, computed, ref, watch, nextTick } from 'vue'
 import type { PropType, Ref } from 'vue'
 import { itemComponent } from './index'
 import { useScroll } from '@vueuse/core'
@@ -110,6 +110,7 @@ const toc = computed((): TableOfContentsItem[] | undefined => {
 })
 
 watch(() => ({ path: props.currentPath, navRef: tocNavRef.value }), async (newValue) => {
+  await nextTick()
 
 
   if (!newValue.navRef || !document) {

@@ -16,7 +16,13 @@
           class="overview-server-list-item"
           :data-testid="`overview-server-list-item-${server.id}`"
         >
-          <span>Server {{ index + 1 }}:</span><span>{{ server.url }}</span>
+          <span>Server {{ index + 1 }}:</span>
+          <span>{{ server.url }}</span>
+          <span v-if="server.name"> [{{ server.name }}]</span>
+          <MarkdownRenderer
+            v-if="server.description"
+            :markdown="server.description"
+          />
         </li>
       </ul>
     </template>
@@ -28,6 +34,7 @@ import { NetworkIcon } from '@kong/icons'
 import type { IServer } from '@stoplight/types'
 import type { PropType } from 'vue'
 import OverviewPanel from './OverviewPanel.vue'
+import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 
 defineProps({
   serverList: {

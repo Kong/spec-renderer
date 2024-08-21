@@ -1,13 +1,32 @@
 <template>
   <div
-    class="http-model"
+    class="async-message"
     :data-testid="dataTestId"
   >
     <PageHeader
       class="http-model-header"
-      :description="data.description"
+      :description="data.summary"
       :title="title"
       :type="data.type?.toString()"
+    />
+    <div
+      v-if="data.messageId"
+      class="message-prop"
+    >
+      Message Id: <b>{{ data.messageId }}</b>
+    </div>
+    <div
+      v-if="data.correlationId"
+      class="message-prop"
+    >
+      Correlation Id: <b>{{ data.correlationId }}</b>
+    </div>
+
+    <MarkdownRenderer
+      v-if="data.description"
+      class="message-description"
+      data-testid="spec-renderer-async-message-description"
+      :markdown="data.description"
     />
 
     <div class="http-model-content">
@@ -18,11 +37,13 @@
           :property-name="title"
           :required-fields="activeSchemaModel?.required"
         />
-        <ModelNode
-          :schema="data"
-          :title="title"
-          @selected-model-changed="(newModel: SchemaObject) => activeSchemaModel = newModel"
-        />
+        <CollapsibleSection title="Payload">
+          <ModelNode
+            :schema="activeSchemaModel"
+            :title="title"
+            @selected-model-changed="(newModel: SchemaObject) => activeSchemaModel = newModel"
+          />
+        </CollapsibleSection>
       </div>
       <SchemaExample
         v-if="exampleModel"
@@ -35,17 +56,20 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { PropType } from 'vue'
-import type { SchemaModelPropertyField, SchemaObject } from '@/types'
+import type { SchemaModelPropertyField, SchemaObject, AsyncMessageObject } from '@/types'
 import ModelNode from './schema-model/ModelNode.vue'
 import PageHeader from '../common/PageHeader.vue'
 import SchemaExample from '../common/SchemaExample.vue'
 import PropertyFieldList from './schema-model/PropertyFieldList.vue'
 import { crawl } from '@/utils'
 import { CODE_INDENT_SPACES } from '@/constants'
+import CollapsibleSection from '@/components/spec-document/endpoint/CollapsibleSection.vue'
+import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
+
 
 const props = defineProps({
   data: {
-    type: Object as PropType<SchemaObject>,
+    type: Object as PropType<AsyncMessageObject>,
     required: true,
   },
   title: {
@@ -53,9 +77,8 @@ const props = defineProps({
     required: true,
   },
 })
-
-const dataTestId = computed(() => `http-model-${props.title.replaceAll(' ', '-')}`)
-const activeSchemaModel = ref<SchemaObject>(props.data)
+const dataTestId = computed(() => `http-async-message-${props.title.replaceAll(' ', '-')}`)
+const activeSchemaModel = ref<SchemaObject>(props.data.payload || {})
 const exampleModel = computed(() => {
   const crawledExample = crawl({
     objData: activeSchemaModel.value,
@@ -74,7 +97,14 @@ const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
 </script>
 
 <style lang="scss" scoped>
-.http-model {
+.async-message {
   @include http-model;
+
+  .message-prop {
+    padding-bottom: var(--kui-space-40, $kui-space-40);
+  }
+  .message-description {
+    padding-top: var(--kui-space-40, $kui-space-40);
+  }
 }
 </style>

@@ -1,3 +1,52 @@
+# [1.63.0](https://github.com/Kong/spec-renderer/compare/v1.62.0...v1.63.0) (2024-08-21)
+
+
+### Features
+
+* **property-default:** add component to show default values ([#279](https://github.com/Kong/spec-renderer/issues/279)) ([29713af](https://github.com/Kong/spec-renderer/commit/29713afc5881b73c6a815e9e2e4325645ebe4b55))
+
+# [1.62.0](https://github.com/Kong/spec-renderer/compare/v1.61.1...v1.62.0) (2024-08-21)
+
+
+### Features
+
+* async message section parsing and rendering [KHCP-12989] ([#277](https://github.com/Kong/spec-renderer/issues/277)) ([28c4dff](https://github.com/Kong/spec-renderer/commit/28c4dff3ab543aacd7e5a84cc09658ecdc913888))
+
+## [1.61.1](https://github.com/Kong/spec-renderer/compare/v1.61.0...v1.61.1) (2024-08-19)
+
+
+### Bug Fixes
+
+* async parsing in ssr mode [KHCP-13024] ([#276](https://github.com/Kong/spec-renderer/issues/276)) ([162797f](https://github.com/Kong/spec-renderer/commit/162797ff66ed178eb4b8cbc27546498133819c52))
+
+# [1.61.0](https://github.com/Kong/spec-renderer/compare/v1.60.0...v1.61.0) (2024-08-19)
+
+
+### Features
+
+* transform and present async schemas  [KHCP-12990] ([#274](https://github.com/Kong/spec-renderer/issues/274)) ([8700aa4](https://github.com/Kong/spec-renderer/commit/8700aa48a5749a6740927ef4bd1e8b5e773f2e2c))
+
+# [1.60.0](https://github.com/Kong/spec-renderer/compare/v1.59.0...v1.60.0) (2024-08-15)
+
+
+### Features
+
+* support callbacks [KHCP-11623] ([#268](https://github.com/Kong/spec-renderer/issues/268)) ([653e5a5](https://github.com/Kong/spec-renderer/commit/653e5a5094a03bbfbcbb1a3f9ce28d30ac960c44))
+
+# [1.59.0](https://github.com/Kong/spec-renderer/compare/v1.58.0...v1.59.0) (2024-08-14)
+
+
+### Features
+
+* overview section of async spec [KHCP-12986] ([#272](https://github.com/Kong/spec-renderer/issues/272)) ([021e2dc](https://github.com/Kong/spec-renderer/commit/021e2dc5ff1cb333741d4a0e920a6a63c612a230))
+
+# [1.58.0](https://github.com/Kong/spec-renderer/compare/v1.57.1...v1.58.0) (2024-08-14)
+
+
+### Features
+
+* parsing async document. toc for async document [KHCP-12978] ([#271](https://github.com/Kong/spec-renderer/issues/271)) ([da81e8a](https://github.com/Kong/spec-renderer/commit/da81e8aa7f295b58b417dcb7b6cc386a8f9b1991))
+
 ## [1.57.1](https://github.com/Kong/spec-renderer/compare/v1.57.0...v1.57.1) (2024-08-13)
 
 

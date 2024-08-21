@@ -22,6 +22,7 @@ import PropertyInfo from './property-fields/PropertyInfo.vue'
 import PropertyEnum from './property-fields/PropertyEnum.vue'
 import PropertyPattern from './property-fields/PropertyPattern.vue'
 import PropertyRange from './property-fields/PropertyRange.vue'
+import PropertyDefault from './property-fields/PropertyDefault.vue'
 
 const props = defineProps({
   property: {
@@ -103,6 +104,17 @@ const orderedFieldList = computed(() => {
       },
       eventHandlers:{},
       key: 'property-pattern',
+    })
+  }
+
+  if (!props.hiddenFieldList.includes('default') && props.property.default !== undefined) {
+    fields.push({
+      component: PropertyDefault,
+      props: {
+        defaultValue: String(props.property.default),
+      },
+      eventHandlers:{},
+      key: 'property-default',
     })
   }
 

@@ -24,6 +24,7 @@
           </span>
 
           <span
+            v-if="path"
             class="endpoint-path"
             data-testid="endpoint-path"
           >
@@ -63,10 +64,6 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  path: {
-    type: String,
-    required: true,
-  },
   serverUrlList: {
     type: Array as PropType <Array<string>>,
     required: true,
@@ -74,6 +71,10 @@ const props = defineProps({
   selectedServerUrl: {
     type: String,
     required: true,
+  },
+  path: {
+    type: String,
+    default: '',
   },
 })
 

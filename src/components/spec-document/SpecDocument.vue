@@ -45,11 +45,12 @@
 import { watch, ref, provide, computed, nextTick, onBeforeMount } from 'vue'
 import composables from '@/composables'
 import type { PropType, Ref } from 'vue'
-import { NodeType } from '@stoplight/types'
-import type { ServiceNode, ServiceChildNode } from '../../stoplight/elements/utils/oas/types'
+import { NodeType } from '@/types'
+import type { ServiceNode, ServiceChildNode } from '@/types'
 import HttpService from './HttpService.vue'
 import HttpOperation from './HttpOperation.vue'
 import HttpModel from './HttpModel.vue'
+import AsyncMessage from './AsyncMessage.vue'
 import ArticleNode from './ArticleNode.vue'
 import UnknownNode from './UnknownNode.vue'
 import { useWindowScroll, useWindowSize, useElementSize, useScroll } from '@vueuse/core'
@@ -162,8 +163,7 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
   const defaultProps = {
     data: forServiceNode.data,
   }
-
-  switch (forServiceNode.type as NodeType) {
+  switch (forServiceNode.type as unknown as typeof NodeType[keyof typeof NodeType]) {
     case NodeType.Article:
       return { component: ArticleNode, props: defaultProps, doc: forServiceNode }
     case NodeType.HttpOperation:
@@ -173,6 +173,8 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
       return { component: HttpService, props: { ...defaultProps, specVersion: (<ServiceNode>forServiceNode).specVersion }, doc: forServiceNode }
     case NodeType.Model:
       return { component: HttpModel, props: { ...defaultProps, title: forServiceNode.name }, doc: forServiceNode }
+    case NodeType.AsyncMessage:
+      return { component: AsyncMessage, props: { ...defaultProps, title: forServiceNode.name }, doc: forServiceNode }
     default:
       return { component: UnknownNode, props: defaultProps, doc: forServiceNode }
   }

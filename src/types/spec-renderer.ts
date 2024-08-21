@@ -13,6 +13,14 @@ export interface SchemaObject extends JSONSchema7 {
   example?: JSONSchema7Type
 }
 
+export interface AsyncMessageObject extends SchemaObject {
+  payload?: SchemaObject
+  summary?: string
+  messageId?: string
+  correlationId?: string
+}
+
+
 export interface ParseOptions {
   /**
    * Url to fetch spec (if not defined by spec blob (text))
@@ -44,4 +52,4 @@ export interface ParseOptions {
   withCredentials: boolean
 }
 
-export type SchemaModelPropertyField = 'info' | 'description' | 'enum' | 'pattern' | 'range' | 'example'
+export type SchemaModelPropertyField = 'info' | 'description' | 'enum' | 'pattern' | 'range' | 'example' | 'default'
