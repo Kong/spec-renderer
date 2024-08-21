@@ -209,7 +209,7 @@ export default (): {
     // it was not async, let's try openAPI
     try {
       // convert to AST for ui layer to use
-      parsedDocument.value = transformOasToServiceNode(jsonDocument.value) || undefined
+      parsedDocument.value = transformOasToServiceNode(jsonDocument.value)
     } catch (err) {
       console.error('error in transformOasToServiceNode:', err)
     }
