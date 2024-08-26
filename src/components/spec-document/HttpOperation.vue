@@ -101,7 +101,7 @@
           />
         </ResponseSample>
         <CallbackSample
-          v-if="activeCallback"
+          v-if="activeCallback && activeCallbackRequestSample"
           :callback-key="activeCallback.key"
           :request-sample="activeCallbackRequestSample"
         />
@@ -126,7 +126,6 @@ import ResponseTypeSelect from './endpoint/ResponseTypeSelect.vue'
 import PageHeader from '../common/PageHeader.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import { getSamplePath, getSampleQuery, getSampleBody, removeTrailingSlash } from '@/utils'
-import useCurrentResponse from '@/composables/useCurrentResponse'
 import composables from '@/composables'
 
 const props = defineProps({
@@ -178,7 +177,7 @@ const {
   activeContentType,
   activeResponseContentList,
   responseSelectComponentList,
-} = useCurrentResponse(responseList)
+} = composables.useCurrentResponse(responseList)
 
 const callbackList = computed(() => props.data.callbacks ?? [])
 const {
