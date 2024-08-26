@@ -12,7 +12,6 @@
       </template>
 
       <BodyContentList
-        v-if="Array.isArray(contentList) && contentList.length"
         :contents="contentList"
         :description="description"
       />
@@ -22,7 +21,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import type { IHttpOperationResponse } from '@stoplight/types'
+import type { IMediaTypeContent } from '@stoplight/types'
 import CollapsibleSection from './CollapsibleSection.vue'
 import BodyContentList from './BodyContentList.vue'
 
@@ -36,7 +35,7 @@ defineProps({
     default: 'Response',
   },
   contentList: {
-    type: Array as PropType<IHttpOperationResponse['contents']>,
+    type: Array as PropType<Array<IMediaTypeContent>>,
     default: () => [],
   },
 })
@@ -48,15 +47,6 @@ defineProps({
     align-items: center;
     display: inline-flex;
     gap: var(--kui-space-50, $kui-space-50);
-  }
-
-  .http-response-body {
-    .http-response-body-description {
-      margin-top: var(--kui-space-60, $kui-space-60);
-    }
-    .http-response-body-content {
-      margin-top: var(--kui-space-40, $kui-space-40);
-    }
   }
 }
 </style>
