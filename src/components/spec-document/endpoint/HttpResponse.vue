@@ -26,10 +26,6 @@ import CollapsibleSection from './CollapsibleSection.vue'
 import BodyContentList from './BodyContentList.vue'
 
 defineProps({
-  responseCode: {
-    type: String,
-    required: true,
-  },
   description: {
     type: String,
     default: '',
