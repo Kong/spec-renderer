@@ -1,3 +1,10 @@
+# [1.64.0](https://github.com/Kong/spec-renderer/compare/v1.63.2...v1.64.0) (2024-08-26)
+
+
+### Features
+
+* **http-response:** show response description in case of empty content-list [KHCP-12881] ([#260](https://github.com/Kong/spec-renderer/issues/260)) ([ea6b07b](https://github.com/Kong/spec-renderer/commit/ea6b07be0b87a1b72f5e515e15d2a5b6b4c8747f))
+
 ## [1.63.2](https://github.com/Kong/spec-renderer/compare/v1.63.1...v1.63.2) (2024-08-26)
 
 
