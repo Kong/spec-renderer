@@ -48,9 +48,5 @@ defineProps({
     display: inline-flex;
     gap: var(--kui-space-50, $kui-space-50);
   }
-
-  .http-response-description {
-    margin-top: var(--kui-space-40, $kui-space-40);
-  }
 }
 </style>
