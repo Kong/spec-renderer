@@ -12,14 +12,8 @@
       </template>
 
       <BodyContentList
-        v-if="Array.isArray(contentList) && contentList.length"
         :contents="contentList"
         :description="description"
-      />
-      <HttpResponseDescription
-        v-else
-        :description="description"
-        :response-code="responseCode"
       />
     </CollapsibleSection>
   </section>
@@ -27,10 +21,9 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import type { IHttpOperationResponse } from '@stoplight/types'
+import type { IMediaTypeContent } from '@stoplight/types'
 import CollapsibleSection from './CollapsibleSection.vue'
 import BodyContentList from './BodyContentList.vue'
-import HttpResponseDescription from './HttpResponseDescription.vue'
 
 defineProps({
   responseCode: {
@@ -46,7 +39,7 @@ defineProps({
     default: 'Response',
   },
   contentList: {
-    type: Array as PropType<IHttpOperationResponse['contents']>,
+    type: Array as PropType<Array<IMediaTypeContent>>,
     default: () => [],
   },
 })
