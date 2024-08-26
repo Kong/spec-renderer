@@ -117,6 +117,7 @@ function handleSelectInputChange(item: SelectItem, componentName: ResponseSelect
 
     .callback-path-url {
       background: var(--kui-color-background, $kui-color-background);
+      margin-bottom: var(--kui-space-50, $kui-space-50);
       padding: var(--kui-space-40, $kui-space-40);
     }
 
