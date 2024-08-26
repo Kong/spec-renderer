@@ -102,7 +102,8 @@
         </ResponseSample>
         <CallbackSample
           v-if="activeCallback"
-          :active-callback="activeCallback"
+          :callback-key="activeCallback.key"
+          :request-sample="activeCallbackRequestSample"
         />
       </div>
     </section>
@@ -180,7 +181,12 @@ const {
 } = useCurrentResponse(responseList)
 
 const callbackList = computed(() => props.data.callbacks ?? [])
-const { activeCallbackKey, callbackKeyList, activeCallback } = composables.useCurrentCallback(callbackList)
+const {
+  activeCallbackKey,
+  callbackKeyList,
+  activeCallback,
+  activeCallbackRequestSample,
+} = composables.useCurrentCallback(callbackList)
 
 // this is fired when server url parameters in tryIt section getting changed
 const setServerUrl = (newServerUrl: string) => {

@@ -1,39 +1,29 @@
 <template>
   <div class="callback-sample">
     <div class="callback-sample-header">
-      <span class="active-callback-key">{{ activeCallback.key }}</span> callback sample
+      <span class="active-callback-key">{{ callbackKey }}</span> callback sample
     </div>
     <SchemaExample
-      v-if="activeCallbackRequestSample"
+      v-if="requestSample"
       class="callback-sample-body"
-      :schema-example-json="activeCallbackRequestSample"
+      :schema-example-json="requestSample"
       title="Callback Body"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { PropType } from 'vue'
-import type { IHttpCallbackOperation } from '@stoplight/types'
 import SchemaExample from '@/components/common/SchemaExample.vue'
-import { getSampleBody } from '@/utils'
 
-const props = defineProps({
-  activeCallback: {
-    type: Object as PropType<IHttpCallbackOperation>,
+defineProps({
+  callbackKey: {
+    type: String,
     required: true,
   },
-})
-
-const activeCallbackRequestSample = computed(() => {
-  return props.activeCallback.request?.body?.contents
-    ? getSampleBody(
-      props.activeCallback.request?.body?.contents,
-      { excludeReadonly: true, excludeNotRequired: false },
-      0,
-    )
-    : ''
+  requestSample: {
+    type: String,
+    default: '',
+  },
 })
 </script>
 
