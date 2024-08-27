@@ -1,3 +1,16 @@
+# [1.65.0](https://github.com/Kong/spec-renderer/compare/v1.64.1...v1.65.0) (2024-08-27)
+
+
+### Bug Fixes
+
+* **headless-popover:** conditionally render floating element [KHCP-13124] ([#286](https://github.com/Kong/spec-renderer/issues/286)) ([3019e86](https://github.com/Kong/spec-renderer/commit/3019e86fcd426a8699a7efdc26df87cb79196745))
+* **try-it-dropdown:** try it dropdown styling [KHCP-12662] ([#287](https://github.com/Kong/spec-renderer/issues/287)) ([5b471cd](https://github.com/Kong/spec-renderer/commit/5b471cd26ec206a19aea7b8651f5ede79b3c4524))
+
+
+### Features
+
+* **response-type-select:** add response-type-select to response sample section [KHCP-12843] ([#288](https://github.com/Kong/spec-renderer/issues/288)) ([27a79fe](https://github.com/Kong/spec-renderer/commit/27a79fe05afbef6ba86e7d989f1b82a5d5bc3d10))
+
 ## [1.64.1](https://github.com/Kong/spec-renderer/compare/v1.64.0...v1.64.1) (2024-08-27)
 
 
