@@ -39,31 +39,11 @@
           :content-list="activeResponseContentList"
           :description="activeResponseDescription"
         >
-          <div class="http-response-header-menu">
-            <SelectDropdown
-              v-for="component in responseSelectComponentList"
-              :id="`http-response-header-dropdown-${operationData.id}`"
-              :key="component.name"
-              :items="component.optionList"
-              :model-value="component.value"
-              @change="(item) => handleSelectInputChange(item, component.name)"
-            >
-              <template #2xx-item-content="{ item }">
-                <ResponseCodeDot
-                  v-if="item?.key"
-                  response-code="2xx"
-                />
-                {{ item?.label }}
-              </template>
-              <template #4xx-item-content="{ item }">
-                <ResponseCodeDot
-                  v-if="item?.key"
-                  response-code="4xx"
-                />
-                {{ item?.label }}
-              </template>
-            </SelectDropdown>
-          </div>
+          <ResponseTypeSelect
+            :component-list="responseSelectComponentList"
+            @update-content-type="(newContentType) => activeContentType = newContentType"
+            @update-response-code="(newResponseCode) => activeResponseCode = newResponseCode"
+          />
         </HttpResponse>
 
         <HttpCallbacks
@@ -113,7 +93,13 @@
           :content-list="activeResponseContentList"
           :content-type="activeContentType"
           :response-code="activeResponseCode"
-        />
+        >
+          <ResponseTypeSelect
+            :component-list="responseSelectComponentList"
+            @update-content-type="(newContentType) => activeContentType = newContentType"
+            @update-response-code="(newResponseCode) => activeResponseCode = newResponseCode"
+          />
+        </ResponseSample>
       </div>
     </section>
   </div>
@@ -130,14 +116,12 @@ import TryIt from './try-it/TryIt.vue'
 import RequestSample from './samples/RequestSample.vue'
 import ResponseSample from './samples/ResponseSample.vue'
 import ServerEndpoint from './endpoint/ServerEndpoint.vue'
+import ResponseTypeSelect from './endpoint/ResponseTypeSelect.vue'
 import PageHeader from '../common/PageHeader.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import ResponseCodeDot from '@/components/common/ResponseCodeDot.vue'
 import { getSamplePath, getSampleQuery, getSampleBody, removeTrailingSlash } from '@/utils'
 import useCurrentResponse from '@/composables/useCurrentResponse'
 import composables from '@/composables'
-import { ResponseSelectComponent } from '@/types'
-import type { SelectItem } from '@/types'
 
 const props = defineProps({
   data: {
@@ -192,14 +176,6 @@ const {
 
 const callbackList = computed(() => props.data.callbacks ?? [])
 const { activeCallbackKey, callbackKeyList, activeCallback } = composables.useCurrentCallback(callbackList)
-
-function handleSelectInputChange(item: SelectItem, componentName: ResponseSelectComponent) {
-  if (componentName === ResponseSelectComponent.ResponseCodeSelectMenu) {
-    activeResponseCode.value = item.value
-  } else if (componentName === ResponseSelectComponent.ContentTypeSelectMenu) {
-    activeContentType.value = item.value
-  }
-}
 
 // this is fired when server url parameters in tryIt section getting changed
 const setServerUrl = (newServerUrl: string) => {
@@ -286,18 +262,6 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
 
       > :not(:first-child) {
         margin-top: var(--kui-space-70, $kui-space-70);
-      }
-    }
-
-    .http-operation-response {
-      .http-response-header-menu {
-        align-items: center;
-        display: inline-flex;
-        gap: var(--kui-space-20, $kui-space-20);
-
-        :deep(.trigger-button) {
-          @include small-bordered-trigger-button;
-        }
       }
     }
 
