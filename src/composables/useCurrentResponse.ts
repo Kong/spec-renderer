@@ -59,6 +59,10 @@ export default function useResponseCode(responseList: ComputedRef<Array<IHttpOpe
     activeContentType.value = contentTypeList.value[0]?.value
   })
 
+  watch(activeResponseCode, () => {
+    activeContentType.value = contentTypeList.value[0]?.value
+  })
+
   return {
     responseCodeList,
     activeResponseCode,
