@@ -10,7 +10,7 @@ describe('<SelectDropdown />', () => {
   ]
 
   describe('props', () => {
-    it('renders dropdown items and trigger button correctly', () => {
+    it('renders dropdown items and trigger button correctly', async () => {
       const triggerButton = 'Spec Renderer Dropdown'
 
       const wrapper = mount(SelectDropdown, {
@@ -18,6 +18,7 @@ describe('<SelectDropdown />', () => {
           items,
           triggerButton,
         },
+        attachTo: document.body, // required for any interaction with the DOM to work
       })
 
       expect(wrapper.findTestId('select-dropdown').exists()).toBe(true)
@@ -26,6 +27,8 @@ describe('<SelectDropdown />', () => {
       expect(wrapper.findTestId('trigger-button').exists()).toBe(true)
       expect(wrapper.findTestId('trigger-button').attributes('disabled')).toBeUndefined()
       expect(wrapper.findTestId('trigger-button').text()).toBe(triggerButton)
+
+      await wrapper.findTestId('trigger-button').trigger('click')
 
       // dropdown items
       // renders 3 items
@@ -67,11 +70,11 @@ describe('<SelectDropdown />', () => {
       expect(wrapper.findTestId('select-dropdown').exists()).toBe(true)
       expect(wrapper.findTestId('trigger-button').attributes('disabled')).toBe('')
 
-      expect(wrapper.findTestId('item-2-item').isVisible()).toBe(false)
+      expect(wrapper.findTestId('item-2-item').exists()).toBe(false)
 
       await wrapper.findTestId('trigger-button').trigger('click')
 
-      expect(wrapper.findTestId('item-2-item').isVisible()).toBe(false)
+      expect(wrapper.findTestId('item-2-item').exists()).toBe(false)
     })
   })
 
@@ -86,6 +89,7 @@ describe('<SelectDropdown />', () => {
         slots: {
           'trigger-content': triggerContent,
         },
+        attachTo: document.body, // required for any interaction with the DOM to work
       })
 
       expect(wrapper.findTestId('trigger-button').exists()).toBe(true)
@@ -117,12 +121,13 @@ describe('<SelectDropdown />', () => {
       // trigger button displays the default content when no item is selected
       expect(wrapper.findTestId('trigger-button').text()).toBe(triggerButton)
 
+      await wrapper.findTestId('trigger-button').trigger('click')
+
       // renders the slot content
       expect(wrapper.findTestId('item-2-item-trigger').exists()).toBe(true)
       expect(wrapper.findTestId('item-2-item-trigger').text()).toBe(itemContent)
 
       // select the item
-      await wrapper.findTestId('trigger-button').trigger('click')
       await wrapper.findTestId('item-2-item-trigger').trigger('click')
 
       // trigger button should display the selected item slot content
@@ -148,13 +153,14 @@ describe('<SelectDropdown />', () => {
       // trigger button displays the default content when no item is selected
       expect(wrapper.findTestId('trigger-button').text()).toBe(triggerButton)
 
+      await wrapper.findTestId('trigger-button').trigger('click')
+
       // renders the slot content
       expect(wrapper.findTestId('item-2-item-trigger').exists()).toBe(false)
       expect(wrapper.findTestId(itemTestId).exists()).toBe(true)
       expect(wrapper.findTestId(itemTestId).text()).toBe(itemContent)
 
       // select the item
-      await wrapper.findTestId('trigger-button').trigger('click')
       await wrapper.findTestId(itemTestId).trigger('click')
 
       // trigger button displays the default content
@@ -168,6 +174,7 @@ describe('<SelectDropdown />', () => {
         props: {
           items,
         },
+        attachTo: document.body, // required for any interaction with the DOM to work
       })
 
       expect(wrapper.emitted('update:modelValue')).toBeUndefined()
@@ -184,6 +191,7 @@ describe('<SelectDropdown />', () => {
         props: {
           items,
         },
+        attachTo: document.body, // required for any interaction with the DOM to work
       })
 
       expect(wrapper.emitted('change')).toBeUndefined()

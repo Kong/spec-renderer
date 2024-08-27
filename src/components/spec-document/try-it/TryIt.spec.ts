@@ -6,7 +6,7 @@ import TryIt from './TryIt.vue'
 
 describe('<TryIt />', () => {
   vi.stubGlobal('open', vi.fn())
-  it('KHCP-12161 - should call fetch with correct url', async () => {
+  it('should call fetch with correct url', async () => {
     const wrapper = mount(TryIt, {
       props: {
         data: {
@@ -55,11 +55,13 @@ describe('<TryIt />', () => {
           'spec-url': ref('/http://lcalhost/xxx'),
         },
       },
-
+      attachTo: document.body, // required for any interaction with the DOM to work
     })
     const spy = vi.spyOn(window, 'open')
-    expect(wrapper.findTestId('tryit-dropdown-123').exists()).toBe(true)
-    await wrapper.findTestId('tryit-dropdown-123').trigger('click')
+
+    // open dropdown so inosomnia option is visible
+    await wrapper.findTestId('trigger-button').trigger('click')
+    // select inosomnia option
     await wrapper.findTestId('tryit-insomnia-123').trigger('click')
     expect(spy).toBeCalledWith(`https://insomnia.rest/run?uri=${encodeURIComponent('/http://lcalhost/xxx')}`, '_blank')
   })

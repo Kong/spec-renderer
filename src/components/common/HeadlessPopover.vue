@@ -14,7 +14,7 @@
 
     <Transition name="spec-renderer-fade">
       <div
-        v-show="isVisible"
+        v-if="isVisible"
         ref="popoverRef"
         :aria-activedescendant="attrs['aria-activedescendant'] ? String(attrs['aria-activedescendant']) : undefined"
         :aria-labelledby="attrs['aria-labelledby'] ? String(attrs['aria-labelledby']) : undefined"
@@ -172,14 +172,13 @@ const popoverStyles = computed(() => {
   }
 })
 
-const { floatingStyles, update: updatePosition } = useFloating(popoverTrigger, popoverRef, {
+const { floatingStyles } = useFloating(popoverTrigger, popoverRef, {
   placement: props.placement,
   middleware: [offset(props.popoverOffset), flip()],
   strategy: 'fixed',
   transform: false,
+  whileElementsMounted: autoUpdate,
 })
-
-const floatingUpdates = ref<() => void>()
 
 defineExpose({
   hidePopover,
@@ -205,13 +204,6 @@ onMounted(() => {
       popoverRef.value.addEventListener('focusout', hidePopover)
     }
   }
-
-  if (popoverTrigger.value && popoverRef.value) {
-    // start the auto updates for the popover position
-    // autoUpdate cleanup function
-    // docs: https://floating-ui.com/docs/autoUpdate#usage
-    floatingUpdates.value = autoUpdate(popoverTrigger.value, popoverRef.value, updatePosition)
-  }
 })
 
 onBeforeUnmount(() => {
@@ -231,11 +223,6 @@ onBeforeUnmount(() => {
       popoverRef.value.removeEventListener('mouseleave', hidePopover)
       popoverRef.value.removeEventListener('focusout', hidePopover)
     }
-  }
-
-  if (floatingUpdates.value) {
-    // need to cleanup the auto updates
-    floatingUpdates.value()
   }
 })
 

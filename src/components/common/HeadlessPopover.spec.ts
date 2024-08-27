@@ -46,7 +46,8 @@ describe('<HeadlessPopover />', () => {
         attachTo: document.body, // required for any interaction with the DOM to work
       })
 
-      expect(wrapper.findTestId('popover-container').isVisible()).toBe(false)
+      // popover content is not visible by default
+      expect(wrapper.findTestId('popover-container').exists()).toBe(false)
 
       await wrapper.findTestId('trigger').trigger('click')
 
@@ -63,11 +64,13 @@ describe('<HeadlessPopover />', () => {
         attachTo: document.body, // required for any interaction with the DOM to work
       })
 
-      expect(wrapper.findTestId('content').exists()).toBe(true)
-      expect(wrapper.findTestId('content').isVisible()).toBe(false)
+      // popover content is not visible by default
+      expect(wrapper.findTestId('content').exists()).toBe(false)
 
       await wrapper.findTestId('trigger').trigger('click')
 
+      // popover content is visible after click is triggered
+      expect(wrapper.findTestId('content').exists()).toBe(true)
       expect(wrapper.findTestId('content').isVisible()).toBe(true)
     })
 
@@ -82,7 +85,7 @@ describe('<HeadlessPopover />', () => {
         attachTo: document.body, // required for any interaction with the DOM to work
       })
 
-      expect(wrapper.findTestId('popover-container').isVisible()).toBe(false)
+      expect(wrapper.findTestId('popover-container').exists()).toBe(false)
 
       await wrapper.findTestId('trigger').trigger('mouseenter')
 
@@ -101,12 +104,12 @@ describe('<HeadlessPopover />', () => {
         attachTo: document.body, // required for any interaction with the DOM to work
       })
 
-      expect(wrapper.findTestId('popover-container').isVisible()).toBe(false)
+      expect(wrapper.findTestId('popover-container').exists()).toBe(false)
 
       await wrapper.findTestId('trigger').trigger('click')
 
       expect(wrapper.emitted('open')).toBeUndefined()
-      expect(wrapper.findTestId('popover-container').isVisible()).toBe(false)
+      expect(wrapper.findTestId('popover-container').exists()).toBe(false)
     })
 
     it('binds classes to popover element correctly', async () => {
@@ -117,8 +120,10 @@ describe('<HeadlessPopover />', () => {
         props: {
           popoverClasses: 'custom-class',
         },
+        attachTo: document.body, // required for any interaction with the DOM to work
       })
 
+      await wrapper.findTestId('trigger').trigger('click')
       expect(wrapper.findTestId('popover-container').classes()).toContain('custom-class')
     })
   })
