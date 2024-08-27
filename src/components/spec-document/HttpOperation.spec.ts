@@ -13,6 +13,7 @@ describe('<HttpOperation />', () => {
           data: <IHttpOperation>{
             id: '123',
             path: '/sample-path',
+            method: 'get',
             servers: <Array<IServer>>[{
               id: 'sample-server-id',
               url: 'https://stoplight.io/api',

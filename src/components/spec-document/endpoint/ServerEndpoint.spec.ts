@@ -8,19 +8,21 @@ describe('<ServerEndpoint />', () => {
     const serverUrlList = ['https://global.api.konghq.com/v2', 'https://us.api.konghq.com/v2']
     const selectedServerUrl = serverUrlList[1]
     const path = '/sample-path'
-    const wrapper = mount(ServerEndpoint, {
-      props: {
-        method: 'get',
-        path,
-        selectedServerUrl,
-        serverUrlList,
-      },
-      attachTo: document.body, // required for any interaction with the DOM to work
-    })
 
-    const select = wrapper.findTestId(`server-dropdown-get-${serverUrlList[0]}${path}`)
 
-    it('renders correctly with all required props', () => {
+    it('renders correctly with all required props', async () => {
+      const wrapper = mount(ServerEndpoint, {
+        props: {
+          method: 'get',
+          path,
+          selectedServerUrl,
+          serverUrlList,
+        },
+        attachTo: document.body, // required for any interaction with the DOM to work
+      })
+
+      const select = wrapper.findTestId(`server-dropdown-get-${serverUrlList[0]}${path}`)
+
       // the component itself is rendered
       expect(wrapper.findTestId('server-endpoint').exists()).toBe(true)
 
@@ -28,18 +30,30 @@ describe('<ServerEndpoint />', () => {
       expect(select.element.innerHTML).toContain(selectedServerUrl)
       expect(wrapper.findTestId('endpoint-path').text()).toBe(path)
 
+      // open the server list dropdown
+      await wrapper.findTestId('trigger-button').trigger('click')
 
       // the list of URLs is correctly rendered
       for (const serverUrl of serverUrlList) {
         expect(wrapper.findTestId(`${serverUrl}-item`).exists()).toBe(true)
-        expect(wrapper.findTestId(`${serverUrl}-item`).isVisible()).toBe(false)
+        expect(wrapper.findTestId(`${serverUrl}-item`).isVisible()).toBe(true)
       }
     })
 
     it('emits an event when a new server URL is selected', async () => {
+      const wrapper = mount(ServerEndpoint, {
+        props: {
+          method: 'get',
+          path,
+          selectedServerUrl,
+          serverUrlList,
+        },
+        attachTo: document.body, // required for any interaction with the DOM to work
+      })
+
       // initial value was the second item in serverUrlList array
       // updating it to the first item should trigger emit
-      expect(wrapper.findTestId(`${serverUrlList[0]}-item`).isVisible()).toBe(false)
+      expect(wrapper.findTestId(`${serverUrlList[0]}-item`).exists()).toBe(false)
 
       await wrapper.findTestId('trigger-button').trigger('click')
 
