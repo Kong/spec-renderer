@@ -76,7 +76,7 @@
     "@commitlint/cli": "^19.4.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
-    "@evilmartians/lefthook": "^1.7.12",
+    "@evilmartians/lefthook": "^1.7.13",
     "@kong/design-tokens": "^1.17.2",
     "@kong/eslint-config-kong-ui": "1.1.1",
     "@semantic-release/changelog": "^6.0.3",
