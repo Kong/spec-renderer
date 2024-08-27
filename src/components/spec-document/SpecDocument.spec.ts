@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import SpecDocument from './SpecDocument.vue'
-import type { ServiceNode } from '../../stoplight/elements/utils/oas/types'
+import type { ServiceNode } from '@/types'
 
 
 describe('<SpecDocument />', () => {

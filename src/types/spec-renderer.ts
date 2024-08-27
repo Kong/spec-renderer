@@ -13,13 +13,6 @@ export interface SchemaObject extends JSONSchema7 {
   example?: JSONSchema7Type
 }
 
-export interface AsyncMessageObject extends SchemaObject {
-  payload?: SchemaObject
-  summary?: string
-  messageId?: string
-  correlationId?: string
-}
-
 
 export interface ParseOptions {
   /**

@@ -49,6 +49,7 @@ import { NodeType } from '@/types'
 import type { ServiceNode, ServiceChildNode } from '@/types'
 import HttpService from './HttpService.vue'
 import HttpOperation from './HttpOperation.vue'
+import AsyncOperation from './AsyncOperation.vue'
 import HttpModel from './HttpModel.vue'
 import AsyncMessage from './AsyncMessage.vue'
 import ArticleNode from './ArticleNode.vue'
@@ -169,6 +170,8 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
     case NodeType.HttpOperation:
     case NodeType.HttpWebhook:
       return { component: HttpOperation, props: defaultProps, doc: forServiceNode }
+    case NodeType.AsyncOperation:
+      return { component: AsyncOperation, props: defaultProps, doc: forServiceNode }
     case NodeType.HttpService:
       return { component: HttpService, props: { ...defaultProps, specVersion: (<ServiceNode>forServiceNode).specVersion }, doc: forServiceNode }
     case NodeType.Model:
@@ -206,6 +209,7 @@ const containerSize = computed(()=> {
 })
 
 const docComponent = computed(() => {
+  //@ts-ignore ignore types for now, we might rewrite all this stuff anyways
   return getDocumentComponent(serviceNode.value)
 })
 
@@ -418,10 +422,14 @@ onBeforeMount(async () => {
 
 .nodes-wrapper {
   .overview-page, .spec-renderer-document {
+    margin-bottom: var(--kui-space-100, $kui-space-100);
     padding-bottom: var(--kui-space-100, $kui-space-100);
   }
   .spec-renderer-document {
     border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    &:last-child {
+      border-bottom: 0
+    }
   }
   .placeholder {
     height: 800px;
