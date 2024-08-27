@@ -1,6 +1,6 @@
 import { computed, ref, watch, type ComputedRef } from 'vue'
 import type { IHttpOperationResponse } from '@stoplight/types'
-import { ResponseSelectComponent } from '@/types'
+import { ResponseSelectComponent, type SelectComponentListItem } from '@/types'
 import { getResponseCodeKey } from '@/utils'
 
 export default function useResponseCode(responseList: ComputedRef<Array<IHttpOperationResponse>>) {
@@ -25,7 +25,7 @@ export default function useResponseCode(responseList: ComputedRef<Array<IHttpOpe
   }) ?? [])
   // ref to store the content type for whose response is shown
   // use the first content type as the default
-  const activeContentType = ref<string>(contentTypeList.value[0]?.value)
+  const activeContentType = ref<string>(contentTypeList.value[0]?.value ?? '')
   // compute the content list based on the active content type, to be used in HttpResponse
   const activeResponseContentList = computed(() => {
     // If only single content type present, return response contents as it is
@@ -34,14 +34,14 @@ export default function useResponseCode(responseList: ComputedRef<Array<IHttpOpe
     return activeResponse.value?.contents?.filter(content => content.mediaType === activeContentType.value)
   })
 
-  const responseSelectComponentList = computed(() => {
+  const responseSelectComponentList = computed((): Array<SelectComponentListItem> => {
     const componentList = [{
       name: ResponseSelectComponent.ResponseCodeSelectMenu,
       value: activeResponseCode.value,
       optionList: responseCodeList.value,
     }]
 
-    if (contentTypeList.value.length > 1) {
+    if (contentTypeList.value.length > 0) {
       componentList.push({
         name: ResponseSelectComponent.ContentTypeSelectMenu,
         value: activeContentType.value,
@@ -56,6 +56,10 @@ export default function useResponseCode(responseList: ComputedRef<Array<IHttpOpe
   // this will happen when a new endpoint page is opened
   watch(responseCodeList, (newResponseCodeList) => {
     activeResponseCode.value = newResponseCodeList[0]?.value
+    activeContentType.value = contentTypeList.value[0]?.value
+  })
+
+  watch(activeResponseCode, () => {
     activeContentType.value = contentTypeList.value[0]?.value
   })
 

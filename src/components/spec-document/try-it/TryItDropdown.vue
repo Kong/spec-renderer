@@ -1,5 +1,8 @@
 <template>
-  <div class="tryit-wrapper">
+  <div
+    class="tryit-wrapper"
+    :class="data.method"
+  >
     <button
       class="call-button"
       :class="{ 'no-dropdown': !showInsomnia }"
@@ -106,31 +109,35 @@ const selectionChanged = (item: SelectItem) => {
 </script>
 
 <style lang="scss" scoped>
-@mixin tryit-button-appearance {
+@mixin method-appearance(
+  $methodColor: var(--kui-method-color-text-get, $kui-method-color-text-get),
+  $hoverBg: var(--kui-method-color-background-get, $kui-method-color-background-get),
+  $textColor: $methodColor,
+) {
   .call-button {
-    border-color: var(--kui-color-border-primary, $kui-color-border-primary);
-    color: var(--kui-color-text-primary, $kui-color-text-primary);
+    border-color: $methodColor;
+    color: $textColor;
 
     &:hover,
     &:focus,
     &:active {
-      background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
+      background-color: $hoverBg;
     }
   }
 
   .tryit-dropdown {
     :deep(.trigger-button) {
-      border-color: var(--kui-color-border-primary, $kui-color-border-primary);
+      border-color: $methodColor;
 
       .select-chevron-icon {
-        color: var(--kui-color-text-primary, $kui-color-text-primary) !important;
+        color: $textColor !important;
       }
 
       &:hover,
       &:focus,
       &:active {
-        background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest) !important;
-        color: var(--kui-color-text-primary, $kui-color-text-primary) !important;
+        background-color: $hoverBg !important;
+        color: $textColor !important;
       }
     }
   }
@@ -144,12 +151,78 @@ const selectionChanged = (item: SelectItem) => {
     gap: var(--kui-space-0, $kui-space-0);
   }
 
-  @include tryit-button-appearance;
+  @include method-appearance(
+    var(--kui-color-border, $kui-color-border),
+    var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest),
+    var(--kui-color-text-neutral, $kui-color-text-neutral),
+  );
+
+  &.get {
+    @include method-appearance(
+      var(--kui-method-color-text-get, $kui-method-color-text-get),
+      var(--kui-method-color-background-get, $kui-method-color-background-get),
+    );
+  }
+
+  &.post {
+    @include method-appearance(
+      var(--kui-method-color-text-post, $kui-method-color-text-post),
+      var(--kui-method-color-background-post, $kui-method-color-background-post),
+    );
+  }
+
+  &.put {
+    @include method-appearance(
+      var(--kui-method-color-text-put, $kui-method-color-text-put),
+      var(--kui-method-color-background-put, $kui-method-color-background-put),
+    );
+  }
+
+  &.delete {
+    @include method-appearance(
+      var(--kui-method-color-text-delete, $kui-method-color-text-delete),
+      var(--kui-method-color-background-delete, $kui-method-color-background-delete),
+    );
+  }
+
+  &.patch {
+    @include method-appearance(
+      var(--kui-method-color-text-patch, $kui-method-color-text-patch),
+      var(--kui-method-color-background-patch, $kui-method-color-background-patch),
+    );
+  }
+
+  &.options {
+    @include method-appearance(
+      var(--kui-method-color-text-options, $kui-method-color-text-options),
+      var(--kui-method-color-background-options, $kui-method-color-background-options),
+    );
+  }
+
+  &.head {
+    @include method-appearance(
+      var(--kui-method-color-text-head, $kui-method-color-text-head),
+      var(--kui-method-color-background-head, $kui-method-color-background-head),
+    );
+  }
+
+  &.connect {
+    @include method-appearance(
+      var(--kui-method-color-text-connect, $kui-method-color-text-connect),
+      var(--kui-method-color-background-connect, $kui-method-color-background-connect),
+    );
+  }
+
+  &.trace {
+    @include method-appearance(
+      var(--kui-method-color-text-trace, $kui-method-color-text-trace),
+      var(--kui-method-color-background-trace, $kui-method-color-background-trace),
+    );
+  }
 }
 
 .call-button {
   @include default-button-reset;
-
   align-items: center;
   background-color: var(--kui-color-background, $kui-color-background);
   border-color: var(--kui-color-border, $kui-color-border);

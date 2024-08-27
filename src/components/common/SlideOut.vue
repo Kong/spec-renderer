@@ -1,6 +1,9 @@
 <template>
   <Teleport to="body">
-    <div class="slideout">
+    <div
+      v-bind="attrs"
+      class="slideout"
+    >
       <Transition name="spec-renderer-fade">
         <div
           v-show="visible"
@@ -45,8 +48,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onUnmounted, watch } from 'vue'
+import { ref, onUnmounted, watch, useAttrs } from 'vue'
 import { CloseIcon } from '@kong/icons'
+
+defineOptions({
+  inheritAttrs: false,
+})
+
+const attrs = useAttrs()
 
 const props = defineProps({
   visible: {
