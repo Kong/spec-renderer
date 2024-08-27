@@ -1,3 +1,10 @@
+## [1.64.1](https://github.com/Kong/spec-renderer/compare/v1.64.0...v1.64.1) (2024-08-27)
+
+
+### Bug Fixes
+
+* **spec-renderer:** remove class assigned to SlideOut component [KHCP-12981] ([#270](https://github.com/Kong/spec-renderer/issues/270)) ([ebb9fd5](https://github.com/Kong/spec-renderer/commit/ebb9fd56fa0d9b4f6cd14555e55dfd9c8de07a4c))
+
 # [1.64.0](https://github.com/Kong/spec-renderer/compare/v1.63.2...v1.64.0) (2024-08-26)
 
 
