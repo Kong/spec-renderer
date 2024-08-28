@@ -57,6 +57,20 @@
             class="http-callback-select-dropdown"
             :items="callbackKeyList"
           />
+
+          <template #callback-response>
+            <HttpResponse
+              :content-list="activeCallbackResponseContentList"
+              :description="activeCallbackResponseDescription"
+              title="Callback Response"
+            >
+              <ResponseTypeSelect
+                :component-list="activeCallbackResponseSelectComponentList"
+                @update-content-type="(newContentType) => activeCallbackContentType = newContentType"
+                @update-response-code="(newResponseCode) => activeCallbackResponseCode = newResponseCode"
+              />
+            </HttpResponse>
+          </template>
         </HttpCallbacks>
       </div>
       <div
@@ -100,6 +114,36 @@
             @update-response-code="(newResponseCode) => activeResponseCode = newResponseCode"
           />
         </ResponseSample>
+        <CallbackSample
+          v-if="activeCallback && activeCallbackRequestSample"
+          :callback-key="activeCallback.key"
+          class="http-operation-callback-sample"
+          :request-sample="activeCallbackRequestSample"
+        >
+          <template #header>
+            <SelectDropdown
+              :id="`http-callback-sample-select-dropdown-${operationData.id}`"
+              v-model="activeCallbackKey"
+              class="http-callback-select-dropdown"
+              :items="callbackKeyList"
+            /> callback sample
+          </template>
+          <ResponseSample
+            v-if="activeCallbackResponseContentList?.length"
+            :content-list="activeCallbackResponseContentList"
+            :content-type="activeCallbackContentType"
+            :response-code="activeCallbackResponseCode"
+          >
+            <div class="calback-response-sample-header">
+              <span>Callback Response</span>
+              <ResponseTypeSelect
+                :component-list="activeCallbackResponseSelectComponentList"
+                @update-content-type="(newContentType) => activeCallbackContentType = newContentType"
+                @update-response-code="(newResponseCode) => activeCallbackResponseCode = newResponseCode"
+              />
+            </div>
+          </ResponseSample>
+        </CallbackSample>
       </div>
     </section>
   </div>
@@ -115,12 +159,12 @@ import HttpCallbacks from './endpoint/HttpCallbacks.vue'
 import TryIt from './try-it/TryIt.vue'
 import RequestSample from './samples/RequestSample.vue'
 import ResponseSample from './samples/ResponseSample.vue'
+import CallbackSample from './samples/CallbackSample.vue'
 import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import ResponseTypeSelect from './endpoint/ResponseTypeSelect.vue'
 import PageHeader from '../common/PageHeader.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import { getSamplePath, getSampleQuery, getSampleBody, removeTrailingSlash } from '@/utils'
-import useCurrentResponse from '@/composables/useCurrentResponse'
 import composables from '@/composables'
 
 const props = defineProps({
@@ -172,10 +216,20 @@ const {
   activeContentType,
   activeResponseContentList,
   responseSelectComponentList,
-} = useCurrentResponse(responseList)
+} = composables.useCurrentResponse(responseList)
 
 const callbackList = computed(() => props.data.callbacks ?? [])
-const { activeCallbackKey, callbackKeyList, activeCallback } = composables.useCurrentCallback(callbackList)
+const {
+  activeCallbackKey,
+  callbackKeyList,
+  activeCallback,
+  activeCallbackRequestSample,
+  activeCallbackResponseDescription,
+  activeCallbackResponseCode,
+  activeCallbackContentType,
+  activeCallbackResponseContentList,
+  activeCallbackResponseSelectComponentList,
+} = composables.useCurrentCallback(callbackList)
 
 // this is fired when server url parameters in tryIt section getting changed
 const setServerUrl = (newServerUrl: string) => {
@@ -265,11 +319,19 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
       }
     }
 
-    .http-operation-callbacks {
+    .http-operation-callbacks, .http-operation-callback-sample {
       .http-callback-select-dropdown {
         :deep(.trigger-button) {
           @include small-bordered-trigger-button;
         }
+      }
+    }
+
+    .http-operation-callback-sample {
+      .calback-response-sample-header {
+        align-items: center;
+        display: flex;
+        gap: var(--kui-space-50, $kui-space-50);
       }
     }
 

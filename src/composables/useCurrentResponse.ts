@@ -1,7 +1,8 @@
 import { computed, ref, watch, type ComputedRef } from 'vue'
 import type { IHttpOperationResponse } from '@stoplight/types'
-import { ResponseSelectComponent, type SelectComponentListItem } from '@/types'
-import { getResponseCodeKey } from '@/utils'
+import { ResponseSelectComponent } from '@/types'
+import type { SelectComponentListItem } from '@/types'
+import { getResponseCodeKey } from '@/utils/response'
 
 export default function useResponseCode(responseList: ComputedRef<Array<IHttpOperationResponse>>) {
   // returns content type key, e.g. 'application/json' -> 'application-json'
