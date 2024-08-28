@@ -72,7 +72,7 @@ importers:
         specifier: ^2.13.0
         version: 2.13.0
       shiki:
-        specifier: ^1.13.0
+        specifier: ^1.14.1
         version: 1.14.1
     devDependencies:
       '@babel/types':
@@ -88,7 +88,7 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1(@types/node@20.16.1)(typescript@5.5.4)
       '@evilmartians/lefthook':
-        specifier: ^1.7.13
+        specifier: ^1.7.14
         version: 1.7.14
       '@kong/design-tokens':
         specifier: ^1.17.2
