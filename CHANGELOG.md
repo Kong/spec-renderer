@@ -1,3 +1,10 @@
+## [1.67.1](https://github.com/Kong/spec-renderer/compare/v1.67.0...v1.67.1) (2024-08-28)
+
+
+### Bug Fixes
+
+* allOf merging in schema variants [KHCP-13131] ([#293](https://github.com/Kong/spec-renderer/issues/293)) ([accea06](https://github.com/Kong/spec-renderer/commit/accea06f93989b7d30f145a770e431ed2f8bb614))
+
 # [1.67.0](https://github.com/Kong/spec-renderer/compare/v1.66.0...v1.67.0) (2024-08-28)
 
 
