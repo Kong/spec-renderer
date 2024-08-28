@@ -1,3 +1,10 @@
+# [1.66.0](https://github.com/Kong/spec-renderer/compare/v1.65.0...v1.66.0) (2024-08-28)
+
+
+### Features
+
+* callback examples [KHCP-13026] ([#292](https://github.com/Kong/spec-renderer/issues/292)) ([266d2d9](https://github.com/Kong/spec-renderer/commit/266d2d9637e0fa48a6373347c74d2cc1ff4f8a6a))
+
 # [1.65.0](https://github.com/Kong/spec-renderer/compare/v1.64.1...v1.65.0) (2024-08-27)
 
 
