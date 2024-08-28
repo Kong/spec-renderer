@@ -1,3 +1,10 @@
+# [1.67.0](https://github.com/Kong/spec-renderer/compare/v1.66.0...v1.67.0) (2024-08-28)
+
+
+### Features
+
+* async operation section [KHCP-12988] ([#289](https://github.com/Kong/spec-renderer/issues/289)) ([a427f17](https://github.com/Kong/spec-renderer/commit/a427f174a7623d69254aa79ca18512a21c1b3426))
+
 # [1.66.0](https://github.com/Kong/spec-renderer/compare/v1.65.0...v1.66.0) (2024-08-28)
 
 
