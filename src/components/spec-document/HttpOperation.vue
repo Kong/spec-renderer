@@ -134,6 +134,7 @@
             :content-type="activeCallbackContentType"
             :response-code="activeCallbackResponseCode"
           >
+            <span>Callback Response</span>
             <ResponseTypeSelect
               :component-list="activeCallbackResponseSelectComponentList"
               @update-content-type="(newContentType) => activeCallbackContentType = newContentType"
