@@ -134,12 +134,14 @@
             :content-type="activeCallbackContentType"
             :response-code="activeCallbackResponseCode"
           >
-            <span>Callback Response</span>
-            <ResponseTypeSelect
-              :component-list="activeCallbackResponseSelectComponentList"
-              @update-content-type="(newContentType) => activeCallbackContentType = newContentType"
-              @update-response-code="(newResponseCode) => activeCallbackResponseCode = newResponseCode"
-            />
+            <div class="calback-response-sample-header">
+              <span>Callback Response</span>
+              <ResponseTypeSelect
+                :component-list="activeCallbackResponseSelectComponentList"
+                @update-content-type="(newContentType) => activeCallbackContentType = newContentType"
+                @update-response-code="(newResponseCode) => activeCallbackResponseCode = newResponseCode"
+              />
+            </div>
           </ResponseSample>
         </CallbackSample>
       </div>
@@ -322,6 +324,14 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
         :deep(.trigger-button) {
           @include small-bordered-trigger-button;
         }
+      }
+    }
+
+    .http-operation-callback-sample {
+      .calback-response-sample-header {
+        align-items: center;
+        display: flex;
+        gap: var(--kui-space-50, $kui-space-50);
       }
     }
 
