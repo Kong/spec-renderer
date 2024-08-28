@@ -2,11 +2,11 @@ import type { TableOfContentsItem } from '../stoplight/elements-core/components/
 import type { SchemaNode } from '../stoplight/elements/utils/oas/types'
 import type { ServiceNode, AsyncMessageNode } from '@/types'
 import { SpecVersion } from '../stoplight/elements/utils/oas/types'
-import type { AsyncAPIDocumentInterface, OperationInterface, SchemaInterface } from '@asyncapi/parser'
-import type { SchemaObject, AsyncMessageObject } from '@/types'
+import type { AsyncAPIDocumentInterface, MessageInterface, OperationInterface, SchemaInterface } from '@asyncapi/parser'
+import type { SchemaObject, AsyncMessageObject, AsyncOperationNode } from '@/types'
 import { PayloadType } from '@/types'
 import { NodeType } from '@/types'
-import type { IHttpService, IHttpOperation, HttpSecurityScheme } from '@stoplight/types'
+import type { IHttpService, HttpSecurityScheme } from '@stoplight/types'
 
 /**
  * return label for opetation type
@@ -38,6 +38,30 @@ const getOperationTypeLabel = ({
 }
 
 /**
+ *  transform async message
+ * @param message
+ * @returns
+ */
+export const transformMessage = (message: MessageInterface): AsyncMessageNode => {
+
+  return <AsyncMessageNode>{
+    type: NodeType.AsyncMessage,
+    uri: `/message-${message.id()}`,
+    name: message.id() || '',
+    data: <AsyncMessageObject>{
+      description: message.description(),
+      summary: message.summary(),
+      correlationId: message.correlationId()?.location(),
+      title: message.title(),
+      messageId: message.id(),
+      ...(message.hasPayload() ? {
+        payload: <SchemaObject>transformSchema(message.payload()),
+      } : null),
+    },
+  }
+}
+
+/**
  *
  * @param operation Return operation type
  * @returns
@@ -61,7 +85,7 @@ const getOperationType = (operation: OperationInterface) =>{
  * @param schema transform properties
  * @returns
  */
-const transformSchema = (schema: SchemaInterface | undefined):Record<string, any> => {
+export const transformSchema = (schema: SchemaInterface | undefined):Record<string, any> => {
   if (!schema) {
     return {}
   }
@@ -253,18 +277,17 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
         meta: getOperationTypeLabel({ type: getOperationType(operation), isAsyncAPIv2 }),
       })
 
-      //TODO: KHCP-12989
-      //@ts-ignore fix when time to develop
-      resDOC.children.push(<IHttpOperation>{
-        type: 'http_operation',
+      resDOC.children.push(<AsyncOperationNode>{
+        type: 'async_operation',
         uri: `/operation-${operation.id()}`,
         name: operation.id() || '',
         data: {
-          description: operation.description(),
+          operation,
+          method: getOperationTypeLabel({ type: getOperationType(operation), isAsyncAPIv2 }),
         },
       })
-
     })
+
     resTOC.push(operationsGroup)
   }
 
@@ -284,20 +307,7 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
         type: NodeType.Model,
         meta: '',
       })
-      resDOC.children.push(<AsyncMessageNode>{
-        type: NodeType.AsyncMessage,
-        uri: `/message-${message.id()}`,
-        name: message.id() || '',
-        data: <AsyncMessageObject>{
-          description: message.description(),
-          summary: message.summary(),
-          correlationId: message.correlationId()?.location(),
-          title: message.title(),
-          messageId: message.id(),
-          ...(message.hasPayload() ? {
-            payload: <SchemaObject>transformSchema(message.payload()) } : null),
-        },
-      })
+      resDOC.children.push(transformMessage(message))
     })
     resTOC.push(messagesGroup)
   }
