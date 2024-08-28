@@ -57,6 +57,20 @@
             class="http-callback-select-dropdown"
             :items="callbackKeyList"
           />
+
+          <template #callback-response>
+            <HttpResponse
+              :content-list="activeCallbackResponseContentList"
+              :description="activeCallbackResponseDescription"
+              title="Callback Response"
+            >
+              <ResponseTypeSelect
+                :component-list="activeCallbackResponseSelectComponentList"
+                @update-content-type="(newContentType) => activeCallbackContentType = newContentType"
+                @update-response-code="(newResponseCode) => activeCallbackResponseCode = newResponseCode"
+              />
+            </HttpResponse>
+          </template>
         </HttpCallbacks>
       </div>
       <div
@@ -103,8 +117,30 @@
         <CallbackSample
           v-if="activeCallback && activeCallbackRequestSample"
           :callback-key="activeCallback.key"
+          class="http-operation-callback-sample"
           :request-sample="activeCallbackRequestSample"
-        />
+        >
+          <template #header>
+            <SelectDropdown
+              :id="`http-callback-sample-select-dropdown-${operationData.id}`"
+              v-model="activeCallbackKey"
+              class="http-callback-select-dropdown"
+              :items="callbackKeyList"
+            /> callback sample
+          </template>
+          <ResponseSample
+            v-if="activeCallbackResponseContentList?.length"
+            :content-list="activeCallbackResponseContentList"
+            :content-type="activeCallbackContentType"
+            :response-code="activeCallbackResponseCode"
+          >
+            <ResponseTypeSelect
+              :component-list="activeCallbackResponseSelectComponentList"
+              @update-content-type="(newContentType) => activeCallbackContentType = newContentType"
+              @update-response-code="(newResponseCode) => activeCallbackResponseCode = newResponseCode"
+            />
+          </ResponseSample>
+        </CallbackSample>
       </div>
     </section>
   </div>
@@ -185,6 +221,11 @@ const {
   callbackKeyList,
   activeCallback,
   activeCallbackRequestSample,
+  activeCallbackResponseDescription,
+  activeCallbackResponseCode,
+  activeCallbackContentType,
+  activeCallbackResponseContentList,
+  activeCallbackResponseSelectComponentList,
 } = composables.useCurrentCallback(callbackList)
 
 // this is fired when server url parameters in tryIt section getting changed
@@ -275,7 +316,7 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
       }
     }
 
-    .http-operation-callbacks {
+    .http-operation-callbacks, .http-operation-callback-sample {
       .http-callback-select-dropdown {
         :deep(.trigger-button) {
           @include small-bordered-trigger-button;

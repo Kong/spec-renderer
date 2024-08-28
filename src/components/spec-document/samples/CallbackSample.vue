@@ -1,14 +1,17 @@
 <template>
   <div class="callback-sample">
     <div class="callback-sample-header">
-      <span class="active-callback-key">{{ callbackKey }}</span> callback sample
+      <slot name="header" />
     </div>
-    <SchemaExample
-      v-if="requestSample"
-      class="callback-sample-body"
-      :schema-example-json="requestSample"
-      title="Callback Body"
-    />
+    <div class="callback-sample-content">
+      <SchemaExample
+        v-if="requestSample"
+        class="callback-request-sample"
+        :schema-example-json="requestSample"
+        title="Callback Body"
+      />
+      <slot />
+    </div>
   </div>
 </template>
 
@@ -49,8 +52,12 @@ defineProps({
     }
   }
 
-  .callback-sample-body {
-    margin: var(--kui-space-50, $kui-space-50);
+  .callback-sample-content {
+    padding: var(--kui-space-50, $kui-space-50);
+
+    .callback-request-sample {
+      margin-bottom: var(--kui-space-50, $kui-space-50);
+    }
   }
 }
 </style>
