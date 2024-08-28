@@ -43,21 +43,24 @@
         title="Parameters"
       />
     </section>
-    <div
-      v-if="acceptedMessages.length"
-    >
-      <OverviewPanel
+    <div v-if="acceptedMessages.length">
+      <CollapsibleSection
         v-for="message in acceptedMessages"
         :key="message.messageId"
-        :title="`Message accepted: ${message.messageId}`"
+        :border-visible="false"
       >
-        <template #content>
+        <template #title>
+          <h2>
+            {{ `Message accepted: ${message.messageId}` }}
+          </h2>
+        </template>
+        <div class="accepted-collapsible-section-content">
           <AsyncMessage
             :data="message"
             title=""
           />
-        </template>
-      </OverviewPanel>
+        </div>
+      </CollapsibleSection>
     </div>
   </div>
 </template>
@@ -73,7 +76,7 @@ import type { IHttpParam } from '@stoplight/types'
 import type { ChannelParameterInterface, MessageInterface } from '@asyncapi/parser'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import { transformSchema, transformMessage } from '@/utils/async-to-oas-transformer'
-import OverviewPanel from './overview//OverviewPanel.vue'
+import CollapsibleSection from './endpoint/CollapsibleSection.vue'
 import AsyncMessage from './AsyncMessage.vue'
 
 const props = defineProps({
@@ -148,6 +151,12 @@ const requestParams = computed(() => {
   .operation-description {
     padding-top: var(--kui-space-40, $kui-space-40);
   }
-}
 
+  .accepted-collapsible-section-content {
+    background: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    margin-top: var(--kui-space-20, $kui-space-20);
+    padding: var(--kui-space-50, $kui-space-50);
+  }
+}
 </style>
