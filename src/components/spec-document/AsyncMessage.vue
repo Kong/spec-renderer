@@ -39,7 +39,7 @@
         />
         <CollapsibleSection title="Payload">
           <ModelNode
-            :schema="activeSchemaModel"
+            :schema="payload"
             :title="title"
             @selected-model-changed="(newModel: SchemaObject) => activeSchemaModel = newModel"
           />
@@ -78,7 +78,8 @@ const props = defineProps({
   },
 })
 const dataTestId = computed(() => `http-async-message-${props.title.replaceAll(' ', '-')}`)
-const activeSchemaModel = ref<SchemaObject>(props.data.payload || {})
+const payload = computed(() => props.data.payload ?? {})
+const activeSchemaModel = ref<SchemaObject>(payload.value)
 const exampleModel = computed(() => {
   const crawledExample = crawl({
     objData: activeSchemaModel.value,
