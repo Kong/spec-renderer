@@ -6,9 +6,9 @@ import { inheritedPropertyName, isValidSchemaObject, resolveSchemaObjectFields }
 export default function useSchemaVariants(schemaModel: ComputedRef<SchemaObject>) {
   const inheritanceTypeLabel = computed(() =>
     schemaModel.value?.oneOf?.length
-      ? 'oneOf'
+      ? 'ONE OF'
       : schemaModel.value?.anyOf?.length
-        ? 'anyOf'
+        ? 'ANY OF'
         : '',
   )
 

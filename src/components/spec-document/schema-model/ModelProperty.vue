@@ -4,6 +4,7 @@
     :data-testid="dataTestId"
   >
     <PropertyFieldList
+      :inheritance-type-label="inheritanceTypeLabel"
       :property="resolvedSchemaObject"
       :property-name="propertyName"
       :required-fields="requiredFields"
@@ -14,7 +15,6 @@
     <div
       v-if="variantSelectItemList.length"
       class="selected-variant-container"
-      :data-testid="`${dataTestId}-${inheritanceTypeLabel}`"
     >
       <ModelProperty
         :property="selectedSchemaModel"

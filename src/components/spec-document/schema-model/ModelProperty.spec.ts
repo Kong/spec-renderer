@@ -69,9 +69,6 @@ describe('<ModelProperty />', () => {
         },
       })
 
-      // Check if container for oneOf renders
-      expect(wrapper.findTestId('model-property-NodeChildren-oneOf').exists()).toBe(true)
-
       // Check if ModelProperty component renders for the first oneOf object
       expect(wrapper.findTestId(`model-property-${oneOfList[0].title}`).exists()).toBe(true)
     })
@@ -87,9 +84,6 @@ describe('<ModelProperty />', () => {
           propertyName: 'NodeChildren',
         },
       })
-
-      // Check if container for oneOf renders
-      expect(wrapper.findTestId('model-property-NodeChildren-oneOf').exists()).toBe(true)
 
       // Check if ModelProperty component renders for the first oneOf object
       expect(wrapper.findTestId(`model-property-${oneOfList[0].title}`).exists()).toBe(true)
@@ -126,9 +120,6 @@ describe('<ModelProperty />', () => {
         },
       })
 
-      // Check if container for anyOf renders
-      expect(wrapper.findTestId('model-property-NodeChildren-anyOf').exists()).toBe(true)
-
       // Check if ModelProperty component renders for the first anyOf object
       expect(wrapper.findTestId(`model-property-${anyOfList[0].title}`).exists()).toBe(true)
     })
@@ -144,9 +135,6 @@ describe('<ModelProperty />', () => {
           propertyName: 'NodeChildren',
         },
       })
-
-      // Check if container for anyOf renders
-      expect(wrapper.findTestId('model-property-NodeChildren-anyOf').exists()).toBe(true)
 
       // Check if ModelProperty component renders for the first anyOf object
       expect(wrapper.findTestId(`model-property-${anyOfList[0].title}`).exists()).toBe(true)
