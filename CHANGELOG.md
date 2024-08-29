@@ -1,3 +1,10 @@
+# [1.68.0](https://github.com/Kong/spec-renderer/compare/v1.67.2...v1.68.0) (2024-08-29)
+
+
+### Features
+
+* label for schema variant select-menu [KHCP-13129] ([#296](https://github.com/Kong/spec-renderer/issues/296)) ([85df51a](https://github.com/Kong/spec-renderer/commit/85df51a3861a00cef82b2c12206e993bfcfd975e))
+
 ## [1.67.2](https://github.com/Kong/spec-renderer/compare/v1.67.1...v1.67.2) (2024-08-29)
 
 
