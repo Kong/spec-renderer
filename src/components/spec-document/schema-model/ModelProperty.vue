@@ -15,7 +15,6 @@
     <div
       v-if="variantSelectItemList.length"
       class="selected-variant-container"
-      :data-testid="`${dataTestId}-${inheritanceTypeLabel}`"
     >
       <ModelProperty
         :property="selectedSchemaModel"

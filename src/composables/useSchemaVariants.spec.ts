@@ -29,7 +29,7 @@ describe('useSchemaVariants', () => {
       }))
 
       const { inheritanceTypeLabel } = useSchemaVariants(schemaModel)
-      expect(inheritanceTypeLabel.value).toBe('oneOf')
+      expect(inheritanceTypeLabel.value).toBe('ONE OF')
     })
     it('returns valid label for schema model with anyOf', () => {
       const schemaModel = computed((): SchemaObject => ({
@@ -38,7 +38,7 @@ describe('useSchemaVariants', () => {
       }))
 
       const { inheritanceTypeLabel } = useSchemaVariants(schemaModel)
-      expect(inheritanceTypeLabel.value).toBe('anyOf')
+      expect(inheritanceTypeLabel.value).toBe('ANY OF')
     })
     it('returns valid label for schema model with neither oneOf nor anyOf', () => {
       const schemaModel = computed((): SchemaObject => ({
