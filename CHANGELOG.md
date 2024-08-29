@@ -1,3 +1,10 @@
+## [1.67.2](https://github.com/Kong/spec-renderer/compare/v1.67.1...v1.67.2) (2024-08-29)
+
+
+### Bug Fixes
+
+* stringify default values before rendering [KHCP-13145] ([#297](https://github.com/Kong/spec-renderer/issues/297)) ([901a445](https://github.com/Kong/spec-renderer/commit/901a44531ac8964b3fab685817e84ff7d11aa209))
+
 ## [1.67.1](https://github.com/Kong/spec-renderer/compare/v1.67.0...v1.67.1) (2024-08-28)
 
 
