@@ -5,15 +5,18 @@
   >
     <span class="field-title">Default:</span>
     <span class="property-field-default-value">
-      {{ defaultValue }}
+      {{ stringifyUnknownValue(defaultValue) }}
     </span>
   </p>
 </template>
 
 <script setup lang="ts">
+import { stringifyUnknownValue } from '@/utils'
+
 defineProps({
   defaultValue: {
-    type: String,
+    // allow any type since typeof default value is unknown
+    type: null,
     required: true,
   },
 })

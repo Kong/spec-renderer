@@ -111,7 +111,7 @@ const orderedFieldList = computed(() => {
     fields.push({
       component: PropertyDefault,
       props: {
-        defaultValue: String(props.property.default),
+        defaultValue: props.property.default,
       },
       eventHandlers:{},
       key: 'property-default',
