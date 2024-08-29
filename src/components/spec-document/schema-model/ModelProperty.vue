@@ -4,6 +4,7 @@
     :data-testid="dataTestId"
   >
     <PropertyFieldList
+      :inheritance-type-label="inheritanceTypeLabel"
       :property="resolvedSchemaObject"
       :property-name="propertyName"
       :required-fields="requiredFields"

@@ -4,13 +4,19 @@
     :data-testid="dataTestId"
   >
     <template v-if="variantSelectItemList.length">
-      <SelectDropdown
-        :id="`${dataTestId}-variant-select-dropdown`"
-        class="model-node-variant-select"
-        :items="variantSelectItemList"
-        :model-value="selectedVariantIndex.toString()"
-        @change="handleVariantSelectChange"
-      />
+      <div>
+        <VariantLabel
+          v-if="inheritanceTypeLabel"
+          :label="inheritanceTypeLabel"
+        />
+        <SelectDropdown
+          :id="`${dataTestId}-variant-select-dropdown`"
+          class="model-node-variant-select"
+          :items="variantSelectItemList"
+          :model-value="selectedVariantIndex.toString()"
+          @change="handleVariantSelectChange"
+        />
+      </div>
       <!-- if the schema model has variants, render the selected variant -->
       <ModelProperty
         v-if="selectedSchemaModel?.oneOf || selectedSchemaModel?.anyOf"
@@ -57,6 +63,7 @@ import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import type { SchemaObject, SelectItem } from '@/types'
 import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 import useSchemaVariants from '@/composables/useSchemaVariants'
+import VariantLabel from '@/components/common/VariantLabel.vue'
 
 const props = defineProps({
   schema: {
@@ -78,7 +85,7 @@ const props = defineProps({
 })
 
 const resolvedSchemaObject = computed(() => resolveSchemaObjectFields(props.schema))
-const { variantSelectItemList, selectedSchemaModel, selectedVariantIndex } = useSchemaVariants(resolvedSchemaObject)
+const { variantSelectItemList, selectedSchemaModel, selectedVariantIndex, inheritanceTypeLabel } = useSchemaVariants(resolvedSchemaObject)
 
 function handleVariantSelectChange(selecteditem: SelectItem) {
   selectedVariantIndex.value = Number(selecteditem.value)
