@@ -49,7 +49,16 @@ export const resolveSchemaObjectFields = (candidate: unknown): SchemaObject => {
   */
   if (candidate.type === 'array' && candidate.items) {
     if (isValidSchemaObject(candidate.items)) {
-      return { ...resolveAllOf(candidate.items), type: 'array', format: candidate.items.type?.toString() }
+      /**
+       * we need —
+       * - fields listed directly under the model, except items
+       * - fields listed under items, so we destructure items
+       * - data type as 'array' and format as the array item data type
+       * if a field is present in both items and the model itself, we use the one from items
+       */
+      const candidateWithoutItems = { ...candidate }
+      delete candidateWithoutItems.items
+      return { ...candidateWithoutItems, ...resolveAllOf(candidate.items), type: 'array', format: candidate.items.type?.toString() }
     } else {
       return {}
     }
