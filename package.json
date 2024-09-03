@@ -111,7 +111,7 @@
     "stylelint-order": "^6.0.4",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
-    "tslib": "^2.6.3",
+    "tslib": "^2.7.0",
     "typescript": "^5.5.4",
     "vite": "^5.4.2",
     "vite-plugin-node-polyfills": "^0.22.0",
@@ -175,8 +175,8 @@
     "node": ">=18.17.0"
   },
   "volta": {
-    "node": "20.16.0",
-    "pnpm": "9.7.1"
+    "node": "20.17.0",
+    "pnpm": "9.8.0"
   },
   "config": {
     "commitizen": {
