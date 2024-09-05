@@ -1,3 +1,10 @@
+## [1.68.2](https://github.com/Kong/spec-renderer/compare/v1.68.1...v1.68.2) (2024-09-05)
+
+
+### Bug Fixes
+
+* **schema-model:** merge fields correctyl for array schema objects ([#301](https://github.com/Kong/spec-renderer/issues/301)) ([d5bd79b](https://github.com/Kong/spec-renderer/commit/d5bd79b695c5ceaf52b786fc49b2862708a30c56))
+
 ## [1.68.1](https://github.com/Kong/spec-renderer/compare/v1.68.0...v1.68.1) (2024-09-05)
 
 
