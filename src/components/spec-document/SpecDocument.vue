@@ -439,3 +439,13 @@ onBeforeMount(async () => {
   }
 }
 </style>
+
+<style lang="scss">
+.spec-renderer-document {
+  // hide default marker for details element
+  details > summary::marker,
+  details > summary::-webkit-details-marker /* Safari */ {
+    display: none;
+  }
+}
+</style>
