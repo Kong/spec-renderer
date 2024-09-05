@@ -1,3 +1,10 @@
+## [1.68.1](https://github.com/Kong/spec-renderer/compare/v1.68.0...v1.68.1) (2024-09-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @vueuse/core to v11 ([#298](https://github.com/Kong/spec-renderer/issues/298)) ([408b6e0](https://github.com/Kong/spec-renderer/commit/408b6e076319b16c73b8000fabe1736bbc13de2c))
+
 # [1.68.0](https://github.com/Kong/spec-renderer/compare/v1.67.2...v1.68.0) (2024-08-29)
 
 
