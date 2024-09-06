@@ -418,6 +418,15 @@ onBeforeMount(async () => {
   color: var(--kui-color-text, $kui-color-text);
   container: spec-document / inline-size;
   padding-top: var(--kui-space-40, $kui-space-40);
+
+  :deep(details) {
+    > summary {
+      &::marker,
+      &::-webkit-details-marker {
+        display: none;
+      }
+    }
+  }
 }
 
 .nodes-wrapper {
@@ -436,16 +445,6 @@ onBeforeMount(async () => {
     max-height: 800px;
     opacity: 0;
     overflow: hidden;
-  }
-}
-</style>
-
-<style lang="scss">
-.spec-renderer-document {
-  // hide default marker for details element
-  details > summary::marker,
-  details > summary::-webkit-details-marker /* Safari */ {
-    display: none;
   }
 }
 </style>
