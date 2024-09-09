@@ -239,10 +239,7 @@ watch(isVisible, (val) => {
 .popover {
   .popover-container {
     // fixes z-index issue in safari
-    -webkit-transform:translateZ(1px);
-    -moz-transform:translateZ(1px);
-    -o-transform:translateZ(1px);
-    transform:translateZ(1px);
+    transform: translateZ(1px);
     z-index: 1000;
   }
 }
