@@ -27,8 +27,13 @@
           <Tooltip
             v-if="params[pKey].description"
             :id="`request-${paramType}-tooltip-${params[pKey].name || pKey}-${data.id}`"
-            :text="params[pKey].description"
-          />
+          >
+            <template #content>
+              <MarkdownRenderer
+                :markdown="params[pKey].description"
+              />
+            </template>
+          </Tooltip>
         </InputLabel>
         <input
           :id="`request-${paramType}-input-${params[pKey].name || pKey}-${data.id}`"
@@ -69,6 +74,7 @@ import type { RequestParamTypes } from '@/types'
 import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
+import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import RequiredToggle from './RequiredToggle.vue'
 
 /**
