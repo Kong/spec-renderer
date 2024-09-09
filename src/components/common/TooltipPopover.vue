@@ -46,8 +46,8 @@ defineProps({
 <style lang="scss" scoped>
 .tooltip-popover {
   .tooltip-trigger-info-icon {
-    height: var(--kui-icon-size-40, $kui-icon-size-40) !important;
-    width: var(--kui-icon-size-40, $kui-icon-size-40) !important;
+    height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
+    width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
   }
 
   :deep(.popover-content) {
