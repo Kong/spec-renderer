@@ -12,13 +12,13 @@
       :type="isWebhookOperation ? 'WEBHOOK' : ''"
     >
       <ServerEndpoint
-        v-if="serverList.length && operationData.path"
+        v-if="serverUrlList.length && operationData.path"
         class="http-operation-server-endpoint"
         :data-testid="`server-endpoint-${operationData.id}`"
         :method="operationData.method"
         :path="operationData.path"
-        :selected-server-url="selectedServerURL"
-        :server-url-list="serverList"
+        :selected-server-url="selectedServerUrl"
+        :server-url-list="serverUrlList"
         @selected-server-changed="updateSelectedServerURL"
       />
     </PageHeader>
@@ -81,7 +81,7 @@
           v-model="excludeNotRequiredInTryIt"
           :data="operationData"
           :request-body="currentRequestBody"
-          :server-url="selectedServerURL"
+          :server-url="selectedServerUrl"
           @access-tokens-changed="setAuthHeaders"
           @request-body-changed="setRequestBody"
           @request-headers-changed="setRequestHeaders"
@@ -200,13 +200,16 @@ const setAuthHeaders = (newHeaders: Array<Record<string, string>>, newAuthQuery:
 
 const serverList = computed(() => props.data.servers?.map(server => removeTrailingSlash(server.url)) ?? [])
 
-// this is the server selected by user, defaults to first server in the list
-const selectedServerURL = ref<string>(serverList.value?.[0] ?? '')
 const currentServerUrl = ref<string>(serverList.value?.[0] ?? '')
 const currentRequestPath = ref<string>('')
 const currentRequestQuery = ref<string>('')
 const currentRequestHeaders = ref<Array<Record<string, string>>>([])
 const currentRequestBody = ref<string>('')
+
+const {
+  serverUrlList,
+  selectedServerUrl,
+} = composables.useServerList()
 
 // refs and computed properties to manage currently active response object
 const responseList = computed(() => props.data.responses ?? [])
@@ -263,7 +266,7 @@ const setRequestBodyByIdx = (newSampleIdx: number) => {
 }
 
 function updateSelectedServerURL(url: string) {
-  selectedServerURL.value = url
+  selectedServerUrl.value = url
   currentServerUrl.value = url
 }
 

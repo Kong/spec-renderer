@@ -96,6 +96,11 @@ const serverUrl = ref<string>(props.selectedServerUrl)
 watch(serverUrl, (newUrl) => {
   changeEndpointServer(newUrl)
 })
+
+// reset serverUrl when the prop `selectedServerUrl` changes
+watch(() => props.selectedServerUrl, (newUrl) => {
+  serverUrl.value = newUrl
+})
 </script>
 
 <style lang="scss" scoped>

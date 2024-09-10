@@ -2,6 +2,7 @@ import useSchemaParser from './useSchemaParser'
 import useShiki from './useShiki'
 import useCurrentCallback from './useCurrentCallback'
 import useCurrentResponse from './useCurrentResponse'
+import useServerList from './useServerList'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
@@ -9,4 +10,5 @@ export default {
   useShiki,
   useCurrentCallback,
   useCurrentResponse,
+  useServerList,
 }

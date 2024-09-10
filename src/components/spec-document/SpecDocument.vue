@@ -58,6 +58,7 @@ import { useWindowScroll, useWindowSize, useElementSize, useScroll } from '@vueu
 import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE } from '@/constants'
 import type { NavigationTypes } from '@/types'
 import { stringify } from 'flatted'
+import { removeTrailingSlash } from '@/utils'
 
 const props = defineProps({
   document: {
@@ -135,6 +136,8 @@ const props = defineProps({
 })
 
 const { createHighlighter } = composables.useShiki()
+const { initialize } = composables.useServerList()
+
 
 const serviceNode = ref<ServiceNode | null>(null)
 
@@ -364,6 +367,12 @@ watch(() => ({
   if (oldDocument !== newDocument) {
     lastY.value = 0
     renderPlain.value = false
+
+    // initialize the centralized state for server list
+    initialize({
+      serverUrlList: serviceNode.value?.data.servers?.map(server => removeTrailingSlash(server.url)) ?? [],
+      selectedServerUrl: serviceNode.value?.data.servers?.[0]?.url || '',
+    })
   }
 
   if (!props.allowContentScrolling) {
