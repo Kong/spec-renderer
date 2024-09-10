@@ -91,7 +91,9 @@ watch(showToggle, (nV: boolean) => {
   label {
     display: inline !important;
     flex: 1;
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
     font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+    line-height: var(--kui-line-height-20, $kui-line-height-20);
   }
 
 }
