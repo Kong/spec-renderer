@@ -238,6 +238,8 @@ watch(isVisible, (val) => {
 <style lang="scss" scoped>
 .popover {
   .popover-container {
+    // fixes z-index issue in safari
+    transform: translateZ(1px);
     z-index: 1000;
   }
 }
