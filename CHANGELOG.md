@@ -1,3 +1,10 @@
+## [1.68.4](https://github.com/Kong/spec-renderer/compare/v1.68.3...v1.68.4) (2024-09-10)
+
+
+### Bug Fixes
+
+* safari styling issues [KHCP-13176] ([#304](https://github.com/Kong/spec-renderer/issues/304)) ([b6cc009](https://github.com/Kong/spec-renderer/commit/b6cc0097104bb8209f08a94594a2af9267a261a1))
+
 ## [1.68.3](https://github.com/Kong/spec-renderer/compare/v1.68.2...v1.68.3) (2024-09-06)
 
 
