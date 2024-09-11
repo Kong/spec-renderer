@@ -30,21 +30,21 @@
           class="overview-server-list-add-custom-url-input"
         >
           <input
-            v-model="customURl"
+            v-model.trim="customURl"
             placeholder="Enter custom URL"
             type="text"
           >
           <button
             @click="handleAddCustomUrl"
           >
-            <AddIcon />
+            <AddIcon decorative />
             Add custom URL
           </button>
           <button
             class="danger"
             @click="clearCustomUrlInput"
           >
-            <ClearIcon />
+            <ClearIcon decorative />
             Cancel
           </button>
         </div>
@@ -53,7 +53,7 @@
           v-else
           @click="showCustomUrlInput = true"
         >
-          <AddIcon />
+          <AddIcon decorative />
           Add custom URL
         </button>
       </ul>
@@ -108,6 +108,7 @@ const clearCustomUrlInput = () => {
 
   button {
     @include button-default;
+    height: var(--kui-icon-size-70, $kui-icon-size-70);
   }
 
   > :not(:first-child) {
