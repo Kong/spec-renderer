@@ -1,12 +1,13 @@
-import { reactive, toRefs } from 'vue'
+import type { IServer } from '@stoplight/types'
+import { computed, reactive, toRefs } from 'vue'
 
 interface ServerListState {
-  serverUrlList: Array<string>
+  serverList: Array<IServer>
   selectedServerUrl: string
 }
 
 const state: ServerListState = reactive({
-  serverUrlList: [],
+  serverList: [],
   selectedServerUrl: '',
 })
 
@@ -20,23 +21,25 @@ const state: ServerListState = reactive({
  */
 export default function useSyncState() {
 
-  const { serverUrlList, selectedServerUrl } = toRefs(state)
+  const { serverList, selectedServerUrl } = toRefs(state)
 
-  const initialize = ({ serverUrlList, selectedServerUrl }: ServerListState) => {
-    console.log('initializing server list: ', { serverUrlList, selectedServerUrl })
-    state.serverUrlList = serverUrlList
+  const initialize = ({ serverList, selectedServerUrl }: ServerListState) => {
+    state.serverList = serverList
     state.selectedServerUrl = selectedServerUrl
   }
 
   const addServerUrl = (newServerUrl: string) => {
-    state.serverUrlList.push(newServerUrl)
+    state.serverList.push({ id: state.serverList.length.toString(), url: newServerUrl })
   }
 
   const removeServerUrl = (serverUrl: string) => {
-    state.serverUrlList = state.serverUrlList.filter(url => url !== serverUrl)
+    state.serverList = state.serverList.filter(server => server.url !== serverUrl)
   }
 
+  const serverUrlList = computed(() => serverList.value?.map(server => server.url) ?? [])
+
   return {
+    serverList,
     serverUrlList,
     selectedServerUrl,
     initialize,

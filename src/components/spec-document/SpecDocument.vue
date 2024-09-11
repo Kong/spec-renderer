@@ -370,7 +370,7 @@ watch(() => ({
 
     // initialize the centralized state for server list
     initialize({
-      serverUrlList: serviceNode.value?.data.servers?.map(server => removeTrailingSlash(server.url)) ?? [],
+      serverList: serviceNode.value?.data.servers || [],
       selectedServerUrl: serviceNode.value?.data.servers?.[0]?.url || '',
     })
   }
