@@ -1,3 +1,10 @@
+## [1.68.6](https://github.com/Kong/spec-renderer/compare/v1.68.5...v1.68.6) (2024-09-11)
+
+
+### Bug Fixes
+
+* miscellaneous styling issues [KHCP-13200] ([#310](https://github.com/Kong/spec-renderer/issues/310)) ([ef2408d](https://github.com/Kong/spec-renderer/commit/ef2408ddaeffc20497a193a2ac2c992c88f4b9b7))
+
 ## [1.68.5](https://github.com/Kong/spec-renderer/compare/v1.68.4...v1.68.5) (2024-09-11)
 
 
