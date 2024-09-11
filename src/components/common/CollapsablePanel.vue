@@ -126,6 +126,8 @@ const toggleState = (e: Event) => {
     border-top: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    // hides the edges slightly visible on rounded corners
+    overflow-y: hidden;
 
     :deep(.short) {
       display: flex;
