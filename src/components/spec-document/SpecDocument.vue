@@ -58,7 +58,6 @@ import { useWindowScroll, useWindowSize, useElementSize, useScroll } from '@vueu
 import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE } from '@/constants'
 import type { NavigationTypes } from '@/types'
 import { stringify } from 'flatted'
-import { removeTrailingSlash } from '@/utils'
 
 const props = defineProps({
   document: {

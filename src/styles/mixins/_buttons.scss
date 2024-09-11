@@ -5,3 +5,52 @@
   cursor: pointer;
   padding: var(--kui-space-0, $kui-space-0);
 }
+
+@mixin button-default {
+  @include default-button-reset;
+  align-items: center;
+  background-color: var(--kui-color-background-primary, $kui-color-background-primary);
+  border: var(--kui-border-width-20, $kui-border-width-20) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
+  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+  color: var(--kui-color-text-inverse, $kui-color-text-inverse);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--kui-font-family-text, $kui-font-family-text);
+  font-size: var(--kui-font-size-30, $kui-font-size-30);
+  gap: var(--kui-space-30, $kui-space-30);
+  justify-content: center;
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
+  padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
+  transition: background-color var(--kui-animation-duration-20, 0.2s) ease-in-out,
+    color var(--kui-animation-duration-20, 0.2s) ease-in-out,
+    border-color var(--kui-animation-duration-20, 0.2s) ease-in-out;
+  white-space: nowrap;
+
+  &:hover:not(:disabled):not(:focus):not(:active) {
+    background-color: var(--kui-color-background-primary-strong, $kui-color-background-primary-strong);
+  }
+
+  &:focus-visible {
+    background-color: var(--kui-color-background-primary-stronger, $kui-color-background-primary-stronger);
+  }
+
+  &:active {
+    background-color: var(--kui-color-background-primary-strongest, $kui-color-background-primary-strongest);
+  }
+
+  &.danger {
+    background-color: var(--kui-color-background-danger, $kui-color-background-danger);
+
+    &:hover:not(:disabled):not(:focus):not(:active) {
+      background-color: var(--kui-color-background-danger-strong, $kui-color-background-danger-strong);
+    }
+
+    &:focus-visible {
+      background-color: var(--kui-color-background-danger-stronger, $kui-color-background-danger-stronger);
+    }
+
+    &:active {
+      background-color: var(--kui-color-background-danger-strongest, $kui-color-background-danger-strongest);
+    }
+  }
+}
