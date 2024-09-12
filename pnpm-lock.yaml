@@ -115,7 +115,7 @@ importers:
         specifier: ^14.1.2
         version: 14.1.2
       '@types/node':
-        specifier: ^20.16.2
+        specifier: ^20.16.3
         version: 20.16.5
       '@types/sanitize-html':
         specifier: ^2.13.0
@@ -154,7 +154,7 @@ importers:
         specifier: ^25.0.0
         version: 25.0.0
       postcss:
-        specifier: ^8.4.42
+        specifier: ^8.4.43
         version: 8.4.45
       postcss-html:
         specifier: ^1.7.0
