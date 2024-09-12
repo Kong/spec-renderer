@@ -87,10 +87,9 @@
           @request-headers-changed="setRequestHeaders"
           @request-path-changed="setRequestPath"
           @request-query-changed="setRequestQuery"
-          @server-url-changed="setServerUrl"
         />
         <RequestSample
-          v-if="currentServerUrl && currentRequestPath"
+          v-if="selectedServerUrl && currentRequestPath"
           v-model="excludeNotRequiredInSample"
           :auth-headers="authHeaders"
           :auth-query="authQuery"
@@ -99,7 +98,7 @@
           :request-body="currentRequestBody"
           :request-path="currentRequestPath"
           :request-query="currentRequestQuery"
-          :server-url="currentServerUrl"
+          :server-url="selectedServerUrl"
           @request-body-sample-idx-changed="setRequestBodyByIdx"
         />
         <ResponseSample
@@ -164,7 +163,7 @@ import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import ResponseTypeSelect from './endpoint/ResponseTypeSelect.vue'
 import PageHeader from '../common/PageHeader.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import { getSamplePath, getSampleQuery, getSampleBody, removeTrailingSlash } from '@/utils'
+import { getSamplePath, getSampleQuery, getSampleBody } from '@/utils'
 import composables from '@/composables'
 
 const props = defineProps({
@@ -198,18 +197,16 @@ const setAuthHeaders = (newHeaders: Array<Record<string, string>>, newAuthQuery:
   authQuery.value = newAuthQuery
 }
 
-const serverList = computed(() => props.data.servers?.map(server => removeTrailingSlash(server.url)) ?? [])
+const {
+  serverUrlList,
+  selectedServerUrl,
+} = composables.useServerList()
 
-const currentServerUrl = ref<string>(serverList.value?.[0] ?? '')
 const currentRequestPath = ref<string>('')
 const currentRequestQuery = ref<string>('')
 const currentRequestHeaders = ref<Array<Record<string, string>>>([])
 const currentRequestBody = ref<string>('')
 
-const {
-  serverUrlList,
-  selectedServerUrl,
-} = composables.useServerList()
 
 // refs and computed properties to manage currently active response object
 const responseList = computed(() => props.data.responses ?? [])
@@ -233,11 +230,6 @@ const {
   activeCallbackResponseContentList,
   activeCallbackResponseSelectComponentList,
 } = composables.useCurrentCallback(callbackList)
-
-// this is fired when server url parameters in tryIt section getting changed
-const setServerUrl = (newServerUrl: string) => {
-  currentServerUrl.value = newServerUrl
-}
 
 const setRequestPath = (newPath: string) => {
   currentRequestPath.value = newPath
@@ -267,7 +259,6 @@ const setRequestBodyByIdx = (newSampleIdx: number) => {
 
 function updateSelectedServerURL(url: string) {
   selectedServerUrl.value = url
-  currentServerUrl.value = url
 }
 
 watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value } ), (newValue) => {
