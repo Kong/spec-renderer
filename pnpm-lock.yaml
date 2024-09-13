@@ -33,8 +33,8 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0
       '@stoplight/json':
-        specifier: ^3.21.6
-        version: 3.21.6
+        specifier: ^3.21.7
+        version: 3.21.7
       '@stoplight/types':
         specifier: ^14.1.1
         version: 14.1.1
@@ -88,8 +88,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1(@types/node@20.16.5)(typescript@5.5.4)
       '@evilmartians/lefthook':
-        specifier: ^1.7.14
-        version: 1.7.14
+        specifier: ^1.7.15
+        version: 1.7.15
       '@kong/design-tokens':
         specifier: ^1.17.2
         version: 1.17.2
@@ -154,7 +154,7 @@ importers:
         specifier: ^25.0.0
         version: 25.0.0
       postcss:
-        specifier: ^8.4.43
+        specifier: ^8.4.44
         version: 8.4.45
       postcss-html:
         specifier: ^1.7.0
@@ -703,8 +703,8 @@ packages:
     resolution: {integrity: sha512-BsWiH1yFGjXXS2yvrf5LyuoSIIbPrGUWob917o+BTKuZ7qJdxX8aJLRxs1fS9n6r7vESrq1OUqb68dANcFXuQQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@evilmartians/lefthook@1.7.14':
-    resolution: {integrity: sha512-0FPRdmd7hIZXjTQKQjLnmqxx4xGRIM1oGN9pJ4PyI14tOqEAwstmLIbauqQpTVTj3MAPeylsQVXh9RGaq/F2/A==}
+  '@evilmartians/lefthook@1.7.15':
+    resolution: {integrity: sha512-YgKTw9noH/SG0aOaPgrZNRgY7iJ0FuIVfvdB/aGsNulYLqiFnJyID2sfCaQ7PsGaFng2wdFBhmK/wbnb8+qPcA==}
     cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
@@ -1104,8 +1104,8 @@ packages:
     resolution: {integrity: sha512-5O0apqJ/t4sIevXCO3SBN9AHCEKKR/Zb4gaj7wYe5863jme9g02Q0n/GhM7ZCALkL+vGPTe4ZzTETP8TFtsw3g==}
     engines: {node: '>=8.3.0'}
 
-  '@stoplight/json@3.21.6':
-    resolution: {integrity: sha512-KGisXfNigoYdWIj1jA4p3IAAIW5YFpU9BdoECdjyDLBbhWGGHzs77e0STSCBmXQ/K3ApxfED2R7mQ79ymjzlvQ==}
+  '@stoplight/json@3.21.7':
+    resolution: {integrity: sha512-xcJXgKFqv/uCEgtGlPxy3tPA+4I+ZI4vAuMJ885+ThkTHFVkC+0Fm58lA9NlsyjnkpxFh4YiQWpH+KefHdbA0A==}
     engines: {node: '>=8.3.0'}
 
   '@stoplight/ordered-object-literal@1.0.5':
@@ -5735,7 +5735,7 @@ snapshots:
 
   '@eslint/object-schema@2.1.4': {}
 
-  '@evilmartians/lefthook@1.7.14': {}
+  '@evilmartians/lefthook@1.7.15': {}
 
   '@exodus/schemasafe@1.3.0': {}
 
@@ -6168,7 +6168,7 @@ snapshots:
 
   '@stoplight/http-spec@7.1.0':
     dependencies:
-      '@stoplight/json': 3.21.6
+      '@stoplight/json': 3.21.7
       '@stoplight/json-schema-generator': 1.0.2
       '@stoplight/types': 14.1.0
       '@types/json-schema': 7.0.11
@@ -6192,7 +6192,7 @@ snapshots:
 
   '@stoplight/json-ref-resolver@3.1.6':
     dependencies:
-      '@stoplight/json': 3.21.6
+      '@stoplight/json': 3.21.7
       '@stoplight/path': 1.3.2
       '@stoplight/types': 13.20.0
       '@types/urijs': 1.19.25
@@ -6222,7 +6222,7 @@ snapshots:
       lodash: 4.17.21
       safe-stable-stringify: 1.1.1
 
-  '@stoplight/json@3.21.6':
+  '@stoplight/json@3.21.7':
     dependencies:
       '@stoplight/ordered-object-literal': 1.0.5
       '@stoplight/path': 1.3.2
@@ -6238,7 +6238,7 @@ snapshots:
   '@stoplight/spectral-core@1.18.3':
     dependencies:
       '@stoplight/better-ajv-errors': 1.0.3(ajv@8.17.1)
-      '@stoplight/json': 3.21.6
+      '@stoplight/json': 3.21.7
       '@stoplight/path': 1.3.2
       '@stoplight/spectral-parsers': 1.0.4
       '@stoplight/spectral-ref-resolver': 1.0.4
@@ -6263,7 +6263,7 @@ snapshots:
 
   '@stoplight/spectral-formats@1.6.0':
     dependencies:
-      '@stoplight/json': 3.21.6
+      '@stoplight/json': 3.21.7
       '@stoplight/spectral-core': 1.18.3
       '@types/json-schema': 7.0.15
       tslib: 2.7.0
@@ -6273,7 +6273,7 @@ snapshots:
   '@stoplight/spectral-functions@1.8.0':
     dependencies:
       '@stoplight/better-ajv-errors': 1.0.3(ajv@8.17.1)
-      '@stoplight/json': 3.21.6
+      '@stoplight/json': 3.21.7
       '@stoplight/spectral-core': 1.18.3
       '@stoplight/spectral-formats': 1.6.0
       '@stoplight/spectral-runtime': 1.1.2
@@ -6288,7 +6288,7 @@ snapshots:
 
   '@stoplight/spectral-parsers@1.0.4':
     dependencies:
-      '@stoplight/json': 3.21.6
+      '@stoplight/json': 3.21.7
       '@stoplight/types': 14.1.1
       '@stoplight/yaml': 4.3.0
       tslib: 2.7.0
@@ -6305,7 +6305,7 @@ snapshots:
 
   '@stoplight/spectral-runtime@1.1.2':
     dependencies:
-      '@stoplight/json': 3.21.6
+      '@stoplight/json': 3.21.7
       '@stoplight/path': 1.3.2
       '@stoplight/types': 12.5.0
       abort-controller: 3.0.0
