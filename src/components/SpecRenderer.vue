@@ -53,6 +53,7 @@
         <SpecDocument
           v-if="parsedDocument && currentPath"
           :allow-content-scrolling="allowContentScrolling"
+          :allow-custom-server-url="allowCustomServerUrl"
           :base-path="basePath"
           :control-address-bar="controlAddressBar"
           :current-path="currentPathDOC"
@@ -197,6 +198,13 @@ const props = defineProps({
   markdownStyles: {
     type: Boolean,
     default: true,
+  },
+  /**
+   * Allow user to add custom server url which will be added to the list of available servers
+   */
+  allowCustomServerUrl: {
+    type: Boolean,
+    default: false,
   },
 })
 

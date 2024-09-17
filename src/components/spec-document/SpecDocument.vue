@@ -132,6 +132,13 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  /**
+   * Allow user to add custom server url which will be added to the list of available servers
+   */
+  allowCustomServerUrl: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { createHighlighter } = composables.useShiki()
@@ -146,6 +153,7 @@ provide<Ref<string>>('base-path', computed((): string => props.basePath))
 provide<Ref<boolean>>('hide-tryit', computed((): boolean => props.hideTryIt))
 provide<Ref<boolean>>('hide-insomnia-tryit', computed((): boolean => props.hideInsomniaTryIt))
 provide<Ref<boolean>>('markdown-styles', computed((): boolean => props.markdownStyles))
+provide<Ref<boolean>>('allow-custom-server-url', computed((): boolean => props.allowCustomServerUrl))
 
 const emit = defineEmits < {
   (e: 'path-not-found', requestedPath: string): void,

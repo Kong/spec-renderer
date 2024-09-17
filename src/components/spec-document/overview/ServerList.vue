@@ -24,48 +24,49 @@
             :markdown="server.description"
           />
         </li>
-
-        <div
-          v-if="showCustomUrlInput"
-          class="overview-server-list-add-custom-url-input"
-        >
-          <input
-            v-model.trim="customURl"
-            placeholder="Enter custom URL"
-            type="text"
+        <template v-if="allowCustomServerUrl">
+          <div
+            v-if="showCustomUrlInput"
+            class="overview-server-list-add-custom-url-input"
           >
+            <input
+              v-model.trim="customURl"
+              placeholder="Enter custom URL"
+              type="text"
+            >
+            <button
+              @click="handleAddCustomUrl"
+            >
+              <AddIcon decorative />
+              Add custom URL
+            </button>
+            <button
+              class="danger"
+              @click="clearCustomUrlInput"
+            >
+              <ClearIcon decorative />
+              Cancel
+            </button>
+          </div>
+
           <button
-            @click="handleAddCustomUrl"
+            v-else
+            @click="showCustomUrlInput = true"
           >
             <AddIcon decorative />
             Add custom URL
           </button>
-          <button
-            class="danger"
-            @click="clearCustomUrlInput"
-          >
-            <ClearIcon decorative />
-            Cancel
-          </button>
-        </div>
-
-        <button
-          v-else
-          @click="showCustomUrlInput = true"
-        >
-          <AddIcon decorative />
-          Add custom URL
-        </button>
+        </template>
       </ul>
     </template>
   </OverviewPanel>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import { NetworkIcon } from '@kong/icons'
 import type { IServer } from '@stoplight/types'
-import type { PropType } from 'vue'
+import type { PropType, Ref } from 'vue'
 import OverviewPanel from './OverviewPanel.vue'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import { AddIcon, ClearIcon } from '@kong/icons'
@@ -77,6 +78,8 @@ defineProps({
     required: true,
   },
 })
+
+const allowCustomServerUrl = inject<Ref<boolean>>('allow-custom-server-url', ref(false))
 
 const emit = defineEmits<{
   (e: 'add-custom-url', url: string): void
