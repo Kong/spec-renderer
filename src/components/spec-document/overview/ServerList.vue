@@ -35,13 +35,14 @@
               type="text"
             >
             <button
+              class="secondary"
               @click="handleAddCustomUrl"
             >
               <AddIcon decorative />
               Add custom URL
             </button>
             <button
-              class="danger"
+              class="tertiary"
               @click="clearCustomUrlInput"
             >
               <ClearIcon decorative />
