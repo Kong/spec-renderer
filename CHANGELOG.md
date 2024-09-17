@@ -1,3 +1,10 @@
+# [1.69.0](https://github.com/Kong/spec-renderer/compare/v1.68.7...v1.69.0) (2024-09-17)
+
+
+### Features
+
+* enable openapi schemas support in async docs [KHCP-13324] ([#317](https://github.com/Kong/spec-renderer/issues/317)) ([52ef58b](https://github.com/Kong/spec-renderer/commit/52ef58b58db5b612f77a45c19988de7bd3150c2a))
+
 ## [1.68.7](https://github.com/Kong/spec-renderer/compare/v1.68.6...v1.68.7) (2024-09-17)
 
 
