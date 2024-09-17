@@ -38,14 +38,12 @@
               class="secondary"
               @click="handleAddCustomUrl"
             >
-              <AddIcon decorative />
               Save URL
             </button>
             <button
               class="tertiary"
               @click="clearCustomUrlInput"
             >
-              <ClearIcon decorative />
               Cancel
             </button>
           </div>
