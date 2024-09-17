@@ -103,7 +103,6 @@ export default (): {
     let parsed = null
     try {
       const { document/*, diagnostics*/ } = await asyncParser.parse(specToParse)
-
       if (!document) {
         return false
       }
