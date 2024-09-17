@@ -98,18 +98,21 @@ const securitySchemeSelectItems = computed((): Array<SelectItem> => {
 const activeScheme = ref<string>(securitySchemeSelectItems.value[0]?.value)
 
 // this is details for selected from the list - we grab all elements for schemeIdx
-const securityScheme = ref<HttpSecurityScheme[] | undefined>([])
+const securityScheme = computed<HttpSecurityScheme[] | undefined>(() =>
+  props.data.security?.find(
+    (secGroup) => secGroup[0]?.key === activeScheme.value,
+  ),
+)
+const tokenValues = ref<string[]>([])
 
 const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): string => {
   //@ts-ignore `name` is valid property
   return scheme.name || scheme.bearerFormat || defaultName || 'Access Token'
 }
 
-const tokenValues = ref<string[]>([])
 
 // when different security scheme selected we need to re-draw the form and reset the tokenValues
-watch(activeScheme, (newIdx) => {
-  securityScheme.value = props.data.security?.find((secGroup) => secGroup[0]?.key === newIdx)
+watch(activeScheme, () => {
   tokenValues.value = Array.from({ length: securityScheme.value?.length || 0 }, () => '')
 }, { immediate: true })
 
@@ -118,7 +121,7 @@ watch(tokenValues, (newValues) => {
   // do something
   const debouncedFn = useDebounceFn(()=> {
     const authHeaders:Array<Record<string, string>> = []
-    const authQuery = <Record<string, string>>{}
+    const authQuery: Record<string, string> = {}
     newValues.forEach((tokenValue, i) => {
       if (securityScheme.value?.[i]) {
         const scheme: HttpSecurityScheme = securityScheme.value[i]
