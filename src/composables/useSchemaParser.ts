@@ -102,7 +102,7 @@ export default (): {
 
     let parsed = null
     try {
-      const { document } = await asyncParser.parse(specToParse)
+      const { document/*, diagnostics*/ } = await asyncParser.parse(specToParse)
 
       if (!document) {
         return false
@@ -114,7 +114,7 @@ export default (): {
     }
     trace(options.traceParsing, 'async document parsed')
 
-    //now as we have document we could create TOC and document
+    // now as we have document we could create TOC and document
     try {
       const { toc, document: transformed } = transformAsync(parsed, {
         hideSchemas: options?.hideSchemas,
