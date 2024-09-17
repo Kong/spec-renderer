@@ -10,6 +10,8 @@ import type { ValidateResult } from '@scalar/openapi-parser'
 import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
 import AsyncParser from '@asyncapi/parser/browser'
+import { OpenAPISchemaParser } from '@asyncapi/openapi-schema-parser'
+
 import { transform as transformAsync } from '@/utils/async-to-oas-transformer'
 
 const trace = (doTrace: boolean | undefined, ...args: any) => {
@@ -18,6 +20,7 @@ const trace = (doTrace: boolean | undefined, ...args: any) => {
   }
 }
 const asyncParser = new AsyncParser()
+asyncParser.registerSchemaParser(OpenAPISchemaParser())
 
 export default (): {
   parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
@@ -99,7 +102,8 @@ export default (): {
 
     let parsed = null
     try {
-      const { document/*, diagnostics*/ } = await asyncParser.parse(specToParse)
+      const { document, diagnostics } = await asyncParser.parse(specToParse)
+      console.log('async document:', document, diagnostics)
       if (!document) {
         return false
       }
@@ -110,7 +114,7 @@ export default (): {
     }
     trace(options.traceParsing, 'async document parsed')
 
-    // now as we have document we could create TOC and document
+    //now as we have document we could create TOC and document
     try {
       const { toc, document: transformed } = transformAsync(parsed, {
         hideSchemas: options?.hideSchemas,
