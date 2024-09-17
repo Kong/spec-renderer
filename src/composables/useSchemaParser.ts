@@ -102,8 +102,8 @@ export default (): {
 
     let parsed = null
     try {
-      const { document, diagnostics } = await asyncParser.parse(specToParse)
-      console.log('async document:', document, diagnostics)
+      const { document } = await asyncParser.parse(specToParse)
+
       if (!document) {
         return false
       }
