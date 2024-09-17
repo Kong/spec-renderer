@@ -61,6 +61,7 @@ import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import type { SelectItem } from '@/types'
+import composables from '@/composables'
 
 const props = defineProps({
   data: {
@@ -68,6 +69,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const { tokenValues, initializeTokenValues } = composables.useAuthTokenState()
 
 const emit = defineEmits<{
   (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>, authQuery: string): void
@@ -103,7 +106,6 @@ const securityScheme = computed<HttpSecurityScheme[] | undefined>(() =>
     (secGroup) => secGroup[0]?.key === activeScheme.value,
   ),
 )
-const tokenValues = ref<string[]>([])
 
 const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): string => {
   //@ts-ignore `name` is valid property
@@ -113,8 +115,8 @@ const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): strin
 
 // when different security scheme selected we need to re-draw the form and reset the tokenValues
 watch(activeScheme, () => {
-  tokenValues.value = Array.from({ length: securityScheme.value?.length || 0 }, () => '')
-}, { immediate: true })
+  initializeTokenValues(securityScheme.value?.length)
+})
 
 // when tokenValues changed we need to fire event to set security headers and queries
 watch(tokenValues, (newValues) => {
