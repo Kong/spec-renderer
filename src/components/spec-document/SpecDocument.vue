@@ -418,6 +418,15 @@ onBeforeMount(async () => {
   color: var(--kui-color-text, $kui-color-text);
   container: spec-document / inline-size;
   padding-top: var(--kui-space-40, $kui-space-40);
+
+  :deep(details) {
+    > summary {
+      &::marker,
+      &::-webkit-details-marker {
+        display: none;
+      }
+    }
+  }
 }
 
 .nodes-wrapper {

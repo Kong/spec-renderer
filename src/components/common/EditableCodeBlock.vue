@@ -265,8 +265,6 @@ watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.
 
 <style lang="scss" scoped>
 .editable-code-wrapper {
-  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
-  border-radius: var(--kui-border-radius-40, $kui-border-radius-40);
   box-sizing: border-box;
   font-family: var(--kui-font-family-code, $kui-font-family-code);
   font-size: var(--kui-font-size-20, $kui-font-size-20);

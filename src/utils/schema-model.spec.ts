@@ -73,6 +73,33 @@ describe('resolveSchemaObjectFields', () => {
     expect(resolveSchemaObjectFields(schemaObject)?.properties).toEqual(itemProperties)
     expect(resolveSchemaObjectFields(schemaObject)?.required).toEqual(itemRequiredFields)
   })
+  it('merges items and properties of a Schema Object of type array correctly', () => {
+    // fields under items
+    const itemProperties: Record<string, SchemaObject> = {
+      name: {
+        type: 'string',
+      },
+    }
+    const itemRequiredFields = ['name']
+
+    // fields directly under the schema object
+    const schemaDescription = 'Example description'
+
+    const schemaObject: SchemaObject = {
+      type: 'array',
+      description: schemaDescription,
+      readOnly: true,
+      items: {
+        type: 'object',
+        properties: itemProperties,
+        required: itemRequiredFields,
+      },
+    }
+    expect(resolveSchemaObjectFields(schemaObject)?.properties).toEqual(itemProperties)
+    expect(resolveSchemaObjectFields(schemaObject)?.required).toEqual(itemRequiredFields)
+    expect(resolveSchemaObjectFields(schemaObject)?.description).toEqual(schemaDescription)
+    expect(resolveSchemaObjectFields(schemaObject)?.readOnly).toEqual(true)
+  })
   it('returns empty objects for invalid Schema Object', () => {
     const invalidSchemaObjectList = [
       [{

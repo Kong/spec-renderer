@@ -78,9 +78,18 @@ function handleSelectInputChange(item: SelectItem, componentName: ResponseSelect
   }
 
   .response-type-select-label {
-    @include small-bordered-trigger-button;
-    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-    font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+    // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+    // stylelint-disable-next-line no-duplicate-selectors
+    & {
+      @include small-bordered-trigger-button;
+    }
+
+    // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+    // stylelint-disable-next-line no-duplicate-selectors
+    & {
+      border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+      font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+    }
   }
 }
 </style>

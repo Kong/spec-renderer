@@ -1,3 +1,73 @@
+## [1.68.7](https://github.com/Kong/spec-renderer/compare/v1.68.6...v1.68.7) (2024-09-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @scalar/openapi-parser to ^0.8.1 ([#316](https://github.com/Kong/spec-renderer/issues/316)) ([15fc2db](https://github.com/Kong/spec-renderer/commit/15fc2dbe39e62014568d321c6b29a824f7581903))
+
+## [1.68.6](https://github.com/Kong/spec-renderer/compare/v1.68.5...v1.68.6) (2024-09-11)
+
+
+### Bug Fixes
+
+* miscellaneous styling issues [KHCP-13200] ([#310](https://github.com/Kong/spec-renderer/issues/310)) ([ef2408d](https://github.com/Kong/spec-renderer/commit/ef2408ddaeffc20497a193a2ac2c992c88f4b9b7))
+
+## [1.68.5](https://github.com/Kong/spec-renderer/compare/v1.68.4...v1.68.5) (2024-09-11)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#311](https://github.com/Kong/spec-renderer/issues/311)) ([23a2839](https://github.com/Kong/spec-renderer/commit/23a28393048ef8048b1d47b9210bc878e8e9e27a))
+
+## [1.68.4](https://github.com/Kong/spec-renderer/compare/v1.68.3...v1.68.4) (2024-09-10)
+
+
+### Bug Fixes
+
+* safari styling issues [KHCP-13176] ([#304](https://github.com/Kong/spec-renderer/issues/304)) ([b6cc009](https://github.com/Kong/spec-renderer/commit/b6cc0097104bb8209f08a94594a2af9267a261a1))
+
+## [1.68.3](https://github.com/Kong/spec-renderer/compare/v1.68.2...v1.68.3) (2024-09-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @vueuse/core to ^11.0.3 ([#305](https://github.com/Kong/spec-renderer/issues/305)) ([c515c6b](https://github.com/Kong/spec-renderer/commit/c515c6b103db762ac7c5410a375e124be4bc366d))
+
+## [1.68.2](https://github.com/Kong/spec-renderer/compare/v1.68.1...v1.68.2) (2024-09-05)
+
+
+### Bug Fixes
+
+* **schema-model:** merge fields correctyl for array schema objects ([#301](https://github.com/Kong/spec-renderer/issues/301)) ([d5bd79b](https://github.com/Kong/spec-renderer/commit/d5bd79b695c5ceaf52b786fc49b2862708a30c56))
+
+## [1.68.1](https://github.com/Kong/spec-renderer/compare/v1.68.0...v1.68.1) (2024-09-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @vueuse/core to v11 ([#298](https://github.com/Kong/spec-renderer/issues/298)) ([408b6e0](https://github.com/Kong/spec-renderer/commit/408b6e076319b16c73b8000fabe1736bbc13de2c))
+
+# [1.68.0](https://github.com/Kong/spec-renderer/compare/v1.67.2...v1.68.0) (2024-08-29)
+
+
+### Features
+
+* label for schema variant select-menu [KHCP-13129] ([#296](https://github.com/Kong/spec-renderer/issues/296)) ([85df51a](https://github.com/Kong/spec-renderer/commit/85df51a3861a00cef82b2c12206e993bfcfd975e))
+
+## [1.67.2](https://github.com/Kong/spec-renderer/compare/v1.67.1...v1.67.2) (2024-08-29)
+
+
+### Bug Fixes
+
+* stringify default values before rendering [KHCP-13145] ([#297](https://github.com/Kong/spec-renderer/issues/297)) ([901a445](https://github.com/Kong/spec-renderer/commit/901a44531ac8964b3fab685817e84ff7d11aa209))
+
+## [1.67.1](https://github.com/Kong/spec-renderer/compare/v1.67.0...v1.67.1) (2024-08-28)
+
+
+### Bug Fixes
+
+* allOf merging in schema variants [KHCP-13131] ([#293](https://github.com/Kong/spec-renderer/issues/293)) ([accea06](https://github.com/Kong/spec-renderer/commit/accea06f93989b7d30f145a770e431ed2f8bb614))
+
 # [1.67.0](https://github.com/Kong/spec-renderer/compare/v1.66.0...v1.67.0) (2024-08-28)
 
 

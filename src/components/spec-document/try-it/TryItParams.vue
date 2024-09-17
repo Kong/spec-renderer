@@ -1,6 +1,7 @@
 <template>
   <CollapsablePanel
     v-show="params && Object.keys(params).length"
+    class="try-it-params"
     :content-to-copy="contentToCopy"
     :data-testid="`tryit-params-${paramType}-${data.id}`"
     :start-collapsed="paramType !== 'body'"
@@ -27,8 +28,13 @@
           <Tooltip
             v-if="params[pKey].description"
             :id="`request-${paramType}-tooltip-${params[pKey].name || pKey}-${data.id}`"
-            :text="params[pKey].description"
-          />
+          >
+            <template #content>
+              <MarkdownRenderer
+                :markdown="params[pKey].description"
+              />
+            </template>
+          </Tooltip>
         </InputLabel>
         <input
           :id="`request-${paramType}-input-${params[pKey].name || pKey}-${data.id}`"
@@ -43,14 +49,16 @@
 
     <div
       v-if="paramType === 'body' && params && Object.keys(params).length"
-      class="wide"
+      class="wide body-param"
     >
       <RequiredToggle
         v-model="excludeNotRequired"
+        class="required-fields-toggle"
         :data="data"
       />
 
       <EditableCodeBlock
+        class="body-param-code-block"
         :code="fieldValues.body"
         lang="json"
         @request-body-changed="requestBodyChanged"
@@ -69,6 +77,7 @@ import type { RequestParamTypes } from '@/types'
 import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
+import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import RequiredToggle from './RequiredToggle.vue'
 
 /**
@@ -195,8 +204,29 @@ watch(fieldValues, (newFieldValues) => {
 </script>
 
 <style lang="scss" scoped>
-.param-label {
-  margin-bottom: var(--kui-space-40, $kui-space-40) !important;
+.try-it-params {
+  .param-label {
+    margin-bottom: var(--kui-space-40, $kui-space-40);
+  }
+
+  .wide.body-param {
+    // remove flex gap and margin inherited from CollapsablePanel
+    gap: 0px;
+    margin: var(--kui-space-0, $kui-space-0);
+
+    .required-fields-toggle {
+      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      margin: var(--kui-space-0, $kui-space-0);
+      padding: var(--kui-space-60, $kui-space-60) var(--kui-space-50, $kui-space-50);
+    }
+
+    .body-param-code-block {
+      // remove border-radius inherited from pre mixin in mixins/_code.scss
+      :deep(pre) {
+        border-radius: var(--kui-border-radius-0, $kui-border-radius-0);
+      }
+    }
+  }
 }
 
 input[type=text] {

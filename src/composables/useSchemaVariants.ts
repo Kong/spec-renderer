@@ -1,14 +1,14 @@
 // composable to manage schema variants for oneOf/anyOf
 import { computed, ref, type ComputedRef } from 'vue'
 import type { SchemaObject, SelectItem } from '@/types'
-import { inheritedPropertyName, isValidSchemaObject } from '@/utils'
+import { inheritedPropertyName, isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 
 export default function useSchemaVariants(schemaModel: ComputedRef<SchemaObject>) {
   const inheritanceTypeLabel = computed(() =>
     schemaModel.value?.oneOf?.length
-      ? 'oneOf'
+      ? 'ONE OF'
       : schemaModel.value?.anyOf?.length
-        ? 'anyOf'
+        ? 'ANY OF'
         : '',
   )
 
@@ -16,7 +16,7 @@ export default function useSchemaVariants(schemaModel: ComputedRef<SchemaObject>
   const schemaVariantList = computed(() =>
     (schemaModel.value?.oneOf || schemaModel.value?.anyOf || []).filter(
       isValidSchemaObject,
-    ),
+    ).map(resolveSchemaObjectFields),
   )
 
   /**
