@@ -69,7 +69,7 @@ import type { IServer } from '@stoplight/types'
 import type { PropType, Ref } from 'vue'
 import OverviewPanel from './OverviewPanel.vue'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
-import { AddIcon, ClearIcon } from '@kong/icons'
+import { AddIcon } from '@kong/icons'
 import { removeTrailingSlash } from '@/utils'
 
 defineProps({
