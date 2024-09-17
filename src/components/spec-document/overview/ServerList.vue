@@ -39,7 +39,7 @@
               @click="handleAddCustomUrl"
             >
               <AddIcon decorative />
-              Add custom URL
+              Save URL
             </button>
             <button
               class="tertiary"
@@ -52,6 +52,7 @@
 
           <button
             v-else
+            class="secondary"
             @click="showCustomUrlInput = true"
           >
             <AddIcon decorative />
