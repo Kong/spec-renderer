@@ -22,8 +22,9 @@
         :markdown="data.description"
       />
       <ServerList
-        v-if="Array.isArray(data.servers) && data.servers.length"
-        :server-list="data.servers"
+        v-if="serverList.length"
+        :server-list="serverList"
+        @add-custom-url="addServerUrl"
       />
       <SecurityList
         v-if="Array.isArray(data.securitySchemes) && data.securitySchemes.length"
@@ -48,6 +49,7 @@ import AdditionalInfo from './overview/AdditionalInfo.vue'
 import LabelBadge from '../common/LabelBadge.vue'
 import PageHeader from '../common/PageHeader.vue'
 import MarkdownRenderer from '../common/MarkdownRenderer.vue'
+import composables from '@/composables'
 
 defineProps({
   data: {
@@ -59,6 +61,8 @@ defineProps({
     required: true,
   },
 })
+
+const { serverList, addServerUrl } = composables.useServerList()
 </script>
 
 <style lang="scss" scoped>

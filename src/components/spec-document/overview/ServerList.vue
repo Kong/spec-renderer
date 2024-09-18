@@ -24,17 +24,53 @@
             :markdown="server.description"
           />
         </li>
+        <template v-if="allowCustomServerUrl">
+          <div
+            v-if="showCustomUrlInput"
+            class="overview-server-list-add-custom-url-input"
+          >
+            <input
+              v-model.trim="customURl"
+              placeholder="Enter custom URL"
+              type="text"
+            >
+            <button
+              class="secondary"
+              @click="handleAddCustomUrl"
+            >
+              Save URL
+            </button>
+            <button
+              class="tertiary"
+              @click="clearCustomUrlInput"
+            >
+              Cancel
+            </button>
+          </div>
+
+          <button
+            v-else
+            class="secondary"
+            @click="showCustomUrlInput = true"
+          >
+            <AddIcon decorative />
+            Add custom URL
+          </button>
+        </template>
       </ul>
     </template>
   </OverviewPanel>
 </template>
 
 <script setup lang="ts">
+import { inject, ref } from 'vue'
 import { NetworkIcon } from '@kong/icons'
 import type { IServer } from '@stoplight/types'
-import type { PropType } from 'vue'
+import type { PropType, Ref } from 'vue'
 import OverviewPanel from './OverviewPanel.vue'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
+import { AddIcon } from '@kong/icons'
+import { removeTrailingSlash } from '@/utils'
 
 defineProps({
   serverList: {
@@ -42,6 +78,27 @@ defineProps({
     required: true,
   },
 })
+
+const allowCustomServerUrl = inject<Ref<boolean>>('allow-custom-server-url', ref(false))
+
+const emit = defineEmits<{
+  (e: 'add-custom-url', url: string): void
+}>()
+
+const showCustomUrlInput = ref<boolean>(false)
+const customURl = ref('')
+
+const handleAddCustomUrl = () => {
+  if (!customURl.value.length) return
+
+  emit('add-custom-url', removeTrailingSlash(customURl.value))
+  clearCustomUrlInput()
+}
+
+const clearCustomUrlInput = () => {
+  showCustomUrlInput.value = false
+  customURl.value = ''
+}
 </script>
 
 <style lang="scss" scoped>
@@ -51,6 +108,11 @@ defineProps({
   font-size: var(--kui-font-size-30, $kui-font-size-30);
   list-style: none;
   padding: var(--kui-space-0, $kui-space-0);
+
+  button {
+    @include button-default;
+    height: var(--kui-icon-size-70, $kui-icon-size-70);
+  }
 
   > :not(:first-child) {
     margin-top: var(--kui-space-50, $kui-space-50);
@@ -67,6 +129,16 @@ defineProps({
       color: var(--kui-color-text, $kui-color-text);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       margin-right: var(--kui-space-40, $kui-space-40);
+    }
+  }
+
+  > .overview-server-list-add-custom-url-input {
+    align-items: center;
+    display: flex;
+    gap: var(--kui-space-40, $kui-space-40);
+
+    input {
+      @include input-default;
     }
   }
 }

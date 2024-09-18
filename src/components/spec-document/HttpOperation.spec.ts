@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import HttpOperation from './HttpOperation.vue'
 import type { IHttpOperation, IServer } from '@stoplight/types'
+import composables from '@/composables'
 
 
 describe('<HttpOperation />', () => {
@@ -83,11 +84,17 @@ describe('<HttpOperation />', () => {
         summary: 'sample endpoint name',
         path: '/sample-path',
         responses: [],
-        servers: [{
+      }
+
+      const { initialize } = composables.useServerList()
+      initialize({
+        serverList: [{
           id: 'sample-server-id',
           url: 'https://global.api.konghq.com/v2',
         }],
-      }
+        selectedServerUrl: 'https://global.api.konghq.com/v2',
+      })
+
       const wrapper = mount(HttpOperation, {
         props: {
           data,
@@ -105,6 +112,14 @@ describe('<HttpOperation />', () => {
         path: '/sample-path',
         responses: [],
       }
+
+
+      const { initialize } = composables.useServerList()
+      initialize({
+        serverList: [],
+        selectedServerUrl: '',
+      })
+
       const wrapper = mount(HttpOperation, {
         props: {
           data,
@@ -126,23 +141,16 @@ describe('<HttpOperation />', () => {
         path: '',
         responses: [],
       }
-      const wrapper = mount(HttpOperation, {
-        props: {
-          data,
-        },
+
+      const { initialize } = composables.useServerList()
+      initialize({
+        serverList: [{
+          id: 'sample-server-id',
+          url: 'https://global.api.konghq.com/v2',
+        }],
+        selectedServerUrl: 'https://global.api.konghq.com/v2',
       })
 
-      // server endpoint is not rendered
-      expect(wrapper.findTestId(`server-endpoint-${data.id}`).exists()).toBe(false)
-    })
-
-    it('is not rendered when server list and path is not defined in the spec', () => {
-      const data = {
-        id: '123',
-        method: 'get',
-        path: '',
-        responses: [],
-      }
       const wrapper = mount(HttpOperation, {
         props: {
           data,

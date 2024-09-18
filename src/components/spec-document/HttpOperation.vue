@@ -12,13 +12,13 @@
       :type="isWebhookOperation ? 'WEBHOOK' : ''"
     >
       <ServerEndpoint
-        v-if="serverList.length && operationData.path"
+        v-if="serverUrlList.length && operationData.path"
         class="http-operation-server-endpoint"
         :data-testid="`server-endpoint-${operationData.id}`"
         :method="operationData.method"
         :path="operationData.path"
-        :selected-server-url="selectedServerURL"
-        :server-url-list="serverList"
+        :selected-server-url="selectedServerUrl"
+        :server-url-list="serverUrlList"
         @selected-server-changed="updateSelectedServerURL"
       />
     </PageHeader>
@@ -81,16 +81,15 @@
           v-model="excludeNotRequiredInTryIt"
           :data="operationData"
           :request-body="currentRequestBody"
-          :server-url="selectedServerURL"
+          :server-url="selectedServerUrl"
           @access-tokens-changed="setAuthHeaders"
           @request-body-changed="setRequestBody"
           @request-headers-changed="setRequestHeaders"
           @request-path-changed="setRequestPath"
           @request-query-changed="setRequestQuery"
-          @server-url-changed="setServerUrl"
         />
         <RequestSample
-          v-if="currentServerUrl && currentRequestPath"
+          v-if="selectedServerUrl && currentRequestPath"
           v-model="excludeNotRequiredInSample"
           :auth-headers="authHeaders"
           :auth-query="authQuery"
@@ -99,7 +98,7 @@
           :request-body="currentRequestBody"
           :request-path="currentRequestPath"
           :request-query="currentRequestQuery"
-          :server-url="currentServerUrl"
+          :server-url="selectedServerUrl"
           @request-body-sample-idx-changed="setRequestBodyByIdx"
         />
         <ResponseSample
@@ -164,7 +163,7 @@ import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import ResponseTypeSelect from './endpoint/ResponseTypeSelect.vue'
 import PageHeader from '../common/PageHeader.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import { getSamplePath, getSampleQuery, getSampleBody, removeTrailingSlash } from '@/utils'
+import { getSamplePath, getSampleQuery, getSampleBody } from '@/utils'
 import composables from '@/composables'
 
 const props = defineProps({
@@ -198,15 +197,16 @@ const setAuthHeaders = (newHeaders: Array<Record<string, string>>, newAuthQuery:
   authQuery.value = newAuthQuery
 }
 
-const serverList = computed(() => props.data.servers?.map(server => removeTrailingSlash(server.url)) ?? [])
+const {
+  serverUrlList,
+  selectedServerUrl,
+} = composables.useServerList()
 
-// this is the server selected by user, defaults to first server in the list
-const selectedServerURL = ref<string>(serverList.value?.[0] ?? '')
-const currentServerUrl = ref<string>(serverList.value?.[0] ?? '')
 const currentRequestPath = ref<string>('')
 const currentRequestQuery = ref<string>('')
 const currentRequestHeaders = ref<Array<Record<string, string>>>([])
 const currentRequestBody = ref<string>('')
+
 
 // refs and computed properties to manage currently active response object
 const responseList = computed(() => props.data.responses ?? [])
@@ -230,11 +230,6 @@ const {
   activeCallbackResponseContentList,
   activeCallbackResponseSelectComponentList,
 } = composables.useCurrentCallback(callbackList)
-
-// this is fired when server url parameters in tryIt section getting changed
-const setServerUrl = (newServerUrl: string) => {
-  currentServerUrl.value = newServerUrl
-}
 
 const setRequestPath = (newPath: string) => {
   currentRequestPath.value = newPath
@@ -263,8 +258,7 @@ const setRequestBodyByIdx = (newSampleIdx: number) => {
 }
 
 function updateSelectedServerURL(url: string) {
-  selectedServerURL.value = url
-  currentServerUrl.value = url
+  selectedServerUrl.value = url
 }
 
 watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value } ), (newValue) => {
