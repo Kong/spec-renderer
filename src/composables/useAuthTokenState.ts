@@ -1,30 +1,39 @@
-import { computed, reactive, toRefs, watch } from 'vue'
+import { computed, reactive, toRefs } from 'vue'
 import type { SecuritySchemeGroup, SelectItem } from '@/types'
 import type { HttpSecurityScheme } from '@stoplight/types'
+import { useDebounceFn } from '@vueuse/core'
 
 interface AuthTokenState {
   // list of token values
   tokenValues: Array<string>
   securitySchemeGroupList: Array<SecuritySchemeGroup>
   activeSchemeGroupKey: string
+  authHeaders: Array<Record<string, string>>
+  authQuery: string
 }
 
 const state: AuthTokenState = reactive({
   tokenValues: [],
   securitySchemeGroupList: [],
   activeSchemeGroupKey: '',
+  authHeaders: [],
+  authQuery: '',
 })
 
 export default function useAuthTokenState() {
-  const { tokenValues, securitySchemeGroupList, activeSchemeGroupKey } = toRefs(state)
+  const { tokenValues, securitySchemeGroupList, activeSchemeGroupKey, authHeaders, authQuery } = toRefs(state)
 
   /**
    * Initialize token values array with empty strings.
+   *
+   * Also resets auth headers and query.
    *
    * @param tokenCount Number of tokens to initialize.
    */
   const initializeTokenValues = (tokenCount = 0) => {
     state.tokenValues = Array.from({ length: tokenCount }, () => '')
+    state.authHeaders = []
+    state.authQuery = ''
   }
 
   /**
@@ -74,22 +83,52 @@ export default function useAuthTokenState() {
   /**
    * Returns the list of security schemes for the active security scheme group.
    */
-  const activeSecuritySchemeList = computed<Array<HttpSecurityScheme> | undefined>(() =>
-    state.securitySchemeGroupList.find(group => group.key === state.activeSchemeGroupKey)?.schemeList,
+  const activeSecuritySchemeList = computed(() =>
+    state.securitySchemeGroupList.find(group => group.key === state.activeSchemeGroupKey)?.schemeList ?? [],
   )
 
-  // Reset token values when active security scheme group changes
-  watch(activeSchemeGroupKey, () => {
-    initializeTokenValues(activeSecuritySchemeList.value?.length)
-  })
+  const handleTokenInput = useDebounceFn((event: Event, index: number) => {
+    const value = (event.target as HTMLInputElement).value
+    tokenValues.value[index] = value
+
+    const headers:Array<Record<string, string>> = []
+    const query: Record<string, string> = {}
+    tokenValues.value.forEach((tokenValue, i) => {
+      if (activeSecuritySchemeList.value?.[i]) {
+        const scheme: HttpSecurityScheme = activeSecuritySchemeList.value[i]
+        // @ts-ignore `name` is valid attribute of the schema
+        const schemeName = scheme.name
+        // @ts-ignore `in` is valid attribute of the schema
+        const schemeIn = scheme.in
+        // @ts-ignore `scheme` is valid attribute of the schema
+        const isBearer = scheme.scheme == 'bearer'
+        if (scheme) {
+          if (schemeIn === 'query') {
+            query[schemeName] = tokenValue
+          } else {
+            const headerName = isBearer || !schemeName ? 'Authorization' : schemeName
+            headers.push({
+              name: headerName,
+              value: `${isBearer ? 'Bearer ' : ''} ${tokenValue}`,
+            })
+          }
+        }
+      }
+    })
+    state.authHeaders = headers
+    state.authQuery = new URLSearchParams(query).toString()
+  }, 800)
 
   return {
     initializeTokenValues,
     initializeSecuritySchemeGroupList,
+    handleTokenInput,
     tokenValues,
     securitySchemeGroupList,
     securitySchemeGroupSelectItems,
     activeSchemeGroupKey,
     activeSecuritySchemeList,
+    authHeaders,
+    authQuery,
   }
 }
