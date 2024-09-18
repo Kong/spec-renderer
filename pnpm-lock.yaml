@@ -35,6 +35,9 @@ importers:
       '@seriousme/openapi-schema-validator':
         specifier: ^2.2.3
         version: 2.2.3
+      '@stoplight/json':
+        specifier: ^3.21.7
+        version: 3.21.7
       '@stoplight/types':
         specifier: ^14.1.1
         version: 14.1.1

@@ -54,6 +54,7 @@
     "@kong/stoplight-http-spec": "^1.0.3",
     "@scalar/openapi-parser": "^0.8.1",
     "@seriousme/openapi-schema-validator": "^2.2.3",
+    "@stoplight/json": "^3.21.7",
     "@stoplight/types": "^14.1.1",
     "@stoplight/yaml": "^4.3.0",
     "@vueuse/core": "^11.0.3",
