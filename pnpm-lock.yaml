@@ -27,8 +27,8 @@ importers:
         specifier: ^1.15.1
         version: 1.15.1(vue@3.4.38(typescript@5.5.4))
       '@kong/stoplight-http-spec':
-        specifier: ^1.1.0
-        version: 1.1.0
+        specifier: ^1.1.1
+        version: 1.1.1
       '@scalar/openapi-parser':
         specifier: ^0.8.1
         version: 0.8.2
@@ -59,9 +59,6 @@ importers:
       json-schema:
         specifier: ^0.4.0
         version: 0.4.0
-      lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.0
@@ -804,8 +801,8 @@ packages:
     peerDependencies:
       vue: '>= 3.3.4 < 4'
 
-  '@kong/stoplight-http-spec@1.1.0':
-    resolution: {integrity: sha512-cGVvLmnG3t13ru+oP+SmNag1OUFVq6ThV+LhQyKrNYpoJ3f7O1zWCgCqd3vfBReW8Ep9oG4LZTbeDO8mr0udRA==}
+  '@kong/stoplight-http-spec@1.1.1':
+    resolution: {integrity: sha512-QOwXWjObVWlTpyNC0iJp/IxYs29ADteZOFczzsnKX/DtCnu44AqIIeGu/y8VgkdOOdTxsCas+rSQKTNPvV9/9g==}
     engines: {node: '>=14.13'}
 
   '@nodelib/fs.scandir@2.1.5':
@@ -5847,7 +5844,7 @@ snapshots:
     dependencies:
       vue: 3.4.38(typescript@5.5.4)
 
-  '@kong/stoplight-http-spec@1.1.0':
+  '@kong/stoplight-http-spec@1.1.1':
     dependencies:
       '@stoplight/json': 3.21.7
       '@stoplight/json-schema-generator': 1.0.2
