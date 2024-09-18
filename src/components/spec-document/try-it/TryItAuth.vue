@@ -1,11 +1,10 @@
 <template>
   <CollapsablePanel
-    v-if="securitySchemeList?.length && data.path"
+    v-if="securitySchemeGroupList?.length && data.path"
     :data-testid="`tryit-auth-${data.id}`"
   >
     <template #header>
       <LockIcon
-        v-if="securitySchemeList?.length"
         :color="KUI_COLOR_TEXT_NEUTRAL"
         :size="20"
       />
@@ -14,18 +13,18 @@
       </h3>
 
       <SelectDropdown
-        v-if="securitySchemeList.length > 1"
+        v-if="securitySchemeGroupSelectItems.length > 1"
         :id="`tryit-scheme-selector-${data.id}`"
-        v-model="activeScheme"
+        v-model="activeSchemeGroupKey"
         class="scheme-selector"
-        :items="securitySchemeSelectItems"
+        :items="securitySchemeGroupSelectItems"
         placement="bottom-end"
       />
     </template>
 
     <!-- body -->
     <div
-      v-for="(scheme, i) in securityScheme"
+      v-for="(scheme, i) in activeSecuritySchemeList"
       :key="scheme.id"
       class="wide"
     >
@@ -50,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { watch } from 'vue'
 import type { PropType } from 'vue'
 import { LockIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
@@ -60,63 +59,31 @@ import { useDebounceFn } from '@vueuse/core'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import type { SelectItem } from '@/types'
 import composables from '@/composables'
 
-const props = defineProps({
+defineProps({
   data: {
     type: Object as PropType<IHttpOperation>,
     required: true,
   },
 })
 
-const { tokenValues, initializeTokenValues } = composables.useAuthTokenState()
+const {
+  tokenValues,
+  securitySchemeGroupSelectItems,
+  activeSecuritySchemeList,
+  activeSchemeGroupKey,
+  securitySchemeGroupList,
+} = composables.useAuthTokenState()
 
 const emit = defineEmits<{
   (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>, authQuery: string): void
 }>()
 
-// this is the list, we grab first element for each scheme to present in the scheme selector
-const securitySchemeList = computed((): HttpSecurityScheme[] | undefined => {
-  const secArray: Array<HttpSecurityScheme> = []
-  if (props.data.security) {
-    props.data.security.forEach((secGroup: HttpSecurityScheme[]) => {
-      if (secGroup.length) {
-        secArray.push(secGroup[0])
-      }
-    })
-  }
-
-  return secArray
-})
-
-const securitySchemeSelectItems = computed((): Array<SelectItem> => {
-  return securitySchemeList.value?.map((scheme) => ({
-    label: `${scheme.key} (${scheme.type})`,
-    value: scheme.key,
-    key: scheme.key,
-  })) ?? []
-})
-
-const activeScheme = ref<string>(securitySchemeSelectItems.value[0]?.value)
-
-// this is details for selected from the list - we grab all elements for schemeIdx
-const securityScheme = computed<HttpSecurityScheme[] | undefined>(() =>
-  props.data.security?.find(
-    (secGroup) => secGroup[0]?.key === activeScheme.value,
-  ),
-)
-
 const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): string => {
   //@ts-ignore `name` is valid property
   return scheme.name || scheme.bearerFormat || defaultName || 'Access Token'
 }
-
-
-// when different security scheme selected we need to re-draw the form and reset the tokenValues
-watch(activeScheme, () => {
-  initializeTokenValues(securityScheme.value?.length)
-})
 
 // when tokenValues changed we need to fire event to set security headers and queries
 watch(tokenValues, (newValues) => {
@@ -125,8 +92,8 @@ watch(tokenValues, (newValues) => {
     const authHeaders:Array<Record<string, string>> = []
     const authQuery: Record<string, string> = {}
     newValues.forEach((tokenValue, i) => {
-      if (securityScheme.value?.[i]) {
-        const scheme: HttpSecurityScheme = securityScheme.value[i]
+      if (activeSecuritySchemeList.value?.[i]) {
+        const scheme: HttpSecurityScheme = activeSecuritySchemeList.value[i]
         // @ts-ignore `name` is valid attribute of the schema
         const schemeName = scheme.name
         // @ts-ignore `in` is valid attribute of the schema
