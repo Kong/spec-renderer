@@ -1,4 +1,4 @@
-import type { TableOfContentsItem } from '../stoplight/elements-core/components/Docs/types'
+import type { TableOfContentsItem } from '@kong/stoplight-http-spec/elements-core'
 import type { SchemaNode } from '../stoplight/elements/utils/oas/types'
 import type { ServiceNode, AsyncMessageNode } from '@/types'
 import { SpecVersion } from '../stoplight/elements/utils/oas/types'
