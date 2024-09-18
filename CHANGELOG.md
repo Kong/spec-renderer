@@ -1,3 +1,10 @@
+# [1.71.0](https://github.com/Kong/spec-renderer/compare/v1.70.0...v1.71.0) (2024-09-18)
+
+
+### Features
+
+* sync auth tokens [KHCP-13271] ([#318](https://github.com/Kong/spec-renderer/issues/318)) ([e376a49](https://github.com/Kong/spec-renderer/commit/e376a49a974efe5de7e75540bdea3165fe141f3f))
+
 # [1.70.0](https://github.com/Kong/spec-renderer/compare/v1.69.1...v1.70.0) (2024-09-18)
 
 
