@@ -106,6 +106,9 @@ export default defineConfig({
   // TODO: If deploying to GitHub pages, enable this line
   base: process.env.USE_SANDBOX ? '/spec-renderer' : '/',
   build: {
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
     lib: process.env.USE_SANDBOX
       ? undefined
       : {
