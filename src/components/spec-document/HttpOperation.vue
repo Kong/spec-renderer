@@ -82,7 +82,6 @@
           :data="operationData"
           :request-body="currentRequestBody"
           :server-url="selectedServerUrl"
-          @access-tokens-changed="setAuthHeaders"
           @request-body-changed="setRequestBody"
           @request-headers-changed="setRequestHeaders"
           @request-path-changed="setRequestPath"
@@ -175,8 +174,6 @@ const props = defineProps({
 
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
-const authHeaders = ref<Array<Record<string, string>>>()
-const authQuery = ref<string>('')
 const excludeNotRequiredInTryIt = ref<boolean>(true)
 const excludeNotRequiredInSample = ref<boolean>(true)
 
@@ -192,11 +189,6 @@ const excludeNotRequired = computed((): boolean => {
   return hideTryIt.value ? excludeNotRequiredInSample.value : excludeNotRequiredInTryIt.value
 })
 
-const setAuthHeaders = (newHeaders: Array<Record<string, string>>, newAuthQuery: string) => {
-  authHeaders.value = newHeaders
-  authQuery.value = newAuthQuery
-}
-
 const {
   serverUrlList,
   selectedServerUrl,
@@ -206,6 +198,8 @@ const currentRequestPath = ref<string>('')
 const currentRequestQuery = ref<string>('')
 const currentRequestHeaders = ref<Array<Record<string, string>>>([])
 const currentRequestBody = ref<string>('')
+
+const { authHeaders, authQuery } = composables.useAuthTokenState()
 
 
 // refs and computed properties to manage currently active response object

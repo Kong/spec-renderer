@@ -30,7 +30,6 @@
     >
       <TryItAuth
         :data="data"
-        @access-tokens-changed="accessTokenChanged"
       />
 
       <TryItParams
@@ -81,6 +80,7 @@ import TryItAuth from './TryItAuth.vue'
 import TryItParams from './TryItParams.vue'
 import TryItResponse from './TryItResponse.vue'
 import { getSamplePath, getSampleQuery } from '@/utils'
+import composables from '@/composables'
 
 
 const props = defineProps({
@@ -104,19 +104,16 @@ const excludeNotRequired = defineModel({
 })
 
 const emit = defineEmits<{
-  (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>, authQuery: string): void
   (e: 'request-path-changed', newPath: string): void
   (e: 'request-query-changed', newPath: string): void
   (e: 'request-headers-changed', newHeaders: Array<Record<string, string>>): void
   (e: 'request-body-changed', newBody: string): void
 }>()
 
+const { authHeaders, authQuery } = composables.useAuthTokenState()
 
 const response = ref<Response | undefined>()
 const responseError = ref<Error>()
-
-const authHeaders = ref<Array<Record<string, string>>>()
-const authQuery = ref<string>('')
 
 const currentServerUrl = ref<string>(props.serverUrl)
 
@@ -187,13 +184,6 @@ const doApiCall = async () => {
   } catch (error: any) {
     responseError.value = error
   }
-}
-
-/* pass trough one level up as it needs to change Request sample */
-const accessTokenChanged = (newHeaders: Array<Record<string, string>>, newAuthQuery: string) => {
-  emit('access-tokens-changed', newHeaders, newAuthQuery)
-  authHeaders.value = newHeaders
-  authQuery.value = newAuthQuery
 }
 
 // there is more logic that drives do we show tryouts or not
