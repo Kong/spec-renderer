@@ -1,3 +1,10 @@
+# [1.70.0](https://github.com/Kong/spec-renderer/compare/v1.69.1...v1.70.0) (2024-09-18)
+
+
+### Features
+
+* synced server URL and custom URL [KHCP-13197] ([#312](https://github.com/Kong/spec-renderer/issues/312)) ([a47f2f2](https://github.com/Kong/spec-renderer/commit/a47f2f23eeec82d556b7fe0f8d3480c795613bc9))
+
 ## [1.69.1](https://github.com/Kong/spec-renderer/compare/v1.69.0...v1.69.1) (2024-09-18)
 
 
