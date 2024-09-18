@@ -1,6 +1,6 @@
 {
   "name": "@kong/spec-renderer-dev",
-  "version": "1.69.1",
+  "version": "1.71.0",
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
   "type": "module",
@@ -51,7 +51,7 @@
     "@asyncapi/parser": "^3.2.2",
     "@floating-ui/vue": "^1.1.4",
     "@kong/icons": "^1.15.1",
-    "@kong/stoplight-http-spec": "^1.0.3",
+    "@kong/stoplight-http-spec": "^1.1.0",
     "@scalar/openapi-parser": "^0.8.1",
     "@seriousme/openapi-schema-validator": "^2.2.3",
     "@stoplight/json": "^3.21.7",

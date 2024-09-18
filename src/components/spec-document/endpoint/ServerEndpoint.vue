@@ -13,10 +13,11 @@
       <SelectDropdown
         v-if="serverUrlList.length > 1"
         id="server-select-dropdown"
-        v-model="serverUrl"
         class="server-select-dropdown"
         :data-testid="`server-dropdown-${dataTestId}`"
         :items="selectItems"
+        :model-value="selectedServerUrl"
+        @update:model-value="changeEndpointServer"
       >
         <template #trigger-content>
           <span class="endpoint-body">
@@ -39,7 +40,7 @@
         :data-testid="`server-url-${dataTestId}`"
       >
         <span class="endpoint-body">
-          {{ serverUrl }}
+          {{ selectedServerUrl }}
         </span>
         <span
           class="endpoint-path"
@@ -48,12 +49,12 @@
       </div>
     </div>
 
-    <CopyButton :content="serverUrl+path" />
+    <CopyButton :content="selectedServerUrl+path" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 import type { PropType } from 'vue'
 import MethodBadge from '@/components/common/MethodBadge.vue'
 import CopyButton from '@/components/common/CopyButton.vue'
@@ -90,12 +91,6 @@ const changeEndpointServer = (url: string) => {
 }
 
 const selectItems = computed(() => props.serverUrlList.map((url) => ({ label: url, value: url, key: url })))
-
-const serverUrl = ref<string>(props.selectedServerUrl)
-
-watch(serverUrl, (newUrl) => {
-  changeEndpointServer(newUrl)
-})
 </script>
 
 <style lang="scss" scoped>

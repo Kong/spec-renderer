@@ -35,6 +35,13 @@
         <label for="allow-content-scrolling">Allow Content Scrolling</label>
         |
         <input
+          id="allow-custom-server-url"
+          v-model="allowCustomServerUrl"
+          type="checkbox"
+        >
+        <label for="allow-custom-server-url">Allow custom server url</label>
+        |
+        <input
           id="default-md-styling"
           v-model="markdownStyles"
           type="checkbox"
@@ -58,6 +65,7 @@
     <SpecRenderer
       v-if="specText || specUrl"
       :allow-content-scrolling="allowContentScrolling"
+      :allow-custom-server-url="allowCustomServerUrl"
       base-path="/spec-renderer"
       :control-address-bar="true"
       :current-path="currentPath"
@@ -93,6 +101,7 @@ const hideDeprecated = ref<boolean>(false)
 const hideTryIt = ref<boolean>(false)
 const allowContentScrolling = ref<boolean>(true)
 const markdownStyles = ref<boolean>(true)
+const allowCustomServerUrl = ref<boolean>(true)
 
 const handlePathNotFound = (requestedPath: string) => {
   console.error(`${requestedPath} not found. App to redirect to it's own 404`)

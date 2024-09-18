@@ -61,6 +61,7 @@ import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import type { SelectItem } from '@/types'
+import composables from '@/composables'
 
 const props = defineProps({
   data: {
@@ -68,6 +69,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const { tokenValues, initializeTokenValues } = composables.useAuthTokenState()
 
 const emit = defineEmits<{
   (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>, authQuery: string): void
@@ -98,27 +101,29 @@ const securitySchemeSelectItems = computed((): Array<SelectItem> => {
 const activeScheme = ref<string>(securitySchemeSelectItems.value[0]?.value)
 
 // this is details for selected from the list - we grab all elements for schemeIdx
-const securityScheme = ref<HttpSecurityScheme[] | undefined>([])
+const securityScheme = computed<HttpSecurityScheme[] | undefined>(() =>
+  props.data.security?.find(
+    (secGroup) => secGroup[0]?.key === activeScheme.value,
+  ),
+)
 
 const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): string => {
   //@ts-ignore `name` is valid property
   return scheme.name || scheme.bearerFormat || defaultName || 'Access Token'
 }
 
-const tokenValues = ref<string[]>([])
 
 // when different security scheme selected we need to re-draw the form and reset the tokenValues
-watch(activeScheme, (newIdx) => {
-  securityScheme.value = props.data.security?.find((secGroup) => secGroup[0]?.key === newIdx)
-  tokenValues.value = Array.from({ length: securityScheme.value?.length || 0 }, () => '')
-}, { immediate: true })
+watch(activeScheme, () => {
+  initializeTokenValues(securityScheme.value?.length)
+})
 
 // when tokenValues changed we need to fire event to set security headers and queries
 watch(tokenValues, (newValues) => {
   // do something
   const debouncedFn = useDebounceFn(()=> {
     const authHeaders:Array<Record<string, string>> = []
-    const authQuery = <Record<string, string>>{}
+    const authQuery: Record<string, string> = {}
     newValues.forEach((tokenValue, i) => {
       if (securityScheme.value?.[i]) {
         const scheme: HttpSecurityScheme = securityScheme.value[i]

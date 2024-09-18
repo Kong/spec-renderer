@@ -33,12 +33,6 @@
         @access-tokens-changed="accessTokenChanged"
       />
 
-      <TryItServer
-        :data="data"
-        :server-url="serverUrl"
-        @server-url-changed="serverUrlChanged"
-      />
-
       <TryItParams
         :data="data"
         param-type="path"
@@ -84,7 +78,6 @@ import { getRequestHeaders } from '@/utils'
 import type { IHttpOperation } from '@stoplight/types'
 import MethodBadge from '@/components/common/MethodBadge.vue'
 import TryItAuth from './TryItAuth.vue'
-import TryItServer from './TryItServer.vue'
 import TryItParams from './TryItParams.vue'
 import TryItResponse from './TryItResponse.vue'
 import { getSamplePath, getSampleQuery } from '@/utils'
@@ -112,7 +105,6 @@ const excludeNotRequired = defineModel({
 
 const emit = defineEmits<{
   (e: 'access-tokens-changed', authHeaders: Array<Record<string, string>>, authQuery: string): void
-  (e: 'server-url-changed', serverUrl: string): void
   (e: 'request-path-changed', newPath: string): void
   (e: 'request-query-changed', newPath: string): void
   (e: 'request-headers-changed', newHeaders: Array<Record<string, string>>): void
@@ -165,16 +157,6 @@ const requestHeadersChanged = (newHeaderList: Array<Record<string, string>>) => 
 const requestBodyChanged = (newBody: string) => {
   currentRequestBody.value = newBody
   emit('request-body-changed', newBody)
-}
-
-/*
-this is the result of emitting an event inside of TryItServer, when user changes server variables
-as a result of this we need to set new value for currentServerUrl in this component to use in actual fetch
-and promote it one level up so RequestSample component has correct Url.
-*/
-const serverUrlChanged = (newServerUrl: string) => {
-  currentServerUrl.value = newServerUrl
-  emit('server-url-changed', newServerUrl)
 }
 
 // this is tryout state requested by property passed
