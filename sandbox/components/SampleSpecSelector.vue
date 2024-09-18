@@ -114,6 +114,8 @@ const optionsArrayASYNC = [
   { url: 'https://raw.githubusercontent.com/asyncapi/spec/master/examples/websocket-gemini-asyncapi.yml', label: 'Gemini Market Data Websocket API' },
   { url: 'https://raw.githubusercontent.com/asyncapi/spec/master/examples/slack-rtm-asyncapi.yml', label: 'Slack Real Time Messaging API' },
   { url: 'https://raw.githubusercontent.com/asyncapi/spec/master/examples/kraken-websocket-request-reply-message-filter-in-reply-asyncapi.yml', label: 'Kraken Websockets API' },
+  { url: `${window.location.origin}/spec-renderer/specs/openapi-scema-in-async.yaml`, label: 'OpenApi Schema in Async spec' },
+
 ]
 
 const trySetStorage = (str: string) => {

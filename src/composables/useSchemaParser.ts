@@ -10,6 +10,8 @@ import type { ValidateResult } from '@scalar/openapi-parser'
 import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@kong/stoplight-http-spec/json'
 import AsyncParser from '@asyncapi/parser/browser'
+import { OpenAPISchemaParser } from '@asyncapi/openapi-schema-parser'
+
 import { transform as transformAsync } from '@/utils/async-to-oas-transformer'
 
 const trace = (doTrace: boolean | undefined, ...args: any) => {
@@ -18,6 +20,7 @@ const trace = (doTrace: boolean | undefined, ...args: any) => {
   }
 }
 const asyncParser = new AsyncParser()
+asyncParser.registerSchemaParser(OpenAPISchemaParser())
 
 export default (): {
   parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>

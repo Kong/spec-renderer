@@ -1,0 +1,18 @@
+asyncapi: 2.0.0
+info:
+  title: Example with OpenAPI
+  version: 0.1.0
+channels:
+  example:
+    publish:
+      message:
+        schemaFormat: 'application/vnd.oai.openapi;version=3.0.0'
+        payload: # The following is an OpenAPI schema
+          type: object
+          properties:
+            title:
+              type: string
+              nullable: true
+            author:
+              type: string
+              example: Jack Johnson
