@@ -1,3 +1,10 @@
+## [1.69.1](https://github.com/Kong/spec-renderer/compare/v1.69.0...v1.69.1) (2024-09-18)
+
+
+### Bug Fixes
+
+* prevent require not defined error in production build [KHCP13324] ([#320](https://github.com/Kong/spec-renderer/issues/320)) ([293b38b](https://github.com/Kong/spec-renderer/commit/293b38b52b07f816efb8554ea7e801f26354baa4))
+
 # [1.69.0](https://github.com/Kong/spec-renderer/compare/v1.68.7...v1.69.0) (2024-09-17)
 
 
