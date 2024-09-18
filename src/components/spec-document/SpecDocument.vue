@@ -144,6 +144,7 @@ const props = defineProps({
 const { createHighlighter } = composables.useShiki()
 const { initialize } = composables.useServerList()
 
+const { initializeSecuritySchemeGroupList } = composables.useAuthTokenState()
 
 const serviceNode = ref<ServiceNode | null>(null)
 
@@ -380,6 +381,10 @@ watch(() => ({
       serverList: serviceNode.value?.data.servers || [],
       selectedServerUrl: serviceNode.value?.data.servers?.[0]?.url || '',
     })
+
+    if (newDocument.data.security) {
+      initializeSecuritySchemeGroupList(newDocument.data.security)
+    }
   }
 
   if (!props.allowContentScrolling) {
