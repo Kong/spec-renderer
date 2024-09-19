@@ -1,3 +1,10 @@
+## [1.73.2](https://github.com/Kong/spec-renderer/compare/v1.73.1...v1.73.2) (2024-09-19)
+
+
+### Bug Fixes
+
+* remove unneeded file [KHCP-13323] ([#324](https://github.com/Kong/spec-renderer/issues/324)) ([619408f](https://github.com/Kong/spec-renderer/commit/619408f4f321a1df0f65169fb0cf0f079a60aac2))
+
 ## [1.73.1](https://github.com/Kong/spec-renderer/compare/v1.73.0...v1.73.1) (2024-09-19)
 
 
