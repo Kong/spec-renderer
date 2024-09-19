@@ -22,7 +22,7 @@ import type { PropType, Ref } from 'vue'
 import { itemComponent } from './index'
 import { useScroll } from '@vueuse/core'
 import type { NavigationTypes } from '@/types'
-import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '../../stoplight/elements-core/components/Docs/types'
+import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '@kong/stoplight-http-spec/elements-core'
 
 const props = defineProps({
   tableOfContents: {

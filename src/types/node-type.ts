@@ -1,6 +1,6 @@
 import type { IHttpService } from '@stoplight/types'
 import { NodeType as OasNodeType } from '@stoplight/types'
-import type { Node, OperationNode, WebhookNode, SchemaNode, SpecVersion } from '@/stoplight/elements/utils/oas/types'
+import type { Node, OperationNode, WebhookNode, SchemaNode, SpecVersion } from '@kong/stoplight-http-spec/elements'
 import type { JSONSchema7 } from 'json-schema'
 import type { SchemaObject } from './spec-renderer'
 import type { OperationInterface, MessageInterface } from '@asyncapi/parser'

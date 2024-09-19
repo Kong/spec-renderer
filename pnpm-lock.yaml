@@ -26,15 +26,15 @@ importers:
       '@kong/icons':
         specifier: ^1.15.1
         version: 1.15.1(vue@3.4.38(typescript@5.5.4))
+      '@kong/stoplight-http-spec':
+        specifier: ^1.1.1
+        version: 1.1.1
       '@scalar/openapi-parser':
         specifier: ^0.8.1
         version: 0.8.2
       '@seriousme/openapi-schema-validator':
         specifier: ^2.2.3
         version: 2.2.3
-      '@stoplight/http-spec':
-        specifier: ^7.1.0
-        version: 7.1.0
       '@stoplight/json':
         specifier: ^3.21.7
         version: 3.21.7
@@ -59,9 +59,6 @@ importers:
       json-schema:
         specifier: ^0.4.0
         version: 0.4.0
-      lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.0
@@ -804,6 +801,10 @@ packages:
     peerDependencies:
       vue: '>= 3.3.4 < 4'
 
+  '@kong/stoplight-http-spec@1.1.1':
+    resolution: {integrity: sha512-QOwXWjObVWlTpyNC0iJp/IxYs29ADteZOFczzsnKX/DtCnu44AqIIeGu/y8VgkdOOdTxsCas+rSQKTNPvV9/9g==}
+    engines: {node: '>=14.13'}
+
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -1089,10 +1090,6 @@ packages:
     peerDependencies:
       ajv: '>=8'
 
-  '@stoplight/http-spec@7.1.0':
-    resolution: {integrity: sha512-Z2XqKX2SV8a1rrgSzFqccX2TolfcblT+l4pNvUU+THaLl50tKDoeidwWWZTzYUzqU0+UV97ponvqEbWWN3PaXg==}
-    engines: {node: '>=14.13'}
-
   '@stoplight/json-ref-readers@1.2.2':
     resolution: {integrity: sha512-nty0tHUq2f1IKuFYsLM4CXLZGHdMn+X/IwEUIpeSOXt0QjMUbL0Em57iJUDzz+2MkWG83smIigNZ3fauGjqgdQ==}
     engines: {node: '>=8.3.0'}
@@ -1155,10 +1152,6 @@ packages:
 
   '@stoplight/types@13.6.0':
     resolution: {integrity: sha512-dzyuzvUjv3m1wmhPfq82lCVYGcXG0xUYgqnWfCq3PCVR4BKFhjdkHrnJ+jIDoMKvXb05AZP/ObQF6+NpDo29IQ==}
-    engines: {node: ^12.20 || >=14.13}
-
-  '@stoplight/types@14.1.0':
-    resolution: {integrity: sha512-fL8Nzw03+diALw91xHEHA5Q0WCGeW9WpPgZQjodNUWogAgJ56aJs03P9YzsQ1J6fT7/XjDqHMgn7/RlsBzB/SQ==}
     engines: {node: ^12.20 || >=14.13}
 
   '@stoplight/types@14.1.1':
@@ -3432,7 +3425,7 @@ packages:
     resolution: {integrity: sha512-Lf+9+2r+Tdp5wXDXC4PcIBjTDtq4UKjCPMQhKIuzpJNW0b96kVqSwW0bT7FhRSfmAiFYgP+SCRvdrDozfh0U5w==}
 
   media-typer@0.3.0:
-    resolution: {integrity: sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==}
+    resolution: {integrity: sha1-hxDXrwqmJvj/+hzgAWhUUmMlV0g=}
     engines: {node: '>= 0.6'}
 
   meow@12.1.1:
@@ -4054,8 +4047,8 @@ packages:
     resolution: {integrity: sha512-7KTLTdzdZZYscUc65XmjFiB73vBhBfbPztCYdUNvlaso9PrzjzcmjqBPR0lNGkcVlcO4BjiO5rK/qNz+XAen1Q==}
     engines: {node: ^10 || ^12 || >=14}
 
-  postman-collection@4.4.0:
-    resolution: {integrity: sha512-2BGDFcUwlK08CqZFUlIC8kwRJueVzPjZnnokWPtJCd9f2J06HBQpGL7t2P1Ud1NEsK9NHq9wdipUhWLOPj5s/Q==}
+  postman-collection@4.5.0:
+    resolution: {integrity: sha512-152JSW9pdbaoJihwjc7Q8lc3nPg/PC9lPTHdMk7SHnHhu/GBJB7b2yb9zG7Qua578+3PxkQ/HYBuXpDSvsf7GQ==}
     engines: {node: '>=10'}
 
   postman-url-encoder@3.0.5:
@@ -4304,11 +4297,6 @@ packages:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
     hasBin: true
 
-  semver@7.5.4:
-    resolution: {integrity: sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.6.0:
     resolution: {integrity: sha512-EnwXhrlwXMk9gKu5/flx5sv/an57AkRplG3hTK68W7FRDN+k+OWBj65M7719OkA82XLBxrcX0KSHj+X5COhOVg==}
     engines: {node: '>=10'}
@@ -4316,6 +4304,11 @@ packages:
 
   semver@7.6.2:
     resolution: {integrity: sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==}
+    engines: {node: '>=10'}
+    hasBin: true
+
+  semver@7.6.3:
+    resolution: {integrity: sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -5851,6 +5844,23 @@ snapshots:
     dependencies:
       vue: 3.4.38(typescript@5.5.4)
 
+  '@kong/stoplight-http-spec@1.1.1':
+    dependencies:
+      '@stoplight/json': 3.21.7
+      '@stoplight/json-schema-generator': 1.0.2
+      '@stoplight/types': 14.1.1
+      '@types/json-schema': 7.0.11
+      '@types/swagger-schema-official': 2.0.25
+      '@types/type-is': 1.6.6
+      fnv-plus: 1.3.1
+      lodash: 4.17.21
+      openapi3-ts: 4.3.3
+      postman-collection: 4.5.0
+      tslib: 2.7.0
+      type-is: 1.6.18
+    transitivePeerDependencies:
+      - encoding
+
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -6181,23 +6191,6 @@ snapshots:
       jsonpointer: 5.0.1
       leven: 3.1.0
 
-  '@stoplight/http-spec@7.1.0':
-    dependencies:
-      '@stoplight/json': 3.21.7
-      '@stoplight/json-schema-generator': 1.0.2
-      '@stoplight/types': 14.1.0
-      '@types/json-schema': 7.0.11
-      '@types/swagger-schema-official': 2.0.25
-      '@types/type-is': 1.6.6
-      fnv-plus: 1.3.1
-      lodash: 4.17.21
-      openapi3-ts: 4.3.3
-      postman-collection: 4.4.0
-      tslib: 2.7.0
-      type-is: 1.6.18
-    transitivePeerDependencies:
-      - encoding
-
   '@stoplight/json-ref-readers@1.2.2':
     dependencies:
       node-fetch: 2.7.0
@@ -6341,11 +6334,6 @@ snapshots:
       utility-types: 3.11.0
 
   '@stoplight/types@13.6.0':
-    dependencies:
-      '@types/json-schema': 7.0.15
-      utility-types: 3.11.0
-
-  '@stoplight/types@14.1.0':
     dependencies:
       '@types/json-schema': 7.0.15
       utility-types: 3.11.0
@@ -9010,7 +8998,7 @@ snapshots:
 
   mkdirp@0.5.6:
     dependencies:
-      minimist: 1.2.8
+      minimist: 1.2.6
 
   mrmime@2.0.0: {}
 
@@ -9462,7 +9450,7 @@ snapshots:
       picocolors: 1.0.1
       source-map-js: 1.2.0
 
-  postman-collection@4.4.0:
+  postman-collection@4.5.0:
     dependencies:
       '@faker-js/faker': 5.5.3
       file-type: 3.9.0
@@ -9473,7 +9461,7 @@ snapshots:
       mime-format: 2.0.1
       mime-types: 2.1.35
       postman-url-encoder: 3.0.5
-      semver: 7.5.4
+      semver: 7.6.3
       uuid: 8.3.2
 
   postman-url-encoder@3.0.5:
@@ -9768,15 +9756,13 @@ snapshots:
 
   semver@6.3.1: {}
 
-  semver@7.5.4:
-    dependencies:
-      lru-cache: 6.0.0
-
   semver@7.6.0:
     dependencies:
       lru-cache: 6.0.0
 
   semver@7.6.2: {}
+
+  semver@7.6.3: {}
 
   set-function-length@1.2.2:
     dependencies:

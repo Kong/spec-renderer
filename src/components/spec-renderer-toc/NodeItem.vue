@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import { computed, inject, ref } from 'vue'
 import type { PropType, Ref } from 'vue'
-import type { TableOfContentsNode } from '../../stoplight/elements-core/components/Docs/types'
+import type { TableOfContentsNode } from '@kong/stoplight-http-spec/elements-core'
 import MethodBadge from '../common/MethodBadge.vue'
 import { NodeType } from '@/types'
 import type { NavigationTypes } from '@/types'

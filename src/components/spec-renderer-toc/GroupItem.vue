@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import type { PropType } from 'vue'
-import type { TableOfContentsGroup } from '../../stoplight/elements-core/components/Docs/types'
+import type { TableOfContentsGroup } from '@kong/stoplight-http-spec/elements-core'
 import { itemComponent, isGroup } from './index'
 import { ChevronRightIcon } from '@kong/icons'
 import { slugify } from '@/utils'
