@@ -175,7 +175,6 @@ const popoverStyles = computed(() => {
 const { floatingStyles } = useFloating(popoverTrigger, popoverRef, {
   placement: props.placement,
   middleware: [offset(props.popoverOffset), flip()],
-  strategy: 'fixed',
   transform: false,
   whileElementsMounted: autoUpdate,
 })
