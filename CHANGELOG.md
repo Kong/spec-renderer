@@ -1,3 +1,10 @@
+# [1.73.0](https://github.com/Kong/spec-renderer/compare/v1.72.0...v1.73.0) (2024-09-19)
+
+
+### Features
+
+* use externalized elements and elements-core [KHCP-13323] ([#321](https://github.com/Kong/spec-renderer/issues/321)) ([1deb544](https://github.com/Kong/spec-renderer/commit/1deb544ecc7cc12c90682bf3bc902d1c72024c38))
+
 # [1.72.0](https://github.com/Kong/spec-renderer/compare/v1.71.0...v1.72.0) (2024-09-18)
 
 
