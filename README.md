@@ -9,9 +9,13 @@ Kong's open-source spec renderer.
 
 Url for sandbox https://kong.github.io/spec-renderer (deployed from main branch)
 
+- [Installation](#installation)
 - [Usage](#usage)
-  - [Installation](#installation)
-  - [Props](#props)
+  - [Vue 3 Component(s)](#vue-3-components)
+  - [Vue 3 Plugin](#vue-3-plugin)
+  - [Vue 2 or no framework via native web components](#vue-2-or-no-framework-via-native-web-components)
+  - [Options](#options)
+  - [Events](#events)
 - [Contributing \& Local Development](#contributing--local-development)
   - [Development Sandbox](#development-sandbox)
   - [Lint and fix](#lint-and-fix)
@@ -20,9 +24,7 @@ Url for sandbox https://kong.github.io/spec-renderer (deployed from main branch)
   - [Committing Changes](#committing-changes)
   - [Package Publishing](#package-publishing)
 
-## Usage
-
-### Installation
+## Installation
 
 Install the `@kong/spec-renderer` package in your host project.
 
@@ -34,13 +36,108 @@ pnpm add @kong/spec-renderer
 yarn add @kong/spec-renderer
 ```
 
-### Props
+## Usage
+
+### Vue 3 Component(s)
+
+Import the package (and TypeScript types, if desired) inside of your App's entry file (e.g. for Vue, `main.ts`). Set the plugin options, and tell Vue to use the plugin.
+
+### Vue 3 Plugin
+
+Import the package (and TypeScript types, if desired) inside of your App's entry file (e.g. for Vue, `main.ts`). Set the plugin options, and tell Vue to use the plugin.
+
+```js
+// main.ts
+
+import App from './App.vue'
+import { KongSpecRendererPlugin } from '@kong/spec-renderer-dev/dist/kong-auth-elements.es'
+import type { KongSpecRendererOptions } from '@kong/spec-renderer-dev/dist/types'
+import '@kong/spec-renderer-dev/dist/style.css'
+
+const app = createApp(App)
+
+const pluginOptions: KongSpecRendererOptions = {
+  // Unless using an absolute URL, this base path MUST start with a leading slash (if setting the default) in order to properly resolve within container applications, especially when called from nested routes(e.g. /organizations/users)
+  apiBaseUrl: 'https://global.api.konghq.com/kauth',
+  userEntity: 'user',
+  shadowDom: false, // We are using the Vue plugin, so the shadow DOM isn't needed
+}
+
+// Register the plugin
+app.use(KongSpecRendererPlugin, pluginOptions)
+
+app.mount('#app')
+```
+
+Now that the plugin is globally registered, simply include a component just like you would any other Vue component, utilizing any props as needed
+
+```html
+<KongAuthLogin
+  show-forgot-password-link
+  @login-success="onLoginSuccess"
+  @click-forgot-password-link="onUserClickForgotPassword"
+  @click-register-link="onUserClickRegister"></KongAuthLogin>
+```
+
+---
+
+### Vue 2 or no framework via native web components
+
+Import the package (and TypeScript types, if desired) inside of your App's entry file (e.g. for Vue, `main.ts`), set up the options, and call the provided `registerKongAuthNativeElements` function.
+
+```ts
+// main.ts
+
+import registerKongAuthNativeElements from '@kong/kong-auth-elements'
+import type { KongAuthElementsOptions } from '@kong/kong-auth-elements'
+import '@kong/kong-auth-elements/dist/style.css'
+
+const options: KongAuthElementsOptions = {
+  // Unless using an absolute URL, this base path MUST start with a leading slash (if setting the default) in order to properly resolve within container applications, especially when called from nested routes(e.g. /organizations/users)
+  apiBaseUrl: 'https://us.api.konghq.com/kauth',
+  userEntity: 'user',
+  shadowDom: true,
+  injectCss: ['.kong-auth-login-form .k-input#email { background-color: #ff0000 }'],
+  lang: 'en', // Exclude to default to English
+}
+
+// Call the registration function to automatically register all custom elements for usage
+registerKongAuthNativeElements(options)
+```
+
+The function will register all custom elements for usage as native web components.
+
+Wherever you want to utilze a custom element, [you **must** wrap it with an element](#teleport-wrapper) (e.g. a `div`) with a unique `id` attribute, and then simply include the element in your HTML just like you would any other element, utilizing any props as needed
+
+```html
+<div id="kong-auth-login-wrapper">
+  <kong-auth-login
+    basic-auth-login-enabled
+    show-forgot-password-link
+    @login-success="onLoginSuccess"
+    @click-forgot-password-link="onUserClickForgotPassword"
+    @click-register-link="onUserClickRegister"></kong-auth-login>
+</div>
+```
+
+#### Teleport Wrapper
+
+For the current implementation, it is **REQUIRED** to wrap the element with a tag with a unique `id` attribute so the custom element can be "teleported" out of the shadow DOM to enable password manager support.
+
+The `id` attribute should then be passed to each [Custom Element](#custom-elements) in the `wrapperId` prop so the element can be properly teleported out of the shadow DOM. For more information [refer to the Vue Teleport docs](https://vuejs.org/guide/built-ins/teleport.html). There are default `wrapperId` prop values provided; however to utilize them you still must wrap the custom element in an element with the corresponding `id`.
+
+---
+
+
+### Options
 
 #### `v-model`
 
 - type: `String`
 - required: `false`
 - default: `''`
+
+### Events
 
 ## Contributing & Local Development
 

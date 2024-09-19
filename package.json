@@ -4,8 +4,8 @@
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
   "type": "module",
-  "main": "./dist/kong-spec-renderer.umd.js",
-  "module": "./dist/kong-spec-renderer.es.js",
+  "main": "./dist/kong-spec-renderer.vue.umd.js",
+  "module": "./dist/kong-spec-renderer.vue.es.js",
   "files": [
     "dist"
   ],
@@ -14,8 +14,8 @@
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/kong-spec-renderer.es.js",
-      "require": "./dist/kong-spec-renderer.umd.js"
+      "import": "./dist/kong-spec-renderer.vue.es.js",
+      "require": "./dist/kong-spec-renderer.vue.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -25,8 +25,9 @@
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
-    "build": "pnpm run typecheck && pnpm run build:package && pnpm run build:types && pnpm run build:aliases",
-    "build:package": "vite build -m production",
+    "build": "pnpm run typecheck && pnpm run build:package &&  yarn build:package:omitVue && pnpm run build:types && pnpm run build:aliases",
+    "build:package": "cross-env INCLUDE_VUE='true' vite build -m production",
+    "build:package:omitVue": "cross-env INCLUDE_VUE='false' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "build:aliases": "tsc-alias -p './tsconfig.build.json'",
     "build:analyzer": "BUILD_VISUALIZER='true' vite build -m production",
