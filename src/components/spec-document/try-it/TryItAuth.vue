@@ -19,6 +19,7 @@
         class="scheme-selector"
         :items="securitySchemeGroupSelectItems"
         placement="bottom-end"
+        @change="updateAuthTokens"
       />
     </template>
 
@@ -74,6 +75,9 @@ const { tokenValueMap, authHeaderMap, authQueryMap } = composables.useAuthTokenS
 const securitySchemeGroupList = inject<ComputedRef<Array<SecuritySchemeGroup>>>('security-scheme-group-list', computed(() => []))
 const activeSchemeGroupKey = inject<Ref<string>>('active-scheme-group-key', ref(''))
 
+/**
+ * Extracts the list of select-items for the security scheme group selector.
+*/
 const securitySchemeGroupSelectItems = computed<Array<SelectItem>>(() => {
   return securitySchemeGroupList.value.map((group) => ({
     label: group.title,
@@ -82,6 +86,9 @@ const securitySchemeGroupSelectItems = computed<Array<SelectItem>>(() => {
   }))
 })
 
+/**
+ * Key-value pair of scheme key and the corresponding scheme object.
+ */
 const activeSecuritySchemeMap = computed(() => {
   const schemeMap: Record<string, HttpSecurityScheme> = {}
   const schemeList = securitySchemeGroupList.value.find(group => group.key === activeSchemeGroupKey.value)?.schemeList ?? []
@@ -93,8 +100,10 @@ const activeSecuritySchemeMap = computed(() => {
   return schemeMap
 })
 
-
-const handleTokenUpdate = useDebounceFn(() => {
+/**
+ * Debounced function to update auth headers and queries
+ */
+const updateAuthTokens = useDebounceFn(() => {
   const headers:Array<Record<string, string>> = []
   const query: Record<string, string> = {}
 
@@ -133,9 +142,30 @@ const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): strin
   return scheme.name || scheme.bearerFormat || defaultName || 'Access Token'
 }
 
-watch(tokenValueMap, () => {
-  handleTokenUpdate()
-}, { immediate: true, deep: true })
+/**
+ * Keeps track of token values for the active security scheme.
+ *
+ * `tokenValueMap` can contain values for tokens from multiple security schemes,
+ * but we only need to keep track of the tokens for the active security scheme.
+ *
+ * This reduces the number of times watchers will run for each TryItAuth component,
+ * vs when we have a watcher for the entire `tokenValueMap`.
+ */
+const activeTokens = computed(() => {
+  let tokens = ''
+
+  for (const schemeKey in activeSecuritySchemeMap.value) {
+    if (tokenValueMap.value[schemeKey]) {
+      tokens += tokenValueMap.value[schemeKey]
+    }
+  }
+
+  return tokens
+})
+
+watch(activeTokens, () => {
+  updateAuthTokens()
+}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>
