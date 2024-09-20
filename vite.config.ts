@@ -118,6 +118,7 @@ export default defineConfig({
       },
     minify: true,
     sourcemap: true,
+    cssCodeSplit: false,
     rollupOptions: {
       input: process.env.USE_SANDBOX
         ? {
@@ -127,14 +128,17 @@ export default defineConfig({
         }
         : path.resolve(__dirname, './src/index.ts'),
       external: externalDependencies,
-      output: process.env.USE_SANDBOX || process.env.INCLUDE_VUE === 'true'
-        ? undefined
-        : {
-          globals: {
-            vue: 'Vue',
-          },
-          exports: 'named',
-        },
+      output: {
+        exports: 'named',
+        ...(process.env.USE_SANDBOX || process.env.INCLUDE_VUE === 'true'
+          ? undefined
+          : {
+            globals: {
+              vue: 'Vue',
+            },
+            exports: 'named',
+          }),
+      },
       plugins: [
         // visualizer must remain last in the list of plugins
         buildVisualizerPlugin,
