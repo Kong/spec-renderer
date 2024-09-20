@@ -279,7 +279,7 @@ watch(() => ({
 
       serverUrl.search = queryStr
       const reqData: HarRequest = ({
-        method: newValue.method,
+        method: newValue.method.toUpperCase(),
         url: serverUrl.toString(),
         headers: [
           ...newValue.authHeaders,
