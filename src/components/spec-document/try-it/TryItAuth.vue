@@ -43,7 +43,6 @@
         autocomplete="off"
         placeholder="App credential"
         type="text"
-        @input="handleTokenUpdate()"
       >
     </div>
   </CollapsablePanel>
@@ -134,9 +133,9 @@ const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): strin
   return scheme.name || scheme.bearerFormat || defaultName || 'Access Token'
 }
 
-watch(activeSchemeGroupKey, () => {
+watch(tokenValueMap, () => {
   handleTokenUpdate()
-}, { immediate: true })
+}, { immediate: true, deep: true })
 </script>
 
 <style lang="scss" scoped>
