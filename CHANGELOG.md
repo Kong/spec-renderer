@@ -1,3 +1,10 @@
+# [1.74.0](https://github.com/Kong/spec-renderer/compare/v1.73.3...v1.74.0) (2024-09-20)
+
+
+### Features
+
+* sync try-it button state [KHCP-13272] ([#327](https://github.com/Kong/spec-renderer/issues/327)) ([1af33d8](https://github.com/Kong/spec-renderer/commit/1af33d890fa2d85e31037d885615a73661911c95))
+
 ## [1.73.3](https://github.com/Kong/spec-renderer/compare/v1.73.2...v1.73.3) (2024-09-20)
 
 
