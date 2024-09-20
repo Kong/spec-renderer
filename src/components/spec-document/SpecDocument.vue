@@ -410,7 +410,7 @@ watch(() => ({
   if (document) {
     if (pathIdx !== 0 || oldValue?.pathname) {
       setTimeout(async () => {
-        const activeSectionEl = document.getElementById(`${pathIdx}-nodecontainter`)
+        const activeSectionEl = wrapperRef.value?.querySelector(`[id="${pathIdx}-nodecontainter"]`)
         if (activeSectionEl) {
           activeSectionEl.scrollIntoView({ behavior: 'instant' })
         }
