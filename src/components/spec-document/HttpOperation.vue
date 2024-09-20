@@ -148,8 +148,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, inject } from 'vue'
-import type { PropType, Ref } from 'vue'
+import { ref, computed, watch, inject, provide } from 'vue'
+import type { ComputedRef, PropType, Ref } from 'vue'
 import type { IHttpOperation, IHttpWebhookOperation } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpResponse from './endpoint/HttpResponse.vue'
@@ -164,6 +164,7 @@ import PageHeader from '../common/PageHeader.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import { getSamplePath, getSampleQuery, getSampleBody } from '@/utils'
 import composables from '@/composables'
+import type { SecuritySchemeGroup } from '@/types'
 
 const props = defineProps({
   data: {
@@ -171,6 +172,32 @@ const props = defineProps({
     required: true,
   },
 })
+
+const securitySchemeGroupList = computed<Array<SecuritySchemeGroup>>(() => {
+  const schemeGroupList = []
+  for (const secGroup of (props.data.security ?? [])) {
+    if (secGroup.length) {
+      let title = ''
+      let key = ''
+      secGroup.forEach((scheme) => {
+        title = title.length ? title + ` & ${scheme.key}` : scheme.key,
+        key = key.length ? key + `-${scheme.key.replace(' ', '-')}` : scheme.key.replace(' ', '-')
+      })
+      schemeGroupList.push({
+        title,
+        key,
+        schemeList: secGroup,
+      })
+    }
+  }
+
+  return schemeGroupList
+})
+
+const activeSchemeGroupKey = ref<string>(securitySchemeGroupList.value[0]?.key ?? '')
+
+provide<ComputedRef<Array<SecuritySchemeGroup>>>('security-scheme-group-list', securitySchemeGroupList)
+provide<Ref<string>>('active-scheme-group-key', activeSchemeGroupKey)
 
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
@@ -199,8 +226,10 @@ const currentRequestQuery = ref<string>('')
 const currentRequestHeaders = ref<Array<Record<string, string>>>([])
 const currentRequestBody = ref<string>('')
 
-const { authHeaders, authQuery } = composables.useAuthTokenState()
+const { authHeaderMap, authQueryMap } = composables.useAuthTokenState()
 
+const authHeaders = computed(() => authHeaderMap.value[activeSchemeGroupKey.value] ?? [])
+const authQuery = computed(() => authQueryMap.value[activeSchemeGroupKey.value] ?? '')
 
 // refs and computed properties to manage currently active response object
 const responseList = computed(() => props.data.responses ?? [])
