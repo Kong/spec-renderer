@@ -82,7 +82,6 @@ import TryItResponse from './TryItResponse.vue'
 import { getSamplePath, getSampleQuery } from '@/utils'
 import composables from '@/composables'
 
-
 const props = defineProps({
   data: {
     type: Object as PropType<IHttpOperation>,
@@ -110,7 +109,12 @@ const emit = defineEmits<{
   (e: 'request-body-changed', newBody: string): void
 }>()
 
-const { authHeaders, authQuery } = composables.useAuthTokenState()
+const activeSchemeGroupKey = inject<Ref<string>>('active-scheme-group-key', ref(''))
+
+const { authHeaderMap, authQueryMap } = composables.useAuthTokenState()
+
+const authHeaders = computed(() => authHeaderMap.value[activeSchemeGroupKey.value] ?? [])
+const authQuery = computed(() => authQueryMap.value[activeSchemeGroupKey.value] ?? '')
 
 const response = ref<Response | undefined>()
 const responseError = ref<Error>()
