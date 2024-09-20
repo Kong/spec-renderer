@@ -55,6 +55,7 @@ import type { IHttpOperation } from '@stoplight/types'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import type { SelectItem } from '@/types'
 import { NetworkIcon, InsomniaIcon } from '@kong/icons'
+import composables from '@/composables'
 
 defineProps({
   data: {
@@ -89,7 +90,7 @@ const showInsomnia = computed((): boolean => {
   return !(hideInsomniaTryIt.value || !specUrl.value)
 })
 
-const selectedTryItMethodKey = ref<string>('browser')
+const { selectedTryItMethodKey } = composables.useTryItState()
 
 const startApiCall = (event?: Event) => {
   if (!event || !(event.target as HTMLElement).dataset.selectDropdownTrigger) {
