@@ -2,7 +2,7 @@
   <div class="kong-auth-element">
     <div
       v-if="injectedStyles"
-      data-testid="kong-auth-injected-styles"
+      data-testid="kong-spec-renderer-injected-styles"
     >
       <!-- This injected styles tag, the parent tag, and its corresponding logic in the setup function must be present to import styles from child components. -->
       <!-- eslint-disable vue/no-v-html -->
