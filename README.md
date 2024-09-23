@@ -42,6 +42,25 @@ yarn add @kong/spec-renderer
 
 Import the package (and TypeScript types, if desired) inside of your App's entry file (e.g. for Vue, `main.ts`). Set the plugin options, and tell Vue to use the plugin.
 
+```ts
+<template>
+  <SpecDocument
+    :spec="spec"
+  />
+</template>
+
+<script setup lang="ts">
+import { SpecDocument } from '@kong/spec-renderer-dev'
+const spec= `openapi: 3.1.0
+info:
+  title: Beer API
+  description: API for managing beers
+  version: 1.0.0
+...`
+</scirpt>
+
+```
+
 ### Vue 3 Plugin
 
 Import the package (and TypeScript types, if desired) inside of your App's entry file (e.g. for Vue, `main.ts`). Set the plugin options, and tell Vue to use the plugin.
@@ -50,16 +69,13 @@ Import the package (and TypeScript types, if desired) inside of your App's entry
 // main.ts
 
 import App from './App.vue'
-import { KongSpecRendererPlugin } from '@kong/spec-renderer-dev/dist/kong-auth-elements.es'
-import type { KongSpecRendererOptions } from '@kong/spec-renderer-dev/dist/types'
+import KongSpecRendererPlugin from '@kong/spec-renderer-dev'
+import type { KongSpecRendererOptions } from '@kong/spec-renderer-dev'
 import '@kong/spec-renderer-dev/dist/style.css'
 
 const app = createApp(App)
 
 const pluginOptions: KongSpecRendererOptions = {
-  // Unless using an absolute URL, this base path MUST start with a leading slash (if setting the default) in order to properly resolve within container applications, especially when called from nested routes(e.g. /organizations/users)
-  apiBaseUrl: 'https://global.api.konghq.com/kauth',
-  userEntity: 'user',
   shadowDom: false, // We are using the Vue plugin, so the shadow DOM isn't needed
 }
 
@@ -72,11 +88,9 @@ app.mount('#app')
 Now that the plugin is globally registered, simply include a component just like you would any other Vue component, utilizing any props as needed
 
 ```html
-<KongAuthLogin
-  show-forgot-password-link
-  @login-success="onLoginSuccess"
-  @click-forgot-password-link="onUserClickForgotPassword"
-  @click-register-link="onUserClickRegister"></KongAuthLogin>
+<KongSpecRenderer
+  :spec="specification-content-to-present"
+/>
 ```
 
 ---
@@ -88,21 +102,17 @@ Import the package (and TypeScript types, if desired) inside of your App's entry
 ```ts
 // main.ts
 
-import registerKongAuthNativeElements from '@kong/kong-auth-elements'
-import type { KongAuthElementsOptions } from '@kong/kong-auth-elements'
-import '@kong/kong-auth-elements/dist/style.css'
+import registerSpecRenderer from '@kong/spec-renderer-dev/vue'
+import type { KongSpecRendererOptions } from '@kong/spec-renderer-dev'
+import '@kong/spec-renderer-dev/dist/style.css'
 
 const options: KongAuthElementsOptions = {
-  // Unless using an absolute URL, this base path MUST start with a leading slash (if setting the default) in order to properly resolve within container applications, especially when called from nested routes(e.g. /organizations/users)
-  apiBaseUrl: 'https://us.api.konghq.com/kauth',
-  userEntity: 'user',
   shadowDom: true,
-  injectCss: ['.kong-auth-login-form .k-input#email { background-color: #ff0000 }'],
-  lang: 'en', // Exclude to default to English
+  injectCss: ['.kong-spec-renderer .k-input#email { background-color: #ff0000 }'],
 }
 
-// Call the registration function to automatically register all custom elements for usage
-registerKongAuthNativeElements(options)
+// Call the registration function to automatically register all spec-renderer custom elements for usage
+registerSpecRenderer(options)
 ```
 
 The function will register all custom elements for usage as native web components.
@@ -110,13 +120,10 @@ The function will register all custom elements for usage as native web component
 Wherever you want to utilze a custom element, [you **must** wrap it with an element](#teleport-wrapper) (e.g. a `div`) with a unique `id` attribute, and then simply include the element in your HTML just like you would any other element, utilizing any props as needed
 
 ```html
-<div id="kong-auth-login-wrapper">
-  <kong-auth-login
-    basic-auth-login-enabled
-    show-forgot-password-link
-    @login-success="onLoginSuccess"
-    @click-forgot-password-link="onUserClickForgotPassword"
-    @click-register-link="onUserClickRegister"></kong-auth-login>
+<div id="kong-spec-renderer-wrapper">
+  <kong-spec-renderer
+    :spec="openapi: 3.1.0 ..."
+  kong-spec-renderer>
 </div>
 ```
 
