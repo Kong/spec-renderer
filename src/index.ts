@@ -6,16 +6,10 @@ import { defineCustomElement } from 'vue'
 //import registerCustomElement from './utils/register-custom-element'
 import * as elements from './elements'
 
-import type { KongSpecRendererOptions } from './types'
-
-export type { KongSpecRendererOptions }
 
 // Export Vue plugin as the default
 export default {
-  install: (app: App, options: KongSpecRendererOptions): void => {
-    // Provide option values to components
-    app.provide('shadow-dom', options.shadowDom)
-    app.provide('inject-css', options?.injectCss)
+  install: (app: App): void => {
     // Register All Elements
     for (const key in elements) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -40,8 +34,7 @@ export {
 }
 
 // Exports a function that registers all custom elements as native web components
-export function registerKongSpecRenderer(options?: KongSpecRendererOptions): void {
-  console.log('calling registerKongSpecRenderer')
+export function registerKongSpecRenderer(): void {
 
   const specRendererCustomElement = defineCustomElement(elements.KongSpecRenderer)
   if (!customElements.get('kong-spec-renderer')) {

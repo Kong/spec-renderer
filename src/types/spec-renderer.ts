@@ -46,10 +46,3 @@ export interface ParseOptions {
 }
 
 export type SchemaModelPropertyField = 'info' | 'description' | 'enum' | 'pattern' | 'range' | 'example' | 'default'
-
-
-
-export interface KongSpecRendererOptions {
-  shadowDom?: boolean
-  injectCss?: string[]
-}

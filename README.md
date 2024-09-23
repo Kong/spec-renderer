@@ -70,17 +70,12 @@ Import the package (and TypeScript types, if desired) inside of your App's entry
 
 import App from './App.vue'
 import KongSpecRendererPlugin from '@kong/spec-renderer-dev'
-import type { KongSpecRendererOptions } from '@kong/spec-renderer-dev'
 import '@kong/spec-renderer-dev/dist/style.css'
 
 const app = createApp(App)
 
-const pluginOptions: KongSpecRendererOptions = {
-  shadowDom: false, // We are using the Vue plugin, so the shadow DOM isn't needed
-}
-
 // Register the plugin
-app.use(KongSpecRendererPlugin, pluginOptions)
+app.use(KongSpecRendererPlugin)
 
 app.mount('#app')
 ```
@@ -102,22 +97,15 @@ Import the package (and TypeScript types, if desired) inside of your App's entry
 ```ts
 // IMPORTANT: we are importing from the bundle with vue included
 import registerSpecRenderer from '@kong/spec-renderer-dev/vue'
-
-import type { KongSpecRendererOptions } from '@kong/spec-renderer-dev'
 import '@kong/spec-renderer-dev/dist/style.css'
 
-const options: KongAuthElementsOptions = {
-  shadowDom: true,
-  injectCss: ['.kong-spec-renderer .k-input#email { background-color: #ff0000 }'],
-}
 
 // Call the registration function to automatically register all spec-renderer custom elements for usage
-registerSpecRenderer(options)
+registerSpecRenderer()
 ```
 
 The function will register all custom elements for usage as native web components.
 
-Wherever you want to utilze a custom element, [you **must** wrap it with an element](#teleport-wrapper) (e.g. a `div`) with a unique `id` attribute, and then simply include the element in your HTML just like you would any other element, utilizing any props as needed
 
 ```html
 <div id="kong-spec-renderer-wrapper">
