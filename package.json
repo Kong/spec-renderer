@@ -30,7 +30,7 @@
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
-    "build": "pnpm run typecheck && pnpm run build:package &&  yarn build:package:omitVue && pnpm run build:types && pnpm run build:aliases",
+    "build": "pnpm run typecheck && pnpm run build:package &&  pnpm build:package:omitVue && pnpm run build:types && pnpm run build:aliases",
     "build:package": "cross-env INCLUDE_VUE='true' vite build -m production",
     "build:package:omitVue": "cross-env INCLUDE_VUE='false' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",

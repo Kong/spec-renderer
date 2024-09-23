@@ -1,4 +1,4 @@
-import { defineCustomElement, mergeProps } from 'vue'
+import { defineCustomElement } from 'vue'
 import type { KongSpecRendererOptions } from '../types'
 import appStyles from '../styles/styles.scss?inline'
 /**
@@ -43,17 +43,9 @@ export default (
       throw new Error('registerCustomElement: You must provide a valid Vue Element.')
     }
 
-    // Add a custom prop to teleport the custom element out of the shadow DOM and merge it with the existing props
-    const customElementProps = mergeProps({ ...customElementComponent.props }, {
-      shouldTeleport: {
-        type: Boolean,
-        default: options?.shadowDom === false, // should eval to true to teleport elements out of shadow DOM
-      },
-    })
-
     const vueCustomElement = defineCustomElement({
       ...customElementComponent,
-      props: customElementProps,
+      props: customElementComponent.props,
       // Inject app styles when rendering in the shadow DOM
       styles: options?.shadowDom !== true ? [] : [appStyles],
       // Provide user options

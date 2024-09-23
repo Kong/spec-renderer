@@ -2,7 +2,8 @@ import type { App } from 'vue'
 import SpecRenderer from '@/components/SpecRenderer.vue'
 import SpecDocument from './components/spec-document/SpecDocument.vue'
 import SpecRendererToc from './components/spec-renderer-toc/SpecRendererToc.vue'
-import registerCustomElement from './utils/register-custom-element'
+import { defineCustomElement } from 'vue'
+//import registerCustomElement from './utils/register-custom-element'
 import * as elements from './elements'
 
 import type { KongSpecRendererOptions } from './types'
@@ -40,12 +41,12 @@ export {
 
 // Exports a function that registers all custom elements as native web components
 export function registerKongSpecRenderer(options?: KongSpecRendererOptions): void {
-  const userOptions = Object.assign({}, options)
+  console.log('calling registerKongSpecRenderer')
 
-  // Since we are registering custom elements as native web components, force options.shadowDom to true only if undefined
-  userOptions.shadowDom = options?.shadowDom !== undefined ? options.shadowDom : true
-
-  registerCustomElement('kong-spec-renderer', elements.KongSpecRenderer, userOptions)
+  const specRendererCustomElement = defineCustomElement(elements.KongSpecRenderer)
+  if (!customElements.get('kong-spec-renderer')) {
+    customElements.define('kong-spec-renderer', specRendererCustomElement)
+  }
 }
 
 

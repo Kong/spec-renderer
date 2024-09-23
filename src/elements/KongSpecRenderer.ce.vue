@@ -1,27 +1,19 @@
 <template>
-  <TeleportWrapper :parent-props="$props">
-    <BaseCustomElement>
-      <SpecRenderer
-        :spec="props.spec"
-      />
-    </BaseCustomElement>
-  </TeleportWrapper>
+  <BaseCustomElement>
+    <SpecRenderer
+      :spec="props.spec"
+    />
+  </BaseCustomElement>
 </template>
 
 <script setup lang="ts">
 import BaseCustomElement from '@/components/elements/BaseCustomElement.vue'
 import SpecRenderer from '@/components/SpecRenderer.vue'
-import TeleportWrapper from '@/components/elements/TeleportWrapper.vue'
 import type { NavigationTypes } from '@/types'
 import type { PropType } from 'vue'
 
 // Props are defined here for use on the custom element tag
 const props = defineProps({
-  wrapperId: {
-    type: String,
-    required: false,
-    default: 'kong-spec-renderer-wrapper',
-  },
   /**
    * Text of the specification.
    */

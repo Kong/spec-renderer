@@ -9,7 +9,7 @@ export const getConfigOptions = {
 }
 
 export default function useConfigOptions(): KongSpecRendererOptions {
-  const shadowDom = getConfigOptions.shadowDom()
+  const shadowDom = true //getConfigOptions.shadowDom()
   const injectCss = getConfigOptions.injectCss()
 
   return {

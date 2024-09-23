@@ -13,8 +13,8 @@ Url for sandbox https://kong.github.io/spec-renderer (deployed from main branch)
 - [Usage](#usage)
   - [Vue 3 Component(s)](#vue-3-components)
   - [Vue 3 Plugin](#vue-3-plugin)
-  - [Vue 2 or no framework via native web components](#vue-2-or-no-framework-via-native-web-components)
-  - [Options](#options)
+  - [No/Other framework via native web components](#noother-framework-via-native-web-components)
+  - [Props](#props)
   - [Events](#events)
 - [Contributing \& Local Development](#contributing--local-development)
   - [Development Sandbox](#development-sandbox)
@@ -95,14 +95,14 @@ Now that the plugin is globally registered, simply include a component just like
 
 ---
 
-### Vue 2 or no framework via native web components
+### No/Other framework via native web components
 
 Import the package (and TypeScript types, if desired) inside of your App's entry file (e.g. for Vue, `main.ts`), set up the options, and call the provided `registerKongAuthNativeElements` function.
 
 ```ts
-// main.ts
-
+// IMPORTANT: we are importing from the bundle with vue included
 import registerSpecRenderer from '@kong/spec-renderer-dev/vue'
+
 import type { KongSpecRendererOptions } from '@kong/spec-renderer-dev'
 import '@kong/spec-renderer-dev/dist/style.css'
 
@@ -127,16 +127,9 @@ Wherever you want to utilze a custom element, [you **must** wrap it with an elem
 </div>
 ```
 
-#### Teleport Wrapper
-
-For the current implementation, it is **REQUIRED** to wrap the element with a tag with a unique `id` attribute so the custom element can be "teleported" out of the shadow DOM to enable password manager support.
-
-The `id` attribute should then be passed to each [Custom Element](#custom-elements) in the `wrapperId` prop so the element can be properly teleported out of the shadow DOM. For more information [refer to the Vue Teleport docs](https://vuejs.org/guide/built-ins/teleport.html). There are default `wrapperId` prop values provided; however to utilize them you still must wrap the custom element in an element with the corresponding `id`.
-
----
 
 
-### Options
+### Props
 
 #### `v-model`
 
