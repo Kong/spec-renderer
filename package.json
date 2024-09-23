@@ -4,8 +4,8 @@
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
   "type": "module",
-  "main": "./dist/kong-spec-renderer.vue.umd.js",
-  "module": "./dist/kong-spec-renderer.vue.es.js",
+  "main": "./dist/kong-spec-renderer.umd.js",
+  "module": "./dist/kong-spec-renderer.es.js",
   "files": [
     "dist"
   ],
@@ -13,6 +13,11 @@
   "typings": "dist/types",
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/kong-spec-renderer.es.js",
+      "require": "./dist/kong-spec-renderer.umd.js"
+    },
+    "./vue": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/kong-spec-renderer.vue.es.js",
       "require": "./dist/kong-spec-renderer.vue.umd.js"

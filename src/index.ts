@@ -10,7 +10,7 @@ import type { KongSpecRendererOptions } from './types'
 export type { KongSpecRendererOptions }
 
 // Export Vue plugin as the default
-export const KongSpecRendererPlugin = {
+export default {
   install: (app: App, options: KongSpecRendererOptions): void => {
     // Provide option values to components
     app.provide('shadow-dom', options.shadowDom)
@@ -39,7 +39,7 @@ export {
 }
 
 // Exports a function that registers all custom elements as native web components
-export default function registerKongSpecRendererNativeElements(options?: KongSpecRendererOptions): void {
+export function registerKongSpecRenderer(options?: KongSpecRendererOptions): void {
   const userOptions = Object.assign({}, options)
 
   // Since we are registering custom elements as native web components, force options.shadowDom to true only if undefined
@@ -54,5 +54,5 @@ export default function registerKongSpecRendererNativeElements(options?: KongSpe
 if (typeof window !== 'undefined') {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  window.registerKongSpecRendererNativeElements = registerKongSpecRendererNativeElements
+  window.registerKongSpecRenderer = registerKongSpecRenderer
 }
