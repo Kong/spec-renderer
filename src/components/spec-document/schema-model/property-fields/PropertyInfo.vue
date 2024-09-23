@@ -124,7 +124,8 @@ function handleSelectChange(selecteditem: SelectItem) {
     }
 
     .property-title-variant-label {
-      margin-left: var(--kui-space-40, $kui-space-40);
+      margin-left: var(--kui-space-50, $kui-space-50);
+      margin-right: var(--kui-space-20, $kui-space-20);
     }
   }
 
