@@ -16,7 +16,7 @@
   >
     <div
       v-for="(node, idx) in nodesList"
-      :id="`${idx}-nodecontainter`"
+      :id="`${idx}-nodecontainer`"
       :key="`${node.doc.data.id}-${idx}`"
       class="spec-renderer-document"
     >
@@ -404,7 +404,7 @@ watch(() => ({
   if (document) {
     if (pathIdx !== 0 || oldValue?.pathname) {
       setTimeout(async () => {
-        const activeSectionEl = wrapperRef.value?.querySelector(`[id="${pathIdx}-nodecontainter"]`)
+        const activeSectionEl = wrapperRef.value?.querySelector(`[id="${pathIdx}-nodecontainer"]`)
         if (activeSectionEl) {
           activeSectionEl.scrollIntoView({ behavior: 'instant' })
         }
