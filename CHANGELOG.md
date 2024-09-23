@@ -1,3 +1,10 @@
+## [1.74.2](https://github.com/Kong/spec-renderer/compare/v1.74.1...v1.74.2) (2024-09-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.15.2 ([#330](https://github.com/Kong/spec-renderer/issues/330)) ([e8c97e5](https://github.com/Kong/spec-renderer/commit/e8c97e515a369be5cc9b7ee856a87049212b9b78))
+
 ## [1.74.1](https://github.com/Kong/spec-renderer/compare/v1.74.0...v1.74.1) (2024-09-23)
 
 
