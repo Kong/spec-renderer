@@ -19,7 +19,6 @@ const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
 // !Important: always externalize `shiki/onig.wasm`
 const externalDependencies: string[] = ['shiki/onig.wasm']
 // If not loading sandbox, externalize vue
-//if (!process.env.USE_SANDBOX && process.env.AS_WEB_COMPONENT !== 'true') {
 if (!process.env.USE_SANDBOX) {
   externalDependencies.push('vue')
 }
@@ -123,7 +122,6 @@ export default defineConfig({
       },
     minify: true,
     sourcemap: true,
-    //cssCodeSplit: process.env.AS_WEB_COMPONENT === 'true' ? false : true,
     rollupOptions: {
       input: process.env.USE_SANDBOX
         ? {
@@ -134,7 +132,6 @@ export default defineConfig({
         : path.resolve(__dirname, './src/index.ts'),
       external: externalDependencies,
       output: {
-        //        ...(process.env.USE_SANDBOX || process.env.AS_WEB_COMPONENT === 'true'
         ...(process.env.USE_SANDBOX
           ? undefined
           : {
