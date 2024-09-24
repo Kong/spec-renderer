@@ -1,3 +1,32 @@
+## [1.74.2](https://github.com/Kong/spec-renderer/compare/v1.74.1...v1.74.2) (2024-09-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.15.2 ([#330](https://github.com/Kong/spec-renderer/issues/330)) ([e8c97e5](https://github.com/Kong/spec-renderer/commit/e8c97e515a369be5cc9b7ee856a87049212b9b78))
+
+## [1.74.1](https://github.com/Kong/spec-renderer/compare/v1.74.0...v1.74.1) (2024-09-23)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#328](https://github.com/Kong/spec-renderer/issues/328)) ([d2438ef](https://github.com/Kong/spec-renderer/commit/d2438ef79027accc1f5e31e3f447bdde21289a3b))
+
+# [1.74.0](https://github.com/Kong/spec-renderer/compare/v1.73.3...v1.74.0) (2024-09-20)
+
+
+### Features
+
+* sync try-it button state [KHCP-13272] ([#327](https://github.com/Kong/spec-renderer/issues/327)) ([1af33d8](https://github.com/Kong/spec-renderer/commit/1af33d890fa2d85e31037d885615a73661911c95))
+
+## [1.73.3](https://github.com/Kong/spec-renderer/compare/v1.73.2...v1.73.3) (2024-09-20)
+
+
+### Bug Fixes
+
+* correct import for SpecVersion [KHCP-13323] ([#325](https://github.com/Kong/spec-renderer/issues/325)) ([3e5b7ef](https://github.com/Kong/spec-renderer/commit/3e5b7ef9c7e494bf6a85df03c5e538ab68a35bfa))
+* support endpoints with their own security schemes [KHCP-13353] ([#323](https://github.com/Kong/spec-renderer/issues/323)) ([0d442da](https://github.com/Kong/spec-renderer/commit/0d442da90448fd5bf8e66ef41a50b2949f52949b))
+
 ## [1.73.2](https://github.com/Kong/spec-renderer/compare/v1.73.1...v1.73.2) (2024-09-19)
 
 
