@@ -66,7 +66,7 @@
     "@vueuse/core": "^11.1.0",
     "allof-merge": "^0.6.6",
     "flatted": "^3.3.1",
-    "httpsnippet-lite": "^3.0.5",
+    "httpsnippet": "^3.0.6",
     "json-schema": "^0.4.0",
     "markdown-it": "^14.1.0",
     "oas-normalize": "^11.1.2",
@@ -183,6 +183,15 @@
   "volta": {
     "node": "20.17.0",
     "pnpm": "9.10.0"
+  },
+  "pnpm": {
+    "packageExtensions": {
+      "httpsnippet": {
+        "dependencies": {
+          "ajv": "6.12.3"
+        }
+      }
+    }
   },
   "config": {
     "commitizen": {
