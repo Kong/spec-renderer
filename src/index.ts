@@ -10,6 +10,8 @@ export default {
   install: (app: App): void => {
     // Register All Elements
     app.component('KongSpecRenderer', SpecRenderer)
+    app.component('KongSpecRendererTOC', SpecRendererToc)
+    app.component('KongSpecRendererDOcument', SpecDocument)
   },
 }
 
@@ -33,9 +35,18 @@ export function registerKongSpecRenderer(): void {
 
 
   const specRendererCustomElement = defineCustomElement(SpecRenderer)
-
   if (!customElements.get('kong-spec-renderer')) {
     customElements.define('kong-spec-renderer', specRendererCustomElement)
+  }
+
+  const specRendererTocCustomElement = defineCustomElement(SpecRendererToc)
+  if (!customElements.get('kong-spec-renderer-toc')) {
+    customElements.define('kong-spec-renderer-toc', specRendererTocCustomElement)
+  }
+
+  const specRendererDocumentCustomElement = defineCustomElement(SpecDocument)
+  if (!customElements.get('kong-spec-renderer-document')) {
+    customElements.define('kong-spec-renderer-document', specRendererDocumentCustomElement)
   }
 }
 

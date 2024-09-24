@@ -131,3 +131,7 @@ export const SECTIONS_TO_RENDER = 2
 
 // start recalculating visibility on scroll more than N pixels
 export const MIN_SCROLL_DIFFERENCE = 20
+
+export const BOOL_VALIDATOR = (value: string | boolean): boolean => ([true, false, 'true', 'false'].includes(value))
+
+export const IS_TRUE = (value: string | boolean): boolean => ([true, 'true'].includes(value))

@@ -23,6 +23,7 @@ import { itemComponent } from './index'
 import { useScroll } from '@vueuse/core'
 import type { NavigationTypes } from '@/types'
 import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '@kong/stoplight-http-spec/elements-core'
+import { BOOL_VALIDATOR, IS_TRUE } from '@/constants'
 
 const props = defineProps({
   tableOfContents: {
@@ -57,7 +58,8 @@ const props = defineProps({
    * When false it becomes the responsibility of consuming app
    */
   controlAddressBar: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: false,
   },
   /**
@@ -144,7 +146,7 @@ watch(() => ({ path: props.currentPath, navRef: tocNavRef.value }), async (newVa
 
 
 const selectItem = (id: any) => {
-  if (props.controlAddressBar) {
+  if (IS_TRUE(props.controlAddressBar)) {
     // we only have path and hash for now
     const newPath = props.navigationType === 'path' ? props.basePath + id : props.basePath + '#' + id
     window.history.pushState({}, '', newPath)

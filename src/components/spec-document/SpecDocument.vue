@@ -55,7 +55,7 @@ import AsyncMessage from './AsyncMessage.vue'
 import ArticleNode from './ArticleNode.vue'
 import UnknownNode from './UnknownNode.vue'
 import { useWindowScroll, useWindowSize, useElementSize, useScroll } from '@vueuse/core'
-import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE } from '@/constants'
+import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE, BOOL_VALIDATOR, IS_TRUE } from '@/constants'
 import type { NavigationTypes } from '@/types'
 import { stringify } from 'flatted'
 
@@ -83,21 +83,24 @@ const props = defineProps({
    * Do not show TryIt section
    */
   hideTryIt: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: false,
   },
   /**
    * Do not show  Insomnia option in TryIt
    */
   hideInsomniaTryIt: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: false,
   },
   /**
    * Allow scrolling trough operations/schemas
    */
   allowContentScrolling: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: true,
   },
   /**
@@ -113,7 +116,8 @@ const props = defineProps({
    * When false it becomes the responsibility of consuming app
    */
   controlAddressBar: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: false,
   },
   /**
@@ -129,15 +133,17 @@ const props = defineProps({
    * Use default markdown styling
    */
   markdownStyles: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: true,
   },
   /**
    * Allow user to add custom server url which will be added to the list of available servers
    */
   allowCustomServerUrl: {
-    type: Boolean,
-    default: false,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
+    default: true,
   },
 })
 
@@ -149,10 +155,10 @@ const serviceNode = ref<ServiceNode | null>(null)
 // to be consumed in multi-level child components
 provide<Ref<string>>('spec-url', computed((): string => props.specUrl))
 provide<Ref<string>>('base-path', computed((): string => props.basePath))
-provide<Ref<boolean>>('hide-tryit', computed((): boolean => props.hideTryIt))
-provide<Ref<boolean>>('hide-insomnia-tryit', computed((): boolean => props.hideInsomniaTryIt))
-provide<Ref<boolean>>('markdown-styles', computed((): boolean => props.markdownStyles))
-provide<Ref<boolean>>('allow-custom-server-url', computed((): boolean => props.allowCustomServerUrl))
+provide<Ref<boolean>>('hide-tryit', computed((): boolean => IS_TRUE(props.hideTryIt)))
+provide<Ref<boolean>>('hide-insomnia-tryit', computed((): boolean => IS_TRUE(props.hideInsomniaTryIt)))
+provide<Ref<boolean>>('markdown-styles', computed((): boolean => IS_TRUE(props.markdownStyles)))
+provide<Ref<boolean>>('allow-custom-server-url', computed((): boolean => IS_TRUE(props.allowCustomServerUrl)))
 
 const emit = defineEmits < {
   (e: 'path-not-found', requestedPath: string): void,
