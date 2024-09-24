@@ -92,11 +92,11 @@ Now that the plugin is globally registered, simply include a component just like
 
 ### No/Other framework via native web components
 
-Import the package (and TypeScript types, if desired) inside of your App's entry file (e.g. for Vue, `main.ts`), set up the options, and call the provided `registerKongAuthNativeElements` function.
+Import the package (and TypeScript types, if desired) inside of your App's entry file (e.g. for Vue, `main.ts`), set up the options, and call the provided `registerSpecRenderer` function.
 
 ```ts
-// IMPORTANT: we are importing from the bundle with vue included
-import registerSpecRenderer from '@kong/spec-renderer-dev/vue'
+// IMPORTANT: we are importing from the web-component bundle
+import registerSpecRenderer from '@kong/spec-renderer-dev/web-component'
 import '@kong/spec-renderer-dev/dist/style.css'
 
 
@@ -106,7 +106,6 @@ registerSpecRenderer()
 
 The function will register all custom elements for usage as native web components.
 
-
 ```html
 <div id="kong-spec-renderer-wrapper">
   <kong-spec-renderer
@@ -114,8 +113,6 @@ The function will register all custom elements for usage as native web component
   kong-spec-renderer>
 </div>
 ```
-
-
 
 ### Props
 

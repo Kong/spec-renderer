@@ -6,7 +6,7 @@
     <component
       :is="docComponent.component"
       v-if="docComponent.component !== null"
-      v-bind="docComponent.props"
+      v-bind="docComponent.props as any"
     />
   </div>
   <div

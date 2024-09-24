@@ -19,7 +19,8 @@ const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
 // !Important: always externalize `shiki/onig.wasm`
 const externalDependencies: string[] = ['shiki/onig.wasm']
 // If not loading sandbox, externalize vue
-if (!process.env.USE_SANDBOX && process.env.INCLUDE_VUE === 'false') {
+//if (!process.env.USE_SANDBOX && process.env.AS_WEB_COMPONENT !== 'true') {
+if (!process.env.USE_SANDBOX) {
   externalDependencies.push('vue')
 }
 // https://vitejs.dev/config/
@@ -78,6 +79,9 @@ export default defineConfig({
       include: ['util', 'path'],
     }),
     vue({
+      features: {
+        customElement: process.env.AS_WEB_COMPONENT === 'true',
+      },
       template: {
         compilerOptions: {
           isCustomElement: (tag) => ['asyncapi-component', 'elements-api'].includes(tag),
@@ -96,6 +100,7 @@ export default defineConfig({
     devSourcemap: true,
     preprocessorOptions: {
       scss: {
+        api: 'modern-compiler',
         // Inject the @kong/design-tokens SCSS variables to make them available for all components.
         // This is not needed in host applications.
         additionalData: '@use "sass:color";@import "@kong/design-tokens/tokens/scss/variables";@import "@/styles/mixins/mixins";@import "@/styles/variables";',
@@ -105,7 +110,7 @@ export default defineConfig({
   // TODO: If deploying to GitHub pages, enable this line
   base: process.env.USE_SANDBOX ? '/spec-renderer' : '/',
   build: {
-    emptyOutDir: process.env.INCLUDE_VUE === 'true',
+    emptyOutDir: process.env.AS_WEB_COMPONENT !== 'true',
     commonjsOptions: {
       transformMixedEsModules: true,
     },
@@ -114,11 +119,11 @@ export default defineConfig({
       : {
         entry: path.resolve(__dirname, 'src/index.ts'),
         name: 'KongSpecRenderer',
-        fileName: (format) => `kong-spec-renderer.${process.env.INCLUDE_VUE === 'true' ? 'vue.' : ''}${format}.js`,
+        fileName: (format) => `kong-spec-renderer.${process.env.AS_WEB_COMPONENT === 'true' ? 'web-component.' : ''}${format}.js`,
       },
     minify: true,
     sourcemap: true,
-    cssCodeSplit: false,
+    //cssCodeSplit: process.env.AS_WEB_COMPONENT === 'true' ? false : true,
     rollupOptions: {
       input: process.env.USE_SANDBOX
         ? {
@@ -129,8 +134,8 @@ export default defineConfig({
         : path.resolve(__dirname, './src/index.ts'),
       external: externalDependencies,
       output: {
-        exports: 'named',
-        ...(process.env.USE_SANDBOX || process.env.INCLUDE_VUE === 'true'
+        //        ...(process.env.USE_SANDBOX || process.env.AS_WEB_COMPONENT === 'true'
+        ...(process.env.USE_SANDBOX
           ? undefined
           : {
             globals: {

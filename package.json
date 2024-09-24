@@ -17,10 +17,10 @@
       "import": "./dist/kong-spec-renderer.es.js",
       "require": "./dist/kong-spec-renderer.umd.js"
     },
-    "./vue": {
+    "./web-component": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/kong-spec-renderer.vue.es.js",
-      "require": "./dist/kong-spec-renderer.vue.umd.js"
+      "import": "./dist/kong-spec-renderer.web-component.es.js",
+      "require": "./dist/kong-spec-renderer.web-component.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -30,9 +30,9 @@
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
-    "build": "pnpm run typecheck && pnpm run build:package &&  pnpm build:package:omitVue && pnpm run build:types && pnpm run build:aliases",
-    "build:package": "cross-env INCLUDE_VUE='true' vite build -m production",
-    "build:package:omitVue": "cross-env INCLUDE_VUE='false' vite build -m production",
+    "build": "pnpm run typecheck && pnpm run build:package && pnpm run build:webcomponent && pnpm run build:types && pnpm run build:aliases",
+    "build:package": "vite build -m production",
+    "build:webcomponent": "cross-env AS_WEB_COMPONENT='true' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "build:aliases": "tsc-alias -p './tsconfig.build.json'",
     "build:analyzer": "BUILD_VISUALIZER='true' vite build -m production",
@@ -108,7 +108,7 @@
     "postcss-html": "^1.7.0",
     "rimraf": "^6.0.1",
     "rollup-plugin-visualizer": "^5.12.0",
-    "sass": "^1.77.8",
+    "sass-embedded": "^1.79.3",
     "semantic-release": "^24.1.0",
     "stylelint": "^16.8.2",
     "stylelint-config-html": "^1.1.0",
@@ -124,7 +124,7 @@
     "vite-plugin-replace": "^0.1.1",
     "vite-plugin-vue-devtools": "^7.4.4",
     "vitest": "2.0.5",
-    "vue": "^3.4.38",
+    "vue": "^3.5.8",
     "vue-router": "^4.4.3",
     "vue-tsc": "^2.0.29"
   },

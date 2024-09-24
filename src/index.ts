@@ -3,19 +3,13 @@ import SpecRenderer from '@/components/SpecRenderer.vue'
 import SpecDocument from './components/spec-document/SpecDocument.vue'
 import SpecRendererToc from './components/spec-renderer-toc/SpecRendererToc.vue'
 import { defineCustomElement } from 'vue'
-//import registerCustomElement from './utils/register-custom-element'
-import * as elements from './elements'
 
 
 // Export Vue plugin as the default
 export default {
   install: (app: App): void => {
     // Register All Elements
-    for (const key in elements) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      app.component(key, elements[key])
-    }
+    app.component('KongSpecRenderer', SpecRenderer)
   },
 }
 
@@ -36,7 +30,10 @@ export {
 // Exports a function that registers all custom elements as native web components
 export function registerKongSpecRenderer(): void {
 
-  const specRendererCustomElement = defineCustomElement(elements.KongSpecRenderer)
+
+
+  const specRendererCustomElement = defineCustomElement(SpecRenderer)
+
   if (!customElements.get('kong-spec-renderer')) {
     customElements.define('kong-spec-renderer', specRendererCustomElement)
   }
