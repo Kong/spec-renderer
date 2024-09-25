@@ -108,7 +108,7 @@ This is to renderer Toc and Document  components separately
 </template>
 <script setup lang="ts">
   import { onBeforeMount } from 'vue'
-  import {parseSpecDocument, parsedDocument, tableOfContents} from '@kong/spec-renderer-dev'
+  import { parseSpecDocument, parsedDocument, tableOfContents } from '@kong/spec-renderer-dev'
 
   onBeforeMount(() => async {
     await parseSpecDocument()
