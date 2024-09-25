@@ -10,8 +10,8 @@ export default {
   install: (app: App): void => {
     // Register All Elements
     app.component('KongSpecRenderer', SpecRenderer)
-    app.component('KongSpecRendererTOC', SpecRendererToc)
-    app.component('KongSpecRendererDOcument', SpecDocument)
+    app.component('KongSpecRendererToc', SpecRendererToc)
+    app.component('KongSpecRendererDocument', SpecDocument)
   },
 }
 

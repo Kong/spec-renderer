@@ -82,13 +82,45 @@ app.mount('#app')
 
 Now that the plugin is globally registered, simply include a component just like you would any other Vue component, utilizing any props as needed
 
-```html
+This is to renderer KongSpecRender component
+
+```js
+<template>
 <KongSpecRenderer
   :spec="specification-content-to-present"
 />
+</template>
 ```
 
----
+This is to renderer Toc and Document  components separately
+
+```js
+<template>
+    <div id="kong-spec-renderer-wrapper">
+      <nav>
+        <KongSpecRendererToc
+          :table-of-contents="tableOfContents.value"
+        />
+      </nav>
+      <main>
+        <KongSpecRendererDocument
+          :document="parsedDocument.value"
+          current-path="/"
+        />
+      </main>
+    </div>
+
+</template>
+<script setup lang="ts">
+  import { onBeforeMount } from 'vue'
+  import {parseSpecDocument, parsedDocument, tableOfContents} from '@kong/spec-renderer-dev'
+
+  onBeforeMount(() => async {
+    await parseSpecDocument()
+  }
+</script>
+```
+
 
 ### No/Other framework via native web components
 
