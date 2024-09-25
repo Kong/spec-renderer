@@ -42,13 +42,13 @@ export default (): {
         try {
           return JSON.parse(yamlOrObject)
         } catch (e) {
-          console.error('in parseJSSON:', e)
+          console.error('@kong/spec-renderer: in parseJSSON:', e)
         }
       } else {
         try {
           return parseYaml(yamlOrObject)
         } catch (e) {
-          console.error('in parseYaml:', e)
+          console.error('@kong/spec-renderer: in parseYaml:', e)
         }
       }
     }
@@ -94,7 +94,7 @@ export default (): {
       try {
         specToParse = await (await fetch(options.specUrl)).text()
       } catch (e) {
-        console.error(`Error fetching async document from ${options.specUrl}`, e)
+        console.error(`@kong/spec-renderer: error fetching async document from ${options.specUrl}`, e)
         return false
       }
       trace(options.traceParsing, 'async document fetched')
@@ -108,7 +108,7 @@ export default (): {
       }
       parsed = document
     } catch (e) {
-      console.error('Error parsing async document', e)
+      console.error('@kong/spec-renderer: error parsing async document', e)
       return false
     }
     trace(options.traceParsing, 'async document parsed')
@@ -127,7 +127,7 @@ export default (): {
       parsedDocument.value = transformed
       return true
     } catch (e) {
-      console.error('Error transforming async document', e)
+      console.error('@kong/spec-renderer: error transforming async document', e)
       return false
     }
   }
@@ -168,7 +168,7 @@ export default (): {
 
     if (!jsonDocument.value) {
       // was it even a spec or even something that could be converted to json?
-      console.error('empty jsonDocument initial processing')
+      console.error('@kong/spec-renderer: empty jsonDocument initial processing')
       return
     }
 
@@ -177,7 +177,7 @@ export default (): {
       // let's see if we can detect some validation errors here
       // validationResults.value = await validate(spec || jsonDocument.value)
     } catch (err) {
-      console.error('error in validate:', err)
+      console.error('@kong/spec-renderer: error in validate:', err)
     }
 
     trace(options.traceParsing, 'validated')
@@ -203,7 +203,7 @@ export default (): {
       })
       jsonDocument.value = dereferenced
     } catch (err) {
-      console.error('error dereferencing:', err)
+      console.error('@kong/spec-renderer: error dereferencing:', err)
     }
 
     trace(options.traceParsing, 'dereferenced')
@@ -214,7 +214,7 @@ export default (): {
       // convert to AST for ui layer to use
       parsedDocument.value = transformOasToServiceNode(jsonDocument.value)
     } catch (err) {
-      console.error('error in transformOasToServiceNode:', err)
+      console.error('@kong/spec-renderer: error in transformOasToServiceNode:', err)
     }
 
     trace(options.traceParsing, 'transformed')
@@ -230,7 +230,7 @@ export default (): {
         })
       }
     } catch (err) {
-      console.error('error in computeAPITree:', err)
+      console.error('e@kong/spec-renderer: rror in computeAPITree:', err)
     }
 
     if (options.webComponentSafe) {

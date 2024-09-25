@@ -101,7 +101,7 @@ const toc = computed((): TableOfContentsItem[] | undefined => {
     try {
       newToc = <TableOfContentsItem[]>parseFlatted(newToc as string)
     } catch (err) {
-      console.error('error parsing provided toc')
+      console.error('@kong/spec-renderer: error parsing provided toc')
       return undefined
     }
   }

@@ -179,7 +179,7 @@ const specDocument = computed((): ServiceNode => {
     try {
       return <ServiceNode>parseFlatted(props.document)
     } catch (e) {
-      console.error('error parsing provided document')
+      console.error('@kong/spec-renderer: error parsing provided document')
       return <ServiceNode>{}
     }
   }
