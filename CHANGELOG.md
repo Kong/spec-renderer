@@ -1,3 +1,10 @@
+# [1.76.0](https://github.com/Kong/spec-renderer/compare/v1.75.0...v1.76.0) (2024-09-25)
+
+
+### Features
+
+* expose spec-renderer as web-component [KHCP-13349] ([#326](https://github.com/Kong/spec-renderer/issues/326)) ([1f50a76](https://github.com/Kong/spec-renderer/commit/1f50a76d01544ef679ff32ac8633ea76577f781c))
+
 # [1.75.0](https://github.com/Kong/spec-renderer/compare/v1.74.2...v1.75.0) (2024-09-25)
 
 
