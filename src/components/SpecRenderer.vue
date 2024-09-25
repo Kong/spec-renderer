@@ -4,7 +4,7 @@
       <SlideOut
         v-if="tableOfContents"
         class="slideout-toc"
-        :title="parsedDocument?.name || 'Table of Contents'"
+        :title="(parsedDocument as ServiceNode)?.name || 'Table of Contents'"
         :visible="slideoutTocVisible"
         @close="slideoutTocVisible = false"
       >
@@ -82,6 +82,7 @@ import { MenuIcon } from '@kong/icons'
 import SlideOut from './common/SlideOut.vue'
 import type { NavigationTypes } from '@/types'
 import { BOOL_VALIDATOR, IS_TRUE } from '@/constants'
+import type { ServiceNode } from '@/types'
 
 const props = defineProps({
   /**
@@ -283,7 +284,7 @@ watch(() => ({
   })
 
   if (props.traceParsing) {
-    console.log('parsedDocument:', parsedDocument.value)
+    console.log('parsedDocument:', <ServiceNode>parsedDocument.value)
     console.log('tableOfContents:', tableOfContents.value)
     console.log('validationResults:', validationResults.value)
   }

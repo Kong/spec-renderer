@@ -94,24 +94,42 @@ Now that the plugin is globally registered, simply include a component just like
 
 Import the package (and TypeScript types, if desired) inside of your App's entry file (e.g. for Vue, `main.ts`), set up the options, and call the provided `registerSpecRenderer` function.
 
-```ts
+```jsx
 // IMPORTANT: we are importing from the web-component bundle
-import registerSpecRenderer from '@kong/spec-renderer-dev/web-component'
-import '@kong/spec-renderer-dev/dist/style.css'
-
+import { registerSpecRenderer, parseSpecDocument, parsedDocument, tableOfContents }  from '@kong/spec-renderer-dev/web-component'
 
 // Call the registration function to automatically register all spec-renderer custom elements for usage
 registerSpecRenderer()
-```
 
-The function will register all custom elements for usage as native web components.
+// this is to renderer spec-renderer as one single component
+const singleComponent = () => (
+    <kong-spec-renderer
+      spec="openapi: 3.1.0 ..."
+    />
+)
 
-```html
-<div id="kong-spec-renderer-wrapper">
-  <kong-spec-renderer
-    :spec="openapi: 3.1.0 ..."
-  kong-spec-renderer>
-</div>
+// this is to renderer toc and document separately
+const tocAndDocComponents = async () => {
+
+  await parseSpecDocument(spec, {webComponentSafe: true})
+
+  return (
+    <div id="kong-spec-renderer-wrapper">
+      <nav>
+        <kong-spec-renderer-toc
+          table-of-contents={tableOfContents.value}
+        />
+      </nav>
+      <main>
+        <kong-spec-renderer-document
+          document={parsedDocument.value}
+          current-path="/"
+        />
+      </main>
+    </div>
+  )
+}
+
 ```
 
 ### Props

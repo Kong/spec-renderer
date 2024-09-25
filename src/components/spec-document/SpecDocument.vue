@@ -57,11 +57,11 @@ import UnknownNode from './UnknownNode.vue'
 import { useWindowScroll, useWindowSize, useElementSize, useScroll } from '@vueuse/core'
 import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE, BOOL_VALIDATOR, IS_TRUE } from '@/constants'
 import type { NavigationTypes } from '@/types'
-import { stringify } from 'flatted'
+import { stringify, parse } from 'flatted'
 
 const props = defineProps({
   document: {
-    type: Object as PropType<ServiceNode>,
+    type: [Object, String],
     required: true,
   },
   /**
@@ -173,6 +173,18 @@ const lastPath = ref<string>()
 const wrapperRef = ref<HTMLElement | null>(null)
 const renderPlain = ref<boolean>(false)
 
+const specDocument = computed((): ServiceNode => {
+  if (typeof props.document === 'string') {
+    try {
+      return <ServiceNode>parse(props.document)
+    } catch (e) {
+      console.error('error parsing provided document')
+      return <ServiceNode>{}
+    }
+  }
+  return <ServiceNode>props.document
+})
+
 const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null) => {
   if (!forServiceNode) return {}
 
@@ -237,27 +249,27 @@ const nodesList = computed(() => {
 
   let nList = <any[]>[]
   // first one - overview
-  nList.push(...[props.document])
+  nList.push(...[specDocument.value])
 
   // first all without tags, but not schemas
-  nList.push(...props.document.children.filter(child => (child.tags || []).length === 0 && child.type !== 'model'))
+  nList.push(...specDocument.value.children.filter(child => (child.tags || []).length === 0 && child.type !== 'model'))
 
   // next by tag ordered
-  props.document.tags.forEach((t: string) => {
-    nList.push(...props.document.children.filter((child: any) => (child.tags || []).includes(t)))
+  specDocument.value.tags.forEach((t: string) => {
+    nList.push(...specDocument.value.children.filter((child: any) => (child.tags || []).includes(t)))
   })
 
   // next - where tag is not matching list of tags
-  nList.push(...props.document.children.filter(child => {
+  nList.push(...specDocument.value.children.filter(child => {
     if (!child.tags || child.tags.length === 0) {
       return false
     }
-    return !!child.tags.find( (childTag) => (!props.document.tags.includes(childTag)))
+    return !!child.tags.find( (childTag) => (!specDocument.value.tags.includes(childTag)))
   }))
 
 
   // very last - schemas
-  nList.push(...props.document.children.filter(child => (child.tags || []).length === 0 && child.type === 'model'))
+  nList.push(...specDocument.value.children.filter(child => (child.tags || []).length === 0 && child.type === 'model'))
 
 
   // transforming to components
@@ -363,7 +375,7 @@ watch(() => ({ nodesList: nodesList.value,
 /** we show tryIt section when it's requested to be hidden and when node */
 watch(() => ({
   pathname: props.currentPath,
-  document: props.document }), async (newValue, oldValue) => {
+  document: specDocument.value }), async (newValue, oldValue) => {
 
   const { pathname, document: newDocument } = newValue
   const { document: oldDocument } = oldValue || {}

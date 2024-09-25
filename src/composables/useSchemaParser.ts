@@ -10,6 +10,7 @@ import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
 import AsyncParser from '@asyncapi/parser/browser'
 import { OpenAPISchemaParser } from '@asyncapi/openapi-schema-parser'
+import { stringify } from 'flatted'
 
 import { transform as transformAsync } from '@/utils/async-to-oas-transformer'
 
@@ -23,12 +24,12 @@ asyncParser.registerSchemaParser(OpenAPISchemaParser())
 
 export default (): {
   parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
-  parsedDocument: Ref<ServiceNode | undefined>
-  tableOfContents: Ref<TableOfContentsItem[] | undefined>
-  validationResults: Ref<ValidateResult | undefined>
+  parsedDocument: Ref<ServiceNode | string | undefined>
+  tableOfContents: Ref<TableOfContentsItem[] | string | undefined>
+  validationResults: Ref<ValidateResult | string | undefined>
 } => {
 
-  const parsedDocument = ref<ServiceNode | undefined>()
+  const parsedDocument = ref<ServiceNode | string | undefined>()
   const jsonDocument = ref<Record<string, any> | undefined>()
 
   const tableOfContents = ref<TableOfContentsItem[] | undefined>()
@@ -221,7 +222,7 @@ export default (): {
     try {
       if (parsedDocument.value) {
         // generate table of contents
-        tableOfContents.value = computeAPITree(parsedDocument.value, {
+        tableOfContents.value = computeAPITree(<ServiceNode>parsedDocument.value, {
           hideSchemas: options?.hideSchemas,
           hideInternal: options?.hideInternal,
           hideDeprecated: options?.hideDeprecated,
@@ -232,6 +233,17 @@ export default (): {
       console.error('error in computeAPITree:', err)
     }
 
+    if (options.webComponentSafe) {
+      try {
+        parsedDocument.value = stringify(parsedDocument.value)
+        //@ts-ignore string is allowed
+        tableOfContents.value = stringify(tableOfContents.value)
+        //@ts-ignore string is allowed
+        validationResults.value = stringify(validationResults.value)
+      } catch (err) {
+        console.error('error in stringifying for web-component:', err)
+      }
+    }
     trace(options.traceParsing, 'APITree computed')
   }
 
