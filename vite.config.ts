@@ -131,16 +131,14 @@ export default defineConfig({
         }
         : path.resolve(__dirname, './src/index.ts'),
       external: externalDependencies,
-      output: {
-        ...(process.env.USE_SANDBOX
-          ? undefined
-          : {
-            globals: {
-              vue: 'Vue',
-            },
-            exports: 'named',
-          }),
-      },
+      output: process.env.USE_SANDBOX
+        ? undefined
+        : {
+          globals: {
+            vue: 'Vue',
+          },
+          exports: 'named',
+        },
       plugins: [
         // visualizer must remain last in the list of plugins
         buildVisualizerPlugin,
