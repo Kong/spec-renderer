@@ -9,8 +9,11 @@ Kong's open-source spec renderer.
 
 Url for sandbox https://kong.github.io/spec-renderer (deployed from main branch)
 
+- [Installation](#installation)
 - [Usage](#usage)
-  - [Installation](#installation)
+  - [Vue 3 Component(s)](#vue-3-components)
+  - [Vue 3 Plugin](#vue-3-plugin)
+  - [No/Other framework via native web components](#noother-framework-via-native-web-components)
   - [Props](#props)
 - [Contributing \& Local Development](#contributing--local-development)
   - [Development Sandbox](#development-sandbox)
@@ -20,19 +23,162 @@ Url for sandbox https://kong.github.io/spec-renderer (deployed from main branch)
   - [Committing Changes](#committing-changes)
   - [Package Publishing](#package-publishing)
 
-## Usage
-
-### Installation
+## Installation
 
 Install the `@kong/spec-renderer` package in your host project.
 
 ```sh
 pnpm add @kong/spec-renderer
-
-# OR
-
-yarn add @kong/spec-renderer
 ```
+
+## Usage
+
+### Vue 3 Component(s)
+
+Import the package (and TypeScript types, if desired) inside of your App's entry file (e.g. for Vue, `main.ts`). Set the plugin options, and tell Vue to use the plugin.
+
+```ts
+<template>
+  <SpecDocument
+    :spec="spec"
+  />
+</template>
+
+<script setup lang="ts">
+import { SpecDocument } from '@kong/spec-renderer-dev'
+const spec= `openapi: 3.1.0
+info:
+  title: Beer API
+  description: API for managing beers
+  version: 1.0.0
+...`
+</scirpt>
+
+```
+
+### Vue 3 Plugin
+
+Import the package (and TypeScript types, if desired) inside of your App's entry file (e.g. for Vue, `main.ts`). Set the plugin options, and tell Vue to use the plugin.
+
+```js
+// main.ts
+
+import App from './App.vue'
+import KongSpecRendererPlugin from '@kong/spec-renderer-dev'
+import '@kong/spec-renderer-dev/dist/style.css'
+
+const app = createApp(App)
+
+// Register the plugin
+app.use(KongSpecRendererPlugin)
+
+app.mount('#app')
+```
+
+Now that the plugin is globally registered, simply include a component just like you would any other Vue component, utilizing any props as needed
+
+This is to renderer KongSpecRender component
+
+```js
+<template>
+<KongSpecRenderer
+  :spec="specification-content-to-present"
+/>
+</template>
+```
+
+This is to renderer Toc and Document  components separately
+
+```js
+<template>
+    <div id="kong-spec-renderer-wrapper">
+      <nav>
+        <KongSpecRendererToc
+          :table-of-contents="tableOfContents.value"
+        />
+      </nav>
+      <main>
+        <KongSpecRendererDocument
+          :document="parsedDocument.value"
+          current-path="/"
+        />
+      </main>
+    </div>
+
+</template>
+<script setup lang="ts">
+  import { onBeforeMount } from 'vue'
+  import { parseSpecDocument, parsedDocument, tableOfContents } from '@kong/spec-renderer-dev'
+
+  onBeforeMount(() => async {
+    await parseSpecDocument()
+  }
+</script>
+```
+
+
+### No/Other framework via native web components
+
+
+Import the package and call the provided `registerSpecRenderer` function.
+
+#### - Example for react
+
+```jsx
+// IMPORTANT: we are importing from the web-component bundle
+import { registerSpecRenderer, parseSpecDocument, parsedDocument, tableOfContents }  from '@kong/spec-renderer-dev/web-component'
+
+// Call the registration function to automatically register all spec-renderer custom elements for usage
+registerSpecRenderer()
+
+// this is to renderer spec-renderer as one single component
+const singleComponent = () => (
+    <kong-spec-renderer
+      spec="openapi: 3.1.0 ..."
+    />
+)
+
+// this is to renderer toc and document separately
+const tocAndDocComponents = async () => {
+
+  await parseSpecDocument(spec, {webComponentSafe: true})
+
+  return (
+    <div id="kong-spec-renderer-wrapper">
+      <nav>
+        <kong-spec-renderer-toc
+          table-of-contents={tableOfContents.value}
+        />
+      </nav>
+      <main>
+        <kong-spec-renderer-document
+          document={parsedDocument.value}
+          current-path="/"
+        />
+      </main>
+    </div>
+  )
+}
+
+```
+
+#### - Example for html/script
+
+```html
+<html>
+  <head>
+    <script src="./lib/kong-spec-renderer.web-component.umd.js"></script>
+  </head>
+  <body>
+     <kong-spec-renderer
+      spec="openapi: 3.1.0 ..."
+    />
+  </body>
+</html>
+```
+
+As of now only `SpecRenderer` as single component is supported for this. Let us know if support for individual SpecRendererToc and SpeRendererDocument is needed.
+
 
 ### Props
 

@@ -43,6 +43,11 @@ export interface ParseOptions {
    * when fetching http reference - using withCredentials directive
    */
   withCredentials?: boolean
+  /**
+   * stringify returned Document, TOC and validation results
+   */
+  webComponentSafe?: boolean
+
 }
 
 export type SchemaModelPropertyField = 'info' | 'description' | 'enum' | 'pattern' | 'range' | 'example' | 'default'

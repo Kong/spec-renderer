@@ -23,10 +23,12 @@ import { itemComponent } from './index'
 import { useScroll } from '@vueuse/core'
 import type { NavigationTypes } from '@/types'
 import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '@kong/stoplight-http-spec/elements-core'
+import { BOOL_VALIDATOR, IS_TRUE } from '@/utils'
+import { parse as parseFlatted } from 'flatted'
 
 const props = defineProps({
   tableOfContents: {
-    type: Array as PropType<TableOfContentsItem[]>,
+    type: [Object, String],
     required: true,
   },
   /**
@@ -57,7 +59,8 @@ const props = defineProps({
    * When false it becomes the responsibility of consuming app
    */
   controlAddressBar: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: false,
   },
   /**
@@ -88,11 +91,20 @@ const scrollableContainerRef = ref<HTMLElement | null>(null)
 const { y: yPosition } = useScroll(scrollableContainerRef)
 
 const toc = computed((): TableOfContentsItem[] | undefined => {
+
   if (!props.tableOfContents) {
     return undefined
   }
-  const newToc = props.tableOfContents
 
+  let newToc = props.tableOfContents
+  if (typeof props.tableOfContents === 'string') {
+    try {
+      newToc = <TableOfContentsItem[]>parseFlatted(newToc as string)
+    } catch (err) {
+      console.error('@kong/spec-renderer: error parsing provided toc')
+      return undefined
+    }
+  }
   const crawl = (item: TableOfContentsGroup, path: string): void => {
     if (!Array.isArray(item.items)) {
       return
@@ -104,9 +116,9 @@ const toc = computed((): TableOfContentsItem[] | undefined => {
       crawl((item.items[i] as TableOfContentsGroup), path)
     }
   }
-  crawl({ title: '', initiallyExpanded: false, items: newToc }, props.currentPath)
+  crawl({ title: '', initiallyExpanded: false, items: <TableOfContentsItem[]>newToc }, props.currentPath)
 
-  return newToc
+  return <TableOfContentsItem[]>newToc
 })
 
 watch(() => ({ path: props.currentPath, navRef: tocNavRef.value }), async (newValue) => {
@@ -144,7 +156,7 @@ watch(() => ({ path: props.currentPath, navRef: tocNavRef.value }), async (newVa
 
 
 const selectItem = (id: any) => {
-  if (props.controlAddressBar) {
+  if (IS_TRUE(props.controlAddressBar)) {
     // we only have path and hash for now
     const newPath = props.navigationType === 'path' ? props.basePath + id : props.basePath + '#' + id
     window.history.pushState({}, '', newPath)

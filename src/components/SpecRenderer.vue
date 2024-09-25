@@ -4,7 +4,7 @@
       <SlideOut
         v-if="tableOfContents"
         class="slideout-toc"
-        :title="parsedDocument?.name || 'Table of Contents'"
+        :title="(parsedDocument as ServiceNode)?.name || 'Table of Contents'"
         :visible="slideoutTocVisible"
         @close="slideoutTocVisible = false"
       >
@@ -81,6 +81,8 @@ import SpecDocument from './spec-document/SpecDocument.vue'
 import { MenuIcon } from '@kong/icons'
 import SlideOut from './common/SlideOut.vue'
 import type { NavigationTypes } from '@/types'
+import { BOOL_VALIDATOR, IS_TRUE } from '@/utils'
+import type { ServiceNode } from '@/types'
 
 const props = defineProps({
   /**
@@ -117,7 +119,8 @@ const props = defineProps({
    * When false it becomes the responsibility of consuming app
    */
   controlAddressBar: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: true,
   },
   /**
@@ -133,56 +136,64 @@ const props = defineProps({
    * hide schemas from TOC
    */
   hideSchemas: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: false,
   },
   /**
    * hide internal endpoints from TOC
    */
   hideInternal: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: false,
   },
   /**
    * hide deprecated endpoints from TOC
    */
   hideDeprecated: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: false,
   },
   /**
    * Do not show TryIt section
    */
   hideTryIt: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: false,
   },
   /**
    * Do not show  Insomnia option in TryIt
    */
   hideInsomniaTryIt: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: false,
   },
   /**
    * console out parsing process and stages
    */
   traceParsing: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: false,
   },
   /**
    * use withCredential instructions when fetching external (http) references during parsing
    */
   withCredentials: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: false,
   },
   /**
    * Allow scrolling trough operations/schemas
    */
   allowContentScrolling: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: true,
   },
   /**
@@ -196,14 +207,16 @@ const props = defineProps({
    * Use default markdown styling. If your host application provides its own default styles, you may want to set to `false`.
    */
   markdownStyles: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: true,
   },
   /**
    * Allow user to add custom server url which will be added to the list of available servers
    */
   allowCustomServerUrl: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: false,
   },
 })
@@ -261,17 +274,17 @@ watch(() => ({
   }
 
   await parseSpecDocument(changed.spec, {
-    hideSchemas: changed.hideSchemas,
-    hideInternal: changed.hideInternal,
-    hideDeprecated: changed.hideDeprecated,
-    traceParsing: props.traceParsing,
+    hideSchemas: IS_TRUE(changed.hideSchemas),
+    hideInternal: IS_TRUE(changed.hideInternal),
+    hideDeprecated: IS_TRUE(changed.hideDeprecated),
+    traceParsing: IS_TRUE(props.traceParsing),
     ...(changed.specUrl ? { specUrl: changed.specUrl } : null),
-    withCredentials: props.withCredentials,
+    withCredentials: IS_TRUE(props.withCredentials),
     currentPath: currentPathTOC.value,
   })
 
   if (props.traceParsing) {
-    console.log('parsedDocument:', parsedDocument.value)
+    console.log('parsedDocument:', <ServiceNode>parsedDocument.value)
     console.log('tableOfContents:', tableOfContents.value)
     console.log('validationResults:', validationResults.value)
   }

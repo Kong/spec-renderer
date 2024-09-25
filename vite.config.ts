@@ -22,7 +22,6 @@ const externalDependencies: string[] = ['shiki/onig.wasm']
 if (!process.env.USE_SANDBOX) {
   externalDependencies.push('vue')
 }
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -79,6 +78,9 @@ export default defineConfig({
       include: ['util', 'path'],
     }),
     vue({
+      features: {
+        customElement: process.env.AS_WEB_COMPONENT === 'true',
+      },
       template: {
         compilerOptions: {
           isCustomElement: (tag) => ['asyncapi-component', 'elements-api'].includes(tag),
@@ -97,6 +99,7 @@ export default defineConfig({
     devSourcemap: true,
     preprocessorOptions: {
       scss: {
+        api: 'modern-compiler',
         // Inject the @kong/design-tokens SCSS variables to make them available for all components.
         // This is not needed in host applications.
         additionalData: '@use "sass:color";@import "@kong/design-tokens/tokens/scss/variables";@import "@/styles/mixins/mixins";@import "@/styles/variables";',
@@ -106,6 +109,7 @@ export default defineConfig({
   // TODO: If deploying to GitHub pages, enable this line
   base: process.env.USE_SANDBOX ? '/spec-renderer' : '/',
   build: {
+    emptyOutDir: process.env.AS_WEB_COMPONENT !== 'true',
     commonjsOptions: {
       transformMixedEsModules: true,
     },
@@ -114,9 +118,8 @@ export default defineConfig({
       : {
         entry: path.resolve(__dirname, 'src/index.ts'),
         name: 'KongSpecRenderer',
-        fileName: (format) => `kong-spec-renderer.${format}.js`,
+        fileName: (format) => `kong-spec-renderer.${process.env.AS_WEB_COMPONENT === 'true' ? 'web-component.' : ''}${format}.js`,
       },
-    emptyOutDir: true,
     minify: true,
     sourcemap: true,
     rollupOptions: {

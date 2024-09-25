@@ -104,7 +104,7 @@ const markdownStyles = ref<boolean>(true)
 const allowCustomServerUrl = ref<boolean>(true)
 
 const handlePathNotFound = (requestedPath: string) => {
-  console.error(`${requestedPath} not found. App to redirect to it's own 404`)
+  console.error(`@kong/spec-renderer: ${requestedPath} not found. App to redirect to it's own 404`)
 }
 
 const sampleSpecSelected = async (sampleSpecUrl: string, resetPath: boolean) => {

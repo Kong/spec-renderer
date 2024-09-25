@@ -6,7 +6,7 @@
     <component
       :is="docComponent.component"
       v-if="docComponent.component !== null"
-      v-bind="docComponent.props"
+      v-bind="docComponent.props as any"
     />
   </div>
   <div
@@ -16,7 +16,7 @@
   >
     <div
       v-for="(node, idx) in nodesList"
-      :id="`${idx}-nodecontainter`"
+      :id="`${idx}-nodecontainer`"
       :key="`${node.doc.data.id}-${idx}`"
       class="spec-renderer-document"
     >
@@ -56,12 +56,13 @@ import ArticleNode from './ArticleNode.vue'
 import UnknownNode from './UnknownNode.vue'
 import { useWindowScroll, useWindowSize, useElementSize, useScroll } from '@vueuse/core'
 import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE } from '@/constants'
+import { BOOL_VALIDATOR, IS_TRUE } from '@/utils'
 import type { NavigationTypes } from '@/types'
-import { stringify } from 'flatted'
+import { stringify, parse as parseFlatted } from 'flatted'
 
 const props = defineProps({
   document: {
-    type: Object as PropType<ServiceNode>,
+    type: [Object, String],
     required: true,
   },
   /**
@@ -83,21 +84,24 @@ const props = defineProps({
    * Do not show TryIt section
    */
   hideTryIt: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: false,
   },
   /**
    * Do not show  Insomnia option in TryIt
    */
   hideInsomniaTryIt: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: false,
   },
   /**
    * Allow scrolling trough operations/schemas
    */
   allowContentScrolling: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: true,
   },
   /**
@@ -113,7 +117,8 @@ const props = defineProps({
    * When false it becomes the responsibility of consuming app
    */
   controlAddressBar: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: false,
   },
   /**
@@ -129,15 +134,17 @@ const props = defineProps({
    * Use default markdown styling
    */
   markdownStyles: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: true,
   },
   /**
    * Allow user to add custom server url which will be added to the list of available servers
    */
   allowCustomServerUrl: {
-    type: Boolean,
-    default: false,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
+    default: true,
   },
 })
 
@@ -149,10 +156,10 @@ const serviceNode = ref<ServiceNode | null>(null)
 // to be consumed in multi-level child components
 provide<Ref<string>>('spec-url', computed((): string => props.specUrl))
 provide<Ref<string>>('base-path', computed((): string => props.basePath))
-provide<Ref<boolean>>('hide-tryit', computed((): boolean => props.hideTryIt))
-provide<Ref<boolean>>('hide-insomnia-tryit', computed((): boolean => props.hideInsomniaTryIt))
-provide<Ref<boolean>>('markdown-styles', computed((): boolean => props.markdownStyles))
-provide<Ref<boolean>>('allow-custom-server-url', computed((): boolean => props.allowCustomServerUrl))
+provide<Ref<boolean>>('hide-tryit', computed((): boolean => IS_TRUE(props.hideTryIt)))
+provide<Ref<boolean>>('hide-insomnia-tryit', computed((): boolean => IS_TRUE(props.hideInsomniaTryIt)))
+provide<Ref<boolean>>('markdown-styles', computed((): boolean => IS_TRUE(props.markdownStyles)))
+provide<Ref<boolean>>('allow-custom-server-url', computed((): boolean => IS_TRUE(props.allowCustomServerUrl)))
 
 const emit = defineEmits < {
   (e: 'path-not-found', requestedPath: string): void,
@@ -166,6 +173,18 @@ const processScrolling = ref<boolean>(false)
 const lastPath = ref<string>()
 const wrapperRef = ref<HTMLElement | null>(null)
 const renderPlain = ref<boolean>(false)
+
+const specDocument = computed((): ServiceNode => {
+  if (typeof props.document === 'string') {
+    try {
+      return <ServiceNode>parseFlatted(props.document)
+    } catch (e) {
+      console.error('@kong/spec-renderer: error parsing provided document')
+      return <ServiceNode>{}
+    }
+  }
+  return <ServiceNode>props.document
+})
 
 const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null) => {
   if (!forServiceNode) return {}
@@ -231,27 +250,27 @@ const nodesList = computed(() => {
 
   let nList = <any[]>[]
   // first one - overview
-  nList.push(...[props.document])
+  nList.push(...[specDocument.value])
 
   // first all without tags, but not schemas
-  nList.push(...props.document.children.filter(child => (child.tags || []).length === 0 && child.type !== 'model'))
+  nList.push(...specDocument.value.children.filter(child => (child.tags || []).length === 0 && child.type !== 'model'))
 
   // next by tag ordered
-  props.document.tags.forEach((t: string) => {
-    nList.push(...props.document.children.filter((child: any) => (child.tags || []).includes(t)))
+  specDocument.value.tags.forEach((t: string) => {
+    nList.push(...specDocument.value.children.filter((child: any) => (child.tags || []).includes(t)))
   })
 
   // next - where tag is not matching list of tags
-  nList.push(...props.document.children.filter(child => {
+  nList.push(...specDocument.value.children.filter(child => {
     if (!child.tags || child.tags.length === 0) {
       return false
     }
-    return !!child.tags.find( (childTag) => (!props.document.tags.includes(childTag)))
+    return !!child.tags.find( (childTag) => (!specDocument.value.tags.includes(childTag)))
   }))
 
 
   // very last - schemas
-  nList.push(...props.document.children.filter(child => (child.tags || []).length === 0 && child.type === 'model'))
+  nList.push(...specDocument.value.children.filter(child => (child.tags || []).length === 0 && child.type === 'model'))
 
 
   // transforming to components
@@ -357,7 +376,7 @@ watch(() => ({ nodesList: nodesList.value,
 /** we show tryIt section when it's requested to be hidden and when node */
 watch(() => ({
   pathname: props.currentPath,
-  document: props.document }), async (newValue, oldValue) => {
+  document: specDocument.value }), async (newValue, oldValue) => {
 
   const { pathname, document: newDocument } = newValue
   const { document: oldDocument } = oldValue || {}
@@ -404,7 +423,7 @@ watch(() => ({
   if (document) {
     if (pathIdx !== 0 || oldValue?.pathname) {
       setTimeout(async () => {
-        const activeSectionEl = document.getElementById(`${pathIdx}-nodecontainter`)
+        const activeSectionEl = wrapperRef.value?.querySelector(`[id="${pathIdx}-nodecontainer"]`)
         if (activeSectionEl) {
           activeSectionEl.scrollIntoView({ behavior: 'instant' })
         }

@@ -10,6 +10,7 @@ import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
 import AsyncParser from '@asyncapi/parser/browser'
 import { OpenAPISchemaParser } from '@asyncapi/openapi-schema-parser'
+import { stringify } from 'flatted'
 
 import { transform as transformAsync } from '@/utils/async-to-oas-transformer'
 
@@ -23,12 +24,12 @@ asyncParser.registerSchemaParser(OpenAPISchemaParser())
 
 export default (): {
   parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
-  parsedDocument: Ref<ServiceNode | undefined>
-  tableOfContents: Ref<TableOfContentsItem[] | undefined>
-  validationResults: Ref<ValidateResult | undefined>
+  parsedDocument: Ref<ServiceNode | string | undefined>
+  tableOfContents: Ref<TableOfContentsItem[] | string | undefined>
+  validationResults: Ref<ValidateResult | string | undefined>
 } => {
 
-  const parsedDocument = ref<ServiceNode | undefined>()
+  const parsedDocument = ref<ServiceNode | string | undefined>()
   const jsonDocument = ref<Record<string, any> | undefined>()
 
   const tableOfContents = ref<TableOfContentsItem[] | undefined>()
@@ -41,13 +42,13 @@ export default (): {
         try {
           return JSON.parse(yamlOrObject)
         } catch (e) {
-          console.error('in parseJSSON:', e)
+          console.error('@kong/spec-renderer: in parseJSSON:', e)
         }
       } else {
         try {
           return parseYaml(yamlOrObject)
         } catch (e) {
-          console.error('in parseYaml:', e)
+          console.error('@kong/spec-renderer: in parseYaml:', e)
         }
       }
     }
@@ -93,7 +94,7 @@ export default (): {
       try {
         specToParse = await (await fetch(options.specUrl)).text()
       } catch (e) {
-        console.error(`Error fetching async document from ${options.specUrl}`, e)
+        console.error(`@kong/spec-renderer: error fetching async document from ${options.specUrl}`, e)
         return false
       }
       trace(options.traceParsing, 'async document fetched')
@@ -107,7 +108,7 @@ export default (): {
       }
       parsed = document
     } catch (e) {
-      console.error('Error parsing async document', e)
+      console.error('@kong/spec-renderer: error parsing async document', e)
       return false
     }
     trace(options.traceParsing, 'async document parsed')
@@ -126,7 +127,7 @@ export default (): {
       parsedDocument.value = transformed
       return true
     } catch (e) {
-      console.error('Error transforming async document', e)
+      console.error('@kong/spec-renderer: error transforming async document', e)
       return false
     }
   }
@@ -167,7 +168,7 @@ export default (): {
 
     if (!jsonDocument.value) {
       // was it even a spec or even something that could be converted to json?
-      console.error('empty jsonDocument initial processing')
+      console.error('@kong/spec-renderer: empty jsonDocument initial processing')
       return
     }
 
@@ -176,7 +177,7 @@ export default (): {
       // let's see if we can detect some validation errors here
       // validationResults.value = await validate(spec || jsonDocument.value)
     } catch (err) {
-      console.error('error in validate:', err)
+      console.error('@kong/spec-renderer: error in validate:', err)
     }
 
     trace(options.traceParsing, 'validated')
@@ -202,7 +203,7 @@ export default (): {
       })
       jsonDocument.value = dereferenced
     } catch (err) {
-      console.error('error dereferencing:', err)
+      console.error('@kong/spec-renderer: error dereferencing:', err)
     }
 
     trace(options.traceParsing, 'dereferenced')
@@ -213,7 +214,7 @@ export default (): {
       // convert to AST for ui layer to use
       parsedDocument.value = transformOasToServiceNode(jsonDocument.value)
     } catch (err) {
-      console.error('error in transformOasToServiceNode:', err)
+      console.error('@kong/spec-renderer: error in transformOasToServiceNode:', err)
     }
 
     trace(options.traceParsing, 'transformed')
@@ -221,7 +222,7 @@ export default (): {
     try {
       if (parsedDocument.value) {
         // generate table of contents
-        tableOfContents.value = computeAPITree(parsedDocument.value, {
+        tableOfContents.value = computeAPITree(<ServiceNode>parsedDocument.value, {
           hideSchemas: options?.hideSchemas,
           hideInternal: options?.hideInternal,
           hideDeprecated: options?.hideDeprecated,
@@ -229,9 +230,20 @@ export default (): {
         })
       }
     } catch (err) {
-      console.error('error in computeAPITree:', err)
+      console.error('e@kong/spec-renderer: rror in computeAPITree:', err)
     }
 
+    if (options.webComponentSafe) {
+      try {
+        parsedDocument.value = stringify(parsedDocument.value)
+        //@ts-ignore string is allowed
+        tableOfContents.value = stringify(tableOfContents.value)
+        //@ts-ignore string is allowed
+        validationResults.value = stringify(validationResults.value)
+      } catch (err) {
+        console.error('@kong/spec-renderer: error in stringifying for web-component:', err)
+      }
+    }
     trace(options.traceParsing, 'APITree computed')
   }
 
