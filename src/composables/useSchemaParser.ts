@@ -241,7 +241,7 @@ export default (): {
         //@ts-ignore string is allowed
         validationResults.value = stringify(validationResults.value)
       } catch (err) {
-        console.error('error in stringifying for web-component:', err)
+        console.error('@kong/spec-renderer: error in stringifying for web-component:', err)
       }
     }
     trace(options.traceParsing, 'APITree computed')
