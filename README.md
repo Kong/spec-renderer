@@ -30,10 +30,6 @@ Install the `@kong/spec-renderer` package in your host project.
 
 ```sh
 pnpm add @kong/spec-renderer
-
-# OR
-
-yarn add @kong/spec-renderer
 ```
 
 ## Usage
