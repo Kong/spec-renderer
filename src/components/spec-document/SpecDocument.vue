@@ -57,7 +57,7 @@ import UnknownNode from './UnknownNode.vue'
 import { useWindowScroll, useWindowSize, useElementSize, useScroll } from '@vueuse/core'
 import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE, BOOL_VALIDATOR, IS_TRUE } from '@/constants'
 import type { NavigationTypes } from '@/types'
-import { stringify, parse } from 'flatted'
+import { stringify, parse as parseFlatted } from 'flatted'
 
 const props = defineProps({
   document: {
@@ -176,7 +176,7 @@ const renderPlain = ref<boolean>(false)
 const specDocument = computed((): ServiceNode => {
   if (typeof props.document === 'string') {
     try {
-      return <ServiceNode>parse(props.document)
+      return <ServiceNode>parseFlatted(props.document)
     } catch (e) {
       console.error('error parsing provided document')
       return <ServiceNode>{}

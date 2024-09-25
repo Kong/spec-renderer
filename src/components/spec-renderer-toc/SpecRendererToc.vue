@@ -24,7 +24,7 @@ import { useScroll } from '@vueuse/core'
 import type { NavigationTypes } from '@/types'
 import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '@kong/stoplight-http-spec/elements-core'
 import { BOOL_VALIDATOR, IS_TRUE } from '@/constants'
-import { parse } from 'flatted'
+import { parse as parseFlatted } from 'flatted'
 
 const props = defineProps({
   tableOfContents: {
@@ -99,7 +99,7 @@ const toc = computed((): TableOfContentsItem[] | undefined => {
   let newToc = props.tableOfContents
   if (typeof props.tableOfContents === 'string') {
     try {
-      newToc = <TableOfContentsItem[]>parse(newToc as string)
+      newToc = <TableOfContentsItem[]>parseFlatted(newToc as string)
     } catch (err) {
       console.error('error parsing provided toc')
       return undefined
