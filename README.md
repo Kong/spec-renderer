@@ -15,7 +15,6 @@ Url for sandbox https://kong.github.io/spec-renderer (deployed from main branch)
   - [Vue 3 Plugin](#vue-3-plugin)
   - [No/Other framework via native web components](#noother-framework-via-native-web-components)
   - [Props](#props)
-  - [Events](#events)
 - [Contributing \& Local Development](#contributing--local-development)
   - [Development Sandbox](#development-sandbox)
   - [Lint and fix](#lint-and-fix)
@@ -188,8 +187,6 @@ As of now only `SpecRenderer` as single component is supported for this. Let us 
 - type: `String`
 - required: `false`
 - default: `''`
-
-### Events
 
 ## Contributing & Local Development
 
