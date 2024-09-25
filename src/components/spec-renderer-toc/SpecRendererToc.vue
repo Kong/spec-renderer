@@ -23,7 +23,7 @@ import { itemComponent } from './index'
 import { useScroll } from '@vueuse/core'
 import type { NavigationTypes } from '@/types'
 import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '@kong/stoplight-http-spec/elements-core'
-import { BOOL_VALIDATOR, IS_TRUE } from '@/constants'
+import { BOOL_VALIDATOR, IS_TRUE } from '@/utils'
 import { parse as parseFlatted } from 'flatted'
 
 const props = defineProps({

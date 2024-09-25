@@ -81,7 +81,7 @@ import SpecDocument from './spec-document/SpecDocument.vue'
 import { MenuIcon } from '@kong/icons'
 import SlideOut from './common/SlideOut.vue'
 import type { NavigationTypes } from '@/types'
-import { BOOL_VALIDATOR, IS_TRUE } from '@/constants'
+import { BOOL_VALIDATOR, IS_TRUE } from '@/utils'
 import type { ServiceNode } from '@/types'
 
 const props = defineProps({
