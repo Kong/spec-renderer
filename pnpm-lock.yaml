@@ -217,7 +217,7 @@ importers:
         specifier: ^3.4.38
         version: 3.4.38(typescript@5.5.4)
       vue-router:
-        specifier: ^4.4.4
+        specifier: ^4.4.5
         version: 4.4.5(vue@3.4.38(typescript@5.5.4))
       vue-tsc:
         specifier: ^2.0.29
