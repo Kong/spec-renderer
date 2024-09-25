@@ -1,3 +1,10 @@
+# [1.75.0](https://github.com/Kong/spec-renderer/compare/v1.74.2...v1.75.0) (2024-09-25)
+
+
+### Features
+
+* oneOf inheritance variant label styling [KHCP-13381] ([#329](https://github.com/Kong/spec-renderer/issues/329)) ([a601012](https://github.com/Kong/spec-renderer/commit/a6010125c2208c3aa75ab0fa4b0809d71a00eaa6))
+
 ## [1.74.2](https://github.com/Kong/spec-renderer/compare/v1.74.1...v1.74.2) (2024-09-23)
 
 
