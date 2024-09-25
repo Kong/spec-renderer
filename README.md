@@ -178,6 +178,8 @@ const tocAndDocComponents = async () => {
 </html>
 ```
 
+As of now only `SpecRenderer` as single component is supported for this. Let us know if support for individual SpecRendererToc and SpeRendererDocument is needed.
+
 
 ### Props
 
