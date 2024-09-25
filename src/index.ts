@@ -32,25 +32,21 @@ export {
 // Exports a function that registers all custom elements as native web components
 export function registerKongSpecRenderer(): void {
 
-
-
-  const specRendererCustomElement = defineCustomElement(SpecRenderer)
   if (!customElements.get('kong-spec-renderer')) {
+    const specRendererCustomElement = defineCustomElement(SpecRenderer)
     customElements.define('kong-spec-renderer', specRendererCustomElement)
   }
 
-  const specRendererTocCustomElement = defineCustomElement(SpecRendererToc)
   if (!customElements.get('kong-spec-renderer-toc')) {
+    const specRendererTocCustomElement = defineCustomElement(SpecRendererToc)
     customElements.define('kong-spec-renderer-toc', specRendererTocCustomElement)
   }
 
-  const specRendererDocumentCustomElement = defineCustomElement(SpecDocument)
   if (!customElements.get('kong-spec-renderer-document')) {
+    const specRendererDocumentCustomElement = defineCustomElement(SpecDocument)
     customElements.define('kong-spec-renderer-document', specRendererDocumentCustomElement)
   }
 }
-
-
 
 // Auto-register the function to the window object
 if (typeof window !== 'undefined') {
