@@ -120,7 +120,10 @@ This is to renderer Toc and Document  components separately
 
 ### No/Other framework via native web components
 
-Import the package (and TypeScript types, if desired) inside of your App's entry file (e.g. for Vue, `main.ts`), set up the options, and call the provided `registerSpecRenderer` function.
+
+Import the package and call the provided `registerSpecRenderer` function.
+
+#### - Example for react
 
 ```jsx
 // IMPORTANT: we are importing from the web-component bundle
@@ -159,6 +162,22 @@ const tocAndDocComponents = async () => {
 }
 
 ```
+
+#### - Example for html/script
+
+```html
+<html>
+  <head>
+    <script src="./lib/kong-spec-renderer.web-component.umd.js"></script>
+  </head>
+  <body>
+     <kong-spec-renderer
+      spec="openapi: 3.1.0 ..."
+    />
+  </body>
+</html>
+```
+
 
 ### Props
 
