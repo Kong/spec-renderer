@@ -125,7 +125,7 @@
     "vite-plugin-vue-devtools": "^7.4.5",
     "vitest": "2.1.0",
     "vue": "^3.5.8",
-    "vue-router": "^4.4.45",
+    "vue-router": "^4.4.5",
     "vue-tsc": "^2.1.6"
   },
   "repository": {
