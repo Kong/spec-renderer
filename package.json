@@ -58,7 +58,7 @@
     "@floating-ui/vue": "^1.1.4",
     "@kong/icons": "^1.15.2",
     "@kong/stoplight-http-spec": "^1.1.1",
-    "@scalar/openapi-parser": "^0.8.1",
+    "@scalar/openapi-parser": "^0.8.2",
     "@seriousme/openapi-schema-validator": "^2.2.3",
     "@stoplight/json": "^3.21.7",
     "@stoplight/types": "^14.1.1",
