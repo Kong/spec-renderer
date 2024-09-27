@@ -1,3 +1,38 @@
+## [1.76.3](https://github.com/Kong/spec-renderer/compare/v1.76.2...v1.76.3) (2024-09-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @floating-ui/vue to ^1.1.5 ([#338](https://github.com/Kong/spec-renderer/issues/338)) ([9fa1719](https://github.com/Kong/spec-renderer/commit/9fa171949a852f12db4899c27fec1bf60e322e44))
+
+## [1.76.2](https://github.com/Kong/spec-renderer/compare/v1.76.1...v1.76.2) (2024-09-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @scalar/openapi-parser to ^0.8.2 ([#337](https://github.com/Kong/spec-renderer/issues/337)) ([b422011](https://github.com/Kong/spec-renderer/commit/b42201133f26c0cfd935184f38c3724f9ff8f4e6))
+
+## [1.76.1](https://github.com/Kong/spec-renderer/compare/v1.76.0...v1.76.1) (2024-09-26)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#334](https://github.com/Kong/spec-renderer/issues/334)) ([e8c27bd](https://github.com/Kong/spec-renderer/commit/e8c27bd6918e536b717df0078e65322819248d07))
+
+# [1.76.0](https://github.com/Kong/spec-renderer/compare/v1.75.0...v1.76.0) (2024-09-25)
+
+
+### Features
+
+* expose spec-renderer as web-component [KHCP-13349] ([#326](https://github.com/Kong/spec-renderer/issues/326)) ([1f50a76](https://github.com/Kong/spec-renderer/commit/1f50a76d01544ef679ff32ac8633ea76577f781c))
+
+# [1.75.0](https://github.com/Kong/spec-renderer/compare/v1.74.2...v1.75.0) (2024-09-25)
+
+
+### Features
+
+* oneOf inheritance variant label styling [KHCP-13381] ([#329](https://github.com/Kong/spec-renderer/issues/329)) ([a601012](https://github.com/Kong/spec-renderer/commit/a6010125c2208c3aa75ab0fa4b0809d71a00eaa6))
+
 ## [1.74.2](https://github.com/Kong/spec-renderer/compare/v1.74.1...v1.74.2) (2024-09-23)
 
 

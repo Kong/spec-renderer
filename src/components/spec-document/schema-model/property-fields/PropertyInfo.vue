@@ -19,6 +19,7 @@
         v-if="variantsList.length"
         :id="`${title}-variant-select-dropdown`"
         v-model="selectedVariant"
+        class="property-title-variant-select"
         :items="variantsList"
         @change="handleSelectChange"
       />
@@ -114,6 +115,10 @@ function handleSelectChange(selecteditem: SelectItem) {
   font-family: var(--kui-font-family-code, $kui-font-family-code);
 
   .property-title {
+    align-items: center;
+    display: inline-flex;
+    gap: var(--kui-space-50, $kui-space-50);
+    height: var(--kui-icon-size-40, $kui-icon-size-40);
     margin-right: var(--kui-space-50, $kui-space-50);
 
     .property-title-name  {
@@ -123,8 +128,12 @@ function handleSelectChange(selecteditem: SelectItem) {
       line-height: var(--kui-line-height-30, $kui-line-height-30);
     }
 
-    .property-title-variant-label {
-      margin-left: var(--kui-space-40, $kui-space-40);
+    .property-title-variant-select {
+      :deep(.trigger-button) {
+        @include small-bordered-trigger-button;
+        color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+        height: var(--kui-icon-size-40, $kui-icon-size-40);
+      }
     }
   }
 
