@@ -4,7 +4,7 @@
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
   "type": "module",
-  "main": "./dist/kong-spec-renderer.umd.js",
+  "main": "./dist/kong-spec-renderer.cjs",
   "module": "./dist/kong-spec-renderer.es.js",
   "files": [
     "dist"
@@ -15,12 +15,12 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/kong-spec-renderer.es.js",
-      "require": "./dist/kong-spec-renderer.umd.js"
+      "require": "./dist/kong-spec-renderer.cjs"
     },
     "./web-component": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/kong-spec-renderer.web-component.es.js",
-      "require": "./dist/kong-spec-renderer.web-component.umd.js"
+      "require": "./dist/kong-spec-renderer.web-component.cjs"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

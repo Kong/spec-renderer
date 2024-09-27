@@ -118,7 +118,14 @@ export default defineConfig({
       : {
         entry: path.resolve(__dirname, 'src/index.ts'),
         name: 'KongSpecRenderer',
-        fileName: (format) => `kong-spec-renderer.${process.env.AS_WEB_COMPONENT === 'true' ? 'web-component.' : ''}${format}.js`,
+        fileName: (format) => {
+          if (format === 'cjs') {
+            return `kong-spec-renderer.${process.env.AS_WEB_COMPONENT === 'true' ? 'web-component.' : ''}cjs`
+          } else {
+            return `kong-spec-renderer.${process.env.AS_WEB_COMPONENT === 'true' ? 'web-component.' : ''}${format}.js`
+          }
+        },
+        formats: ['es', 'cjs'],
       },
     minify: true,
     sourcemap: true,
