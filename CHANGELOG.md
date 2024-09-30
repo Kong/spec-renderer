@@ -1,3 +1,10 @@
+## [1.76.5](https://github.com/Kong/spec-renderer/compare/v1.76.4...v1.76.5) (2024-09-30)
+
+
+### Bug Fixes
+
+* khcp-13349 webcomponent 2. change exports ([#339](https://github.com/Kong/spec-renderer/issues/339)) ([e434d44](https://github.com/Kong/spec-renderer/commit/e434d44d9b1c447692ece7074b0b5178fb43c546))
+
 ## [1.76.4](https://github.com/Kong/spec-renderer/compare/v1.76.3...v1.76.4) (2024-09-30)
 
 
