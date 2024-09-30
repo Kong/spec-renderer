@@ -126,10 +126,10 @@ Import the package and call the provided `registerSpecRenderer` function.
 
 ```jsx
 // IMPORTANT: we are importing from the web-component bundle
-import { registerSpecRenderer, parseSpecDocument, parsedDocument, tableOfContents }  from '@kong/spec-renderer-dev/web-component'
+import { registerKongSpecRenderer, parseSpecDocument, parsedDocument, tableOfContents }  from '@kong/spec-renderer-dev/web-component'
 
 // Call the registration function to automatically register all spec-renderer custom elements for usage
-registerSpecRenderer()
+registerKongSpecRenderer()
 
 // this is to renderer spec-renderer as one single component
 const singleComponent = () => (
