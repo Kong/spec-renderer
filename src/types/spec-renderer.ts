@@ -11,6 +11,11 @@ export interface SpecRendererProps {
  */
 export interface SchemaObject extends JSONSchema7 {
   example?: JSONSchema7Type
+  /**
+   * added as part of JSON Schema draft 2019-09
+   * https://json-schema.org/draft/2019-09/release-notes#meta-data-vocabulary
+   */
+  deprecated?: boolean
 }
 
 
