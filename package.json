@@ -56,7 +56,7 @@
     "@asyncapi/openapi-schema-parser": "^3.0.24",
     "@asyncapi/parser": "^3.3.0",
     "@floating-ui/vue": "^1.1.5",
-    "@kong/icons": "^1.18.0",
+    "@kong/icons": "^1.18.1",
     "@kong/stoplight-http-spec": "^1.1.1",
     "@scalar/openapi-parser": "^0.8.2",
     "@seriousme/openapi-schema-validator": "^2.2.3",
