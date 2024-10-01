@@ -28,7 +28,7 @@ export default function useSchemaVariants(schemaModel: ComputedRef<SchemaObject>
       return {
         key: variantTitle,
         value: index.toString(),
-        label: variantTitle,
+        label: variantTitle + `${variant.deprecated ? ' (deprecated)' : ''}`,
       }
     })
   })
