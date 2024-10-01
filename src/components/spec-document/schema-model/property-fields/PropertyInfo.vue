@@ -1,6 +1,7 @@
 <template>
   <div
     class="property-info"
+    :class="{'deprecated-property': deprecated}"
     data-testid="property-field-info"
   >
     <span
@@ -53,6 +54,13 @@
         v-if="uniqueItems"
         data-testid="property-field-unique-items"
       >unique-items</span>
+      <LabelBadge
+        v-if="deprecated"
+        data-testid="deprecated-badge"
+        label="DEPRECATED"
+        size="small"
+        type="neutral"
+      />
     </span>
   </div>
 </template>
@@ -63,6 +71,7 @@ import type { SchemaObject, SelectItem } from '@/types'
 import type { PropType } from 'vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import VariantLabel from '@/components/common/VariantLabel.vue'
+import LabelBadge from '@/components/common/LabelBadge.vue'
 
 defineProps({
   title: {
@@ -82,6 +91,10 @@ defineProps({
     default: '',
   },
   uniqueItems: {
+    type: Boolean,
+    default: false,
+  },
+  deprecated: {
     type: Boolean,
     default: false,
   },
@@ -113,6 +126,12 @@ function handleSelectChange(selecteditem: SelectItem) {
 <style lang="scss" scoped>
 .property-info {
   font-family: var(--kui-font-family-code, $kui-font-family-code);
+
+  &.deprecated-property {
+    .property-title-name {
+      text-decoration: line-through;
+    }
+  }
 
   .property-title {
     align-items: center;
