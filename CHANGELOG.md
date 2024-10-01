@@ -1,3 +1,10 @@
+# [1.77.0](https://github.com/Kong/spec-renderer/compare/v1.76.6...v1.77.0) (2024-10-01)
+
+
+### Features
+
+* deprecated label for schema variants [KHCP-13457] ([#343](https://github.com/Kong/spec-renderer/issues/343)) ([7fed26e](https://github.com/Kong/spec-renderer/commit/7fed26ebb67148c2f22bb637019cf1dc0ffc32f9))
+
 ## [1.76.6](https://github.com/Kong/spec-renderer/compare/v1.76.5...v1.76.6) (2024-10-01)
 
 
