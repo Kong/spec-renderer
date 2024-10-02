@@ -75,7 +75,7 @@ export default defineConfig({
      * during the build
      */
     nodePolyfills({
-      include: ['util', 'path'],
+      include: ['util', 'path', 'querystring'],
     }),
     vue({
       features: {

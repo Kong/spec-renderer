@@ -1,4 +1,4 @@
-import type { TargetId, ClientId } from 'httpsnippet-lite'
+import type { TargetId, ClientId } from 'httpsnippet'
 export type LanguageCode = TargetId | 'json'
 interface LibraryConfig {
   label: string

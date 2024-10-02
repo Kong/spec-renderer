@@ -90,13 +90,13 @@
 import { watch, ref, computed, inject } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { IHttpOperation, INodeExample } from '@stoplight/types'
-import { HTTPSnippet } from 'httpsnippet-lite'
+import { HTTPSnippet } from 'httpsnippet'
 import { requestSampleConfigs } from '@/constants'
 import { getRequestHeaders } from '@/utils'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import type { LanguageCode } from '@/types/request-languages'
-import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet-lite'
+import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import LanguageIcon from '@/components/common/LanguageIcon.vue'
 import type { SelectItem } from '@/types'
@@ -243,7 +243,7 @@ watch(() => ({
   requestQuery: props.requestQuery,
   authQuery: props.authQuery,
   requestBody: props.requestBody,
-}), async (newValue, oldValue) => {
+}), (newValue, oldValue) => {
 
   if (newValue.method !== oldValue?.method && requestConfigs.value?.[0]) {
     selectedLang.value = requestConfigs.value[0].httpSnippetLanguage
@@ -308,7 +308,7 @@ watch(() => ({
         requestCode.value = newValue.requestBody
         return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
       } else if (snippet.value) {
-        requestCode.value = await snippet.value.convert((newValue.lang as TargetId), newValue.lib)
+        requestCode.value = snippet.value.convert((newValue.lang as TargetId), newValue.lib) || ''
       }
     }
   }
