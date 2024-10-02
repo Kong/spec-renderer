@@ -1,3 +1,10 @@
+## [1.77.1](https://github.com/Kong/spec-renderer/compare/v1.77.0...v1.77.1) (2024-10-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency shiki to ^1.18.0 ([#344](https://github.com/Kong/spec-renderer/issues/344)) ([de261b3](https://github.com/Kong/spec-renderer/commit/de261b3726468faf5541c27bb834cf08876f7408))
+
 # [1.77.0](https://github.com/Kong/spec-renderer/compare/v1.76.6...v1.77.0) (2024-10-01)
 
 
