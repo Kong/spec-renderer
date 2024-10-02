@@ -1,3 +1,10 @@
+# [1.78.0](https://github.com/Kong/spec-renderer/compare/v1.77.1...v1.78.0) (2024-10-02)
+
+
+### Features
+
+* use @kong/httpsnippet package for snippet generation [KHCP-13130] ([#332](https://github.com/Kong/spec-renderer/issues/332)) ([fd5a681](https://github.com/Kong/spec-renderer/commit/fd5a6819253d069e737207bc0e29afcc75379d70))
+
 ## [1.77.1](https://github.com/Kong/spec-renderer/compare/v1.77.0...v1.77.1) (2024-10-02)
 
 
