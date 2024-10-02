@@ -72,7 +72,7 @@ importers:
         specifier: ^2.13.0
         version: 2.13.0
       shiki:
-        specifier: ^1.17.7
+        specifier: ^1.18.0
         version: 1.18.0
     devDependencies:
       '@babel/types':
