@@ -82,6 +82,15 @@
         <p>Enim ut tellus elementum sagittis vitae et leo duis. Luctus venenatis lectus magna fringilla. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt. Vitae congue eu consequat ac felis donec et odio pellentesque. Purus viverra accumsan in nisl nisi. Curabitur gravida arcu ac tortor dignissim convallis aenean et tortor. Vestibulum lectus mauris ultrices eros in cursus. Ipsum suspendisse ultrices gravida dictum fusce ut. Et netus et malesuada fames ac turpis egestas integer eget. Sed lectus vestibulum mattis ullamcorper.</p>
       </SlideOut>
     </div>
+
+    <div class="component-container">
+      <h2>Schema Renderer</h2>
+      <SchemaRenderer
+        :example-visible="false"
+        :schema="schema"
+        title="Sample Schema"
+      />
+    </div>
   </div>
 </template>
 
@@ -93,6 +102,7 @@ import ToggleSwitch from '../../src/components/common/ToggleSwitch.vue'
 import SelectDropdown from '../../src/components/common/SelectDropdown.vue'
 import { KongIcon } from '@kong/icons'
 import SlideOut from '../../src/components/common/SlideOut.vue'
+import SchemaRenderer from '../../src/components/exported/SchemaRenderer.vue'
 
 const dropdownItems = [
   { label: 'Item 1', value: 'item-1' },
@@ -108,6 +118,57 @@ const onDropdownButtonClick = () => {
 const toggle = ref<boolean>(false)
 
 const isSlideoutOpen = ref<boolean>(false)
+
+const schema = {
+  'description': "I'm a model's description.",
+  'type': 'object',
+  'title': 'Todo',
+  'properties': {
+    'id': {
+      'type': 'number',
+      'minimum': 0,
+      'maximum': 9999,
+      'description': 'ID of the task',
+      'readOnly': true,
+    },
+    'name': {
+      'type': 'string',
+      'minLength': 1,
+      'maxLength': 100,
+      'description': 'Name of the task',
+    },
+    'completed': {
+      'type': 'boolean',
+      'default': false,
+      'description': 'Boolean indicating if the task has been completed or not',
+    },
+    'completed_at': {
+      'type': 'string',
+      'format': 'date-time',
+      'description': 'Time when the task was completed',
+      'readOnly': true,
+    },
+    'created_at': {
+      'type': 'string',
+      'format': 'date-time',
+      'description': 'Time when the task was created',
+      'readOnly': true,
+    },
+    'updated_at': {
+      'type': 'string',
+      'format': 'date-time',
+      'description': 'Time when the task was updated',
+      'readOnly': true,
+    },
+  },
+  'required': [
+    'id',
+    'name',
+    'completed_at',
+    'created_at',
+    'updated_at',
+  ],
+}
 </script>
 
 <style lang="scss" scoped>
@@ -116,10 +177,10 @@ const isSlideoutOpen = ref<boolean>(false)
   padding: 0 6px;
 
   .component-container {
-    padding: 12px;
-    border-radius: 4px;
     border: 1px solid lightgray;
+    border-radius: 4px;
     margin-bottom: 12px;
+    padding: 12px;
   }
 
   input {
