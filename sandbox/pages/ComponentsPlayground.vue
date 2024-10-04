@@ -87,6 +87,7 @@
       <h2>Schema Renderer</h2>
       <SchemaRenderer
         :example-visible="false"
+        :header-visible="false"
         :schema="schema"
         title="Sample Schema"
       />
