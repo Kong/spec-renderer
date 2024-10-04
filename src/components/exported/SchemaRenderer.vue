@@ -35,13 +35,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import type { PropType } from 'vue'
 import type { SchemaModelPropertyField, SchemaObject } from '@/types'
 import ModelNode from '@/components/spec-document/schema-model/ModelNode.vue'
 import PropertyFieldList from '@/components/spec-document/schema-model/PropertyFieldList.vue'
 import PageHeader from '@/components/common/PageHeader.vue'
 import SchemaExample from '@/components/common/SchemaExample.vue'
+import composables from '@/composables'
 import { crawl } from '@/utils'
 import { CODE_INDENT_SPACES } from '@/constants'
 
@@ -78,6 +79,13 @@ const props = defineProps({
 })
 
 const activeSchemaModel = ref<SchemaObject>(props.schema)
+
+const { createHighlighter } = composables.useShiki()
+
+// initialize shiki
+onBeforeMount(async () => {
+  await createHighlighter()
+})
 
 const exampleModel = computed(() => {
   if (!props.exampleVisible) {
