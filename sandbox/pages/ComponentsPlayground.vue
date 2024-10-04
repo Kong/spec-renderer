@@ -103,7 +103,7 @@ import ToggleSwitch from '../../src/components/common/ToggleSwitch.vue'
 import SelectDropdown from '../../src/components/common/SelectDropdown.vue'
 import { KongIcon } from '@kong/icons'
 import SlideOut from '../../src/components/common/SlideOut.vue'
-import SchemaRenderer from '../../src/components/exported/SchemaRenderer.vue'
+import SchemaRenderer from '../../src/components/extra-renderers/SchemaRenderer.vue'
 
 const dropdownItems = [
   { label: 'Item 1', value: 'item-1' },

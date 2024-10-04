@@ -2,7 +2,7 @@ import type { App } from 'vue'
 import SpecRenderer from '@/components/SpecRenderer.vue'
 import SpecDocument from './components/spec-document/SpecDocument.vue'
 import SpecRendererToc from './components/spec-renderer-toc/SpecRendererToc.vue'
-import SchemaRenderer from './components/exported/SchemaRenderer.vue'
+import SchemaRenderer from './components/extra-renderers/SchemaRenderer.vue'
 import { defineCustomElement } from 'vue'
 
 
