@@ -151,7 +151,7 @@ importers:
         specifier: ^9.11.0
         version: 9.11.1(jiti@1.21.6)
       jsdom:
-        specifier: ^25.0.0
+        specifier: ^25.0.1
         version: 25.0.1
       postcss:
         specifier: ^8.4.47
