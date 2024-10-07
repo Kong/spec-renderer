@@ -3,7 +3,7 @@
     class="schema-renderer"
   >
     <PageHeader
-      v-if="headerVisible && schemaTitle"
+      v-if="showHeader && schemaTitle"
       class="schema-renderer-header"
       :description="schema.description"
       :title="schemaTitle"
@@ -12,7 +12,7 @@
 
     <div
       class="schema-renderer-content"
-      :class="{'model-example-visible': exampleVisible}"
+      :class="{'model-example-visible': showExample}"
     >
       <div>
         <PropertyFieldList
@@ -42,7 +42,7 @@ import PropertyFieldList from '@/components/spec-document/schema-model/PropertyF
 import PageHeader from '@/components/common/PageHeader.vue'
 import SchemaExample from '@/components/common/SchemaExample.vue'
 import composables from '@/composables'
-import { crawl } from '@/utils'
+import { BOOL_VALIDATOR, crawl, IS_TRUE } from '@/utils'
 import { parse as parseFlatted } from 'flatted'
 import { CODE_INDENT_SPACES } from '@/constants'
 
@@ -65,14 +65,16 @@ const props = defineProps({
    * show/hide the title and description header
    */
   headerVisible: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: true,
   },
   /**
    * show/hide example section
    */
   exampleVisible: {
-    type: Boolean,
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
     default: true,
   },
 
@@ -89,6 +91,8 @@ const schema = computed((): SchemaObject => {
   }
   return <SchemaObject>props.schema
 })
+const showHeader = computed((): boolean => IS_TRUE(props.headerVisible))
+const showExample = computed((): boolean => IS_TRUE(props.exampleVisible))
 
 const activeSchemaModel = ref<SchemaObject>(schema.value)
 
@@ -100,7 +104,7 @@ onBeforeMount(async () => {
 })
 
 const exampleModel = computed(() => {
-  if (!props.exampleVisible) {
+  if (!showExample.value) {
     return null
   }
 
