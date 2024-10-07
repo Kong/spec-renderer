@@ -1,16 +1,14 @@
 <template>
-  <Teleport to="body">
+  <Teleport :to="teleportTarget">
     <div
       v-bind="attrs"
       class="slideout"
     >
-      <Transition name="spec-renderer-fade">
-        <div
-          v-show="visible"
-          class="slideout-backdrop"
-          @click="emit('close')"
-        />
-      </Transition>
+      <div
+        v-show="visible"
+        class="slideout-backdrop"
+        @click="emit('close')"
+      />
       <Transition name="spec-renderer-slide-in">
         <div
           v-show="visible"
@@ -73,6 +71,10 @@ const props = defineProps({
     type: String,
     required: false,
     default: '500px',
+  },
+  teleportTarget: {
+    type: String,
+    default: 'body',
   },
 })
 

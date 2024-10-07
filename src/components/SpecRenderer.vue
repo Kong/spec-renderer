@@ -4,6 +4,7 @@
       <SlideOut
         v-if="tableOfContents"
         class="slideout-toc"
+        :teleport-target="documentScrollingContainer || 'body'"
         :title="(parsedDocument as ServiceNode)?.name || 'Table of Contents'"
         :visible="slideoutTocVisible"
         @close="slideoutTocVisible = false"

@@ -24,6 +24,12 @@ SlideOut is an overlay container with backdrop that displays content over the pa
 
 Max width of SlideOut container.
 
+### `teleportTarget`
+
+* type: `string`
+* required: `false`
+* default: `body`
+
 ## Slots
 
 ### `default`
