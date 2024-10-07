@@ -35,7 +35,7 @@ pnpm add @kong/spec-renderer
 
 ### Vue 3 Component(s)
 
-Import the package (and TypeScript types, if desired) inside of your App's entry file (e.g. for Vue, `main.ts`). Set the plugin options, and tell Vue to use the plugin.
+Import the package and the component(s) you wish to use.
 
 ```ts
 <template>
@@ -79,32 +79,31 @@ Now that the plugin is globally registered, simply include a component just like
 
 This is to renderer KongSpecRender component
 
-```js
+```vue
 <template>
-<KongSpecRenderer
-  :spec="specification-content-to-present"
-/>
+  <KongSpecRenderer
+    :spec="specification-content-to-present"
+  />
 </template>
 ```
 
 This is to renderer Toc and Document  components separately
 
-```js
+```vue
 <template>
-    <div id="kong-spec-renderer-wrapper">
-      <nav>
-        <KongSpecRendererToc
-          :table-of-contents="tableOfContents.value"
-        />
-      </nav>
-      <main>
-        <KongSpecRendererDocument
-          :document="parsedDocument.value"
-          current-path="/"
-        />
-      </main>
-    </div>
-
+  <div id="kong-spec-renderer-wrapper">
+    <nav>
+      <KongSpecRendererToc
+        :table-of-contents="tableOfContents.value"
+      />
+    </nav>
+    <main>
+      <KongSpecRendererDocument
+        :document="parsedDocument.value"
+        current-path="/"
+      />
+    </main>
+  </div>
 </template>
 <script setup lang="ts">
   import { onBeforeMount } from 'vue'
@@ -116,6 +115,28 @@ This is to renderer Toc and Document  components separately
 </script>
 ```
 
+This is to renderer SchemaRenderer component
+
+```vue
+<template>
+  <KongSchemaRenderer
+    :schema="mySchema"
+  />
+</template>
+<script setup lang="ts">
+  import { SchemaObject } from '@kong/spec-renderer-dev'
+
+  const mySchema: SchemaObject = {
+    type: 'object',
+    title: 'Person',
+    properties: {
+      name: {
+        type: 'string',
+      },
+    },
+  }
+</script>
+```
 
 ### No/Other framework via native web components
 
@@ -177,7 +198,7 @@ const tocAndDocComponents = async () => {
 </html>
 ```
 
-As of now only `SpecRenderer` as single component is supported for this. Let us know if support for individual SpecRendererToc and SpeRendererDocument is needed.
+As of now only `SpecRenderer` as single component is supported for this. Let us know if support for individual `SpecRendererToc`, `SpeRendererDocument` and `SchemaRenderer` is needed.
 
 
 ### Props

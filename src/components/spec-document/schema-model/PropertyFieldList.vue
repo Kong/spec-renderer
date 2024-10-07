@@ -31,7 +31,7 @@ const props = defineProps({
   },
   propertyName: {
     type: String,
-    required: true,
+    default: '',
   },
   hiddenFieldList: {
     type: Array as PropType<Array<SchemaModelPropertyField>>,
