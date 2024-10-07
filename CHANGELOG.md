@@ -1,3 +1,10 @@
+# [1.79.0](https://github.com/Kong/spec-renderer/compare/v1.78.1...v1.79.0) (2024-10-07)
+
+
+### Features
+
+* schema renderer component [KHCP-13507] ([#348](https://github.com/Kong/spec-renderer/issues/348)) ([8ae0e3d](https://github.com/Kong/spec-renderer/commit/8ae0e3d2a698d0f47c2413a98fee4253fed1a5d3))
+
 ## [1.78.1](https://github.com/Kong/spec-renderer/compare/v1.78.0...v1.78.1) (2024-10-04)
 
 
