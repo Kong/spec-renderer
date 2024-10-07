@@ -36,7 +36,6 @@
 
 <script setup lang="ts">
 import { computed, onBeforeMount, ref } from 'vue'
-import type { PropType } from 'vue'
 import type { SchemaModelPropertyField, SchemaObject } from '@/types'
 import ModelNode from '@/components/spec-document/schema-model/ModelNode.vue'
 import PropertyFieldList from '@/components/spec-document/schema-model/PropertyFieldList.vue'
@@ -44,6 +43,7 @@ import PageHeader from '@/components/common/PageHeader.vue'
 import SchemaExample from '@/components/common/SchemaExample.vue'
 import composables from '@/composables'
 import { crawl } from '@/utils'
+import { parse as parseFlatted } from 'flatted'
 import { CODE_INDENT_SPACES } from '@/constants'
 
 const props = defineProps({
@@ -51,7 +51,7 @@ const props = defineProps({
  * JSON schema to render
  */
   schema: {
-    type: Object as PropType<SchemaObject>,
+    type: [Object, String],
     required: true,
   },
   /**
@@ -78,7 +78,19 @@ const props = defineProps({
 
 })
 
-const activeSchemaModel = ref<SchemaObject>(props.schema)
+const schema = computed((): SchemaObject => {
+  if (typeof props.schema === 'string') {
+    try {
+      return <SchemaObject>parseFlatted(props.schema)
+    } catch (e) {
+      console.error('@kong/spec-renderer: error parsing provided JSON Schema')
+      return {}
+    }
+  }
+  return <SchemaObject>props.schema
+})
+
+const activeSchemaModel = ref<SchemaObject>(schema.value)
 
 const { createHighlighter } = composables.useShiki()
 
@@ -107,8 +119,8 @@ const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
     : ['info', 'description'],
 )
 
-const schemaTitle = computed(() => props.schema.title || props.title)
-const schemaType = computed(() => props.schema.type?.toString())
+const schemaTitle = computed(() => schema.value.title || props.title)
+const schemaType = computed(() => schema.value.type?.toString())
 </script>
 
 <style lang="scss" scoped>
