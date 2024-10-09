@@ -351,9 +351,7 @@ watch(() => ({
         }
 
         @media (min-width: $kui-breakpoint-mobile) {
-          * {
-            max-width: fit-content;
-          }
+          max-width: 40ch;
         }
       }
     }
