@@ -31,7 +31,7 @@
         :security-scheme-list="data.securitySchemes"
       />
       <AdditionalInfo
-        v-if="data.externalDocs || data.contact || data.license"
+        v-if="additionalInfoVisible"
         :contact="data.contact"
         :external-docs="data.externalDocs"
         :license="data.license"
@@ -41,6 +41,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpService } from '@stoplight/types'
 import ServerList from './overview/ServerList.vue'
@@ -51,7 +52,7 @@ import PageHeader from '../common/PageHeader.vue'
 import MarkdownRenderer from '../common/MarkdownRenderer.vue'
 import composables from '@/composables'
 
-defineProps({
+const props = defineProps({
   data: {
     type: Object as PropType<IHttpService>,
     required: true,
@@ -63,6 +64,8 @@ defineProps({
 })
 
 const { serverList, addServerUrl } = composables.useServerList()
+
+const additionalInfoVisible = computed(() => props.data.externalDocs?.url || props.data.contact?.url || props.data.contact?.email || props.data.license?.name)
 </script>
 
 <style lang="scss" scoped>
