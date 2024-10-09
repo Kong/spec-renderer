@@ -117,8 +117,13 @@ const exampleModel = computed(() => {
   return crawledExample && Object.keys(crawledExample).length ? JSON.stringify(crawledExample, null, CODE_INDENT_SPACES) : ''
 })
 
+/**
+ * list of fields to hide from the property field list
+ * - info and description fields are always hidden
+ * - example field is hidden when exampleVisible prop is false or exampleModel is rendered inside the example section
+ */
 const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
-  exampleModel.value
+  exampleModel.value || !showExample.value
     ? ['info', 'description', 'example']
     : ['info', 'description'],
 )
