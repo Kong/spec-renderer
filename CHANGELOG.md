@@ -1,3 +1,11 @@
+## [1.79.3](https://github.com/Kong/spec-renderer/compare/v1.79.2...v1.79.3) (2024-10-09)
+
+
+### Bug Fixes
+
+* **http-service:** update conditions to show additional info ([#360](https://github.com/Kong/spec-renderer/issues/360)) ([f0c39d5](https://github.com/Kong/spec-renderer/commit/f0c39d5e1fecd5ba78c34ea966fae3a7ad212874))
+* **schema-renderer:** hide example from proeprty-field-list if exampleVisible is false ([#356](https://github.com/Kong/spec-renderer/issues/356)) ([63cf2a9](https://github.com/Kong/spec-renderer/commit/63cf2a9c569be9e2a1e4c4e2f3c9dfcf0866dbd1))
+
 ## [1.79.2](https://github.com/Kong/spec-renderer/compare/v1.79.1...v1.79.2) (2024-10-09)
 
 
