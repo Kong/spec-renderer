@@ -1,3 +1,10 @@
+## [1.79.4](https://github.com/Kong/spec-renderer/compare/v1.79.3...v1.79.4) (2024-10-10)
+
+
+### Bug Fixes
+
+* mobile view fixes [KHCP-13491] ([#357](https://github.com/Kong/spec-renderer/issues/357)) ([d0f0824](https://github.com/Kong/spec-renderer/commit/d0f082424269df683794457d48bf8cada563561d))
+
 ## [1.79.3](https://github.com/Kong/spec-renderer/compare/v1.79.2...v1.79.3) (2024-10-09)
 
 
