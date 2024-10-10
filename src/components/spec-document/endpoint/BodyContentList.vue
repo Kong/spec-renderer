@@ -76,6 +76,7 @@ function parseSchema(schema: SchemaObject) {
   .content-list-schema-title {
     font-size: var(--kui-font-size-30, $kui-font-size-30);
     line-height: var(--kui-line-height-30, $kui-line-height-30);
+    overflow-wrap: anywhere;
   }
 }
 </style>
