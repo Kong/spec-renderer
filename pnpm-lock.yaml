@@ -54,8 +54,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
       httpsnippet:
-        specifier: ^3.0.7
-        version: 3.0.7
+        specifier: ^3.0.8
+        version: 3.0.8
       json-schema:
         specifier: ^0.4.0
         version: 0.4.0
@@ -88,7 +88,7 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1(@types/node@20.16.11)(typescript@5.6.2)
       '@evilmartians/lefthook':
-        specifier: ^1.7.17
+        specifier: ^1.7.18
         version: 1.7.18
       '@kong/design-tokens':
         specifier: ^1.17.2
@@ -2848,8 +2848,8 @@ packages:
     resolution: {integrity: sha512-1e4Wqeblerz+tMKPIq2EMGiiWW1dIjZOksyHWSUm1rmuvw/how9hBHZ38lAGj5ID4Ik6EdkOw7NmWPy6LAwalw==}
     engines: {node: '>= 14'}
 
-  httpsnippet@3.0.7:
-    resolution: {integrity: sha512-jlJv2Mxu5bfSysmlhiAPmxbk6UxFx0EhsKIw1aR7mlIwDzFMXuxcnTgQB30L0hfq92bbLKiwhW5xHor3Af07uQ==}
+  httpsnippet@3.0.8:
+    resolution: {integrity: sha512-vihjPtFCgF454uWigD4CZmJkaOp7xfIq/QQBYTtyRtWfs2bzCwPqFuqVl2nftP5lvNYcm8prCKljm/xGHAf2+Q==}
     engines: {node: ^14.19.1 || ^16.14.2 || ^18.0.0 || ^20.0.0}
     hasBin: true
 
@@ -8579,7 +8579,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  httpsnippet@3.0.7:
+  httpsnippet@3.0.8:
     dependencies:
       chalk: 4.1.2
       event-stream: 4.0.1
