@@ -78,7 +78,7 @@
     "openapi3-ts": "4.4.0"
   },
   "devDependencies": {
-    "@babel/types": "^7.25.6",
+    "@babel/types": "^7.25.7",
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
@@ -94,7 +94,7 @@
     "@types/node": "^20.16.10",
     "@types/sanitize-html": "^2.13.0",
     "@vitejs/plugin-vue": "^5.1.4",
-    "@vitest/ui": "^2.1.1",
+    "@vitest/ui": "^2.1.2",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.5.1",
     "autoprefixer": "^10.4.20",
@@ -123,7 +123,7 @@
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-replace": "^0.1.1",
     "vite-plugin-vue-devtools": "^7.4.6",
-    "vitest": "2.1.1",
+    "vitest": "2.1.2",
     "vue": "^3.5.10",
     "vue-router": "^4.4.5",
     "vue-tsc": "^2.1.6"
