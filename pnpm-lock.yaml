@@ -54,8 +54,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
       httpsnippet:
-        specifier: ^3.0.8
-        version: 3.0.8
+        specifier: ^3.0.9
+        version: 3.0.9
       json-schema:
         specifier: ^0.4.0
         version: 0.4.0
@@ -691,7 +691,6 @@ packages:
 
   '@evilmartians/lefthook@1.7.18':
     resolution: {integrity: sha512-BIJBQtC7xKOedxESlB0wVG6M32ftjK+5vnID9I5CjRDE/6KcCpcK366AyG0eHGdPK1TVty81QalxZqSTxWRXPw==}
-    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -2858,8 +2857,8 @@ packages:
     resolution: {integrity: sha512-1e4Wqeblerz+tMKPIq2EMGiiWW1dIjZOksyHWSUm1rmuvw/how9hBHZ38lAGj5ID4Ik6EdkOw7NmWPy6LAwalw==}
     engines: {node: '>= 14'}
 
-  httpsnippet@3.0.8:
-    resolution: {integrity: sha512-vihjPtFCgF454uWigD4CZmJkaOp7xfIq/QQBYTtyRtWfs2bzCwPqFuqVl2nftP5lvNYcm8prCKljm/xGHAf2+Q==}
+  httpsnippet@3.0.9:
+    resolution: {integrity: sha512-d5GazgvgT+xd+oltAVJPe+s62mJ5DKGw7yF7Put1fimLc5KwPzbH8Ef/AOMTUwOBSeS3iDqyt9wgYHm+Jyh0CA==}
     engines: {node: ^14.19.1 || ^16.14.2 || ^18.0.0 || ^20.0.0}
     hasBin: true
 
@@ -8601,7 +8600,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  httpsnippet@3.0.8:
+  httpsnippet@3.0.9:
     dependencies:
       chalk: 4.1.2
       event-stream: 4.0.1
