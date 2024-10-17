@@ -5,6 +5,7 @@ import useCurrentResponse from './useCurrentResponse'
 import useServerList from './useServerList'
 import useAuthTokenState from './useAuthTokenState'
 import useTryItState from './useTryItState'
+import useMarkdown from './useMarkdown'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
@@ -15,4 +16,5 @@ export default {
   useServerList,
   useAuthTokenState,
   useTryItState,
+  useMarkdown,
 }
