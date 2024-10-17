@@ -161,7 +161,7 @@ const orderedFieldList = computed(() => {
     })
   }
 
-  if (!props.hiddenFieldList.includes('additional-properties') && props.property.additionalProperties !== undefined) {
+  if (!props.hiddenFieldList.includes('additional-properties') && typeof props.property.additionalProperties === 'boolean') {
     fields.push({
       component: AdditionalProperties,
       props: {
