@@ -30,8 +30,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       '@scalar/openapi-parser':
-        specifier: ^0.8.4
-        version: 0.8.4
+        specifier: ^0.8.5
+        version: 0.8.7
       '@seriousme/openapi-schema-validator':
         specifier: ^2.2.3
         version: 2.2.3
@@ -1011,8 +1011,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@scalar/openapi-parser@0.8.4':
-    resolution: {integrity: sha512-q/XtmuBgSBQXv0pCR6DYscZwoiIL1WAGt0OWGkQIYRfw1KLcUR23DH7UOcPi3Se3OHvmHXe3MI+I6VSmkkVxiw==}
+  '@scalar/openapi-parser@0.8.7':
+    resolution: {integrity: sha512-hb9GsNtLS0fJSMyrnbsU/U8l4lUnPKGSi+GWhVhy1KxgdfXvhe9FxwJYp6EsBLSkmTRZMSTetUFSiTD5O0ljxA==}
     engines: {node: '>=18'}
 
   '@sec-ant/readable-stream@0.4.1':
@@ -6238,7 +6238,7 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.22.4':
     optional: true
 
-  '@scalar/openapi-parser@0.8.4':
+  '@scalar/openapi-parser@0.8.7':
     dependencies:
       ajv: 8.17.1
       ajv-draft-04: 1.0.0(ajv@8.17.1)
