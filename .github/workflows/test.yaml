@@ -53,7 +53,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: spec-renderer-build-output-artifact
-          path: ./**
+          path: ./dist/**
           include-hidden-files: 'true'
           if-no-files-found: error
 
