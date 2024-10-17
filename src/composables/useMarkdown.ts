@@ -1,21 +1,20 @@
-import { markRaw, ref } from 'vue'
 import markdownit from 'markdown-it'
 import type MarkdownIt from 'markdown-it'
 import sanitize from 'sanitize-html'
 
-const md = ref<MarkdownIt>()
+let md: MarkdownIt | null = null
 
 export default function useMarkdown() {
 
   function initializeMarkdown() {
-    if (!md.value) {
-      md.value = markRaw(markdownit({
+    if (!md) {
+      md = markdownit({
         html: true, // enabled to allow raw HTML in source
         xhtmlOut: true, // Use '/' to close single tags (<br />)
         linkify: true, // Convert URL-like text to links
         breaks: true, // Convert '\n' in paragraphs into <br>
         typographer: true, // Enable some language-neutral replacement + quotes beautification
-      }))
+      })
     }
   }
 
@@ -25,7 +24,7 @@ export default function useMarkdown() {
     }
     initializeMarkdown()
     try {
-      const renderedText = md.value?.render(text) || text
+      const renderedText = md?.render(text) || text
       return sanitize(renderedText, {
         allowedTags: sanitize.defaults.allowedTags.concat(['img', 'details']),
       })
