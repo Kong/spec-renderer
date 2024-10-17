@@ -12,7 +12,6 @@ export default function useMarkdown() {
       md.value = markdownit({
         html: true, // enabled to allow raw HTML in source
         xhtmlOut: true, // Use '/' to close single tags (<br />)
-        linkify: true, // Convert URL-like text to links
         breaks: true, // Convert '\n' in paragraphs into <br>
         typographer: true, // Enable some language-neutral replacement + quotes beautification
       })
