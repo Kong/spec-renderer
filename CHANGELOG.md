@@ -1,3 +1,10 @@
+## [1.79.8](https://github.com/Kong/spec-renderer/compare/v1.79.7...v1.79.8) (2024-10-17)
+
+
+### Bug Fixes
+
+* **httpsnippet:** bump package to fix SSR errors ([#367](https://github.com/Kong/spec-renderer/issues/367)) ([1fa462c](https://github.com/Kong/spec-renderer/commit/1fa462cf1231a2bd93e395512152f355b185cced))
+
 ## [1.79.7](https://github.com/Kong/spec-renderer/compare/v1.79.6...v1.79.7) (2024-10-17)
 
 
