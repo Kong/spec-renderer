@@ -1,3 +1,10 @@
+## [1.79.9](https://github.com/Kong/spec-renderer/compare/v1.79.8...v1.79.9) (2024-10-17)
+
+
+### Bug Fixes
+
+* infinite render loop during markdown parsing [KHCP-13730] ([#371](https://github.com/Kong/spec-renderer/issues/371)) ([643b9f4](https://github.com/Kong/spec-renderer/commit/643b9f4318f87a475f459bf39b3f05176ae125a3))
+
 ## [1.79.8](https://github.com/Kong/spec-renderer/compare/v1.79.7...v1.79.8) (2024-10-17)
 
 
