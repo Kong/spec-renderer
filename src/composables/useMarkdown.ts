@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { markRaw, ref } from 'vue'
 import markdownit from 'markdown-it'
 import type MarkdownIt from 'markdown-it'
 import sanitize from 'sanitize-html'
@@ -9,12 +9,13 @@ export default function useMarkdown() {
 
   function initializeMarkdown() {
     if (!md.value) {
-      md.value = markdownit({
+      md.value = markRaw(markdownit({
         html: true, // enabled to allow raw HTML in source
         xhtmlOut: true, // Use '/' to close single tags (<br />)
+        linkify: true, // Convert URL-like text to links
         breaks: true, // Convert '\n' in paragraphs into <br>
         typographer: true, // Enable some language-neutral replacement + quotes beautification
-      })
+      }))
     }
   }
 
