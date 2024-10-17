@@ -2,7 +2,7 @@ import markdownit from 'markdown-it'
 import type MarkdownIt from 'markdown-it'
 import sanitize from 'sanitize-html'
 
-let md: MarkdownIt | null = null
+let md: MarkdownIt | null
 
 export default function useMarkdown() {
 
