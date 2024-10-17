@@ -7,9 +7,9 @@
 <script setup lang="ts">
 import { computed, h, inject, ref } from 'vue'
 import type { Ref } from 'vue'
-import composables from '@/composables'
+import useMarkdown from '@/composables/useMarkdown'
 
-const { mdRender } = composables.useMarkdown()
+const { mdRender } = useMarkdown()
 
 const props = defineProps({
   markdown: {
