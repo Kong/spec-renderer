@@ -51,7 +51,7 @@ const showToggle = computed((): boolean => {
   }
 
   const crawlForRequired = (objData: Record<string, any>, parentKey: string, nestedLevel: number): boolean => {
-    if (nestedLevel > MAX_NESTED_LEVELS) {
+    if (nestedLevel > MAX_NESTED_LEVELS || !objData || Object.keys(objData).length < 1) {
       return false
     }
 
