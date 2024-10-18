@@ -1,24 +1,10 @@
-import { reactive, toRefs } from 'vue'
+import { ref } from 'vue'
 
-interface AuthTokenState {
-  tokenValueMap: Record<string, string>
-  authHeaderMap: Record<string, Array<Record<string, string>>>
-  authQueryMap: Record<string, string>
-}
-
-const state: AuthTokenState = reactive({
-  tokenValueMap: {},
-  authHeaderMap: {},
-  authQueryMap: {},
-})
+const tokenValueMap = ref<Record<string, string>>({})
+const authHeaderMap = ref<Record<string, Array<Record<string, string>>>>({})
+const authQueryMap = ref<Record<string, string>>({})
 
 export default function useAuthTokenState() {
-  const {
-    tokenValueMap,
-    authHeaderMap,
-    authQueryMap,
-  } = toRefs(state)
-
   return {
     tokenValueMap,
     authHeaderMap,
