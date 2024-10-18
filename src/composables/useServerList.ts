@@ -1,15 +1,13 @@
 import type { IServer } from '@stoplight/types'
-import { computed, reactive, toRefs } from 'vue'
+import { computed, shallowRef } from 'vue'
 
 interface ServerListState {
   serverList: Array<IServer>
   selectedServerUrl: string
 }
 
-const state: ServerListState = reactive({
-  serverList: [],
-  selectedServerUrl: '',
-})
+const serverListState = shallowRef<Array<IServer>>([])
+const selectedServerUrlState = shallowRef<string>('')
 
 /**
  * Centralized state for server list.
@@ -19,29 +17,29 @@ const state: ServerListState = reactive({
  * - list of server urls
  * - selected server url
  */
-export default function useSyncState() {
+export default function useServerList() {
 
-  const { serverList, selectedServerUrl } = toRefs(state)
+  // const { serverList, selectedServerUrl } = state.value
 
   const initialize = ({ serverList, selectedServerUrl }: ServerListState) => {
-    state.serverList = serverList
-    state.selectedServerUrl = selectedServerUrl
+    serverListState.value = serverList
+    selectedServerUrlState.value = selectedServerUrl
   }
 
   const addServerUrl = (newServerUrl: string) => {
-    state.serverList.push({ id: state.serverList.length.toString(), url: newServerUrl })
+    serverListState.value.push({ id: serverListState.value.length.toString(), url: newServerUrl })
   }
 
   const removeServerUrl = (serverUrl: string) => {
-    state.serverList = state.serverList.filter(server => server.url !== serverUrl)
+    serverListState.value = serverListState.value.filter(server => server.url !== serverUrl)
   }
 
-  const serverUrlList = computed(() => serverList.value?.map(server => server.url) ?? [])
+  const serverUrlList = computed(() => serverListState.value?.map(server => server.url) ?? [])
 
   return {
-    serverList,
+    serverList: serverListState,
+    selectedServerUrl: selectedServerUrlState,
     serverUrlList,
-    selectedServerUrl,
     initialize,
     addServerUrl,
     removeServerUrl,
