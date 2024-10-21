@@ -395,8 +395,8 @@ watch(() => ({
 
     // initialize the centralized state for server list
     initialize({
-      serverList: serviceNode.value?.data.servers || [],
-      selectedServerUrl: serviceNode.value?.data.servers?.[0]?.url || '',
+      newServerList: serviceNode.value?.data.servers || [],
+      newSelectedServerUrl: serviceNode.value?.data.servers?.[0]?.url || '',
     })
   }
 
