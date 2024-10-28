@@ -90,6 +90,9 @@ importers:
       '@evilmartians/lefthook':
         specifier: ^1.8.2
         version: 1.8.2
+      '@guolao/vue-monaco-editor':
+        specifier: ^1.5.4
+        version: 1.5.4(vue@3.5.12(typescript@5.6.3))
       '@kong/design-tokens':
         specifier: ^1.17.2
         version: 1.17.2
@@ -721,6 +724,16 @@ packages:
   '@floating-ui/vue@1.1.5':
     resolution: {integrity: sha512-ynL1p5Z+woPVSwgMGqeDrx6HrJfGIDzFyESFkyqJKilGW1+h/8yVY29Khn0LaU6wHBRwZ13ntG6reiHWK6jyzw==}
 
+  '@guolao/vue-monaco-editor@1.5.4':
+    resolution: {integrity: sha512-eyBAqxJeDpV4mZYZSpNvh3xUgKCld5eEe0dBtjJhsy2+L0MB6PYFZ/FbPHNwskgp2RoIpfn1DLrIhXXE3lVbwQ==}
+    peerDependencies:
+      '@vue/composition-api': ^1.7.1
+      monaco-editor: '>=0.43.0'
+      vue: ^2.6.14 || >=3.0.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
     engines: {node: '>=18.18.0'}
@@ -814,6 +827,11 @@ packages:
   '@kong/stoplight-http-spec@1.1.1':
     resolution: {integrity: sha512-QOwXWjObVWlTpyNC0iJp/IxYs29ADteZOFczzsnKX/DtCnu44AqIIeGu/y8VgkdOOdTxsCas+rSQKTNPvV9/9g==}
     engines: {node: '>=14.13'}
+
+  '@monaco-editor/loader@1.4.0':
+    resolution: {integrity: sha512-00ioBig0x642hytVspPl7DbQyaSWRaolYie/UFNjoTdvoKPzo6xrXLhTk9ixgIKcLH5b5vDOjVNiGyY+uDCUlg==}
+    peerDependencies:
+      monaco-editor: '>= 0.21.0 < 1'
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -4735,6 +4753,9 @@ packages:
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
 
+  state-local@1.0.7:
+    resolution: {integrity: sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==}
+
   std-env@3.7.0:
     resolution: {integrity: sha512-JPbdCEQLj1w5GilpiHAx3qJvFndqybBysA3qUOnznweH4QbNYUsW/ea8QzSrnh0vNsezMMw5bcVool8lM0gwzg==}
 
@@ -6072,6 +6093,12 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
+  '@guolao/vue-monaco-editor@1.5.4(vue@3.5.12(typescript@5.6.3))':
+    dependencies:
+      '@monaco-editor/loader': 1.4.0
+      vue: 3.5.12(typescript@5.6.3)
+      vue-demi: 0.14.10(vue@3.5.12(typescript@5.6.3))
+
   '@humanfs/core@0.19.1': {}
 
   '@humanfs/node@0.16.6':
@@ -6176,6 +6203,10 @@ snapshots:
       type-is: 1.6.18
     transitivePeerDependencies:
       - encoding
+
+  '@monaco-editor/loader@1.4.0':
+    dependencies:
+      state-local: 1.0.7
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -10490,6 +10521,8 @@ snapshots:
       through: 2.3.8
 
   stackback@0.0.2: {}
+
+  state-local@1.0.7: {}
 
   std-env@3.7.0: {}
 
