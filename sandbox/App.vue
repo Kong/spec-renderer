@@ -12,6 +12,9 @@
         <a href="/spec-renderer/async/">
           Async-Playground
         </a>
+        <a href="/spec-renderer/editor/">
+          Live Editor
+        </a>
       </div>
     </header>
     <main class="page-main">
