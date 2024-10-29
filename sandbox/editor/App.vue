@@ -69,6 +69,11 @@ const handleMount: VueMonacoEditorEmitsOptions['mount'] = (editorInstance) => {
   font-family: 'Inter', Helvetica, Arial, sans-serif;
   $header-height: $kui-space-120;
 
+  * {
+    box-sizing: border-box;
+    margin: 0;
+  }
+
   header {
     align-items: center;
     background-color: $kui-color-background-neutral;
@@ -79,12 +84,22 @@ const handleMount: VueMonacoEditorEmitsOptions['mount'] = (editorInstance) => {
     padding: $kui-space-20 $kui-space-40;
 
     h1 {
-      margin: 0px;
+      font-size: $kui-font-size-80;
+      line-height: $kui-line-height-60;
     }
 
     .language-selector {
       :deep(.trigger-button) {
-        color: $kui-color-text;
+        border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+        color: $kui-color-text-inverse;
+        font-family: var(--kui-font-family-code, $kui-font-family-code);
+        font-size: var(--kui-font-size-20, $kui-font-size-20);
+        line-height: var(--kui-line-height-20, $kui-line-height-20);
+        padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
+
+        @media (min-width: $kui-breakpoint-mobile) {
+          padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
+        }
       }
     }
   }
