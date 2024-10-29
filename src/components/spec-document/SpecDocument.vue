@@ -461,12 +461,10 @@ onBeforeMount(async () => {
 }
 
 .nodes-wrapper {
-  .overview-page, .spec-renderer-document {
-    margin-bottom: var(--kui-space-100, $kui-space-100);
-    padding-bottom: var(--kui-space-100, $kui-space-100);
-  }
   .spec-renderer-document {
     border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    margin-bottom: var(--kui-space-100, $kui-space-100);
+    padding-bottom: var(--kui-space-100, $kui-space-100);
     &:last-child {
       border-bottom: none;
     }
