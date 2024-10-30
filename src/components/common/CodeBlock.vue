@@ -35,7 +35,7 @@ const getHighlightLanguage = (snippetLang: LanguageCode | null | undefined): str
 const highlightedCode = computed(():string => {
   if (highlighter.value && props.lang) {
     const hightLightLang = getHighlightLanguage(props.lang as LanguageCode)
-    return highlighter.value.codeToHtml(props.code, { lang: hightLightLang as string, theme: 'material-theme-lighter' })
+    return highlighter.value.codeToHtml(props.code, { lang: hightLightLang as string, theme: 'catppuccin-latte' })
   }
   return ''
 })
@@ -47,6 +47,7 @@ const highlightedCode = computed(():string => {
     @include pre;
 
     border: none;
+    border-radius: 0;
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     margin: var(--kui-space-0, $kui-space-0);
     max-height: 300px;
@@ -75,7 +76,7 @@ const highlightedCode = computed(():string => {
       word-break: break-all;
 
       &::after {
-        background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+        background-color: transparent;
         bottom: 0;
         color: var(--kui-color-text-neutral, $kui-color-text-neutral-weak);
         content: counter(codeblock-line);
