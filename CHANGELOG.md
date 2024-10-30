@@ -1,3 +1,18 @@
+## [1.79.10](https://github.com/Kong/spec-renderer/compare/v1.79.9...v1.79.10) (2024-10-30)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#377](https://github.com/Kong/spec-renderer/issues/377)) ([5ad6d98](https://github.com/Kong/spec-renderer/commit/5ad6d984e3697241449a17a7942d9063c38aeba1))
+* **deps:** update dependency @scalar/openapi-parser to ^0.8.6 ([#379](https://github.com/Kong/spec-renderer/issues/379)) ([b47c31a](https://github.com/Kong/spec-renderer/commit/b47c31a0c195fa2a7392e061de05786b5ef1b594))
+* **deps:** update dependency shiki to ^1.21.1 ([#373](https://github.com/Kong/spec-renderer/issues/373)) ([b8019c6](https://github.com/Kong/spec-renderer/commit/b8019c61edfb2cb3d74f321aaf13b4f81f52a0b2))
+* trigger deploy ([4fe6a22](https://github.com/Kong/spec-renderer/commit/4fe6a225677deff7bb3b8308587ce477b05a279e))
+
+
+### Reverts
+
+* token permissions ([db96716](https://github.com/Kong/spec-renderer/commit/db96716d3476766bb4f9391d0463e4b270cd251b))
+
 ## [1.79.9](https://github.com/Kong/spec-renderer/compare/v1.79.8...v1.79.9) (2024-10-17)
 
 
