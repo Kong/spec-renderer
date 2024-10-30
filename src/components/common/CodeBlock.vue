@@ -56,7 +56,7 @@ const highlightedCode = computed(():string => {
     white-space: break-spaces;
 
     code {
-      background: transparent !important;
+      background: var(--kui-color-background-transparent, $kui-color-background-transparent) !important;
       white-space: break-spaces;
       word-wrap: break-word;
     }
@@ -76,7 +76,7 @@ const highlightedCode = computed(():string => {
       word-break: break-all;
 
       &::after {
-        background-color: transparent;
+        background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
         bottom: 0;
         color: var(--kui-color-text-neutral, $kui-color-text-neutral-weak);
         content: counter(codeblock-line);
