@@ -19,7 +19,7 @@ export default function useShiki(): {
 
     shikiInstance.value = await createHighlighterCore({
       themes: [
-        import('shiki/themes/material-theme-lighter.mjs'),
+        import('shiki/themes/catppuccin-latte.mjs'),
         import('shiki/themes/material-theme-palenight.mjs'),
       ],
       langs: [
