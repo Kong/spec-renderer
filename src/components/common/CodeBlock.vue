@@ -47,7 +47,7 @@ const highlightedCode = computed(():string => {
     @include pre;
 
     border: none;
-    border-radius: 0;
+    border-radius: var(--kui-border-radius-0, $kui-border-radius-0);
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     margin: var(--kui-space-0, $kui-space-0);
     max-height: 300px;
