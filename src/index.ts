@@ -6,7 +6,7 @@ import SchemaRenderer from './components/extra-renderers/SchemaRenderer.vue'
 import { defineCustomElement } from 'vue'
 
 
-// Export vue plugin as the default
+// Export Vue plugin as the default
 export default {
   install: (app: App): void => {
     // Register All Elements
