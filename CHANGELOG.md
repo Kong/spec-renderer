@@ -1,3 +1,10 @@
+## [1.79.12](https://github.com/Kong/spec-renderer/compare/v1.79.11...v1.79.12) (2024-10-31)
+
+
+### Bug Fixes
+
+* force rebuild and publish to make sure CI works ([#392](https://github.com/Kong/spec-renderer/issues/392)) ([5ffc659](https://github.com/Kong/spec-renderer/commit/5ffc659486764e7ea7d344c4cbcd515b86149f0d))
+
 ## [1.79.11](https://github.com/Kong/spec-renderer/compare/v1.79.10...v1.79.11) (2024-10-31)
 
 
