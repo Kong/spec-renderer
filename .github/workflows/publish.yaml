@@ -17,11 +17,13 @@ jobs:
       steps:
         - name: Checkout
           uses: actions/checkout@v4
+          with:
+            token: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
         - name: Setup git
           run: |
-            git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
-            git config user.name "Kong UI Bot"
+            git config --global user.email "konnectx-engineers+kongponents-bot@konghq.com"
+            git config --global user.name 'kongponents-bot'
 
         - name: Create .npmrc
           env:
