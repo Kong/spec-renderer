@@ -1,3 +1,12 @@
+## [1.79.11](https://github.com/Kong/spec-renderer/compare/v1.79.10...v1.79.11) (2024-10-31)
+
+
+### Bug Fixes
+
+* checkout using bot token ([945b031](https://github.com/Kong/spec-renderer/commit/945b031d0df8f3b07edf677fcb8e1c6e170ebdf0))
+* **deps:** update dependency @scalar/openapi-parser to ^0.8.7 ([#391](https://github.com/Kong/spec-renderer/issues/391)) ([45555b8](https://github.com/Kong/spec-renderer/commit/45555b8feb9770087d477a2499d57dac1eaaf914))
+* force release ([#389](https://github.com/Kong/spec-renderer/issues/389)) ([1565292](https://github.com/Kong/spec-renderer/commit/1565292f50ca90073a357073f4c3f51d6ce65707))
+
 ## [1.79.10](https://github.com/Kong/spec-renderer/compare/v1.79.9...v1.79.10) (2024-10-30)
 
 
