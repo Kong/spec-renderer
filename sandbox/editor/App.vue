@@ -7,8 +7,15 @@
         class="language-selector"
         :items="[{ label: 'JSON', value: 'json' }, { label: 'YAML', value: 'yaml' }]"
       />
+      <button
+        class="upload-spec-file"
+        type="button"
+        @click="() => open()"
+      >
+        Upload spec file
+      </button>
     </header>
-    <main>
+    <main class="spec-container">
       <Editor
         v-model:value="code"
         :language="editorLanguage"
@@ -19,6 +26,7 @@
       <SpecRenderer
         class="spec-renderer"
         :control-address-bar="true"
+        document-scrolling-container=".spec-renderer-wrapper"
         :markdown-styles="true"
         :spec="specText"
       />
@@ -28,6 +36,7 @@
 
 <script setup lang="ts">
 import '@kong/spec-renderer-dev/dist/style.css'
+import { useFileDialog } from '@vueuse/core'
 import type { VueMonacoEditorEmitsOptions } from '@guolao/vue-monaco-editor'
 import { Editor } from '@guolao/vue-monaco-editor'
 import { ref, shallowRef } from 'vue'
@@ -48,20 +57,45 @@ const editorLanguage = ref('json')
 const code = ref(JSON.stringify(sampleSpec, null, 2))
 const specText = refDebounced(code, 700)
 const editor = shallowRef()
+
+const updateLanguage = () => {
+  if (code.value.length < 1) return
+
+  // simplest hack to detect if we have JSON or YAML
+  if (editorLanguage.value !== 'json' && (code.value.startsWith('{') || code.value.startsWith('['))) {
+    editorLanguage.value = 'json'
+  } else {
+    editorLanguage.value = 'yaml'
+  }
+}
+
 const handleMount: VueMonacoEditorEmitsOptions['mount'] = (editorInstance) => {
   editor.value = editorInstance
 
   // auto-detect language when new code is pasted
-  editor.value.onDidPaste(() => {
-    if (code.value.length > 0) {
-      if (editorLanguage.value !== 'json' && (code.value.startsWith('{') || code.value.startsWith('['))) {
-        editorLanguage.value = 'json'
-      } else {
-        editorLanguage.value = 'yaml'
+  editor.value.onDidPaste(updateLanguage)
+}
+
+const { open, onChange } = useFileDialog({
+  accept: 'yml, yaml, json',
+  multiple: false,
+})
+
+onChange((list) => {
+  const file = list?.[0]
+
+  if (file) {
+    const reader = new FileReader()
+    reader.readAsText(file, 'UTF-8')
+    reader.onload = (e) => {
+      if (e.target?.result) {
+        code.value = e.target.result.toString()
+        updateLanguage()
       }
     }
-  })
-}
+  }
+  /** do something with files */
+})
 </script>
 
 <style lang="scss" scoped>
@@ -90,16 +124,30 @@ const handleMount: VueMonacoEditorEmitsOptions['mount'] = (editorInstance) => {
 
     .language-selector {
       :deep(.trigger-button) {
-        border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+        border: $kui-border-width-10 solid $kui-color-border;
         color: $kui-color-text-inverse;
-        font-family: var(--kui-font-family-code, $kui-font-family-code);
-        font-size: var(--kui-font-size-20, $kui-font-size-20);
-        line-height: var(--kui-line-height-20, $kui-line-height-20);
-        padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
+        font-family: $kui-font-family-code;
+        font-size: $kui-font-size-20;
+        line-height: $kui-line-height-20;
+        padding: $kui-space-20 $kui-space-30;
+      }
+    }
 
-        @media (min-width: $kui-breakpoint-mobile) {
-          padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
-        }
+    .upload-spec-file {
+      background-color: $kui-color-background-transparent;
+      border: $kui-border-width-10 solid $kui-color-border;
+      border-radius: $kui-border-radius-20;
+      color: $kui-color-text-inverse;
+      cursor: pointer;
+      font-size: $kui-font-size-30;
+      padding: $kui-space-20 $kui-space-40;
+      transition: background-color 0.2s ease-in-out,
+        color 0.2s ease-in-out,
+        border-color 0.2s ease-in-out;
+
+      &:hover:not(:disabled):not(:focus):not(:active) {
+        background-color: $kui-color-background-primary-weakest;
+        color: $kui-color-text-primary-stronger;
       }
     }
   }
