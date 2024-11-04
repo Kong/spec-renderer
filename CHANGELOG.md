@@ -1,3 +1,10 @@
+## [1.79.14](https://github.com/Kong/spec-renderer/compare/v1.79.13...v1.79.14) (2024-11-04)
+
+
+### Bug Fixes
+
+* using correct path for upload-download artifacts ([#395](https://github.com/Kong/spec-renderer/issues/395)) ([66abbdf](https://github.com/Kong/spec-renderer/commit/66abbdf0e9a86261fef053b39432b94cf5972c08))
+
 ## [1.79.13](https://github.com/Kong/spec-renderer/compare/v1.79.12...v1.79.13) (2024-11-04)
 
 
