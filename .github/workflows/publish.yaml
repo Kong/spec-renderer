@@ -39,6 +39,7 @@ jobs:
           uses: actions/download-artifact@v4
           with:
             name: spec-renderer-build-output-artifact
+            path: ./dist
 
         - name: Semantic Release
           run: |
