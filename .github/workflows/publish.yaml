@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - fix/missing-dist-in-release
 
 jobs:
   run-tests:
@@ -38,11 +39,12 @@ jobs:
           uses: actions/download-artifact@v4
           with:
             name: spec-renderer-build-output-artifact
-            path: ./dist/**
 
         - name: Semantic Release
-          uses: cycjimmy/semantic-release-action@v4
-          env:
-            # Since branch protections are on (pushing commits) you need to use a bot PAT
-            GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
-            NPM_TOKEN: ${{ secrets.NPM_TOKEN_PRIVATE_PUBLISH }}
+          run: |
+            ls -lR dist/
+          # uses: cycjimmy/semantic-release-action@v4
+          # env:
+          #   # Since branch protections are on (pushing commits) you need to use a bot PAT
+          #   GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
+          #   NPM_TOKEN: ${{ secrets.NPM_TOKEN_PRIVATE_PUBLISH }}
