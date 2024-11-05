@@ -1,3 +1,10 @@
+## [1.79.16](https://github.com/Kong/spec-renderer/compare/v1.79.15...v1.79.16) (2024-11-05)
+
+
+### Bug Fixes
+
+* **use-server-list:** strip trailing slash from server URLs ([#398](https://github.com/Kong/spec-renderer/issues/398)) ([387478e](https://github.com/Kong/spec-renderer/commit/387478eeffcbfb83491b8f697f5e2f1dd3fc11d7))
+
 ## [1.79.15](https://github.com/Kong/spec-renderer/compare/v1.79.14...v1.79.15) (2024-11-05)
 
 
