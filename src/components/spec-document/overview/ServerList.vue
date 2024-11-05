@@ -70,7 +70,6 @@ import type { PropType, Ref } from 'vue'
 import OverviewPanel from './OverviewPanel.vue'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import { AddIcon } from '@kong/icons'
-import { removeTrailingSlash } from '@/utils'
 
 defineProps({
   serverList: {
@@ -91,7 +90,7 @@ const customURl = ref('')
 const handleAddCustomUrl = () => {
   if (!customURl.value.length) return
 
-  emit('add-custom-url', removeTrailingSlash(customURl.value))
+  emit('add-custom-url', customURl.value)
   clearCustomUrlInput()
 }
 

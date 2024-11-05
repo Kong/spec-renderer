@@ -394,10 +394,7 @@ watch(() => ({
     renderPlain.value = false
 
     // initialize the centralized state for server list
-    initialize({
-      newServerList: serviceNode.value?.data.servers || [],
-      newSelectedServerUrl: serviceNode.value?.data.servers?.[0]?.url || '',
-    })
+    initialize(serviceNode.value?.data.servers || [])
   }
 
   if (!props.allowContentScrolling) {
