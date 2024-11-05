@@ -5,9 +5,9 @@
   >
     <PageHeader
       class="http-model-header"
-      :description="data.description"
+      :description="activeSchemaModel.description"
       :title="title"
-      :type="data.type?.toString()"
+      :type="activeSchemaModel.type?.toString()"
     />
 
     <div class="http-model-content">

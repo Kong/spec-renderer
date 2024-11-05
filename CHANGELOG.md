@@ -1,3 +1,10 @@
+## [1.79.15](https://github.com/Kong/spec-renderer/compare/v1.79.14...v1.79.15) (2024-11-05)
+
+
+### Bug Fixes
+
+* allOf merge issues [KHCP-13450] ([#397](https://github.com/Kong/spec-renderer/issues/397)) ([b9a3e08](https://github.com/Kong/spec-renderer/commit/b9a3e081ed2e2d851dcdc5c7bedef5b8131e89ce))
+
 ## [1.79.14](https://github.com/Kong/spec-renderer/compare/v1.79.13...v1.79.14) (2024-11-04)
 
 
