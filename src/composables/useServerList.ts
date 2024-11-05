@@ -1,10 +1,11 @@
+import { computed, ref, shallowRef } from 'vue'
+import { removeTrailingSlash } from '@/utils/strings'
 import type { IServer } from '@stoplight/types'
-import { computed, shallowRef } from 'vue'
 
 type ServerList = Array<IServer>
 type SelectedServerUrl = string
 
-const serverList = shallowRef<ServerList>([])
+const serverList = ref<ServerList>([])
 const selectedServerUrl = shallowRef<SelectedServerUrl>('')
 
 /**
@@ -20,15 +21,14 @@ export default function useServerList() {
   /**
    * Initialize the centralized state for server list.
    */
-  const initialize = ({
-    newServerList,
-    newSelectedServerUrl,
-  }: {
-    newServerList: ServerList;
-    newSelectedServerUrl: SelectedServerUrl;
-  }) => {
-    serverList.value = newServerList
-    selectedServerUrl.value = newSelectedServerUrl
+  const initialize = (newServerList: ServerList) => {
+    // strip trailing slash from server urls
+    const filteredServerList = newServerList.map((server) => ({
+      ...server,
+      url: removeTrailingSlash(server.url),
+    }))
+    serverList.value = filteredServerList
+    selectedServerUrl.value = filteredServerList[0]?.url || ''
   }
 
   /**
@@ -36,7 +36,10 @@ export default function useServerList() {
    * Also generates a unique ID for the server, based on its index in the list.
    */
   const addServerUrl = (newServerUrl: string) => {
-    serverList.value.push({ id: serverList.value.length.toString(), url: newServerUrl })
+    serverList.value.push({
+      id: serverList.value.length.toString(),
+      url: removeTrailingSlash(newServerUrl),
+    })
   }
 
   /**
