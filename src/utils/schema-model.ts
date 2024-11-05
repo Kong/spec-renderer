@@ -26,7 +26,7 @@ export function filterSchemaObjectArray(candidate: unknown): Array<SchemaObject>
  * @returns {SchemaObject}
  */
 const resolveAllOf = (schema: SchemaObject): SchemaObject =>
-  Array.isArray(schema.allOf) && schema.allOf.length > 0
+  Array.isArray(schema?.allOf) && schema.allOf.length > 0
     ? (merge(schema) as SchemaObject)
     : schema
 
@@ -75,19 +75,22 @@ type SchemaPropertyFilterMethod = (property: SchemaObject) => boolean
 /**
  * Utility to filter out fields from a properties object based on the conditions in filterMethod
  */
-function filterSchemaProperties(propertiesObject: SchemaObject['properties'], filterMethod: SchemaPropertyFilterMethod): SchemaObject['properties'] {
-  if (!propertiesObject) return
+function filterSchemaProperties(
+  propertiesObject: SchemaObject['properties'],
+  filterMethod: SchemaPropertyFilterMethod,
+): NonNullable<SchemaObject['properties']> {
+  if (!propertiesObject) return {}
 
   const filteredObj: SchemaObject['properties'] = {}
 
   Object.keys(propertiesObject).forEach((key) => {
     const currentItem = propertiesObject[key]
     // we only need to operate on valid schema objects
-    if (!isValidSchemaObject(currentItem)) return
+    if (!isValidSchemaObject(currentItem)) return {}
 
     // If the current object fails the condition in filterMethod, we need to remove it
     if (filterMethod(currentItem)) {
-      return
+      return {}
     }
 
     /**
