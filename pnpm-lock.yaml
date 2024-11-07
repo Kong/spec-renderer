@@ -76,7 +76,7 @@ importers:
         version: 1.22.2
     devDependencies:
       '@babel/types':
-        specifier: ^7.25.9
+        specifier: ^7.26.0
         version: 7.26.0
       '@commitlint/cli':
         specifier: ^19.5.0
@@ -115,7 +115,7 @@ importers:
         specifier: ^14.1.2
         version: 14.1.2
       '@types/node':
-        specifier: ^22.7.9
+        specifier: ^22.8.1
         version: 22.8.5
       '@types/sanitize-html':
         specifier: ^2.13.0
@@ -169,7 +169,7 @@ importers:
         specifier: ^1.80.4
         version: 1.80.4
       semantic-release:
-        specifier: ^24.1.3
+        specifier: ^24.2.0
         version: 24.2.0(typescript@5.6.3)
       stylelint:
         specifier: ^16.10.0
@@ -316,10 +316,6 @@ packages:
 
   '@babel/helper-string-parser@7.25.9':
     resolution: {integrity: sha512-4A/SCr/2KLd5jrtOMFzaKjVtAei3+2r/NChoBNoZ3EyP/+GlhoaEGoWOZUmFmoITP7zOJyHIMm+DYRd8o3PvHA==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/helper-validator-identifier@7.25.7':
-    resolution: {integrity: sha512-AM6TzwYqGChO45oiuPqwL2t20/HdMC1rTPAesnBCgPCSF1x3oN9MVUwQV2iyz4xqWrctwK5RNC8LV22kaQCNYg==}
     engines: {node: '>=6.9.0'}
 
   '@babel/helper-validator-identifier@7.25.9':
@@ -5548,8 +5544,6 @@ snapshots:
 
   '@babel/helper-string-parser@7.25.9': {}
 
-  '@babel/helper-validator-identifier@7.25.7': {}
-
   '@babel/helper-validator-identifier@7.25.9': {}
 
   '@babel/helper-validator-option@7.24.8': {}
@@ -5561,7 +5555,7 @@ snapshots:
 
   '@babel/highlight@7.24.7':
     dependencies:
-      '@babel/helper-validator-identifier': 7.25.7
+      '@babel/helper-validator-identifier': 7.25.9
       chalk: 2.4.2
       js-tokens: 4.0.0
       picocolors: 1.1.0
