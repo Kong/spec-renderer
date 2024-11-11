@@ -36,11 +36,10 @@
 
 <script setup lang="ts">
 import '@kong/spec-renderer-dev/dist/style.css'
-import { useFileDialog } from '@vueuse/core'
+import { useFileDialog, refDebounced } from '@vueuse/core'
 import type { VueMonacoEditorEmitsOptions } from '@guolao/vue-monaco-editor'
 import { Editor } from '@guolao/vue-monaco-editor'
 import { ref, shallowRef } from 'vue'
-import { refDebounced } from '@vueuse/core'
 import SpecRenderer from '../../src/components/SpecRenderer.vue'
 import SelectDropdown from '../../src/components/common/SelectDropdown.vue'
 import sampleSpec from './sample.json'
@@ -77,7 +76,7 @@ const handleMount: VueMonacoEditorEmitsOptions['mount'] = (editorInstance) => {
 }
 
 const { open, onChange } = useFileDialog({
-  accept: 'yml, yaml, json',
+  accept: '.json, .yaml, .yml',
   multiple: false,
 })
 
@@ -94,7 +93,6 @@ onChange((list) => {
       }
     }
   }
-  /** do something with files */
 })
 </script>
 
