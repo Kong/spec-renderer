@@ -26,6 +26,8 @@ Max width of SlideOut container.
 
 ### `teleportTarget`
 
+Selector for teleport target to render slide out in. When no value is provided, the slide out is rendered as a direct child of `body` element.
+
 * type: `string`
 * required: `false`
 * default: `body`
