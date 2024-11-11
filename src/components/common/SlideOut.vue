@@ -1,5 +1,8 @@
 <template>
-  <Teleport :to="teleportTarget">
+  <Teleport
+    defer
+    :to="teleportTarget"
+  >
     <div
       v-bind="attrs"
       class="slideout"
