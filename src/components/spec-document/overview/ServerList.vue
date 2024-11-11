@@ -18,7 +18,7 @@
         >
           <span>Server {{ index + 1 }}:</span>
           <span>{{ server.url }}</span>
-          <span v-if="server.name"> [{{ server.name }}]</span>
+          <span v-if="server.name">[{{ server.name }}]</span>
           <MarkdownRenderer
             v-if="server.description"
             :markdown="server.description"
@@ -70,7 +70,6 @@ import type { PropType, Ref } from 'vue'
 import OverviewPanel from './OverviewPanel.vue'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import { AddIcon } from '@kong/icons'
-import { removeTrailingSlash } from '@/utils'
 
 defineProps({
   serverList: {
@@ -91,7 +90,7 @@ const customURl = ref('')
 const handleAddCustomUrl = () => {
   if (!customURl.value.length) return
 
-  emit('add-custom-url', removeTrailingSlash(customURl.value))
+  emit('add-custom-url', customURl.value)
   clearCustomUrlInput()
 }
 
@@ -122,13 +121,16 @@ const clearCustomUrlInput = () => {
     background-color: var(--kui-color-background, $kui-color-background);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kui-space-40, $kui-space-40);
     line-height: var(--kui-line-height-40, $kui-line-height-40);
+    overflow-wrap: anywhere;
     padding: var(--kui-space-50, $kui-space-50);
 
     > :first-child {
       color: var(--kui-color-text, $kui-color-text);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-      margin-right: var(--kui-space-40, $kui-space-40);
     }
   }
 

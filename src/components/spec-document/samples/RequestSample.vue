@@ -321,6 +321,9 @@ watch(() => ({
   .select-wrapper {
     display: flex;
     flex: 1;
+    flex-wrap: wrap;
+    gap: var(--kui-space-50, $kui-space-50);
+    justify-content: space-between;
 
     .language-selector {
       :deep(.trigger-button) {
@@ -330,7 +333,6 @@ watch(() => ({
     }
 
     .request-sample-selector {
-      margin-left: auto;
       place-self: center;
 
       :deep(.trigger-button) {
@@ -348,7 +350,7 @@ watch(() => ({
           max-width: 25ch;
         }
 
-        @media (min-width: $kui-breakpoint-tablet) {
+        @media (min-width: $kui-breakpoint-mobile) {
           max-width: 40ch;
         }
       }

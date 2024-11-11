@@ -23,6 +23,7 @@ import PropertyEnum from './property-fields/PropertyEnum.vue'
 import PropertyPattern from './property-fields/PropertyPattern.vue'
 import PropertyRange from './property-fields/PropertyRange.vue'
 import PropertyDefault from './property-fields/PropertyDefault.vue'
+import AdditionalProperties from './property-fields/AdditionalProperties.vue'
 
 const props = defineProps({
   property: {
@@ -159,6 +160,18 @@ const orderedFieldList = computed(() => {
       key: 'property-example',
     })
   }
+
+  if (!props.hiddenFieldList.includes('additional-properties') && typeof props.property.additionalProperties === 'boolean') {
+    fields.push({
+      component: AdditionalProperties,
+      props: {
+        additionalProperties: props.property.additionalProperties,
+      },
+      eventHandlers:{},
+      key: 'property-additional-properties',
+    })
+  }
+
   return fields
 })
 </script>

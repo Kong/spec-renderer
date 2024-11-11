@@ -124,6 +124,12 @@ const schema = {
   'description': "I'm a model's description.",
   'type': 'object',
   'title': 'Todo',
+  'example': {
+    'id': 1,
+    'name': 'Buy milk',
+    'completed': true,
+    'completed_at': '2021-01-01T00:00:00.000Z',
+  },
   'properties': {
     'id': {
       'type': 'number',

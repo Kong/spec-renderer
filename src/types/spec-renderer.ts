@@ -55,4 +55,4 @@ export interface ParseOptions {
 
 }
 
-export type SchemaModelPropertyField = 'info' | 'description' | 'enum' | 'pattern' | 'range' | 'example' | 'default'
+export type SchemaModelPropertyField = 'info' | 'description' | 'enum' | 'pattern' | 'range' | 'example' | 'default' | 'additional-properties'

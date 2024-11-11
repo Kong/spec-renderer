@@ -87,13 +87,10 @@ describe('<HttpOperation />', () => {
       }
 
       const { initialize } = composables.useServerList()
-      initialize({
-        serverList: [{
-          id: 'sample-server-id',
-          url: 'https://global.api.konghq.com/v2',
-        }],
-        selectedServerUrl: 'https://global.api.konghq.com/v2',
-      })
+      initialize([{
+        id: 'sample-server-id',
+        url: 'https://global.api.konghq.com/v2',
+      }])
 
       const wrapper = mount(HttpOperation, {
         props: {
@@ -115,10 +112,7 @@ describe('<HttpOperation />', () => {
 
 
       const { initialize } = composables.useServerList()
-      initialize({
-        serverList: [],
-        selectedServerUrl: '',
-      })
+      initialize([])
 
       const wrapper = mount(HttpOperation, {
         props: {
@@ -143,13 +137,10 @@ describe('<HttpOperation />', () => {
       }
 
       const { initialize } = composables.useServerList()
-      initialize({
-        serverList: [{
-          id: 'sample-server-id',
-          url: 'https://global.api.konghq.com/v2',
-        }],
-        selectedServerUrl: 'https://global.api.konghq.com/v2',
-      })
+      initialize([{
+        id: 'sample-server-id',
+        url: 'https://global.api.konghq.com/v2',
+      }])
 
       const wrapper = mount(HttpOperation, {
         props: {

@@ -1,3 +1,154 @@
+## [1.79.20](https://github.com/Kong/spec-renderer/compare/v1.79.19...v1.79.20) (2024-11-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.19.1 ([#405](https://github.com/Kong/spec-renderer/issues/405)) ([9b78f14](https://github.com/Kong/spec-renderer/commit/9b78f146ca842b7cae69d03bc78176060fb49740))
+
+## [1.79.19](https://github.com/Kong/spec-renderer/compare/v1.79.18...v1.79.19) (2024-11-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @asyncapi/parser to ^3.4.0 ([#404](https://github.com/Kong/spec-renderer/issues/404)) ([803db4a](https://github.com/Kong/spec-renderer/commit/803db4a26d20c74ddc59e60c9c2c2c012e133716))
+
+## [1.79.18](https://github.com/Kong/spec-renderer/compare/v1.79.17...v1.79.18) (2024-11-08)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @scalar/openapi-parser to ^0.8.8 ([#402](https://github.com/Kong/spec-renderer/issues/402)) ([5d05383](https://github.com/Kong/spec-renderer/commit/5d05383de00967dd4dc5d38c9539ac2ce2610282))
+
+## [1.79.17](https://github.com/Kong/spec-renderer/compare/v1.79.16...v1.79.17) (2024-11-06)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#399](https://github.com/Kong/spec-renderer/issues/399)) ([617421c](https://github.com/Kong/spec-renderer/commit/617421c7a070db5ba71e92d0f3d8c6fa5f47c063))
+
+## [1.79.16](https://github.com/Kong/spec-renderer/compare/v1.79.15...v1.79.16) (2024-11-05)
+
+
+### Bug Fixes
+
+* **use-server-list:** strip trailing slash from server URLs ([#398](https://github.com/Kong/spec-renderer/issues/398)) ([387478e](https://github.com/Kong/spec-renderer/commit/387478eeffcbfb83491b8f697f5e2f1dd3fc11d7))
+
+## [1.79.15](https://github.com/Kong/spec-renderer/compare/v1.79.14...v1.79.15) (2024-11-05)
+
+
+### Bug Fixes
+
+* allOf merge issues [KHCP-13450] ([#397](https://github.com/Kong/spec-renderer/issues/397)) ([b9a3e08](https://github.com/Kong/spec-renderer/commit/b9a3e081ed2e2d851dcdc5c7bedef5b8131e89ce))
+
+## [1.79.14](https://github.com/Kong/spec-renderer/compare/v1.79.13...v1.79.14) (2024-11-04)
+
+
+### Bug Fixes
+
+* using correct path for upload-download artifacts ([#395](https://github.com/Kong/spec-renderer/issues/395)) ([66abbdf](https://github.com/Kong/spec-renderer/commit/66abbdf0e9a86261fef053b39432b94cf5972c08))
+
+## [1.79.13](https://github.com/Kong/spec-renderer/compare/v1.79.12...v1.79.13) (2024-11-04)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.18.2 ([#394](https://github.com/Kong/spec-renderer/issues/394)) ([ad73aa2](https://github.com/Kong/spec-renderer/commit/ad73aa21dea9148c06b2891687ffb1c7f31734ee))
+
+## [1.79.12](https://github.com/Kong/spec-renderer/compare/v1.79.11...v1.79.12) (2024-10-31)
+
+
+### Bug Fixes
+
+* force rebuild and publish to make sure CI works ([#392](https://github.com/Kong/spec-renderer/issues/392)) ([5ffc659](https://github.com/Kong/spec-renderer/commit/5ffc659486764e7ea7d344c4cbcd515b86149f0d))
+
+## [1.79.11](https://github.com/Kong/spec-renderer/compare/v1.79.10...v1.79.11) (2024-10-31)
+
+
+### Bug Fixes
+
+* checkout using bot token ([945b031](https://github.com/Kong/spec-renderer/commit/945b031d0df8f3b07edf677fcb8e1c6e170ebdf0))
+* **deps:** update dependency @scalar/openapi-parser to ^0.8.7 ([#391](https://github.com/Kong/spec-renderer/issues/391)) ([45555b8](https://github.com/Kong/spec-renderer/commit/45555b8feb9770087d477a2499d57dac1eaaf914))
+* force release ([#389](https://github.com/Kong/spec-renderer/issues/389)) ([1565292](https://github.com/Kong/spec-renderer/commit/1565292f50ca90073a357073f4c3f51d6ce65707))
+
+## [1.79.10](https://github.com/Kong/spec-renderer/compare/v1.79.9...v1.79.10) (2024-10-30)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#377](https://github.com/Kong/spec-renderer/issues/377)) ([5ad6d98](https://github.com/Kong/spec-renderer/commit/5ad6d984e3697241449a17a7942d9063c38aeba1))
+* **deps:** update dependency @scalar/openapi-parser to ^0.8.6 ([#379](https://github.com/Kong/spec-renderer/issues/379)) ([b47c31a](https://github.com/Kong/spec-renderer/commit/b47c31a0c195fa2a7392e061de05786b5ef1b594))
+* **deps:** update dependency shiki to ^1.21.1 ([#373](https://github.com/Kong/spec-renderer/issues/373)) ([b8019c6](https://github.com/Kong/spec-renderer/commit/b8019c61edfb2cb3d74f321aaf13b4f81f52a0b2))
+* trigger deploy ([4fe6a22](https://github.com/Kong/spec-renderer/commit/4fe6a225677deff7bb3b8308587ce477b05a279e))
+
+
+### Reverts
+
+* token permissions ([db96716](https://github.com/Kong/spec-renderer/commit/db96716d3476766bb4f9391d0463e4b270cd251b))
+
+## [1.79.9](https://github.com/Kong/spec-renderer/compare/v1.79.8...v1.79.9) (2024-10-17)
+
+
+### Bug Fixes
+
+* infinite render loop during markdown parsing [KHCP-13730] ([#371](https://github.com/Kong/spec-renderer/issues/371)) ([643b9f4](https://github.com/Kong/spec-renderer/commit/643b9f4318f87a475f459bf39b3f05176ae125a3))
+
+## [1.79.8](https://github.com/Kong/spec-renderer/compare/v1.79.7...v1.79.8) (2024-10-17)
+
+
+### Bug Fixes
+
+* **httpsnippet:** bump package to fix SSR errors ([#367](https://github.com/Kong/spec-renderer/issues/367)) ([1fa462c](https://github.com/Kong/spec-renderer/commit/1fa462cf1231a2bd93e395512152f355b185cced))
+
+## [1.79.7](https://github.com/Kong/spec-renderer/compare/v1.79.6...v1.79.7) (2024-10-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @scalar/openapi-parser to ^0.8.5 ([#370](https://github.com/Kong/spec-renderer/issues/370)) ([48df3d0](https://github.com/Kong/spec-renderer/commit/48df3d019fb973f903d410f192c01d99f2d4cde1))
+
+## [1.79.6](https://github.com/Kong/spec-renderer/compare/v1.79.5...v1.79.6) (2024-10-16)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#366](https://github.com/Kong/spec-renderer/issues/366)) ([35acc89](https://github.com/Kong/spec-renderer/commit/35acc8931b1db8a4212744ff82c116b8db231e7c))
+
+## [1.79.5](https://github.com/Kong/spec-renderer/compare/v1.79.4...v1.79.5) (2024-10-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency shiki to ^1.21.0 ([#362](https://github.com/Kong/spec-renderer/issues/362)) ([a02f35d](https://github.com/Kong/spec-renderer/commit/a02f35dcbd7b75d62cc26d807d0a65e9e7e4c878))
+
+## [1.79.4](https://github.com/Kong/spec-renderer/compare/v1.79.3...v1.79.4) (2024-10-10)
+
+
+### Bug Fixes
+
+* mobile view fixes [KHCP-13491] ([#357](https://github.com/Kong/spec-renderer/issues/357)) ([d0f0824](https://github.com/Kong/spec-renderer/commit/d0f082424269df683794457d48bf8cada563561d))
+
+## [1.79.3](https://github.com/Kong/spec-renderer/compare/v1.79.2...v1.79.3) (2024-10-09)
+
+
+### Bug Fixes
+
+* **http-service:** update conditions to show additional info ([#360](https://github.com/Kong/spec-renderer/issues/360)) ([f0c39d5](https://github.com/Kong/spec-renderer/commit/f0c39d5e1fecd5ba78c34ea966fae3a7ad212874))
+* **schema-renderer:** hide example from proeprty-field-list if exampleVisible is false ([#356](https://github.com/Kong/spec-renderer/issues/356)) ([63cf2a9](https://github.com/Kong/spec-renderer/commit/63cf2a9c569be9e2a1e4c4e2f3c9dfcf0866dbd1))
+
+## [1.79.2](https://github.com/Kong/spec-renderer/compare/v1.79.1...v1.79.2) (2024-10-09)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @scalar/openapi-parser to ^0.8.4 ([#359](https://github.com/Kong/spec-renderer/issues/359)) ([b5e8207](https://github.com/Kong/spec-renderer/commit/b5e8207ba8f9be942a85a71fc1e3edda5e46fc23))
+
+## [1.79.1](https://github.com/Kong/spec-renderer/compare/v1.79.0...v1.79.1) (2024-10-08)
+
+
+### Bug Fixes
+
+* **deps:** update dependency shiki to ^1.19.0 ([#355](https://github.com/Kong/spec-renderer/issues/355)) ([591cf85](https://github.com/Kong/spec-renderer/commit/591cf85f7b473b9c2517bd3041889d0d0b6323ca))
+
 # [1.79.0](https://github.com/Kong/spec-renderer/compare/v1.78.1...v1.79.0) (2024-10-07)
 
 

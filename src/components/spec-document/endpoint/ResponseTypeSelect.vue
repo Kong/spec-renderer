@@ -71,6 +71,7 @@ function handleSelectInputChange(item: SelectItem, componentName: ResponseSelect
 .response-type-select {
   align-items: center;
   display: inline-flex;
+  flex-wrap: wrap;
   gap: var(--kui-space-40, $kui-space-40);
 
   :deep(.trigger-button) {

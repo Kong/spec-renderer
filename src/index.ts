@@ -6,7 +6,7 @@ import SchemaRenderer from './components/extra-renderers/SchemaRenderer.vue'
 import { defineCustomElement } from 'vue'
 
 
-// Export Vue plugin as the default
+// Export vue plugin as the default
 export default {
   install: (app: App): void => {
     // Register All Elements
@@ -17,10 +17,10 @@ export default {
   },
 }
 
-// we need to expose refs to parsed document/toc and parseSpecDocument method to outside word
+// We need to expose refs to parsed document/toc and parseSpecDocument method to outside word
 export * from './utils/schema-parser'
 
-// those are types that used in properties of components exposed to outside word
+// These are types that used in properties of components exposed to outside word
 export type { ServiceNode, NavigationTypes, ParseOptions, SchemaObject } from './types'
 export type { TableOfContentsItem } from '@kong/stoplight-http-spec/elements-core'
 

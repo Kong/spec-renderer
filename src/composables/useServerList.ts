@@ -1,47 +1,63 @@
+import { computed, ref, shallowRef } from 'vue'
+import { removeTrailingSlash } from '@/utils/strings'
 import type { IServer } from '@stoplight/types'
-import { computed, reactive, toRefs } from 'vue'
 
-interface ServerListState {
-  serverList: Array<IServer>
-  selectedServerUrl: string
-}
+type ServerList = Array<IServer>
+type SelectedServerUrl = string
 
-const state: ServerListState = reactive({
-  serverList: [],
-  selectedServerUrl: '',
-})
+const serverList = ref<ServerList>([])
+const selectedServerUrl = shallowRef<SelectedServerUrl>('')
 
 /**
  * Centralized state for server list.
  * Gets initialized In SpecDocument. Re-initialized whenever new document is loaded.
  *
- * Maintainst state for:
+ * Maintains state for:
  * - list of server urls
  * - selected server url
  */
-export default function useSyncState() {
+export default function useServerList() {
 
-  const { serverList, selectedServerUrl } = toRefs(state)
-
-  const initialize = ({ serverList, selectedServerUrl }: ServerListState) => {
-    state.serverList = serverList
-    state.selectedServerUrl = selectedServerUrl
+  /**
+   * Initialize the centralized state for server list.
+   */
+  const initialize = (newServerList: ServerList) => {
+    // strip trailing slash from server urls
+    const filteredServerList = newServerList.map((server) => ({
+      ...server,
+      url: removeTrailingSlash(server.url),
+    }))
+    serverList.value = filteredServerList
+    selectedServerUrl.value = filteredServerList[0]?.url || ''
   }
 
+  /**
+   * Add a new server to the list of servers in the state.
+   * Also generates a unique ID for the server, based on its index in the list.
+   */
   const addServerUrl = (newServerUrl: string) => {
-    state.serverList.push({ id: state.serverList.length.toString(), url: newServerUrl })
+    serverList.value.push({
+      id: serverList.value.length.toString(),
+      url: removeTrailingSlash(newServerUrl),
+    })
   }
 
+  /**
+   * Remove a server from the list of servers in the state, based on its URL.
+   */
   const removeServerUrl = (serverUrl: string) => {
-    state.serverList = state.serverList.filter(server => server.url !== serverUrl)
+    serverList.value = serverList.value.filter(server => server.url !== serverUrl)
   }
 
+  /**
+   * Get the list of server URLs from the state.
+   */
   const serverUrlList = computed(() => serverList.value?.map(server => server.url) ?? [])
 
   return {
     serverList,
-    serverUrlList,
     selectedServerUrl,
+    serverUrlList,
     initialize,
     addServerUrl,
     removeServerUrl,

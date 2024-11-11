@@ -18,13 +18,12 @@ jobs:
         - name: Checkout
           uses: actions/checkout@v4
           with:
-            fetch-depth: 0
             token: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
-        - name: setup git
+        - name: Setup git
           run: |
-            git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
-            git config user.name "Kong UI Bot"
+            git config --global user.email "konnectx-engineers+kongponents-bot@konghq.com"
+            git config --global user.name 'kongponents-bot'
 
         - name: Create .npmrc
           env:
@@ -35,9 +34,11 @@ jobs:
         - name: Setup PNPM with Dependencies
           uses: ./.github/actions/setup-pnpm-with-dependencies/
 
-        - name: Build
-          # Since we lint in the Tests job, we can just build here
-          run: pnpm run build
+        - name: Download Build Artifacts
+          uses: actions/download-artifact@v4
+          with:
+            name: spec-renderer-build-output-artifact
+            path: ./dist
 
         - name: Semantic Release
           uses: cycjimmy/semantic-release-action@v4

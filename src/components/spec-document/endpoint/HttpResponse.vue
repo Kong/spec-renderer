@@ -46,7 +46,14 @@ defineProps({
   .http-response-header {
     align-items: center;
     display: inline-flex;
+    flex-wrap: wrap;
     gap: var(--kui-space-50, $kui-space-50);
+  }
+
+  @media (max-width: $kui-breakpoint-mobile) {
+    :deep(.chevron-icon) {
+      align-self: baseline;
+    }
   }
 }
 </style>

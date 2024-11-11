@@ -134,11 +134,12 @@ function handleSelectChange(selecteditem: SelectItem) {
   }
 
   .property-title {
-    align-items: center;
-    display: inline-flex;
-    gap: var(--kui-space-50, $kui-space-50);
     height: var(--kui-icon-size-40, $kui-icon-size-40);
     margin-right: var(--kui-space-50, $kui-space-50);
+
+    > :not(:last-child) {
+      margin-right: var(--kui-space-50, $kui-space-50);
+    }
 
     .property-title-name  {
       color: var(--kui-color-text-primary, $kui-color-text-primary);
