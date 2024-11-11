@@ -27,7 +27,11 @@ export function filterSchemaObjectArray(candidate: unknown): Array<SchemaObject>
  */
 const resolveAllOf = (schema: SchemaObject): SchemaObject =>
   Array.isArray(schema?.allOf) && schema.allOf.length > 0
-    ? (merge(schema) as SchemaObject)
+    ? {
+      ...(merge(schema, { mergeCombinarySibling: true }) as SchemaObject),
+      // when merging combinary siblings, the title is lost, so we add it back
+      title: schema.title,
+    }
     : schema
 
 /**
@@ -63,8 +67,8 @@ export const resolveSchemaObjectFields = (candidate: unknown): SchemaObject => {
       return {}
     }
   }
-  const schema = resolveAllOf(candidate)
-  return schema
+
+  return resolveAllOf(candidate)
 }
 
 // only needed till we figure out how to add title field to anyOf/oneOf objects while parsing
