@@ -30,7 +30,7 @@ const resolveAllOf = (schema: SchemaObject): SchemaObject =>
     ? {
       ...(merge(schema, { mergeCombinarySibling: true }) as SchemaObject),
       // when merging combinary siblings, the title is lost, so we add it back
-      title: schema.title,
+      ...(schema.title ? { title: schema.title } : {}),
     }
     : schema
 
