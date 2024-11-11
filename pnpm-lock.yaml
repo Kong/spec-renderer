@@ -18,8 +18,8 @@ importers:
         specifier: ^3.0.24
         version: 3.0.24
       '@asyncapi/parser':
-        specifier: ^3.3.0
-        version: 3.3.0
+        specifier: ^3.4.0
+        version: 3.4.0
       '@floating-ui/vue':
         specifier: ^1.1.5
         version: 1.1.5(vue@3.5.12(typescript@5.6.3))
@@ -242,8 +242,8 @@ packages:
   '@asyncapi/openapi-schema-parser@3.0.24':
     resolution: {integrity: sha512-7wz2yVDedJMS+TzOuqCvRWJMc6pNHICKZcOhnW6ZvyVLAh7hYIqQE1WA4OoXT4cKVbwSU3V2Q4bZagSsAIQd6Q==}
 
-  '@asyncapi/parser@3.3.0':
-    resolution: {integrity: sha512-IqBeDU/YxiHP/ySPYR5ayT/EE2ad9V75v8lhcA2ZowRDKh1YvNJaDwTpJjmRuggg8328uSDc9x/YEy6KgRgcgw==}
+  '@asyncapi/parser@3.4.0':
+    resolution: {integrity: sha512-Sxn74oHiZSU6+cVeZy62iPZMFMvKp4jupMFHelSICCMw1qELmUHPvuZSr+ZHDmNGgHcEpzJM5HN02kR7T4g+PQ==}
 
   '@asyncapi/specs@6.8.0':
     resolution: {integrity: sha512-1i6xs8+IOh6U5T7yH+bCMGQBF+m7kP/NpwyAlt++XaDQutoGCgACf24mQBgcDVqDWWoY81evQv+9ABvw0BviVg==}
@@ -765,6 +765,12 @@ packages:
 
   '@jsdevtools/ono@7.1.3':
     resolution: {integrity: sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==}
+
+  '@jsep-plugin/assignment@1.3.0':
+    resolution: {integrity: sha512-VVgV+CXrhbMI3aSusQyclHkenWSAm95WaiKrMxRFam3JSUiIaQjoMIw2sEs/OX4XifnqeQUN4DYbJjlA8EfktQ==}
+    engines: {node: '>= 10.16.0'}
+    peerDependencies:
+      jsep: ^0.4.0||^1.0.0
 
   '@jsep-plugin/regex@1.0.3':
     resolution: {integrity: sha512-XfZgry4DwEZvSFtS/6Y+R48D7qJYJK6R9/yJFyUFHCIUMEEHuJ4X95TDgJp5QkmzfLYvapMPzskV5HpIDrREug==}
@@ -3271,16 +3277,17 @@ packages:
     resolution: {integrity: sha512-POQXvpdL69+CluYsillJ7SUhKvytYjW9vG/GKpnf+xP8UWgYEM/RaMzHHofbALDiKbbP1W8UEYmgGl39WkPZsg==}
     engines: {'0': node >= 0.2.0}
 
+  jsonpath-plus@10.1.0:
+    resolution: {integrity: sha512-gHfV1IYqH8uJHYVTs8BJX1XKy2/rR93+f8QQi0xhx95aCiXn1ettYAd5T+7FU6wfqyDoX/wy0pm/fL3jOKJ9Lg==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+
   jsonpath-plus@6.0.1:
     resolution: {integrity: sha512-EvGovdvau6FyLexFH2OeXfIITlgIbgZoAZe3usiySeaIDm5QS+A10DKNpaPBBqqRSZr2HN6HVNXxtwUAr2apEw==}
     engines: {node: '>=10.0.0'}
 
   jsonpath-plus@7.1.0:
     resolution: {integrity: sha512-gTaNRsPWO/K2KY6MrqaUFClF9kmuM6MFH5Dhg1VYDODgFbByw1yb7xu3hrViE/sz+dGOeMWgCzwUwQtAnCTE9g==}
-    engines: {node: '>=12.0.0'}
-
-  jsonpath-plus@7.2.0:
-    resolution: {integrity: sha512-zBfiUPM5nD0YZSBT/o/fbCUlCcepMIdP0CJZxM1+KgA4f2T206f6VAg9e7mX35+KlMaIc5qXW34f3BnwJ3w+RA==}
     engines: {node: '>=12.0.0'}
 
   jsonpointer@5.0.1:
@@ -5398,7 +5405,7 @@ snapshots:
 
   '@asyncapi/openapi-schema-parser@3.0.24':
     dependencies:
-      '@asyncapi/parser': 3.3.0
+      '@asyncapi/parser': 3.4.0
       '@openapi-contrib/openapi-schema-to-json-schema': 3.2.0
       ajv: 8.17.1
       ajv-errors: 3.0.0(ajv@8.17.1)
@@ -5406,7 +5413,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@asyncapi/parser@3.3.0':
+  '@asyncapi/parser@3.4.0':
     dependencies:
       '@asyncapi/specs': 6.8.0
       '@openapi-contrib/openapi-schema-to-json-schema': 3.2.0
@@ -5425,7 +5432,7 @@ snapshots:
       ajv-formats: 2.1.1
       avsc: 5.7.7
       js-yaml: 4.1.0
-      jsonpath-plus: 7.2.0
+      jsonpath-plus: 10.1.0
       node-fetch: 2.6.7
     transitivePeerDependencies:
       - encoding
@@ -5980,6 +5987,10 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
 
   '@jsdevtools/ono@7.1.3': {}
+
+  '@jsep-plugin/assignment@1.3.0(jsep@1.3.9)':
+    dependencies:
+      jsep: 1.3.9
 
   '@jsep-plugin/regex@1.0.3(jsep@1.3.9)':
     dependencies:
@@ -8991,12 +9002,16 @@ snapshots:
 
   jsonparse@1.3.1: {}
 
+  jsonpath-plus@10.1.0:
+    dependencies:
+      '@jsep-plugin/assignment': 1.3.0(jsep@1.3.9)
+      '@jsep-plugin/regex': 1.0.3(jsep@1.3.9)
+      jsep: 1.3.9
+
   jsonpath-plus@6.0.1:
     optional: true
 
   jsonpath-plus@7.1.0: {}
-
-  jsonpath-plus@7.2.0: {}
 
   jsonpointer@5.0.1: {}
 
