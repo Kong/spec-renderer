@@ -1,3 +1,10 @@
+## [1.79.19](https://github.com/Kong/spec-renderer/compare/v1.79.18...v1.79.19) (2024-11-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @asyncapi/parser to ^3.4.0 ([#404](https://github.com/Kong/spec-renderer/issues/404)) ([803db4a](https://github.com/Kong/spec-renderer/commit/803db4a26d20c74ddc59e60c9c2c2c012e133716))
+
 ## [1.79.18](https://github.com/Kong/spec-renderer/compare/v1.79.17...v1.79.18) (2024-11-08)
 
 
