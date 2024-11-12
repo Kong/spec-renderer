@@ -1,6 +1,6 @@
 <template>
   <Teleport
-    defer
+    :defer="teleportTarget === 'body' ? false : true"
     :to="teleportTarget"
   >
     <div
