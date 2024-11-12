@@ -1,3 +1,10 @@
+## [1.79.22](https://github.com/Kong/spec-renderer/compare/v1.79.21...v1.79.22) (2024-11-12)
+
+
+### Bug Fixes
+
+* **schema-model:** enable combinary sibling merging ([#406](https://github.com/Kong/spec-renderer/issues/406)) ([916366c](https://github.com/Kong/spec-renderer/commit/916366c0d46a830788cdbb8e2eff48d1aa2c0d9f))
+
 ## [1.79.21](https://github.com/Kong/spec-renderer/compare/v1.79.20...v1.79.21) (2024-11-12)
 
 
