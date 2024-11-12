@@ -1,135 +1,162 @@
 <template>
-  <div>
-    <div class="sandbox-controls-container">
-      <SampleSpecSelector
-        @sample-spec-selected="sampleSpecSelected"
-        @sample-spec-uploaded="sampleSpecUploaded"
+  <div class="spec-renderer-playground">
+    <header>
+      <h1>Kong Spec Renderer</h1>
+      <SelectDropdown
+        v-model="editorLanguage"
+        class="language-selector"
+        :items="[{ label: 'JSON', value: 'json' }, { label: 'YAML', value: 'yaml' }]"
       />
-      <div>
-        <input
-          id="hide-schemas"
-          v-model="hideSchemas"
-          type="checkbox"
-        >
-        <label for="hide-schemas">Hide schemas</label>
-        |
-        <input
-          id="hide-deprecated"
-          v-model="hideDeprecated"
-          type="checkbox"
-        >
-        <label for="hide-deprecated">Hide deprecated</label>
-        |
-        <input
-          id="hide-tryit"
-          v-model="hideTryIt"
-          type="checkbox"
-        >
-        <label for="hide-tryit">Hide TryIt</label>
-        |
-        <input
-          id="allow-content-scrolling"
-          v-model="allowContentScrolling"
-          type="checkbox"
-        >
-        <label for="allow-content-scrolling">Allow Content Scrolling</label>
-        |
-        <input
-          id="allow-custom-server-url"
-          v-model="allowCustomServerUrl"
-          type="checkbox"
-        >
-        <label for="allow-custom-server-url">Allow custom server url</label>
-        |
-        <input
-          id="default-md-styling"
-          v-model="markdownStyles"
-          type="checkbox"
-        >
-        <label for="default-md-styling">Default markdown styling</label>
-        |
-        <label for="navigation-type">Navigation: &nbsp;</label>
-        <select
-          id="navigation-type"
-          v-model="navigationType"
-        >
-          <option value="path">
-            path
-          </option>
-          <option value="hash">
-            hash
-          </option>
-        </select>
-      </div>
+      <button
+        class="upload-spec-file"
+        type="button"
+        @click="() => open()"
+      >
+        Upload spec file
+      </button>
+    </header>
+    <div class="spec-container">
+      <Editor
+        v-model:value="code"
+        :language="editorLanguage"
+        :options="MONACO_EDITOR_OPTIONS"
+        theme="vs-dark"
+        @mount="handleMount"
+      />
+      <SpecRenderer
+        class="spec-renderer"
+        :control-address-bar="true"
+        document-scrolling-container=".spec-renderer-wrapper"
+        :markdown-styles="true"
+        :spec="specText"
+      />
     </div>
-    <SpecRenderer
-      v-if="specText || specUrl"
-      :allow-content-scrolling="allowContentScrolling"
-      :allow-custom-server-url="allowCustomServerUrl"
-      base-path="/spec-renderer"
-      :control-address-bar="true"
-      :current-path="currentPath"
-      :hide-deprecated="hideDeprecated"
-      :hide-schemas="hideSchemas"
-      :hide-try-it="hideTryIt"
-      :markdown-styles="markdownStyles"
-      :navigation-type="navigationType"
-      :spec="specText"
-      :spec-url="specUrl"
-      :trace-parsing="true"
-      @path-not-found="handlePathNotFound"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import SampleSpecSelector from '../components/SampleSpecSelector.vue'
+import '@kong/spec-renderer-dev/dist/style.css'
+import { useFileDialog, refDebounced } from '@vueuse/core'
+import type { VueMonacoEditorEmitsOptions } from '@guolao/vue-monaco-editor'
+import { Editor } from '@guolao/vue-monaco-editor'
+import { ref, shallowRef } from 'vue'
 import SpecRenderer from '../../src/components/SpecRenderer.vue'
-import type { NavigationTypes } from '../../src/types'
-import { useRoute as useVueRoute } from 'vue-router'
+import SelectDropdown from '../../src/components/common/SelectDropdown.vue'
+import sampleSpec from '../sample-spec.json'
 
-const route = useVueRoute()
-
-const navigationType = ref<NavigationTypes>(route.hash ? 'hash' : 'path')
-
-const specText = ref<string>('')
-const specUrl = ref<string>('')
-const currentPath = ref<string>(navigationType.value === 'path' ? route.path : route.hash.replace('#', ''))
-const hideSchemas = ref<boolean>(false)
-const hideDeprecated = ref<boolean>(false)
-const hideTryIt = ref<boolean>(false)
-const allowContentScrolling = ref<boolean>(true)
-const markdownStyles = ref<boolean>(true)
-const allowCustomServerUrl = ref<boolean>(true)
-
-const handlePathNotFound = (requestedPath: string) => {
-  console.error(`@kong/spec-renderer: ${requestedPath} not found. App to redirect to it's own 404`)
+const MONACO_EDITOR_OPTIONS = {
+  theme: 'vs-dark',
+  automaticLayout: true,
+  formatOnType: true,
+  formatOnPaste: true,
+  minimap: { enabled: false },
 }
 
-const sampleSpecSelected = async (sampleSpecUrl: string, resetPath: boolean) => {
-  specText.value = ''
-  specUrl.value = sampleSpecUrl
-  if (resetPath) {
-    currentPath.value = '/'
+const editorLanguage = ref('json')
+const code = ref(JSON.stringify(sampleSpec, null, 2))
+const specText = refDebounced(code, 700)
+const editor = shallowRef()
+
+const updateLanguage = () => {
+  if (code.value.length < 1) return
+
+  // simplest hack to detect if we have JSON or YAML
+  if (editorLanguage.value !== 'json' && (code.value.startsWith('{') || code.value.startsWith('['))) {
+    editorLanguage.value = 'json'
+  } else {
+    editorLanguage.value = 'yaml'
   }
 }
 
-const sampleSpecUploaded = (sampleSpecText: string, resetPath: boolean) => {
-  specUrl.value = ''
-  specText.value = sampleSpecText
-  if (resetPath) {
-    currentPath.value = '/'
-  }
+const handleMount: VueMonacoEditorEmitsOptions['mount'] = (editorInstance) => {
+  editor.value = editorInstance
+
+  // auto-detect language when new code is pasted
+  editor.value.onDidPaste(updateLanguage)
 }
+
+const { open, onChange } = useFileDialog({
+  accept: '.json, .yaml, .yml',
+  multiple: false,
+})
+
+onChange((list) => {
+  const file = list?.[0]
+
+  if (file) {
+    const reader = new FileReader()
+    reader.readAsText(file, 'UTF-8')
+    reader.onload = (e) => {
+      if (e.target?.result) {
+        code.value = e.target.result.toString()
+        updateLanguage()
+      }
+    }
+  }
+})
 </script>
 
-<style land="scss" scoped>
-.sandbox-controls-container {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 16px 0;
+<style lang="scss" scoped>
+.spec-renderer-playground {
+  font-family: 'Inter', Helvetica, Arial, sans-serif;
+  $header-height: $kui-space-120;
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  header {
+    align-items: center;
+    background-color: $kui-color-background-neutral;
+    color: $kui-color-text-inverse;
+    display: flex;
+    gap: $kui-space-100;
+    height: $header-height;
+    padding: $kui-space-20 $kui-space-40;
+
+    h1 {
+      font-size: $kui-font-size-80;
+      line-height: $kui-line-height-60;
+    }
+
+    .language-selector {
+      :deep(.trigger-button) {
+        border: $kui-border-width-10 solid $kui-color-border;
+        color: $kui-color-text-inverse;
+        font-family: $kui-font-family-code;
+        font-size: $kui-font-size-20;
+        line-height: $kui-line-height-20;
+        padding: $kui-space-20 $kui-space-30;
+      }
+    }
+
+    .upload-spec-file {
+      background-color: $kui-color-background-transparent;
+      border: $kui-border-width-10 solid $kui-color-border;
+      border-radius: $kui-border-radius-20;
+      color: $kui-color-text-inverse;
+      cursor: pointer;
+      font-size: $kui-font-size-30;
+      padding: $kui-space-20 $kui-space-40;
+      transition: background-color 0.2s ease-in-out,
+        color 0.2s ease-in-out,
+        border-color 0.2s ease-in-out;
+
+      &:hover:not(:disabled):not(:focus):not(:active) {
+        background-color: $kui-color-background-primary-weakest;
+        color: $kui-color-text-primary-stronger;
+      }
+    }
+  }
+
+  .spec-container {
+    display: flex;
+    height: calc(100dvh - $header-height);
+    width: 100dvw;
+    .spec-renderer {
+      overflow: scroll;
+    }
+  }
 }
 </style>
