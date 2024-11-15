@@ -126,7 +126,7 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/styles';
+@use '@/styles/styles' as *;
 
 .slideout {
   .slideout-container {

@@ -2,4 +2,4 @@
  * Barrel file for styles
  */
 
-@import "./transitions";
+@use "./transitions" as *;

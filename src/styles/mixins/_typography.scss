@@ -1,3 +1,5 @@
+@use "@kong/design-tokens/tokens/scss/variables" as *;
+
 @mixin collapsible-section-title {
   color: var(--kui-color-text, $kui-color-text);
   font-size: var(--kui-font-size-30, $kui-font-size-30);

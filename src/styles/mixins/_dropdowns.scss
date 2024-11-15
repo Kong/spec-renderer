@@ -1,3 +1,6 @@
+@use "@kong/design-tokens/tokens/scss/variables" as *;
+@use "@/styles/mixins/common" as *;
+
 @mixin dropdown-item-container {
   align-items: center;
   color: var(--kui-color-text, $kui-color-text);

@@ -90,7 +90,7 @@ watch(()=>(props.item.initiallyExpanded), (newValue) => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/styles';
+@use '@/styles/styles' as *;
 
 @mixin group-spacing {
   display: flex;
