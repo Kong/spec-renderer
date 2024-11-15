@@ -23,10 +23,10 @@
     display: grid;
     gap: var(--kui-space-130, $kui-space-130);
     grid-template-columns: auto clamp(
-        $spec-renderer-secondary-column-min-width,
-        40%,
-        $spec-renderer-secondary-column-max-width
-      );
+      $spec-renderer-secondary-column-min-width,
+      40%,
+      $spec-renderer-secondary-column-max-width
+    );
     padding-top: var(--kui-space-40, $kui-space-40);
 
     @supports (container: inline-size) {
