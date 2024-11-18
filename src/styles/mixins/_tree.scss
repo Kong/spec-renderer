@@ -1,3 +1,5 @@
+@use "@kong/design-tokens/tokens/scss/variables" as *;
+
 @mixin tree-nesting {
   $branch-width: var(--kui-space-50, $kui-space-50);
   $left: calc(-1 * ($branch-width));
@@ -5,7 +7,7 @@
 
   margin-left: var(--kui-space-60, $kui-space-60);
 
-  >* {
+  > * {
     position: relative;
 
     &::before {

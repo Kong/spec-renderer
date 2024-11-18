@@ -102,7 +102,10 @@ export default defineConfig({
         api: 'modern-compiler',
         // Inject the @kong/design-tokens SCSS variables to make them available for all components.
         // This is not needed in host applications.
-        additionalData: '@use "sass:color";@import "@kong/design-tokens/tokens/scss/variables";@import "@/styles/mixins/mixins";@import "@/styles/variables";',
+        additionalData: `
+          @use "sass:color";
+          @use "@/styles/globals" as *;
+        `,
       },
     },
   },

@@ -1,3 +1,5 @@
+@use "@kong/design-tokens/tokens/scss/variables" as *;
+
 @mixin model-property-additional-field {
   color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
   font-size: var(--kui-font-size-20, $kui-font-size-20);

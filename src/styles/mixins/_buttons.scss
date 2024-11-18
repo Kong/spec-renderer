@@ -1,3 +1,5 @@
+@use "@kong/design-tokens/tokens/scss/variables" as *;
+
 @mixin default-button-reset {
   background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
   border: none;
@@ -10,7 +12,8 @@
   @include default-button-reset;
   align-items: center;
   background-color: var(--kui-color-background-primary, $kui-color-background-primary);
-  border: var(--kui-border-width-20, $kui-border-width-20) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
+  border: var(--kui-border-width-20, $kui-border-width-20) solid
+    var(--kui-color-border-transparent, $kui-color-border-transparent);
   border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   color: var(--kui-color-text-inverse, $kui-color-text-inverse);
   cursor: pointer;
@@ -22,7 +25,8 @@
   justify-content: center;
   line-height: var(--kui-line-height-30, $kui-line-height-30);
   padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
-  transition: background-color var(--kui-animation-duration-20, 0.2s) ease-in-out,
+  transition:
+    background-color var(--kui-animation-duration-20, 0.2s) ease-in-out,
     color var(--kui-animation-duration-20, 0.2s) ease-in-out,
     border-color var(--kui-animation-duration-20, 0.2s) ease-in-out;
   white-space: nowrap;
@@ -41,7 +45,8 @@
 
   &.secondary {
     background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-    border: var(--kui-border-width-20, $kui-border-width-20) solid var(--kui-color-border-primary, $kui-color-border-primary);
+    border: var(--kui-border-width-20, $kui-border-width-20) solid
+      var(--kui-color-border-primary, $kui-color-border-primary);
     color: var(--kui-color-text-primary, $kui-color-text-primary);
 
     &:hover:not(:disabled):not(:focus):not(:active) {
@@ -63,10 +68,10 @@
     }
   }
 
-
   &.tertiary {
     background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-    border: var(--kui-border-width-20, $kui-border-width-20) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
+    border: var(--kui-border-width-20, $kui-border-width-20) solid
+      var(--kui-color-border-transparent, $kui-color-border-transparent);
     color: var(--kui-color-text-primary, $kui-color-text-primary);
 
     &:hover:not(:disabled):not(:focus):not(:active) {
