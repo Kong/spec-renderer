@@ -1,3 +1,10 @@
+## [1.79.23](https://github.com/Kong/spec-renderer/compare/v1.79.22...v1.79.23) (2024-11-18)
+
+
+### Bug Fixes
+
+* sass [@import](https://github.com/import) to [@use](https://github.com/use) [KHCP-13755] ([#414](https://github.com/Kong/spec-renderer/issues/414)) ([664152f](https://github.com/Kong/spec-renderer/commit/664152fc90ec86b547d79688fc66156da485048a))
+
 ## [1.79.22](https://github.com/Kong/spec-renderer/compare/v1.79.21...v1.79.22) (2024-11-12)
 
 
