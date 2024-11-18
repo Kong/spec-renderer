@@ -4,7 +4,7 @@
     class="spec-renderer-playground"
   >
     <header>
-      <h1>Kong Spec Renderer</h1>
+      <h1>Kong Spec Renderer {{ isOverDropZone ? ' (drop zone)' : '' }}</h1>
       <SelectDropdown
         v-model="editorLanguage"
         class="language-selector"
@@ -41,6 +41,7 @@
         :spec="specText"
       />
     </div>
+    <DropzoneModal v-if="isOverDropZone" />
   </div>
 </template>
 
@@ -50,6 +51,7 @@ import { ref, shallowRef, useTemplateRef } from 'vue'
 import { refDebounced, useDropZone } from '@vueuse/core'
 import type { VueMonacoEditorEmitsOptions } from '@guolao/vue-monaco-editor'
 import { Editor } from '@guolao/vue-monaco-editor'
+import DropzoneModal from '../components/DropzoneModal.vue'
 import SpecRenderer from '../../src/components/SpecRenderer.vue'
 import SelectDropdown from '../../src/components/common/SelectDropdown.vue'
 import sampleSpec from '../sample-spec.json'
