@@ -213,10 +213,7 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
 
 
 const scrollingContainerEl = computed(():HTMLElement | null => {
-  if (!window || !document) {
-    return null
-  }
-  if (!props.documentScrollingContainer) {
+  if (typeof window === 'undefined' || typeof document === 'undefined' || !props.documentScrollingContainer) {
     return null
   }
   return document.querySelector(props.documentScrollingContainer)
