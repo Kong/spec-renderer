@@ -1,5 +1,8 @@
 <template>
-  <div class="spec-renderer-playground">
+  <div
+    ref="dropzone"
+    class="spec-renderer-playground"
+  >
     <header>
       <h1>Kong Spec Renderer</h1>
       <SelectDropdown
@@ -10,10 +13,17 @@
       <button
         class="upload-spec-file"
         type="button"
-        @click="() => open()"
+        @click="dropzoneClick()"
       >
-        Upload spec file
+        Upload or drop spec file
       </button>
+      <input
+        ref="fileInput"
+        accept=".json, .yaml, .yml"
+        style="position: absolute; visibility: hidden;"
+        type="file"
+        @change="fileUploaded"
+      >
     </header>
     <div class="spec-container">
       <Editor
@@ -36,10 +46,10 @@
 
 <script setup lang="ts">
 import '@kong/spec-renderer-dev/dist/style.css'
-import { useFileDialog, refDebounced } from '@vueuse/core'
+import { ref, shallowRef, useTemplateRef } from 'vue'
+import { refDebounced, useDropZone } from '@vueuse/core'
 import type { VueMonacoEditorEmitsOptions } from '@guolao/vue-monaco-editor'
 import { Editor } from '@guolao/vue-monaco-editor'
-import { ref, shallowRef } from 'vue'
 import SpecRenderer from '../../src/components/SpecRenderer.vue'
 import SelectDropdown from '../../src/components/common/SelectDropdown.vue'
 import sampleSpec from '../sample-spec.json'
@@ -56,6 +66,8 @@ const editorLanguage = ref('json')
 const code = ref(JSON.stringify(sampleSpec, null, 2))
 const specText = refDebounced(code, 700)
 const editor = shallowRef()
+const dropZoneRef = useTemplateRef('dropzone')
+const fileInputRef = useTemplateRef('fileInput')
 
 const updateLanguage = () => {
   if (code.value.length < 1) return
@@ -75,13 +87,19 @@ const handleMount: VueMonacoEditorEmitsOptions['mount'] = (editorInstance) => {
   editor.value.onDidPaste(updateLanguage)
 }
 
-const { open, onChange } = useFileDialog({
-  accept: '.json, .yaml, .yml',
-  multiple: false,
-})
+const dropzoneClick = () => {
+  fileInputRef.value?.click()
+}
 
-onChange((list) => {
-  const file = list?.[0]
+const fileUploaded = () => {
+  const file = fileInputRef.value?.files?.item(0)
+  if (file) {
+    onDrop([file])
+  }
+}
+
+function onDrop(files: File[] | null) {
+  const file = files?.[0]
 
   if (file) {
     const reader = new FileReader()
@@ -93,6 +111,14 @@ onChange((list) => {
       }
     }
   }
+}
+
+const { isOverDropZone } = useDropZone(dropZoneRef, {
+  onDrop,
+  dataTypes: ['application/x-yaml', 'application/json'],
+  multiple: false,
+  // whether to prevent default behavior for unhandled events
+  preventDefaultForUnhandled: false,
 })
 </script>
 
