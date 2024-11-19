@@ -24,6 +24,14 @@
         type="file"
         @change="fileUploaded"
       >
+      <SettingsModal
+        v-model:allow-content-scrolling="allowContentScrolling"
+        v-model:allow-custom-server-url="allowCustomServerUrl"
+        v-model:hide-deprecated="hideDeprecated"
+        v-model:hide-schemas="hideSchemas"
+        v-model:hide-try-it="hideTryIt"
+        v-model:markdown-styles="markdownStyles"
+      />
     </header>
     <div class="spec-container">
       <Editor
@@ -34,10 +42,15 @@
         @mount="handleMount"
       />
       <SpecRenderer
+        :allow-content-scrolling="allowContentScrolling"
+        :allow-custom-server-url="allowCustomServerUrl"
         class="spec-renderer"
         :control-address-bar="true"
         document-scrolling-container=".spec-renderer-wrapper"
-        :markdown-styles="true"
+        :hide-deprecated="hideDeprecated"
+        :hide-schemas="hideSchemas"
+        :hide-try-it="hideTryIt"
+        :markdown-styles="markdownStyles"
         :spec="specText"
       />
     </div>
@@ -52,6 +65,7 @@ import { refDebounced, useDropZone } from '@vueuse/core'
 import type { VueMonacoEditorEmitsOptions } from '@guolao/vue-monaco-editor'
 import { Editor } from '@guolao/vue-monaco-editor'
 import DropzoneModal from '../components/DropzoneModal.vue'
+import SettingsModal from '../components/SettingsModal.vue'
 import SpecRenderer from '../../src/components/SpecRenderer.vue'
 import SelectDropdown from '../../src/components/common/SelectDropdown.vue'
 import sampleSpec from '../sample-spec.json'
@@ -68,8 +82,16 @@ const editorLanguage = ref('json')
 const code = ref(JSON.stringify(sampleSpec, null, 2))
 const specText = refDebounced(code, 700)
 const editor = shallowRef()
+
 const dropZoneRef = useTemplateRef('dropzone')
 const fileInputRef = useTemplateRef('fileInput')
+
+const hideSchemas = ref<boolean>(false)
+const hideDeprecated = ref<boolean>(false)
+const hideTryIt = ref<boolean>(false)
+const allowContentScrolling = ref<boolean>(true)
+const markdownStyles = ref<boolean>(true)
+const allowCustomServerUrl = ref<boolean>(true)
 
 const updateLanguage = () => {
   if (code.value.length < 1) return
@@ -160,6 +182,7 @@ const { isOverDropZone } = useDropZone(dropZoneRef, {
     }
 
     .upload-spec-file {
+      @include default-button-reset;
       background-color: $kui-color-background-transparent;
       border: $kui-border-width-10 solid $kui-color-border;
       border-radius: $kui-border-radius-20;
