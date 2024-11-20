@@ -97,7 +97,7 @@ const updateLanguage = () => {
   if (code.value.length < 1) return
 
   // simplest hack to detect if we have JSON or YAML
-  if (editorLanguage.value !== 'json' && (code.value.startsWith('{') || code.value.startsWith('['))) {
+  if (code.value.startsWith('{') || code.value.startsWith('[')) {
     editorLanguage.value = 'json'
   } else {
     editorLanguage.value = 'yaml'
