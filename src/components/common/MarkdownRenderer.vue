@@ -242,6 +242,16 @@ const markdownStyles = inject<Ref<boolean>>('markdown-styles', ref(true))
         vertical-align: text-top;
       }
     }
+
+    details {
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      line-height: var(--kui-line-height-30, $kui-line-height-30);
+
+      >summary {
+        cursor: pointer;
+        padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
+      }
+    }
   }
 }
 </style>
