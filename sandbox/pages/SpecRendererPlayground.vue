@@ -33,37 +33,47 @@
         v-model:markdown-styles="markdownStyles"
       />
     </header>
-    <div class="spec-container">
-      <Editor
-        v-model:value="code"
-        :language="editorLanguage"
-        :options="MONACO_EDITOR_OPTIONS"
-        theme="vs-dark"
-        @mount="handleMount"
-      />
-      <SpecRenderer
-        :allow-content-scrolling="allowContentScrolling"
-        :allow-custom-server-url="allowCustomServerUrl"
-        class="spec-renderer"
-        :control-address-bar="true"
-        document-scrolling-container=".spec-renderer-wrapper"
-        :hide-deprecated="hideDeprecated"
-        :hide-schemas="hideSchemas"
-        :hide-try-it="hideTryIt"
-        :markdown-styles="markdownStyles"
-        :spec="specText"
-      />
-    </div>
+    <splitpanes class="spec-container default-theme">
+      <pane
+        max-size="70"
+        min-size="10"
+      >
+        <Editor
+          v-model:value="code"
+          :language="editorLanguage"
+          :options="MONACO_EDITOR_OPTIONS"
+          theme="vs-dark"
+          @mount="handleMount"
+        />
+      </pane>
+      <pane class="spec-renderer-pane">
+        <SpecRenderer
+          :allow-content-scrolling="allowContentScrolling"
+          :allow-custom-server-url="allowCustomServerUrl"
+          base-path="/spec-renderer"
+          class="spec-renderer"
+          :control-address-bar="true"
+          document-scrolling-container=".spec-renderer-pane"
+          :hide-deprecated="hideDeprecated"
+          :hide-schemas="hideSchemas"
+          :hide-try-it="hideTryIt"
+          :markdown-styles="markdownStyles"
+          :spec="specText"
+        />
+      </pane>
+    </splitpanes>
     <DropzoneModal v-if="isOverDropZone" />
   </div>
 </template>
 
 <script setup lang="ts">
 import '@kong/spec-renderer-dev/dist/style.css'
+import 'splitpanes/dist/splitpanes.css'
 import { ref, shallowRef, useTemplateRef } from 'vue'
 import { refDebounced, useDropZone } from '@vueuse/core'
 import type { VueMonacoEditorEmitsOptions } from '@guolao/vue-monaco-editor'
 import { Editor } from '@guolao/vue-monaco-editor'
+import { Splitpanes, Pane } from 'splitpanes'
 import DropzoneModal from '../components/DropzoneModal.vue'
 import SettingsModal from '../components/SettingsModal.vue'
 import SpecRenderer from '../../src/components/SpecRenderer.vue'
@@ -201,13 +211,29 @@ const { isOverDropZone } = useDropZone(dropZoneRef, {
     }
   }
 
-  .spec-container {
-    display: flex;
+  .spec-container.default-theme {
     height: calc(100dvh - $header-height);
     width: 100dvw;
-    .spec-renderer {
-      overflow: scroll;
+
+    .splitpanes__pane {
+      background-color: $kui-color-background-transparent;
+      overflow: auto;
     }
+
+    .splitpanes__splitter {background-color: #ccc;position: relative;}
+    .splitpanes__splitter:before {
+      background-color: rgba(255, 0, 0, 0.3);
+      content: '';
+      left: 0;
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      transition: opacity 0.4s;
+      z-index: 1;
+    }
+    .splitpanes__splitter:hover:before {opacity: 1;}
+    .splitpanes--vertical > .splitpanes__splitter:before {height: 100%;left: -30px;right: -30px;}
+    .splitpanes--horizontal > .splitpanes__splitter:before {bottom: -30px;top: -30px;width: 100%;}
   }
 }
 </style>
