@@ -96,7 +96,7 @@
     "@vitejs/plugin-vue": "^5.1.5",
     "@vitest/ui": "^2.1.4",
     "@vue/test-utils": "^2.4.6",
-    "@vue/tsconfig": "^0.5.1",
+    "@vue/tsconfig": "^0.6.0",
     "autoprefixer": "^10.4.20",
     "c8": "^10.1.2",
     "commitizen": "^4.3.1",
