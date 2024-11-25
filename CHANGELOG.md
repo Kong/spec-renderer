@@ -1,3 +1,10 @@
+# [1.80.0](https://github.com/Kong/spec-renderer/compare/v1.79.26...v1.80.0) (2024-11-25)
+
+
+### Features
+
+* **markdown-renderer:** support summary tag with some defaults tyling ([#419](https://github.com/Kong/spec-renderer/issues/419)) ([556f0b1](https://github.com/Kong/spec-renderer/commit/556f0b17958e8c2cc4b377ee5ff919c3ae0ec1dd))
+
 ## [1.79.26](https://github.com/Kong/spec-renderer/compare/v1.79.25...v1.79.26) (2024-11-25)
 
 
