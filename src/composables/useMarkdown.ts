@@ -26,7 +26,7 @@ export default function useMarkdown() {
     try {
       const renderedText = md?.render(text) || text
       return sanitize(renderedText, {
-        allowedTags: sanitize.defaults.allowedTags.concat(['img', 'details']),
+        allowedTags: sanitize.defaults.allowedTags.concat(['img', 'details', 'summary']),
       })
     } catch (error) {
       return text
