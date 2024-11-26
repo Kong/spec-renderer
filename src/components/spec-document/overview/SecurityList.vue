@@ -32,7 +32,7 @@ import { LockIcon } from '@kong/icons'
 import OverviewPanel from './OverviewPanel.vue'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import OverviewCollapsiblePanel from './OverviewCollapsiblePanel.vue'
-import { getDefaultDescription } from '@kong/stoplight-http-spec/elements-core'
+import { getDefaultDescription } from '@/stoplight/elements-core'
 
 defineProps({
   securitySchemeList: {

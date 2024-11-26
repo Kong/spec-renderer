@@ -22,7 +22,7 @@ import type { PropType, Ref } from 'vue'
 import { itemComponent } from './index'
 import { useScroll } from '@vueuse/core'
 import type { NavigationTypes } from '@/types'
-import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '@kong/stoplight-http-spec/elements-core'
+import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '@/stoplight/elements-core'
 import { BOOL_VALIDATOR, IS_TRUE } from '@/utils'
 import { parse as parseFlatted } from 'flatted'
 

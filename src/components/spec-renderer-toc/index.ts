@@ -4,7 +4,7 @@ import type {
   TableOfContentsNodeGroup,
   TableOfContentsGroup,
   TableOfContentsExternalLink,
-} from '@kong/stoplight-http-spec/elements-core'
+} from '@/stoplight/elements-core'
 
 import UnknownItem from './UnknownItem.vue'
 import NodeItem from './NodeItem.vue'

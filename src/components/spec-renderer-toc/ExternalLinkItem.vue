@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import type { TableOfContentsNodeGroup } from '@kong/stoplight-http-spec/elements-core'
+import type { TableOfContentsNodeGroup } from '@/stoplight/elements-core'
 
 defineProps({
   item: {
