@@ -48,11 +48,11 @@ const highlightedCode = computed(():string => {
 
     border: none;
     border-radius: var(--kui-border-radius-0, $kui-border-radius-0);
+    background: var(--kui-color-background-primary-weaker, $kui-color-background-neutral-weaker) !important;
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     margin: var(--kui-space-0, $kui-space-0);
     max-height: 300px;
     overflow-y: auto;
-    background: var(--kui-color-background-primary-weaker, $kui-color-background-neutral-weaker) !important;
     padding: var(--kui-space-40, $kui-space-40);
     white-space: break-spaces;
 
