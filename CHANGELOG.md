@@ -1,3 +1,10 @@
+## [1.80.2](https://github.com/Kong/spec-renderer/compare/v1.80.1...v1.80.2) (2024-11-26)
+
+
+### Bug Fixes
+
+* remove async and stoplight sandboxes [KHCP-14229] ([#422](https://github.com/Kong/spec-renderer/issues/422)) ([808e47f](https://github.com/Kong/spec-renderer/commit/808e47fb9673a5799741107e1f1915f6c90861c1))
+
 ## [1.80.1](https://github.com/Kong/spec-renderer/compare/v1.80.0...v1.80.1) (2024-11-26)
 
 
