@@ -52,6 +52,7 @@ const highlightedCode = computed(():string => {
     margin: var(--kui-space-0, $kui-space-0);
     max-height: 300px;
     overflow-y: auto;
+    background: var(--kui-color-background-primary-weaker, $kui-color-background-neutral-weaker) !important;
     padding: var(--kui-space-40, $kui-space-40);
     white-space: break-spaces;
 
