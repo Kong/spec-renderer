@@ -46,7 +46,7 @@ const highlightedCode = computed(():string => {
   :deep(pre) {
     @include pre;
 
-    background: var(--kui-color-background-primary-weaker, $kui-color-background-neutral-weaker) !important;
+    background: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker) !important;
     border: none;
     border-radius: var(--kui-border-radius-0, $kui-border-radius-0);
     font-size: var(--kui-font-size-20, $kui-font-size-20);
