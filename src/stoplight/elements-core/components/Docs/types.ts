@@ -1,3 +1,4 @@
+// @ts-nocheck external file
 export type TableOfContentsProps = {
   tree: TableOfContentsItem[];
   activeId: string;
@@ -5,12 +6,12 @@ export type TableOfContentsProps = {
   externalScrollbar?: boolean;
   isInResponsiveMode?: boolean;
   onLinkClick?(): void;
-};
+}
 
 export type TableOfContentsExternalLink = {
   title: string;
   url: string;
-};
+}
 
 export type TableOfContentsNode<
   T = 'http_service' | 'http_operation' | 'http_webhook' | 'model' | 'article' | 'overview',
@@ -22,9 +23,9 @@ export type TableOfContentsNode<
   meta: string;
   version?: string;
   deprecated?: boolean;
-};
+}
 
-export type TableOfContentsNodeGroup = TableOfContentsNode<'http_service'> & TableOfContentsGroup;
+export type TableOfContentsNodeGroup = TableOfContentsNode<'http_service'> & TableOfContentsGroup
 
 export type TableOfContentsGroup = {
   title: string;
@@ -36,12 +37,12 @@ export type TableOfContentsGroup = {
    * e.g. when the group contains the active item.
    */
   initiallyExpanded: boolean;
-};
+}
 
 export type TableOfContentsGroupItem =
   | TableOfContentsGroup
   | TableOfContentsNodeGroup
   | TableOfContentsNode
-  | TableOfContentsExternalLink;
+  | TableOfContentsExternalLink
 
-export type TableOfContentsItem = TableOfContentsGroupItem;
+export type TableOfContentsItem = TableOfContentsGroupItem

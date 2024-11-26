@@ -1,5 +1,5 @@
-import type { ISourceNodeMap } from './types';
-import { NodeTypes } from './types';
+import type { ISourceNodeMap } from './types'
+import { NodeTypes } from './types'
 
 export const oas2SourceMap: ISourceNodeMap[] = [
   {
@@ -29,4 +29,4 @@ export const oas2SourceMap: ISourceNodeMap[] = [
       },
     ],
   },
-];
+]

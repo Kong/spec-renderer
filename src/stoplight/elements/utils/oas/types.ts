@@ -1,5 +1,5 @@
-import type { IHttpOperation, IHttpService, IHttpWebhookOperation, NodeType } from '@stoplight/types';
-import type { JSONSchema7 } from 'json-schema';
+import type { IHttpOperation, IHttpService, IHttpWebhookOperation, NodeType } from '@stoplight/types'
+import type { JSONSchema7 } from 'json-schema'
 
 export enum NodeTypes {
   Paths = 'paths',
@@ -25,7 +25,7 @@ export type Node<T, D> = {
   name: string;
   data: D;
   tags: string[];
-};
+}
 
 export enum SpecVersion {
   OAS2 = 'OAS 2.0',
@@ -34,10 +34,10 @@ export enum SpecVersion {
   ASYNC = 'ASYNC',
 }
 
-export type OperationNode = Node<NodeType.HttpOperation, IHttpOperation>;
-export type WebhookNode = Node<NodeType.HttpWebhook, IHttpWebhookOperation>;
-export type SchemaNode = Node<NodeType.Model, JSONSchema7>;
-export type ServiceChildNode = OperationNode | WebhookNode | SchemaNode;
+export type OperationNode = Node<NodeType.HttpOperation, IHttpOperation>
+export type WebhookNode = Node<NodeType.HttpWebhook, IHttpWebhookOperation>
+export type SchemaNode = Node<NodeType.Model, JSONSchema7>
+export type ServiceChildNode = OperationNode | WebhookNode | SchemaNode
 export type ServiceNode = Node<NodeType.HttpService, IHttpService> & { children: ServiceChildNode[] } & {
   specVersion: SpecVersion;
-};
+}

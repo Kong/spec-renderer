@@ -1,72 +1,72 @@
 // @ts-nocheck external file
-import { NodeType } from '@stoplight/types';
+import { NodeType } from '@stoplight/types'
 
-import type { ServiceChildNode, ServiceNode } from '@/types';
+import type { ServiceChildNode, ServiceNode } from '@/types'
 
-import type { TableOfContentsGroup, TableOfContentsItem } from '../../../elements-core/components/Docs/types';
-import { isHttpOperation, isHttpService, isHttpWebhookOperation } from '../../../elements-core/utils/guards';
-import type { OperationNode, SchemaNode, WebhookNode } from '../../utils/oas/types';
+import type { TableOfContentsGroup, TableOfContentsItem } from '../../../elements-core/components/Docs/types'
+import { isHttpOperation, isHttpService, isHttpWebhookOperation } from '../../../elements-core/utils/guards'
+import type { OperationNode, SchemaNode, WebhookNode } from '../../utils/oas/types'
 
-const defaults = (...args) => args.reverse().reduce((acc, obj) => ({ ...acc, ...obj }), {});
+const defaults = (...args) => args.reverse().reduce((acc, obj) => ({ ...acc, ...obj }), {})
 
-type GroupableNode = OperationNode | WebhookNode | SchemaNode;
+type GroupableNode = OperationNode | WebhookNode | SchemaNode
 
-export type TagGroup<T extends GroupableNode> = { title: string; items: T[]; initiallyExpanded: boolean };
+export type TagGroup<T extends GroupableNode> = { title: string; items: T[]; initiallyExpanded: boolean }
 
 export function computeTagGroups<T extends GroupableNode>(
   serviceNode: ServiceNode,
   nodeType: T['type'],
   currentPath: string,
 ) {
-  const groupsByTagId: { [tagId: string]: TagGroup<T> } = {};
-  const ungrouped: T[] = [];
+  const groupsByTagId: { [tagId: string]: TagGroup<T> } = {}
+  const ungrouped: T[] = []
 
-  const lowerCaseServiceTags = serviceNode.tags.map(tn => tn.toLowerCase());
+  const lowerCaseServiceTags = serviceNode.tags.map(tn => tn.toLowerCase())
 
-  const groupableNodes = serviceNode.children.filter(n => n.type === nodeType) as T[];
+  const groupableNodes = serviceNode.children.filter(n => n.type === nodeType) as T[]
 
   for (const node of groupableNodes) {
-    const tagName = node.tags[0];
+    const tagName = node.tags[0]
 
     if (tagName) {
-      const tagId = tagName.toLowerCase();
+      const tagId = tagName.toLowerCase()
       if (groupsByTagId[tagId]) {
-        groupsByTagId[tagId].items.push(node);
+        groupsByTagId[tagId].items.push(node)
         groupsByTagId[tagId].initiallyExpanded = groupsByTagId[tagId].initiallyExpanded
           ? true
-          : node.uri === currentPath;
+          : node.uri === currentPath
       } else {
-        const serviceTagIndex = lowerCaseServiceTags.findIndex(tn => tn === tagId);
-        const serviceTagName = serviceNode.tags[serviceTagIndex];
+        const serviceTagIndex = lowerCaseServiceTags.findIndex(tn => tn === tagId)
+        const serviceTagName = serviceNode.tags[serviceTagIndex]
         groupsByTagId[tagId] = {
           title: serviceTagName || tagName,
           items: [node],
           initiallyExpanded: node.uri === currentPath,
-        };
+        }
       }
     } else {
-      ungrouped.push(node);
+      ungrouped.push(node)
     }
   }
 
   const orderedTagGroups = Object.entries(groupsByTagId)
     .sort(([g1], [g2]) => {
-      const g1LC = g1.toLowerCase();
-      const g2LC = g2.toLowerCase();
-      const g1Idx = lowerCaseServiceTags.findIndex(tn => tn === g1LC);
-      const g2Idx = lowerCaseServiceTags.findIndex(tn => tn === g2LC);
+      const g1LC = g1.toLowerCase()
+      const g2LC = g2.toLowerCase()
+      const g1Idx = lowerCaseServiceTags.findIndex(tn => tn === g1LC)
+      const g2Idx = lowerCaseServiceTags.findIndex(tn => tn === g2LC)
 
       // Move not-tagged groups to the bottom
-      if (g1Idx < 0 && g2Idx < 0) return 0;
-      if (g1Idx < 0) return 1;
-      if (g2Idx < 0) return -1;
+      if (g1Idx < 0 && g2Idx < 0) return 0
+      if (g1Idx < 0) return 1
+      if (g2Idx < 0) return -1
 
       // sort tagged groups according to the order found in HttpService
-      return g1Idx - g2Idx;
+      return g1Idx - g2Idx
     })
-    .map(([, tagGroup]) => tagGroup);
+    .map(([, tagGroup]) => tagGroup)
 
-  return { groups: orderedTagGroups, ungrouped };
+  return { groups: orderedTagGroups, ungrouped }
 }
 
 interface ComputeAPITreeConfig {
@@ -81,11 +81,11 @@ const defaultComputerAPITreeConfig = {
   hideInternal: false,
   hideDeprecated: false,
   currentPath: '',
-};
+}
 
 export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeConfig = {}) => {
-  const mergedConfig = defaults(config, defaultComputerAPITreeConfig);
-  const tree: TableOfContentsItem[] = [];
+  const mergedConfig = defaults(config, defaultComputerAPITreeConfig)
+  const tree: TableOfContentsItem[] = []
 
   tree.push({
     id: '/',
@@ -93,22 +93,22 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
     title: 'Overview',
     type: 'overview',
     meta: '',
-  });
+  })
 
-  const hasOperationNodes = serviceNode.children.some(node => node.type === NodeType.HttpOperation);
+  const hasOperationNodes = serviceNode.children.some(node => node.type === NodeType.HttpOperation)
   if (hasOperationNodes) {
     const { groups, ungrouped } = computeTagGroups<OperationNode>(
       serviceNode,
       NodeType.HttpOperation,
       mergedConfig.currentPath,
-    );
+    )
 
     tree.push({
       title: 'Endpoints',
       items: [],
       hideTitle: mergedConfig.hideSchemas,
       initiallyExpanded: true, // Endpoints are always expanded by default
-    });
+    })
 
     addTagGroupsToTree({
       groups,
@@ -117,15 +117,15 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
       itemsType: NodeType.HttpOperation,
       hideInternal: mergedConfig.hideInternal,
       hideDeprecated: mergedConfig.hideDeprecated,
-    });
+    })
   }
 
-  const hasWebhookNodes = serviceNode.children.some(node => node.type === NodeType.HttpWebhook);
+  const hasWebhookNodes = serviceNode.children.some(node => node.type === NodeType.HttpWebhook)
   const { groups, ungrouped } = computeTagGroups<WebhookNode>(
     serviceNode,
     NodeType.HttpWebhook,
     mergedConfig.currentPath,
-  );
+  )
 
   if (hasWebhookNodes) {
     tree.push({
@@ -133,7 +133,7 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
       items: [],
       initiallyExpanded:
         groups.some(group => group.initiallyExpanded) || ungrouped.some(node => node.uri === mergedConfig.currentPath),
-    });
+    })
 
     addTagGroupsToTree({
       groups,
@@ -142,23 +142,23 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
       itemsType: NodeType.HttpWebhook,
       hideInternal: mergedConfig.hideInternal,
       hideDeprecated: mergedConfig.hideDeprecated,
-    });
+    })
   }
 
-  let schemaNodes = serviceNode.children.filter(node => node.type === NodeType.Model);
+  let schemaNodes = serviceNode.children.filter(node => node.type === NodeType.Model)
   if (mergedConfig.hideInternal) {
-    schemaNodes = schemaNodes.filter(n => !isInternal(n));
+    schemaNodes = schemaNodes.filter(n => !isInternal(n))
   }
 
   if (!mergedConfig.hideSchemas && schemaNodes.length) {
-    const { groups, ungrouped } = computeTagGroups<SchemaNode>(serviceNode, NodeType.Model, mergedConfig.currentPath);
+    const { groups, ungrouped } = computeTagGroups<SchemaNode>(serviceNode, NodeType.Model, mergedConfig.currentPath)
 
     tree.push({
       title: 'Schemas',
       items: [],
       initiallyExpanded:
         groups.some(group => group.initiallyExpanded) || ungrouped.some(node => node.uri === mergedConfig.currentPath),
-    });
+    })
 
     addTagGroupsToTree({
       groups,
@@ -166,50 +166,50 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
       tree: tree.at(-1).items,
       itemsType: NodeType.Model,
       hideInternal: mergedConfig.hideInternal,
-    });
+    })
   }
 
-  return tree;
-};
+  return tree
+}
 
 export const findFirstNodeSlug = (tree: TableOfContentsItem[]): string | void => {
   for (const item of tree) {
     if ('slug' in item) {
-      return item.slug;
+      return item.slug
     }
 
     if ('items' in item) {
-      const slug = findFirstNodeSlug(item.items);
+      const slug = findFirstNodeSlug(item.items)
       if (slug) {
-        return slug;
+        return slug
       }
     }
   }
-};
+}
 
 export const isInternal = (node: ServiceChildNode | ServiceNode): boolean => {
-  const data = node.data;
+  const data = node.data
 
   if (isHttpOperation(data) || isHttpWebhookOperation(data)) {
-    return !!data.internal;
+    return !!data.internal
   }
 
   if (isHttpService(data)) {
-    return false;
+    return false
   }
 
-  return !!data['x-internal'];
-};
+  return !!data['x-internal']
+}
 
 const isDeprecated = (node: ServiceChildNode | ServiceNode): boolean => {
-  const data = node.data;
+  const data = node.data
 
   if (isHttpOperation(data) || isHttpWebhookOperation(data)) {
-    return data.deprecated ?? false;
+    return data.deprecated ?? false
   }
 
-  return false;
-};
+  return false
+}
 
 interface AddTagGroupsToTreeParams<T extends GroupableNode> {
   groups: TagGroup<T>[];
@@ -231,7 +231,7 @@ const addTagGroupsToTree = <T extends GroupableNode>({
   // Show ungrouped nodes above tag groups
   ungrouped.forEach(node => {
     if ((hideInternal && isInternal(node)) || (hideDeprecated && isDeprecated(node))) {
-      return;
+      return
     }
 
     tree.push({
@@ -241,13 +241,13 @@ const addTagGroupsToTree = <T extends GroupableNode>({
       type: node.type,
       meta: isHttpOperation(node.data) || isHttpWebhookOperation(node.data) ? node.data.method : '',
       ...(isDeprecated(node) ? { deprecated: true } : {}),
-    });
-  });
+    })
+  })
 
   groups.forEach(group => {
     const items = group.items.flatMap(node => {
       if ((hideInternal && isInternal(node)) || (hideDeprecated && isDeprecated(node))) {
-        return [];
+        return []
       }
 
       return {
@@ -257,8 +257,8 @@ const addTagGroupsToTree = <T extends GroupableNode>({
         type: node.type,
         meta: isHttpOperation(node.data) || isHttpWebhookOperation(node.data) ? node.data.method : '',
         ...(isDeprecated(node) ? { deprecated: true } : {}),
-      };
-    });
+      }
+    })
 
     if (items.length) {
       tree.push({
@@ -266,7 +266,7 @@ const addTagGroupsToTree = <T extends GroupableNode>({
         items,
         itemsType,
         initiallyExpanded: group.initiallyExpanded,
-      });
+      })
     }
-  });
-};
+  })
+}
