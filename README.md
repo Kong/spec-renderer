@@ -297,7 +297,7 @@ This repository utilizes [Semantic Release](https://github.com/semantic-release/
 
 ## Third-party packages and Thank You
 
-- Thank You [Stoplight](https://stoplight.io/) for beautiful parser and ACT producer [stoplight/http-spec](https://github.com/stoplightio/http-spec).
+- Thank You [Stoplight](https://stoplight.io/) for beautiful parser and AST producer [stoplight/http-spec](https://github.com/stoplightio/http-spec).
 
 - Thank You [Stoplight](https://stoplight.io/) for excellent approach for dealing with specification's table of contents and specification's  security definitions. Found in [elements](https://github.com/stoplightio/elements) and currently placed into [src/stoplight](src/stoplight/), while [PR]() back to elements package pending.
 
