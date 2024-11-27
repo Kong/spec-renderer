@@ -1,3 +1,10 @@
+# [1.81.0](https://github.com/Kong/spec-renderer/compare/v1.80.2...v1.81.0) (2024-11-27)
+
+
+### Features
+
+* use stoplight/http-spec directly, put elements code back to this repo [KHCP-14238] ([#426](https://github.com/Kong/spec-renderer/issues/426)) ([648abb1](https://github.com/Kong/spec-renderer/commit/648abb1b63616cdba3de62af8b53713595d602bf))
+
 ## [1.80.2](https://github.com/Kong/spec-renderer/compare/v1.80.1...v1.80.2) (2024-11-26)
 
 
