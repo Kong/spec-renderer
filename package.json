@@ -73,7 +73,7 @@
     "oas-normalize": "^11.1.3",
     "openapi3-ts": "4.4.0",
     "sanitize-html": "^2.13.1",
-    "shiki": "^1.22.2"
+    "shiki": "^1.23.0"
   },
   "resolutions": {
     "openapi3-ts": "4.4.0"
