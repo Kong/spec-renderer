@@ -126,7 +126,7 @@
     "vite-plugin-replace": "^0.1.1",
     "vite-plugin-vue-devtools": "^7.6.4",
     "vitest": "2.1.5",
-    "vue": "^3.5.12",
+    "vue": "^3.5.13",
     "vue-router": "^4.4.5",
     "vue-tsc": "^2.1.10"
   },
