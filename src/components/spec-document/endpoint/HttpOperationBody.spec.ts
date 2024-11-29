@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import HttpResponse from './HttpResponse.vue'
+import HttpOperationBody from './HttpOperationBody.vue'
 
-describe('<HttpResponse />', () => {
+describe('<HttpOperationBody />', () => {
   it('renders', () => {
-    const wrapper = mount(HttpResponse, {
+    const wrapper = mount(HttpOperationBody, {
       props: {
         description: 'sample description',
         contentList: [
