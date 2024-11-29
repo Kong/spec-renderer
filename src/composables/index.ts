@@ -2,6 +2,7 @@ import useSchemaParser from './useSchemaParser'
 import useShiki from './useShiki'
 import useCurrentCallback from './useCurrentCallback'
 import useCurrentResponse from './useCurrentResponse'
+import useContentTypes from './useContentTypes'
 import useServerList from './useServerList'
 import useAuthTokenState from './useAuthTokenState'
 import useTryItState from './useTryItState'
@@ -13,6 +14,7 @@ export default {
   useShiki,
   useCurrentCallback,
   useCurrentResponse,
+  useContentTypes,
   useServerList,
   useAuthTokenState,
   useTryItState,

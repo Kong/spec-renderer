@@ -10,15 +10,16 @@
         v-bind="componentProps"
       />
     </template>
+
+    <slot />
   </section>
 </template>
 
 <script setup lang="ts">
 import { computed, toRefs } from 'vue'
 import type { PropType } from 'vue'
-import type { IHttpOperationRequestBody, IHttpPathParam, IHttpQueryParam, IHttpHeaderParam } from '@stoplight/types'
+import type { IHttpPathParam, IHttpQueryParam, IHttpHeaderParam } from '@stoplight/types'
 import RequestParamList from './RequestParamList.vue'
-import RequestBody from './RequestBody.vue'
 
 const props = defineProps({
   query: {
@@ -28,10 +29,6 @@ const props = defineProps({
   path: {
     type: Array as PropType<Array<IHttpPathParam>>,
     default: () => [],
-  },
-  body: {
-    type: Object as PropType<IHttpOperationRequestBody>,
-    default: () => {},
   },
   headers: {
     type: Array as PropType<Array<IHttpHeaderParam>>,
@@ -46,7 +43,7 @@ const props = defineProps({
 const componentList = computed(() => {
   const list: Array<{ component: any; componentProps: any; key: string }> = []
 
-  const { body, query, path, headers } = toRefs(props)
+  const { query, path, headers } = toRefs(props)
   const titlePrefixWithSpace = props.titlePrefix + ' '
 
   if (query.value?.length) {
@@ -80,18 +77,6 @@ const componentList = computed(() => {
         'data-testid': 'endpoint-header-param-list',
       },
       key: 'headers',
-    })
-  }
-  if (body.value?.contents?.length) {
-    list.push({
-      component: RequestBody,
-      componentProps: {
-        description: body.value.description,
-        contents: body.value.contents,
-        readonlyVisible: false,
-        title: `${titlePrefixWithSpace}Body`,
-      },
-      key: 'body',
     })
   }
 

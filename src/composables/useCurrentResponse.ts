@@ -3,11 +3,9 @@ import type { IHttpOperationResponse } from '@stoplight/types'
 import { ResponseSelectComponent } from '@/types'
 import type { SelectComponentListItem } from '@/types'
 import { getResponseCodeKey } from '@/utils/response'
+import useContentTypes from './useContentTypes'
 
 export default function useResponseCode(responseList: ComputedRef<Array<IHttpOperationResponse>>) {
-  // returns content type key, e.g. 'application/json' -> 'application-json'
-  const getContentTypeKey = (contentType: string) => contentType.replace('/', '-')
-
   // from the list of responses, get the list of response codes. Used to populate the response code select dropdown
   const responseCodeList = computed(() => responseList.value?.map(response => {
     return { value: response.code, label: response.code, key: getResponseCodeKey(response.code) }
@@ -19,21 +17,8 @@ export default function useResponseCode(responseList: ComputedRef<Array<IHttpOpe
   const activeResponse = computed(() => responseList.value?.find(response => response.code === activeResponseCode.value))
   const activeResponseDescription = computed(() => activeResponse.value?.description ?? '')
 
-  // compute the list of content types for the active response. Used to populate the content-type select dropdown
-  // e.g. ['application/json', 'application/xml']
-  const contentTypeList = computed(() => activeResponse.value?.contents?.map(content => {
-    return { value: content.mediaType, label: content.mediaType, key: getContentTypeKey(content.mediaType) }
-  }) ?? [])
-  // ref to store the content type for whose response is shown
-  // use the first content type as the default
-  const activeContentType = ref<string>(contentTypeList.value[0]?.value ?? '')
-  // compute the content list based on the active content type, to be used in HttpResponse
-  const activeResponseContentList = computed(() => {
-    // If only single content type present, return response contents as it is
-    if (contentTypeList.value.length < 2) return activeResponse.value?.contents
-
-    return activeResponse.value?.contents?.filter(content => content.mediaType === activeContentType.value)
-  })
+  const responseContents = computed(() => activeResponse.value?.contents ?? [])
+  const { activeContentType, activeResponseContentList, contentTypeList } = useContentTypes(responseContents)
 
   const responseSelectComponentList = computed((): Array<SelectComponentListItem> => {
     const componentList = [{

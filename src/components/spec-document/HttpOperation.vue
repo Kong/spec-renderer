@@ -32,19 +32,32 @@
         <HttpRequest
           v-if="operationData.request"
           v-bind="operationData.request"
-        />
+        >
+          <HttpOperationBody
+            v-if="activeRequestBodyContentList.length"
+            class="http-operation-request-body"
+            :content-list="activeRequestBodyContentList"
+            title="Body"
+          >
+            <ResponseTypeSelect
+              :component-list="contentSelectComponentList"
+              @update-content-type="updateRequestBodyContentType"
+            />
+          </HttpOperationBody>
+        </HttpRequest>
 
-        <HttpResponse
+        <HttpOperationBody
           class="http-operation-response"
           :content-list="activeResponseContentList"
           :description="activeResponseDescription"
+          title="Response"
         >
           <ResponseTypeSelect
             :component-list="responseSelectComponentList"
             @update-content-type="(newContentType) => activeContentType = newContentType"
             @update-response-code="(newResponseCode) => activeResponseCode = newResponseCode"
           />
-        </HttpResponse>
+        </HttpOperationBody>
 
         <HttpCallbacks
           v-if="callbackList.length"
@@ -59,7 +72,7 @@
           />
 
           <template #callback-response>
-            <HttpResponse
+            <HttpOperationBody
               :content-list="activeCallbackResponseContentList"
               :description="activeCallbackResponseDescription"
               title="Callback Response"
@@ -69,7 +82,7 @@
                 @update-content-type="(newContentType) => activeCallbackContentType = newContentType"
                 @update-response-code="(newResponseCode) => activeCallbackResponseCode = newResponseCode"
               />
-            </HttpResponse>
+            </HttpOperationBody>
           </template>
         </HttpCallbacks>
       </div>
@@ -152,7 +165,7 @@ import { ref, computed, watch, inject, provide } from 'vue'
 import type { ComputedRef, PropType, Ref } from 'vue'
 import type { IHttpOperation, IHttpWebhookOperation } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
-import HttpResponse from './endpoint/HttpResponse.vue'
+import HttpOperationBody from './endpoint/HttpOperationBody.vue'
 import HttpCallbacks from './endpoint/HttpCallbacks.vue'
 import TryIt from './try-it/TryIt.vue'
 import RequestSample from './samples/RequestSample.vue'
@@ -231,6 +244,12 @@ const { authHeaderMap, authQueryMap } = composables.useAuthTokenState()
 const authHeaders = computed(() => authHeaderMap.value[activeSchemeGroupKey.value] ?? [])
 const authQuery = computed(() => authQueryMap.value[activeSchemeGroupKey.value] ?? '')
 
+const {
+  activeContentType: activeRequestBodyContentType,
+  activeResponseContentList: activeRequestBodyContentList,
+  contentSelectComponentList,
+} = composables.useContentTypes(operationData.value.request?.body?.contents ?? [])
+
 // refs and computed properties to manage currently active response object
 const responseList = computed(() => props.data.responses ?? [])
 const {
@@ -271,9 +290,9 @@ const setRequestBody = (newBody: string) => {
 }
 
 const setRequestBodyByIdx = (newSampleIdx: number) => {
-  currentRequestBody.value = props.data.request?.body?.contents
+  currentRequestBody.value = activeRequestBodyContentList.value.length
     ? getSampleBody(
-      props.data.request?.body?.contents,
+      activeRequestBodyContentList.value,
       { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value },
       newSampleIdx,
     )
@@ -284,13 +303,24 @@ function updateSelectedServerURL(url: string) {
   selectedServerUrl.value = url
 }
 
+function updateRequestBodyContentType(newContentType: string) {
+  activeRequestBodyContentType.value = newContentType
+  currentRequestBody.value = activeRequestBodyContentList.value.length
+    ? getSampleBody(
+      activeRequestBodyContentList.value,
+      { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value },
+      0,
+    )
+    : ''
+}
+
 watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value } ), (newValue) => {
   currentRequestPath.value = getSamplePath(operationData.value)
   currentRequestQuery.value = getSampleQuery(operationData.value)
   currentRequestHeaders.value = []
-  currentRequestBody.value = props.data.request?.body?.contents
+  currentRequestBody.value = activeRequestBodyContentList.value
     ? getSampleBody(
-      props.data.request?.body?.contents,
+      activeRequestBodyContentList.value,
       { excludeReadonly: true, excludeNotRequired: newValue.excludeNotRequired },
       0,
     )

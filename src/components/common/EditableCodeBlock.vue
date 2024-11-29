@@ -74,17 +74,19 @@ const setCursorPosition = (customPosition: number, eol: boolean) => {
   const selectedRange = document.createRange()
   let rangeNode = 0
   let rangePos = customPosition
-  for (let i = 0; editableInput.value.childNodes.length; i++) {
-    const contentLen = (editableInput.value.childNodes[i].textContent || '').length
+  for (let i = 0; i < editableInput.value.childNodes.length; i++) {
+    const contentLen = (editableInput.value.childNodes[i]?.textContent || '').length
     if (rangePos - contentLen <= 0) {
       break
     }
     rangeNode++
     rangePos -= contentLen
-    if (editableInput.value.childNodes[i].nodeName === 'BR') {
+    if (editableInput.value.childNodes[i]?.nodeName === 'BR') {
       rangePos--
     }
   }
+
+  if (!editableInput.value.childNodes[rangeNode]) return
 
   if (eol) {
     rangePos = editableInput.value.childNodes[rangeNode].textContent?.length || 0
