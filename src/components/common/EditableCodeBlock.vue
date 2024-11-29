@@ -75,13 +75,13 @@ const setCursorPosition = (customPosition: number, eol: boolean) => {
   let rangeNode = 0
   let rangePos = customPosition
   for (let i = 0; editableInput.value.childNodes.length; i++) {
-    const contentLen = (editableInput.value.childNodes[i].textContent || '').length
+    const contentLen = (editableInput.value.childNodes[i]?.textContent || '').length
     if (rangePos - contentLen <= 0) {
       break
     }
     rangeNode++
     rangePos -= contentLen
-    if (editableInput.value.childNodes[i].nodeName === 'BR') {
+    if (editableInput.value.childNodes[i]?.nodeName === 'BR') {
       rangePos--
     }
   }

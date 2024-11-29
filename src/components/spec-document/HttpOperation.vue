@@ -41,7 +41,7 @@
           >
             <ResponseTypeSelect
               :component-list="contentSelectComponentList"
-              @update-content-type="(newContentType) => activeRequestBodyContentType = newContentType"
+              @update-content-type="updateRequestBodyContentType"
             />
           </HttpOperationBody>
         </HttpRequest>
@@ -290,9 +290,9 @@ const setRequestBody = (newBody: string) => {
 }
 
 const setRequestBodyByIdx = (newSampleIdx: number) => {
-  currentRequestBody.value = props.data.request?.body?.contents
+  currentRequestBody.value = activeRequestBodyContentList.value.length
     ? getSampleBody(
-      props.data.request?.body?.contents,
+      activeRequestBodyContentList.value,
       { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value },
       newSampleIdx,
     )
@@ -303,13 +303,24 @@ function updateSelectedServerURL(url: string) {
   selectedServerUrl.value = url
 }
 
+function updateRequestBodyContentType(newContentType: string) {
+  activeRequestBodyContentType.value = newContentType
+  currentRequestBody.value = activeRequestBodyContentList.value.length
+    ? getSampleBody(
+      activeRequestBodyContentList.value,
+      { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value },
+      0,
+    )
+    : ''
+}
+
 watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value } ), (newValue) => {
   currentRequestPath.value = getSamplePath(operationData.value)
   currentRequestQuery.value = getSampleQuery(operationData.value)
   currentRequestHeaders.value = []
-  currentRequestBody.value = props.data.request?.body?.contents
+  currentRequestBody.value = activeRequestBodyContentList.value
     ? getSampleBody(
-      props.data.request?.body?.contents,
+      activeRequestBodyContentList.value,
       { excludeReadonly: true, excludeNotRequired: newValue.excludeNotRequired },
       0,
     )
