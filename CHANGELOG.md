@@ -1,3 +1,10 @@
+# [1.82.0](https://github.com/Kong/spec-renderer/compare/v1.81.1...v1.82.0) (2024-11-29)
+
+
+### Features
+
+* support multiple content-types for request body [KHCP-14244] ([#431](https://github.com/Kong/spec-renderer/issues/431)) ([3acc247](https://github.com/Kong/spec-renderer/commit/3acc247abddc8cedfd35f5caae8507cecb91f9b2))
+
 ## [1.81.1](https://github.com/Kong/spec-renderer/compare/v1.81.0...v1.81.1) (2024-11-28)
 
 
