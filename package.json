@@ -80,8 +80,8 @@
   },
   "devDependencies": {
     "@babel/types": "^7.26.0",
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.5.0",
+    "@commitlint/cli": "^19.6.0",
+    "@commitlint/config-conventional": "^19.6.0",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
     "@evilmartians/lefthook": "^1.8.2",
     "@kong/design-tokens": "^1.17.2",
@@ -184,7 +184,7 @@
   },
   "volta": {
     "node": "20.18.0",
-    "pnpm": "9.13.2"
+    "pnpm": "9.14.1"
   },
   "config": {
     "commitizen": {
