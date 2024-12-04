@@ -27,8 +27,8 @@ importers:
         specifier: ^1.20.0
         version: 1.20.0(vue@3.5.13(typescript@5.6.3))
       '@scalar/openapi-parser':
-        specifier: ^0.8.9
-        version: 0.8.9
+        specifier: ^0.8.10
+        version: 0.8.10
       '@seriousme/openapi-schema-validator':
         specifier: ^2.2.5
         version: 2.3.0
@@ -1105,8 +1105,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@scalar/openapi-parser@0.8.9':
-    resolution: {integrity: sha512-vTXrkl/hX3CG2dMe8mYutjsjfFLZOXGFJGqz6k8lUk8avFP/5eGEsd/eZe1UIcwtDwcjgJIyQ4p3pIC7jBvfuw==}
+  '@scalar/openapi-parser@0.8.10':
+    resolution: {integrity: sha512-wAHrxB6SMKqlyOfj2Bq5rPl9s25+0LXD3UsFvx3v35bQSoIS13h0akVgpph5sbwRvufgQoE4IDWYuFTXH393Bg==}
     engines: {node: '>=18'}
 
   '@sec-ant/readable-stream@0.4.1':
@@ -6475,7 +6475,7 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.22.4':
     optional: true
 
-  '@scalar/openapi-parser@0.8.9':
+  '@scalar/openapi-parser@0.8.10':
     dependencies:
       ajv: 8.17.1
       ajv-draft-04: 1.0.0(ajv@8.17.1)
