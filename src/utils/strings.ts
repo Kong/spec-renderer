@@ -22,3 +22,11 @@ export const stringifyUnknownValue = (candidate: unknown) => {
   }
   return stringToRender || candidate
 }
+
+export const safeJSONParse = (candidate: unknown) => {
+  try {
+    return typeof candidate === 'string' ? JSON.parse(candidate) : candidate
+  } catch (error) {
+    return candidate
+  }
+}
