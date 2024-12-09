@@ -9,24 +9,13 @@
       v-bind="docComponent.props"
     />
 
-    <div
-      v-if="previousComponent || nextComponent"
-    >
-      <a
-        v-if="previousComponent"
-        :href="`${basePath}${navigationType==='hash' ? '#' : ''}${previousComponent.doc.uri}`"
-        @click.prevent="selectItem(previousComponent.doc.uri)"
-      >
-        {{ previousComponent.doc.name }}
-      </a>
-      <a
-        v-if="nextComponent"
-        :href="`${basePath}${navigationType==='hash' ? '#' : ''}${nextComponent.doc.uri}`"
-        @click.prevent="selectItem(nextComponent.doc.uri)"
-      >
-        {{ nextComponent.doc.name }}
-      </a>
-    </div>
+    <DocumentNavigation
+      v-if="neighbourComponentList.length"
+      :base-path="basePath"
+      :navigation-type="navigationType"
+      :neighbour-component-list="neighbourComponentList"
+      @item-selected="selectItem"
+    />
   </div>
   <div
     v-else-if="serviceNode"
@@ -36,7 +25,7 @@
     <div
       v-for="(node, idx) in nodesList"
       :id="`${idx}-nodecontainer`"
-      :key="`${node.doc.data.id}-${idx}`"
+      :key="`${node.doc.name.replace(' ', '-')}-${idx}`"
       class="spec-renderer-document"
     >
       <div v-if="node.component">
@@ -62,10 +51,11 @@
 
 <script setup lang="ts">
 import { watch, ref, provide, computed, nextTick, onBeforeMount } from 'vue'
+import { useWindowScroll, useWindowSize, useElementSize, useScroll } from '@vueuse/core'
 import composables from '@/composables'
 import type { PropType, Ref } from 'vue'
 import { NodeType } from '@/types'
-import type { ServiceNode, ServiceChildNode } from '@/types'
+import type { ServiceNode, ServiceChildNode, DocumentNavigationItem } from '@/types'
 import HttpService from './HttpService.vue'
 import HttpOperation from './HttpOperation.vue'
 import AsyncOperation from './AsyncOperation.vue'
@@ -73,7 +63,7 @@ import HttpModel from './HttpModel.vue'
 import AsyncMessage from './AsyncMessage.vue'
 import ArticleNode from './ArticleNode.vue'
 import UnknownNode from './UnknownNode.vue'
-import { useWindowScroll, useWindowSize, useElementSize, useScroll } from '@vueuse/core'
+import DocumentNavigation from './DocumentNavigation.vue'
 import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE } from '@/constants'
 import { BOOL_VALIDATOR, IS_TRUE } from '@/utils'
 import type { NavigationTypes } from '@/types'
@@ -206,8 +196,13 @@ const specDocument = computed((): ServiceNode => {
   return <ServiceNode>props.document
 })
 
-const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null) => {
-  if (!forServiceNode) return {}
+const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null):
+{
+  component: any;
+  props: any;
+  doc: ServiceNode | ServiceChildNode;
+} | null => {
+  if (!forServiceNode) return null
 
   const defaultProps = {
     data: forServiceNode.data,
@@ -257,7 +252,7 @@ const containerSize = computed(()=> {
 })
 
 const nodesList = computed(() => {
-  let nList = <any[]>[]
+  let nList = []
   // first one - overview
   nList.push(...[specDocument.value])
 
@@ -281,12 +276,15 @@ const nodesList = computed(() => {
   // very last - schemas
   nList.push(...specDocument.value.children.filter(child => (child.tags || []).length === 0 && child.type === 'model'))
 
-
+  const docComponentList = []
   // transforming to components
   for (let i = 0; i < nList.length; i++) {
-    nList[i] = getDocumentComponent(nList[i])
+    const component = getDocumentComponent(nList[i])
+    if (component) {
+      docComponentList.push(component)
+    }
   }
-  return nList
+  return docComponentList
 })
 
 const activePathIdx = computed(() => nodesList.value.findIndex(node => node.doc.uri === props.currentPath))
@@ -295,12 +293,25 @@ const docComponent = computed(() => {
   return nodesList.value[activePathIdx.value]
 })
 
-const previousComponent = computed(() => {
-  return nodesList.value[activePathIdx.value - 1]
-})
+const neighbourComponentList = computed(() => {
+  const list: Array<DocumentNavigationItem> = []
 
-const nextComponent = computed(() => {
-  return nodesList.value[activePathIdx.value + 1]
+  for (const idx of [-1, 1]) {
+    const node = nodesList.value[activePathIdx.value + Number(idx)]
+
+    if (node) {
+      list.push({
+        name: node.doc.name,
+        uri: node.doc.uri,
+        type: idx === -1 ? 'previous' : 'next',
+        ...(node.doc.type === 'http_operation' && node.doc.data.method
+          ? { method: node.doc.data.method }
+          : {}),
+      })
+    }
+  }
+
+  return list
 })
 
 const selectItem = (newUrl: string): void => {
@@ -486,7 +497,7 @@ onBeforeMount(async () => {
   box-sizing: border-box;
   color: var(--kui-color-text, $kui-color-text);
   container: spec-document / inline-size;
-  padding-top: var(--kui-space-40, $kui-space-40);
+  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
 
   :deep(details) {
     > summary {
