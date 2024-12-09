@@ -6,8 +6,27 @@
     <component
       :is="docComponent.component"
       v-if="docComponent.component !== null"
-      v-bind="docComponent.props as any"
+      v-bind="docComponent.props"
     />
+
+    <div
+      v-if="previousComponent || nextComponent"
+    >
+      <a
+        v-if="previousComponent"
+        :href="`${basePath}${navigationType==='hash' ? '#' : ''}${previousComponent.doc.uri}`"
+        @click.prevent="selectItem(previousComponent.doc.uri)"
+      >
+        {{ previousComponent.doc.name }}
+      </a>
+      <a
+        v-if="nextComponent"
+        :href="`${basePath}${navigationType==='hash' ? '#' : ''}${nextComponent.doc.uri}`"
+        @click.prevent="selectItem(nextComponent.doc.uri)"
+      >
+        {{ nextComponent.doc.name }}
+      </a>
+    </div>
   </div>
   <div
     v-else-if="serviceNode"
@@ -164,6 +183,7 @@ provide<Ref<boolean>>('allow-custom-server-url', computed((): boolean => IS_TRUE
 const emit = defineEmits < {
   (e: 'path-not-found', requestedPath: string): void,
   (e: 'content-scrolled', path: string): void,
+  (e: 'item-selected', id: string): void,
 }>()
 
 // forced - assumed visible (rendered) even when hidden
@@ -236,18 +256,7 @@ const containerSize = computed(()=> {
   return scrollingContainerEl.value ? scrollableContainerSize : windowSize
 })
 
-const docComponent = computed(() => {
-  //@ts-ignore ignore types for now, we might rewrite all this stuff anyways
-  return getDocumentComponent(serviceNode.value)
-})
-
-
-
 const nodesList = computed(() => {
-  if (!props.allowContentScrolling) {
-    return []
-  }
-
   let nList = <any[]>[]
   // first one - overview
   nList.push(...[specDocument.value])
@@ -280,6 +289,30 @@ const nodesList = computed(() => {
   return nList
 })
 
+const activePathIdx = computed(() => nodesList.value.findIndex(node => node.doc.uri === props.currentPath))
+
+const docComponent = computed(() => {
+  return nodesList.value[activePathIdx.value]
+})
+
+const previousComponent = computed(() => {
+  return nodesList.value[activePathIdx.value - 1]
+})
+
+const nextComponent = computed(() => {
+  return nodesList.value[activePathIdx.value + 1]
+})
+
+const selectItem = (newUrl: string): void => {
+  if (IS_TRUE(props.controlAddressBar)) {
+    // we only have path and hash for now
+    const newPath = props.navigationType === 'path' ? props.basePath + newUrl : props.basePath + '#' + newUrl
+    window.history.pushState({}, '', newPath)
+  }
+
+  emit('item-selected', newUrl)
+}
+
 const forceRenderer = (visibleIdx: number[]) => {
   const newToRenderer = Array(nodesList.value.length).fill('false', 0)
   visibleIdx.sort()
@@ -305,6 +338,11 @@ watch(() => ({ nodesList: nodesList.value,
   wHeight: containerSize.value.height.value,
   wWidth: containerSize.value.width.value,
 }), (newValue, oldValue) => {
+
+  if (!props.allowContentScrolling) {
+    // case when scrolling is not enabled - we do not need to do anything else
+    return
+  }
 
   if (!processScrolling.value) {
     return

@@ -65,6 +65,7 @@
           :navigation-type="navigationType"
           :spec-url="specUrl"
           @content-scrolled="onDocumentScroll"
+          @item-selected="itemSelected"
           @path-not-found="relayPathNotFound"
         />
       </div>
