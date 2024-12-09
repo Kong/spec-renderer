@@ -2,12 +2,14 @@
   <li
     class="group-item"
     :class="{ root: root }"
+    data-testid="group-item"
   >
     <button
       v-if="!item.hideTitle"
       ref="collapseTriggerRef"
       :aria-controls="collapseGroupId"
       :aria-expanded="isExpanded"
+      data-testid="group-item-button"
       type="button"
       @click="onClick"
     >
@@ -23,6 +25,7 @@
       <ul
         v-show="isExpanded"
         :id="collapseGroupId"
+        data-testid="group-item-list"
       >
         <component
           :is="itemComponent(child)"
