@@ -2,9 +2,11 @@
   <li
     class="node-item"
     :data-spec-renderer-toc-active="isActive ? true : undefined"
+    data-testid="node-item"
   >
     <a
       :class="{ 'single-word': isSingleWord, 'active': isActive }"
+      data-testid="node-item-title-link"
       :href="`${basePath}${navigationType==='hash' ? '#' : ''}${item.id}`"
       :title="itemTitle"
       @click.prevent="selectItem(item.id)"
@@ -12,6 +14,7 @@
       <span
         class="node-item-title"
         :class="{ 'deprecated-node-item': item.deprecated }"
+        data-testid="node-item-title"
       >
         {{ item.title }}
       </span>
@@ -19,6 +22,7 @@
       <MethodBadge
         v-if="item.type === NodeType.HttpOperation || item.type === NodeType.HttpWebhook"
         class="http-operation-badge"
+        data-testid="http-operation-badge"
         :inverted="isActive"
         :method="item.meta"
       />

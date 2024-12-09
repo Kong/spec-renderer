@@ -2,6 +2,7 @@
   <nav
     ref="tocNavRef"
     class="table-of-contents"
+    data-testid="table-of-contents"
   >
     <ul>
       <component
