@@ -1,3 +1,10 @@
+## [1.82.3](https://github.com/Kong/spec-renderer/compare/v1.82.2...v1.82.3) (2024-12-09)
+
+
+### Bug Fixes
+
+* trigger release ([0cbd52a](https://github.com/Kong/spec-renderer/commit/0cbd52a4542bd886629878c02812454a1cdd1c32))
+
 ## [1.82.2](https://github.com/Kong/spec-renderer/compare/v1.82.1...v1.82.2) (2024-12-04)
 
 
