@@ -1,6 +1,7 @@
 <template>
   <div
     class="document-navigation"
+    :class="{'single-item': neighborComponentList.length === 1}"
   >
     <a
       v-for="(component) in neighborComponentList"
@@ -76,6 +77,10 @@ const selectItem = (newUrl: string): void => {
   gap: var(--kui-space-90, $kui-space-90);
   justify-content: center;
   padding: var(--kui-space-90, $kui-space-90) var(--kui-space-0, $kui-space-0);
+
+  &.single-item {
+    justify-content: left;
+  }
 
   .document-navigation-link {
     align-items: center;
