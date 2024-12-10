@@ -3,10 +3,11 @@
     class="document-navigation"
   >
     <a
-      v-for="(component) in neighbourComponentList"
+      v-for="(component) in neighborComponentList"
       :key="component.type"
       class="document-navigation-link"
       :class="component.type"
+      :data-testid="`document-navigation-link-${component.type}`"
       :href="`${basePath}${navigationType==='hash' ? '#' : ''}${component.uri}`"
       @click.prevent="selectItem(component.uri)"
     >
@@ -44,7 +45,7 @@ import type { PropType } from 'vue'
 import type { DocumentNavigationItem } from '@/types'
 
 defineProps({
-  neighbourComponentList: {
+  neighborComponentList: {
     type: Array as PropType<Array<DocumentNavigationItem>>,
     required: true,
   },
@@ -73,7 +74,7 @@ const selectItem = (newUrl: string): void => {
   display: flex;
   flex-wrap: wrap;
   gap: var(--kui-space-90, $kui-space-90);
-  justify-content: space-between;
+  justify-content: center;
   padding: var(--kui-space-90, $kui-space-90) var(--kui-space-0, $kui-space-0);
 
   .document-navigation-link {

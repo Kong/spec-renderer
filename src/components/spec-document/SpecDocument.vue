@@ -10,10 +10,10 @@
     />
 
     <DocumentNavigation
-      v-if="neighbourComponentList.length"
+      v-if="neighborComponentList.length"
       :base-path="basePath"
       :navigation-type="navigationType"
-      :neighbour-component-list="neighbourComponentList"
+      :neighbor-component-list="neighborComponentList"
       @item-selected="selectItem"
     />
   </div>
@@ -25,7 +25,7 @@
     <div
       v-for="(node, idx) in nodesList"
       :id="`${idx}-nodecontainer`"
-      :key="`${node.doc.name.replace(' ', '-')}-${idx}`"
+      :key="`${node.doc.uri}-${idx}`"
       class="spec-renderer-document"
     >
       <div v-if="node.component">
@@ -293,7 +293,7 @@ const docComponent = computed(() => {
   return nodesList.value[activePathIdx.value]
 })
 
-const neighbourComponentList = computed(() => {
+const neighborComponentList = computed<Array<DocumentNavigationItem>>(() => {
   const list: Array<DocumentNavigationItem> = []
 
   for (const idx of [-1, 1]) {
