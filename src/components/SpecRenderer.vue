@@ -60,6 +60,7 @@
           :document="parsedDocument"
           :document-scrolling-container="documentScrollingContainer"
           :hide-insomnia-try-it="hideInsomniaTryIt"
+          :hide-navigation-buttons="hideNavigationButtons"
           :hide-try-it="hideTryIt"
           :markdown-styles="markdownStyles"
           :navigation-type="navigationType"
@@ -216,6 +217,15 @@ const props = defineProps({
    * Allow user to add custom server url which will be added to the list of available servers
    */
   allowCustomServerUrl: {
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
+    default: false,
+  },
+  /**
+   * Hide navigation buttons at the bottom of the document.
+   * Only relevant when not in content scrolling mode.
+   */
+  hideNavigationButtons: {
     type: [Boolean, String],
     validator: BOOL_VALIDATOR,
     default: false,

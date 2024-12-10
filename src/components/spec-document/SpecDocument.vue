@@ -155,6 +155,15 @@ const props = defineProps({
     validator: BOOL_VALIDATOR,
     default: true,
   },
+  /**
+   * Hide navigation buttons at the bottom of the document.
+   * Only relevant when not in content scrolling mode.
+   */
+  hideNavigationButtons: {
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
+    default: false,
+  },
 })
 
 const { createHighlighter } = composables.useShiki()
@@ -295,6 +304,10 @@ const docComponent = computed(() => {
 
 const neighborComponentList = computed<Array<DocumentNavigationItem>>(() => {
   const list: Array<DocumentNavigationItem> = []
+
+  if (IS_TRUE(props.hideNavigationButtons)) {
+    return list
+  }
 
   for (const idx of [-1, 1]) {
     const node = nodesList.value[activePathIdx.value + Number(idx)]
