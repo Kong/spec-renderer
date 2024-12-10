@@ -305,7 +305,7 @@ const docComponent = computed(() => {
 const neighborComponentList = computed<Array<DocumentNavigationItem>>(() => {
   const list: Array<DocumentNavigationItem> = []
 
-  if (IS_TRUE(props.hideNavigationButtons)) {
+  if (IS_TRUE(props.hideNavigationButtons) || IS_TRUE(props.allowContentScrolling)) {
     return list
   }
 
