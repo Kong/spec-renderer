@@ -1,3 +1,24 @@
+## [1.82.5](https://github.com/Kong/spec-renderer/compare/v1.82.4...v1.82.5) (2024-12-11)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#442](https://github.com/Kong/spec-renderer/issues/442)) ([edf689a](https://github.com/Kong/spec-renderer/commit/edf689a40ef943e27dc4c0c9e341e08aada62b7e))
+
+## [1.82.4](https://github.com/Kong/spec-renderer/compare/v1.82.3...v1.82.4) (2024-12-09)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.20.1 ([#440](https://github.com/Kong/spec-renderer/issues/440)) ([459ba89](https://github.com/Kong/spec-renderer/commit/459ba895359da0817ea27b5b8dedd302cbf604bb))
+
+## [1.82.3](https://github.com/Kong/spec-renderer/compare/v1.82.2...v1.82.3) (2024-12-09)
+
+
+### Bug Fixes
+
+* trigger release ([0cbd52a](https://github.com/Kong/spec-renderer/commit/0cbd52a4542bd886629878c02812454a1cdd1c32))
+
 ## [1.82.2](https://github.com/Kong/spec-renderer/compare/v1.82.1...v1.82.2) (2024-12-04)
 
 
