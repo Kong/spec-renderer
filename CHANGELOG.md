@@ -1,3 +1,10 @@
+## [1.82.6](https://github.com/Kong/spec-renderer/compare/v1.82.5...v1.82.6) (2024-12-11)
+
+
+### Bug Fixes
+
+* **get-sample-body:** parse stringified object example values ([#437](https://github.com/Kong/spec-renderer/issues/437)) ([4cd16bd](https://github.com/Kong/spec-renderer/commit/4cd16bd78152fe764d25c02f7d8aee6c2c85c847))
+
 ## [1.82.5](https://github.com/Kong/spec-renderer/compare/v1.82.4...v1.82.5) (2024-12-11)
 
 
