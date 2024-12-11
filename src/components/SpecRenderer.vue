@@ -228,7 +228,7 @@ const props = defineProps({
   hideNavigationButtons: {
     type: [Boolean, String],
     validator: BOOL_VALIDATOR,
-    default: false,
+    default: true,
   },
 })
 
