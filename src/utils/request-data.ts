@@ -2,6 +2,7 @@ import type { IHttpOperation, IMediaTypeContent } from '@stoplight/types'
 import { crawl, extractSampleForParam } from './schema-example'
 import { resolveSchemaObjectFields } from './schema-model'
 import { CODE_INDENT_SPACES } from '@/constants'
+import { safeJSONParse } from './strings'
 
 const getAcceptHeader = (data: IHttpOperation): string => {
   const headers = new Set()
@@ -109,7 +110,8 @@ export const getSampleBody = (contents: Array<IMediaTypeContent>, filteringOptio
       contents[0].examples[sampleIdx]?.value
     ) {
       // @ts-ignore value is valid property of example
-      return JSON.stringify(contents[0].examples[sampleIdx].value as Record<string, any>, null, CODE_INDENT_SPACES)
+      const exampleValue = safeJSONParse(contents[0].examples[sampleIdx].value)
+      return JSON.stringify(exampleValue as Record<string, any>, null, CODE_INDENT_SPACES)
     }
   }
 
