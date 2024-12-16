@@ -7,10 +7,11 @@
       class="call-button"
       :class="{ 'no-dropdown': !showInsomnia }"
       :data-testid="`tryit-call-button-${data.id}`"
+      :disabled="isLoading"
       @click="startApiCall"
     >
       <component
-        :is="selectedTryItMethodKey === 'browser' ? NetworkIcon : InsomniaIcon"
+        :is="tryItIcon"
         v-if="showInsomnia"
         class="tryit-method-icon"
       />
@@ -22,6 +23,7 @@
       :id="`tryit-dropdown-${data.id}`"
       class="tryit-dropdown"
       :data-testid="`tryit-dropdown-${data.id}`"
+      :disabled="isLoading"
       :items="items"
       placement="bottom-end"
       trigger-button=""
@@ -54,13 +56,17 @@ import type { PropType, Ref } from 'vue'
 import type { IHttpOperation } from '@stoplight/types'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import type { SelectItem } from '@/types'
-import { NetworkIcon, InsomniaIcon } from '@kong/icons'
+import { NetworkIcon, InsomniaIcon, ProgressIcon } from '@kong/icons'
 import composables from '@/composables'
 
-defineProps({
+const props = defineProps({
   data: {
     type: Object as PropType<IHttpOperation>,
     required: true,
+  },
+  isLoading: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -88,6 +94,14 @@ const specUrl = inject<Ref<string>>('spec-url', ref(''))
 // when property forced or url of the specification is not provided
 const showInsomnia = computed((): boolean => {
   return !(hideInsomniaTryIt.value || !specUrl.value)
+})
+
+const tryItIcon = computed(() => {
+  if (props.isLoading) {
+    return ProgressIcon
+  }
+
+  return selectedTryItMethodKey.value === 'browser' ? NetworkIcon : InsomniaIcon
 })
 
 const { selectedTryItMethodKey } = composables.useTryItState()
@@ -124,6 +138,13 @@ const selectionChanged = (item: SelectItem) => {
     &:active {
       background-color: $hoverBg;
     }
+
+    &:disabled, &[disabled] {
+      background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+      border-color: var(--kui-color-border-disabled, $kui-color-border-disabled);
+      color: var(--kui-color-text-disabled, $kui-color-text-disabled);
+      cursor: not-allowed;
+    }
   }
 
   .tryit-dropdown {
@@ -139,6 +160,17 @@ const selectionChanged = (item: SelectItem) => {
       &:active {
         background-color: $hoverBg !important;
         color: $textColor !important;
+      }
+
+      &:disabled, &[disabled] {
+        background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+        border-color: var(--kui-color-border-disabled, $kui-color-border-disabled);
+        color: var(--kui-color-text-disabled, $kui-color-text-disabled);
+        cursor: not-allowed;
+
+        .select-chevron-icon {
+          color: var(--kui-color-text-disabled, $kui-color-text-disabled) !important;
+        }
       }
     }
   }

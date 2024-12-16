@@ -20,6 +20,7 @@
         v-if="data.path"
         class="tryit-button-dropdown"
         :data="data"
+        :is-loading="apiCallLoading"
         @tryit-api-call="doApiCall"
       />
     </div>
@@ -129,6 +130,8 @@ const currentRequestHeaders = ref<Array<Record<string, string>>>([])
 
 const currentRequestBody = ref<string>('')
 
+const apiCallLoading = ref(false)
+
 // hide body section if none of the params are present
 const sectionBodyEmpty = computed((): boolean =>
   (!props.data.servers || !props.data.servers.some(s => s.variables)) &&
@@ -165,6 +168,7 @@ const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 const doApiCall = async () => {
   try {
+    apiCallLoading.value = true
     response.value = undefined
     const url = new URL(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''))
     let queryStr = currentRequestQuery.value
@@ -187,6 +191,8 @@ const doApiCall = async () => {
     })
   } catch (error: any) {
     responseError.value = error
+  } finally {
+    apiCallLoading.value = false
   }
 }
 
