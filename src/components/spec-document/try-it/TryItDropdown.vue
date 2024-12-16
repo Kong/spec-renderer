@@ -12,7 +12,7 @@
     >
       <component
         :is="tryItIcon"
-        v-if="showInsomnia"
+        v-if="tryItIcon"
         class="tryit-method-icon"
       />
       Try It!
@@ -99,6 +99,10 @@ const showInsomnia = computed((): boolean => {
 const tryItIcon = computed(() => {
   if (props.isLoading) {
     return ProgressIcon
+  }
+
+  if (!showInsomnia.value) {
+    return null
   }
 
   return selectedTryItMethodKey.value === 'browser' ? NetworkIcon : InsomniaIcon
@@ -285,6 +289,7 @@ const selectionChanged = (item: SelectItem) => {
   }
 
   .tryit-method-icon {
+    height: var(--kui-icon-size-40, $kui-icon-size-40) !important;
     width: var(--kui-icon-size-40, $kui-icon-size-40) !important;
   }
 }
