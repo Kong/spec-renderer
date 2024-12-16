@@ -1,3 +1,10 @@
+## [1.83.1](https://github.com/Kong/spec-renderer/compare/v1.83.0...v1.83.1) (2024-12-16)
+
+
+### Bug Fixes
+
+* **try-it:** show loading icon also when insomnia button is hidden ([#450](https://github.com/Kong/spec-renderer/issues/450)) ([d5a18e7](https://github.com/Kong/spec-renderer/commit/d5a18e79c1c9d4bd1f0aba2ad727e58ef823de68))
+
 # [1.83.0](https://github.com/Kong/spec-renderer/compare/v1.82.6...v1.83.0) (2024-12-16)
 
 
