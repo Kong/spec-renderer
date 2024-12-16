@@ -1,3 +1,10 @@
+# [1.83.0](https://github.com/Kong/spec-renderer/compare/v1.82.6...v1.83.0) (2024-12-16)
+
+
+### Features
+
+* **try-it:** add loading state to try-it button ([#449](https://github.com/Kong/spec-renderer/issues/449)) ([b3dc948](https://github.com/Kong/spec-renderer/commit/b3dc948623a210a52395ca2683191a469c3ff401))
+
 ## [1.82.6](https://github.com/Kong/spec-renderer/compare/v1.82.5...v1.82.6) (2024-12-11)
 
 
