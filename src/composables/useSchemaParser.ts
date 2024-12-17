@@ -8,8 +8,8 @@ import type { ParseOptions } from '../types'
 import type { ValidateResult } from '@scalar/openapi-parser'
 import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
-import AsyncParser from '@asyncapi/parser/browser'
-import { OpenAPISchemaParser } from '@asyncapi/openapi-schema-parser'
+// import AsyncParser from '@asyncapi/parser/browser'
+// import { OpenAPISchemaParser } from '@asyncapi/openapi-schema-parser'
 import { stringify } from 'flatted'
 
 import { transform as transformAsync } from '@/utils/async-to-oas-transformer'
@@ -19,8 +19,8 @@ const trace = (doTrace: boolean | undefined, ...args: any) => {
     console.log(...args)
   }
 }
-const asyncParser = new AsyncParser()
-asyncParser.registerSchemaParser(OpenAPISchemaParser())
+// const asyncParser = new AsyncParser()
+// asyncParser.registerSchemaParser(OpenAPISchemaParser())
 
 export default (): {
   parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
@@ -87,60 +87,62 @@ export default (): {
   }
 
 
-  const parseAsyncDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<boolean> => {
+  // const parseAsyncDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<boolean> => {
 
-    let specToParse = spec
-    if (options.specUrl && !spec) {
-      try {
-        specToParse = await (await fetch(options.specUrl)).text()
-      } catch (e) {
-        console.error(`@kong/spec-renderer: error fetching async document from ${options.specUrl}`, e)
-        return false
-      }
-      trace(options.traceParsing, 'async document fetched')
-    }
+  //   let specToParse = spec
+  //   if (options.specUrl && !spec) {
+  //     try {
+  //       specToParse = await (await fetch(options.specUrl)).text()
+  //     } catch (e) {
+  //       console.error(`@kong/spec-renderer: error fetching async document from ${options.specUrl}`, e)
+  //       return false
+  //     }
+  //     trace(options.traceParsing, 'async document fetched')
+  //   }
 
-    let parsed = null
-    try {
-      const { document/*, diagnostics*/ } = await asyncParser.parse(specToParse)
-      if (!document) {
-        return false
-      }
-      parsed = document
-    } catch (e) {
-      console.error('@kong/spec-renderer: error parsing async document', e)
-      return false
-    }
-    trace(options.traceParsing, 'async document parsed')
+  //   let parsed = null
+  //   try {
+  //     const { document/*, diagnostics*/ } = await asyncParser.parse(specToParse)
+  //     if (!document) {
+  //       return false
+  //     }
+  //     parsed = document
+  //   } catch (e) {
+  //     console.error('@kong/spec-renderer: error parsing async document', e)
+  //     return false
+  //   }
+  //   trace(options.traceParsing, 'async document parsed')
 
-    // now as we have document we could create TOC and document
-    try {
-      const { toc, document: transformed } = transformAsync(parsed, {
-        hideSchemas: options?.hideSchemas,
-        hideInternal: options?.hideInternal,
-        hideDeprecated: options?.hideDeprecated,
-        currentPath: options?.currentPath,
-      })
+  //   // now as we have document we could create TOC and document
+  //   try {
+  //     const { toc, document: transformed } = transformAsync(parsed, {
+  //       hideSchemas: options?.hideSchemas,
+  //       hideInternal: options?.hideInternal,
+  //       hideDeprecated: options?.hideDeprecated,
+  //       currentPath: options?.currentPath,
+  //     })
 
-      trace(options.traceParsing, 'async document transformed')
-      tableOfContents.value = toc
-      parsedDocument.value = transformed
-      return true
-    } catch (e) {
-      console.error('@kong/spec-renderer: error transforming async document', e)
-      return false
-    }
-  }
+  //     trace(options.traceParsing, 'async document transformed')
+  //     tableOfContents.value = toc
+  //     parsedDocument.value = transformed
+  //     return true
+  //   } catch (e) {
+  //     console.error('@kong/spec-renderer: error transforming async document', e)
+  //     return false
+  //   }
+  // }
+
   /**
     Parsing spec (sepcText) or by URL produced in  ParseOptions
   */
   const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):Promise<void> => {
 
-    const isAsync = await parseAsyncDocument(spec, options)
-    if (isAsync) {
-      return
-    }
+    // const isAsync = await parseAsyncDocument(spec, options)
+    // if (isAsync) {
+    //   return
+    // }
 
+    console.log('!!!!!!!!do not parse async')
     // let's
     // we want to leave console.logs for parsing
     if (options.specUrl && !spec) {

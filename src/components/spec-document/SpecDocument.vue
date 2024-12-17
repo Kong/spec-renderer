@@ -213,7 +213,7 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
 
 
 const scrollingContainerEl = computed(():HTMLElement | null => {
-  if (!window || !document) {
+  if (typeof window === 'undefined' || typeof document === 'undefined' || !window || !document) {
     return null
   }
   if (!props.documentScrollingContainer) {
@@ -377,6 +377,11 @@ watch(() => ({ nodesList: nodesList.value,
 watch(() => ({
   pathname: props.currentPath,
   document: specDocument.value }), async (newValue, oldValue) => {
+
+  // this watcher only need to be executed when in non-ssr mode
+  if (typeof window === 'undefined' || typeof document === 'undefined' || !window || !document) {
+    return
+  }
 
   const { pathname, document: newDocument } = newValue
   const { document: oldDocument } = oldValue || {}
