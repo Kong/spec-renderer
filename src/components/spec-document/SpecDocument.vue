@@ -411,16 +411,19 @@ watch(() => ({
     return
   }
 
-  // the rest of this watcher only need to be executed when in non-ssr mode
-  if (typeof window === 'undefined' || typeof document === 'undefined' || !window || !document) {
-    return
-  }
 
   processScrolling.value = false
 
   const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
 
   forceRenderer([pathIdx])
+
+  // the rest of this watcher only need to be executed when in non-ssr mode
+  if (typeof window === 'undefined' || typeof document === 'undefined' || !window || !document) {
+    renderPlain.value = true
+    return
+  }
+
   await nextTick()
 
 
