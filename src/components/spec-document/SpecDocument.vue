@@ -378,10 +378,6 @@ watch(() => ({
   pathname: props.currentPath,
   document: specDocument.value }), async (newValue, oldValue) => {
 
-  // this watcher only need to be executed when in non-ssr mode
-  if (typeof window === 'undefined' || typeof document === 'undefined' || !window || !document) {
-    return
-  }
 
   const { pathname, document: newDocument } = newValue
   const { document: oldDocument } = oldValue || {}
@@ -389,11 +385,13 @@ watch(() => ({
 
   const isRootPath = !pathname || pathname === '/'
   serviceNode.value = <ServiceNode>(isRootPath ? newDocument : newDocument.children.find((child: any) => child.uri === pathname))
-
+  console.log('setting service node')
   if (!serviceNode.value) {
     emit('path-not-found', pathname)
     return
   }
+
+
   if (oldDocument !== newDocument) {
     lastY.value = 0
     renderPlain.value = false
@@ -410,6 +408,11 @@ watch(() => ({
     return
   }
   if (pathname === oldValue?.pathname && oldValue?.pathname) {
+    return
+  }
+
+  // the rest of this watcher only need to be executed when in non-ssr mode
+  if (typeof window === 'undefined' || typeof document === 'undefined' || !window || !document) {
     return
   }
 
