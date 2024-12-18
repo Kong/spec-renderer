@@ -52,7 +52,7 @@
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
-    "@apidevtools/json-schema-ref-parser": "^11.7.2",
+    "@apidevtools/json-schema-ref-parser": "^11.7.3",
     "@asyncapi/openapi-schema-parser": "^3.0.24",
     "@asyncapi/parser": "^3.4.0",
     "@floating-ui/vue": "^1.1.5",
@@ -79,7 +79,7 @@
     "openapi3-ts": "4.4.0"
   },
   "devDependencies": {
-    "@babel/types": "^7.26.0",
+    "@babel/types": "^7.26.3",
     "@commitlint/cli": "^19.6.0",
     "@commitlint/config-conventional": "^19.6.0",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
@@ -109,8 +109,8 @@
     "postcss-html": "^1.7.0",
     "rimraf": "^6.0.1",
     "rollup-plugin-visualizer": "^5.12.0",
-    "sass": "^1.81.1",
-    "sass-embedded": "^1.81.1",
+    "sass": "^1.82.0",
+    "sass-embedded": "^1.82.0",
     "semantic-release": "^24.2.0",
     "stylelint": "^16.10.0",
     "stylelint-config-html": "^1.1.0",
