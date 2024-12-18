@@ -43,9 +43,14 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    default: '',
+  },
 })
 
 const activeResponseSampleIndex = ref('0')
+
 const activeResponseSample = computed(() => {
   if (props.contentList.length) {
     return getSampleBody(
@@ -54,8 +59,11 @@ const activeResponseSample = computed(() => {
       parseInt(activeResponseSampleIndex.value) || 0,
     )
   }
-  return ''
+
+  // if content list is empty, we fallback to show the description
+  return props.description
 })
+
 const exampleSelectList = computed((): Array<SelectItem> => {
   if (props.contentList[0]?.examples) {
     return props.contentList[0].examples.map((s, index) => {
