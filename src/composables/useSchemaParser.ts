@@ -106,10 +106,9 @@ export default (): {
     }
     let parsed = null
     try {
-      //@ts-ignore testing becasue i need
-      const { document/*, diagnostics*/ } = await asyncParser?.parse(specToParse)
+      const { document/*, diagnostics*/ } = await asyncParser.parse(specToParse)
       if (!document) {
-        trace(options.traceParsing, 'async document undefined afer parsing')
+        trace(options.traceParsing, 'async document undefined after parsing')
         return
       }
       parsed = document
