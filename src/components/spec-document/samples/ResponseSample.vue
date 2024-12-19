@@ -1,6 +1,7 @@
 <template>
   <SchemaExample
     class="response-sample"
+    data-testid="response-sample"
     :schema-example-json="activeResponseSample"
   >
     <slot />
@@ -10,6 +11,7 @@
         id="response-sample-select"
         v-model="activeResponseSampleIndex"
         class="response-sample-selector"
+        data-testid="response-sample-selector"
         :items="exampleSelectList"
         placement="bottom-end"
       />
