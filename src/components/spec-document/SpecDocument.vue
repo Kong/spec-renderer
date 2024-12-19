@@ -378,7 +378,6 @@ watch(() => ({
   pathname: props.currentPath,
   document: specDocument.value }), async (newValue, oldValue) => {
 
-
   const { pathname, document: newDocument } = newValue
   const { document: oldDocument } = oldValue || {}
 
@@ -389,7 +388,6 @@ watch(() => ({
     emit('path-not-found', pathname)
     return
   }
-
 
   if (oldDocument !== newDocument) {
     lastY.value = 0
@@ -412,7 +410,6 @@ watch(() => ({
   if (pathname === oldValue?.pathname && oldValue?.pathname) {
     return
   }
-
 
   processScrolling.value = false
 
