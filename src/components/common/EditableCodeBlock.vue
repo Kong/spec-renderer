@@ -42,18 +42,31 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'request-body-changed', newBody: string): void
 }>()
+// holds codeError
+const codeError = ref<boolean>(false)
+
+const formatCode = (codeToFormat: string, codeLang: string): string => {
+  let formattedCode = codeToFormat
+  codeError.value = false
+  if (codeLang === 'json') {
+    try {
+      formattedCode = JSON.stringify(JSON.parse(codeToFormat), null, CODE_INDENT_SPACES)
+    } catch (err) {
+      codeError.value = true
+    }
+  }
+  return formattedCode
+}
 
 // ref to contentEditable element
 const editableInput = ref<HTMLDivElement | null>()
 
 // to hold editable code content
-const editableCode = ref<string>()
+const editableCode = ref<string>(formatCode(props.code, props.lang))
 
 // to hold presented code content
-const presentedCode = ref<string>()
+const presentedCode = ref<string>(props.code)
 
-// holds codeError
-const codeError = ref<boolean>(false)
 
 // holds current cursor position
 const cursorPosition = ref<number>(0)
@@ -236,18 +249,6 @@ const handleFocusOut = (e: Event) => {
   emit('request-body-changed', resText)
 }
 
-const formatCode = (codeToFormat: string, codeLang: string): string => {
-  let formattedCode = codeToFormat
-  codeError.value = false
-  if (codeLang === 'json') {
-    try {
-      formattedCode = JSON.stringify(JSON.parse(codeToFormat), null, CODE_INDENT_SPACES)
-    } catch (err) {
-      codeError.value = true
-    }
-  }
-  return formattedCode
-}
 
 watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.value }),
   ({ code: newCode, lang: newLang, editableInput: newEditableInput }) => {

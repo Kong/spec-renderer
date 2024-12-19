@@ -1,17 +1,11 @@
 <template>
   <div>
-    <!-- eslint-disable vue/no-v-html -->
-    <div
-      v-if="highlightedCode"
-      class="code-block"
-      v-html="highlightedCode"
-    />
-    <!-- eslint-enable vue/no-v-html -->
+    <VNode />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, h } from 'vue'
 import composables from '@/composables'
 import { requestSampleConfigs } from '@/constants'
 import type { LanguageCode } from '@/types/request-languages'
@@ -39,6 +33,8 @@ const highlightedCode = computed(():string => {
   }
   return ''
 })
+
+const VNode = () => h('div', { class: 'code-block', innerHTML: highlightedCode.value })
 </script>
 
 <style lang="scss" scoped>

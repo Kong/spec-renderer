@@ -148,7 +148,7 @@ const props = defineProps({
   },
 })
 
-const { createHighlighter } = composables.useShiki()
+const { highlighter, createHighlighter } = composables.useShiki()
 const { initialize } = composables.useServerList()
 
 const serviceNode = ref<ServiceNode | null>(null)
@@ -401,6 +401,10 @@ watch(() => ({
   }
 
   if (!props.allowContentScrolling) {
+    if (!highlighter.value) {
+      console.log('doCreate')
+      await createHighlighter()
+    }
     // case when scrolling is not enabled - we do not need to do anything else
     return
   }
