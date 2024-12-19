@@ -1,3 +1,31 @@
+## [1.83.3](https://github.com/Kong/spec-renderer/compare/v1.83.2...v1.83.3) (2024-12-19)
+
+
+### Bug Fixes
+
+* **response-sample:** fallback to description if no sample body to show ([#454](https://github.com/Kong/spec-renderer/issues/454)) ([8b7c919](https://github.com/Kong/spec-renderer/commit/8b7c919a991e867542c94ea73e5206203811ce34))
+
+## [1.83.2](https://github.com/Kong/spec-renderer/compare/v1.83.1...v1.83.2) (2024-12-18)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#452](https://github.com/Kong/spec-renderer/issues/452)) ([191c124](https://github.com/Kong/spec-renderer/commit/191c1242b6f3d0a213327d3215adb6c77a33e6bf))
+
+## [1.83.1](https://github.com/Kong/spec-renderer/compare/v1.83.0...v1.83.1) (2024-12-16)
+
+
+### Bug Fixes
+
+* **try-it:** show loading icon also when insomnia button is hidden ([#450](https://github.com/Kong/spec-renderer/issues/450)) ([d5a18e7](https://github.com/Kong/spec-renderer/commit/d5a18e79c1c9d4bd1f0aba2ad727e58ef823de68))
+
+# [1.83.0](https://github.com/Kong/spec-renderer/compare/v1.82.6...v1.83.0) (2024-12-16)
+
+
+### Features
+
+* **try-it:** add loading state to try-it button ([#449](https://github.com/Kong/spec-renderer/issues/449)) ([b3dc948](https://github.com/Kong/spec-renderer/commit/b3dc948623a210a52395ca2683191a469c3ff401))
+
 ## [1.82.6](https://github.com/Kong/spec-renderer/compare/v1.82.5...v1.82.6) (2024-12-11)
 
 
