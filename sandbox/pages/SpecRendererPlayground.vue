@@ -28,6 +28,13 @@
         <label for="hide-tryit">Hide TryIt</label>
         |
         <input
+          id="hide-navigation-buttons"
+          v-model="hideNavigationButtons"
+          type="checkbox"
+        >
+        <label for="hide-navigation-buttons">Hide navigation buttons</label>
+        |
+        <input
           id="allow-content-scrolling"
           v-model="allowContentScrolling"
           type="checkbox"
@@ -70,6 +77,7 @@
       :control-address-bar="true"
       :current-path="currentPath"
       :hide-deprecated="hideDeprecated"
+      :hide-navigation-buttons="hideNavigationButtons"
       :hide-schemas="hideSchemas"
       :hide-try-it="hideTryIt"
       :markdown-styles="markdownStyles"
@@ -102,6 +110,7 @@ const hideTryIt = ref<boolean>(false)
 const allowContentScrolling = ref<boolean>(true)
 const markdownStyles = ref<boolean>(true)
 const allowCustomServerUrl = ref<boolean>(true)
+const hideNavigationButtons = ref<boolean>(false)
 
 const handlePathNotFound = (requestedPath: string) => {
   console.error(`@kong/spec-renderer: ${requestedPath} not found. App to redirect to it's own 404`)
