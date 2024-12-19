@@ -56,7 +56,7 @@ import ArticleNode from './ArticleNode.vue'
 import UnknownNode from './UnknownNode.vue'
 import { useWindowScroll, useWindowSize, useElementSize, useScroll } from '@vueuse/core'
 import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE } from '@/constants'
-import { BOOL_VALIDATOR, IS_TRUE } from '@/utils'
+import { BOOL_VALIDATOR, IS_TRUE, isSsr } from '@/utils'
 import type { NavigationTypes } from '@/types'
 import { stringify, parse as parseFlatted } from 'flatted'
 
@@ -213,7 +213,7 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
 
 
 const scrollingContainerEl = computed(():HTMLElement | null => {
-  if (typeof window === 'undefined' || typeof document === 'undefined' || !window || !document) {
+  if (isSsr()) {
     return null
   }
   if (!props.documentScrollingContainer) {
@@ -385,7 +385,6 @@ watch(() => ({
 
   const isRootPath = !pathname || pathname === '/'
   serviceNode.value = <ServiceNode>(isRootPath ? newDocument : newDocument.children.find((child: any) => child.uri === pathname))
-  console.log('setting service node')
   if (!serviceNode.value) {
     emit('path-not-found', pathname)
     return
@@ -402,7 +401,6 @@ watch(() => ({
 
   if (!props.allowContentScrolling) {
     if (!highlighter.value) {
-      console.log('doCreate')
       await createHighlighter()
     }
     // case when scrolling is not enabled - we do not need to do anything else
@@ -423,7 +421,7 @@ watch(() => ({
   forceRenderer([pathIdx])
 
   // the rest of this watcher only need to be executed when in non-ssr mode
-  if (typeof window === 'undefined' || typeof document === 'undefined' || !window || !document) {
+  if (isSsr()) {
     renderPlain.value = true
     return
   }
