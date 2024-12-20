@@ -144,7 +144,6 @@ export default (): {
   const fetchAndBundle = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<void> => {
     // if we have URL passed, but no spec, we call bundle to fetch and resolve external refs
     if (options.specUrl && !spec) {
-      fetchAndBundle(options.specUrl, options)
       // fetches spec by URL provided and resolves all external references
       jsonDocument.value = await refParser.bundle(options.specUrl, {
         resolve: {
