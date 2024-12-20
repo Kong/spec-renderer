@@ -1,17 +1,13 @@
 import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { computeAPITree, transformOasToServiceNode } from '@/stoplight/elements'
-import type { ServiceNode } from '@/types'
+import type { ServiceNode, ParseOptions } from '@/types'
 import { parse as parseYaml } from '@stoplight/yaml'
 import type { TableOfContentsItem } from '@/stoplight/elements-core'
-import type { ParseOptions } from '../types'
 import type { ValidateResult } from '@scalar/openapi-parser'
 import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
-import AsyncParser from '@asyncapi/parser/browser'
-import { OpenAPISchemaParser } from '@asyncapi/openapi-schema-parser'
 import { stringify } from 'flatted'
-
 import { transform as transformAsync } from '@/utils/async-to-oas-transformer'
 
 const trace = (doTrace: boolean | undefined, ...args: any) => {
@@ -19,11 +15,13 @@ const trace = (doTrace: boolean | undefined, ...args: any) => {
     console.log(...args)
   }
 }
-const asyncParser = new AsyncParser()
-asyncParser.registerSchemaParser(OpenAPISchemaParser())
+
+let asyncParser:any = null
 
 export default (): {
   parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
+  parseOpenApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
+  parseAsyncApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
   parsedDocument: Ref<ServiceNode | string | undefined>
   tableOfContents: Ref<TableOfContentsItem[] | string | undefined>
   validationResults: Ref<ValidateResult | string | undefined>
@@ -87,7 +85,14 @@ export default (): {
   }
 
 
-  const parseAsyncDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<boolean> => {
+  const parseAsyncApiSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<void> => {
+
+    if (!asyncParser) {
+      const AsyncParser:any = await import('@asyncapi/parser/browser')
+      const OpenAPISchemaParser:any = await import('@asyncapi/openapi-schema-parser')
+      asyncParser = new AsyncParser.default()
+      asyncParser.registerSchemaParser(OpenAPISchemaParser.default())
+    }
 
     let specToParse = spec
     if (options.specUrl && !spec) {
@@ -95,21 +100,21 @@ export default (): {
         specToParse = await (await fetch(options.specUrl)).text()
       } catch (e) {
         console.error(`@kong/spec-renderer: error fetching async document from ${options.specUrl}`, e)
-        return false
+        return
       }
       trace(options.traceParsing, 'async document fetched')
     }
-
     let parsed = null
     try {
       const { document/*, diagnostics*/ } = await asyncParser.parse(specToParse)
       if (!document) {
-        return false
+        trace(options.traceParsing, 'async document undefined after parsing')
+        return
       }
       parsed = document
     } catch (e) {
       console.error('@kong/spec-renderer: error parsing async document', e)
-      return false
+      return
     }
     trace(options.traceParsing, 'async document parsed')
 
@@ -125,24 +130,19 @@ export default (): {
       trace(options.traceParsing, 'async document transformed')
       tableOfContents.value = toc
       parsedDocument.value = transformed
-      return true
+      return
     } catch (e) {
       console.error('@kong/spec-renderer: error transforming async document', e)
-      return false
+      return
     }
   }
+
   /**
     Parsing spec (sepcText) or by URL produced in  ParseOptions
   */
-  const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):Promise<void> => {
 
-    const isAsync = await parseAsyncDocument(spec, options)
-    if (isAsync) {
-      return
-    }
-
-    // let's
-    // we want to leave console.logs for parsing
+  const fetchAndBundle = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<void> => {
+    // if we have URL passed, but no spec, we call bundle to fetch and resolve external refs
     if (options.specUrl && !spec) {
       // fetches spec by URL provided and resolves all external references
       jsonDocument.value = await refParser.bundle(options.specUrl, {
@@ -159,11 +159,17 @@ export default (): {
         },
         continueOnError: true,
       })
-      trace(options.traceParsing, 'external referenced bundled')
+      trace(options.traceParsing, 'fetched and external referenced bundled')
     } else {
-      // parse document. also do yaml to json
+      // if we have string holding spec content, we try to convert it to json obect (from json string or yaml)
       jsonDocument.value = tryParseYamlOrObject(spec)
-      trace(options.traceParsing, 'parsed')
+      trace(options.traceParsing, 'parsed from string')
+    }
+  }
+  const parseOpenApiSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):Promise<void> => {
+
+    if (!jsonDocument.value) {
+      await fetchAndBundle(spec, options)
     }
 
     if (!jsonDocument.value) {
@@ -173,6 +179,7 @@ export default (): {
     }
 
     trace(options.traceParsing, 'json document available')
+
     try {
       // let's see if we can detect some validation errors here
       // validationResults.value = await validate(spec || jsonDocument.value)
@@ -247,8 +254,33 @@ export default (): {
     trace(options.traceParsing, 'APITree computed')
   }
 
+  const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<void> => {
+
+    await fetchAndBundle(spec, options)
+
+    if (!jsonDocument.value) {
+      // was it even a spec or even something that could be converted to json?
+      console.error('@kong/spec-renderer: empty jsonDocument initial processing')
+      return
+    }
+
+    trace(options.traceParsing, 'json document available')
+
+    // at this point we have json schema, so we can look when spec is it and if it is asyc, we call async if not in ssr mode
+    if (jsonDocument.value?.asyncapi) {
+      trace(options.traceParsing, 'asyncapi spec detected')
+      await parseAsyncApiSpecDocument(spec, options)
+    } else {
+      trace(options.traceParsing, 'openapi spec detected')
+      await parseOpenApiSpecDocument(spec, options)
+    }
+
+  }
+
   return {
     parseSpecDocument,
+    parseOpenApiSpecDocument,
+    parseAsyncApiSpecDocument,
     parsedDocument,
     tableOfContents,
     validationResults,

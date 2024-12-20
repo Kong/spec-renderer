@@ -65,7 +65,7 @@ import ArticleNode from './ArticleNode.vue'
 import UnknownNode from './UnknownNode.vue'
 import DocumentNavigation from './DocumentNavigation.vue'
 import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE } from '@/constants'
-import { BOOL_VALIDATOR, IS_TRUE } from '@/utils'
+import { BOOL_VALIDATOR, IS_TRUE, isSsr } from '@/utils'
 import type { NavigationTypes } from '@/types'
 import { stringify, parse as parseFlatted } from 'flatted'
 
@@ -166,7 +166,7 @@ const props = defineProps({
   },
 })
 
-const { createHighlighter } = composables.useShiki()
+const { highlighter, createHighlighter } = composables.useShiki()
 const { initialize } = composables.useServerList()
 
 const serviceNode = ref<ServiceNode | null>(null)
@@ -237,7 +237,7 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
 
 
 const scrollingContainerEl = computed(():HTMLElement | null => {
-  if (!window || !document) {
+  if (isSsr()) {
     return null
   }
   if (!props.documentScrollingContainer) {
@@ -446,11 +446,11 @@ watch(() => ({
 
   const isRootPath = !pathname || pathname === '/'
   serviceNode.value = <ServiceNode>(isRootPath ? newDocument : newDocument.children.find((child: any) => child.uri === pathname))
-
   if (!serviceNode.value) {
     emit('path-not-found', pathname)
     return
   }
+
   if (oldDocument !== newDocument) {
     lastY.value = 0
     renderPlain.value = false
@@ -460,6 +460,9 @@ watch(() => ({
   }
 
   if (!props.allowContentScrolling) {
+    if (!highlighter.value) {
+      await createHighlighter()
+    }
     // case when scrolling is not enabled - we do not need to do anything else
     return
   }
@@ -475,6 +478,13 @@ watch(() => ({
   const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
 
   forceRenderer([pathIdx])
+
+  // the rest of this watcher only need to be executed when in non-ssr mode
+  if (isSsr()) {
+    renderPlain.value = true
+    return
+  }
+
   await nextTick()
 
 
