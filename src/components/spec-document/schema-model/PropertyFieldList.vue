@@ -50,6 +50,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  propertyPath: {
+    type: String,
+    default: '',
+  },
 })
 
 const emit = defineEmits<{
@@ -72,6 +76,7 @@ const orderedFieldList = computed(() => {
         variantsList: props.variantSelectItemList,
         inheritanceTypeLabel: props.inheritanceTypeLabel,
         deprecated: props.property.deprecated,
+        propertyPath: props.propertyPath,
         // if property is of array type, we use format to display the item type, else we use format as it is
         ...(props.property.type === 'array' ? { propertyItemType: props.property.format } : { format: props.property.format }),
       },
