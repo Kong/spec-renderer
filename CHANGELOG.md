@@ -1,3 +1,17 @@
+# [1.84.0](https://github.com/Kong/spec-renderer/compare/v1.83.3...v1.84.0) (2024-12-19)
+
+
+### Features
+
+* navigation buttons [KHCP-14316] ([#439](https://github.com/Kong/spec-renderer/issues/439)) ([8917fe9](https://github.com/Kong/spec-renderer/commit/8917fe98b0cbde53105568c3dcc6a745070d7a50))
+
+## [1.83.3](https://github.com/Kong/spec-renderer/compare/v1.83.2...v1.83.3) (2024-12-19)
+
+
+### Bug Fixes
+
+* **response-sample:** fallback to description if no sample body to show ([#454](https://github.com/Kong/spec-renderer/issues/454)) ([8b7c919](https://github.com/Kong/spec-renderer/commit/8b7c919a991e867542c94ea73e5206203811ce34))
+
 ## [1.83.2](https://github.com/Kong/spec-renderer/compare/v1.83.1...v1.83.2) (2024-12-18)
 
 
