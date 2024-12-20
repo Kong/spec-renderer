@@ -1,3 +1,10 @@
+## [1.85.1](https://github.com/Kong/spec-renderer/compare/v1.85.0...v1.85.1) (2024-12-20)
+
+
+### Bug Fixes
+
+* ssr support for openapi specs [KHCP-14450] ([#451](https://github.com/Kong/spec-renderer/issues/451)) ([b7c3605](https://github.com/Kong/spec-renderer/commit/b7c3605c227cb488522556223b2f0a4cc708a9a0))
+
 # [1.85.0](https://github.com/Kong/spec-renderer/compare/v1.84.0...v1.85.0) (2024-12-20)
 
 
