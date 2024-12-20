@@ -86,8 +86,9 @@
     <div class="component-container">
       <h2>Schema Renderer</h2>
       <SchemaRenderer
+        enable-property-links
         :example-visible="false"
-        :header-visible="false"
+        :header-visible="true"
         :schema="schema"
         title="Sample Schema"
       />
@@ -166,6 +167,56 @@ const schema = {
       'format': 'date-time',
       'description': 'Time when the task was updated',
       'readOnly': true,
+    },
+    'userId': {
+      'type': 'number',
+      'description': 'ID of the user',
+      'readOnly': true,
+    },
+    'firstName': {
+      'type': 'string',
+      'minLength': 1,
+      'description': '',
+    },
+    'lastName': {
+      'type': 'string',
+      'minLength': 1,
+      'description': '',
+    },
+    'phoneNumber': {
+      'type': 'string',
+      'minLength': 1,
+      'description': 'Official Phone Number',
+    },
+    'emailAddress': {
+      'type': 'string',
+      'minLength': 1,
+      'description': 'Work Email Address',
+    },
+    'address': {
+      'type': 'object',
+      'properties': {
+        'street': {
+          'type': 'string',
+          'minLength': 1,
+          'description': 'Street address',
+        },
+        'city': {
+          'type': 'string',
+          'minLength': 1,
+          'description': 'City',
+        },
+        'state': {
+          'type': 'string',
+          'minLength': 1,
+          'description': 'State',
+        },
+        'zip': {
+          'type': 'string',
+          'minLength': 1,
+          'description': 'Zip code',
+        },
+      },
     },
   },
   'required': [

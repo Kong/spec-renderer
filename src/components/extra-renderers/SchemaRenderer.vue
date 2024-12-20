@@ -21,8 +21,7 @@
           :required-fields="activeSchemaModel?.required"
         />
         <ModelNode
-          :schema="schema"
-          :title="title"
+          v-bind="modelNodeProps"
           @selected-model-changed="(newModel: SchemaObject) => activeSchemaModel = newModel"
         />
       </div>
@@ -77,7 +76,14 @@ const props = defineProps({
     validator: BOOL_VALIDATOR,
     default: true,
   },
-
+  /**
+   * enable links to individual properties of a Schema Model
+   */
+  enablePropertyLinks: {
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
+    default: false,
+  },
 })
 
 const schema = computed((): SchemaObject => {
@@ -93,6 +99,12 @@ const schema = computed((): SchemaObject => {
 })
 const showHeader = computed((): boolean => IS_TRUE(props.headerVisible))
 const showExample = computed((): boolean => IS_TRUE(props.exampleVisible))
+
+const modelNodeProps = computed(() => ({
+  schema: schema.value,
+  title: props.title,
+  ...(IS_TRUE(props.enablePropertyLinks) ? { basePathId: `schema-${schemaTitle.value}` } : null),
+}))
 
 const activeSchemaModel = ref<SchemaObject>(schema.value)
 
