@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import ModelProperty from './ModelProperty.vue'
 import type { SchemaObject } from '@/types'
+import { kebabCase } from '@/utils'
 
 describe('<ModelProperty />', () => {
   it('renders all fields of a property', () => {
@@ -70,7 +71,7 @@ describe('<ModelProperty />', () => {
       })
 
       // Check if ModelProperty component renders for the first oneOf object
-      expect(wrapper.findTestId(`model-property-${oneOfList[0].title}`).exists()).toBe(true)
+      expect(wrapper.findTestId(`model-property-${kebabCase(oneOfList[0].title ?? '')}`).exists()).toBe(true)
     })
 
     it('when schema model is a simple object', () => {
@@ -86,7 +87,7 @@ describe('<ModelProperty />', () => {
       })
 
       // Check if ModelProperty component renders for the first oneOf object
-      expect(wrapper.findTestId(`model-property-${oneOfList[0].title}`).exists()).toBe(true)
+      expect(wrapper.findTestId(`model-property-${kebabCase(oneOfList[0].title ?? '')}`).exists()).toBe(true)
     })
   })
 
@@ -121,7 +122,7 @@ describe('<ModelProperty />', () => {
       })
 
       // Check if ModelProperty component renders for the first anyOf object
-      expect(wrapper.findTestId(`model-property-${anyOfList[0].title}`).exists()).toBe(true)
+      expect(wrapper.findTestId(`model-property-${kebabCase(anyOfList[0].title ?? '')}`).exists()).toBe(true)
     })
 
     it('when schema model is a simple object', () => {
@@ -137,7 +138,7 @@ describe('<ModelProperty />', () => {
       })
 
       // Check if ModelProperty component renders for the first anyOf object
-      expect(wrapper.findTestId(`model-property-${anyOfList[0].title}`).exists()).toBe(true)
+      expect(wrapper.findTestId(`model-property-${kebabCase(anyOfList[0].title ?? '')}`).exists()).toBe(true)
     })
   })
 })

@@ -62,11 +62,20 @@
         type="neutral"
       />
     </span>
+
+    <a
+      v-if="propertyPath"
+      class="property-info-permalink"
+      :href="`#${propertyPath}`"
+    >
+      <LinkIcon />
+    </a>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { LinkIcon } from '@kong/icons'
 import type { SchemaObject, SelectItem } from '@/types'
 import type { PropType } from 'vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
@@ -110,6 +119,10 @@ defineProps({
     type: String,
     default: '',
   },
+  propertyPath: {
+    type: String,
+    default: '',
+  },
 })
 
 const selectedVariant = ref('0')
@@ -133,9 +146,12 @@ function handleSelectChange(selecteditem: SelectItem) {
     }
   }
 
+  > :not(:last-child) {
+    margin-right: var(--kui-space-50, $kui-space-50);
+  }
+
   .property-title {
     height: var(--kui-icon-size-40, $kui-icon-size-40);
-    margin-right: var(--kui-space-50, $kui-space-50);
 
     > :not(:last-child) {
       margin-right: var(--kui-space-50, $kui-space-50);
@@ -169,6 +185,18 @@ function handleSelectChange(selecteditem: SelectItem) {
     .required-property {
       color: var(--kui-color-text-danger, $kui-color-text-danger);
       font-size: var(--kui-font-size-20, $kui-font-size-20);
+    }
+  }
+
+  .property-info-permalink {
+    display: inline-block;
+    vertical-align: middle;
+    visibility: hidden;
+  }
+
+  &:hover {
+    .property-info-permalink {
+      visibility: visible;
     }
   }
 }

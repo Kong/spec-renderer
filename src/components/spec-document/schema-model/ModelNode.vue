@@ -20,6 +20,7 @@
       <!-- if the schema model has variants, render the selected variant -->
       <ModelProperty
         v-if="selectedSchemaModel?.oneOf || selectedSchemaModel?.anyOf"
+        :base-path-id="basePathId"
         :property="selectedSchemaModel"
         :property-name="selectedSchemaModel.title || variantSelectItemList[selectedVariantIndex].label"
         :required-fields="selectedSchemaModel?.required"
@@ -33,6 +34,7 @@
     >
       <ModelProperty
         v-if="isValidSchemaObject(property)"
+        :base-path-id="basePathId"
         :class="{ 'model-node-property': index !== 0 }"
         :data-testid="`model-property-${propertyName}`"
         :property="property"
@@ -69,6 +71,13 @@ const props = defineProps({
   hideExampleField: {
     type: Boolean,
     default: false,
+  },
+  /**
+   * used for links to individual properties of a Schema Model
+   */
+  basePathId: {
+    type: String,
+    default: '',
   },
 })
 

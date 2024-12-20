@@ -1,5 +1,6 @@
 <template>
   <div
+    :id="propertyId"
     class="model-property"
     :data-testid="dataTestId"
   >
@@ -7,6 +8,7 @@
       :inheritance-type-label="inheritanceTypeLabel"
       :property="resolvedSchemaObject"
       :property-name="propertyName"
+      :property-path="propertyId"
       :required-fields="requiredFields"
       :variant-select-item-list="variantSelectItemList"
       @variant-changed="(index: number) => selectedVariantIndex = index"
@@ -17,6 +19,7 @@
       class="selected-variant-container"
     >
       <ModelProperty
+        :base-path-id="propertyId"
         :property="selectedSchemaModel"
         :property-name="selectedSchemaModel.title || variantSelectItemList[selectedVariantIndex].label"
         :required-fields="selectedSchemaModel.required"
@@ -39,6 +42,7 @@
       </summary>
       <ModelNode
         v-if="nestedPropertiesExpanded"
+        :base-path-id="propertyId"
         class="nested-model-node"
         :schema="selectedSchemaModel"
         :title="propertyName"
@@ -50,7 +54,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { AddIcon } from '@kong/icons'
-import { resolveSchemaObjectFields } from '@/utils'
+import { kebabCase, resolveSchemaObjectFields } from '@/utils'
 import type { PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 
@@ -71,13 +75,26 @@ const props = defineProps({
     type: Array as PropType<SchemaObject['required']>,
     default: () => [],
   },
+  /**
+   * used for links to individual properties of a Schema Model
+   */
+  basePathId: {
+    type: String,
+    default: '',
+  },
 })
 const nestedPropertiesExpanded = ref(false)
 
-const dataTestId = computed(() => `model-property-${props.propertyName.replaceAll(' ', '-')}`)
+const dataTestId = computed(() => `model-property-${kebabCase(props.propertyName)}`)
+const propertyId = computed(() => props.basePathId ? kebabCase(`${props.basePathId}-${props.propertyName}`) : undefined)
 
 const resolvedSchemaObject = computed(() => resolveSchemaObjectFields(props.property))
-const { variantSelectItemList, selectedSchemaModel, selectedVariantIndex, inheritanceTypeLabel } = useSchemaVariants(resolvedSchemaObject)
+const {
+  variantSelectItemList,
+  selectedSchemaModel,
+  selectedVariantIndex,
+  inheritanceTypeLabel,
+} = useSchemaVariants(resolvedSchemaObject)
 
 const nestedPropertiesPresent = computed<boolean>(() =>{
   if (selectedSchemaModel.value?.properties) {
