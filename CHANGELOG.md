@@ -1,3 +1,10 @@
+# [1.85.0](https://github.com/Kong/spec-renderer/compare/v1.84.0...v1.85.0) (2024-12-20)
+
+
+### Features
+
+* **schema-renderer:** add support for linking to schema properties ([#455](https://github.com/Kong/spec-renderer/issues/455)) ([29a0f26](https://github.com/Kong/spec-renderer/commit/29a0f2690e13c1e6e6825aeade0cbe5225843bee))
+
 # [1.84.0](https://github.com/Kong/spec-renderer/compare/v1.83.3...v1.84.0) (2024-12-19)
 
 
