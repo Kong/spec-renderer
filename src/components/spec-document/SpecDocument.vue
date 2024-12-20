@@ -6,7 +6,15 @@
     <component
       :is="docComponent.component"
       v-if="docComponent.component !== null"
-      v-bind="docComponent.props as any"
+      v-bind="docComponent.props"
+    />
+
+    <DocumentNavigation
+      v-if="neighborComponentList.length"
+      :base-path="basePath"
+      :navigation-type="navigationType"
+      :neighbor-component-list="neighborComponentList"
+      @item-selected="selectItem"
     />
   </div>
   <div
@@ -17,7 +25,7 @@
     <div
       v-for="(node, idx) in nodesList"
       :id="`${idx}-nodecontainer`"
-      :key="`${node.doc.data.id}-${idx}`"
+      :key="`${node.doc.uri}-${idx}`"
       class="spec-renderer-document"
     >
       <div v-if="node.component">
@@ -43,10 +51,11 @@
 
 <script setup lang="ts">
 import { watch, ref, provide, computed, nextTick, onBeforeMount } from 'vue'
+import { useWindowScroll, useWindowSize, useElementSize, useScroll } from '@vueuse/core'
 import composables from '@/composables'
 import type { PropType, Ref } from 'vue'
 import { NodeType } from '@/types'
-import type { ServiceNode, ServiceChildNode } from '@/types'
+import type { ServiceNode, ServiceChildNode, DocumentNavigationItem } from '@/types'
 import HttpService from './HttpService.vue'
 import HttpOperation from './HttpOperation.vue'
 import AsyncOperation from './AsyncOperation.vue'
@@ -54,7 +63,7 @@ import HttpModel from './HttpModel.vue'
 import AsyncMessage from './AsyncMessage.vue'
 import ArticleNode from './ArticleNode.vue'
 import UnknownNode from './UnknownNode.vue'
-import { useWindowScroll, useWindowSize, useElementSize, useScroll } from '@vueuse/core'
+import DocumentNavigation from './DocumentNavigation.vue'
 import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE } from '@/constants'
 import { BOOL_VALIDATOR, IS_TRUE } from '@/utils'
 import type { NavigationTypes } from '@/types'
@@ -146,6 +155,15 @@ const props = defineProps({
     validator: BOOL_VALIDATOR,
     default: true,
   },
+  /**
+   * Hide navigation buttons at the bottom of the document.
+   * Only relevant when not in content scrolling mode.
+   */
+  hideNavigationButtons: {
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
+    default: true,
+  },
 })
 
 const { createHighlighter } = composables.useShiki()
@@ -164,6 +182,7 @@ provide<Ref<boolean>>('allow-custom-server-url', computed((): boolean => IS_TRUE
 const emit = defineEmits < {
   (e: 'path-not-found', requestedPath: string): void,
   (e: 'content-scrolled', path: string): void,
+  (e: 'item-selected', id: string): void,
 }>()
 
 // forced - assumed visible (rendered) even when hidden
@@ -186,8 +205,13 @@ const specDocument = computed((): ServiceNode => {
   return <ServiceNode>props.document
 })
 
-const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null) => {
-  if (!forServiceNode) return {}
+const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null):
+{
+  component: any;
+  props: any;
+  doc: ServiceNode | ServiceChildNode;
+} | null => {
+  if (!forServiceNode) return null
 
   const defaultProps = {
     data: forServiceNode.data,
@@ -236,19 +260,8 @@ const containerSize = computed(()=> {
   return scrollingContainerEl.value ? scrollableContainerSize : windowSize
 })
 
-const docComponent = computed(() => {
-  //@ts-ignore ignore types for now, we might rewrite all this stuff anyways
-  return getDocumentComponent(serviceNode.value)
-})
-
-
-
 const nodesList = computed(() => {
-  if (!props.allowContentScrolling) {
-    return []
-  }
-
-  let nList = <any[]>[]
+  let nList = []
   // first one - overview
   nList.push(...[specDocument.value])
 
@@ -272,13 +285,57 @@ const nodesList = computed(() => {
   // very last - schemas
   nList.push(...specDocument.value.children.filter(child => (child.tags || []).length === 0 && child.type === 'model'))
 
-
+  const docComponentList = []
   // transforming to components
   for (let i = 0; i < nList.length; i++) {
-    nList[i] = getDocumentComponent(nList[i])
+    const component = getDocumentComponent(nList[i])
+    if (component) {
+      docComponentList.push(component)
+    }
   }
-  return nList
+  return docComponentList
 })
+
+const activePathIdx = computed(() => nodesList.value.findIndex(node => node.doc.uri === props.currentPath))
+
+const docComponent = computed(() => {
+  return nodesList.value[activePathIdx.value]
+})
+
+const neighborComponentList = computed<Array<DocumentNavigationItem>>(() => {
+  const list: Array<DocumentNavigationItem> = []
+
+  if (IS_TRUE(props.hideNavigationButtons) || IS_TRUE(props.allowContentScrolling)) {
+    return list
+  }
+
+  for (const idx of [-1, 1]) {
+    const node = nodesList.value[activePathIdx.value + Number(idx)]
+
+    if (node) {
+      list.push({
+        name: node.doc.name,
+        uri: node.doc.uri,
+        type: idx === -1 ? 'previous' : 'next',
+        ...(node.doc.type === 'http_operation' && node.doc.data.method
+          ? { method: node.doc.data.method }
+          : {}),
+      })
+    }
+  }
+
+  return list
+})
+
+const selectItem = (newUrl: string): void => {
+  if (IS_TRUE(props.controlAddressBar)) {
+    // we only have path and hash for now
+    const newPath = props.navigationType === 'path' ? props.basePath + newUrl : props.basePath + '#' + newUrl
+    window.history.pushState({}, '', newPath)
+  }
+
+  emit('item-selected', newUrl)
+}
 
 const forceRenderer = (visibleIdx: number[]) => {
   const newToRenderer = Array(nodesList.value.length).fill('false', 0)
@@ -305,6 +362,11 @@ watch(() => ({ nodesList: nodesList.value,
   wHeight: containerSize.value.height.value,
   wWidth: containerSize.value.width.value,
 }), (newValue, oldValue) => {
+
+  if (!props.allowContentScrolling) {
+    // case when scrolling is not enabled - we do not need to do anything else
+    return
+  }
 
   if (!processScrolling.value) {
     return
@@ -448,7 +510,7 @@ onBeforeMount(async () => {
   box-sizing: border-box;
   color: var(--kui-color-text, $kui-color-text);
   container: spec-document / inline-size;
-  padding-top: var(--kui-space-40, $kui-space-40);
+  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
 
   :deep(details) {
     > summary {

@@ -114,9 +114,9 @@
           @request-body-sample-idx-changed="setRequestBodyByIdx"
         />
         <ResponseSample
-          v-if="activeResponseContentList?.length"
           :content-list="activeResponseContentList"
           :content-type="activeContentType"
+          :description="activeResponseDescription"
           :response-code="activeResponseCode"
         >
           <ResponseTypeSelect
@@ -140,9 +140,9 @@
             /> callback sample
           </template>
           <ResponseSample
-            v-if="activeCallbackResponseContentList?.length"
             :content-list="activeCallbackResponseContentList"
             :content-type="activeCallbackContentType"
+            :description="activeCallbackResponseDescription"
             :response-code="activeCallbackResponseCode"
           >
             <div class="calback-response-sample-header">
