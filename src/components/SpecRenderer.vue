@@ -60,11 +60,13 @@
           :document="parsedDocument"
           :document-scrolling-container="documentScrollingContainer"
           :hide-insomnia-try-it="hideInsomniaTryIt"
+          :hide-navigation-buttons="hideNavigationButtons"
           :hide-try-it="hideTryIt"
           :markdown-styles="markdownStyles"
           :navigation-type="navigationType"
           :spec-url="specUrl"
           @content-scrolled="onDocumentScroll"
+          @item-selected="itemSelected"
           @path-not-found="relayPathNotFound"
         />
       </div>
@@ -218,6 +220,15 @@ const props = defineProps({
     type: [Boolean, String],
     validator: BOOL_VALIDATOR,
     default: false,
+  },
+  /**
+   * Hide navigation buttons at the bottom of the document.
+   * Only relevant when not in content scrolling mode.
+   */
+  hideNavigationButtons: {
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
+    default: true,
   },
 })
 
