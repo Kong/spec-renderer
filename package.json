@@ -22,7 +22,7 @@
       "import": "./dist/kong-spec-renderer.web-component.es.js",
       "require": "./dist/kong-spec-renderer.web-component.cjs"
     },
-    "./dist/style.css": "./dist/spec-renderer-dev.css",
+    "./dist/style.css": "./dist/spec-renderer.css",
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
   },
