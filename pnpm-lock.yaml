@@ -91,8 +91,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1(@types/node@22.10.2)(typescript@5.6.3)
       '@evilmartians/lefthook':
-        specifier: ^1.9.0
-        version: 1.9.0
+        specifier: ^1.9.2
+        version: 1.10.0
       '@kong/design-tokens':
         specifier: ^1.17.2
         version: 1.17.2
@@ -169,10 +169,10 @@ importers:
         specifier: ^5.12.0
         version: 5.12.0(rollup@4.22.4)
       sass:
-        specifier: ^1.82.0
+        specifier: ^1.83.0
         version: 1.83.0
       sass-embedded:
-        specifier: ^1.82.0
+        specifier: ^1.83.0
         version: 1.83.0
       semantic-release:
         specifier: ^24.2.0
@@ -703,8 +703,8 @@ packages:
     resolution: {integrity: sha512-2b/g5hRmpbb1o4GnTZax9N9m0FXzz9OV42ZzI4rDDMDuHUqigAiQCEWChBWCY4ztAGVRjoWT19v0yMmc5/L5kA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@evilmartians/lefthook@1.9.0':
-    resolution: {integrity: sha512-a6+eZ/6TlE3ILu0B1GGUC90X3nysSfcUZo5mQMwY0aF2Djw5Faf6EYZ7Il8oCxxgNmsZ2tGn9EgOPNQTqT2G+g==}
+  '@evilmartians/lefthook@1.10.0':
+    resolution: {integrity: sha512-jv6GJ8ZbPd9/iLwCkWk9IQen8a6gkVCv/XOR1AYMGp+C0v+YqZwc1SXnL1y4LlS8Kv6bjBpQhSJmtuXLOFn7LA==}
     cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
@@ -6114,7 +6114,7 @@ snapshots:
     dependencies:
       levn: 0.4.1
 
-  '@evilmartians/lefthook@1.9.0': {}
+  '@evilmartians/lefthook@1.10.0': {}
 
   '@exodus/schemasafe@1.3.0': {}
 
