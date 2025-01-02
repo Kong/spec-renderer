@@ -114,22 +114,27 @@ describe('resolveSchemaObjectFields', () => {
       expect(resolveSchemaObjectFields(invalidSchemaObject)).toStrictEqual({})
     }
   })
-  it('returns empty object for invalid Schema Object from array', () => {
+  it('returns original object for invalid items field in an array schema', () => {
     const invalidSchemaObjectList = [
-      null,
-      false,
-      [{
-        type: 'object',
-        $ref: '#/components/schemas/Pet',
-      }],
       {
         type: 'array',
+        items: true,
+      },
+      {
+        type: 'array',
+        items: null,
+      },
+      {
+        type: 'array',
+      },
+      {
+        type: ['array', 'null'],
         items: true,
       },
     ]
 
     for (const invalidSchemaObject of invalidSchemaObjectList) {
-      expect(resolveSchemaObjectFields(invalidSchemaObject)).toStrictEqual({})
+      expect(resolveSchemaObjectFields(invalidSchemaObject)).toStrictEqual(invalidSchemaObject)
     }
   })
   it('returns Schema Object with merged allOf fields', () => {
