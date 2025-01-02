@@ -73,6 +73,25 @@ describe('resolveSchemaObjectFields', () => {
     expect(resolveSchemaObjectFields(schemaObject)?.properties).toEqual(itemProperties)
     expect(resolveSchemaObjectFields(schemaObject)?.required).toEqual(itemRequiredFields)
   })
+  it('returns properties and required fields of a Schema Object of multiple types', () => {
+    const itemProperties: Record<string, SchemaObject> = {
+      name: {
+        type: 'string',
+      },
+    }
+    const itemRequiredFields = ['name']
+
+    const schemaObject: SchemaObject = {
+      type: ['array', 'null'],
+      items: {
+        type: 'object',
+        properties: itemProperties,
+        required: itemRequiredFields,
+      },
+    }
+    expect(resolveSchemaObjectFields(schemaObject)?.properties).toEqual(itemProperties)
+    expect(resolveSchemaObjectFields(schemaObject)?.required).toEqual(itemRequiredFields)
+  })
   it('merges items and properties of a Schema Object of type array correctly', () => {
     // fields under items
     const itemProperties: Record<string, SchemaObject> = {
