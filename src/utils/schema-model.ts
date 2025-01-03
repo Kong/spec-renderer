@@ -51,7 +51,7 @@ export const resolveSchemaObjectFields = (candidate: unknown): SchemaObject => {
    * If the candidate is an array, we need to derive the fields from its `items` field.
    * Else, we can directly use the fields from the candidate.
   */
-  if (candidate.type === 'array' && candidate.items) {
+  if (candidate.type === 'array' || candidate.type?.includes('array') && candidate.items) {
     if (isValidSchemaObject(candidate.items)) {
       /**
        * we need —
@@ -62,9 +62,12 @@ export const resolveSchemaObjectFields = (candidate: unknown): SchemaObject => {
        */
       const candidateWithoutItems = { ...candidate }
       delete candidateWithoutItems.items
-      return { ...candidateWithoutItems, ...resolveAllOf(candidate.items), type: 'array', format: candidate.items.type?.toString() }
-    } else {
-      return {}
+      return {
+        ...candidateWithoutItems,
+        ...resolveAllOf(candidate.items),
+        type: candidate.type,
+        format: candidate.items.type?.toString(),
+      }
     }
   }
 
