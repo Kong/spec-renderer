@@ -1,3 +1,10 @@
+## [1.85.5](https://github.com/Kong/spec-renderer/compare/v1.85.4...v1.85.5) (2025-01-03)
+
+
+### Bug Fixes
+
+* **schema-model:** add support for when schema type is a list [KHCP-14512] ([#466](https://github.com/Kong/spec-renderer/issues/466)) ([b414225](https://github.com/Kong/spec-renderer/commit/b414225669156b233a77c0f6e68496bceb6aabfe))
+
 ## [1.85.4](https://github.com/Kong/spec-renderer/compare/v1.85.3...v1.85.4) (2025-01-02)
 
 
