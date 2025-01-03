@@ -16,6 +16,11 @@ export interface SchemaObject extends JSONSchema7 {
    * https://json-schema.org/draft/2019-09/release-notes#meta-data-vocabulary
    */
   deprecated?: boolean
+  /**
+   * used to show array item type
+   * e.g. array [string]
+   */
+  itemType?: JSONSchema7['type']
 }
 
 
