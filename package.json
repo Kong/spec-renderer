@@ -22,6 +22,7 @@
       "import": "./dist/kong-spec-renderer.web-component.es.js",
       "require": "./dist/kong-spec-renderer.web-component.cjs"
     },
+    "./dist/style.css": "./dist/spec-renderer.css",
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
   },
@@ -121,7 +122,7 @@
     "tsc-alias": "^1.8.10",
     "tslib": "^2.8.1",
     "typescript": "^5.6.3",
-    "vite": "^5.4.11",
+    "vite": "^6.0.3",
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-replace": "^0.1.1",
     "vite-plugin-vue-devtools": "^7.6.8",

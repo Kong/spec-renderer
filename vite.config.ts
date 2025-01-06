@@ -129,6 +129,7 @@ export default defineConfig({
           }
         },
         formats: ['es', 'cjs'],
+        cssFileName: 'spec-renderer',
       },
     minify: true,
     sourcemap: true,
