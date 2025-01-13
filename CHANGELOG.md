@@ -1,3 +1,10 @@
+## [1.85.6](https://github.com/Kong/spec-renderer/compare/v1.85.5...v1.85.6) (2025-01-13)
+
+
+### Bug Fixes
+
+* add stylelint rule and brace rules ([#474](https://github.com/Kong/spec-renderer/issues/474)) ([9ac318a](https://github.com/Kong/spec-renderer/commit/9ac318afcb733512e4052484b42428293326d8b5))
+
 ## [1.85.5](https://github.com/Kong/spec-renderer/compare/v1.85.4...v1.85.5) (2025-01-03)
 
 
