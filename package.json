@@ -93,7 +93,7 @@
     "@types/jsdom": "^21.1.7",
     "@types/json-schema": "^7.0.15",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^22.10.2",
+    "@types/node": "^22.10.3",
     "@types/sanitize-html": "^2.13.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitest/ui": "^2.1.8",
