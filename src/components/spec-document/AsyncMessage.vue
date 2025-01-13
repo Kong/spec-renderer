@@ -104,6 +104,7 @@ const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
   .message-prop {
     padding-bottom: var(--kui-space-40, $kui-space-40);
   }
+
   .message-description {
     padding-top: var(--kui-space-40, $kui-space-40);
   }

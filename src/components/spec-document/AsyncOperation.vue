@@ -138,11 +138,12 @@ const requestParams = computed(() => {
     margin-bottom: var(--kui-space-90, $kui-space-90);
   }
 
-  .async-operation-container  {
+  .async-operation-container {
     display: grid;
     gap: var(--kui-space-10, $kui-space-10);
     width: 100%;
   }
+
   .operation-prop {
     padding-bottom: var(--kui-space-40, $kui-space-40);
     padding-top: var(--kui-space-40, $kui-space-40);

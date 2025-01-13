@@ -537,12 +537,15 @@ onBeforeMount(async () => {
     margin-bottom: var(--kui-space-100, $kui-space-100);
     padding-bottom: var(--kui-space-100, $kui-space-100);
   }
+
   .spec-renderer-document {
     border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+
     &:last-child {
       border-bottom: none;
     }
   }
+
   .placeholder {
     height: 800px;
     max-height: 800px;

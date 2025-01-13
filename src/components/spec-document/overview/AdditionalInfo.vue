@@ -87,6 +87,7 @@ defineProps({
   .overview-additional-info-contact {
     display: block;
   }
+
   > :not(:first-child) {
     margin-top: var(--kui-space-50, $kui-space-50);
   }

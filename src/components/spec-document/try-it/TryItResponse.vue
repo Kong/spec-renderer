@@ -155,6 +155,7 @@ watch(() => props.response, async (res) => {
   display:flex;
   flex: 1;
 }
+
 .response-status:before {
   color: var(--kui-color-text-danger, $kui-color-text-danger);
   content: '\25CF';
