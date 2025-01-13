@@ -60,6 +60,7 @@ defineProps({
     align-items: center;
     display: flex;
     gap: var(--kui-space-50, $kui-space-50);
+
     h1 {
       font-size: var(--kui-font-size-80, $kui-font-size-80);
       font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);

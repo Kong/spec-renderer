@@ -94,6 +94,7 @@ const toggleState = (e: Event) => {
         display: none;
       }
     }
+
     .btn-container {
       align-self: flex-end;
       padding-left: var(--kui-space-30, $kui-space-30);
@@ -148,6 +149,7 @@ const toggleState = (e: Event) => {
   @media (max-width: ($kui-breakpoint-mobile - 1px)) {
     .panel-body {
       grid-template-columns: 1fr;
+
       :deep(.wide) {
         grid-column: 1;
       }

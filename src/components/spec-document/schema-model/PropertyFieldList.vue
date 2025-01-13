@@ -184,6 +184,7 @@ const orderedFieldList = computed(() => {
 <style lang="scss" scoped>
 .property-field-list {
   overflow-wrap: anywhere;
+
   > :not(:first-child) {
     margin-top: var(--kui-space-50, $kui-space-50);
   }

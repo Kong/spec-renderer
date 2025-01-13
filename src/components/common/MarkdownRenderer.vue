@@ -131,8 +131,7 @@ const markdownStyles = inject<Ref<boolean>>('markdown-styles', ref(true))
 
       // Add external link icons
       &[href^="http://"],
-      &[href^="https://"]
-      {
+      &[href^="https://"] {
         background-image: url("data:image/svg+xml;base64,PHN2ZyBjbGFzcz0iaWNvbiBvdXRib3VuZCIKICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGFyaWEtaGlkZGVuPSJ0cnVlIiBhcmlhLWxhYmVsPSIob3BlbnMgbmV3IHdpbmRvdykiIGZvY3VzYWJsZT0iZmFsc2UiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgd2lkdGg9IjE1IiBoZWlnaHQ9IjE1Ij4KICA8cGF0aCBmaWxsPSIjYWFhIiBkPSJNMTguOCw4NS4xaDU2bDAsMGMyLjIsMCw0LTEuOCw0LTR2LTMyaC04djI4aC00OHYtNDhoMjh2LThoLTMybDAsMGMtMi4yLDAtNCwxLjgtNCw0djU2QzE0LjgsODMuMywxNi42LDg1LjEsMTguOCw4NS4xeiIgLz4KICA8cG9seWdvbiBmaWxsPSIjYWFhIiBwb2ludHM9IjQ1LjcsNDguNyA1MS4zLDU0LjMgNzcuMiwyOC41IDc3LjIsMzcuMiA4NS4yLDM3LjIgODUuMiwxNC45IDYyLjgsMTQuOSA2Mi44LDIyLjkgNzEuNSwyMi45IiAvPgo8L3N2Zz4K");
         background-position: right center;
         background-repeat: no-repeat;
