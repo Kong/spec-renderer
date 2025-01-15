@@ -1,3 +1,10 @@
+## [1.85.7](https://github.com/Kong/spec-renderer/compare/v1.85.6...v1.85.7) (2025-01-15)
+
+
+### Bug Fixes
+
+* handle example generation when schema type is a list ([#467](https://github.com/Kong/spec-renderer/issues/467)) ([5789a84](https://github.com/Kong/spec-renderer/commit/5789a84829b4026901111068d813bad1556982c7))
+
 ## [1.85.6](https://github.com/Kong/spec-renderer/compare/v1.85.5...v1.85.6) (2025-01-13)
 
 
