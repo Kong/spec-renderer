@@ -71,7 +71,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'tryit-api-call'): void,
+  (e: 'tryit-api-call'): void
 }>()
 
 const items: Array<SelectItem> = [

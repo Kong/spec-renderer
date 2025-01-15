@@ -77,8 +77,8 @@ const orderedFieldList = computed(() => {
         inheritanceTypeLabel: props.inheritanceTypeLabel,
         deprecated: props.property.deprecated,
         propertyPath: props.propertyPath,
-        // if property is of array type, we use format to display the item type, else we use format as it is
-        ...(props.property.type === 'array' ? { propertyItemType: props.property.format } : { format: props.property.format }),
+        propertyItemType: props.property.itemType,
+        format: props.property.format,
       },
       eventHandlers: {
         'variant-changed': (index: number) => {

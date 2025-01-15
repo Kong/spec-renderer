@@ -81,7 +81,7 @@ provide<Ref<string>>('current-path', computed((): string => props.currentPath))
 provide<Ref<NavigationTypes>>('navigation-type', computed((): NavigationTypes => props.navigationType))
 
 const emit = defineEmits<{
-  (e: 'item-selected', id: string): void,
+  (e: 'item-selected', id: string): void
 }>()
 
 const tocNavRef = ref<HTMLElement | null>(null)

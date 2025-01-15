@@ -1,5 +1,5 @@
 import { MAX_NESTED_LEVELS } from '@/constants'
-import { resolveSchemaObjectFields } from './schema-model'
+import { resolveSchemaObjectFields, resolveSchemaType } from './schema-model'
 
 /**
  * Returning sample value for single parameter
@@ -40,7 +40,7 @@ export const extractSampleForParam = (paramData: Record<string, any> | undefined
     return typeof paramData.default === 'object' ? JSON.stringify(paramData.default) : paramData.default
   }
 
-  switch (paramData.type) {
+  switch (resolveSchemaType(paramData.type)) {
     case 'boolean':
       return false
     case 'integer':
@@ -101,11 +101,13 @@ export const crawl = ({ objData, parentKey, nestedLevel, filteringOptions }: Cra
       return
     }
 
-    if (oData.type === 'array') {
+    const oDataType = resolveSchemaType(oData.type)
+
+    if (oDataType === 'array') {
       // if it's an array of objects, we'll generate the sample array item by crawling again
       // else, if there's no inherited fields, we'll generate the sample array item using extractSampleForParam
       sampleObj[key] =
-        oData.format === 'object'
+        oData.itemType === 'object'
           ? [crawl({
             objData: oData || {},
             parentKey: key,
@@ -118,7 +120,7 @@ export const crawl = ({ objData, parentKey, nestedLevel, filteringOptions }: Cra
             nestedLevel: nestedLevel + 1,
             filteringOptions,
           }) ?? extractSampleForParam(oData, key)]
-    } else if (oData.type === 'object' || oData.allOf) {
+    } else if (oDataType === 'object' || oData.allOf) {
       const res = crawl({ objData: oData || {}, parentKey: key, nestedLevel: nestedLevel + 1, filteringOptions })
       if (res !== null) {
         sampleObj[key] = res

@@ -78,7 +78,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'sample-spec-selected', specUrl: string, resetPath: boolean): void,
+  (e: 'sample-spec-selected', specUrl: string, resetPath: boolean): void
   (e: 'sample-spec-uploaded', specText: string, resetPath: boolean): void
 }>()
 
