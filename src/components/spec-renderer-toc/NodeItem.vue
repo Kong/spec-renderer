@@ -53,7 +53,7 @@ const basePath = inject<Ref<string>>('base-path', ref<string>(''))
 const navigationType = inject<Ref<NavigationTypes>>('navigation-type', ref<NavigationTypes>('path'))
 
 const emit = defineEmits<{
-  (e: 'item-selected', id: string): void,
+  (e: 'item-selected', id: string): void
 }>()
 
 const isSingleWord = computed(() => !props.item.title?.trim()?.includes(' '))

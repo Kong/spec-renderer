@@ -41,7 +41,7 @@ const props = defineProps({
 })
 
 const componentList = computed(() => {
-  const list: Array<{ component: any; componentProps: any; key: string }> = []
+  const list: Array<{ component: any, componentProps: any, key: string }> = []
 
   const { query, path, headers } = toRefs(props)
   const titlePrefixWithSpace = props.titlePrefix + ' '

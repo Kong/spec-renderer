@@ -180,9 +180,9 @@ provide<Ref<boolean>>('markdown-styles', computed((): boolean => IS_TRUE(props.m
 provide<Ref<boolean>>('allow-custom-server-url', computed((): boolean => IS_TRUE(props.allowCustomServerUrl)))
 
 const emit = defineEmits < {
-  (e: 'path-not-found', requestedPath: string): void,
-  (e: 'content-scrolled', path: string): void,
-  (e: 'item-selected', id: string): void,
+  (e: 'path-not-found', requestedPath: string): void
+  (e: 'content-scrolled', path: string): void
+  (e: 'item-selected', id: string): void
 }>()
 
 // forced - assumed visible (rendered) even when hidden
@@ -207,9 +207,9 @@ const specDocument = computed((): ServiceNode => {
 
 const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null):
 {
-  component: any;
-  props: any;
-  doc: ServiceNode | ServiceChildNode;
+  component: any
+  props: any
+  doc: ServiceNode | ServiceChildNode
 } | null => {
   if (!forServiceNode) return null
 
@@ -537,12 +537,15 @@ onBeforeMount(async () => {
     margin-bottom: var(--kui-space-100, $kui-space-100);
     padding-bottom: var(--kui-space-100, $kui-space-100);
   }
+
   .spec-renderer-document {
     border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+
     &:last-child {
       border-bottom: none;
     }
   }
+
   .placeholder {
     height: 800px;
     max-height: 800px;

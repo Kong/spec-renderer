@@ -22,7 +22,7 @@ import type { ISourceNodeMap, ServiceChildNode, ServiceNode } from './types'
 import { NodeTypes, SpecVersion } from './types'
 
 type OpenAPIObject = _OpenAPIObject & {
-  webhooks?: PathObject;
+  webhooks?: PathObject
 }
 
 const isOas2 = (parsed: unknown): parsed is Spec =>
