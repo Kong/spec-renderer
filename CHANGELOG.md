@@ -1,3 +1,10 @@
+## [1.85.8](https://github.com/Kong/spec-renderer/compare/v1.85.7...v1.85.8) (2025-01-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @vueuse/core to v12 ([#444](https://github.com/Kong/spec-renderer/issues/444)) ([26326f3](https://github.com/Kong/spec-renderer/commit/26326f3daf24e5ad00f007b0ce415093dd32dc58))
+
 ## [1.85.7](https://github.com/Kong/spec-renderer/compare/v1.85.6...v1.85.7) (2025-01-15)
 
 
