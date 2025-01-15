@@ -68,7 +68,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'item-selected', id: string): void,
+  (e: 'item-selected', id: string): void
 }>()
 
 // make sure the collapse group id is unique
