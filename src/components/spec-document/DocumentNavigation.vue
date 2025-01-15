@@ -61,7 +61,7 @@ defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'item-selected', id: string): void,
+  (e: 'item-selected', id: string): void
 }>()
 
 const selectItem = (newUrl: string): void => {

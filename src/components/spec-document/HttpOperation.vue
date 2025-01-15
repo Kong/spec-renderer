@@ -193,7 +193,7 @@ const securitySchemeGroupList = computed<Array<SecuritySchemeGroup>>(() => {
       let title = ''
       let key = ''
       secGroup.forEach((scheme) => {
-        title = title.length ? title + ` & ${scheme.key}` : scheme.key,
+        title = title.length ? title + ` & ${scheme.key}` : scheme.key
         key = key.length ? key + `-${scheme.key.replace(' ', '-')}` : scheme.key.replace(' ', '-')
       })
       schemeGroupList.push({

@@ -13,18 +13,18 @@ export enum NodeTypes {
 }
 
 export interface ISourceNodeMap {
-  type: string;
-  match?: string;
-  notMatch?: string;
-  children?: ISourceNodeMap[];
+  type: string
+  match?: string
+  notMatch?: string
+  children?: ISourceNodeMap[]
 }
 
 export type Node<T, D> = {
-  type: T;
-  uri: string;
-  name: string;
-  data: D;
-  tags: string[];
+  type: T
+  uri: string
+  name: string
+  data: D
+  tags: string[]
 }
 
 export enum SpecVersion {
@@ -39,5 +39,5 @@ export type WebhookNode = Node<NodeType.HttpWebhook, IHttpWebhookOperation>
 export type SchemaNode = Node<NodeType.Model, JSONSchema7>
 export type ServiceChildNode = OperationNode | WebhookNode | SchemaNode
 export type ServiceNode = Node<NodeType.HttpService, IHttpService> & { children: ServiceChildNode[] } & {
-  specVersion: SpecVersion;
+  specVersion: SpecVersion
 }
