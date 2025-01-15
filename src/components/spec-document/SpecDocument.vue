@@ -439,14 +439,17 @@ watch(() => ({ nodesList: nodesList.value,
 watch(() => ({
   pathname: props.currentPath,
   document: specDocument.value }), async (newValue, oldValue) => {
-
   const { pathname, document: newDocument } = newValue
+
+  console.log('in spec document:', { newpath:pathname, oldPath: oldValue?.pathname, lastPath: lastPath.value })
+
   const { document: oldDocument } = oldValue || {}
 
 
   const isRootPath = !pathname || pathname === '/'
   serviceNode.value = <ServiceNode>(isRootPath ? newDocument : newDocument.children.find((child: any) => child.uri === pathname))
   if (!serviceNode.value) {
+    console.log('emiting path-not-found and returning')
     emit('path-not-found', pathname)
     return
   }
@@ -466,10 +469,12 @@ watch(() => ({
     // case when scrolling is not enabled - we do not need to do anything else
     return
   }
-  if (lastPath.value == pathname) {
+  if (lastPath.value == pathname && pathname !== '/') {
+    console.log('returning 473')
     return
   }
   if (pathname === oldValue?.pathname && oldValue?.pathname) {
+    console.log('returning 476')
     return
   }
 

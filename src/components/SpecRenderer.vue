@@ -239,6 +239,7 @@ const currentPathTOC = ref<string>(props.currentPath)
 const currentPathDOC = ref<string>(props.currentPath)
 
 const itemSelected = (id: any) => {
+  console.log('in TOC item selected:', id)
   currentPathTOC.value = id
   currentPathDOC.value = id
 
