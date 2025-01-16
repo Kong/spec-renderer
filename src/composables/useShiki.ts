@@ -7,7 +7,7 @@ import type { HighlighterCore } from 'shiki/core'
 const shikiInstance = ref<HighlighterCore>()
 
 export default function useShiki(): {
-  highlighter: DeepReadonly<Ref<HighlighterCore | undefined>>,
+  highlighter: DeepReadonly<Ref<HighlighterCore | undefined>>
   createHighlighter: () => Promise<void>
 } {
 

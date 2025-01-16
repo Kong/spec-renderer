@@ -1,3 +1,66 @@
+## [1.85.10](https://github.com/Kong/spec-renderer/compare/v1.85.9...v1.85.10) (2025-01-16)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#479](https://github.com/Kong/spec-renderer/issues/479)) ([c38d4dd](https://github.com/Kong/spec-renderer/commit/c38d4dd0cebc94c28be474df3ce736a0ce76a5d4))
+
+## [1.85.9](https://github.com/Kong/spec-renderer/compare/v1.85.8...v1.85.9) (2025-01-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency oas-normalize to v12 ([#470](https://github.com/Kong/spec-renderer/issues/470)) ([835a584](https://github.com/Kong/spec-renderer/commit/835a584f5350e9eccd5a55fd7644ad5e1038915f))
+
+## [1.85.8](https://github.com/Kong/spec-renderer/compare/v1.85.7...v1.85.8) (2025-01-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @vueuse/core to v12 ([#444](https://github.com/Kong/spec-renderer/issues/444)) ([26326f3](https://github.com/Kong/spec-renderer/commit/26326f3daf24e5ad00f007b0ce415093dd32dc58))
+
+## [1.85.7](https://github.com/Kong/spec-renderer/compare/v1.85.6...v1.85.7) (2025-01-15)
+
+
+### Bug Fixes
+
+* handle example generation when schema type is a list ([#467](https://github.com/Kong/spec-renderer/issues/467)) ([5789a84](https://github.com/Kong/spec-renderer/commit/5789a84829b4026901111068d813bad1556982c7))
+
+## [1.85.6](https://github.com/Kong/spec-renderer/compare/v1.85.5...v1.85.6) (2025-01-13)
+
+
+### Bug Fixes
+
+* add stylelint rule and brace rules ([#474](https://github.com/Kong/spec-renderer/issues/474)) ([9ac318a](https://github.com/Kong/spec-renderer/commit/9ac318afcb733512e4052484b42428293326d8b5))
+
+## [1.85.5](https://github.com/Kong/spec-renderer/compare/v1.85.4...v1.85.5) (2025-01-03)
+
+
+### Bug Fixes
+
+* **schema-model:** add support for when schema type is a list [KHCP-14512] ([#466](https://github.com/Kong/spec-renderer/issues/466)) ([b414225](https://github.com/Kong/spec-renderer/commit/b414225669156b233a77c0f6e68496bceb6aabfe))
+
+## [1.85.4](https://github.com/Kong/spec-renderer/compare/v1.85.3...v1.85.4) (2025-01-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @scalar/openapi-parser to ^0.10.2 ([#465](https://github.com/Kong/spec-renderer/issues/465)) ([133d177](https://github.com/Kong/spec-renderer/commit/133d1775cb20e0105edad1ef16c0960a4c0ea667))
+
+## [1.85.3](https://github.com/Kong/spec-renderer/compare/v1.85.2...v1.85.3) (2024-12-31)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @scalar/openapi-parser to ^0.10.1 ([#463](https://github.com/Kong/spec-renderer/issues/463)) ([8993990](https://github.com/Kong/spec-renderer/commit/8993990072b9fc71d9798d03e0e531bbd08cdb40))
+
+## [1.85.2](https://github.com/Kong/spec-renderer/compare/v1.85.1...v1.85.2) (2024-12-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @scalar/openapi-parser to ^0.9.0 ([#459](https://github.com/Kong/spec-renderer/issues/459)) ([51d7dde](https://github.com/Kong/spec-renderer/commit/51d7ddea28190f141476917398bd5b6a22110163))
+
 ## [1.85.1](https://github.com/Kong/spec-renderer/compare/v1.85.0...v1.85.1) (2024-12-20)
 
 

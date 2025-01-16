@@ -73,6 +73,25 @@ describe('resolveSchemaObjectFields', () => {
     expect(resolveSchemaObjectFields(schemaObject)?.properties).toEqual(itemProperties)
     expect(resolveSchemaObjectFields(schemaObject)?.required).toEqual(itemRequiredFields)
   })
+  it('returns properties and required fields of a Schema Object of multiple types', () => {
+    const itemProperties: Record<string, SchemaObject> = {
+      name: {
+        type: 'string',
+      },
+    }
+    const itemRequiredFields = ['name']
+
+    const schemaObject: SchemaObject = {
+      type: ['array', 'null'],
+      items: {
+        type: 'object',
+        properties: itemProperties,
+        required: itemRequiredFields,
+      },
+    }
+    expect(resolveSchemaObjectFields(schemaObject)?.properties).toEqual(itemProperties)
+    expect(resolveSchemaObjectFields(schemaObject)?.required).toEqual(itemRequiredFields)
+  })
   it('merges items and properties of a Schema Object of type array correctly', () => {
     // fields under items
     const itemProperties: Record<string, SchemaObject> = {
@@ -114,22 +133,27 @@ describe('resolveSchemaObjectFields', () => {
       expect(resolveSchemaObjectFields(invalidSchemaObject)).toStrictEqual({})
     }
   })
-  it('returns empty object for invalid Schema Object from array', () => {
+  it('returns original object for invalid items field in an array schema', () => {
     const invalidSchemaObjectList = [
-      null,
-      false,
-      [{
-        type: 'object',
-        $ref: '#/components/schemas/Pet',
-      }],
       {
         type: 'array',
+        items: true,
+      },
+      {
+        type: 'array',
+        items: null,
+      },
+      {
+        type: 'array',
+      },
+      {
+        type: ['array', 'null'],
         items: true,
       },
     ]
 
     for (const invalidSchemaObject of invalidSchemaObjectList) {
-      expect(resolveSchemaObjectFields(invalidSchemaObject)).toStrictEqual({})
+      expect(resolveSchemaObjectFields(invalidSchemaObject)).toStrictEqual(invalidSchemaObject)
     }
   })
   it('returns Schema Object with merged allOf fields', () => {

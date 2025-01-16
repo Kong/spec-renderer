@@ -73,14 +73,17 @@ const additionalInfoVisible = computed(() => props.data.externalDocs?.url || pro
   * {
     margin: 0;
   }
+
   .overview-page-header {
     margin-bottom: var(--kui-space-90, $kui-space-90);
+
     .overview-page-versions {
       align-items: center;
       display: flex;
       gap: var(--kui-space-50, $kui-space-50);
     }
   }
+
   .overview-page-content {
     // add spacing between content components, via margin
     > :not(:first-child) {

@@ -28,6 +28,8 @@ export default {
       },
     ],
     '@kong/design-tokens/use-proper-token': true,
+    'rule-empty-line-before': ['always', { ignore: ['after-comment', 'first-nested'] }],
+    '@stylistic/block-opening-brace-space-before': 'always',
     // Disable the following rules
     'custom-property-no-missing-var-function': null,
     'no-descending-specificity': null,

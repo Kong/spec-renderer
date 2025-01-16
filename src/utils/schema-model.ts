@@ -35,6 +35,29 @@ const resolveAllOf = (schema: SchemaObject): SchemaObject =>
     : schema
 
 /**
+ * Utility to resolve the type of a schema object.
+ * We return the type as it is if it's not a list.
+ *
+ * If type is a list:
+ * - and includes 'array', we return 'array'
+ * - else if it includes 'object', we return 'object'
+ * - else we return the first item in the list
+ */
+export const resolveSchemaType = (schemaType: SchemaObject['type']): SchemaObject['type'] => {
+  if (Array.isArray(schemaType)) {
+    if (schemaType.includes('array')) {
+      return 'array'
+    } else if (schemaType.includes('object')) {
+      return 'object'
+    } else {
+      return schemaType[0]
+    }
+  }
+
+  return schemaType
+}
+
+/**
  * util to compute from where to extract the fields of the candidate object
  * - if it's a valid Schema Object, we can directly use it, as it is
  * - if candidate is of type array, we can extract the fields from items field
@@ -47,24 +70,27 @@ export const resolveSchemaObjectFields = (candidate: unknown): SchemaObject => {
   // if the candidate is not a valid schema object, we return empty object
   if (!isValidSchemaObject(candidate)) return {}
 
+  const schemaType = resolveSchemaType(candidate.type)
+
   /**
    * If the candidate is an array, we need to derive the fields from its `items` field.
    * Else, we can directly use the fields from the candidate.
   */
-  if (candidate.type === 'array' && candidate.items) {
-    if (isValidSchemaObject(candidate.items)) {
-      /**
+  if (schemaType === 'array' && candidate.items && isValidSchemaObject(candidate.items)) {
+    /**
        * we need —
        * - fields listed directly under the model, except items
        * - fields listed under items, so we destructure items
        * - data type as 'array' and format as the array item data type
        * if a field is present in both items and the model itself, we use the one from items
        */
-      const candidateWithoutItems = { ...candidate }
-      delete candidateWithoutItems.items
-      return { ...candidateWithoutItems, ...resolveAllOf(candidate.items), type: 'array', format: candidate.items.type?.toString() }
-    } else {
-      return {}
+    const candidateWithoutItems = { ...candidate }
+    delete candidateWithoutItems.items
+    return {
+      ...candidateWithoutItems,
+      ...resolveAllOf(candidate.items),
+      type: candidate.type,
+      itemType: candidate.items.type,
     }
   }
 

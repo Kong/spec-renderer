@@ -88,6 +88,7 @@ watch(showToggle, (nV: boolean) => {
 .required-only-wrapper {
   align-items: center;
   flex-direction: row !important;
+
   label {
     display: inline !important;
     flex: 1;

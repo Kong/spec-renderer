@@ -89,6 +89,7 @@ const exampleSelectList = computed((): Array<SelectItem> => {
 
     .response-sample-selector {
       line-height: var(--kui-line-height-30, $kui-line-height-30);
+
       :deep(.trigger-button) {
         @include small-bordered-trigger-button;
       }

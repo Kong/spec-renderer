@@ -30,7 +30,7 @@
     </div>
 
     <InputLabel
-      v-if="label || $slots.label"
+      v-if="label || ($slots as Record<string, any>).label"
       v-bind="attrs.id ? { for: String(attrs.id) } : {}"
     >
       {{ label }}

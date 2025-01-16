@@ -83,6 +83,7 @@ const expanded = ref(true)
     >.endpoint-collapsible-section-header {
       padding-bottom: var(--kui-space-20, $kui-space-20);
     }
+
     >.endpoint-collapsible-section-content {
       border: none;
     }

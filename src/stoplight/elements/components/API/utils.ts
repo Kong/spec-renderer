@@ -11,7 +11,7 @@ const defaults = (...args) => args.reverse().reduce((acc, obj) => ({ ...acc, ...
 
 type GroupableNode = OperationNode | WebhookNode | SchemaNode
 
-export type TagGroup<T extends GroupableNode> = { title: string; items: T[]; initiallyExpanded: boolean }
+export type TagGroup<T extends GroupableNode> = { title: string, items: T[], initiallyExpanded: boolean }
 
 export function computeTagGroups<T extends GroupableNode>(
   serviceNode: ServiceNode,
@@ -70,10 +70,10 @@ export function computeTagGroups<T extends GroupableNode>(
 }
 
 interface ComputeAPITreeConfig {
-  hideSchemas?: boolean;
-  hideInternal?: boolean;
-  currentPath?: string;
-  hideDeprecated?: boolean;
+  hideSchemas?: boolean
+  hideInternal?: boolean
+  currentPath?: string
+  hideDeprecated?: boolean
 }
 
 const defaultComputerAPITreeConfig = {
@@ -212,12 +212,12 @@ const isDeprecated = (node: ServiceChildNode | ServiceNode): boolean => {
 }
 
 interface AddTagGroupsToTreeParams<T extends GroupableNode> {
-  groups: TagGroup<T>[];
-  ungrouped: T[];
-  tree: TableOfContentsItem[];
-  itemsType: TableOfContentsGroup['itemsType'];
-  hideInternal: boolean;
-  hideDeprecated: boolean;
+  groups: TagGroup<T>[]
+  ungrouped: T[]
+  tree: TableOfContentsItem[]
+  itemsType: TableOfContentsGroup['itemsType']
+  hideInternal: boolean
+  hideDeprecated: boolean
 }
 
 const addTagGroupsToTree = <T extends GroupableNode>({

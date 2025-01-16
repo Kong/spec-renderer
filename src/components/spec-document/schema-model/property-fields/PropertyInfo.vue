@@ -157,7 +157,7 @@ function handleSelectChange(selecteditem: SelectItem) {
       margin-right: var(--kui-space-50, $kui-space-50);
     }
 
-    .property-title-name  {
+    .property-title-name {
       color: var(--kui-color-text-primary, $kui-color-text-primary);
       font-size:var(--kui-font-size-30, $kui-font-size-30);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
