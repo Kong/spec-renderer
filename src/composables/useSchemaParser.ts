@@ -237,7 +237,7 @@ export default (): {
         })
       }
     } catch (err) {
-      console.error('e@kong/spec-renderer: rror in computeAPITree:', err)
+      console.error('e@kong/spec-renderer: error in computeAPITree:', err)
     }
 
     if (options.webComponentSafe) {
@@ -252,6 +252,7 @@ export default (): {
       }
     }
     trace(options.traceParsing, 'APITree computed')
+    console.log('inside parser:', tableOfContents.value ? tableOfContents.value[1] : '???')
   }
 
   const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<void> => {
