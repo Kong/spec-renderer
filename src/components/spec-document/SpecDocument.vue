@@ -428,6 +428,7 @@ watch(() => ({ nodesList: nodesList.value,
       const newPath = props.navigationType === 'path' ? props.basePath + newUri : props.basePath + '#' + newUri
       window.history.pushState({}, '', newPath)
     }
+    console.log('lastPath is set to:', newUri)
     lastPath.value = newUri
   }
   lastY.value = newValue.yPosition
@@ -470,8 +471,8 @@ watch(() => ({
     return
   }
   if (lastPath.value == pathname && pathname !== '/') {
-    console.log('returning 473')
-    return
+    // console.log('returning 473')
+    // return
   }
   if (pathname === oldValue?.pathname && oldValue?.pathname) {
     console.log('returning 476')
@@ -482,6 +483,7 @@ watch(() => ({
 
   const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
 
+  console.log('forceRenderer called')
   forceRenderer([pathIdx])
 
   // the rest of this watcher only need to be executed when in non-ssr mode
