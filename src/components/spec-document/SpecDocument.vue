@@ -466,6 +466,11 @@ watch(() => ({
     // case when scrolling is not enabled - we do not need to do anything else
     return
   }
+
+  if (lastPath.value == pathname) {
+    return
+  }
+
   if (pathname === oldValue?.pathname && oldValue?.pathname) {
     return
   }
