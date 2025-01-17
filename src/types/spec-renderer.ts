@@ -57,6 +57,10 @@ export interface ParseOptions {
    * stringify returned Document, TOC and validation results
    */
   webComponentSafe?: boolean
+  /**
+   * enforce reset of json document
+   */
+  enforceResetBeforeParsing?: boolean
 
 }
 
