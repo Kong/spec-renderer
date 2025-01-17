@@ -443,6 +443,7 @@ watch(() => ({
   const { pathname, document: newDocument } = newValue
   const { document: oldDocument } = oldValue || {}
 
+
   const isRootPath = !pathname || pathname === '/'
   serviceNode.value = <ServiceNode>(isRootPath ? newDocument : newDocument.children.find((child: any) => child.uri === pathname))
   if (!serviceNode.value) {
