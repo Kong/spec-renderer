@@ -167,7 +167,7 @@ export default (): {
     }
   }
   const parseOpenApiSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):Promise<void> => {
-    console.log('parseOpenApiSpecDocument starts:', spec.split('\n').slice(0, 4))
+    console.log('parseOpenApiSpecDocument starts:', spec && typeof spec === 'string' ? spec.split('\n').slice(0, 4) : '----')
 
     if (!jsonDocument.value) {
       await fetchAndBundle(spec, options)
