@@ -467,7 +467,7 @@ watch(() => ({
     return
   }
 
-  if (lastPath.value == pathname) {
+  if (lastPath.value == pathname && pathname != '/') {
     return
   }
 
