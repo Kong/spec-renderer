@@ -252,7 +252,6 @@ export default (): {
       }
     }
     trace(options.traceParsing, 'APITree computed')
-    console.log('inside parser:', tableOfContents.value ? tableOfContents.value[1] : '???')
   }
 
   const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<void> => {
