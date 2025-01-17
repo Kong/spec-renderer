@@ -440,7 +440,6 @@ watch(() => ({
   pathname: props.currentPath,
   document: specDocument.value }), async (newValue, oldValue) => {
   const { pathname, document: newDocument } = newValue
-
   const { document: oldDocument } = oldValue || {}
 
   const isRootPath = !pathname || pathname === '/'
