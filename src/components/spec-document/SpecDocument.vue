@@ -495,8 +495,12 @@ watch(() => ({
       const activeSectionEl = wrapperRef.value?.querySelector(`[id="${pathIdx}-nodecontainer"]`)
       if (activeSectionEl) {
         console.log('scrollingContainerEl:', scrollingContainerEl.value)
-        if (!scrollingContainerEl.value && pathIdx === 0) {
-          window.scrollTo(0, 0)
+        if (pathIdx === 0) {
+          if (!scrollingContainerEl.value) {
+            window.scrollTo(0, 0)
+          } else {
+            scrollingContainerEl.value.scrollTo(0, 0)
+          }
         } else {
           activeSectionEl.scrollIntoView({ behavior: 'instant' })
         }
