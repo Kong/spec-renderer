@@ -443,6 +443,8 @@ watch(() => ({
   const { pathname, document: newDocument } = newValue
   const { document: oldDocument } = oldValue || {}
 
+  console.log('in watch', { pathname, oldValue: oldValue?.pathname })
+
 
   const isRootPath = !pathname || pathname === '/'
   serviceNode.value = <ServiceNode>(isRootPath ? newDocument : newDocument.children.find((child: any) => child.uri === pathname))
@@ -467,18 +469,15 @@ watch(() => ({
     return
   }
 
-  if (lastPath.value == pathname && pathname != '/') {
-    return
-  }
-
   if (pathname === oldValue?.pathname && oldValue?.pathname) {
+    console.log('????')
     return
   }
 
   processScrolling.value = false
 
   const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
-
+  console.log('pathIdx:', pathIdx)
   forceRenderer([pathIdx])
 
   // the rest of this watcher only need to be executed when in non-ssr mode
@@ -492,14 +491,12 @@ watch(() => ({
 
   // now we want to find position of the active element and if it is not visible force it to be visible
   if (document) {
-    if (pathIdx !== 0 || oldValue?.pathname) {
-      setTimeout(async () => {
-        const activeSectionEl = wrapperRef.value?.querySelector(`[id="${pathIdx}-nodecontainer"]`)
-        if (activeSectionEl) {
-          activeSectionEl.scrollIntoView({ behavior: 'instant' })
-        }
-      }, 200)
-    }
+    setTimeout(async () => {
+      const activeSectionEl = wrapperRef.value?.querySelector(`[id="${pathIdx}-nodecontainer"]`)
+      if (activeSectionEl) {
+        activeSectionEl.scrollIntoView({ behavior: 'instant' })
+      }
+    }, 200)
     setTimeout(async () => {
       // now as we have our current section visible start re-drawing all the sections
       renderPlain.value = true

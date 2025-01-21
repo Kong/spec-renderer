@@ -52,6 +52,7 @@
       <div class="doc">
         <SpecDocument
           v-if="parsedDocument && currentPath"
+          :key="documentRendererKey"
           :allow-content-scrolling="allowContentScrolling"
           :allow-custom-server-url="allowCustomServerUrl"
           :base-path="basePath"
@@ -239,8 +240,13 @@ const currentPathTOC = ref<string>(props.currentPath)
 const currentPathDOC = ref<string>(props.currentPath)
 
 const itemSelected = (id: any) => {
+  console.log('itemSelected:', { id, currentPathTOC: currentPathTOC.value, currentPathDOC: currentPathDOC.value, documentRendererKey: documentRendererKey.value })
   currentPathTOC.value = id
-  currentPathDOC.value = id
+  if (currentPathDOC.value === id) {
+    documentRendererKey.value += 1
+  } else {
+    currentPathDOC.value = id
+  }
 
   slideoutTocVisible.value = false
 }
@@ -249,6 +255,7 @@ const emit = defineEmits<{
   (e: 'path-not-found', requestedPath: string): void
 }>()
 
+const documentRendererKey = ref(0)
 
 const slideoutTocVisible = ref<boolean>(false)
 /**
@@ -264,7 +271,6 @@ const openSlideoutToc = async (): Promise<void> => {
 
 const onDocumentScroll = (path: string) => {
   currentPathTOC.value = path
-  currentPathDOC.value = path
   // we need to re-calculate initiallyExpanded property based on the new path
   if (props.controlAddressBar) {
     window.history.pushState({}, '', props.basePath + path)
