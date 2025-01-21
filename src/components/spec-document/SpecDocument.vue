@@ -443,9 +443,6 @@ watch(() => ({
   const { pathname, document: newDocument } = newValue
   const { document: oldDocument } = oldValue || {}
 
-  console.log('in watch', { pathname, oldValue: oldValue?.pathname })
-
-
   const isRootPath = !pathname || pathname === '/'
   serviceNode.value = <ServiceNode>(isRootPath ? newDocument : newDocument.children.find((child: any) => child.uri === pathname))
   if (!serviceNode.value) {
@@ -470,14 +467,12 @@ watch(() => ({
   }
 
   if (pathname === oldValue?.pathname && oldValue?.pathname) {
-    console.log('????')
     return
   }
 
   processScrolling.value = false
 
   const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
-  console.log('pathIdx:', pathIdx)
   forceRenderer([pathIdx])
 
   // the rest of this watcher only need to be executed when in non-ssr mode
@@ -494,7 +489,10 @@ watch(() => ({
     setTimeout(async () => {
       const activeSectionEl = wrapperRef.value?.querySelector(`[id="${pathIdx}-nodecontainer"]`)
       if (activeSectionEl) {
-        console.log('scrollingContainerEl:', scrollingContainerEl.value)
+        /*
+          special handling for pathIdx = 0 ('/' - we want to make sure entire contaner with what's on top is visible for this case,
+          and yes, we still need to force scroll to fix KHCP-14499 for portal
+        */
         if (pathIdx === 0) {
           if (!scrollingContainerEl.value) {
             window.scrollTo(0, 0)

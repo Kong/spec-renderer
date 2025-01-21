@@ -240,7 +240,13 @@ const currentPathTOC = ref<string>(props.currentPath)
 const currentPathDOC = ref<string>(props.currentPath)
 
 const itemSelected = (id: any) => {
-  console.log('itemSelected:', { id, currentPathTOC: currentPathTOC.value, currentPathDOC: currentPathDOC.value, documentRendererKey: documentRendererKey.value })
+  /*
+  KHCP-14499: user can select same path he is already on. Eg:
+   - specrenderer first opens with '/',
+   - user scrolls down few sections so path on TOC becomes '/xxx',
+   - now user clicks on Overview ('/')
+   we need to refresh spec document even if currentPath there is still '/' as it was during first rendering, that'w why in this scenario we bump the key
+  */
   currentPathTOC.value = id
   if (currentPathDOC.value === id) {
     documentRendererKey.value += 1
