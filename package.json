@@ -56,7 +56,7 @@
     "@apidevtools/json-schema-ref-parser": "^11.7.3",
     "@asyncapi/openapi-schema-parser": "^3.0.24",
     "@asyncapi/parser": "^3.4.0",
-    "@floating-ui/vue": "^1.1.5",
+    "@floating-ui/vue": "^1.1.6",
     "@kong/icons": "^1.20.2",
     "@scalar/openapi-parser": "^0.10.2",
     "@seriousme/openapi-schema-validator": "^2.3.0",
@@ -120,7 +120,7 @@
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
     "tslib": "^2.8.1",
-    "typescript": "^5.7.2",
+    "typescript": "^5.7.3",
     "vite": "^6.0.7",
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-replace": "^0.1.1",
@@ -184,7 +184,7 @@
   },
   "volta": {
     "node": "22.13.0",
-    "pnpm": "9.15.2"
+    "pnpm": "9.15.3"
   },
   "config": {
     "commitizen": {
