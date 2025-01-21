@@ -8,7 +8,7 @@ jobs:
     if: ${{ github.actor != 'dependabot[bot]' && github.actor != 'renovate[bot]' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
 
@@ -16,6 +16,6 @@ jobs:
       - name: Remove tsconfig
         run: rm tsconfig.json
 
-      - uses: wagoid/commitlint-github-action@v6.2.0
+      - uses: wagoid/commitlint-github-action@0184f5a228ee06430bb9e67d65f73a1a6767496a # v6.2.0
         with:
           configFile: commitlint.config.ts
