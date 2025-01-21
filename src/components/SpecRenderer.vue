@@ -245,7 +245,7 @@ const itemSelected = (id: any) => {
    - specrenderer first opens with '/',
    - user scrolls down few sections so path on TOC becomes '/xxx',
    - now user clicks on Overview ('/')
-   we need to refresh spec document even if currentPath there is still '/' as it was during first rendering, that'w why in this scenario we bump the key
+   we need to refresh spec document even if currentPath there is still '/' as it was during first rendering, that's why in this scenario we bump the key
   */
   currentPathTOC.value = id
   if (currentPathDOC.value === id) {
