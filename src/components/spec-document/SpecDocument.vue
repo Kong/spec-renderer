@@ -494,7 +494,12 @@ watch(() => ({
     setTimeout(async () => {
       const activeSectionEl = wrapperRef.value?.querySelector(`[id="${pathIdx}-nodecontainer"]`)
       if (activeSectionEl) {
-        activeSectionEl.scrollIntoView({ behavior: 'instant' })
+        console.log('scrollingContainerEl:', scrollingContainerEl.value)
+        if (!scrollingContainerEl.value && pathIdx === 0) {
+          window.scrollTo(0, 0)
+        } else {
+          activeSectionEl.scrollIntoView({ behavior: 'instant' })
+        }
       }
     }, 200)
     setTimeout(async () => {
