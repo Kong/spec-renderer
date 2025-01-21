@@ -1,3 +1,10 @@
+## [1.85.15](https://github.com/Kong/spec-renderer/compare/v1.85.14...v1.85.15) (2025-01-21)
+
+
+### Bug Fixes
+
+* remove 'defined but never used' warnings ([#487](https://github.com/Kong/spec-renderer/issues/487)) ([59c2a1d](https://github.com/Kong/spec-renderer/commit/59c2a1d175243dfaee37e1f5665a2e26035edea9))
+
 ## [1.85.14](https://github.com/Kong/spec-renderer/compare/v1.85.13...v1.85.14) (2025-01-21)
 
 
