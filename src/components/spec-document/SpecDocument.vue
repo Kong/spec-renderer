@@ -474,7 +474,7 @@ watch(() => ({
   }
   if (pathname === lastPath.value) {
     // KHCP-14793
-    console.log('do not need to re-draw or force scroll')
+    console.log('do not need to re-draw or force scroll, resetting lastPath')
     lastPath.value = undefined
     return
   }
