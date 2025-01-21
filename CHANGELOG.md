@@ -1,3 +1,10 @@
+## [1.85.13](https://github.com/Kong/spec-renderer/compare/v1.85.12...v1.85.13) (2025-01-21)
+
+
+### Bug Fixes
+
+* scroll back to top [KHCP-14499] ([#478](https://github.com/Kong/spec-renderer/issues/478)) ([d3ecc4f](https://github.com/Kong/spec-renderer/commit/d3ecc4fcb84d3c07a2b02edceca7c92d55cc64de))
+
 ## [1.85.12](https://github.com/Kong/spec-renderer/compare/v1.85.11...v1.85.12) (2025-01-20)
 
 
