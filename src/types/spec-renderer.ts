@@ -58,7 +58,7 @@ export interface ParseOptions {
    */
   webComponentSafe?: boolean
   /**
-   * enforce reset of json document
+   * enforce reset of json document, enforces reset when API type specific function is called directly (portal ssr case)
    */
   enforceResetBeforeParsing?: boolean
 
