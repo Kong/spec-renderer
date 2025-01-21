@@ -472,6 +472,11 @@ watch(() => ({
   if (pathname === oldValue?.pathname && oldValue?.pathname) {
     return
   }
+  if (pathname === lastPath.value) {
+    // KHCP-14793
+    console.log('do not need to re-draw or force scroll')
+    return
+  }
 
   processScrolling.value = false
 
