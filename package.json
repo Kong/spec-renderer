@@ -108,7 +108,7 @@
     "postcss": "^8.4.49",
     "postcss-html": "^1.7.0",
     "rimraf": "^6.0.1",
-    "rollup-plugin-visualizer": "^5.12.0",
+    "rollup-plugin-visualizer": "^5.14.0",
     "sass": "^1.83.1",
     "sass-embedded": "^1.83.1",
     "semantic-release": "^24.2.1",
@@ -124,7 +124,7 @@
     "vite": "^6.0.7",
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-replace": "^0.1.1",
-    "vite-plugin-vue-devtools": "^7.6.8",
+    "vite-plugin-vue-devtools": "^7.7.0",
     "vitest": "2.1.8",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
@@ -183,7 +183,7 @@
     "node": ">=18.17.0"
   },
   "volta": {
-    "node": "22.12.0",
+    "node": "22.13.0",
     "pnpm": "9.15.2"
   },
   "config": {
