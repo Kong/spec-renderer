@@ -444,7 +444,7 @@ watch(() => ({
   const { pathname, document: newDocument } = newValue
   const { document: oldDocument } = oldValue || {}
 
-  console.log('specdocument in watch:', { pathname, oldPathName: oldValue?.pathname })
+  console.log('specdocument in watch:', { pathname, oldPathName: oldValue?.pathname, lastPath: lastPath.value, lastY: lastY.value })
 
   const isRootPath = !pathname || pathname === '/'
   serviceNode.value = <ServiceNode>(isRootPath ? newDocument : newDocument.children.find((child: any) => child.uri === pathname))
