@@ -440,8 +440,11 @@ watch(() => ({
   pathname: props.currentPath,
   document: specDocument.value }), async (newValue, oldValue) => {
 
+
   const { pathname, document: newDocument } = newValue
   const { document: oldDocument } = oldValue || {}
+
+  console.log('specdocument in watch:', { pathname, oldPathName: oldValue?.pathname })
 
   const isRootPath = !pathname || pathname === '/'
   serviceNode.value = <ServiceNode>(isRootPath ? newDocument : newDocument.children.find((child: any) => child.uri === pathname))
@@ -473,6 +476,7 @@ watch(() => ({
   processScrolling.value = false
 
   const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
+  console.log('pathIdx', pathIdx)
   forceRenderer([pathIdx])
 
   // the rest of this watcher only need to be executed when in non-ssr mode
