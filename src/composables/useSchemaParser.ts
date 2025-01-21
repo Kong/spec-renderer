@@ -237,7 +237,7 @@ export default (): {
         })
       }
     } catch (err) {
-      console.error('e@kong/spec-renderer: error in computeAPITree:', err)
+      console.error('@kong/spec-renderer: error in computeAPITree:', err)
     }
 
     if (options.webComponentSafe) {
