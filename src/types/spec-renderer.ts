@@ -57,6 +57,10 @@ export interface ParseOptions {
    * stringify returned Document, TOC and validation results
    */
   webComponentSafe?: boolean
+  /**
+   * enforce reset of json document, enforces reset when API type specific function is called directly (portal ssr case)
+   */
+  enforceResetBeforeParsing?: boolean
 
 }
 

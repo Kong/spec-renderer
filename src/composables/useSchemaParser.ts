@@ -168,7 +168,7 @@ export default (): {
   }
   const parseOpenApiSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):Promise<void> => {
 
-    if (!jsonDocument.value) {
+    if (!jsonDocument.value || options.enforceResetBeforeParsing) {
       await fetchAndBundle(spec, options)
     }
 
@@ -237,7 +237,7 @@ export default (): {
         })
       }
     } catch (err) {
-      console.error('e@kong/spec-renderer: rror in computeAPITree:', err)
+      console.error('@kong/spec-renderer: error in computeAPITree:', err)
     }
 
     if (options.webComponentSafe) {

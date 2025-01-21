@@ -52,6 +52,7 @@
       <div class="doc">
         <SpecDocument
           v-if="parsedDocument && currentPath"
+          :key="documentRendererKey"
           :allow-content-scrolling="allowContentScrolling"
           :allow-custom-server-url="allowCustomServerUrl"
           :base-path="basePath"
@@ -239,8 +240,19 @@ const currentPathTOC = ref<string>(props.currentPath)
 const currentPathDOC = ref<string>(props.currentPath)
 
 const itemSelected = (id: any) => {
+  /*
+  KHCP-14499: user can select same path he is already on. Eg:
+   - specrenderer first opens with '/',
+   - user scrolls down few sections so path on TOC becomes '/xxx',
+   - now user clicks on Overview ('/')
+   we need to refresh spec document even if currentPath there is still '/' as it was during first rendering, that's why in this scenario we bump the key
+  */
   currentPathTOC.value = id
-  currentPathDOC.value = id
+  if (currentPathDOC.value === id) {
+    documentRendererKey.value += 1
+  } else {
+    currentPathDOC.value = id
+  }
 
   slideoutTocVisible.value = false
 }
@@ -249,6 +261,7 @@ const emit = defineEmits<{
   (e: 'path-not-found', requestedPath: string): void
 }>()
 
+const documentRendererKey = ref(0)
 
 const slideoutTocVisible = ref<boolean>(false)
 /**

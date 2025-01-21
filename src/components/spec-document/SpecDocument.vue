@@ -443,7 +443,6 @@ watch(() => ({
   const { pathname, document: newDocument } = newValue
   const { document: oldDocument } = oldValue || {}
 
-
   const isRootPath = !pathname || pathname === '/'
   serviceNode.value = <ServiceNode>(isRootPath ? newDocument : newDocument.children.find((child: any) => child.uri === pathname))
   if (!serviceNode.value) {
@@ -466,9 +465,7 @@ watch(() => ({
     // case when scrolling is not enabled - we do not need to do anything else
     return
   }
-  if (lastPath.value == pathname) {
-    return
-  }
+
   if (pathname === oldValue?.pathname && oldValue?.pathname) {
     return
   }
@@ -476,7 +473,6 @@ watch(() => ({
   processScrolling.value = false
 
   const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
-
   forceRenderer([pathIdx])
 
   // the rest of this watcher only need to be executed when in non-ssr mode
@@ -490,14 +486,24 @@ watch(() => ({
 
   // now we want to find position of the active element and if it is not visible force it to be visible
   if (document) {
-    if (pathIdx !== 0 || oldValue?.pathname) {
-      setTimeout(async () => {
-        const activeSectionEl = wrapperRef.value?.querySelector(`[id="${pathIdx}-nodecontainer"]`)
-        if (activeSectionEl) {
+    setTimeout(() => {
+      const activeSectionEl = wrapperRef.value?.querySelector(`[id="${pathIdx}-nodecontainer"]`)
+      if (activeSectionEl) {
+        /*
+          special handling for pathIdx = 0 ('/' - we want to make sure entire contaner with what's on top is visible for this case,
+          and yes, we still need to force scroll to fix KHCP-14499 for portal
+        */
+        if (pathIdx === 0) {
+          if (!scrollingContainerEl.value) {
+            window.scrollTo(0, 0)
+          } else {
+            scrollingContainerEl.value.scrollTo(0, 0)
+          }
+        } else {
           activeSectionEl.scrollIntoView({ behavior: 'instant' })
         }
-      }, 200)
-    }
+      }
+    }, 200)
     setTimeout(async () => {
       // now as we have our current section visible start re-drawing all the sections
       renderPlain.value = true
