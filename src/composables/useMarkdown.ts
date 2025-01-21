@@ -28,7 +28,7 @@ export default function useMarkdown() {
       return sanitize(renderedText, {
         allowedTags: sanitize.defaults.allowedTags.concat(['img', 'details', 'summary']),
       })
-    } catch (error) {
+    } catch {
       return text
     }
   }

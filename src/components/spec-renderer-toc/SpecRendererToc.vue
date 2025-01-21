@@ -101,7 +101,7 @@ const toc = computed((): TableOfContentsItem[] | undefined => {
   if (typeof props.tableOfContents === 'string') {
     try {
       newToc = <TableOfContentsItem[]>parseFlatted(newToc as string)
-    } catch (err) {
+    } catch {
       console.error('@kong/spec-renderer: error parsing provided toc')
       return undefined
     }

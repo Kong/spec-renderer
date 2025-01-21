@@ -26,7 +26,7 @@ export const stringifyUnknownValue = (candidate: unknown) => {
 export const safeJSONParse = (candidate: unknown) => {
   try {
     return typeof candidate === 'string' ? JSON.parse(candidate) : candidate
-  } catch (error) {
+  } catch {
     return candidate
   }
 }

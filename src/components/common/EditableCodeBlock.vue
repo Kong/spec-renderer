@@ -51,7 +51,7 @@ const formatCode = (codeToFormat: string, codeLang: string): string => {
   if (codeLang === 'json') {
     try {
       formattedCode = JSON.stringify(JSON.parse(codeToFormat), null, CODE_INDENT_SPACES)
-    } catch (err) {
+    } catch {
       codeError.value = true
     }
   }

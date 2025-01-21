@@ -90,7 +90,7 @@ const schema = computed((): SchemaObject => {
   if (typeof props.schema === 'string') {
     try {
       return <SchemaObject>parseFlatted(props.schema)
-    } catch (e) {
+    } catch {
       console.error('@kong/spec-renderer: error parsing provided JSON Schema')
       return {}
     }
