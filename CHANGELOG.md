@@ -1,3 +1,10 @@
+## [1.85.16](https://github.com/Kong/spec-renderer/compare/v1.85.15...v1.85.16) (2025-01-22)
+
+
+### Bug Fixes
+
+* unexpected scrolling jump [KHCP-14793] ([#488](https://github.com/Kong/spec-renderer/issues/488)) ([25b5de9](https://github.com/Kong/spec-renderer/commit/25b5de9185336746deebf30fd8a65a520640912b))
+
 ## [1.85.15](https://github.com/Kong/spec-renderer/compare/v1.85.14...v1.85.15) (2025-01-21)
 
 
