@@ -387,6 +387,7 @@ watch(() => ({ nodesList: nodesList.value,
     && Math.abs(newValue.yPosition - lastY.value) < MIN_SCROLL_DIFFERENCE) {
     return
   }
+
   const visibleEls:Array<Record<string, any>> = []
   const visibleIndexes: Array<number> = []
   Array.from(newValue.wrapperRef.children).forEach((c, i) => {
@@ -444,8 +445,6 @@ watch(() => ({
   const { pathname, document: newDocument } = newValue
   const { document: oldDocument } = oldValue || {}
 
-  console.log('specdocument in watch:', { pathname, oldPathName: oldValue?.pathname, lastPath: lastPath.value, lastY: lastY.value })
-
   const isRootPath = !pathname || pathname === '/'
   serviceNode.value = <ServiceNode>(isRootPath ? newDocument : newDocument.children.find((child: any) => child.uri === pathname))
   if (!serviceNode.value) {
@@ -473,16 +472,13 @@ watch(() => ({
     return
   }
   if (pathname === lastPath.value) {
-    // KHCP-14793
-    console.log('do not need to re-draw or force scroll, resetting lastPath')
-    lastPath.value = undefined
+    // KHCP-14793 this is to prevent the unexected scrolljump
     return
   }
 
   processScrolling.value = false
 
   const pathIdx = nodesList.value.findIndex(node => node.doc.uri === pathname)
-  console.log('pathIdx', pathIdx)
   forceRenderer([pathIdx])
 
   // the rest of this watcher only need to be executed when in non-ssr mode
@@ -512,8 +508,9 @@ watch(() => ({
         } else {
           activeSectionEl.scrollIntoView({ behavior: 'instant' })
         }
+        lastPath.value = pathname
       }
-    }, 200)
+    }, 50)
     setTimeout(async () => {
       // now as we have our current section visible start re-drawing all the sections
       renderPlain.value = true
@@ -527,6 +524,8 @@ watch(() => ({
 onBeforeMount(async () => {
   await createHighlighter()
 })
+
+
 
 </script>
 
