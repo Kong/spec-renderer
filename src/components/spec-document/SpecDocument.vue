@@ -387,7 +387,6 @@ watch(() => ({ nodesList: nodesList.value,
     && Math.abs(newValue.yPosition - lastY.value) < MIN_SCROLL_DIFFERENCE) {
     return
   }
-
   const visibleEls:Array<Record<string, any>> = []
   const visibleIndexes: Array<number> = []
   Array.from(newValue.wrapperRef.children).forEach((c, i) => {
@@ -440,7 +439,6 @@ watch(() => ({ nodesList: nodesList.value,
 watch(() => ({
   pathname: props.currentPath,
   document: specDocument.value }), async (newValue, oldValue) => {
-
 
   const { pathname, document: newDocument } = newValue
   const { document: oldDocument } = oldValue || {}
@@ -524,8 +522,6 @@ watch(() => ({
 onBeforeMount(async () => {
   await createHighlighter()
 })
-
-
 
 </script>
 
