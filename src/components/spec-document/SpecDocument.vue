@@ -469,6 +469,10 @@ watch(() => ({
   if (pathname === oldValue?.pathname && oldValue?.pathname) {
     return
   }
+  if (pathname === lastPath.value) {
+    // KHCP-14793 this is to prevent the unexected scrolljump
+    return
+  }
 
   processScrolling.value = false
 
@@ -502,8 +506,9 @@ watch(() => ({
         } else {
           activeSectionEl.scrollIntoView({ behavior: 'instant' })
         }
+        lastPath.value = pathname
       }
-    }, 200)
+    }, 50)
     setTimeout(async () => {
       // now as we have our current section visible start re-drawing all the sections
       renderPlain.value = true
