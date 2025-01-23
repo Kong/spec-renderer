@@ -152,7 +152,7 @@ watch(() => props.response, async (res) => {
 
 <style lang="scss" scoped>
 .h-wrapper {
-  display:flex;
+  display: flex;
   flex: 1;
 }
 
