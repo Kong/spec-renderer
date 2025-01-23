@@ -25,8 +25,7 @@
   justify-content: center;
   line-height: var(--kui-line-height-30, $kui-line-height-30);
   padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
-  transition:
-    background-color var(--kui-animation-duration-20, 0.2s) ease-in-out,
+  transition: background-color var(--kui-animation-duration-20, 0.2s) ease-in-out,
     color var(--kui-animation-duration-20, 0.2s) ease-in-out,
     border-color var(--kui-animation-duration-20, 0.2s) ease-in-out;
   white-space: nowrap;

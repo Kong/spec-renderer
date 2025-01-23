@@ -159,7 +159,7 @@ function handleSelectChange(selecteditem: SelectItem) {
 
     .property-title-name {
       color: var(--kui-color-text-primary, $kui-color-text-primary);
-      font-size:var(--kui-font-size-30, $kui-font-size-30);
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       line-height: var(--kui-line-height-30, $kui-line-height-30);
     }
