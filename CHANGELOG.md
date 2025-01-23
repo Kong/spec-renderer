@@ -1,3 +1,10 @@
+## [1.85.17](https://github.com/Kong/spec-renderer/compare/v1.85.16...v1.85.17) (2025-01-23)
+
+
+### Bug Fixes
+
+* **stylelint:** add spacing rules ([#493](https://github.com/Kong/spec-renderer/issues/493)) ([53eb252](https://github.com/Kong/spec-renderer/commit/53eb25223767c789eb571429ed8afbc2b9b3a5e5))
+
 ## [1.85.16](https://github.com/Kong/spec-renderer/compare/v1.85.15...v1.85.16) (2025-01-22)
 
 
