@@ -97,8 +97,7 @@ const selectItem = (newUrl: string): void => {
     min-width: 250px;
     padding: var(--kui-space-70, $kui-space-70);
     text-decoration: none;
-    transition:
-      color var(--kui-animation-duration-20, $kui-animation-duration-20) ease,
+    transition: color var(--kui-animation-duration-20, $kui-animation-duration-20) ease,
       background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
 
     &:hover {
