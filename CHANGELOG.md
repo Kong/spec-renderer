@@ -1,3 +1,24 @@
+## [1.85.19](https://github.com/Kong/spec-renderer/compare/v1.85.18...v1.85.19) (2025-01-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @scalar/openapi-parser to ^0.10.3 ([#495](https://github.com/Kong/spec-renderer/issues/495)) ([e1fa677](https://github.com/Kong/spec-renderer/commit/e1fa677ec997e5b1dd733611bae494052acb59cb))
+
+## [1.85.18](https://github.com/Kong/spec-renderer/compare/v1.85.17...v1.85.18) (2025-01-27)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#491](https://github.com/Kong/spec-renderer/issues/491)) ([a6bbe98](https://github.com/Kong/spec-renderer/commit/a6bbe98f8750d4398710e2a6e9400cc0d47ebb25))
+
+## [1.85.17](https://github.com/Kong/spec-renderer/compare/v1.85.16...v1.85.17) (2025-01-23)
+
+
+### Bug Fixes
+
+* **stylelint:** add spacing rules ([#493](https://github.com/Kong/spec-renderer/issues/493)) ([53eb252](https://github.com/Kong/spec-renderer/commit/53eb25223767c789eb571429ed8afbc2b9b3a5e5))
+
 ## [1.85.16](https://github.com/Kong/spec-renderer/compare/v1.85.15...v1.85.16) (2025-01-22)
 
 
