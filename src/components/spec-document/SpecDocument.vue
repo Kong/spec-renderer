@@ -68,11 +68,20 @@ import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE } from '@/constants'
 import { BOOL_VALIDATOR, IS_TRUE, isSsr } from '@/utils'
 import type { NavigationTypes } from '@/types'
 import { stringify, parse as parseFlatted } from 'flatted'
+import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '@/stoplight/elements-core'
+import { slugify } from '@/stoplight/elements-core/utils/string'
 
 const props = defineProps({
   document: {
     type: [Object, String],
     required: true,
+  },
+  /**
+   * table of contents. when passed to the document we will use it to define the order of scrollable sections (nList)
+   */
+  tableOfContents: {
+    type: [Object, String],
+    default: null,
   },
   /**
    * URL to fetch spec document from
@@ -205,6 +214,24 @@ const specDocument = computed((): ServiceNode => {
   return <ServiceNode>props.document
 })
 
+const findMatchingNode = (spDoc: ServiceNode, forPath: string): ServiceChildNode | null => {
+  const cNode = spDoc.children.find(child => child.uri === forPath)
+  if (cNode) {
+    return cNode
+  }
+
+  const multiTagNodes = spDoc.children.filter(child=> child.tags.length > 1)
+  for (const multiTagNode of multiTagNodes) {
+    for (const tagName of multiTagNode.tags) {
+      if (multiTagNode.uri.split('/').toSpliced(2, 0 , slugify(tagName).toLowerCase()).join('/') === forPath) {
+        return multiTagNode
+      }
+    }
+  }
+
+  return null
+}
+
 const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null):
 {
   component: any
@@ -262,28 +289,62 @@ const containerSize = computed(()=> {
 
 const nodesList = computed(() => {
   let nList = []
+
   // first one - overview
   nList.push(...[specDocument.value])
 
-  // first all without tags, but not schemas
-  nList.push(...specDocument.value.children.filter(child => (child.tags || []).length === 0 && child.type !== 'model'))
+  if (props.tableOfContents === null) {
 
-  // next by tag ordered
-  specDocument.value.tags.forEach((t: string) => {
-    nList.push(...specDocument.value.children.filter((child: any) => (child.tags || []).includes(t)))
-  })
+    // first all without tags, but not schemas
+    nList.push(...specDocument.value.children.filter(child => (child.tags || []).length === 0 && child.type !== 'model'))
 
-  // next - where tag is not matching list of tags
-  nList.push(...specDocument.value.children.filter(child => {
-    if (!child.tags || child.tags.length === 0) {
-      return false
+    // next by tag ordered
+    specDocument.value.tags.forEach((t: string) => {
+      nList.push(...specDocument.value.children.filter((child: any) => (child.tags || []).includes(t)))
+    })
+
+    // next - where tag is not matching list of tags
+    nList.push(...specDocument.value.children.filter(child => {
+      if (!child.tags || child.tags.length === 0) {
+        return false
+      }
+      return !!child.tags.find( (childTag) => (!specDocument.value.tags.includes(childTag)))
+    }))
+
+
+    // very last - schemas
+    nList.push(...specDocument.value.children.filter(child => (child.tags || []).length === 0 && child.type === 'model'))
+  } else {
+    let toc = props.tableOfContents
+    if (typeof props.tableOfContents === 'string') {
+      try {
+        toc = <TableOfContentsItem[]>parseFlatted(toc as string)
+      } catch {
+        console.error('@kong/spec-renderer: error parsing provided toc')
+      }
     }
-    return !!child.tags.find( (childTag) => (!specDocument.value.tags.includes(childTag)))
-  }))
 
-
-  // very last - schemas
-  nList.push(...specDocument.value.children.filter(child => (child.tags || []).length === 0 && child.type === 'model'))
+    const crawl = (item: TableOfContentsGroup): void => {
+      if (!Array.isArray(item.items)) {
+        return
+      }
+      for (let i = 0; i < item.items.length; i++) {
+        const childItem = item.items[i] as TableOfContentsNode
+        if (childItem.id === '/') {
+          continue
+        }
+        if ((item.items[i] as TableOfContentsGroup).items) {
+          crawl((item.items[i] as TableOfContentsGroup))
+        } else {
+          const matchingNode = findMatchingNode(specDocument.value, childItem.id)
+          if (matchingNode) {
+            nList.push({ ...matchingNode, uri: childItem.id })
+          }
+        }
+      }
+    }
+    crawl({ title: '', initiallyExpanded: false, items: <TableOfContentsItem[]>toc })
+  }
 
   const docComponentList = []
   // transforming to components
@@ -444,7 +505,7 @@ watch(() => ({
   const { document: oldDocument } = oldValue || {}
 
   const isRootPath = !pathname || pathname === '/'
-  serviceNode.value = <ServiceNode>(isRootPath ? newDocument : newDocument.children.find((child: any) => child.uri === pathname))
+  serviceNode.value = <ServiceNode>(isRootPath ? newDocument : findMatchingNode(newDocument, pathname))
   if (!serviceNode.value) {
     emit('path-not-found', pathname)
     return

@@ -232,4 +232,133 @@ components:
     expect(tableOfContents.value[1].items.length).toEqual(533) // endpoints
     expect(tableOfContents.value[2].items.length).toEqual(979) // schemas
   })
+
+  describe('multi-tag operations KHCP-14794', () => {
+    it('should create TOD with multiple items according to multitags', async () => {
+
+      const specContent = `
+openapi: 3.1.0
+info:
+  title: Beer API
+  description: API for managing beers
+  version: 1.0.0
+servers:
+  - url: https://ff90af76a1.gateways.konghq.tech
+paths:
+  /beers/ale:
+    put:
+      summary: VIew list of beers
+      responses:
+        '200':
+          description: A list of beers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Beer'
+
+    get:
+      summary: Get list of beers
+      responses:
+        '200':
+          description: A list of beers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Beer'
+      tags:
+        - System
+        - Mesh
+
+    post:
+      summary: Add a new beer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Beer'
+      responses:
+        '201':
+          description: Beer created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Beer'
+      tags:
+        - System
+    delete:
+      summary: Delete a beer
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the beer to delete
+      responses:
+        '200':
+          description: Beer deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Beer deleted successfully"
+        '404':
+          description: Beer not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Beer not found"
+      tags:
+        - Mesh
+components:
+  schemas:
+    Beer:
+      type: object
+      properties:
+        price:
+          type: string
+          example: "$16.99"
+        name:
+          type: string
+          example: "Founders All Day IPA"
+        rating:
+          type: object
+          properties:
+            average:
+              type: number
+              example: 4.411243509154233
+            reviews:
+              type: integer
+              example: 453
+        image:
+          type: string
+          example: "https://www.totalwine.com/media/sys_master/twmmedia/h00/h94/11891416367134.png"
+        id:
+          type: integer
+          example: 1
+
+      `
+      const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
+      await parseSpecDocument(specContent)
+
+      expect(tableOfContents.value?.length).toEqual(3)
+      expect(tableOfContents.value[1].items[1].items[0].id).toEqual('/paths/beers-ale/get')
+      expect(tableOfContents.value[1].items[2].items[0].id).toEqual('/paths/mesh/beers-ale/get')
+
+    })
+  })
 })
+
+
