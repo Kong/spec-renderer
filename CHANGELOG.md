@@ -1,3 +1,10 @@
+# [1.86.0](https://github.com/Kong/spec-renderer/compare/v1.85.19...v1.86.0) (2025-01-27)
+
+
+### Features
+
+* handle multi-tag sections [KHCP-14894] ([#496](https://github.com/Kong/spec-renderer/issues/496)) ([fe6b287](https://github.com/Kong/spec-renderer/commit/fe6b287e5f46dd4fced8516d887013a6ba030e09))
+
 ## [1.85.19](https://github.com/Kong/spec-renderer/compare/v1.85.18...v1.85.19) (2025-01-27)
 
 
