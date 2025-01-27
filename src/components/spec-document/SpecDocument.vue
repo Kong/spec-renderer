@@ -225,7 +225,7 @@ const findMatchingNode = (spDoc: ServiceNode, forPath: string): ServiceChildNode
    section has uri: /paths/list/get
    and two tags: system and mesh
 
-   so here when we are seraching document sections by path name we need to encounter that path could hold tag name in it,
+   so here when we are searching document sections by path name we need to encounter that path could hold tag name in it,
    because in our document children section's path will have no tag.
 
    Eg: forPath = '/paths/mesh/list/get'
