@@ -64,7 +64,7 @@
     "@stoplight/json": "^3.21.7",
     "@stoplight/types": "^14.1.1",
     "@stoplight/yaml": "^4.3.0",
-    "@vueuse/core": "^12.3.0",
+    "@vueuse/core": "^12.4.0",
     "allof-merge": "^0.6.6",
     "flatted": "^3.3.2",
     "httpsnippet": "^3.0.9",
@@ -73,17 +73,17 @@
     "markdown-it": "^14.1.0",
     "openapi3-ts": "4.4.0",
     "sanitize-html": "^2.14.0",
-    "shiki": "^1.26.1"
+    "shiki": "^1.26.2"
   },
   "resolutions": {
     "openapi3-ts": "4.4.0"
   },
   "devDependencies": {
-    "@babel/types": "^7.26.3",
+    "@babel/types": "^7.26.5",
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
-    "@evilmartians/lefthook": "^1.10.1",
+    "@evilmartians/lefthook": "^1.10.5",
     "@kong/design-tokens": "^1.17.2",
     "@kong/eslint-config-kong-ui": "1.2.3",
     "@semantic-release/changelog": "^6.0.3",
@@ -92,7 +92,7 @@
     "@types/jsdom": "^21.1.7",
     "@types/json-schema": "^7.0.15",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^22.10.5",
+    "@types/node": "^22.10.6",
     "@types/sanitize-html": "^2.13.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitest/ui": "^2.1.8",
@@ -109,10 +109,10 @@
     "postcss-html": "^1.7.0",
     "rimraf": "^6.0.1",
     "rollup-plugin-visualizer": "^5.14.0",
-    "sass": "^1.83.1",
-    "sass-embedded": "^1.83.1",
+    "sass": "^1.83.4",
+    "sass-embedded": "^1.83.4",
     "semantic-release": "^24.2.1",
-    "stylelint": "^16.12.0",
+    "stylelint": "^16.13.2",
     "stylelint-config-html": "^1.1.0",
     "stylelint-config-recommended-scss": "^14.1.0",
     "stylelint-config-recommended-vue": "^1.5.0",
@@ -184,7 +184,7 @@
   },
   "volta": {
     "node": "22.13.0",
-    "pnpm": "9.15.3"
+    "pnpm": "9.15.4"
   },
   "config": {
     "commitizen": {
