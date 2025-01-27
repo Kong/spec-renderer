@@ -274,8 +274,6 @@ export default (): {
       trace(options.traceParsing, 'openapi spec detected')
       await parseOpenApiSpecDocument(spec, options)
     }
-    console.log('parsedDocumexnt:', parsedDocument.value)
-    console.log('toc:', tableOfContents.value)
   }
 
   return {

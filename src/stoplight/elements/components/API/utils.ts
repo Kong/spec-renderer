@@ -107,7 +107,6 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
       NodeType.HttpOperation,
       mergedConfig.currentPath,
     )
-    console.log({ groups, ungrouped })
     tree.push({
       title: 'Endpoints',
       items: [],
