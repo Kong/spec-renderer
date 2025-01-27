@@ -32,6 +32,14 @@ export function computeTagGroups<T extends GroupableNode>(
     if (node.tags.length > 0) {
       for (let i = 0; i < node.tags.length; i++) {
         const tagName = node.tags[i]
+        /*
+          if the section has multiple-tags, we need to inject the slugified tag name into section's uri.
+          eg:
+          section has uri: /paths/list/get
+          and two tags: system and mesh
+
+          we will keep first occurrence (toc item) with url: /paths/list/get. but inject tag into second occurrence (/paths/mesh/list/get)
+        */
         const nodeUri = i === 0 ? node.uri : node.uri.split('/').toSpliced(2, 0 , slugify(tagName).toLowerCase()).join('/')
         const tagId = tagName.toLowerCase()
         if (groupsByTagId[tagId]) {
