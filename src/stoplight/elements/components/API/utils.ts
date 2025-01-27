@@ -6,6 +6,8 @@ import type { ServiceChildNode, ServiceNode } from '@/types'
 import type { TableOfContentsGroup, TableOfContentsItem } from '../../../elements-core/components/Docs/types'
 import { isHttpOperation, isHttpService, isHttpWebhookOperation } from '../../../elements-core/utils/guards'
 import type { OperationNode, SchemaNode, WebhookNode } from '../../utils/oas/types'
+import { slugify } from '../../../elements-core/utils/string'
+
 
 const defaults = (...args) => args.reverse().reduce((acc, obj) => ({ ...acc, ...obj }), {})
 
@@ -26,22 +28,33 @@ export function computeTagGroups<T extends GroupableNode>(
   const groupableNodes = serviceNode.children.filter(n => n.type === nodeType) as T[]
 
   for (const node of groupableNodes) {
-    const tagName = node.tags[0]
 
-    if (tagName) {
-      const tagId = tagName.toLowerCase()
-      if (groupsByTagId[tagId]) {
-        groupsByTagId[tagId].items.push(node)
-        groupsByTagId[tagId].initiallyExpanded = groupsByTagId[tagId].initiallyExpanded
-          ? true
-          : node.uri === currentPath
-      } else {
-        const serviceTagIndex = lowerCaseServiceTags.findIndex(tn => tn === tagId)
-        const serviceTagName = serviceNode.tags[serviceTagIndex]
-        groupsByTagId[tagId] = {
-          title: serviceTagName || tagName,
-          items: [node],
-          initiallyExpanded: node.uri === currentPath,
+    if (node.tags.length > 0) {
+      for (let i = 0; i < node.tags.length; i++) {
+        const tagName = node.tags[i]
+        /*
+          if the section has multiple-tags, we need to inject the slugified tag name into section's uri.
+          eg:
+          section has uri: /paths/list/get
+          and two tags: system and mesh
+
+          we will keep first occurrence (toc item) with url: /paths/list/get. but inject tag into second occurrence (/paths/mesh/list/get)
+        */
+        const nodeUri = i === 0 ? node.uri : node.uri.split('/').toSpliced(2, 0 , slugify(tagName).toLowerCase()).join('/')
+        const tagId = tagName.toLowerCase()
+        if (groupsByTagId[tagId]) {
+          groupsByTagId[tagId].items.push({ ...node, ...{ uri: nodeUri } })
+          groupsByTagId[tagId].initiallyExpanded = groupsByTagId[tagId].initiallyExpanded
+            ? true
+            : nodeUri === currentPath
+        } else {
+          const serviceTagIndex = lowerCaseServiceTags.findIndex(tn => tn === tagId)
+          const serviceTagName = serviceNode.tags[serviceTagIndex]
+          groupsByTagId[tagId] = {
+            title: serviceTagName || tagName,
+            items: [{ ...node, ...{ uri: nodeUri } }],
+            initiallyExpanded: nodeUri === currentPath,
+          }
         }
       }
     } else {
@@ -102,7 +115,6 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
       NodeType.HttpOperation,
       mergedConfig.currentPath,
     )
-
     tree.push({
       title: 'Endpoints',
       items: [],

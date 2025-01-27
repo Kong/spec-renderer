@@ -274,7 +274,6 @@ export default (): {
       trace(options.traceParsing, 'openapi spec detected')
       await parseOpenApiSpecDocument(spec, options)
     }
-
   }
 
   return {

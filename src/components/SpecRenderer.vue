@@ -66,6 +66,7 @@
           :markdown-styles="markdownStyles"
           :navigation-type="navigationType"
           :spec-url="specUrl"
+          :table-of-contents="tableOfContents"
           @content-scrolled="onDocumentScroll"
           @item-selected="itemSelected"
           @path-not-found="relayPathNotFound"
