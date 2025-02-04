@@ -94,8 +94,8 @@ importers:
         specifier: ^1.17.2
         version: 1.17.2
       '@kong/eslint-config-kong-ui':
-        specifier: 1.2.3
-        version: 1.2.3(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)
+        specifier: 1.2.4
+        version: 1.2.4(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)
       '@semantic-release/changelog':
         specifier: ^6.0.3
         version: 6.0.3(semantic-release@24.2.1(typescript@5.7.3))
@@ -867,10 +867,6 @@ packages:
     resolution: {integrity: sha512-grOjVNN8P3hjJn/eIETF1wwd12DdnwFDoyceUJLYYdkpbwq3nLi+4fqrTAONx7XDALqlL220wC/RHSC/QTI/0w==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/js@9.17.0':
-    resolution: {integrity: sha512-Sxc4hqcs1kTu0iID3kcZDW3JHq2a77HO9P8CP6YEA/FpH3Ll8UXE2r/86Rz9YJLKme39S9vU5OWNjC6Xl0Cr3w==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
   '@eslint/js@9.19.0':
     resolution: {integrity: sha512-rbq9/g38qjfqFLOVPvwjIvFFdNziEC5S65jmjPw5r6A//QH+W91akh9irMwjDN8zKUTak6W9EsAv4m/7Wnw0UQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -982,8 +978,8 @@ packages:
     resolution: {integrity: sha512-979FHvvqPkjdUmbUL7Q2+z04GiVLXqu+OgucD3krAczuTWGfbFG6mOzbO6QIZ7/YlFMbe/N7TH85yJ+YfA/uUg==}
     engines: {node: '>=18.19.1', pnpm: '>=9.7.0'}
 
-  '@kong/eslint-config-kong-ui@1.2.3':
-    resolution: {integrity: sha512-zIR5jHCSOl7OQO9pf+k7e99R48dXkyMoMJHtA+hYraJkrN/dkP+C+A8tnxuVcBwpbmroWasvK4HYlpxJi0W36A==}
+  '@kong/eslint-config-kong-ui@1.2.4':
+    resolution: {integrity: sha512-DoYY1BNITrPP3N1BdN9KMryOSXGWlUUf1ko+ELDuGG2SerAOxyMxVIlP1YgbMjhHY6aFAaX1BH5qnX6W1bkYHg==}
     engines: {node: '>=18.0.0 || >=20.13.1'}
     peerDependencies:
       eslint: '>= 9.17.0'
@@ -6321,8 +6317,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@eslint/js@9.17.0': {}
-
   '@eslint/js@9.19.0': {}
 
   '@eslint/object-schema@2.1.4': {}
@@ -6422,11 +6416,11 @@ snapshots:
 
   '@kong/design-tokens@1.17.2': {}
 
-  '@kong/eslint-config-kong-ui@1.2.3(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)':
+  '@kong/eslint-config-kong-ui@1.2.4(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)':
     dependencies:
       '@eslint/compat': 1.2.4(eslint@9.19.0(jiti@2.4.2))
       '@eslint/eslintrc': 3.2.0
-      '@eslint/js': 9.17.0
+      '@eslint/js': 9.19.0
       '@stylistic/eslint-plugin': 2.12.1(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)
       eslint: 9.19.0(jiti@2.4.2)
       eslint-plugin-cypress: 3.6.0(eslint@9.19.0(jiti@2.4.2))
