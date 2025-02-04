@@ -59,7 +59,7 @@
     "@floating-ui/vue": "^1.1.6",
     "@kong/icons": "^1.20.4",
     "@scalar/openapi-parser": "^0.10.3",
-    "@seriousme/openapi-schema-validator": "^2.3.0",
+    "@seriousme/openapi-schema-validator": "^2.3.1",
     "@stoplight/http-spec": "^7.1.0",
     "@stoplight/json": "^3.21.7",
     "@stoplight/types": "^14.1.1",
@@ -83,7 +83,7 @@
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
-    "@evilmartians/lefthook": "^1.10.5",
+    "@evilmartians/lefthook": "^1.10.10",
     "@kong/design-tokens": "^1.17.2",
     "@kong/eslint-config-kong-ui": "1.2.3",
     "@semantic-release/changelog": "^6.0.3",
@@ -92,7 +92,7 @@
     "@types/jsdom": "^21.1.7",
     "@types/json-schema": "^7.0.15",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^22.10.7",
+    "@types/node": "^22.10.8",
     "@types/sanitize-html": "^2.13.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitest/ui": "^2.1.8",
@@ -121,7 +121,7 @@
     "tsc-alias": "^1.8.10",
     "tslib": "^2.8.1",
     "typescript": "^5.7.3",
-    "vite": "^6.0.7",
+    "vite": "^6.0.11",
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-replace": "^0.1.1",
     "vite-plugin-vue-devtools": "^7.7.0",
@@ -183,7 +183,7 @@
     "node": ">=18.17.0"
   },
   "volta": {
-    "node": "22.13.0",
+    "node": "22.13.1",
     "pnpm": "9.15.4"
   },
   "config": {
