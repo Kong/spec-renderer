@@ -115,7 +115,7 @@ importers:
         specifier: ^14.1.2
         version: 14.1.2
       '@types/node':
-        specifier: ^22.10.8
+        specifier: ^22.10.9
         version: 22.10.10
       '@types/sanitize-html':
         specifier: ^2.13.0
