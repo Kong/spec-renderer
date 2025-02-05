@@ -1,3 +1,10 @@
+# [1.87.0](https://github.com/Kong/spec-renderer/compare/v1.86.3...v1.87.0) (2025-02-05)
+
+
+### Features
+
+* add support to image response ([#511](https://github.com/Kong/spec-renderer/issues/511)) ([05a1435](https://github.com/Kong/spec-renderer/commit/05a1435f10c287a06586f04514466a7df05ddb62))
+
 ## [1.86.3](https://github.com/Kong/spec-renderer/compare/v1.86.2...v1.86.3) (2025-02-04)
 
 
