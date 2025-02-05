@@ -27,7 +27,7 @@ importers:
         specifier: ^1.20.4
         version: 1.20.4(vue@3.5.13(typescript@5.7.3))
       '@scalar/openapi-parser':
-        specifier: ^0.10.3
+        specifier: ^0.10.4
         version: 0.10.4
       '@seriousme/openapi-schema-validator':
         specifier: ^2.3.1
