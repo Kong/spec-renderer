@@ -64,7 +64,7 @@
     "@stoplight/json": "^3.21.7",
     "@stoplight/types": "^14.1.1",
     "@stoplight/yaml": "^4.3.0",
-    "@vueuse/core": "^12.4.0",
+    "@vueuse/core": "^12.5.0",
     "allof-merge": "^0.6.6",
     "flatted": "^3.3.2",
     "httpsnippet": "^3.0.9",
@@ -73,7 +73,7 @@
     "markdown-it": "^14.1.0",
     "openapi3-ts": "4.4.0",
     "sanitize-html": "^2.14.0",
-    "shiki": "^1.27.2"
+    "shiki": "^1.29.1"
   },
   "resolutions": {
     "openapi3-ts": "4.4.0"
@@ -115,7 +115,7 @@
     "stylelint": "^16.13.2",
     "stylelint-config-html": "^1.1.0",
     "stylelint-config-recommended-scss": "^14.1.0",
-    "stylelint-config-recommended-vue": "^1.5.0",
+    "stylelint-config-recommended-vue": "^1.6.0",
     "stylelint-order": "^6.0.4",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
