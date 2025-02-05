@@ -31,10 +31,9 @@
       v-if="responseText && selectedResOption === 'body'"
       class="wide"
     >
-      <CodeBlock
-        class="response-body"
-        :code="responseText"
-        lang="json"
+      <component
+        :is="responseBodyComponent.component"
+        v-bind="responseBodyComponent.props"
       />
     </div>
 
@@ -123,6 +122,31 @@ const resultOptions = computed((): Array<SelectItem> => {
   return opts
 })
 
+const isResponseImage = computed(() => props.response.headers.get('content-type')?.includes('image') ?? false)
+
+// Returns the component & props to be used to display the response body
+const responseBodyComponent = computed(() => {
+  if (isResponseImage.value) {
+    return {
+      component: 'img',
+      props: {
+        src: responseText.value,
+        alt: 'response image',
+        width: '300px',
+      },
+    }
+  }
+
+  return {
+    component: CodeBlock,
+    props: {
+      code: responseText.value,
+      lang: requestLang.value,
+      class: 'response-body',
+    },
+  }
+})
+
 const selectedResOption = ref<string>()
 
 watch(resultOptions, (options) => {
@@ -138,9 +162,12 @@ watch(() => props.response, async (res) => {
     if (res.headers.get('content-type')?.includes('/json')) {
       responseText.value = JSON.stringify(await res.json(), null, CODE_INDENT_SPACES)
       requestLang.value = 'json'
+    } else if (isResponseImage.value) {
+      const blob = await res.blob()
+      responseText.value = URL.createObjectURL(blob)
     } else {
       responseText.value = await res.text()
-      requestLang.value = ''
+      requestLang.value = 'text'
     }
   } else {
     responseText.value = ''
