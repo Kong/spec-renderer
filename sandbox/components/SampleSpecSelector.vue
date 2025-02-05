@@ -107,6 +107,7 @@ const optionsArrayOAS = [
   { url: 'https://raw.githubusercontent.com/stoplightio/Public-APIs/master/reference/netlify/openapi.yaml', label: 'Netlify' },
   { url: 'https://api.apis.guru/v2/specs/instagram.com/1.0.0/swagger.yaml', label: 'Instagram' },
   { url: 'https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.json', label: 'Stripe' },
+  { url: 'https://httpbin.org/spec.json', label: 'Httpbin' },
 ]
 
 
