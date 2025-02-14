@@ -73,7 +73,7 @@
     "markdown-it": "^14.1.0",
     "openapi3-ts": "4.4.0",
     "sanitize-html": "^2.14.0",
-    "shiki": "^1.29.1"
+    "shiki": "^2.2.0"
   },
   "resolutions": {
     "openapi3-ts": "4.4.0"
