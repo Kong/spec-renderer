@@ -22,7 +22,6 @@
         :markdown="data.description"
       />
       <ServerList
-        v-if="serverList.length"
         :server-list="serverList"
         @add-custom-url="addServerUrl"
       />
