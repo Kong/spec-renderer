@@ -1,3 +1,10 @@
+## [1.87.5](https://github.com/Kong/spec-renderer/compare/v1.87.4...v1.87.5) (2025-02-24)
+
+
+### Bug Fixes
+
+* **server-list:** show add custom url button if no server endpoint present ([#526](https://github.com/Kong/spec-renderer/issues/526)) ([e16970c](https://github.com/Kong/spec-renderer/commit/e16970cdaef8970451401bcad66029f44fbae977))
+
 ## [1.87.4](https://github.com/Kong/spec-renderer/compare/v1.87.3...v1.87.4) (2025-02-24)
 
 
