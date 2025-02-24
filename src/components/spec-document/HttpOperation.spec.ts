@@ -102,7 +102,7 @@ describe('<HttpOperation />', () => {
       expect(wrapper.findTestId(`server-endpoint-${data.id}`).exists()).toBe(true)
     })
 
-    it('is not rendered when server list is not defined in the spec', () => {
+    it('is rendered even if server list is not defined in the spec but path is defined', () => {
       const data = {
         id: '123',
         method: 'get',
@@ -121,7 +121,9 @@ describe('<HttpOperation />', () => {
       })
 
       // server endpoint is not rendered
-      expect(wrapper.findTestId(`server-endpoint-${data.id}`).exists()).toBe(false)
+      expect(wrapper.findTestId(`server-endpoint-${data.id}`).exists()).toBe(true)
+      // method and path for endpoint are rendered
+      expect(wrapper.findTestId(`server-endpoint-${data.id}`).text()).toBe(data.method + data.path)
     })
 
     it('is not rendered when path is not defined in the spec', () => {
