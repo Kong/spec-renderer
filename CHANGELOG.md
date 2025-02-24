@@ -1,3 +1,10 @@
+## [1.87.4](https://github.com/Kong/spec-renderer/compare/v1.87.3...v1.87.4) (2025-02-24)
+
+
+### Bug Fixes
+
+* **http-operation:** show only endpoint path if server url not defined [KHCP-15209] ([#525](https://github.com/Kong/spec-renderer/issues/525)) ([a72fa24](https://github.com/Kong/spec-renderer/commit/a72fa2419df4482c0abeb03522d1e7d6f5032e2f))
+
 ## [1.87.3](https://github.com/Kong/spec-renderer/compare/v1.87.2...v1.87.3) (2025-02-13)
 
 
