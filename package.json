@@ -1,6 +1,6 @@
 {
   "name": "@kong/spec-renderer-dev",
-  "version": "1.87.3",
+  "version": "1.87.4",
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
   "type": "module",
@@ -103,7 +103,7 @@
     "commitizen": "^4.3.1",
     "cross-env": "^7.0.3",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^9.19.0",
+    "eslint": "^9.20.0",
     "jsdom": "^26.0.0",
     "postcss": "^8.5.1",
     "postcss-html": "^1.8.0",

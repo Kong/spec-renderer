@@ -12,7 +12,7 @@
       :type="isWebhookOperation ? 'WEBHOOK' : ''"
     >
       <ServerEndpoint
-        v-if="serverUrlList.length && operationData.path"
+        v-if="serverUrlList.length || operationData.path"
         class="http-operation-server-endpoint"
         :data-testid="`server-endpoint-${operationData.id}`"
         :method="operationData.method"
