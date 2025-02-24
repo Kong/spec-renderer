@@ -32,14 +32,16 @@ export default function useServerList() {
   }
 
   /**
-   * Add a new server to the list of servers in the state.
-   * Also generates a unique ID for the server, based on its index in the list.
+   * Add a new server to the list of servers in the state and generates a unique ID for the server, based on its index in the list.
+   * Also sets the selected server URL to the newly added server URL.
    */
   const addServerUrl = (newServerUrl: string) => {
+    const url = removeTrailingSlash(newServerUrl)
     serverList.value.push({
       id: serverList.value.length.toString(),
-      url: removeTrailingSlash(newServerUrl),
+      url,
     })
+    selectedServerUrl.value = url
   }
 
   /**
