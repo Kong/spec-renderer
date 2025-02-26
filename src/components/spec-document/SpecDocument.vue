@@ -379,7 +379,7 @@ const doContentScrolling = computed(():boolean => {
   return IS_TRUE(props.allowContentScrolling) && specDocument.value.children.length < DISABLE_SCROLLING_ITEMS_LIMIT
 })
 
-const hideNavigation = computed((): bollean => {
+const hideNavigation = computed((): boolean => {
   return IS_TRUE(props.hideNavigationButtons) && specDocument.value.children.length < DISABLE_SCROLLING_ITEMS_LIMIT
 })
 
