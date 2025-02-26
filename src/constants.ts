@@ -131,3 +131,6 @@ export const SECTIONS_TO_RENDER = 2
 
 // start recalculating visibility on scroll more than N pixels
 export const MIN_SCROLL_DIFFERENCE = 20
+
+// when number of topics (operations + schemas) in the spec is greater than N - scrolling is disabled
+export const DISABLE_SCROLLING_ITEMS_LIMIT = 1200
