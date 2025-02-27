@@ -55,8 +55,8 @@ export default (): {
   }
 
   /*
-    This is for the case when we point to the referecnce, and reference block
-    doesn't have title. In this case we want to use 'key' (last element of the path) as a tilte,
+    This is for the case when we point to the reference, and reference block
+    doesn't have title. In this case we want to use 'key' (last element of the path) as a title,
     so our UI representation of the referenced object is more meaningful
   / */
   const titleResolve = (json: Record<string, any>): Record<string, any> => {
@@ -64,8 +64,9 @@ export default (): {
     const refsSet = new Set()
 
     const deepGet = (obj: Record<string, any>, keys: Array<string>) => keys.reduce((xs, x) => xs?.[x] ?? null, obj)
-
+    let i = 0
     const doResolve = (fragment: Record<string, any>): Record<string, any> => {
+      console.log('calling doResolve', i++, fragment)
       Object.keys(fragment).forEach(key => {
         if (typeof fragment[key] === 'object' && fragment[key] !== null) {
           fragment[key] = doResolve(fragment[key])
