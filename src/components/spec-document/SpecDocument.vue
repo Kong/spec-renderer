@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="!allowContentScrolling"
+    v-if="!doContentScrolling"
     class="spec-renderer-document"
   >
     <component
@@ -64,7 +64,7 @@ import AsyncMessage from './AsyncMessage.vue'
 import ArticleNode from './ArticleNode.vue'
 import UnknownNode from './UnknownNode.vue'
 import DocumentNavigation from './DocumentNavigation.vue'
-import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE } from '@/constants'
+import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE, DISABLE_SCROLLING_ITEMS_LIMIT } from '@/constants'
 import { BOOL_VALIDATOR, IS_TRUE, isSsr } from '@/utils'
 import type { NavigationTypes } from '@/types'
 import { stringify, parse as parseFlatted } from 'flatted'
@@ -375,10 +375,18 @@ const docComponent = computed(() => {
   return nodesList.value[activePathIdx.value]
 })
 
+const doContentScrolling = computed(():boolean => {
+  return IS_TRUE(props.allowContentScrolling) && specDocument.value.children.length < DISABLE_SCROLLING_ITEMS_LIMIT
+})
+
+const hideNavigation = computed((): boolean => {
+  return IS_TRUE(props.hideNavigationButtons) && specDocument.value.children.length < DISABLE_SCROLLING_ITEMS_LIMIT
+})
+
 const neighborComponentList = computed<Array<DocumentNavigationItem>>(() => {
   const list: Array<DocumentNavigationItem> = []
 
-  if (IS_TRUE(props.hideNavigationButtons) || IS_TRUE(props.allowContentScrolling)) {
+  if (hideNavigation.value || doContentScrolling.value) {
     return list
   }
 
@@ -436,7 +444,7 @@ watch(() => ({ nodesList: nodesList.value,
   wWidth: containerSize.value.width.value,
 }), (newValue, oldValue) => {
 
-  if (!props.allowContentScrolling) {
+  if (!doContentScrolling.value) {
     // case when scrolling is not enabled - we do not need to do anything else
     return
   }
@@ -531,7 +539,7 @@ watch(() => ({
     initialize(serviceNode.value?.data.servers || [])
   }
 
-  if (!props.allowContentScrolling) {
+  if (!doContentScrolling.value) {
     if (!highlighter.value) {
       await createHighlighter()
     }
