@@ -79,7 +79,7 @@ const selectItem = (newUrl: string): void => {
   padding: var(--kui-space-90, $kui-space-90) var(--kui-space-0, $kui-space-0);
 
   &.single-item {
-    justify-content: left;
+    justify-content: right;
   }
 
   .document-navigation-link {
