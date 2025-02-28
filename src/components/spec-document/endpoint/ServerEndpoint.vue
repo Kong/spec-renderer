@@ -39,7 +39,10 @@
         class="server-url-with-path"
         :data-testid="`server-url-${dataTestId}`"
       >
-        <span v-if="selectedServerUrl" class="endpoint-body">
+        <span
+          v-if="selectedServerUrl"
+          class="endpoint-body"
+        >
           {{ selectedServerUrl }}
         </span>
         <span
