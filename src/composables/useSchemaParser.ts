@@ -66,7 +66,7 @@ export default (): {
     const deepGet = (obj: Record<string, any>, keys: Array<string>) => keys.reduce((xs, x) => xs?.[x] ?? null, obj)
     let i = 0
     const doResolve = (fragment: Record<string, any>, parentKey: string = ''): Record<string, any> => {
-      if (parentKey.split('/').length > 500) {
+      if (parentKey.split('/').length > 100) {
         console.log('!!!! key to long')
         return fragment
       }
