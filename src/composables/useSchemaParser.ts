@@ -65,8 +65,9 @@ export default (): {
 
     const deepGet = (obj: Record<string, any>, keys: Array<string>) => keys.reduce((xs, x) => xs?.[x] ?? null, obj)
     let i = 0
-    const doResolve = (fragment: Record<string, any>, parentKey?: string): Record<string, any> => {
-      if (i++ > 10000) {
+    const doResolve = (fragment: Record<string, any>, parentKey: string = ''): Record<string, any> => {
+      if (parentKey.split('/').length > 200) {
+        console.log('!!!! key to long')
         return fragment
       }
       console.log('calling doResolve', i, refsSet.size, parentKey?.split('/').length, parentKey)
@@ -75,12 +76,10 @@ export default (): {
           if (typeof fragment[key] === 'object' && fragment[key] !== null) {
             fragment[key] = doResolve(fragment[key], parentKey + '/' + key)
           } else if (fragment[key] && isLocalRef(fragment[key])) {
-            console.log('!!!! ref found', key, fragment[key], parentKey)
             const resolvedRef = deepGet(json, fragment[key].replace('#/', '').split('/'))
             if (resolvedRef) {
               resolvedRef.title = resolvedRef.title || fragment[key].split('/').pop()
             }
-            console.log('adding!!!!')
             refsSet.add(fragment[key])
           }
         }
@@ -89,7 +88,7 @@ export default (): {
       return fragment
     }
 
-    return doResolve(json, '')
+    return doResolve(json)
   }
 
 
