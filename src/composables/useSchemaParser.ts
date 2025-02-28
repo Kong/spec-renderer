@@ -92,10 +92,10 @@ export default (): {
               refsSet.add(fragment[key])
             }
           } else {
-            console.log('skip due to fragmentsSet', {parentKey, key})
+            console.log('skip due to fragmentsSet', { parentKey, key })
           }
         } else {
-          console.log('skip die to resSet', {parentKey, key})
+          console.log('skip die to resSet', { parentKey, key })
         }
       })
 
@@ -192,7 +192,7 @@ export default (): {
     if (!jsonDocument.value || options.enforceResetBeforeParsing) {
       await fetchAndBundle(spec, options)
     }
-    console.log("json document:", jsonDocument.value)
+    console.log('json document:', jsonDocument.value)
     if (!jsonDocument.value) {
       // was it even a spec or even something that could be converted to json?
       console.error('@kong/spec-renderer: empty jsonDocument initial processing')
