@@ -69,7 +69,7 @@ export default (): {
       if (i++ > 10000) {
         return fragment
       }
-      console.log('calling doResolve', i, refsSet.size, fragment, parentKey)
+      console.log('calling doResolve', i, refsSet.size, parentKey?.split('/').length, parentKey)
       Object.keys(fragment).forEach(key => {
         if (!refsSet.has(fragment[key])) {
           if (typeof fragment[key] === 'object' && fragment[key] !== null) {
