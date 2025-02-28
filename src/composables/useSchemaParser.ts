@@ -64,25 +64,32 @@ export default (): {
     const refsSet = new Set()
 
     const deepGet = (obj: Record<string, any>, keys: Array<string>) => keys.reduce((xs, x) => xs?.[x] ?? null, obj)
-    let i = 0
-    const doResolve = (fragment: Record<string, any>): Record<string, any> => {
-      console.log('calling doResolve', i++, fragment)
-      Object.keys(fragment).forEach(key => {
-        if (typeof fragment[key] === 'object' && fragment[key] !== null) {
-          fragment[key] = doResolve(fragment[key])
-        } else if (fragment[key] && isLocalRef(fragment[key]) && !refsSet.has(fragment[key])) {
-          const resolvedRef = deepGet(json, fragment[key].replace('#/', '').split('/'))
-          if (resolvedRef) {
-            resolvedRef.title = resolvedRef.title || fragment[key].split('/').pop()
-          }
-          refsSet.add(fragment[key])
+      let i = 0;
+      const doResolve = (fragment: Record<string, any>, parentKey?: string): Record<string, any> => {
+        if (i++ > 10000) {
+          return fragment
         }
-      })
+        console.log('calling doResolve', i, refsSet.size, fragment, parentKey)
+        Object.keys(fragment).forEach(key => {
+          if (!refsSet.has(fragment[key])) {
+            if (typeof fragment[key] === 'object' && fragment[key] !== null) {
+              fragment[key] = doResolve(fragment[key], parentKey+'/'+ key)
+            } else if (fragment[key] && isLocalRef(fragment[key])) {
+              console.log('!!!! ref found', key, fragment[key], parentKey)
+              const resolvedRef = deepGet(json, fragment[key].replace('#/', '').split('/'))
+              if (resolvedRef) {
+                resolvedRef.title = resolvedRef.title || fragment[key].split('/').pop()
+              }
+              console.log('adding!!!!')
+              refsSet.add(fragment[key])
+            }
+          }
+        })
 
-      return fragment
-    }
+        return fragment
+      }
 
-    return doResolve(json)
+    return doResolve(json, '')
   }
 
 
