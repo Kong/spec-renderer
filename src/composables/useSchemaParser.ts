@@ -67,7 +67,7 @@ export default (): {
     const deepGet = (obj: Record<string, any>, keys: Array<string>) => keys.reduce((xs, x) => xs?.[x] ?? null, obj)
     let i = 0
     const doResolve = (fragment: Record<string, any>, parentKey: string = ''): Record<string, any> => {
-      if (parentKey.split('/').length > 1000000) {
+      if (parentKey.split('/').length > 100) {
         console.log('!!!! key to long')
         return fragment
       }
@@ -98,11 +98,11 @@ export default (): {
           console.log('skip die to resSet', { parentKey, key })
         }
       })
-
       return fragment
     }
-
-    return doResolve(json)
+    let ret =  doResolve(json)
+    console.log('fragmentsSet', fragmentsSet)
+    return ret
   }
 
 
