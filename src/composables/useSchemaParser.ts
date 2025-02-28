@@ -70,6 +70,11 @@ export default (): {
         console.log('!!!! key to long')
         return fragment
       }
+      if (i > 5000) {
+        console.log('too much')
+        return fragment
+
+      }
       console.log('calling doResolve', i++, refsSet.size, parentKey?.split('/').length, parentKey)
       Object.keys(fragment).forEach(key => {
         if (!refsSet.has(fragment[key])) {
