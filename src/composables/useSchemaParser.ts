@@ -62,31 +62,40 @@ export default (): {
   const titleResolve = (json: Record<string, any>): Record<string, any> => {
 
     const refsSet = new Set()
+    const fragmentsSet = new Set()
 
     const deepGet = (obj: Record<string, any>, keys: Array<string>) => keys.reduce((xs, x) => xs?.[x] ?? null, obj)
     let i = 0
     const doResolve = (fragment: Record<string, any>, parentKey: string = ''): Record<string, any> => {
-      if (parentKey.split('/').length > 100) {
+      if (parentKey.split('/').length > 1000000) {
         console.log('!!!! key to long')
         return fragment
       }
-      if (i > 5000) {
+      if (i > 8000) {
         console.log('too much')
         return fragment
 
       }
-      console.log('calling doResolve', i++, refsSet.size, parentKey?.split('/').length, parentKey)
+      console.log('calling doResolve', i++, refsSet.size, fragmentsSet.size, parentKey?.split('/').length, parentKey)
       Object.keys(fragment).forEach(key => {
         if (!refsSet.has(fragment[key])) {
-          if (typeof fragment[key] === 'object' && fragment[key] !== null) {
-            fragment[key] = doResolve(fragment[key], parentKey + '/' + key)
-          } else if (fragment[key] && isLocalRef(fragment[key])) {
-            const resolvedRef = deepGet(json, fragment[key].replace('#/', '').split('/'))
-            if (resolvedRef) {
-              resolvedRef.title = resolvedRef.title || fragment[key].split('/').pop()
+          if (!fragmentsSet.has(fragment[key])) {
+            if (typeof fragment[key] === 'object' && fragment[key] !== null) {
+              fragmentsSet.add(fragment[key])
+              fragment[key] = doResolve(fragment[key], parentKey + '/' + key)
+            } else if (fragment[key] && isLocalRef(fragment[key])) {
+              const resolvedRef = deepGet(json, fragment[key].replace('#/', '').split('/'))
+              if (resolvedRef) {
+                resolvedRef.title = resolvedRef.title || fragment[key].split('/').pop()
+              }
+              console.log('!!! adding to refSet', key)
+              refsSet.add(fragment[key])
             }
-            refsSet.add(fragment[key])
+          } else {
+            console.log('skip due to fragmentsSet', {parentKey, key})
           }
+        } else {
+          console.log('skip die to resSet', {parentKey, key})
         }
       })
 
@@ -183,7 +192,7 @@ export default (): {
     if (!jsonDocument.value || options.enforceResetBeforeParsing) {
       await fetchAndBundle(spec, options)
     }
-
+    console.log("json document:", jsonDocument.value)
     if (!jsonDocument.value) {
       // was it even a spec or even something that could be converted to json?
       console.error('@kong/spec-renderer: empty jsonDocument initial processing')
