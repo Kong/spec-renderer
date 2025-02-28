@@ -100,7 +100,7 @@ export default (): {
       })
       return fragment
     }
-    let ret =  doResolve(json)
+    const ret = doResolve(json)
     console.log('fragmentsSet', fragmentsSet)
     return ret
   }
