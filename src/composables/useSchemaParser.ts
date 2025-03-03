@@ -65,18 +65,7 @@ export default (): {
     const fragmentsSet = new Set()
 
     const deepGet = (obj: Record<string, any>, keys: Array<string>) => keys.reduce((xs, x) => xs?.[x] ?? null, obj)
-    let i = 0
     const doResolve = (fragment: Record<string, any>, parentKey: string = ''): Record<string, any> => {
-      if (parentKey.split('/').length > 100) {
-        console.log('!!!! key to long')
-        return fragment
-      }
-      if (i > 8000) {
-        console.log('too much')
-        return fragment
-
-      }
-      console.log('calling doResolve', i++, refsSet.size, fragmentsSet.size, parentKey?.split('/').length, parentKey)
       Object.keys(fragment).forEach(key => {
         if (!refsSet.has(fragment[key])) {
           if (!fragmentsSet.has(fragment[key])) {
@@ -88,20 +77,14 @@ export default (): {
               if (resolvedRef) {
                 resolvedRef.title = resolvedRef.title || fragment[key].split('/').pop()
               }
-              console.log('!!! adding to refSet', key)
               refsSet.add(fragment[key])
             }
-          } else {
-            console.log('skip due to fragmentsSet', { parentKey, key })
           }
-        } else {
-          console.log('skip die to resSet', { parentKey, key })
         }
       })
       return fragment
     }
     const ret = doResolve(json)
-    console.log('fragmentsSet', fragmentsSet)
     return ret
   }
 
@@ -192,7 +175,6 @@ export default (): {
     if (!jsonDocument.value || options.enforceResetBeforeParsing) {
       await fetchAndBundle(spec, options)
     }
-    console.log('json document:', jsonDocument.value)
     if (!jsonDocument.value) {
       // was it even a spec or even something that could be converted to json?
       console.error('@kong/spec-renderer: empty jsonDocument initial processing')
