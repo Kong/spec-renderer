@@ -1,3 +1,10 @@
+## [1.87.9](https://github.com/Kong/spec-renderer/compare/v1.87.8...v1.87.9) (2025-03-03)
+
+
+### Bug Fixes
+
+*  limit circular calls no doResolve [KHCP-15208] ([#529](https://github.com/Kong/spec-renderer/issues/529)) ([84897af](https://github.com/Kong/spec-renderer/commit/84897af812684cccace7bdcdf2b08597d3b51999))
+
 ## [1.87.8](https://github.com/Kong/spec-renderer/compare/v1.87.7...v1.87.8) (2025-03-03)
 
 
