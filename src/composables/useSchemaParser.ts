@@ -79,8 +79,6 @@ export default (): {
             refsSet.add(fragment[key])
           }
         }
-          }
-        }
       })
       return fragment
     }
