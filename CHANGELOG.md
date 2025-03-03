@@ -1,3 +1,10 @@
+## [1.87.6](https://github.com/Kong/spec-renderer/compare/v1.87.5...v1.87.6) (2025-02-27)
+
+
+### Bug Fixes
+
+* force disable content scrolling for large specs [KHCP-15276] ([#528](https://github.com/Kong/spec-renderer/issues/528)) ([b3bdf19](https://github.com/Kong/spec-renderer/commit/b3bdf1905ca32568650df059cd1177556d04272b))
+
 ## [1.87.5](https://github.com/Kong/spec-renderer/compare/v1.87.4...v1.87.5) (2025-02-24)
 
 
