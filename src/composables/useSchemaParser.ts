@@ -55,33 +55,35 @@ export default (): {
   }
 
   /*
-    This is for the case when we point to the referecnce, and reference block
-    doesn't have title. In this case we want to use 'key' (last element of the path) as a tilte,
+    This is for the case when we point to the reference, and reference block
+    doesn't have title. In this case we want to use 'key' (last element of the path) as a title,
     so our UI representation of the referenced object is more meaningful
   / */
   const titleResolve = (json: Record<string, any>): Record<string, any> => {
 
     const refsSet = new Set()
+    const fragmentsSet = new Set()
 
     const deepGet = (obj: Record<string, any>, keys: Array<string>) => keys.reduce((xs, x) => xs?.[x] ?? null, obj)
-
-    const doResolve = (fragment: Record<string, any>): Record<string, any> => {
+    const doResolve = (fragment: Record<string, any>, parentKey: string = ''): Record<string, any> => {
       Object.keys(fragment).forEach(key => {
-        if (typeof fragment[key] === 'object' && fragment[key] !== null) {
-          fragment[key] = doResolve(fragment[key])
-        } else if (fragment[key] && isLocalRef(fragment[key]) && !refsSet.has(fragment[key])) {
-          const resolvedRef = deepGet(json, fragment[key].replace('#/', '').split('/'))
-          if (resolvedRef) {
-            resolvedRef.title = resolvedRef.title || fragment[key].split('/').pop()
+        if (!refsSet.has(fragment[key]) && !fragmentsSet.has(fragment[key])) {
+          if (typeof fragment[key] === 'object' && fragment[key] !== null) {
+            fragmentsSet.add(fragment[key])
+            fragment[key] = doResolve(fragment[key], parentKey + '/' + key)
+          } else if (fragment[key] && isLocalRef(fragment[key])) {
+            const resolvedRef = deepGet(json, fragment[key].replace('#/', '').split('/'))
+            if (resolvedRef) {
+              resolvedRef.title = resolvedRef.title || fragment[key].split('/').pop()
+            }
+            refsSet.add(fragment[key])
           }
-          refsSet.add(fragment[key])
         }
       })
-
       return fragment
     }
-
-    return doResolve(json)
+    const ret = doResolve(json)
+    return ret
   }
 
 
@@ -171,7 +173,6 @@ export default (): {
     if (!jsonDocument.value || options.enforceResetBeforeParsing) {
       await fetchAndBundle(spec, options)
     }
-
     if (!jsonDocument.value) {
       // was it even a spec or even something that could be converted to json?
       console.error('@kong/spec-renderer: empty jsonDocument initial processing')
