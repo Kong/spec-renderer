@@ -573,7 +573,7 @@ watch(() => ({
   if (document) {
     if (!wrapperRef.value) {
       // KHCP-15336 there is a case in portal when wrapperRef is not initialised at this pont
-      await until(wrapperRef).not.toBeNull({timeout: 10000})
+      await until(wrapperRef).not.toBeNull({ timeout: 10000 })
     }
     const activeSectionEl = wrapperRef.value?.querySelector(`[id="${pathIdx}-nodecontainer"]`)
 
