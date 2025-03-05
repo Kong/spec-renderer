@@ -1,3 +1,10 @@
+## [1.87.10](https://github.com/Kong/spec-renderer/compare/v1.87.9...v1.87.10) (2025-03-05)
+
+
+### Bug Fixes
+
+* show operation in portal when opened via NuxRouter from search [KHCP-15336] ([#531](https://github.com/Kong/spec-renderer/issues/531)) ([0a03750](https://github.com/Kong/spec-renderer/commit/0a0375071114b9a2341d3b658a305285f1a5a5e4))
+
 ## [1.87.9](https://github.com/Kong/spec-renderer/compare/v1.87.8...v1.87.9) (2025-03-03)
 
 
