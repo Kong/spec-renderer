@@ -186,7 +186,6 @@ provide<Ref<string>>('base-path', computed((): string => props.basePath))
 provide<Ref<boolean>>('hide-tryit', computed((): boolean => IS_TRUE(props.hideTryIt)))
 provide<Ref<boolean>>('hide-insomnia-tryit', computed((): boolean => IS_TRUE(props.hideInsomniaTryIt)))
 provide<Ref<boolean>>('markdown-styles', computed((): boolean => IS_TRUE(props.markdownStyles)))
-provide<Ref<boolean>>('allow-custom-server-url', computed((): boolean => IS_TRUE(props.allowCustomServerUrl)))
 
 const emit = defineEmits < {
   (e: 'path-not-found', requestedPath: string): void
@@ -264,7 +263,7 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
     case NodeType.AsyncOperation:
       return { component: AsyncOperation, props: defaultProps, doc: forServiceNode }
     case NodeType.HttpService:
-      return { component: HttpService, props: { ...defaultProps, specVersion: (<ServiceNode>forServiceNode).specVersion }, doc: forServiceNode }
+      return { component: HttpService, props: { ...defaultProps, specVersion: (<ServiceNode>forServiceNode).specVersion, allowCustomServerUrl: IS_TRUE(props.allowCustomServerUrl) }, doc: forServiceNode }
     case NodeType.Model:
       return { component: HttpModel, props: { ...defaultProps, title: forServiceNode.name }, doc: forServiceNode }
     case NodeType.AsyncMessage:
