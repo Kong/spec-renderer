@@ -1,3 +1,10 @@
+## [1.87.11](https://github.com/Kong/spec-renderer/compare/v1.87.10...v1.87.11) (2025-03-05)
+
+
+### Bug Fixes
+
+* **http-service:** hide server-list if custom url not allowed [KHCP-15355] ([#533](https://github.com/Kong/spec-renderer/issues/533)) ([fdede3e](https://github.com/Kong/spec-renderer/commit/fdede3eb8112f389df41888665ffd0e90d883dbc))
+
 ## [1.87.10](https://github.com/Kong/spec-renderer/compare/v1.87.9...v1.87.10) (2025-03-05)
 
 
