@@ -31,7 +31,6 @@
   }
 
   &.active {
-    background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
     color: var(--kui-color-text-primary, $kui-color-text-primary);
   }
 }
