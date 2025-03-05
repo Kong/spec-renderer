@@ -167,8 +167,13 @@ function handleSelectChange(selecteditem: SelectItem) {
     .property-title-variant-select {
       :deep(.trigger-button) {
         @include small-bordered-trigger-button;
-        color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
-        height: var(--kui-icon-size-40, $kui-icon-size-40);
+
+        // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+        // stylelint-disable-next-line no-duplicate-selectors
+        & {
+          color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+          height: var(--kui-icon-size-40, $kui-icon-size-40);
+        }
       }
     }
   }

@@ -9,6 +9,7 @@ import { computed, h } from 'vue'
 import composables from '@/composables'
 import { requestSampleConfigs } from '@/constants'
 import type { LanguageCode } from '@/types/request-languages'
+import { KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST } from '@kong/design-tokens'
 
 const props = defineProps({
   code: {
@@ -29,7 +30,15 @@ const getHighlightLanguage = (snippetLang: LanguageCode | null | undefined): str
 const highlightedCode = computed(():string => {
   if (highlighter.value && props.lang) {
     const hightLightLang = getHighlightLanguage(props.lang as LanguageCode)
-    return highlighter.value.codeToHtml(props.code, { lang: hightLightLang as string, theme: 'catppuccin-latte' })
+    return highlighter.value.codeToHtml(props.code, {
+      lang: hightLightLang as string,
+      theme: 'catppuccin-latte',
+      colorReplacements: {
+        'catppuccin-latte': {
+          '#eff1f5': `var(--kui-color-background-neutral-weakest, ${KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST})`,
+        },
+      },
+    })
   }
   return ''
 })

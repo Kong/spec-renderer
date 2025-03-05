@@ -18,7 +18,7 @@
   padding: var(--kui-space-30, $kui-space-30);
   text-align: left;
   text-decoration: none;
-  transition: color background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease,
+  transition: color var(--kui-animation-duration-20, $kui-animation-duration-20) ease,
     background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
 
   &:hover:not(.active) {
@@ -30,7 +30,6 @@
   }
 
   &.active {
-    background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
     color: var(--kui-color-text-primary, $kui-color-text-primary);
   }
 }
