@@ -1,3 +1,10 @@
+## [1.87.12](https://github.com/Kong/spec-renderer/compare/v1.87.11...v1.87.12) (2025-03-05)
+
+
+### Bug Fixes
+
+* shiki background color and misc toc style fixes ([#534](https://github.com/Kong/spec-renderer/issues/534)) ([79f0df0](https://github.com/Kong/spec-renderer/commit/79f0df02223f74fc5c97f53b5fff4e2dfaba7ee4))
+
 ## [1.87.11](https://github.com/Kong/spec-renderer/compare/v1.87.10...v1.87.11) (2025-03-05)
 
 
