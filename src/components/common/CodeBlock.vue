@@ -35,9 +35,9 @@ const highlightedCode = computed(():string => {
       theme: 'catppuccin-latte',
       colorReplacements: {
         'catppuccin-latte': {
-          '#eff1f5': `var(--kui-color-background-neutral-weakest, ${KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST})`
-        }
-      }
+          '#eff1f5': `var(--kui-color-background-neutral-weakest, ${KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST})`,
+        },
+      },
     })
   }
   return ''
