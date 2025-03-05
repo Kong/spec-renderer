@@ -22,6 +22,8 @@
         :markdown="data.description"
       />
       <ServerList
+        v-if="serverList.length || allowCustomServerUrl"
+        :allow-custom-server-url="allowCustomServerUrl"
         :server-list="serverList"
         @add-custom-url="addServerUrl"
       />
@@ -59,6 +61,10 @@ const props = defineProps({
   specVersion: {
     type: String,
     required: true,
+  },
+  allowCustomServerUrl: {
+    type: Boolean,
+    default: false,
   },
 })
 

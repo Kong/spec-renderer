@@ -63,10 +63,10 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref } from 'vue'
+import { ref } from 'vue'
 import { NetworkIcon } from '@kong/icons'
 import type { IServer } from '@stoplight/types'
-import type { PropType, Ref } from 'vue'
+import type { PropType } from 'vue'
 import OverviewPanel from './OverviewPanel.vue'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import { AddIcon } from '@kong/icons'
@@ -76,9 +76,11 @@ defineProps({
     type: Array as PropType<Array<IServer>>,
     required: true,
   },
+  allowCustomServerUrl: {
+    type: Boolean,
+    default: false,
+  },
 })
-
-const allowCustomServerUrl = inject<Ref<boolean>>('allow-custom-server-url', ref(false))
 
 const emit = defineEmits<{
   (e: 'add-custom-url', url: string): void

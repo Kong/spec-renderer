@@ -221,7 +221,7 @@ const props = defineProps({
   allowCustomServerUrl: {
     type: [Boolean, String],
     validator: BOOL_VALIDATOR,
-    default: false,
+    default: true,
   },
   /**
    * Hide navigation buttons at the bottom of the document.
