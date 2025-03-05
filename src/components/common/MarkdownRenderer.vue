@@ -201,6 +201,9 @@ const markdownStyles = inject<Ref<boolean>>('markdown-styles', ref(true))
 
     pre {
       @include pre;
+
+      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+      margin-top: var(--kui-space-50, $kui-space-50);
     }
 
     .line.highlighted {
