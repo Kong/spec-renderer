@@ -51,7 +51,7 @@
 
 <script setup lang="ts">
 import { watch, ref, provide, computed, nextTick, onBeforeMount } from 'vue'
-import { useWindowScroll, useWindowSize, useElementSize, useScroll } from '@vueuse/core'
+import { useWindowScroll, useWindowSize, useElementSize, useScroll, until } from '@vueuse/core'
 import composables from '@/composables'
 import type { PropType, Ref } from 'vue'
 import { NodeType } from '@/types'
@@ -570,25 +570,29 @@ watch(() => ({
 
   // now we want to find position of the active element and if it is not visible force it to be visible
   if (document) {
-    setTimeout(() => {
-      const activeSectionEl = wrapperRef.value?.querySelector(`[id="${pathIdx}-nodecontainer"]`)
-      if (activeSectionEl) {
-        /*
-          special handling for pathIdx = 0 ('/' - we want to make sure entire contaner with what's on top is visible for this case,
-          and yes, we still need to force scroll to fix KHCP-14499 for portal
-        */
-        if (pathIdx === 0) {
-          if (!scrollingContainerEl.value) {
-            window.scrollTo(0, 0)
-          } else {
-            scrollingContainerEl.value.scrollTo(0, 0)
-          }
+    if (!wrapperRef.value) {
+      // KHCP-15336 there is a case in portal when wrapperRef is not initialised at this pont
+      await until(wrapperRef).not.toBeNull({ timeout: 10000 })
+    }
+    const activeSectionEl = wrapperRef.value?.querySelector(`[id="${pathIdx}-nodecontainer"]`)
+
+    if (activeSectionEl) {
+      /*
+        special handling for pathIdx = 0 ('/' - we want to make sure entire container with what's on top is visible for this case,
+        and yes, we still need to force scroll to fix KHCP-14499 for portal
+      */
+      if (pathIdx === 0) {
+        if (!scrollingContainerEl.value) {
+          window.scrollTo(0, 0)
         } else {
-          activeSectionEl.scrollIntoView({ behavior: 'instant' })
+          scrollingContainerEl.value.scrollTo(0, 0)
         }
-        lastPath.value = pathname
+      } else {
+        // KHCP-15336 - scrollIntoView likes to be in it's own timeout KHCP-15336
+        setTimeout(()=> activeSectionEl.scrollIntoView({ behavior: 'instant' }), 50)
       }
-    }, 50)
+      lastPath.value = pathname
+    }
     setTimeout(async () => {
       // now as we have our current section visible start re-drawing all the sections
       renderPlain.value = true
