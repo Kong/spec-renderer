@@ -9,7 +9,7 @@ import { computed, h } from 'vue'
 import composables from '@/composables'
 import { requestSampleConfigs } from '@/constants'
 import type { LanguageCode } from '@/types/request-languages'
-import { KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST } from '@kong/design-tokens'
+import { KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST, KUI_COLOR_BACKGROUND_NEUTRAL_STRONGEST } from '@kong/design-tokens'
 
 const props = defineProps({
   code: {
@@ -32,10 +32,18 @@ const highlightedCode = computed(():string => {
     const hightLightLang = getHighlightLanguage(props.lang as LanguageCode)
     return highlighter.value.codeToHtml(props.code, {
       lang: hightLightLang as string,
-      theme: 'catppuccin-latte',
+      themes: {
+        light: 'catppuccin-latte',
+        dark: 'catppuccin-mocha',
+      },
       colorReplacements: {
         'catppuccin-latte': {
+          // Always use the neutral weakest token, fallback to **light** background
           '#eff1f5': `var(--kui-color-background-neutral-weakest, ${KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST})`,
+        },
+        'catppuccin-mocha': {
+          // Always use the neutral weakest token, fallback to **dark** background
+          '#1e1e2e': `var(--kui-color-background-neutral-weakest, ${KUI_COLOR_BACKGROUND_NEUTRAL_STRONGEST})`,
         },
       },
     })
@@ -45,6 +53,28 @@ const highlightedCode = computed(():string => {
 
 const VNode = () => h('div', { class: 'code-block', innerHTML: highlightedCode.value })
 </script>
+
+<style lang="scss">
+// Shiki code blocks; dark theme
+html.dark,
+[data-portal-color-mode="dark"] {
+  .code-block {
+    .shiki,
+    .shiki span {
+      /* stylelint-disable custom-property-pattern */
+      /** !Important: The CSS custom property does not match the SCSS variable here purposefully so that it falls back to a dark color */
+      --shiki-dark-bg: var(--kui-color-background-neutral-weakest, #{$kui-color-background-neutral-strongest});
+      background-color: var(--shiki-dark-bg) !important;
+      color: var(--shiki-dark) !important;
+      /* Optional, if you also want font styles */
+      font-style: var(--shiki-dark-font-style) !important;
+      font-weight: var(--shiki-dark-font-weight) !important;
+      text-decoration: var(--shiki-dark-text-decoration) !important;
+      /* stylelint-enable custom-property-pattern */
+    }
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 .code-block {
