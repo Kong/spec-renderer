@@ -263,11 +263,22 @@ watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.
       }
     }
   })
-
 </script>
+
+<style lang="scss">
+// Shiki code blocks; dark theme
+html.dark,
+[data-portal-color-mode="dark"] {
+  // Force the scrollable container to match the shiki background color
+  .editable-code-wrapper {
+    background-color: var(--kui-color-background-neutral-weakest, #{$kui-color-background-neutral-strongest}) !important;
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 .editable-code-wrapper {
+  background-color: var(--kui-color-background-neutral-weakest, #{$kui-color-background-neutral-weakest});
   box-sizing: border-box;
   font-family: var(--kui-font-family-code, $kui-font-family-code);
   font-size: var(--kui-font-size-20, $kui-font-size-20);
