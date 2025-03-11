@@ -1,5 +1,5 @@
 {
-  "name": "@kong/spec-renderer-dev",
+  "name": "@kong/spec-renderer",
   "version": "1.87.13",
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
@@ -59,7 +59,6 @@
     "@floating-ui/vue": "^1.1.6",
     "@kong/icons": "^1.21.2",
     "@scalar/openapi-parser": "^0.10.4",
-    "@seriousme/openapi-schema-validator": "^2.3.1",
     "@stoplight/http-spec": "^7.1.0",
     "@stoplight/json": "^3.21.7",
     "@stoplight/types": "^14.1.1",
@@ -68,10 +67,8 @@
     "allof-merge": "^0.6.6",
     "flatted": "^3.3.3",
     "httpsnippet": "^3.0.9",
-    "json-schema": "^0.4.0",
     "lodash-es": "^4.17.21",
     "markdown-it": "^14.1.0",
-    "openapi3-ts": "4.4.0",
     "sanitize-html": "^2.14.0",
     "shiki": "^2.3.2"
   },
@@ -105,6 +102,7 @@
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.20.1",
     "jsdom": "^26.0.0",
+    "openapi3-ts": "4.4.0",
     "postcss": "^8.5.3",
     "postcss-html": "^1.8.0",
     "rimraf": "^6.0.1",

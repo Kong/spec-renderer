@@ -1,7 +1,7 @@
 <template>
   <div class="sandbox-container">
     <header class="page-header">
-      <h1><code>@kong/spec-renderer-dev</code></h1>
+      <h1><code>@kong/spec-renderer</code></h1>
     </header>
     <main class="page-main">
       <router-view />

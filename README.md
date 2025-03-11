@@ -1,7 +1,7 @@
 # Kong Spec Renderer
 
 > [!IMPORTANT]
-> This repository and the `@kong/spec-renderer-dev` package are currently in development on the `main` branch. Breaking changes should be expected.
+> This repository and the `@kong/spec-renderer` package are currently in development on the `main` branch. Breaking changes should be expected.
 >
 > Once the `1.x` version is ready, the package name will change to `@kong/spec-renderer`.
 
@@ -47,7 +47,7 @@ Import the package and the component(s) you wish to use.
 </template>
 
 <script setup lang="ts">
-import { SpecDocument } from '@kong/spec-renderer-dev'
+import { SpecDocument } from '@kong/spec-renderer'
 const spec= `openapi: 3.1.0
 info:
   title: Beer API
@@ -66,8 +66,8 @@ Import the package (and TypeScript types, if desired) inside of your App's entry
 // main.ts
 
 import App from './App.vue'
-import KongSpecRendererPlugin from '@kong/spec-renderer-dev'
-import '@kong/spec-renderer-dev/dist/style.css'
+import KongSpecRendererPlugin from '@kong/spec-renderer'
+import '@kong/spec-renderer/dist/style.css'
 
 const app = createApp(App)
 
@@ -109,7 +109,7 @@ This is to renderer Toc and Document  components separately
 </template>
 <script setup lang="ts">
   import { onBeforeMount } from 'vue'
-  import { parseSpecDocument, parsedDocument, tableOfContents } from '@kong/spec-renderer-dev'
+  import { parseSpecDocument, parsedDocument, tableOfContents } from '@kong/spec-renderer'
 
   onBeforeMount(() => async {
     await parseSpecDocument()
@@ -126,7 +126,7 @@ This is to renderer SchemaRenderer component
   />
 </template>
 <script setup lang="ts">
-  import { SchemaObject } from '@kong/spec-renderer-dev'
+  import { SchemaObject } from '@kong/spec-renderer'
 
   const mySchema: SchemaObject = {
     type: 'object',
@@ -149,7 +149,7 @@ Import the package and call the provided `registerSpecRenderer` function.
 
 ```jsx
 // IMPORTANT: we are importing from the web-component bundle
-import { registerKongSpecRenderer, parseSpecDocument, parsedDocument, tableOfContents }  from '@kong/spec-renderer-dev/web-component'
+import { registerKongSpecRenderer, parseSpecDocument, parsedDocument, tableOfContents }  from '@kong/spec-renderer/web-component'
 
 // Call the registration function to automatically register all spec-renderer custom elements for usage
 registerKongSpecRenderer()
