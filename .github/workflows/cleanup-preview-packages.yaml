@@ -30,6 +30,5 @@ jobs:
       - name: Cleanup PR preview
         uses: Kong/public-shared-actions/pr-previews/cleanup@main
         with:
-          # TODO: Change to `@kong/spec-renderer` when v1 is ready
           package: "@kong/spec-renderer"
           openPRs: ${{ steps.prepare.outputs.openPRs }}
