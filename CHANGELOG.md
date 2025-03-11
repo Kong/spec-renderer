@@ -1,3 +1,10 @@
+# [1.88.0](https://github.com/Kong/spec-renderer/compare/v1.87.13...v1.88.0) (2025-03-11)
+
+
+### Features
+
+* rename package to @kong/spec-renderer [KHCP-15361] ([#539](https://github.com/Kong/spec-renderer/issues/539)) ([4bc66e0](https://github.com/Kong/spec-renderer/commit/4bc66e0a81c52d2fc1c1af8781835e86d75834e0))
+
 ## [1.87.13](https://github.com/Kong/spec-renderer/compare/v1.87.12...v1.87.13) (2025-03-06)
 
 
