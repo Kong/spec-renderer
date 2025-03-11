@@ -67,10 +67,8 @@
     "allof-merge": "^0.6.6",
     "flatted": "^3.3.3",
     "httpsnippet": "^3.0.9",
-    "json-schema": "^0.4.0",
     "lodash-es": "^4.17.21",
     "markdown-it": "^14.1.0",
-    "openapi3-ts": "4.4.0",
     "sanitize-html": "^2.14.0",
     "shiki": "^2.3.2"
   },
@@ -104,6 +102,7 @@
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.20.1",
     "jsdom": "^26.0.0",
+    "openapi3-ts": "4.4.0",
     "postcss": "^8.5.3",
     "postcss-html": "^1.8.0",
     "rimraf": "^6.0.1",
