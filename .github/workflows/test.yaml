@@ -82,7 +82,7 @@ jobs:
 
           package_version=$(jq -r ".version" package.json)
           # TODO: Change to `@kong/spec-renderer` when v1 is ready
-          package=@kong/spec-renderer-dev@"${package_version}"
+          package=@kong/spec-renderer@"${package_version}"
 
           npm show "${package}" >/dev/null 2>&1 && npm_show_status=0 || npm_show_status=1
           if [ $npm_show_status -eq 0 ]; then
