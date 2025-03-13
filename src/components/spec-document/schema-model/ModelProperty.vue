@@ -1,6 +1,7 @@
 <template>
   <div
     :id="propertyId"
+    ref="model-property"
     class="model-property"
     :data-testid="dataTestId"
   >
@@ -52,9 +53,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref, useTemplateRef } from 'vue'
 import { AddIcon } from '@kong/icons'
-import { kebabCase, resolveSchemaObjectFields } from '@/utils'
+import { isSsr, kebabCase, resolveSchemaObjectFields } from '@/utils'
 import type { PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 
@@ -84,6 +85,7 @@ const props = defineProps({
   },
 })
 const nestedPropertiesExpanded = ref(false)
+const currentElement = useTemplateRef('model-property')
 
 const dataTestId = computed(() => `model-property-${kebabCase(props.propertyName)}`)
 const propertyId = computed(() => props.basePathId ? kebabCase(`${props.basePathId}-${props.propertyName}`) : undefined)
@@ -101,6 +103,29 @@ const nestedPropertiesPresent = computed<boolean>(() =>{
     return Boolean(Object.keys(selectedSchemaModel.value?.properties).length)
   }
   return false
+})
+
+onMounted(() => {
+  // don't do anything if either:
+  // 1. we are in ssr mode
+  // 2. the propertyId is not defined i.e. `enablePropertyLinks` is not enabled
+  if (isSsr() || !propertyId.value) {
+    return
+  }
+  const propertyIDHash = `#${propertyId.value}`
+  const hash = window.location.hash
+  if (hash.length) {
+    // if the hash is the same as the current component's propertyId it means we want to show the current component
+    // so we scroll to the current component
+    if (hash === propertyIDHash) {
+      currentElement.value?.scrollIntoView({ behavior: 'smooth' })
+    } else if (hash.startsWith(propertyIDHash)) {
+      nestedPropertiesExpanded.value = true
+      // only mess with the details element during mounted
+      // after that let the details element handle it itself
+      currentElement.value?.getElementsByTagName('details')[0]?.setAttribute('open', 'true')
+    }
+  }
 })
 </script>
 
