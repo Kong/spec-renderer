@@ -89,7 +89,7 @@
         enable-property-links
         :example-visible="false"
         :header-visible="true"
-        :schema="schema"
+        :schema="sampleSchema"
         title="Sample Schema"
       />
     </div>
@@ -105,6 +105,7 @@ import SelectDropdown from '../../src/components/common/SelectDropdown.vue'
 import { KongIcon } from '@kong/icons'
 import SlideOut from '../../src/components/common/SlideOut.vue'
 import SchemaRenderer from '../../src/components/extra-renderers/SchemaRenderer.vue'
+import sampleSchema from '../sample-schema.json'
 
 const dropdownItems = [
   { label: 'Item 1', value: 'item-1' },
@@ -120,113 +121,6 @@ const onDropdownButtonClick = () => {
 const toggle = ref<boolean>(false)
 
 const isSlideoutOpen = ref<boolean>(false)
-
-const schema = {
-  'description': "I'm a model's description.",
-  'type': 'object',
-  'title': 'Todo',
-  'example': {
-    'id': 1,
-    'name': 'Buy milk',
-    'completed': true,
-    'completed_at': '2021-01-01T00:00:00.000Z',
-  },
-  'properties': {
-    'id': {
-      'type': 'number',
-      'minimum': 0,
-      'maximum': 9999,
-      'description': 'ID of the task',
-      'readOnly': true,
-    },
-    'name': {
-      'type': 'string',
-      'minLength': 1,
-      'maxLength': 100,
-      'description': 'Name of the task',
-    },
-    'completed': {
-      'type': 'boolean',
-      'default': false,
-      'description': 'Boolean indicating if the task has been completed or not',
-    },
-    'completed_at': {
-      'type': 'string',
-      'format': 'date-time',
-      'description': 'Time when the task was completed',
-      'readOnly': true,
-    },
-    'created_at': {
-      'type': 'string',
-      'format': 'date-time',
-      'description': 'Time when the task was created',
-      'readOnly': true,
-    },
-    'updated_at': {
-      'type': 'string',
-      'format': 'date-time',
-      'description': 'Time when the task was updated',
-      'readOnly': true,
-    },
-    'userId': {
-      'type': 'number',
-      'description': 'ID of the user',
-      'readOnly': true,
-    },
-    'firstName': {
-      'type': 'string',
-      'minLength': 1,
-      'description': '',
-    },
-    'lastName': {
-      'type': 'string',
-      'minLength': 1,
-      'description': '',
-    },
-    'phoneNumber': {
-      'type': 'string',
-      'minLength': 1,
-      'description': 'Official Phone Number',
-    },
-    'emailAddress': {
-      'type': 'string',
-      'minLength': 1,
-      'description': 'Work Email Address',
-    },
-    'address': {
-      'type': 'object',
-      'properties': {
-        'street': {
-          'type': 'string',
-          'minLength': 1,
-          'description': 'Street address',
-        },
-        'city': {
-          'type': 'string',
-          'minLength': 1,
-          'description': 'City',
-        },
-        'state': {
-          'type': 'string',
-          'minLength': 1,
-          'description': 'State',
-        },
-        'zip': {
-          'type': 'string',
-          'minLength': 1,
-          'description': 'Zip code',
-        },
-      },
-    },
-  },
-  'required': [
-    'id',
-    'name',
-    'completed_at',
-    'created_at',
-    'updated_at',
-  ],
-}
 </script>
 
 <style lang="scss" scoped>

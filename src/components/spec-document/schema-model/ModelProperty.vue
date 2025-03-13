@@ -1,8 +1,8 @@
 <template>
   <div
     :id="propertyId"
-    class="model-property"
     ref="model-property"
+    class="model-property"
     :data-testid="dataTestId"
   >
     <PropertyFieldList
