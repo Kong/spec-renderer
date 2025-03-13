@@ -1,3 +1,10 @@
+# [1.89.0](https://github.com/Kong/spec-renderer/compare/v1.88.0...v1.89.0) (2025-03-13)
+
+
+### Features
+
+* **schema-renderer:** add support for scrolling into view nested fields [KHCP-15281] ([#540](https://github.com/Kong/spec-renderer/issues/540)) ([6249b34](https://github.com/Kong/spec-renderer/commit/6249b34bcf920129f94e119b9552f326fe6c8a8f))
+
 # [1.88.0](https://github.com/Kong/spec-renderer/compare/v1.87.13...v1.88.0) (2025-03-11)
 
 
