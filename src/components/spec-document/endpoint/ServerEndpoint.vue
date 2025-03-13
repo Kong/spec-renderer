@@ -134,6 +134,7 @@ const selectItems = computed(() => props.serverUrlList.map((url) => ({ label: ur
       display: flex;
       font-family: var(--kui-font-family-code, $kui-font-family-code);
       gap: var(--kui-space-20, $kui-space-20);
+      overflow-wrap: anywhere;
     }
 
     .endpoint-body {
