@@ -1,3 +1,10 @@
+## [1.89.1](https://github.com/Kong/spec-renderer/compare/v1.89.0...v1.89.1) (2025-03-13)
+
+
+### Bug Fixes
+
+* **server-endpoint:** wrap single server url on overflow [KHCP-15481] ([#541](https://github.com/Kong/spec-renderer/issues/541)) ([87153be](https://github.com/Kong/spec-renderer/commit/87153be8cf8ccbc8d0dd7f918b9970c06576411c))
+
 # [1.89.0](https://github.com/Kong/spec-renderer/compare/v1.88.0...v1.89.0) (2025-03-13)
 
 
