@@ -20,9 +20,9 @@
           v-if="content.schema.title"
           #title
         >
-          <h3 class="content-list-schema-title">
+          <h4 class="content-list-schema-title">
             {{ content.schema.title }}
-          </h3>
+          </h4>
         </template>
         <ContentListItemSchema :schema="parseSchema(content.schema)" />
       </CollapsibleSection>

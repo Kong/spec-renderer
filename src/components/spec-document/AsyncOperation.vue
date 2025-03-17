@@ -50,9 +50,9 @@
         :border-visible="false"
       >
         <template #title>
-          <h2>
+          <h3>
             {{ `Message accepted: ${message.messageId}` }}
-          </h2>
+          </h3>
         </template>
         <div class="accepted-collapsible-section-content">
           <AsyncMessage

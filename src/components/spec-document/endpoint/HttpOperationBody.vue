@@ -6,7 +6,7 @@
     <CollapsibleSection>
       <template #title>
         <div class="http-response-header">
-          <h2>{{ title }}</h2>
+          <h3>{{ title }}</h3>
           <slot />
         </div>
       </template>

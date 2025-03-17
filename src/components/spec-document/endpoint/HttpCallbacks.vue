@@ -6,7 +6,7 @@
     <CollapsibleSection :border-visible="false">
       <template #title>
         <div class="http-callbacks-header">
-          <h2>Callbacks</h2>
+          <h3>Callbacks</h3>
           <slot />
         </div>
       </template>

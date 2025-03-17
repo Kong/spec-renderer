@@ -9,9 +9,9 @@
       @click="expanded = !expanded"
     >
       <slot name="title">
-        <h2 v-if="title">
+        <h3 v-if="title">
           {{ title }}
-        </h2>
+        </h3>
       </slot>
       <ChevronRightIcon
         class="chevron-icon"
@@ -58,7 +58,7 @@ const expanded = ref(true)
     padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
 
     // applies to the title slot and fallback title prop, both
-    :slotted(h2) {
+    :slotted(h3) {
       font-size: var(--kui-font-size-40, $kui-font-size-40);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       line-height: var(--kui-line-height-40, $kui-line-height-40);
