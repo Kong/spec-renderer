@@ -207,10 +207,7 @@ const securitySchemeGroupList = computed<Array<SecuritySchemeGroup>>(() => {
   return schemeGroupList
 })
 
-const activeSchemeGroupKey = ref<string>(securitySchemeGroupList.value[0]?.key ?? '')
-
 provide<ComputedRef<Array<SecuritySchemeGroup>>>('security-scheme-group-list', securitySchemeGroupList)
-provide<Ref<string>>('active-scheme-group-key', activeSchemeGroupKey)
 
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
@@ -239,10 +236,10 @@ const currentRequestQuery = ref<string>('')
 const currentRequestHeaders = ref<Array<Record<string, string>>>([])
 const currentRequestBody = ref<string>('')
 
-const { authHeaderMap, authQueryMap } = composables.useAuthTokenState()
+const { activeSecurityScheme, authHeaderMap, authQueryMap } = composables.useAuthTokenState()
 
-const authHeaders = computed(() => authHeaderMap.value[activeSchemeGroupKey.value] ?? [])
-const authQuery = computed(() => authQueryMap.value[activeSchemeGroupKey.value] ?? '')
+const authHeaders = computed(() => authHeaderMap.value[activeSecurityScheme.value] ?? [])
+const authQuery = computed(() => authQueryMap.value[activeSecurityScheme.value] ?? '')
 
 const {
   activeContentType: activeRequestBodyContentType,
@@ -315,6 +312,10 @@ function updateRequestBodyContentType(newContentType: string) {
 }
 
 watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value } ), (newValue) => {
+  // if active security scheme is not set, set it to the first one
+  if (!activeSecurityScheme.value && securitySchemeGroupList.value.length) {
+    activeSecurityScheme.value = securitySchemeGroupList.value[0].key
+  }
   currentRequestPath.value = getSamplePath(operationData.value)
   currentRequestQuery.value = getSampleQuery(operationData.value)
   currentRequestHeaders.value = []
