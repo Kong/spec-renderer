@@ -12,7 +12,7 @@ import { ref } from 'vue'
  * - auth tokens can also be reused across multiple endpoints & servers. Which is why we have to store them in a common state.
 */
 
-
+const activeSecurityScheme = ref<string>('')
 const tokenValueMap = ref<Record<string, string>>({})
 const authHeaderMap = ref<Record<string, Array<Record<string, string>>>>({})
 const authQueryMap = ref<Record<string, string>>({})
@@ -22,6 +22,12 @@ const authQueryMap = ref<Record<string, string>>({})
  */
 export default function useAuthTokenState() {
   return {
+    /**
+     * state for storing the active security scheme group key.
+     * e.g. "bearerAuth-xApiKeyAuth"
+     * gets initialized in HttpOperation
+     */
+    activeSecurityScheme,
     /**
      * state for storing raw auth token values
      * e.g.

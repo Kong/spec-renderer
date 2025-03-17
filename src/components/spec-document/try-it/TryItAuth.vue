@@ -15,7 +15,7 @@
       <SelectDropdown
         v-if="securitySchemeGroupSelectItems.length > 1"
         :id="`tryit-scheme-selector-${data.id}`"
-        v-model="activeSchemeGroupKey"
+        v-model="activeSecurityScheme"
         class="scheme-selector"
         :items="securitySchemeGroupSelectItems"
         placement="bottom-end"
@@ -50,8 +50,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, ref, watch } from 'vue'
-import type { ComputedRef, PropType, Ref } from 'vue'
+import { computed, inject, watch } from 'vue'
+import type { ComputedRef, PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { LockIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
@@ -70,10 +70,9 @@ defineProps({
   },
 })
 
-const { tokenValueMap, authHeaderMap, authQueryMap } = composables.useAuthTokenState()
+const { activeSecurityScheme, tokenValueMap, authHeaderMap, authQueryMap } = composables.useAuthTokenState()
 
 const securitySchemeGroupList = inject<ComputedRef<Array<SecuritySchemeGroup>>>('security-scheme-group-list', computed(() => []))
-const activeSchemeGroupKey = inject<Ref<string>>('active-scheme-group-key', ref(''))
 
 /**
  * Extracts the list of select-items for the security scheme group selector.
@@ -91,7 +90,7 @@ const securitySchemeGroupSelectItems = computed<Array<SelectItem>>(() => {
  */
 const activeSecuritySchemeMap = computed(() => {
   const schemeMap: Record<string, HttpSecurityScheme> = {}
-  const schemeList = securitySchemeGroupList.value.find(group => group.key === activeSchemeGroupKey.value)?.schemeList ?? []
+  const schemeList = securitySchemeGroupList.value.find(group => group.key === activeSecurityScheme.value)?.schemeList ?? []
 
   schemeList.forEach((scheme) => {
     schemeMap[scheme.key] = scheme
@@ -133,8 +132,8 @@ const updateAuthTokens = useDebounceFn(() => {
     }
   }
 
-  authHeaderMap.value[activeSchemeGroupKey.value] = headers
-  authQueryMap.value[activeSchemeGroupKey.value] = new URLSearchParams(query).toString()
+  authHeaderMap.value[activeSecurityScheme.value] = headers
+  authQueryMap.value[activeSecurityScheme.value] = new URLSearchParams(query).toString()
 }, 500)
 
 const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): string => {
