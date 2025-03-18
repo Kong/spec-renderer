@@ -110,12 +110,10 @@ const emit = defineEmits<{
   (e: 'request-body-changed', newBody: string): void
 }>()
 
-const activeSchemeGroupKey = inject<Ref<string>>('active-scheme-group-key', ref(''))
+const { activeSecurityScheme, authHeaderMap, authQueryMap } = composables.useAuthTokenState()
 
-const { authHeaderMap, authQueryMap } = composables.useAuthTokenState()
-
-const authHeaders = computed(() => authHeaderMap.value[activeSchemeGroupKey.value] ?? [])
-const authQuery = computed(() => authQueryMap.value[activeSchemeGroupKey.value] ?? '')
+const authHeaders = computed(() => authHeaderMap.value[activeSecurityScheme.value] ?? [])
+const authQuery = computed(() => authQueryMap.value[activeSecurityScheme.value] ?? '')
 
 const response = ref<Response | undefined>()
 const responseError = ref<Error>()

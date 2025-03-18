@@ -1,3 +1,10 @@
+# [1.90.0](https://github.com/Kong/spec-renderer/compare/v1.89.2...v1.90.0) (2025-03-17)
+
+
+### Features
+
+* sync selected auth scheme [KHCP-15469] ([#543](https://github.com/Kong/spec-renderer/issues/543)) ([41e05b9](https://github.com/Kong/spec-renderer/commit/41e05b9f2d352277cb1b099fe96f6f37a9e973c1))
+
 ## [1.89.2](https://github.com/Kong/spec-renderer/compare/v1.89.1...v1.89.2) (2025-03-13)
 
 
