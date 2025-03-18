@@ -1,3 +1,10 @@
+## [1.90.1](https://github.com/Kong/spec-renderer/compare/v1.90.0...v1.90.1) (2025-03-18)
+
+
+### Bug Fixes
+
+* replace h1 tags with h2 [KHCP-15489] ([#544](https://github.com/Kong/spec-renderer/issues/544)) ([1904f43](https://github.com/Kong/spec-renderer/commit/1904f43aa0670cd8a728eb1005af1cc6e4e78719))
+
 # [1.90.0](https://github.com/Kong/spec-renderer/compare/v1.89.2...v1.90.0) (2025-03-17)
 
 
