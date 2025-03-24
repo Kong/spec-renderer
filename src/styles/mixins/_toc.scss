@@ -22,7 +22,7 @@
     background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
 
   &:hover:not(.active) {
-    color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
+    color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
   }
 
   .chevron-icon {
