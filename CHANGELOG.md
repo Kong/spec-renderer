@@ -1,3 +1,10 @@
+## [1.90.2](https://github.com/Kong/spec-renderer/compare/v1.90.1...v1.90.2) (2025-03-24)
+
+
+### Bug Fixes
+
+* toc link hover color ([#547](https://github.com/Kong/spec-renderer/issues/547)) ([5da9855](https://github.com/Kong/spec-renderer/commit/5da9855b5aa34823037b4f74fd882871d1755128))
+
 ## [1.90.1](https://github.com/Kong/spec-renderer/compare/v1.90.0...v1.90.1) (2025-03-18)
 
 
