@@ -1,3 +1,10 @@
+# [1.91.0](https://github.com/Kong/spec-renderer/compare/v1.90.2...v1.91.0) (2025-03-25)
+
+
+### Features
+
+* **spec-document:** lazy rendering of stringified endpoint docs [KHCP-15531] ([#548](https://github.com/Kong/spec-renderer/issues/548)) ([fffc2f6](https://github.com/Kong/spec-renderer/commit/fffc2f67e961780df21de605e897ff699c3b9f96))
+
 ## [1.90.2](https://github.com/Kong/spec-renderer/compare/v1.90.1...v1.90.2) (2025-03-24)
 
 
