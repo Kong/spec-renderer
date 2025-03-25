@@ -51,7 +51,7 @@
 
 <script setup lang="ts">
 import { watch, ref, provide, computed, nextTick, onBeforeMount } from 'vue'
-import { useWindowScroll, useWindowSize, useElementSize, useScroll, until } from '@vueuse/core'
+import { useMagicKeys, useWindowScroll, useWindowSize, useElementSize, useScroll, until, whenever } from '@vueuse/core'
 import composables from '@/composables'
 import type { PropType, Ref } from 'vue'
 import { NodeType } from '@/types'
@@ -178,6 +178,13 @@ const props = defineProps({
 const { highlighter, createHighlighter } = composables.useShiki()
 const { initialize } = composables.useServerList()
 
+// listen to Cmd+F to render the raw document for each endpoint to enable search
+const keys = useMagicKeys()
+
+whenever(keys['meta+f'], () => {
+  renderPlain.value = true
+}, { once: true })
+
 const serviceNode = ref<ServiceNode | null>(null)
 
 // to be consumed in multi-level child components
@@ -187,7 +194,7 @@ provide<Ref<boolean>>('hide-tryit', computed((): boolean => IS_TRUE(props.hideTr
 provide<Ref<boolean>>('hide-insomnia-tryit', computed((): boolean => IS_TRUE(props.hideInsomniaTryIt)))
 provide<Ref<boolean>>('markdown-styles', computed((): boolean => IS_TRUE(props.markdownStyles)))
 
-const emit = defineEmits < {
+const emit = defineEmits<{
   (e: 'path-not-found', requestedPath: string): void
   (e: 'content-scrolled', path: string): void
   (e: 'item-selected', id: string): void
@@ -561,7 +568,6 @@ watch(() => ({
 
   // the rest of this watcher only need to be executed when in non-ssr mode
   if (isSsr()) {
-    renderPlain.value = true
     return
   }
 
@@ -595,8 +601,6 @@ watch(() => ({
     }
     setTimeout(async () => {
       // now as we have our current section visible start re-drawing all the sections
-      renderPlain.value = true
-      await nextTick()
       processScrolling.value = true
     }, 500)
   }
