@@ -21,6 +21,12 @@ export interface SchemaObject extends JSONSchema7 {
    * e.g. array [string]
    */
   itemType?: JSONSchema7['type']
+  'x-stoplight'?: {
+    /**
+     * list of fields explicitly defined in the spec for a property
+     */
+    explicitProperties?: string[]
+  }
 }
 
 
@@ -64,4 +70,16 @@ export interface ParseOptions {
 
 }
 
-export type SchemaModelPropertyField = 'info' | 'description' | 'enum' | 'pattern' | 'range' | 'example' | 'default' | 'additional-properties'
+export const RangeFields = [
+  'maximum',
+  'minimum',
+  'maxLength',
+  'minLength',
+  'exclusiveMaximum',
+  'exclusiveMinimum',
+  'multipleOf',
+  'maxItems',
+  'minItems',
+] as const
+
+export type SchemaModelPropertyField = 'info' | 'description' | 'enum' | 'pattern' | 'range' | 'example' | 'examples' | 'default' | 'additionalProperties' | typeof RangeFields[number]
