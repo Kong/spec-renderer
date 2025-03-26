@@ -68,7 +68,7 @@ const showProperty = (field: SchemaModelPropertyField) => {
 
   const explictlyDefinedFields = props.property?.['x-stoplight']?.explicitProperties
 
-  if (Array.isArray(explictlyDefinedFields)) {
+  if (Array.isArray(explictlyDefinedFields) && explictlyDefinedFields.length) {
     // show the field only if it was explicitly defined
     return explictlyDefinedFields.includes(field)
   }
