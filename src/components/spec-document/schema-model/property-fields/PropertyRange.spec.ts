@@ -3,11 +3,11 @@ import { shallowMount } from '@vue/test-utils'
 import PropertyRange from './PropertyRange.vue'
 
 describe('<PropertyRange />', () => {
-  it('renders with both max and min', () => {
+  it('renders with both maximum and minimum', () => {
     const wrapper = shallowMount(PropertyRange, {
       props: {
-        max: 100,
-        min: 10,
+        maximum: 100,
+        minimum: 10,
       },
     })
 
@@ -15,10 +15,10 @@ describe('<PropertyRange />', () => {
     expect(wrapper.text()).toEqual('>= 10<= 100')
   })
 
-  it('renders with only max', () => {
+  it('renders with only maximum', () => {
     const wrapper = shallowMount(PropertyRange, {
       props: {
-        max: 100,
+        maximum: 100,
       },
     })
 
@@ -26,10 +26,10 @@ describe('<PropertyRange />', () => {
     expect(wrapper.text()).toEqual('<= 100')
   })
 
-  it('renders with only min', () => {
+  it('renders with only minimum', () => {
     const wrapper = shallowMount(PropertyRange, {
       props: {
-        min: 10,
+        minimum: 10,
       },
     })
 
@@ -40,9 +40,9 @@ describe('<PropertyRange />', () => {
   it('renders with exclusiveMinimum and exclusiveMaximum as booleans', () => {
     const wrapper = shallowMount(PropertyRange, {
       props: {
-        min: 10,
+        minimum: 10,
         exclusiveMinimum: true,
-        max: 100,
+        maximum: 100,
         exclusiveMaximum: true,
       },
     })
@@ -54,9 +54,9 @@ describe('<PropertyRange />', () => {
   it('renders with exclusiveMinimum and exclusiveMaximum as numbers', () => {
     const wrapper = shallowMount(PropertyRange, {
       props: {
-        min: 10,
+        minimum: 10,
         exclusiveMinimum: 11,
-        max: 100,
+        maximum: 100,
         exclusiveMaximum: 99,
       },
     })

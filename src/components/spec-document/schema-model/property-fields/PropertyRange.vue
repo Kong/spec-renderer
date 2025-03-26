@@ -18,11 +18,11 @@ import { computed, type PropType } from 'vue'
 import type { SchemaObject } from '@/types'
 
 const props = defineProps({
-  max: {
+  maximum: {
     type: Number as PropType<SchemaObject['maximum']>,
     default: null,
   },
-  min: {
+  minimum: {
     type: Number as PropType<SchemaObject['minimum']>,
     default: null,
   },
@@ -63,22 +63,22 @@ const rangeItemList = computed(() => {
    * in OAS 2.0 and before, exclusiveMinimum and exclusiveMaximum are boolean values that affect max and min.
    * In OAS 3.1, they are number values.
    */
-  if (Number.isFinite(props.min)) {
+  if (Number.isFinite(props.minimum)) {
     rangeList.push({
       key: 'range-min',
       value:
       typeof props.exclusiveMinimum === 'boolean' && props.exclusiveMinimum
-        ? `> ${props.min}`
-        : `>= ${props.min}`,
+        ? `> ${props.minimum}`
+        : `>= ${props.minimum}`,
     })
   }
-  if (Number.isFinite(props.max)) {
+  if (Number.isFinite(props.maximum)) {
     rangeList.push({
       key: 'range-max',
       value:
       typeof props.exclusiveMaximum === 'boolean' && props.exclusiveMaximum
-        ? `< ${props.max}`
-        : `<= ${props.max}`,
+        ? `< ${props.maximum}`
+        : `<= ${props.maximum}`,
     })
   }
   if (Number.isFinite(props.minLength)) {

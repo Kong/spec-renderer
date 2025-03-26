@@ -15,6 +15,7 @@ import { computed } from 'vue'
 import type { PropType } from 'vue'
 import { isValidSchemaObject } from '@/utils'
 import type { SchemaModelPropertyField, SchemaObject, SelectItem } from '@/types'
+import { RangeFields } from '@/types'
 
 import PropertyDescription from './property-fields/PropertyDescription.vue'
 import PropertyExample from './property-fields/PropertyExample.vue'
@@ -60,6 +61,22 @@ const emit = defineEmits<{
   (e: 'variant-changed', variant: number): void
 }>()
 
+const showProperty = (field: SchemaModelPropertyField) => {
+  if (props.hiddenFieldList.includes(field)) {
+    return false
+  }
+
+  const explictlyDefinedFields = props.property?.['x-stoplight']?.explicitProperties
+
+  if (Array.isArray(explictlyDefinedFields) && explictlyDefinedFields.length) {
+    // show the field only if it was explicitly defined
+    return explictlyDefinedFields.includes(field)
+  }
+
+  return true
+}
+
+
 const orderedFieldList = computed(() => {
   const fields = []
 
@@ -88,7 +105,7 @@ const orderedFieldList = computed(() => {
       key: 'property-info',
     })
   }
-  if (!props.hiddenFieldList.includes('description') && props.property.description) {
+  if (showProperty('description') && props.property.description) {
     fields.push({
       component: PropertyDescription,
       props: {
@@ -98,7 +115,7 @@ const orderedFieldList = computed(() => {
       key: 'property-description',
     })
   }
-  if (!props.hiddenFieldList.includes('enum') && props.property.enum) {
+  if (showProperty('enum') && props.property.enum) {
     fields.push({
       component: PropertyEnum,
       props: {
@@ -108,7 +125,7 @@ const orderedFieldList = computed(() => {
       key: 'property-enum',
     })
   }
-  if (!props.hiddenFieldList.includes('pattern') && props.property.pattern) {
+  if (showProperty('pattern') && props.property.pattern) {
     fields.push({
       component: PropertyPattern,
       props: {
@@ -119,7 +136,7 @@ const orderedFieldList = computed(() => {
     })
   }
 
-  if (!props.hiddenFieldList.includes('default') && props.property.default !== undefined) {
+  if (showProperty('default') && props.property.default !== undefined) {
     fields.push({
       component: PropertyDefault,
       props: {
@@ -130,17 +147,13 @@ const orderedFieldList = computed(() => {
     })
   }
 
-  const rangeProps = {
-    max: props.property.maximum,
-    min: props.property.minimum,
-    maxLength: props.property.maxLength,
-    minLength: props.property.minLength,
-    exclusiveMaximum: props.property.exclusiveMaximum,
-    exclusiveMinimum: props.property.exclusiveMinimum,
-    multipleOf: props.property.multipleOf,
-    maxItems: props.property.maxItems,
-    minItems: props.property.minItems,
-  }
+  const rangeProps: Partial<Pick<SchemaObject, typeof RangeFields[number]>> = {}
+
+  RangeFields.forEach(field => {
+    if (showProperty(field)) {
+      rangeProps[field] = props.property[field]
+    }
+  })
 
   if (
     !props.hiddenFieldList.includes('range') &&
@@ -154,8 +167,9 @@ const orderedFieldList = computed(() => {
     })
   }
 
+  const showExamples = (props.property.example && showProperty('example')) || (props.property.examples && showProperty('examples'))
 
-  if (!props.hiddenFieldList.includes('example') && (props.property.examples || props.property.example)) {
+  if (showExamples) {
     fields.push({
       component: PropertyExample,
       props: {
@@ -166,7 +180,7 @@ const orderedFieldList = computed(() => {
     })
   }
 
-  if (!props.hiddenFieldList.includes('additional-properties') && typeof props.property.additionalProperties === 'boolean') {
+  if (showProperty('additionalProperties') && typeof props.property.additionalProperties === 'boolean') {
     fields.push({
       component: AdditionalProperties,
       props: {

@@ -1,5 +1,8 @@
 <template>
-  <div class="property-field-additional-properties">
+  <div
+    class="property-field-additional-properties"
+    data-testid="property-field-additional-properties"
+  >
     <div
       v-if="additionalProperties === true"
       class="footprint"
