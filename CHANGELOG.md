@@ -1,3 +1,10 @@
+## [1.91.1](https://github.com/Kong/spec-renderer/compare/v1.91.0...v1.91.1) (2025-03-26)
+
+
+### Bug Fixes
+
+* **property-field-list:** add check for explicitly defined fields [KHCP-15606] ([#551](https://github.com/Kong/spec-renderer/issues/551)) ([77835fd](https://github.com/Kong/spec-renderer/commit/77835fdeb2072ba2bcdcc7c2c51012e21cabe9bb))
+
 # [1.91.0](https://github.com/Kong/spec-renderer/compare/v1.90.2...v1.91.0) (2025-03-25)
 
 
