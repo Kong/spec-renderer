@@ -1,3 +1,10 @@
+## [1.91.2](https://github.com/Kong/spec-renderer/compare/v1.91.1...v1.91.2) (2025-03-28)
+
+
+### Bug Fixes
+
+* expose findMatchingNode from SpecDocument component [TDX-5468] ([#553](https://github.com/Kong/spec-renderer/issues/553)) ([a7566aa](https://github.com/Kong/spec-renderer/commit/a7566aa5a6dfbb187a7de5491b73942f01ecc71e))
+
 ## [1.91.1](https://github.com/Kong/spec-renderer/compare/v1.91.0...v1.91.1) (2025-03-26)
 
 
