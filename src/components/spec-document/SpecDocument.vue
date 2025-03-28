@@ -251,7 +251,7 @@ const findMatchingNode = (spDoc: ServiceNode, forPath: string): ServiceChildNode
 }
 
 defineExpose({
-  findMatchingNode
+  findMatchingNode,
 })
 
 const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null):
