@@ -24,7 +24,7 @@ export * from './utils/schema-parser'
 export * from './utils/find-matching-node'
 
 // These are types that used in properties of components exposed to outside word
-export type { ServiceNode, NavigationTypes, ParseOptions, SchemaObject } from './types'
+export type { ServiceNode, NavigationTypes, ParseOptions, SchemaObject, ServiceChildNode } from './types'
 export type { TableOfContentsItem } from '@/stoplight/elements-core'
 
 // expose components
