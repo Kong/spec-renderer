@@ -240,7 +240,7 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
     case NodeType.AsyncOperation:
       return { component: AsyncOperation, props: defaultProps, doc: forServiceNode }
     case NodeType.HttpService:
-      return { component: HttpService, props: { ...defaultProps, specVersion: (<ServiceNode>forServiceNode).specVersion, allowCustomServerUrl: IS_TRUE(props.allowCustomServerUrl) }, doc: forServiceNode }
+      return { component: HttpService, props: { ...defaultProps, specUrl: props.specUrl, specVersion: (<ServiceNode>forServiceNode).specVersion, allowCustomServerUrl: IS_TRUE(props.allowCustomServerUrl) }, doc: forServiceNode }
     case NodeType.Model:
       return { component: HttpModel, props: { ...defaultProps, title: forServiceNode.name }, doc: forServiceNode }
     case NodeType.AsyncMessage:
