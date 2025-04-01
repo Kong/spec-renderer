@@ -163,13 +163,13 @@ const handleChange = (event: Event): void => {
         box-shadow: var(--kui-shadow-border, $kui-shadow-border);
         content: '';
         display: block;
-        height: calc(100% - ($toggleSwitchPadding * 2));
+        height: calc(100% - (#{$toggleSwitchPadding} * 2));
         left: $toggleSwitchPadding;
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
         transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease, box-shadow var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
-        width: calc(50% - ($toggleSwitchPadding * 2));
+        width: calc(50% - (#{$toggleSwitchPadding} * 2));
         z-index: 1;
       }
 
