@@ -57,6 +57,15 @@
             @update-content-type="(newContentType) => activeContentType = newContentType"
             @update-response-code="(newResponseCode) => activeResponseCode = newResponseCode"
           />
+
+          <template #contents>
+            <RequestParamList
+              v-if="activeResponseHeaders.length"
+              class="http-operation-response-headers"
+              :param-list="activeResponseHeaders"
+              title="Headers"
+            />
+          </template>
         </HttpOperationBody>
 
         <HttpCallbacks
@@ -172,6 +181,7 @@ import RequestSample from './samples/RequestSample.vue'
 import ResponseSample from './samples/ResponseSample.vue'
 import CallbackSample from './samples/CallbackSample.vue'
 import ServerEndpoint from './endpoint/ServerEndpoint.vue'
+import RequestParamList from './endpoint/RequestParamList.vue'
 import ResponseTypeSelect from './endpoint/ResponseTypeSelect.vue'
 import PageHeader from '../common/PageHeader.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
@@ -252,6 +262,7 @@ const responseList = computed(() => props.data.responses ?? [])
 const {
   activeResponseDescription,
   activeResponseCode,
+  activeResponseHeaders,
   activeContentType,
   activeResponseContentList,
   responseSelectComponentList,
@@ -379,6 +390,16 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
         align-items: center;
         display: flex;
         gap: var(--kui-space-50, $kui-space-50);
+      }
+    }
+
+    .http-operation-response {
+      .http-operation-response-headers {
+        padding: 0px 8px;
+
+        :deep(h3) {
+          font-size: var(--kui-font-size-30, $kui-font-size-30);
+        }
       }
     }
 

@@ -15,6 +15,8 @@
         :contents="contentList"
         :description="description"
       />
+
+      <slot name="contents" />
     </CollapsibleSection>
   </section>
 </template>

@@ -17,6 +17,8 @@ export default function useResponseCode(responseList: ComputedRef<Array<IHttpOpe
   const activeResponse = computed(() => responseList.value?.find(response => response.code === activeResponseCode.value))
   const activeResponseDescription = computed(() => activeResponse.value?.description ?? '')
 
+  const activeResponseHeaders = computed(() => activeResponse.value?.headers ?? [])
+
   const responseContents = computed(() => activeResponse.value?.contents ?? [])
   const { activeContentType, activeResponseContentList, contentTypeList } = useContentTypes(responseContents)
 
@@ -54,6 +56,7 @@ export default function useResponseCode(responseList: ComputedRef<Array<IHttpOpe
     activeResponseCode,
     activeResponse,
     activeResponseDescription,
+    activeResponseHeaders,
     activeContentType,
     contentTypeList,
     activeResponseContentList,
