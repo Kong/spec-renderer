@@ -350,7 +350,7 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
   .http-operation-container {
     display: grid;
     gap: var(--kui-space-90, $kui-space-90);
-    grid-template-columns: auto clamp($spec-renderer-secondary-column-min-width, 40%, $spec-renderer-secondary-column-max-width);
+    grid-template-columns: auto clamp(#{$spec-renderer-secondary-column-min-width}, 40%, #{$spec-renderer-secondary-column-max-width});
     width: 100%;
 
     .left {

@@ -53,7 +53,7 @@
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
-    "@apidevtools/json-schema-ref-parser": "^11.7.3",
+    "@apidevtools/json-schema-ref-parser": "^11.9.3",
     "@asyncapi/openapi-schema-parser": "^3.0.24",
     "@asyncapi/parser": "^3.4.0",
     "@floating-ui/vue": "^1.1.6",
@@ -63,13 +63,13 @@
     "@stoplight/json": "^3.21.7",
     "@stoplight/types": "^14.1.1",
     "@stoplight/yaml": "^4.3.0",
-    "@vueuse/core": "^12.5.0",
+    "@vueuse/core": "^12.8.2",
     "allof-merge": "^0.6.6",
     "flatted": "^3.3.3",
     "httpsnippet": "^3.0.9",
     "lodash-es": "^4.17.21",
     "markdown-it": "^14.1.0",
-    "sanitize-html": "^2.14.0",
+    "sanitize-html": "^2.15.0",
     "shiki": "^3.2.1"
   },
   "resolutions": {
@@ -77,10 +77,10 @@
   },
   "devDependencies": {
     "@babel/types": "^7.26.9",
-    "@commitlint/cli": "^19.6.1",
-    "@commitlint/config-conventional": "^19.6.0",
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
-    "@evilmartians/lefthook": "^1.10.10",
+    "@evilmartians/lefthook": "^1.11.3",
     "@kong/design-tokens": "^1.17.3",
     "@kong/eslint-config-kong-ui": "1.2.6",
     "@semantic-release/changelog": "^6.0.3",
@@ -89,7 +89,7 @@
     "@types/jsdom": "^21.1.7",
     "@types/json-schema": "^7.0.15",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^22.10.10",
+    "@types/node": "^22.13.10",
     "@types/sanitize-html": "^2.13.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitest/ui": "^3.0.6",
@@ -107,19 +107,19 @@
     "postcss-html": "^1.8.0",
     "rimraf": "^6.0.1",
     "rollup-plugin-visualizer": "^5.14.0",
-    "sass": "^1.83.4",
-    "sass-embedded": "^1.83.4",
+    "sass": "^1.86.0",
+    "sass-embedded": "^1.86.0",
     "semantic-release": "^24.2.3",
-    "stylelint": "^16.13.2",
+    "stylelint": "^16.16.0",
     "stylelint-config-html": "^1.1.0",
     "stylelint-config-recommended-scss": "^14.1.0",
-    "stylelint-config-recommended-vue": "^1.5.0",
+    "stylelint-config-recommended-vue": "^1.6.0",
     "stylelint-order": "^6.0.4",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
     "tslib": "^2.8.1",
-    "typescript": "^5.7.3",
-    "vite": "^6.0.11",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.2",
     "vite-plugin-node-polyfills": "^0.23.0",
     "vite-plugin-replace": "^0.1.1",
     "vite-plugin-vue-devtools": "^7.7.2",
@@ -181,8 +181,8 @@
     "node": ">=18.17.0"
   },
   "volta": {
-    "node": "22.13.1",
-    "pnpm": "10.0.0"
+    "node": "22.14.0",
+    "pnpm": "10.6.5"
   },
   "config": {
     "commitizen": {

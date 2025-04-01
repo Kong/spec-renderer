@@ -173,7 +173,7 @@ const schemaType = computed(() => schema.value.type?.toString())
     &.model-example-visible {
       display: grid;
       gap: var(--kui-space-130, $kui-space-130);
-      grid-template-columns: auto clamp($spec-renderer-secondary-column-min-width, 40%, $spec-renderer-secondary-column-max-width);
+      grid-template-columns: auto clamp(#{$spec-renderer-secondary-column-min-width}, 40%, #{$spec-renderer-secondary-column-max-width});
     }
   }
 }
