@@ -550,7 +550,7 @@ watch(() => ({
 
   await nextTick()
 
-    console.log('pathIdx', pathIdx)
+  console.log('pathIdx', pathIdx)
 
   // now we want to find position of the active element and if it is not visible force it to be visible
   if (document) {
