@@ -180,6 +180,13 @@ const props = defineProps({
     validator: BOOL_VALIDATOR,
     default: false,
   },
+  /**
+   * Name for the downloaded spec file
+   */
+  specFileName: {
+    type: String,
+    default: '',
+  },
 })
 
 const { highlighter, createHighlighter } = composables.useShiki()
@@ -256,6 +263,7 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
           specVersion: (<ServiceNode>forServiceNode).specVersion,
           allowCustomServerUrl: IS_TRUE(props.allowCustomServerUrl),
           hideDownloadButton: IS_TRUE(props.hideDownloadButton),
+          specFileName: props.specFileName,
         },
         doc: forServiceNode,
       }

@@ -241,6 +241,13 @@ const props = defineProps({
     validator: BOOL_VALIDATOR,
     default: false,
   },
+  /**
+   * Name for the downloaded spec file
+   */
+  specFileName: {
+    type: String,
+    default: '',
+  },
 })
 
 // TODO: introduce and handle isParsed. show parsing state while parsing

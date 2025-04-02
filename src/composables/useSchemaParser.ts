@@ -30,7 +30,7 @@ export default (): {
   parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
   parseOpenApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
   parseAsyncApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
-  downloadSpecFile: () => Promise<void>
+  downloadSpecFile: (fileName?: string) => Promise<void>
   parsedDocument: Ref<ServiceNode | string | undefined>
   tableOfContents: Ref<TableOfContentsItem[] | string | undefined>
   validationResults: Ref<ValidateResult | string | undefined>
@@ -306,7 +306,7 @@ export default (): {
     }
   }
 
-  const downloadSpecFile = async () => {
+  const downloadSpecFile = async (fileName?: string) => {
     if (isSsr() || !specText) return
 
     try {
@@ -316,7 +316,7 @@ export default (): {
       const link = document.createElement('a')
 
       link.href = url
-      link.setAttribute('download', `${kebabCase(window.location.hostname)}.${fileExtension}`)
+      link.setAttribute('download', `${fileName || kebabCase(window.location.pathname.slice(1))}.${fileExtension}`)
       document.body.appendChild(link)
       link.click()
 
