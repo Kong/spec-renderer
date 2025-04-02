@@ -27,7 +27,7 @@ importers:
         specifier: ^1.21.2
         version: 1.21.2(vue@3.5.13(typescript@5.8.2))
       '@scalar/openapi-parser':
-        specifier: ^0.10.8
+        specifier: ^0.10.10
         version: 0.10.10
       '@stoplight/http-spec':
         specifier: ^7.1.0
