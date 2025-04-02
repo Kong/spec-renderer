@@ -567,7 +567,7 @@ watch(() => ({
         // KHCP-15336 - scrollIntoView likes to be in it's own timeout KHCP-15336
         console.log('activeSectionEl:', activeSectionEl)
         console.log('scrollingContainerEl:', scrollingContainerEl.value)
-
+        console.log('yPositionContainer.value: ', yPositionContainer.value)
         setTimeout(()=> {
           // TDX-5469 - give it a little help for the first time scrolling into view when inside of scrollable container
           if (scrollingContainerEl.value) {
