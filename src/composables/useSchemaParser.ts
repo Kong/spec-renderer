@@ -9,6 +9,8 @@ import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
 import { stringify } from 'flatted'
 import { transform as transformAsync } from '@/utils/async-to-oas-transformer'
+import { isSsr } from '@/utils/ssr'
+import { kebabCase } from '@/utils/strings'
 
 const trace = (doTrace: boolean | undefined, ...args: any) => {
   if (doTrace) {
@@ -19,18 +21,19 @@ const trace = (doTrace: boolean | undefined, ...args: any) => {
 let asyncParser:any = null
 
 /**
- * Raw text content from the spec file provided to the spec-renderer
+ * Raw text content from the spec file provided to the spec-renderer.
+ * Don't need it to be reactive
  */
-const specText = ref<string>()
+let specText = ''
 
 export default (): {
   parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
   parseOpenApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
   parseAsyncApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
+  downloadSpecFile: () => Promise<void>
   parsedDocument: Ref<ServiceNode | string | undefined>
   tableOfContents: Ref<TableOfContentsItem[] | string | undefined>
   validationResults: Ref<ValidateResult | string | undefined>
-  specText: Ref<string | undefined>
 } => {
 
   const parsedDocument = ref<ServiceNode | string | undefined>()
@@ -263,9 +266,7 @@ export default (): {
 
   const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<void> => {
 
-    if (spec && !options.specUrl) {
-      specText.value = spec
-    }
+    await saveSpecText(spec, options.specUrl)
 
     await fetchAndBundle(spec, options)
 
@@ -287,13 +288,54 @@ export default (): {
     }
   }
 
+  const saveSpecText = async (spec: string, specUrl?: string) => {
+    specText = spec ?? ''
+
+    if (!spec && specUrl) {
+      try {
+        const response = await fetch(specUrl)
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        specText = await response.text()
+      } catch (e) {
+        console.error('@kong/spec-renderer: error in fetching spec file:', e)
+      }
+    }
+  }
+
+  const downloadSpecFile = async () => {
+    if (isSsr() || !specText) return
+
+    try {
+      const fileExtension = jsonOrYaml(specText)
+      const blob = new Blob([specText], { type: fileExtension })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+
+      link.href = url
+      link.setAttribute('download', `${kebabCase(window.location.hostname)}.${fileExtension}`)
+      document.body.appendChild(link)
+      link.click()
+
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+    } catch (e) {
+      console.error('@kong/spec-renderer: error in downloading spec file:', e)
+    }
+  }
+
+  const jsonOrYaml = (text: string) => text.startsWith('{') || text.startsWith('[') ? 'json' : 'yaml'
+
   return {
     parseSpecDocument,
     parseOpenApiSpecDocument,
     parseAsyncApiSpecDocument,
+    downloadSpecFile,
     parsedDocument,
     tableOfContents,
     validationResults,
-    specText,
   }
 }

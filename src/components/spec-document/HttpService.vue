@@ -10,7 +10,7 @@
       >
         <button
           class="download-spec-btn"
-          @click="downloadSpec"
+          @click="downloadSpecFile"
         >
           Download
         </button>
@@ -63,7 +63,6 @@ import LabelBadge from '../common/LabelBadge.vue'
 import PageHeader from '../common/PageHeader.vue'
 import MarkdownRenderer from '../common/MarkdownRenderer.vue'
 import composables from '@/composables'
-import { kebabCase } from '@/utils'
 
 const props = defineProps({
   data: {
@@ -89,59 +88,9 @@ const props = defineProps({
 })
 
 const { serverList, addServerUrl } = composables.useServerList()
-const { specText } = composables.useSchemaParser()
+const { downloadSpecFile } = composables.useSchemaParser()
 
 const additionalInfoVisible = computed(() => props.data.externalDocs?.url || props.data.contact?.url || props.data.contact?.email || props.data.license?.name)
-
-const downloadSpec = async () => {
-  try {
-    if (props.specUrl) {
-      const response = await fetch(props.specUrl)
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-
-      const contentType = response.headers.get('Content-Type')
-      let fileExtension = 'json' // Default extension
-
-
-      if (contentType?.includes('json')) {
-        fileExtension = 'json'
-      } else if (contentType?.includes('yaml')) {
-        fileExtension = 'yaml'
-      } else {
-        const responseText = await response.text()
-        fileExtension = jsonOrYaml(responseText)
-      }
-
-      const blob = await response.blob()
-      downloadBlob(blob, fileExtension)
-
-    } else if (specText.value?.length) {
-      const fileExtension = jsonOrYaml(specText.value)
-      const blob = new Blob([specText.value], { type: fileExtension })
-      downloadBlob(blob, fileExtension)
-    }
-  } catch (e) {
-    console.error('@kong/spec-renderer: error in downloading spec file:', e)
-  }
-}
-
-const jsonOrYaml = (text: string) => text.startsWith('{') || text.startsWith('[') ? 'json' : 'yaml'
-
-const downloadBlob = (blob: Blob, fileExtension: string) => {
-  const url = window.URL.createObjectURL(blob)
-  const link = document.createElement('a')
-
-  link.href = url
-  link.setAttribute('download', `${kebabCase(props.data.name)}.${fileExtension}`)
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-
-  window.URL.revokeObjectURL(url)
-}
 </script>
 
 <style lang="scss" scoped>
