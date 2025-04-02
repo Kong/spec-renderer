@@ -491,6 +491,23 @@ watch(() => ({ nodesList: nodesList.value,
   // we look trough elements and find the one that should be visible
 }, { immediate: true })
 
+const waitForElementPosition = (elementSelector: string, maxRetries: number, callback: Function) => {
+  let tryNumber = 0
+  const intervalId = setInterval(() => {
+    const element = document.querySelector(elementSelector);
+    if (element && (element as HTMLElement).offsetTop > 0) {
+      clearInterval(intervalId);
+      callback(element);
+    }
+    tryNumber++
+    // avoid max call stack error, it should not take longer than a sec...
+    if (tryNumber >= maxRetries) {
+      clearInterval(intervalId);
+      callback(element);
+    }
+  }, 100);
+}
+
 
 /** we show tryIt section when it's requested to be hidden and when node */
 watch(() => ({
@@ -550,7 +567,8 @@ watch(() => ({
       // KHCP-15336 there is a case in portal when wrapperRef is not initialised at this pont
       await until(wrapperRef).not.toBeNull({ timeout: 10000 })
     }
-    const activeSectionEl = wrapperRef.value?.querySelector(`[id="${pathIdx}-nodecontainer"]`)
+    const activeElementSelector = `[id="${pathIdx}-nodecontainer"]`
+    const activeSectionEl = wrapperRef.value?.querySelector(activeElementSelector)
 
     if (activeSectionEl) {
       /*
@@ -565,18 +583,14 @@ watch(() => ({
         }
       } else {
         // KHCP-15336 - scrollIntoView likes to be in it's own timeout KHCP-15336
-        console.log('activeSectionEl:', activeSectionEl, ' offsetTop:', (activeSectionEl as HTMLElement).offsetTop)
-        console.log('scrollingContainerEl:', scrollingContainerEl.value)
-        console.log('yPositionContainer.value: ', yPositionContainer.value)
-        setTimeout(()=> {
-          // TDX-5469 - give it a little help for the first time scrolling into view when inside of scrollable container
-          if (scrollingContainerEl.value && yPositionContainer.value == 0) {
-            console.log('forcing yPositionContainer.value')
-            yPositionContainer.value = (activeSectionEl as HTMLElement).offsetTop
-          }
-          console.log('calling scrollIntoView')
-          activeSectionEl.scrollIntoView({ behavior: 'instant' })
-        }, 50)
+        if (!scrollingContainerEl.value || yPositionContainer.value > 0) {
+          setTimeout(()=> activeSectionEl.scrollIntoView({ behavior: 'instant' }), 50)
+        } else {
+          // TDX-5469 - give it a little help for the first time scrollingINfo, wait till element is positioned inside of container
+          waitForElementPosition(activeElementSelector, 10, (element: HTMLElement) => {
+            element.scrollIntoView({ behavior: 'instant' })
+          })
+        }
       }
       lastPath.value = pathname
     }
