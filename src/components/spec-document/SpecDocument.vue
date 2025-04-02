@@ -574,14 +574,14 @@ watch(() => ({
       } else {
         // KHCP-15336 - scrollIntoView likes to be in it's own timeout KHCP-15336
         console.log('calling scrollIntoView!!!')
-        setTimeout(()=> activeSectionEl.scrollIntoView({ behavior: 'instant' }), 100)
+        setTimeout(()=> activeSectionEl.scrollIntoView({ behavior: 'instant' }), 500)
       }
       lastPath.value = pathname
     }
     setTimeout(async () => {
       // now as we have our current section visible start re-drawing all the sections
       processScrolling.value = true
-    }, 500)
+    }, 700)
   }
 }, { immediate: true })
 
