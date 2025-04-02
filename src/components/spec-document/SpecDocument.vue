@@ -582,15 +582,10 @@ watch(() => ({
           scrollingContainerEl.value.scrollTo(0, 0)
         }
       } else {
-        // KHCP-15336 - scrollIntoView likes to be in it's own timeout KHCP-15336
-        if (!scrollingContainerEl.value || yPositionContainer.value > 0) {
-          setTimeout(()=> activeSectionEl.scrollIntoView({ behavior: 'instant' }), 50)
-        } else {
-          // TDX-5469 - give it a little help for the first time scrollingINfo, wait till element is positioned inside of container
-          waitForElementPosition(activeElementSelector, 10, (element: HTMLElement) => {
-            element.scrollIntoView({ behavior: 'instant' })
-          })
-        }
+        // TDX-5469 - give it a little help for the first time scrollingINfo, wait till element is positioned inside of container
+        waitForElementPosition(activeElementSelector, 10, (element: HTMLElement) => {
+          element.scrollIntoView({ behavior: 'instant' })
+        })
       }
       lastPath.value = pathname
     }
