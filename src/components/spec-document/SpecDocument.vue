@@ -491,21 +491,21 @@ watch(() => ({ nodesList: nodesList.value,
   // we look trough elements and find the one that should be visible
 }, { immediate: true })
 
-const waitForElementPosition = (elementSelector: string, maxRetries: number, callback: Function) => {
+const waitForElementPosition = (elementSelector: string, maxRetries: number, callback: (element: HTMLElement) => void) => {
   let tryNumber = 0
   const intervalId = setInterval(() => {
-    const element = document.querySelector(elementSelector);
-    if (element && (element as HTMLElement).offsetTop > 0) {
-      clearInterval(intervalId);
-      callback(element);
+    const element = document.querySelector(elementSelector) as HTMLElement
+    if (element && element.offsetTop > 0) {
+      clearInterval(intervalId)
+      callback(element)
     }
     tryNumber++
     // avoid max call stack error, it should not take longer than a sec...
     if (tryNumber >= maxRetries) {
-      clearInterval(intervalId);
-      callback(element);
+      clearInterval(intervalId)
+      callback(element)
     }
-  }, 100);
+  }, 100)
 }
 
 
