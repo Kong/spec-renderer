@@ -4,7 +4,10 @@
       class="overview-page-header"
       :title="data.name"
     >
-      <template #actions>
+      <template
+        v-if="!hideDownloadButton"
+        #actions
+      >
         <button
           class="download-spec-btn"
           @click="downloadSpec"
@@ -79,15 +82,20 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  hideDownloadButton: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { serverList, addServerUrl } = composables.useServerList()
+const { specText } = composables.useSchemaParser()
 
 const additionalInfoVisible = computed(() => props.data.externalDocs?.url || props.data.contact?.url || props.data.contact?.email || props.data.license?.name)
 
 const downloadSpec = async () => {
-  if (props.specUrl) {
-    try {
+  try {
+    if (props.specUrl) {
       const response = await fetch(props.specUrl)
 
       if (!response.ok) {
@@ -97,38 +105,42 @@ const downloadSpec = async () => {
       const contentType = response.headers.get('Content-Type')
       let fileExtension = 'json' // Default extension
 
-      if (contentType) {
-        if (contentType.includes('json')) {
-          fileExtension = 'json'
-        } else if (
-          contentType.includes('yaml')
-        ) {
-          fileExtension = 'yaml'
-        }
+
+      if (contentType?.includes('json')) {
+        fileExtension = 'json'
+      } else if (contentType?.includes('yaml')) {
+        fileExtension = 'yaml'
       } else {
         const responseText = await response.text()
-        if (responseText.startsWith('{') || responseText.startsWith('[')) {
-          fileExtension = 'json'
-        } else {
-          fileExtension = 'yaml'
-        }
+        fileExtension = jsonOrYaml(responseText)
       }
 
       const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement('a')
+      downloadBlob(blob, fileExtension)
 
-      link.href = url
-      link.setAttribute('download', `${kebabCase(props.data.name)}.${fileExtension}`)
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-
-      window.URL.revokeObjectURL(url)
-    } catch (e) {
-      console.error('@kong/spec-renderer: in fetching spec file:', e)
+    } else if (specText.value?.length) {
+      const fileExtension = jsonOrYaml(specText.value)
+      const blob = new Blob([specText.value], { type: fileExtension })
+      downloadBlob(blob, fileExtension)
     }
+  } catch (e) {
+    console.error('@kong/spec-renderer: error in downloading spec file:', e)
   }
+}
+
+const jsonOrYaml = (text: string) => text.startsWith('{') || text.startsWith('[') ? 'json' : 'yaml'
+
+const downloadBlob = (blob: Blob, fileExtension: string) => {
+  const url = window.URL.createObjectURL(blob)
+  const link = document.createElement('a')
+
+  link.href = url
+  link.setAttribute('download', `${kebabCase(props.data.name)}.${fileExtension}`)
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+
+  window.URL.revokeObjectURL(url)
 }
 </script>
 

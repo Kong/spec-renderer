@@ -18,6 +18,11 @@ const trace = (doTrace: boolean | undefined, ...args: any) => {
 
 let asyncParser:any = null
 
+/**
+ * Raw text content from the spec file provided to the spec-renderer
+ */
+const specText = ref<string>()
+
 export default (): {
   parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
   parseOpenApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
@@ -25,6 +30,7 @@ export default (): {
   parsedDocument: Ref<ServiceNode | string | undefined>
   tableOfContents: Ref<TableOfContentsItem[] | string | undefined>
   validationResults: Ref<ValidateResult | string | undefined>
+  specText: Ref<string | undefined>
 } => {
 
   const parsedDocument = ref<ServiceNode | string | undefined>()
@@ -257,6 +263,10 @@ export default (): {
 
   const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<void> => {
 
+    if (spec && !options.specUrl) {
+      specText.value = spec
+    }
+
     await fetchAndBundle(spec, options)
 
     if (!jsonDocument.value) {
@@ -284,5 +294,6 @@ export default (): {
     parsedDocument,
     tableOfContents,
     validationResults,
+    specText,
   }
 }
