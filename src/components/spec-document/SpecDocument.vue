@@ -69,7 +69,7 @@ import { BOOL_VALIDATOR, IS_TRUE, isSsr, findMatchingNode } from '@/utils'
 import type { NavigationTypes } from '@/types'
 import { stringify, parse as parseFlatted } from 'flatted'
 import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '@/stoplight/elements-core'
-import { scrollIntoView } from "seamless-scroll-polyfill"
+import { scrollIntoView } from 'seamless-scroll-polyfill'
 
 const props = defineProps({
   document: {
@@ -566,12 +566,12 @@ watch(() => ({
         }
       } else {
         scrollIntoView(activeSectionEl, {
-            behavior: "instant",
-          },
-          {
-            duration: 250 // aprox. the duration that chrome uses,
-          }
-        );
+          behavior: 'instant',
+        },
+        {
+          duration: 250, // aprox. the duration that chrome uses,
+        },
+        )
       }
       lastPath.value = pathname
     }
