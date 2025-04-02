@@ -1,6 +1,6 @@
 {
   "name": "@kong/spec-renderer",
-  "version": "1.91.6",
+  "version": "1.91.624",
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
   "type": "module",
@@ -70,7 +70,6 @@
     "lodash-es": "^4.17.21",
     "markdown-it": "^14.1.0",
     "sanitize-html": "^2.15.0",
-    "seamless-scroll-polyfill": "^2.3.4",
     "shiki": "^3.2.1"
   },
   "resolutions": {

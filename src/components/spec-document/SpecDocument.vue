@@ -69,7 +69,6 @@ import { BOOL_VALIDATOR, IS_TRUE, isSsr, findMatchingNode } from '@/utils'
 import type { NavigationTypes } from '@/types'
 import { stringify, parse as parseFlatted } from 'flatted'
 import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '@/stoplight/elements-core'
-import { scrollIntoView } from 'seamless-scroll-polyfill'
 
 const props = defineProps({
   document: {
@@ -565,13 +564,17 @@ watch(() => ({
           scrollingContainerEl.value.scrollTo(0, 0)
         }
       } else {
-        scrollIntoView(activeSectionEl, {
-          behavior: 'instant',
-        },
-        {
-          duration: 250, // aprox. the duration that chrome uses,
-        },
-        )
+        // KHCP-15336 - scrollIntoView likes to be in it's own timeout KHCP-15336
+        console.log('activeSectionEl:', activeSectionEl)
+        console.log('scrollingContainerEl:', scrollingContainerEl.value)
+
+        setTimeout(()=> {
+          // TDX-5469 - give it a little help for the first time scrolling into view when inside of scrollable container
+          if (scrollingContainerEl.value) {
+            scrollingContainerEl.value.scrollTo(0, (activeSectionEl as HTMLElement).offsetTop)
+          }
+          activeSectionEl.scrollIntoView({ behavior: 'instant' })
+        }, 50)
       }
       lastPath.value = pathname
     }
