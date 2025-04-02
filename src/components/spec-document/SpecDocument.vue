@@ -477,6 +477,7 @@ watch(() => ({ nodesList: nodesList.value,
   // now out of all elements in visibleEls we  need to find the one that is most visible
   const mostVisibleIdx = visibleEls[0].idx
   forceRenderer(visibleIndexes)
+  console.log('visibleIndexes:', visibleIndexes)
   const newUri = nodesList.value[mostVisibleIdx].doc.uri
   if (newUri !== lastPath.value) {
     emit('content-scrolled', newUri)
@@ -505,6 +506,7 @@ watch(() => ({
   const isRootPath = !pathname || pathname === '/'
   serviceNode.value = <ServiceNode>(isRootPath ? newDocument : findMatchingNode(newDocument, pathname))
   if (!serviceNode.value) {
+    console.log('emitting patch not found and returning')
     emit('path-not-found', pathname)
     return
   }
@@ -522,14 +524,17 @@ watch(() => ({
       await createHighlighter()
     }
     // case when scrolling is not enabled - we do not need to do anything else
+    console.log('content scrolling disabled, returning')
     return
   }
 
   if (pathname === oldValue?.pathname && oldValue?.pathname) {
+    console.log('path name eq oldValue, returning')
     return
   }
   if (pathname === lastPath.value) {
     // KHCP-14793 this is to prevent the unexected scrolljump
+    console.log('path name eq lastPath, returning')
     return
   }
 
@@ -545,6 +550,7 @@ watch(() => ({
 
   await nextTick()
 
+    console.log('pathIdx', pathIdx)
 
   // now we want to find position of the active element and if it is not visible force it to be visible
   if (document) {
@@ -553,7 +559,7 @@ watch(() => ({
       await until(wrapperRef).not.toBeNull({ timeout: 10000 })
     }
     const activeSectionEl = wrapperRef.value?.querySelector(`[id="${pathIdx}-nodecontainer"]`)
-
+    console.log('activeSectionEl:', activeSectionEl, ' scrollingContainerEl: ', scrollingContainerEl.value)
     if (activeSectionEl) {
       /*
         special handling for pathIdx = 0 ('/' - we want to make sure entire container with what's on top is visible for this case,
@@ -567,6 +573,7 @@ watch(() => ({
         }
       } else {
         // KHCP-15336 - scrollIntoView likes to be in it's own timeout KHCP-15336
+        console.log('calling scrollIntoView!!!')
         setTimeout(()=> activeSectionEl.scrollIntoView({ behavior: 'instant' }), 50)
       }
       lastPath.value = pathname
