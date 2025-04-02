@@ -63,7 +63,7 @@
     "@stoplight/json": "^3.21.7",
     "@stoplight/types": "^14.1.1",
     "@stoplight/yaml": "^4.3.0",
-    "@vueuse/core": "^12.8.2",
+    "@vueuse/core": "^13.0.0",
     "allof-merge": "^0.6.6",
     "flatted": "^3.3.3",
     "httpsnippet": "^3.0.9",
