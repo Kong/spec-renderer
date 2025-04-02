@@ -570,9 +570,9 @@ watch(() => ({
         console.log('yPositionContainer.value: ', yPositionContainer.value)
         setTimeout(()=> {
           // TDX-5469 - give it a little help for the first time scrolling into view when inside of scrollable container
-          if (scrollingContainerEl.value) {
-            console.log('calling scrollTo')
-            scrollingContainerEl.value.scrollTo(0, (activeSectionEl as HTMLElement).offsetTop)
+          if (scrollingContainerEl.value && yPositionContainer.value == 0) {
+            console.log('forcing yPositionContainer.value')
+            yPositionContainer.value=(activeSectionEl as HTMLElement).offsetTop
           }
           console.log('calling scrollIntoView')
           activeSectionEl.scrollIntoView({ behavior: 'instant' })
