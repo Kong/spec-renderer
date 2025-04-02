@@ -574,7 +574,7 @@ watch(() => ({
       } else {
         // KHCP-15336 - scrollIntoView likes to be in it's own timeout KHCP-15336
         console.log('calling scrollIntoView!!!')
-        setTimeout(()=> activeSectionEl.scrollIntoView({ behavior: 'instant' }), 50)
+        setTimeout(()=> activeSectionEl.scrollIntoView({ behavior: 'instant' }), 100)
       }
       lastPath.value = pathname
     }
