@@ -116,6 +116,11 @@ export default (): {
       }
       trace(options.traceParsing, 'async document fetched')
     }
+
+    if (!specText) {
+      saveSpecText(specToParse)
+    }
+
     let parsed = null
     try {
       const { document/*, diagnostics*/ } = await asyncParser.parse(specToParse)
@@ -182,6 +187,8 @@ export default (): {
     specTitle = jsonDocument.value?.info?.title
   }
   const parseOpenApiSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):Promise<void> => {
+
+    await saveSpecText(spec, options.specUrl)
 
     if (!jsonDocument.value || options.enforceResetBeforeParsing) {
       await fetchAndBundle(spec, options)
@@ -269,9 +276,6 @@ export default (): {
   }
 
   const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<void> => {
-
-    await saveSpecText(spec, options.specUrl)
-
     await fetchAndBundle(spec, options)
 
     if (!jsonDocument.value) {
@@ -292,6 +296,12 @@ export default (): {
     }
   }
 
+  /**
+   * Persists the spec text so it's available when user wants to download spec file
+   *
+   * @param spec the raw spec file text
+   * @param specUrl URL from where we can fetch the spec in case the spec text is unavailable
+   */
   const saveSpecText = async (spec: string, specUrl?: string) => {
     specText = spec ?? ''
 
@@ -315,13 +325,13 @@ export default (): {
 
     try {
       const fileExtension = jsonOrYaml(specText)
-      const blob = new Blob([specText], { type: fileExtension === 'json' ? 'application/json' : 'text/yaml' })
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement('a')
-
       const pathBasedName = window.location.pathname.replace(/[^a-zA-Z0-9]/g, '') // remove all non alphanumeric charaters from the path
       const baseFileName = specTitle || pathBasedName || 'spec-file' // ensure a non-empty base name, so provided a default fallback
       const downloadFileName = `${kebabCase(baseFileName)}.${fileExtension}`
+
+      const blob = new Blob([specText], { type: fileExtension === 'json' ? 'application/json' : 'text/yaml' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
 
       link.href = url
       link.setAttribute('download', downloadFileName)

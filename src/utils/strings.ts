@@ -33,6 +33,7 @@ export const safeJSONParse = (candidate: unknown) => {
 
 export const kebabCase = (candidate: string) => {
   return candidate
+    .replaceAll(' ','') // Remove all spaces
     .replace(/([a-z])([A-Z])/g, '$1-$2') // Add hyphen before uppercase letters: myVar -> my-Var
     .replace(/[\s_/]+/g, '-') // Replace spaces, underscores, slashes with hyphens
     .toLowerCase() // Convert to lowercase: my-Var -> my-var
