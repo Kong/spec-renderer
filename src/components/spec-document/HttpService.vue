@@ -73,10 +73,6 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  specUrl: {
-    type: String,
-    default: '',
-  },
   allowCustomServerUrl: {
     type: Boolean,
     default: false,

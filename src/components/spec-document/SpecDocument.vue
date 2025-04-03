@@ -252,7 +252,6 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
         component: HttpService,
         props: {
           ...defaultProps,
-          specUrl: props.specUrl,
           specVersion: (<ServiceNode>forServiceNode).specVersion,
           allowCustomServerUrl: IS_TRUE(props.allowCustomServerUrl),
           hideDownloadButton: IS_TRUE(props.hideDownloadButton),
