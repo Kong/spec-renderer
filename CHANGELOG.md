@@ -1,3 +1,10 @@
+# [1.92.0](https://github.com/Kong/spec-renderer/compare/v1.91.6...v1.92.0) (2025-04-03)
+
+
+### Features
+
+* **http-service:** add spec download button [TDX-5450] ([#556](https://github.com/Kong/spec-renderer/issues/556)) ([280a1c2](https://github.com/Kong/spec-renderer/commit/280a1c2e2672c129c1429f1b117137b09ed420d1))
+
 ## [1.91.6](https://github.com/Kong/spec-renderer/compare/v1.91.5...v1.91.6) (2025-04-02)
 
 
