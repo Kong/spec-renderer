@@ -19,6 +19,13 @@
         label="DEPRECATED"
         type="neutral"
       />
+
+      <div
+        v-if="$slots.actions"
+        class="page-header-actions"
+      >
+        <slot name="actions" />
+      </div>
     </div>
     <MarkdownRenderer
       v-if="description"
@@ -65,6 +72,10 @@ defineProps({
       font-size: var(--kui-font-size-80, $kui-font-size-80);
       font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
       line-height: var(--kui-line-height-70, $kui-line-height-70);
+    }
+
+    .page-header-actions {
+      margin-left: auto;
     }
   }
 

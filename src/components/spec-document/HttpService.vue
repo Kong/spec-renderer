@@ -4,6 +4,17 @@
       class="overview-page-header"
       :title="data.name"
     >
+      <template
+        v-if="!hideDownloadButton"
+        #actions
+      >
+        <button
+          class="download-spec-btn"
+          @click="downloadSpecFile"
+        >
+          Download
+        </button>
+      </template>
       <div class="overview-page-versions">
         <LabelBadge
           :label="`v${data.version}`"
@@ -66,9 +77,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  hideDownloadButton: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { serverList, addServerUrl } = composables.useServerList()
+const { downloadSpecFile } = composables.useSchemaParser()
 
 const additionalInfoVisible = computed(() => props.data.externalDocs?.url || props.data.contact?.url || props.data.contact?.email || props.data.license?.name)
 </script>
@@ -86,6 +102,14 @@ const additionalInfoVisible = computed(() => props.data.externalDocs?.url || pro
       align-items: center;
       display: flex;
       gap: var(--kui-space-50, $kui-space-50);
+    }
+
+    .download-spec-btn {
+      @include default-button-reset;
+      color: var(--kui-color-text-primary, $kui-color-text-primary);
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+      line-height: var(--kui-line-height-30, $kui-line-height-30);
     }
   }
 

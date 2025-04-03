@@ -60,6 +60,7 @@
           :current-path="currentPathDOC"
           :document="parsedDocument"
           :document-scrolling-container="documentScrollingContainer"
+          :hide-download-button="hideDownloadButton"
           :hide-insomnia-try-it="hideInsomniaTryIt"
           :hide-navigation-buttons="hideNavigationButtons"
           :hide-try-it="hideTryIt"
@@ -231,6 +232,14 @@ const props = defineProps({
     type: [Boolean, String],
     validator: BOOL_VALIDATOR,
     default: true,
+  },
+  /**
+   * Hide the spec download button.
+   */
+  hideDownloadButton: {
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
+    default: false,
   },
 })
 
