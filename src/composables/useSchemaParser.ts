@@ -9,6 +9,8 @@ import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
 import { stringify } from 'flatted'
 import { transform as transformAsync } from '@/utils/async-to-oas-transformer'
+import { isSsr } from '@/utils/ssr'
+import { kebabCase } from '@/utils/strings'
 
 const trace = (doTrace: boolean | undefined, ...args: any) => {
   if (doTrace) {
@@ -18,10 +20,18 @@ const trace = (doTrace: boolean | undefined, ...args: any) => {
 
 let asyncParser:any = null
 
+/**
+ * Raw text content from the spec file provided to the spec-renderer.
+ * Don't need it to be reactive
+ */
+let specText = ''
+let specTitle = ''
+
 export default (): {
   parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
   parseOpenApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
   parseAsyncApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
+  downloadSpecFile: () => Promise<void>
   parsedDocument: Ref<ServiceNode | string | undefined>
   tableOfContents: Ref<TableOfContentsItem[] | string | undefined>
   validationResults: Ref<ValidateResult | string | undefined>
@@ -106,6 +116,11 @@ export default (): {
       }
       trace(options.traceParsing, 'async document fetched')
     }
+
+    if (!specText) {
+      saveSpecText(specToParse)
+    }
+
     let parsed = null
     try {
       const { document/*, diagnostics*/ } = await asyncParser.parse(specToParse)
@@ -167,8 +182,13 @@ export default (): {
       jsonDocument.value = tryParseYamlOrObject(spec)
       trace(options.traceParsing, 'parsed from string')
     }
+
+    // save the spec title to be used as file name for the downloaded spec file
+    specTitle = jsonDocument.value?.info?.title
   }
   const parseOpenApiSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):Promise<void> => {
+
+    await saveSpecText(spec, options.specUrl)
 
     if (!jsonDocument.value || options.enforceResetBeforeParsing) {
       await fetchAndBundle(spec, options)
@@ -256,7 +276,6 @@ export default (): {
   }
 
   const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<void> => {
-
     await fetchAndBundle(spec, options)
 
     if (!jsonDocument.value) {
@@ -277,10 +296,62 @@ export default (): {
     }
   }
 
+  /**
+   * Persists the spec text so it's available when user wants to download spec file
+   *
+   * @param spec the raw spec file text
+   * @param specUrl URL from where we can fetch the spec in case the spec text is unavailable
+   */
+  const saveSpecText = async (spec: string, specUrl?: string) => {
+    specText = spec ?? ''
+
+    if (!spec && specUrl) {
+      try {
+        const response = await fetch(specUrl)
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        specText = await response.text()
+      } catch (e) {
+        console.error('@kong/spec-renderer: error in fetching spec file:', e)
+      }
+    }
+  }
+
+  const downloadSpecFile = async () => {
+    if (isSsr() || !specText) return
+
+    try {
+      const fileExtension = jsonOrYaml(specText)
+      const pathBasedName = window.location.pathname.replace(/[^a-zA-Z0-9]/g, '') // remove all non alphanumeric charaters from the path
+      const baseFileName = specTitle || pathBasedName || 'spec-file' // ensure a non-empty base name, so provided a default fallback
+      const downloadFileName = `${kebabCase(baseFileName)}.${fileExtension}`
+
+      const blob = new Blob([specText], { type: fileExtension === 'json' ? 'application/json' : 'text/yaml' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+
+      link.href = url
+      link.setAttribute('download', downloadFileName)
+      document.body.appendChild(link)
+      link.click()
+
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+    } catch (e) {
+      console.error('@kong/spec-renderer: error in downloading spec file:', e)
+    }
+  }
+
+  const jsonOrYaml = (text: string) => text.startsWith('{') || text.startsWith('[') ? 'json' : 'yaml'
+
   return {
     parseSpecDocument,
     parseOpenApiSpecDocument,
     parseAsyncApiSpecDocument,
+    downloadSpecFile,
     parsedDocument,
     tableOfContents,
     validationResults,

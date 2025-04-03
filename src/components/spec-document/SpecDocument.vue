@@ -172,6 +172,14 @@ const props = defineProps({
     validator: BOOL_VALIDATOR,
     default: true,
   },
+  /**
+   * Hide the spec download button.
+   */
+  hideDownloadButton: {
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
+    default: false,
+  },
 })
 
 const { highlighter, createHighlighter } = composables.useShiki()
@@ -240,7 +248,16 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
     case NodeType.AsyncOperation:
       return { component: AsyncOperation, props: defaultProps, doc: forServiceNode }
     case NodeType.HttpService:
-      return { component: HttpService, props: { ...defaultProps, specVersion: (<ServiceNode>forServiceNode).specVersion, allowCustomServerUrl: IS_TRUE(props.allowCustomServerUrl) }, doc: forServiceNode }
+      return {
+        component: HttpService,
+        props: {
+          ...defaultProps,
+          specVersion: (<ServiceNode>forServiceNode).specVersion,
+          allowCustomServerUrl: IS_TRUE(props.allowCustomServerUrl),
+          hideDownloadButton: IS_TRUE(props.hideDownloadButton),
+        },
+        doc: forServiceNode,
+      }
     case NodeType.Model:
       return { component: HttpModel, props: { ...defaultProps, title: forServiceNode.name }, doc: forServiceNode }
     case NodeType.AsyncMessage:
