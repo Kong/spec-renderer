@@ -10,7 +10,7 @@
       >
         <button
           class="download-spec-btn"
-          @click="downloadSpecFile(specFileName)"
+          @click="downloadSpecFile"
         >
           Download
         </button>
@@ -84,10 +84,6 @@ const props = defineProps({
   hideDownloadButton: {
     type: Boolean,
     default: false,
-  },
-  specFileName: {
-    type: String,
-    default: '',
   },
 })
 

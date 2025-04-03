@@ -25,12 +25,13 @@ let asyncParser:any = null
  * Don't need it to be reactive
  */
 let specText = ''
+let specTitle = ''
 
 export default (): {
   parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
   parseOpenApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
   parseAsyncApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
-  downloadSpecFile: (fileName?: string) => Promise<void>
+  downloadSpecFile: () => Promise<void>
   parsedDocument: Ref<ServiceNode | string | undefined>
   tableOfContents: Ref<TableOfContentsItem[] | string | undefined>
   validationResults: Ref<ValidateResult | string | undefined>
@@ -176,6 +177,9 @@ export default (): {
       jsonDocument.value = tryParseYamlOrObject(spec)
       trace(options.traceParsing, 'parsed from string')
     }
+
+    // save the spec title to be used as file name for the downloaded spec file
+    specTitle = jsonDocument.value?.info?.title
   }
   const parseOpenApiSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):Promise<void> => {
 
@@ -306,7 +310,7 @@ export default (): {
     }
   }
 
-  const downloadSpecFile = async (fileName?: string) => {
+  const downloadSpecFile = async () => {
     if (isSsr() || !specText) return
 
     try {
@@ -315,10 +319,8 @@ export default (): {
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
 
-      const providedBaseName = fileName?.trim() // Trim any accidental spaces
-      const pathBasedName = window.location.pathname.slice(1)
-      // Ensure a non-empty base name, provide a default fallback
-      const baseFileName = providedBaseName || pathBasedName || 'spec-file'
+      const pathBasedName = window.location.pathname.replace(/[^a-zA-Z0-9]/g, '') // remove all non alphanumeric charaters from the path
+      const baseFileName = specTitle || pathBasedName || 'spec-file' // ensure a non-empty base name, so provided a default fallback
       const downloadFileName = `${kebabCase(baseFileName)}.${fileExtension}`
 
       link.href = url
