@@ -311,12 +311,18 @@ export default (): {
 
     try {
       const fileExtension = jsonOrYaml(specText)
-      const blob = new Blob([specText], { type: fileExtension })
+      const blob = new Blob([specText], { type: fileExtension === 'json' ? 'application/json' : 'text/yaml' })
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
 
+      const providedBaseName = fileName?.trim() // Trim any accidental spaces
+      const pathBasedName = window.location.pathname.slice(1)
+      // Ensure a non-empty base name, provide a default fallback
+      const baseFileName = providedBaseName || pathBasedName || 'spec-file'
+      const downloadFileName = `${kebabCase(baseFileName)}.${fileExtension}`
+
       link.href = url
-      link.setAttribute('download', `${fileName || kebabCase(window.location.pathname.slice(1))}.${fileExtension}`)
+      link.setAttribute('download', downloadFileName)
       document.body.appendChild(link)
       link.click()
 
