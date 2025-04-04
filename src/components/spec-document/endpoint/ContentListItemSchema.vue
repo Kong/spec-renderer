@@ -3,7 +3,7 @@
     <PropertyFieldList
       :hidden-field-list="hiddenFields"
       :property="schema"
-      :required-fields="schema?.required"
+      :required-fields="schema.required"
     />
     <ModelNode
       :schema="schema"
