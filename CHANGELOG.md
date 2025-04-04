@@ -1,3 +1,10 @@
+## [1.92.2](https://github.com/Kong/spec-renderer/compare/v1.92.1...v1.92.2) (2025-04-04)
+
+
+### Bug Fixes
+
+* scroll-into-view in portal-admin [TDX-5469] ([#557](https://github.com/Kong/spec-renderer/issues/557)) ([94c04da](https://github.com/Kong/spec-renderer/commit/94c04da5b090798fd579c526806f14c909907b29))
+
 ## [1.92.1](https://github.com/Kong/spec-renderer/compare/v1.92.0...v1.92.1) (2025-04-04)
 
 
