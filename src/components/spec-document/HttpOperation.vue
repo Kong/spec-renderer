@@ -37,6 +37,7 @@
             v-if="activeRequestBodyContentList.length"
             class="http-operation-request-body"
             :content-list="activeRequestBodyContentList"
+            :description="operationData.request.body?.description"
             title="Body"
           >
             <ResponseTypeSelect

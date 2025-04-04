@@ -1,9 +1,9 @@
 <template>
   <div class="content-list-item-schema">
-    <MarkdownRenderer
-      v-if="schema.description"
-      class="content-list-item-schema-description"
-      :markdown="schema.description"
+    <PropertyFieldList
+      :hidden-field-list="hiddenFields"
+      :property="schema"
+      :required-fields="schema?.required"
     />
     <ModelNode
       :schema="schema"
@@ -13,23 +13,25 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType } from 'vue'
-import type { SchemaObject } from '@/types'
-import ModelNode from '../schema-model/ModelNode.vue'
-import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
+import { computed, type PropType } from 'vue'
+import type { SchemaModelPropertyField, SchemaObject } from '@/types'
+import ModelNode from '@/components/spec-document/schema-model/ModelNode.vue'
+import PropertyFieldList from '@/components/spec-document/schema-model/PropertyFieldList.vue'
 
-defineProps({
+const { schema } = defineProps({
   schema: {
     type: Object as PropType<SchemaObject>,
     required: true,
   },
 })
-</script>
 
-<style lang="scss" scoped>
-.content-list-item-schema {
-  .content-list-item-schema-description {
-    margin-bottom: var(--kui-space-40, $kui-space-40);
+const hiddenFields = computed(() => {
+  // example is already shown under the try-it section
+  const list: Array<SchemaModelPropertyField> = ['example', 'examples']
+  // If properties are present, we don't want to show the schema type
+  if (schema.properties && Object.keys(schema.properties)?.length) {
+    list.push('info')
   }
-}
-</style>
+  return list
+})
+</script>
