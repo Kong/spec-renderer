@@ -1,3 +1,10 @@
+# [1.93.0](https://github.com/Kong/spec-renderer/compare/v1.92.2...v1.93.0) (2025-04-14)
+
+
+### Features
+
+* **body-content:** support for request/response bodies with only type [KHCP-15583] ([#560](https://github.com/Kong/spec-renderer/issues/560)) ([dcc319d](https://github.com/Kong/spec-renderer/commit/dcc319d65fc5083c03e43f29fff6a3de876309bf))
+
 ## [1.92.2](https://github.com/Kong/spec-renderer/compare/v1.92.1...v1.92.2) (2025-04-04)
 
 
