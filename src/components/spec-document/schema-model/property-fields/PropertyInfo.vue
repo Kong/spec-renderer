@@ -5,6 +5,7 @@
     data-testid="property-field-info"
   >
     <span
+      v-if="title || inheritanceTypeLabel || variantsList.length"
       class="property-title"
       data-testid="property-field-title"
     >
@@ -85,7 +86,7 @@ import LabelBadge from '@/components/common/LabelBadge.vue'
 defineProps({
   title: {
     type: String,
-    required: true,
+    default: '',
   },
   propertyType: {
     type: [Array, String] as PropType<SchemaObject['type']>,
