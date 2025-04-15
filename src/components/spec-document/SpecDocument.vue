@@ -500,7 +500,6 @@ watch(() => ({ nodesList: nodesList.value,
     if (props.controlAddressBar) {
     // we only have path and hash for now
       const newPath = props.navigationType === 'path' ? props.basePath + newUri : props.basePath + '#' + newUri
-      console.log('calling replace')
       window.history.replaceState({}, '', newPath)
     }
     lastPath.value = newUri
