@@ -1,3 +1,10 @@
+## [1.93.3](https://github.com/Kong/spec-renderer/compare/v1.93.2...v1.93.3) (2025-04-15)
+
+
+### Bug Fixes
+
+* use replaceState instead of pushState when spec document is scrolled [TDX-5588] ([#565](https://github.com/Kong/spec-renderer/issues/565)) ([7f59fae](https://github.com/Kong/spec-renderer/commit/7f59fae0e8f7fb54e50fb218e86ea9b0bf71202c))
+
 ## [1.93.2](https://github.com/Kong/spec-renderer/compare/v1.93.1...v1.93.2) (2025-04-14)
 
 
