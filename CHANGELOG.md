@@ -1,3 +1,10 @@
+# [1.94.0](https://github.com/Kong/spec-renderer/compare/v1.93.4...v1.94.0) (2025-04-16)
+
+
+### Features
+
+* add support for expanding fields upto a depth by default [TDX-5650] ([#567](https://github.com/Kong/spec-renderer/issues/567)) ([d00cdb1](https://github.com/Kong/spec-renderer/commit/d00cdb10ba03810afbf672c413a12cf2320db86b))
+
 ## [1.93.4](https://github.com/Kong/spec-renderer/compare/v1.93.3...v1.93.4) (2025-04-16)
 
 
