@@ -1,3 +1,10 @@
+## [1.93.4](https://github.com/Kong/spec-renderer/compare/v1.93.3...v1.93.4) (2025-04-16)
+
+
+### Bug Fixes
+
+* do not replace first selected Item during scrolling [TDX-5588] ([#566](https://github.com/Kong/spec-renderer/issues/566)) ([47de336](https://github.com/Kong/spec-renderer/commit/47de336a7d863bc080f85405ab64f0b45421fc58))
+
 ## [1.93.3](https://github.com/Kong/spec-renderer/compare/v1.93.2...v1.93.3) (2025-04-15)
 
 
