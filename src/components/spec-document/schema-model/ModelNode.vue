@@ -21,6 +21,7 @@
       <ModelProperty
         v-if="selectedSchemaModel?.oneOf || selectedSchemaModel?.anyOf"
         :base-path-id="basePathId"
+        :depth="depth"
         :property="selectedSchemaModel"
         :property-name="selectedSchemaModel.title || variantSelectItemList[selectedVariantIndex].label"
         :required-fields="selectedSchemaModel?.required"
@@ -37,6 +38,7 @@
         :base-path-id="basePathId"
         :class="{ 'model-node-property': index !== 0 }"
         :data-testid="`model-property-${propertyName}`"
+        :depth="depth"
         :property="property"
         :property-name="propertyName.toString()"
         :required-fields="selectedSchemaModel?.required"
@@ -78,6 +80,13 @@ const props = defineProps({
   basePathId: {
     type: String,
     default: '',
+  },
+  /**
+   * The depth at which the current property is at
+   */
+  depth: {
+    type: Number,
+    default: 1,
   },
 })
 

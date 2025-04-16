@@ -65,6 +65,7 @@
           :hide-navigation-buttons="hideNavigationButtons"
           :hide-try-it="hideTryIt"
           :markdown-styles="markdownStyles"
+          :max-expanded-depth="maxExpandedDepth"
           :navigation-type="navigationType"
           :spec-url="specUrl"
           :table-of-contents="tableOfContents"
@@ -86,8 +87,9 @@ import SpecDocument from './spec-document/SpecDocument.vue'
 import { MenuIcon } from '@kong/icons'
 import SlideOut from './common/SlideOut.vue'
 import type { NavigationTypes } from '@/types'
-import { BOOL_VALIDATOR, IS_TRUE } from '@/utils'
+import { BOOL_VALIDATOR, IS_TRUE, NUMBER_VALIDATOR } from '@/utils'
 import type { ServiceNode } from '@/types'
+import { DEFAULT_EXPANDED_PROPERTIES_DEPTH } from '@/constants'
 
 const props = defineProps({
   /**
@@ -240,6 +242,14 @@ const props = defineProps({
     type: [Boolean, String],
     validator: BOOL_VALIDATOR,
     default: false,
+  },
+  /**
+   * The max depth until which nested properties should remain expanded by default.
+  */
+  maxExpandedDepth: {
+    type: [Number, String],
+    validator: NUMBER_VALIDATOR,
+    default: DEFAULT_EXPANDED_PROPERTIES_DEPTH,
   },
 })
 
