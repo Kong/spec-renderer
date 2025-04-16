@@ -34,16 +34,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, provide, ref } from 'vue'
+import type { Ref } from 'vue'
 import type { SchemaModelPropertyField, SchemaObject } from '@/types'
 import ModelNode from '@/components/spec-document/schema-model/ModelNode.vue'
 import PropertyFieldList from '@/components/spec-document/schema-model/PropertyFieldList.vue'
 import PageHeader from '@/components/common/PageHeader.vue'
 import SchemaExample from '@/components/common/SchemaExample.vue'
 import composables from '@/composables'
-import { BOOL_VALIDATOR, crawl, IS_TRUE } from '@/utils'
+import { BOOL_VALIDATOR, convertToNumber, crawl, IS_TRUE, NUMBER_VALIDATOR } from '@/utils'
 import { parse as parseFlatted } from 'flatted'
-import { CODE_INDENT_SPACES } from '@/constants'
+import { CODE_INDENT_SPACES, DEFAULT_EXPANDED_PROPERTIES_DEPTH } from '@/constants'
 
 const props = defineProps({
 /**
@@ -84,7 +85,17 @@ const props = defineProps({
     validator: BOOL_VALIDATOR,
     default: false,
   },
+  /**
+   * The max depth until which nested properties should remain expanded by default.
+   */
+  maxExpandedDepth: {
+    type: [Number, String],
+    validator: NUMBER_VALIDATOR,
+    default: DEFAULT_EXPANDED_PROPERTIES_DEPTH,
+  },
 })
+
+provide<Ref<number>>('max-expanded-depth', computed((): number => convertToNumber(props.maxExpandedDepth) || DEFAULT_EXPANDED_PROPERTIES_DEPTH))
 
 const schema = computed((): SchemaObject => {
   if (typeof props.schema === 'string') {
