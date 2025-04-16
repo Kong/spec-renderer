@@ -401,15 +401,18 @@ const neighborComponentList = computed<Array<DocumentNavigationItem>>(() => {
   return list
 })
 
+const scrolledItemsCounter = ref<number>(0)
 const selectItem = (newUrl: string): void => {
   if (IS_TRUE(props.controlAddressBar)) {
     // we only have path and hash for now
     const newPath = props.navigationType === 'path' ? props.basePath + newUrl : props.basePath + '#' + newUrl
     window.history.pushState({}, '', newPath)
+    scrolledItemsCounter.value = 0
   }
 
   emit('item-selected', newUrl)
 }
+
 
 const forceRenderer = (visibleIdx: number[]) => {
   const newToRenderer = Array(nodesList.value.length).fill('false', 0)
@@ -500,7 +503,7 @@ watch(() => ({ nodesList: nodesList.value,
     if (props.controlAddressBar) {
     // we only have path and hash for now
       const newPath = props.navigationType === 'path' ? props.basePath + newUri : props.basePath + '#' + newUri
-      window.history.replaceState({}, '', newPath)
+      window.history[scrolledItemsCounter.value++ > 0 ? 'replaceState' : 'pushState']({}, '', newPath)
     }
     lastPath.value = newUri
   }
