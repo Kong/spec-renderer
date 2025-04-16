@@ -21,6 +21,7 @@
     >
       <ModelProperty
         :base-path-id="propertyId"
+        :depth="depth"
         :property="selectedSchemaModel"
         :property-name="selectedSchemaModel.title || variantSelectItemList[selectedVariantIndex].label"
         :required-fields="selectedSchemaModel.required"
@@ -29,6 +30,7 @@
 
     <details
       v-else-if="nestedPropertiesPresent"
+      ref="nested-fields"
     >
       <summary
         class="nested-fields-summary"
@@ -45,6 +47,7 @@
         v-if="nestedPropertiesExpanded"
         :base-path-id="propertyId"
         class="nested-model-node"
+        :depth="depth + 1"
         :schema="selectedSchemaModel"
         :title="propertyName"
       />
@@ -53,15 +56,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, useTemplateRef } from 'vue'
+import { computed, inject, onMounted, ref, useTemplateRef } from 'vue'
 import { AddIcon } from '@kong/icons'
 import { isSsr, kebabCase, resolveSchemaObjectFields } from '@/utils'
-import type { PropType } from 'vue'
+import type { PropType, Ref } from 'vue'
 import type { SchemaObject } from '@/types'
 
 import ModelNode from './ModelNode.vue'
 import useSchemaVariants from '@/composables/useSchemaVariants'
 import PropertyFieldList from './PropertyFieldList.vue'
+import { DEFAULT_EXPANDED_PROPERTIES_DEPTH } from '@/constants'
 
 const props = defineProps({
   property: {
@@ -83,9 +87,21 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  /**
+   * The depth at which the current property is at
+   */
+  depth: {
+    type: Number,
+    default: 1,
+  },
 })
-const nestedPropertiesExpanded = ref(false)
+
+const maxExpandedDepth = inject<Ref<number>>('max-expanded-depth', ref(DEFAULT_EXPANDED_PROPERTIES_DEPTH))
+
+const nestedPropertiesExpanded = ref(props.depth < maxExpandedDepth.value)
+
 const currentElement = useTemplateRef('model-property')
+const nestedFieldsDetails = useTemplateRef('nested-fields')
 
 const dataTestId = computed(() => `model-property-${kebabCase(props.propertyName)}`)
 const propertyId = computed(() => props.basePathId ? kebabCase(`${props.basePathId}-${props.propertyName}`) : undefined)
@@ -106,6 +122,10 @@ const nestedPropertiesPresent = computed<boolean>(() =>{
 })
 
 onMounted(() => {
+  if (nestedPropertiesExpanded.value) {
+    openDetailsElement()
+  }
+
   // don't do anything if either:
   // 1. we are in ssr mode
   // 2. the propertyId is not defined i.e. `enablePropertyLinks` is not enabled
@@ -123,10 +143,16 @@ onMounted(() => {
       nestedPropertiesExpanded.value = true
       // only mess with the details element during mounted
       // after that let the details element handle it itself
-      currentElement.value?.getElementsByTagName('details')[0]?.setAttribute('open', 'true')
+      openDetailsElement()
     }
   }
 })
+
+const openDetailsElement = () => {
+  if (nestedFieldsDetails.value) {
+    nestedFieldsDetails.value.open = true
+  }
+}
 </script>
 
 <style lang="scss" scoped>

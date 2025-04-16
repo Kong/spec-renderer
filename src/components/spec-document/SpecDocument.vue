@@ -64,8 +64,8 @@ import AsyncMessage from './AsyncMessage.vue'
 import ArticleNode from './ArticleNode.vue'
 import UnknownNode from './UnknownNode.vue'
 import DocumentNavigation from './DocumentNavigation.vue'
-import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE, DISABLE_SCROLLING_ITEMS_LIMIT } from '@/constants'
-import { BOOL_VALIDATOR, IS_TRUE, isSsr, findMatchingNode } from '@/utils'
+import { SECTIONS_TO_RENDER, MIN_SCROLL_DIFFERENCE, DISABLE_SCROLLING_ITEMS_LIMIT, DEFAULT_EXPANDED_PROPERTIES_DEPTH } from '@/constants'
+import { BOOL_VALIDATOR, IS_TRUE, isSsr, findMatchingNode, NUMBER_VALIDATOR, convertToNumber } from '@/utils'
 import type { NavigationTypes } from '@/types'
 import { stringify, parse as parseFlatted } from 'flatted'
 import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '@/stoplight/elements-core'
@@ -180,6 +180,14 @@ const props = defineProps({
     validator: BOOL_VALIDATOR,
     default: false,
   },
+  /**
+   * The max depth until which nested properties should remain expanded by default.
+   */
+  maxExpandedDepth: {
+    type: [Number, String],
+    validator: NUMBER_VALIDATOR,
+    default: DEFAULT_EXPANDED_PROPERTIES_DEPTH,
+  },
 })
 
 const { highlighter, createHighlighter } = composables.useShiki()
@@ -200,6 +208,7 @@ provide<Ref<string>>('base-path', computed((): string => props.basePath))
 provide<Ref<boolean>>('hide-tryit', computed((): boolean => IS_TRUE(props.hideTryIt)))
 provide<Ref<boolean>>('hide-insomnia-tryit', computed((): boolean => IS_TRUE(props.hideInsomniaTryIt)))
 provide<Ref<boolean>>('markdown-styles', computed((): boolean => IS_TRUE(props.markdownStyles)))
+provide<Ref<number>>('max-expanded-depth', computed((): number => convertToNumber(props.maxExpandedDepth) || DEFAULT_EXPANDED_PROPERTIES_DEPTH))
 
 const emit = defineEmits<{
   (e: 'path-not-found', requestedPath: string): void
