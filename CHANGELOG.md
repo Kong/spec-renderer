@@ -1,3 +1,10 @@
+## [1.94.4](https://github.com/Kong/spec-renderer/compare/v1.94.3...v1.94.4) (2025-04-21)
+
+
+### Bug Fixes
+
+* use margin reset only if default markdown enabled ([#574](https://github.com/Kong/spec-renderer/issues/574)) ([f55b290](https://github.com/Kong/spec-renderer/commit/f55b290b04d740a82203c33fb16878afb334c0fa))
+
 ## [1.94.3](https://github.com/Kong/spec-renderer/compare/v1.94.2...v1.94.3) (2025-04-21)
 
 
