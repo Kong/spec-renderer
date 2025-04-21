@@ -55,7 +55,7 @@
 import { watch, ref, provide, computed, nextTick, onBeforeMount } from 'vue'
 import { useMagicKeys, useWindowScroll, useWindowSize, useElementSize, useScroll, until, whenever } from '@vueuse/core'
 import composables from '@/composables'
-import type { PropType, Ref } from 'vue'
+import type { PropType, ComputedRef } from 'vue'
 import { NodeType } from '@/types'
 import type { ServiceNode, ServiceChildNode, DocumentNavigationItem } from '@/types'
 import HttpService from './HttpService.vue'
@@ -205,12 +205,12 @@ whenever(keys['meta+f'], () => {
 const serviceNode = ref<ServiceNode | null>(null)
 
 // to be consumed in multi-level child components
-provide<Ref<string>>('spec-url', computed((): string => props.specUrl))
-provide<Ref<string>>('base-path', computed((): string => props.basePath))
-provide<Ref<boolean>>('hide-tryit', computed((): boolean => IS_TRUE(props.hideTryIt)))
-provide<Ref<boolean>>('hide-insomnia-tryit', computed((): boolean => IS_TRUE(props.hideInsomniaTryIt)))
-provide<Ref<boolean>>('markdown-styles', computed((): boolean => IS_TRUE(props.markdownStyles)))
-provide<Ref<number>>('max-expanded-depth', computed((): number => convertToNumber(props.maxExpandedDepth) || DEFAULT_EXPANDED_PROPERTIES_DEPTH))
+provide<ComputedRef<string>>('spec-url', computed((): string => props.specUrl))
+provide<ComputedRef<string>>('base-path', computed((): string => props.basePath))
+provide<ComputedRef<boolean>>('hide-tryit', computed((): boolean => IS_TRUE(props.hideTryIt)))
+provide<ComputedRef<boolean>>('hide-insomnia-tryit', computed((): boolean => IS_TRUE(props.hideInsomniaTryIt)))
+provide<ComputedRef<boolean>>('markdown-styles', computed((): boolean => IS_TRUE(props.markdownStyles)))
+provide<ComputedRef<number>>('max-expanded-depth', computed((): number => convertToNumber(props.maxExpandedDepth) || DEFAULT_EXPANDED_PROPERTIES_DEPTH))
 
 const emit = defineEmits<{
   (e: 'path-not-found', requestedPath: string): void

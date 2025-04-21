@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import { computed, onBeforeMount, provide, ref } from 'vue'
-import type { Ref } from 'vue'
+import type { ComputedRef } from 'vue'
 import type { SchemaModelPropertyField, SchemaObject } from '@/types'
 import ModelNode from '@/components/spec-document/schema-model/ModelNode.vue'
 import PropertyFieldList from '@/components/spec-document/schema-model/PropertyFieldList.vue'
@@ -104,8 +104,8 @@ const props = defineProps({
   },
 })
 
-provide<Ref<number>>('max-expanded-depth', computed((): number => convertToNumber(props.maxExpandedDepth) || DEFAULT_EXPANDED_PROPERTIES_DEPTH))
-provide<Ref<boolean>>('markdown-styles', computed((): boolean => IS_TRUE(props.markdownStyles)))
+provide<ComputedRef<number>>('max-expanded-depth', computed((): number => convertToNumber(props.maxExpandedDepth) || DEFAULT_EXPANDED_PROPERTIES_DEPTH))
+provide<ComputedRef<boolean>>('markdown-styles', computed((): boolean => IS_TRUE(props.markdownStyles)))
 
 const schema = computed((): SchemaObject => {
   if (typeof props.schema === 'string') {
