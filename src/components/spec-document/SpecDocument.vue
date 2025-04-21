@@ -2,6 +2,7 @@
   <div
     v-if="!doContentScrolling"
     class="spec-renderer-document"
+    :class="{'reset-margin': markdownStyles}"
   >
     <component
       :is="docComponent.component"
@@ -21,6 +22,7 @@
     v-else-if="serviceNode"
     ref="wrapperRef"
     class="nodes-wrapper"
+    :class="{'reset-margin': markdownStyles}"
   >
     <div
       v-for="(node, idx) in nodesList"
@@ -674,6 +676,12 @@ onBeforeMount(async () => {
     max-height: 800px;
     opacity: 0;
     overflow: hidden;
+  }
+}
+
+.reset-margin {
+  * {
+    margin: var(--kui-space-0, $kui-space-0);
   }
 }
 </style>

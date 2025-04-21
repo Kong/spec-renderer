@@ -1,6 +1,7 @@
 <template>
   <div
     class="schema-renderer"
+    :class="{'reset-margin': markdownStyles}"
   >
     <PageHeader
       v-if="showHeader && schemaTitle"
@@ -93,9 +94,18 @@ const props = defineProps({
     validator: NUMBER_VALIDATOR,
     default: DEFAULT_EXPANDED_PROPERTIES_DEPTH,
   },
+  /**
+   * Use default markdown styling
+   */
+  markdownStyles: {
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
+    default: true,
+  },
 })
 
 provide<Ref<number>>('max-expanded-depth', computed((): number => convertToNumber(props.maxExpandedDepth) || DEFAULT_EXPANDED_PROPERTIES_DEPTH))
+provide<Ref<boolean>>('markdown-styles', computed((): boolean => IS_TRUE(props.markdownStyles)))
 
 const schema = computed((): SchemaObject => {
   if (typeof props.schema === 'string') {
@@ -157,10 +167,6 @@ const schemaType = computed(() => schema.value.type?.toString())
 
 <style lang="scss" scoped>
 .schema-renderer {
-  * {
-    margin: var(--kui-space-0, $kui-space-0);
-  }
-
   .schema-renderer-header {
     margin-bottom: var(--kui-space-90, $kui-space-90);
   }
@@ -186,6 +192,12 @@ const schemaType = computed(() => schema.value.type?.toString())
       gap: var(--kui-space-130, $kui-space-130);
       grid-template-columns: auto clamp(#{$spec-renderer-secondary-column-min-width}, 40%, #{$spec-renderer-secondary-column-max-width});
     }
+  }
+}
+
+.reset-margin {
+  * {
+    margin: var(--kui-space-0, $kui-space-0);
   }
 }
 </style>

@@ -162,11 +162,6 @@ const openDetailsElement = () => {
   gap: var(--kui-space-50, $kui-space-50);
   padding: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0);
 
-  // reset margins for nested fields
-  * {
-    margin: var(--kui-space-0, $kui-space-0);
-  }
-
   .nested-fields-summary {
     align-items: center;
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);

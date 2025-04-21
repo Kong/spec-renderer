@@ -340,10 +340,6 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
 }
 
 .http-operation {
-  * {
-    margin: var(--kui-space-0, $kui-space-0);
-  }
-
   .http-operation-header {
     margin-bottom: var(--kui-space-90, $kui-space-90);
   }
