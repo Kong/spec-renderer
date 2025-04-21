@@ -91,10 +91,6 @@ const additionalInfoVisible = computed(() => props.data.externalDocs?.url || pro
 
 <style lang="scss" scoped>
 .overview-page {
-  * {
-    margin: 0;
-  }
-
   .overview-page-header {
     margin-bottom: var(--kui-space-90, $kui-space-90);
 

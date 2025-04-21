@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { provide, computed, ref, watch, nextTick } from 'vue'
-import type { PropType, Ref } from 'vue'
+import type { PropType, ComputedRef } from 'vue'
 import { itemComponent } from './index'
 import { useScroll } from '@vueuse/core'
 import type { NavigationTypes } from '@/types'
@@ -76,9 +76,9 @@ const props = defineProps({
 })
 
 // to be consumed in multi-level child components
-provide<Ref<string>>('base-path', computed((): string => props.basePath))
-provide<Ref<string>>('current-path', computed((): string => props.currentPath))
-provide<Ref<NavigationTypes>>('navigation-type', computed((): NavigationTypes => props.navigationType))
+provide<ComputedRef<string>>('base-path', computed((): string => props.basePath))
+provide<ComputedRef<string>>('current-path', computed((): string => props.currentPath))
+provide<ComputedRef<NavigationTypes>>('navigation-type', computed((): NavigationTypes => props.navigationType))
 
 const emit = defineEmits<{
   (e: 'item-selected', id: string): void

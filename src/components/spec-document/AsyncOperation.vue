@@ -130,10 +130,6 @@ const requestParams = computed(() => {
 
 <style lang="scss" scoped>
 .async-operation {
-  * {
-    margin: var(--kui-space-0, $kui-space-0);
-  }
-
   .async-operation-header {
     margin-bottom: var(--kui-space-90, $kui-space-90);
   }
