@@ -1,3 +1,10 @@
+## [1.94.3](https://github.com/Kong/spec-renderer/compare/v1.94.2...v1.94.3) (2025-04-21)
+
+
+### Bug Fixes
+
+* prevent runtime error when scrolling is enabled and requested path is invalid [TDX-5588] ([#573](https://github.com/Kong/spec-renderer/issues/573)) ([0fc855e](https://github.com/Kong/spec-renderer/commit/0fc855e509d9db364444d28bde00adc59ca06a48))
+
 ## [1.94.2](https://github.com/Kong/spec-renderer/compare/v1.94.1...v1.94.2) (2025-04-18)
 
 
