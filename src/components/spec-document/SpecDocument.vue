@@ -5,7 +5,7 @@
   >
     <component
       :is="docComponent.component"
-      v-if="docComponent && docComponent.component"
+      v-if="docComponent?.component"
       v-bind="docComponent.props"
     />
 
