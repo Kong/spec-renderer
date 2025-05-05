@@ -1,3 +1,10 @@
+## [1.94.8](https://github.com/Kong/spec-renderer/compare/v1.94.7...v1.94.8) (2025-05-05)
+
+
+### Bug Fixes
+
+* broken headers and server-list after margin reset [TDX-5738] ([#585](https://github.com/Kong/spec-renderer/issues/585)) ([cbe3aeb](https://github.com/Kong/spec-renderer/commit/cbe3aeb90976d1ad3146bfe2556720e804f28e5c))
+
 ## [1.94.7](https://github.com/Kong/spec-renderer/compare/v1.94.6...v1.94.7) (2025-04-24)
 
 
