@@ -70,7 +70,6 @@ import type { IServer } from '@stoplight/types'
 import type { PropType } from 'vue'
 import OverviewPanel from './OverviewPanel.vue'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
-import LabelBadge from '@/components/common/LabelBadge.vue'
 import { AddIcon } from '@kong/icons'
 
 defineProps({
@@ -132,6 +131,7 @@ const clearCustomUrlInput = () => {
       color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
       font-family: var(--kui-font-family-code, $kui-font-family-code);
       font-size: var(--kui-font-size-30, $kui-font-size-30);
+      line-height: var(--kui-line-height-30, $kui-line-height-30);
 
       > :first-child {
         color: var(--kui-color-text, $kui-color-text);
