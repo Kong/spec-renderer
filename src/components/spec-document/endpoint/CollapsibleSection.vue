@@ -62,6 +62,7 @@ const expanded = ref(true)
       font-size: var(--kui-font-size-40, $kui-font-size-40);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       line-height: var(--kui-line-height-40, $kui-line-height-40);
+      margin: var(--kui-space-0, $kui-space-0);
     }
 
     .chevron-icon {

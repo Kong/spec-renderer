@@ -9,7 +9,6 @@
         size="large"
       />
 
-
       <SelectDropdown
         v-if="serverUrlList.length > 1"
         id="server-select-dropdown"

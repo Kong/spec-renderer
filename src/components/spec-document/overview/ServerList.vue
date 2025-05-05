@@ -16,9 +16,10 @@
           class="overview-server-list-item"
           :data-testid="`overview-server-list-item-${server.id}`"
         >
-          <span>Server {{ index + 1 }}:</span>
-          <span>{{ server.url }}</span>
-          <span v-if="server.name">[{{ server.name }}]</span>
+          <div class="server-item-header">
+            <span>Server {{ index + 1 }}:</span>
+            <span>{{ server.url }}</span>
+          </div>
           <MarkdownRenderer
             v-if="server.description"
             :markdown="server.description"
@@ -104,9 +105,8 @@ const clearCustomUrlInput = () => {
 
 <style lang="scss" scoped>
 .overview-server-list {
-  color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
-  font-family: var(--kui-font-family-code, $kui-font-family-code);
-  font-size: var(--kui-font-size-30, $kui-font-size-30);
+  color: var(--kui-color-text, $kui-color-text);
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
   list-style: none;
   padding: var(--kui-space-0, $kui-space-0);
 
@@ -123,16 +123,21 @@ const clearCustomUrlInput = () => {
     background-color: var(--kui-color-background, $kui-color-background);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--kui-space-40, $kui-space-40);
     line-height: var(--kui-line-height-40, $kui-line-height-40);
     overflow-wrap: anywhere;
     padding: var(--kui-space-50, $kui-space-50);
 
-    > :first-child {
-      color: var(--kui-color-text, $kui-color-text);
-      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    .server-item-header {
+      color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+      font-family: var(--kui-font-family-code, $kui-font-family-code);
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      line-height: var(--kui-line-height-30, $kui-line-height-30);
+
+      > :first-child {
+        color: var(--kui-color-text, $kui-color-text);
+        font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+        margin-right: var(--kui-space-40, $kui-space-40);
+      }
     }
   }
 
