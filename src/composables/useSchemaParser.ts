@@ -90,8 +90,8 @@ export default (): {
               refsSet.add(fragment[key])
             }
           }
-        } catch {
-          // no ops
+        } catch (err) {
+          console.warn('Issue in titleResolve:', err)
         }
       })
       return fragment
