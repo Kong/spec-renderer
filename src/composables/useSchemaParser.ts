@@ -85,7 +85,6 @@ export default (): {
             } else if (fragment[key] && isLocalRef(fragment[key])) {
               const resolvedRef = deepGet(json, fragment[key].replace('#/', '').split('/'))
               if (resolvedRef && typeof(resolvedRef) === 'object') {
-                console.log('resolvedRef:', resolvedRef, typeof(resolvedRef))
                 resolvedRef.title = resolvedRef.title || fragment[key].split('/').pop()
               }
               refsSet.add(fragment[key])
