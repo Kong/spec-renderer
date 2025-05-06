@@ -91,7 +91,7 @@ export default (): {
             }
           }
         } catch (err) {
-          console.warn('Issue in titleResolve:', err)
+          console.warn('@kong/spec-renderer: Issue in titleResolve:', err)
         }
       })
       return fragment
