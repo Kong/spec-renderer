@@ -1,3 +1,10 @@
+## [1.94.9](https://github.com/Kong/spec-renderer/compare/v1.94.8...v1.94.9) (2025-05-06)
+
+
+### Bug Fixes
+
+* ignore error in titleResolve [TDX-5744] ([#586](https://github.com/Kong/spec-renderer/issues/586)) ([d5d8d59](https://github.com/Kong/spec-renderer/commit/d5d8d59253c929912713d6abda9fb197b2a740d0))
+
 ## [1.94.8](https://github.com/Kong/spec-renderer/compare/v1.94.7...v1.94.8) (2025-05-05)
 
 
