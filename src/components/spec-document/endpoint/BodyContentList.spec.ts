@@ -46,7 +46,7 @@ describe('<BodyContentList />', () => {
     expect(wrapper.findTestId('model-node-Person').exists()).toBe(true)
   })
 
-  describe('does not render readonly property if readonlyVisible is false', () => {
+  describe('does not render readonly property if hideReadonly is true', () => {
     const wrapper = mount(BodyContentList, {
       props: {
         contents: [
@@ -90,7 +90,7 @@ describe('<BodyContentList />', () => {
             },
           },
         ],
-        readonlyVisible: false,
+        hideReadonly: true,
       },
     })
 

@@ -41,7 +41,7 @@ import CollapsibleSection from './CollapsibleSection.vue'
 import ContentListItemSchema from './ContentListItemSchema.vue'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import type { SchemaObject } from '@/types'
-import { removeFieldsFromSchemaObject, resolveSchemaObjectFields } from '@/utils'
+import { removeFieldsFromSchemaObject, removeReadonlyFields, resolveSchemaObjectFields } from '@/utils'
 
 const props = defineProps({
   description: {
@@ -52,15 +52,15 @@ const props = defineProps({
     type: Array as PropType<Array<IMediaTypeContent>>,
     required: true,
   },
-  readonlyVisible: {
+  hideReadonly: {
     type: Boolean,
-    default: true,
+    default: false,
   },
 })
 
 function parseSchema(schema: SchemaObject) {
   const resolvedSchema = resolveSchemaObjectFields(schema)
-  return props.readonlyVisible ? resolvedSchema : removeFieldsFromSchemaObject(resolvedSchema)
+  return props.hideReadonly ? removeFieldsFromSchemaObject(resolvedSchema, removeReadonlyFields) : resolvedSchema
 }
 </script>
 

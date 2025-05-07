@@ -14,6 +14,7 @@
       <BodyContentList
         :contents="contentList"
         :description="description"
+        :hide-readonly="hideReadonly"
       />
     </CollapsibleSection>
   </section>
@@ -37,6 +38,10 @@ defineProps({
   contentList: {
     type: Array as PropType<Array<IMediaTypeContent>>,
     default: () => [],
+  },
+  hideReadonly: {
+    type: Boolean,
+    default: false,
   },
 })
 </script>
