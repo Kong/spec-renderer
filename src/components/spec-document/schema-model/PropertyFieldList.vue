@@ -96,6 +96,7 @@ const orderedFieldList = computed(() => {
         propertyPath: props.propertyPath,
         propertyItemType: props.property.itemType,
         format: props.property.format,
+        readOnly: props.property.readOnly,
       },
       eventHandlers: {
         'variant-changed': (index: number) => {

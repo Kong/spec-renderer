@@ -52,12 +52,17 @@
         data-testid="property-field-required"
       >required</span>
       <span
+        v-if="readOnly"
+        class="readonly-property"
+        data-testid="property-field-read-only"
+      >read-only</span>
+      <span
         v-if="uniqueItems"
         data-testid="property-field-unique-items"
       >unique-items</span>
       <LabelBadge
         v-if="deprecated"
-        data-testid="deprecated-badge"
+        data-testid="property-field-deprecated"
         label="DEPRECATED"
         size="small"
         type="neutral"
@@ -123,6 +128,10 @@ defineProps({
   propertyPath: {
     type: String,
     default: '',
+  },
+  readOnly: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -190,7 +199,10 @@ function handleSelectChange(selecteditem: SelectItem) {
 
     .required-property {
       color: var(--kui-color-text-danger, $kui-color-text-danger);
-      font-size: var(--kui-font-size-20, $kui-font-size-20);
+    }
+
+    .readonly-property {
+      color: var(--kui-color-text-primary-weak, $kui-color-text-primary-weak);
     }
   }
 

@@ -11,6 +11,8 @@ describe('<PropertyInfo />', () => {
         format: 'date-time',
         propertyItemType: 'string',
         requiredFields: ['sample-title', 'another-property'],
+        readOnly: true,
+        deprecated: true,
       },
     })
 
@@ -21,6 +23,8 @@ describe('<PropertyInfo />', () => {
       'property-field-item-type',
       'property-field-format',
       'property-field-required',
+      'property-field-read-only',
+      'property-field-deprecated',
     ]
 
     for (const component of componentList) {
