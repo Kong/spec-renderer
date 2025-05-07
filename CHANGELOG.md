@@ -1,3 +1,10 @@
+## [1.94.10](https://github.com/Kong/spec-renderer/compare/v1.94.9...v1.94.10) (2025-05-07)
+
+
+### Bug Fixes
+
+* hide readonly properties from request body [TDX-5578] ([#588](https://github.com/Kong/spec-renderer/issues/588)) ([f4a1836](https://github.com/Kong/spec-renderer/commit/f4a183631534eabd11f3c766c2d3ca33c108fb8e))
+
 ## [1.94.9](https://github.com/Kong/spec-renderer/compare/v1.94.8...v1.94.9) (2025-05-06)
 
 
