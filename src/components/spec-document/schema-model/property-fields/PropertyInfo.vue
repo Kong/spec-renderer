@@ -29,10 +29,10 @@
     </span>
     <span class="property-type">
       <span
-        v-if="propertyType"
+        v-if="formattedPropertyType"
         data-testid="property-field-type"
       >
-        {{ propertyType }}
+        {{ formattedPropertyType }}
       </span>
       <span
         v-if="propertyItemType"
@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { LinkIcon } from '@kong/icons'
 import type { SchemaObject, SelectItem } from '@/types'
 import type { PropType } from 'vue'
@@ -88,7 +88,7 @@ import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import VariantLabel from '@/components/common/VariantLabel.vue'
 import LabelBadge from '@/components/common/LabelBadge.vue'
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     default: '',
@@ -140,6 +140,13 @@ const selectedVariant = ref('0')
 const emit = defineEmits<{
   (e: 'variant-changed', variant: number): void
 }>()
+
+const formattedPropertyType = computed<string>(() => {
+  if (Array.isArray(props.propertyType)) {
+    return props.propertyType.join(' | ')
+  }
+  return props.propertyType ?? ''
+})
 
 function handleSelectChange(selecteditem: SelectItem) {
   emit('variant-changed', Number((selecteditem.value)))
