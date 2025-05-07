@@ -29,10 +29,10 @@
     </span>
     <span class="property-type">
       <span
-        v-if="propertyType"
+        v-if="formattedPropertyType"
         data-testid="property-field-type"
       >
-        {{ propertyType }}
+        {{ formattedPropertyType }}
       </span>
       <span
         v-if="propertyItemType"
@@ -52,12 +52,17 @@
         data-testid="property-field-required"
       >required</span>
       <span
+        v-if="readOnly"
+        class="readonly-property"
+        data-testid="property-field-read-only"
+      >read-only</span>
+      <span
         v-if="uniqueItems"
         data-testid="property-field-unique-items"
       >unique-items</span>
       <LabelBadge
         v-if="deprecated"
-        data-testid="deprecated-badge"
+        data-testid="property-field-deprecated"
         label="DEPRECATED"
         size="small"
         type="neutral"
@@ -75,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { LinkIcon } from '@kong/icons'
 import type { SchemaObject, SelectItem } from '@/types'
 import type { PropType } from 'vue'
@@ -83,7 +88,7 @@ import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import VariantLabel from '@/components/common/VariantLabel.vue'
 import LabelBadge from '@/components/common/LabelBadge.vue'
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     default: '',
@@ -124,6 +129,10 @@ defineProps({
     type: String,
     default: '',
   },
+  readOnly: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const selectedVariant = ref('0')
@@ -131,6 +140,13 @@ const selectedVariant = ref('0')
 const emit = defineEmits<{
   (e: 'variant-changed', variant: number): void
 }>()
+
+const formattedPropertyType = computed<string>(() => {
+  if (Array.isArray(props.propertyType)) {
+    return props.propertyType.join(' | ')
+  }
+  return props.propertyType ?? ''
+})
 
 function handleSelectChange(selecteditem: SelectItem) {
   emit('variant-changed', Number((selecteditem.value)))
@@ -190,7 +206,10 @@ function handleSelectChange(selecteditem: SelectItem) {
 
     .required-property {
       color: var(--kui-color-text-danger, $kui-color-text-danger);
-      font-size: var(--kui-font-size-20, $kui-font-size-20);
+    }
+
+    .readonly-property {
+      color: var(--kui-color-text-primary-weak, $kui-color-text-primary-weak);
     }
   }
 

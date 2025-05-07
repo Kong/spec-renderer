@@ -38,6 +38,7 @@
             class="http-operation-request-body"
             :content-list="activeRequestBodyContentList"
             :description="operationData.request.body?.description"
+            hide-readonly
             title="Body"
           >
             <ResponseTypeSelect
