@@ -1,3 +1,10 @@
+## [1.94.12](https://github.com/Kong/spec-renderer/compare/v1.94.11...v1.94.12) (2025-05-13)
+
+
+### Bug Fixes
+
+* do not emit content-scrolling while still in scrolling mode [TDX-5748] ([#590](https://github.com/Kong/spec-renderer/issues/590)) ([3bf448a](https://github.com/Kong/spec-renderer/commit/3bf448a87d62ebe8d3d3ed2eea2c71f27ac0f2e0))
+
 ## [1.94.11](https://github.com/Kong/spec-renderer/compare/v1.94.10...v1.94.11) (2025-05-12)
 
 
