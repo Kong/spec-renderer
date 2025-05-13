@@ -289,14 +289,18 @@ const scrollingContainerEl = computed(():HTMLElement | null => {
   return document.querySelector(props.documentScrollingContainer)
 })
 
-const { y: yPositionWindow } = useWindowScroll()
-const { y: yPositionContainer } = useScroll(scrollingContainerEl.value)
+const { y: yPositionWindow, isScrolling: isScrollingWindow } = useWindowScroll()
+const { y: yPositionContainer, isScrolling: isScrollingContainer } = useScroll(scrollingContainerEl.value)
 
 const windowSize = useWindowSize()
 const scrollableContainerSize = useElementSize(scrollingContainerEl.value)
 
 const yPosition = computed(() => {
   return scrollingContainerEl.value ? yPositionContainer.value : yPositionWindow.value
+})
+
+const isScrolling = computed(() => {
+  return scrollingContainerEl.value ? isScrollingContainer.value : isScrollingWindow.value
 })
 
 const containerSize = computed(()=> {
@@ -446,6 +450,7 @@ const forceRenderer = (visibleIdx: number[]) => {
 
 watch(() => ({ nodesList: nodesList.value,
   yPosition: yPosition.value,
+  isScrolling: isScrolling.value,
   wrapperRef: wrapperRef.value,
   wHeight: containerSize.value.height.value,
   wWidth: containerSize.value.width.value,
@@ -471,10 +476,11 @@ watch(() => ({ nodesList: nodesList.value,
     lastY.value = undefined
   }
 
-  if (lastY.value != undefined
+  if ( newValue.isScrolling && lastY.value != undefined
     && Math.abs(newValue.yPosition - lastY.value) < MIN_SCROLL_DIFFERENCE) {
     return
   }
+
   const visibleEls:Array<Record<string, any>> = []
   const visibleIndexes: Array<number> = []
   Array.from(newValue.wrapperRef.children).forEach((c, i) => {
@@ -509,7 +515,9 @@ watch(() => ({ nodesList: nodesList.value,
   const mostVisibleIdx = visibleEls[0].idx
   forceRenderer(visibleIndexes)
   const newUri = nodesList.value[mostVisibleIdx].doc.uri
-  if (newUri !== lastPath.value) {
+
+  // we do not want to emit content-scrolled if we are still in the process of scrolling
+  if (newUri !== lastPath.value && !newValue.isScrolling) {
     emit('content-scrolled', newUri)
     if (props.controlAddressBar) {
     // we only have path and hash for now
