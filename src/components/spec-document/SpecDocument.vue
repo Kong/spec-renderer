@@ -475,7 +475,7 @@ watch(() => ({ nodesList: nodesList.value,
   if (oldValue?.wHeight !== newValue.wHeight || oldValue?.wWidth != newValue.wWidth ) {
     lastY.value = undefined
   }
-  console.log({yPosition:newValue.yPosition, isScrolling: newValue.isScrolling})
+  console.log({ yPosition:newValue.yPosition, isScrolling: newValue.isScrolling })
 
   if ( newValue.isScrolling && lastY.value != undefined
     && Math.abs(newValue.yPosition - lastY.value) < MIN_SCROLL_DIFFERENCE) {
