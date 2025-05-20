@@ -176,7 +176,7 @@ const doApiCall = async () => {
 
     url.search = queryStr
     response.value = await fetch(url, {
-      method: props.data.method,
+      method: String(props.data.method).toUpperCase(),
       headers: [
         ...(authHeaders?.value || []),
         ...getRequestHeaders(props.data),

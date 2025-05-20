@@ -31,7 +31,7 @@ describe('<TryIt />', () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      method: 'get',
+      method: 'GET',
     })
   })
 
