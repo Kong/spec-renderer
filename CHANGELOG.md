@@ -1,3 +1,10 @@
+## [1.94.13](https://github.com/Kong/spec-renderer/compare/v1.94.12...v1.94.13) (2025-05-20)
+
+
+### Bug Fixes
+
+* **try-it:** use uppercase http method [TDX-5825] ([#592](https://github.com/Kong/spec-renderer/issues/592)) ([e3d94ed](https://github.com/Kong/spec-renderer/commit/e3d94ed971a4722d355a45e6ac4783cfef105a98))
+
 ## [1.94.12](https://github.com/Kong/spec-renderer/compare/v1.94.11...v1.94.12) (2025-05-13)
 
 
