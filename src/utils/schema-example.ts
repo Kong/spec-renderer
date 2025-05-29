@@ -65,6 +65,7 @@ interface CrawlOptions {
   parentKey: string
   nestedLevel: number
   filteringOptions: Record<string, boolean>
+  fullKey?: string
 }
 
 /**
@@ -73,32 +74,37 @@ interface CrawlOptions {
  * @param {CrawlOptions} CrawlOptions
  * @returns {Record<string, any> | null}
  */
-export const crawl = ({ objData, parentKey, nestedLevel, filteringOptions }: CrawlOptions): Record<string, any> | null => {
+
+export const crawl = ({ objData, parentKey, nestedLevel, filteringOptions, fullKey = '' }: CrawlOptions): Record<string, any> | null => {
 
   let sampleObj = <Record<string, any>>{}
   if (typeof objData === 'undefined') {
     return sampleObj
   }
-  if (nestedLevel > MAX_NESTED_LEVELS) {
+  // if we already parsed the parent key , we do not want to do it again
+  if (nestedLevel > MAX_NESTED_LEVELS || (parentKey && fullKey.split('/').includes(parentKey))) {
     sampleObj[parentKey] = extractSampleForParam(objData, parentKey)
     return sampleObj
   }
+
+  fullKey = parentKey ? (fullKey ? `${fullKey}/` : '') + parentKey : fullKey
 
   if (objData.example) {
     return objData.example
   }
 
-  sampleObj = crawlInheritedProperties({ objData, parentKey, nestedLevel: nestedLevel, filteringOptions }) ?? {}
+  sampleObj = crawlInheritedProperties({ objData, parentKey, nestedLevel: nestedLevel, fullKey, filteringOptions }) ?? {}
 
-  Object.keys(objData.properties || {}).forEach((key: string) => {
+  for (const key of Object.keys(objData.properties || {})) {
+
     if (filteringOptions.excludeNotRequired) {
       if (!objData.required || !Array.isArray(objData.required) || !objData.required.includes(key)) {
-        return
+        continue
       }
     }
     const oData = resolveSchemaObjectFields(objData.properties[key])
     if (filteringOptions.excludeReadonly && oData.readOnly) {
-      return
+      continue
     }
 
     const oDataType = resolveSchemaType(oData.type)
@@ -111,17 +117,19 @@ export const crawl = ({ objData, parentKey, nestedLevel, filteringOptions }: Cra
           ? [crawl({
             objData: oData || {},
             parentKey: key,
+            fullKey,
             nestedLevel: nestedLevel + 1,
             filteringOptions,
           })]
           : [crawlInheritedProperties({
             objData: oData,
             parentKey: key,
+            fullKey,
             nestedLevel: nestedLevel + 1,
             filteringOptions,
           }) ?? extractSampleForParam(oData, key)]
     } else if (oDataType === 'object' || oData.allOf) {
-      const res = crawl({ objData: oData || {}, parentKey: key, nestedLevel: nestedLevel + 1, filteringOptions })
+      const res = crawl({ objData: oData || {}, parentKey: key, nestedLevel: nestedLevel + 1, fullKey, filteringOptions })
       if (res !== null) {
         sampleObj[key] = res
       }
@@ -130,11 +138,12 @@ export const crawl = ({ objData, parentKey, nestedLevel, filteringOptions }: Cra
         crawlInheritedProperties({
           objData: oData,
           parentKey: key,
+          fullKey,
           nestedLevel: nestedLevel + 1,
           filteringOptions,
         }) ?? extractSampleForParam(oData, key)
     }
-  })
+  }
   return sampleObj
 }
 
@@ -144,7 +153,7 @@ export const crawl = ({ objData, parentKey, nestedLevel, filteringOptions }: Cra
  * @param {CrawlOptions} CrawlOptions
  * @returns {Record<string, any> | null}
  */
-const crawlInheritedProperties = ({ objData, parentKey, nestedLevel, filteringOptions }: CrawlOptions): Record<string, any> | null => {
+const crawlInheritedProperties = ({ objData, parentKey, nestedLevel, fullKey, filteringOptions }: CrawlOptions): Record<string, any> | null => {
   if (typeof objData === 'undefined') {
     return null
   }
@@ -164,6 +173,7 @@ const crawlInheritedProperties = ({ objData, parentKey, nestedLevel, filteringOp
         ...sampleObj,
         ...crawl({
           objData: objData.allOf[i],
+          fullKey,
           parentKey: `allOf-${i}`,
           nestedLevel,
           filteringOptions,
@@ -174,9 +184,9 @@ const crawlInheritedProperties = ({ objData, parentKey, nestedLevel, filteringOp
   }
 
   if (Array.isArray(objData.anyOf) && typeof(objData.anyOf[0]) === 'object') {
-    return crawl({ objData: objData.anyOf[0] || {}, parentKey, nestedLevel: nestedLevel + 1, filteringOptions })
+    return crawl({ objData: objData.anyOf[0] || {}, parentKey, nestedLevel: nestedLevel + 1, fullKey, filteringOptions })
   } else if (Array.isArray(objData.oneOf) && typeof(objData.oneOf[0]) === 'object') {
-    return crawl({ objData: objData.oneOf[0] || {}, parentKey, nestedLevel: nestedLevel + 1, filteringOptions })
+    return crawl({ objData: objData.oneOf[0] || {}, parentKey, nestedLevel: nestedLevel + 1, fullKey, filteringOptions })
   }
 
   return null
