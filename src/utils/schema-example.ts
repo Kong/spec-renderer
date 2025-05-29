@@ -87,7 +87,7 @@ export const crawl = ({ objData, parentKey, nestedLevel, filteringOptions, fullK
     return sampleObj
   }
 
-  fullKey = (fullKey || '')+ '/'+parentKey
+  fullKey = (fullKey || '') + '/' + parentKey
 
   if (objData.example) {
     return objData.example
