@@ -1,3 +1,10 @@
+## [1.94.14](https://github.com/Kong/spec-renderer/compare/v1.94.13...v1.94.14) (2025-05-29)
+
+
+### Bug Fixes
+
+* prevent crawl to hang the browser [TDX-5890] ([#593](https://github.com/Kong/spec-renderer/issues/593)) ([fdf5f0b](https://github.com/Kong/spec-renderer/commit/fdf5f0b413f8654b24677a8a6d40110961cd3082))
+
 ## [1.94.13](https://github.com/Kong/spec-renderer/compare/v1.94.12...v1.94.13) (2025-05-20)
 
 
