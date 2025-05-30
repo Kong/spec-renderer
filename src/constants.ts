@@ -122,7 +122,7 @@ export const requestSampleConfigs: RequestSampleConfigs = [
 ]
 
 // maximum nested levels to look deep when generating request/response sample
-export const MAX_NESTED_LEVELS = 4
+export const MAX_NESTED_LEVELS = 10
 
 export const CODE_INDENT_SPACES = 2
 

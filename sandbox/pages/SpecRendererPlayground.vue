@@ -71,7 +71,7 @@
     </div>
     <SpecRenderer
       v-if="specText || specUrl"
-      :allow-content-scrolling="allowContentScrolling"
+      :allow-content-scrolling="false"
       :allow-custom-server-url="allowCustomServerUrl"
       base-path="/spec-renderer"
       :control-address-bar="true"
