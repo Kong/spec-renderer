@@ -77,66 +77,66 @@ interface CrawlOptions {
  */
 
 
-export const crawl = ({ objData, parentKey='', nestedLevel=0, filteringOptions, fullKey = ''}: CrawlOptions): Record<string, any> | null => {
+export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptions, fullKey = '' }: CrawlOptions): Record<string, any> | null => {
 
-  console.log('*** crawl starts', {parentKey, nestedLevel, objData})
+  console.log('*** crawl starts', { parentKey, nestedLevel, objData })
 
   const seen = new WeakMap()
-  let nCalls = 0
-//  const MAX_CALLS_ALLOWED = 1700
+  const nCalls = 0
+  //  const MAX_CALLS_ALLOWED = 1700
 
 
-/**
+  /**
  * util to generate example for inherited fields like allOf, anyOf, oneOf
  *
  * @param {CrawlOptions} CrawlOptions
  * @returns {Record<string, any> | null}
  */
-const crawlInheritedProperties = ({ objData, parentKey = '', nestedLevel = 0, fullKey, filteringOptions }: CrawlOptions): Record<string, any> | null => {
-  if (typeof objData === 'undefined') {
-    return null
-  }
+  const crawlInheritedProperties = ({ objData, parentKey = '', nestedLevel = 0, fullKey, filteringOptions }: CrawlOptions): Record<string, any> | null => {
+    if (typeof objData === 'undefined') {
+      return null
+    }
 
-  let sampleObj = <Record<string, any>>{}
+    let sampleObj = <Record<string, any>>{}
 
-  if (objData.allOf && Array.isArray(objData.allOf)) {
-    if (filteringOptions.excludeReadonly) {
-      for (let i = 0; i < objData.allOf.length; i++) {
-        if (objData.allOf[i].readOnly === true) {
-          return null
+    if (objData.allOf && Array.isArray(objData.allOf)) {
+      if (filteringOptions.excludeReadonly) {
+        for (let i = 0; i < objData.allOf.length; i++) {
+          if (objData.allOf[i].readOnly === true) {
+            return null
+          }
         }
       }
-    }
-    for (let i = 0; i < objData.allOf.length; i++) {
-      sampleObj = {
-        ...sampleObj,
-        ...doCrawl({
-          objData: objData.allOf[i],
-          fullKey,
-          parentKey: `allOf-${i}`,
-          nestedLevel,
-          filteringOptions,
-        }),
+      for (let i = 0; i < objData.allOf.length; i++) {
+        sampleObj = {
+          ...sampleObj,
+          ...doCrawl({
+            objData: objData.allOf[i],
+            fullKey,
+            parentKey: `allOf-${i}`,
+            nestedLevel,
+            filteringOptions,
+          }),
+        }
       }
+      return sampleObj
     }
-    return sampleObj
-  }
 
-  if (Array.isArray(objData.anyOf) && typeof(objData.anyOf[0]) === 'object') {
-    return doCrawl({ objData: objData.anyOf[0] || {}, parentKey, nestedLevel: nestedLevel + 1, fullKey, filteringOptions })
-  } else if (Array.isArray(objData.oneOf) && typeof(objData.oneOf[0]) === 'object') {
-    return doCrawl({ objData: objData.oneOf[0] || {}, parentKey, nestedLevel: nestedLevel + 1, fullKey, filteringOptions })
-  }
+    if (Array.isArray(objData.anyOf) && typeof(objData.anyOf[0]) === 'object') {
+      return doCrawl({ objData: objData.anyOf[0] || {}, parentKey, nestedLevel: nestedLevel + 1, fullKey, filteringOptions })
+    } else if (Array.isArray(objData.oneOf) && typeof(objData.oneOf[0]) === 'object') {
+      return doCrawl({ objData: objData.oneOf[0] || {}, parentKey, nestedLevel: nestedLevel + 1, fullKey, filteringOptions })
+    }
 
-  return null
-}
+    return null
+  }
   /**
    * do actual crawl, called recursively
    * @param {CrawlOptions} CrawlOptions
    * @returns {Record<string, any> | null}
   */
-  const doCrawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptions, fullKey = ''}: CrawlOptions): Record<string, any> | null => {
-    console.log('--- doCrawl starts', {nCalls, parentKey, nestedLevel, fullKey, objData})
+  const doCrawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptions, fullKey = '' }: CrawlOptions): Record<string, any> | null => {
+    console.log('--- doCrawl starts', { nCalls, parentKey, nestedLevel, fullKey, objData })
     console.log('seen:', seen)
 
     let sampleObj = <Record<string, any>>{}
@@ -168,7 +168,7 @@ const crawlInheritedProperties = ({ objData, parentKey = '', nestedLevel = 0, fu
     const fullKeyArray = fullKey.split('/')
     if (nestedLevel >= MAX_NESTED_LEVELS ) {
       console.log(' we reached MAX_NESTED_LEVELS, so we do not go more')
-      sampleObj[parentKey] =  extractSampleForParam(objData, parentKey)
+      sampleObj[parentKey] = extractSampleForParam(objData, parentKey)
       return sampleObj
     }
     const seenRecord = seen.get(objData)
@@ -186,7 +186,7 @@ const crawlInheritedProperties = ({ objData, parentKey = '', nestedLevel = 0, fu
     sampleObj = crawlInheritedProperties({ objData, parentKey, nestedLevel: nestedLevel, fullKey, filteringOptions }) ?? {}
 
     for (const key of Object.keys(objData.properties || {})) {
-//      console.log('  looking at properties key: ', {key, nestedLevel, parentFullKey: fullKey})
+      //      console.log('  looking at properties key: ', {key, nestedLevel, parentFullKey: fullKey})
 
       if (filteringOptions.excludeNotRequired) {
         if (!Array.isArray(objData.required) || !objData.required.includes(key)) {
@@ -245,7 +245,7 @@ const crawlInheritedProperties = ({ objData, parentKey = '', nestedLevel = 0, fu
           if (res !== null) {
             sampleObj[key] = res
           }
-      }
+        }
       } else {
         //console.log('   non object detected', oData)
         sampleObj[key] =
@@ -259,12 +259,12 @@ const crawlInheritedProperties = ({ objData, parentKey = '', nestedLevel = 0, fu
       }
     }
     console.log('  -- doCrawl returns: ', sampleObj)
-    seen.set(objData, {sampleObj, fullKey, parentKey})
+    seen.set(objData, { sampleObj, fullKey, parentKey })
     return sampleObj
   }
 
-  const finalRes =  doCrawl({ objData, parentKey, nestedLevel, filteringOptions})
-  console.log("seen:", seen)
+  const finalRes = doCrawl({ objData, parentKey, nestedLevel, filteringOptions })
+  console.log('seen:', seen)
   console.log('*** crawl returns: ', finalRes)
   return finalRes
 }
