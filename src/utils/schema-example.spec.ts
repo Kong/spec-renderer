@@ -57,7 +57,7 @@ describe('extractSampleForParam', () => {
 
 })
 
-describe.only('crawl', () => {
+describe('crawl', () => {
   it('should handle undefined', () => {
     //@ts-ignore
     expect(crawl({ objData: undefined, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })).toEqual({})
