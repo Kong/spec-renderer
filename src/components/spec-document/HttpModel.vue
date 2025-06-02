@@ -61,7 +61,6 @@ const exampleModel = computed(() => {
     objData: activeSchemaModel.value,
     filteringOptions: { excludeReadonly: false, excludeNotRequired: false },
   })
-  console.log('res:', crawledExample)
   return crawledExample && Object.keys(crawledExample).length ? JSON.stringify(crawledExample, null, CODE_INDENT_SPACES) : ''
 })
 

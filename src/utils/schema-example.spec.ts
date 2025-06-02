@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { crawl, extractSampleForParam } from './schema-example'
 import type { SchemaObject } from '@/types'
-
+import householdSpec from '../../sandbox/public/specs/Household_openspec_V11.json'
+import composables from '@/composables'
 
 describe('extractSampleForParam', () => {
   it('should return empty for no data', () => {
@@ -68,12 +69,7 @@ describe('crawl', () => {
     expect(crawl({ objData, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })).toEqual({})
   })
 
-  it.skip('should handle circular references', () => {
-    const a = { type: 'object', properties: { field: 'a-key', default: 'a-value', reference: {} } }
-    const b = { type: 'object', properties: { field: 'b-key', default: 'b-value', reference: {} } }
-    a.properties.reference = b
-    b.properties.reference = a
-
+  it('should handle circular references', () => {
     const firstAllOfObject: SchemaObject = {
       type: 'object',
       properties: {
@@ -100,8 +96,21 @@ describe('crawl', () => {
       allOf: [firstAllOfObject, secondAllOfObject],
     }
 
-    expect(crawl({ objData, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })).toEqual({})
+    expect(crawl({ objData, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })).toEqual({age: 0, name: 'name', refToName: 0})
   })
 
+
+
+  it('TDX-5890, parsing schema', async() => {
+
+      const { parseSpecDocument, parsedDocument } = composables.useSchemaParser()
+      await parseSpecDocument(householdSpec)
+
+      const node = parsedDocument.value.children.find((child: any) => child.uri === '/schemas/System.Exception')
+
+
+      const result = crawl({objData: node.data,  filteringOptions: { excludeReadonly: false, excludeNotRequired: false }})
+      expect(result).toBeInstanceOf(Object)
+  })
 })
 

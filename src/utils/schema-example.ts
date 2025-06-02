@@ -9,7 +9,6 @@ import { resolveSchemaObjectFields, resolveSchemaType } from './schema-model'
  * @returns
  */
 export const extractSampleForParam = (paramData: Record<string, any> | undefined, key: string): string | boolean | number => {
-//  console.log('extractSampleForParam started', paramData)
   if (!paramData) {
     return ''
   }
@@ -66,7 +65,6 @@ interface CrawlOptions {
   parentKey?: string
   nestedLevel?: number
   filteringOptions: Record<string, boolean>
-  fullKey?: string
 }
 
 /**
@@ -77,14 +75,9 @@ interface CrawlOptions {
  */
 
 
-export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptions, fullKey = '' }: CrawlOptions): Record<string, any> | null => {
-
-  console.log('*** crawl starts', { parentKey, nestedLevel, objData })
+export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptions }: CrawlOptions): Record<string, any> | null => {
 
   const seen = new WeakMap()
-  const nCalls = 0
-  //  const MAX_CALLS_ALLOWED = 1700
-
 
   /**
  * util to generate example for inherited fields like allOf, anyOf, oneOf
@@ -92,7 +85,7 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
  * @param {CrawlOptions} CrawlOptions
  * @returns {Record<string, any> | null}
  */
-  const crawlInheritedProperties = ({ objData, parentKey = '', nestedLevel = 0, fullKey, filteringOptions }: CrawlOptions): Record<string, any> | null => {
+  const crawlInheritedProperties = ({ objData, parentKey = '', nestedLevel = 0, filteringOptions }: CrawlOptions): Record<string, any> | null => {
     if (typeof objData === 'undefined') {
       return null
     }
@@ -112,7 +105,6 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
           ...sampleObj,
           ...doCrawl({
             objData: objData.allOf[i],
-            fullKey,
             parentKey: `allOf-${i}`,
             nestedLevel,
             filteringOptions,
@@ -123,9 +115,9 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
     }
 
     if (Array.isArray(objData.anyOf) && typeof(objData.anyOf[0]) === 'object') {
-      return doCrawl({ objData: objData.anyOf[0] || {}, parentKey, nestedLevel: nestedLevel + 1, fullKey, filteringOptions })
+      return doCrawl({ objData: objData.anyOf[0] || {}, parentKey, nestedLevel: nestedLevel + 1, filteringOptions })
     } else if (Array.isArray(objData.oneOf) && typeof(objData.oneOf[0]) === 'object') {
-      return doCrawl({ objData: objData.oneOf[0] || {}, parentKey, nestedLevel: nestedLevel + 1, fullKey, filteringOptions })
+      return doCrawl({ objData: objData.oneOf[0] || {}, parentKey, nestedLevel: nestedLevel + 1, filteringOptions })
     }
 
     return null
@@ -135,58 +127,36 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
    * @param {CrawlOptions} CrawlOptions
    * @returns {Record<string, any> | null}
   */
-  const doCrawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptions, fullKey = '' }: CrawlOptions): Record<string, any> | null => {
-    console.log('--- doCrawl starts', { nCalls, parentKey, nestedLevel, fullKey, objData })
-    console.log('seen:', seen)
+  const doCrawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptions }: CrawlOptions): Record<string, any> | null => {
 
     let sampleObj = <Record<string, any>>{}
 
     if (typeof objData === 'undefined') {
-      console.log('return due to undefined')
       return sampleObj
     }
 
     if (objData.example) {
-      console.log('got example - returning it:', objData.example)
       return objData.example
     }
 
     if (filteringOptions.excludeNotRequired && !objData.required ) {
-      console.log(' skipping not required')
       return sampleObj
     }
 
 
-    // if we already parsed the parent key , we do not want to do it again
-    // if (parentKey && fullKey.split('/').includes(parentKey)) {
-    //   sampleObj[parentKey] = extractSampleForParam(objData, parentKey)
-    //   console.log('parent key already processed, returning: ', sampleObj)
-    //   return sampleObj
-    // }
-
-    fullKey = parentKey ? (fullKey ? `${fullKey}/` : '') + parentKey : fullKey
-    const fullKeyArray = fullKey.split('/')
     if (nestedLevel >= MAX_NESTED_LEVELS ) {
-      console.log(' we reached MAX_NESTED_LEVELS, so we do not go more')
       sampleObj[parentKey] = extractSampleForParam(objData, parentKey)
       return sampleObj
     }
     const seenRecord = seen.get(objData)
     if (seenRecord) {
-      console.log('*** objData already processed', objData, seenRecord)
       return seenRecord.seenSample
     }
 
 
-    // if (nCalls++ > MAX_CALLS_ALLOWED) {
-    //   console.log('too many calls, returning', nCalls)
-    //   return sampleObj
-    // }
-
-    sampleObj = crawlInheritedProperties({ objData, parentKey, nestedLevel: nestedLevel, fullKey, filteringOptions }) ?? {}
+    sampleObj = crawlInheritedProperties({ objData, parentKey, nestedLevel: nestedLevel, filteringOptions }) ?? {}
 
     for (const key of Object.keys(objData.properties || {})) {
-      //      console.log('  looking at properties key: ', {key, nestedLevel, parentFullKey: fullKey})
 
       if (filteringOptions.excludeNotRequired) {
         if (!Array.isArray(objData.required) || !objData.required.includes(key)) {
@@ -199,26 +169,7 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
         continue
       }
 
-      // if (nestedLevel == MAX_NESTED_LEVELS - 1 ) {
-      //   //console.log(' while in props we almost reached max nested level', nestedLevel)
-      //   sampleObj[key] =  extractSampleForParam(oData, key)
-      //   continue
-      // }
-
-      // if (nCalls > MAX_CALLS_ALLOWED) {
-      //   //console.log('  in props, too many calls, returning', nCalls)
-      //   //sampleObj[key] =  extractSampleForParam(oData, key)
-      //   continue
-      // }
-
-      // if (fullKeyArray.includes(key)) {
-      //   // console.log(`  properties key ${key} already processed`)
-      //   //sampleObj[key] =  extractSampleForParam(oData, key)
-      //   continue
-      // }
-
       const oDataType = resolveSchemaType(oData.type)
-      //console.log('  dataType: ', oDataType)
 
       if (oDataType === 'array' || oDataType === 'object' || oData.allOf) {
         if (oDataType === 'array') {
@@ -229,43 +180,35 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
               ? [doCrawl({
                 objData: oData || {},
                 parentKey: key,
-                fullKey,
                 nestedLevel: nestedLevel + 1,
                 filteringOptions,
               })]
               : [crawlInheritedProperties({
                 objData: oData,
                 parentKey: key,
-                fullKey,
                 nestedLevel: nestedLevel + 1,
                 filteringOptions,
               }) ?? extractSampleForParam(oData, key)]
         } else if (oDataType === 'object' || oData.allOf) {
-          const res = doCrawl({ objData: oData || {}, parentKey: key, nestedLevel: nestedLevel + 1, fullKey, filteringOptions })
+          const res = doCrawl({ objData: oData || {}, parentKey: key, nestedLevel: nestedLevel + 1,  filteringOptions })
           if (res !== null) {
             sampleObj[key] = res
           }
         }
       } else {
-        //console.log('   non object detected', oData)
         sampleObj[key] =
           crawlInheritedProperties({
             objData: oData,
             parentKey: key,
-            fullKey,
             nestedLevel: nestedLevel + 1,
             filteringOptions,
           }) ?? extractSampleForParam(oData, key)
       }
     }
-    console.log('  -- doCrawl returns: ', sampleObj)
-    seen.set(objData, { sampleObj, fullKey, parentKey })
+    seen.set(objData, { sampleObj, parentKey })
     return sampleObj
   }
 
-  const finalRes = doCrawl({ objData, parentKey, nestedLevel, filteringOptions })
-  console.log('seen:', seen)
-  console.log('*** crawl returns: ', finalRes)
-  return finalRes
+  return doCrawl({ objData, parentKey, nestedLevel, filteringOptions })
 }
 
