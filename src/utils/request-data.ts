@@ -118,8 +118,6 @@ export const getSampleBody = (contents: Array<IMediaTypeContent>, filteringOptio
   return JSON.stringify(
     crawl({
       objData: resolveSchemaObjectFields(contents[0].schema) as Record<string, any>,
-      parentKey: '',
-      nestedLevel: 0,
       filteringOptions,
     }),
     null,

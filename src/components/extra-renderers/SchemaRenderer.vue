@@ -143,8 +143,6 @@ const exampleModel = computed(() => {
 
   const crawledExample = crawl({
     objData: activeSchemaModel.value,
-    parentKey: '',
-    nestedLevel: 0,
     filteringOptions: { excludeReadonly: false, excludeNotRequired: false },
   })
   return crawledExample && Object.keys(crawledExample).length ? JSON.stringify(crawledExample, null, CODE_INDENT_SPACES) : ''

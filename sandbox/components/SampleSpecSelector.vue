@@ -101,6 +101,7 @@ const optionsArrayOAS = [
     url: `${window.location.origin}/spec-renderer/specs/cloudflare.json`, label: 'CloudFlare' },
   { url: `${window.location.origin}/spec-renderer/specs/beer-and-coffee.yaml`, label: 'Beer-and-coffee (e50ca83c443b.us)' },
   { url: `${window.location.origin}/spec-renderer/specs/multi-tags.yaml`, label: 'Multi-tags' },
+  { url: `${window.location.origin}/spec-renderer/specs/Household_openspec_V11.json`, label: 'Household_openspec_V11' },
   { url: 'https://raw.githubusercontent.com/digitalocean/openapi/main/specification/DigitalOcean-public.v2.yaml', label: 'Digital Ocean' },
   { url: 'https://raw.githubusercontent.com/stoplightio/Public-APIs/master/reference/zoom/openapi.yaml', label: 'Zoom' },
   { url: 'https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/ghes-3.0/ghes-3.0.json', label: 'GitHub' },
