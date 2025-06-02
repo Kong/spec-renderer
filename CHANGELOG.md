@@ -1,3 +1,10 @@
+## [1.94.15](https://github.com/Kong/spec-renderer/compare/v1.94.14...v1.94.15) (2025-06-02)
+
+
+### Bug Fixes
+
+* second attempt to prevent browser freesing [TDX-5890] ([#594](https://github.com/Kong/spec-renderer/issues/594)) ([7901d0a](https://github.com/Kong/spec-renderer/commit/7901d0a558957741e36ccdeb3543ff965c0b365d))
+
 ## [1.94.14](https://github.com/Kong/spec-renderer/compare/v1.94.13...v1.94.14) (2025-05-29)
 
 
