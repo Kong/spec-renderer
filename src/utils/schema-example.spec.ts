@@ -102,52 +102,52 @@ describe('crawl', () => {
 
   it.only('TDX-5892, value from enum', () => {
 
-    var objData = {
-      "description": "Represents a limited time period for which a value is constant.",
-      "type": "array",
-      "minItems": 1,
-      "title": "Face Amount Schedule Entry",
-      "properties": {
-        "from": {
-          "description": "starting point for the value, inclusive",
-          "type": "integer",
-          "minimum": 1,
-          "examples": [
-            1
-          ]
+    const objData = {
+      'description': 'Represents a limited time period for which a value is constant.',
+      'type': 'array',
+      'minItems': 1,
+      'title': 'Face Amount Schedule Entry',
+      'properties': {
+        'from': {
+          'description': 'starting point for the value, inclusive',
+          'type': 'integer',
+          'minimum': 1,
+          'examples': [
+            1,
+          ],
         },
-        "value": {
-          "oneOf": [
+        'value': {
+          'oneOf': [
             {
-              "examples": [
-                250000
+              'examples': [
+                250000,
               ],
-              "type": "number",
-              "format": "double",
-              "x-stoplight": {
-                "explicitProperties": [
-                  "type",
-                  "format"
-                ]
+              'type': 'number',
+              'format': 'double',
+              'x-stoplight': {
+                'explicitProperties': [
+                  'type',
+                  'format',
+                ],
               },
-              "minimum": -1.7976931348623157e+308,
-              "maximum": 1.7976931348623157e+308
+              'minimum': -1.7976931348623157e+308,
+              'maximum': 1.7976931348623157e+308,
             },
             {
-              "examples": [
-                250000
+              'examples': [
+                250000,
               ],
-              "title": "Face Amount Option",
-              "type": "string",
-              "enum": [
-                "SOLVE_FOR_TARGET_CASH_VALUE",
-                "MINIMUM_NON_MEC"
-              ]
-            }
-          ]
-        }
+              'title': 'Face Amount Option',
+              'type': 'string',
+              'enum': [
+                'SOLVE_FOR_TARGET_CASH_VALUE',
+                'MINIMUM_NON_MEC',
+              ],
+            },
+          ],
+        },
       },
-      "itemType": "object"
+      'itemType': 'object',
     }
     const res = crawl({ objData, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })
 
