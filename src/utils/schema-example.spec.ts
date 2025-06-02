@@ -60,7 +60,7 @@ describe('extractSampleForParam', () => {
 
 describe('crawl', () => {
   it('should handle undefined', () => {
-    //@ts-ignore
+    //@ts-ignore need to test against undefined
     expect(crawl({ objData: undefined, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })).toEqual({})
   })
 
@@ -96,21 +96,21 @@ describe('crawl', () => {
       allOf: [firstAllOfObject, secondAllOfObject],
     }
 
-    expect(crawl({ objData, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })).toEqual({age: 0, name: 'name', refToName: 0})
+    expect(crawl({ objData, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })).toEqual({ age: 0, name: 'name', refToName: 0 })
   })
 
 
 
-  it('TDX-5890, parsing schema', async() => {
+  it('TDX-5890, parsing schema', async () => {
 
-      const { parseSpecDocument, parsedDocument } = composables.useSchemaParser()
-      await parseSpecDocument(householdSpec)
+    const { parseSpecDocument, parsedDocument } = composables.useSchemaParser()
+    await parseSpecDocument(householdSpec)
 
-      const node = parsedDocument.value.children.find((child: any) => child.uri === '/schemas/System.Exception')
+    const node = parsedDocument.value.children.find((child: any) => child.uri === '/schemas/System.Exception')
 
 
-      const result = crawl({objData: node.data,  filteringOptions: { excludeReadonly: false, excludeNotRequired: false }})
-      expect(result).toBeInstanceOf(Object)
+    const result = crawl({ objData: node.data, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })
+    expect(result).toBeInstanceOf(Object)
   })
 })
 

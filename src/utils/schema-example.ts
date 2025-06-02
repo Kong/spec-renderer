@@ -190,7 +190,7 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
                 filteringOptions,
               }) ?? extractSampleForParam(oData, key)]
         } else if (oDataType === 'object' || oData.allOf) {
-          const res = doCrawl({ objData: oData || {}, parentKey: key, nestedLevel: nestedLevel + 1,  filteringOptions })
+          const res = doCrawl({ objData: oData || {}, parentKey: key, nestedLevel: nestedLevel + 1, filteringOptions })
           if (res !== null) {
             sampleObj[key] = res
           }
