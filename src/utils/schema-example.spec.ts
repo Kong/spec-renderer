@@ -100,7 +100,7 @@ describe('crawl', () => {
   })
 
 
-  it.only('TDX-5892, value from enum', () => {
+  it('TDX-5892, value from enum', () => {
 
     const objData = {
       'description': 'Represents a limited time period for which a value is constant.',
