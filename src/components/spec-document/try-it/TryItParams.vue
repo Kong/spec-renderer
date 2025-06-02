@@ -69,7 +69,6 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { watchDebounced } from '@vueuse/core'
 import type { PropType } from 'vue'
 import type { IHttpOperation, IHttpPathParam, IHttpQueryParam } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
@@ -184,8 +183,7 @@ const requestBodyChanged = (newBody: string) => {
 }
 
 // this is to fire event when fieldValues changed
-// it is debounced to avoid too many events getting emitted everytime user types in the input fields
-watchDebounced(fieldValues, (newFieldValues) => {
+watch(fieldValues, (newFieldValues) => {
   if (props.paramType === 'path') {
     emit('request-path-changed', getSamplePath(props.data, newFieldValues))
     return
@@ -205,9 +203,6 @@ watchDebounced(fieldValues, (newFieldValues) => {
 }, {
   deep: true,
   immediate: true, // emit the event immediately with initial values
-  // debounce params
-  debounce: 500,
-  maxWait: 1000,
 })
 </script>
 
