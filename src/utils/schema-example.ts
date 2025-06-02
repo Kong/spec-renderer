@@ -77,6 +77,10 @@ interface CrawlOptions {
 
 export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptions }: CrawlOptions): Record<string, any> | null => {
 
+  /*
+    WeakMap we store child objData's sampleObjects in weakMap so that when
+    we we see it's already stored, instead of extracting sampleObject again and again, we use what already extracted and stored in the WeakMap
+  */
   const seen = new WeakMap()
 
   /**
@@ -148,6 +152,10 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
       sampleObj[parentKey] = extractSampleForParam(objData, parentKey)
       return sampleObj
     }
+
+    /*
+      here is where we do lookup into WeakMap, and we we already have record there, just return already parsed sample object
+    */
     const seenRecord = seen.get(objData)
     if (seenRecord) {
       return seenRecord.seenSample
@@ -205,6 +213,10 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
           }) ?? extractSampleForParam(oData, key)
       }
     }
+
+    /*
+      now, as we have sampleObj for objData extracted, we store it in the WeakMap for future child objects to use
+    */
     seen.set(objData, { sampleObj, parentKey })
     return sampleObj
   }
