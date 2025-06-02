@@ -60,7 +60,7 @@ describe('extractSampleForParam', () => {
 
 describe('crawl', () => {
   it('should handle undefined', () => {
-    //@ts-ignore need to test against undefined
+    // @ts-expect-error need to test against undefined
     expect(crawl({ objData: undefined, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })).toEqual({})
   })
 
