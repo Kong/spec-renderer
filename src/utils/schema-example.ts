@@ -79,7 +79,7 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
 
   /*
     WeakMap we store child objData's sampleObjects in weakMap so that when
-    we we see it's already stored, instead of extracting sampleObject again and again, we use what already extracted and stored in the WeakMap
+    we see it's already stored, instead of extracting sampleObject again and again, we use what already extracted and stored in the WeakMap
   */
   const seen = new WeakMap()
 
