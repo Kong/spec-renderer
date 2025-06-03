@@ -164,7 +164,7 @@ const requestBodyChanged = (newBody: string) => {
 // this is tryout state requested by property passed
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
-const doApiCall = async () => {
+const doApiCall = async (forceSimpleRequest = false) => {
   try {
     apiCallLoading.value = true
     response.value = undefined
@@ -175,19 +175,28 @@ const doApiCall = async () => {
     }
 
     url.search = queryStr
-    response.value = await fetch(url, {
-      method: String(props.data.method).toUpperCase(),
-      headers: [
+    const headers = [
         ...(authHeaders?.value || []),
         ...getRequestHeaders(props.data),
         ...currentRequestHeaders.value,
       ].reduce((acc, current) => {
-        acc[current.name] = current.value; return acc
-      }
-      , { }),
+        acc[current.name.toLowerCase()] = current.value; return acc
+      }, {})
+
+    if (forceSimpleRequest) {
+      headers['content-type'] = 'text/plain'
+    }
+
+    response.value = await fetch(url, {
+      method: String(props.data.method).toUpperCase(),
+      headers,
       ...(currentRequestBody.value ? { body: currentRequestBody.value } : null),
     })
   } catch (error: any) {
+    if (!forceSimpleRequest) {
+      doApiCall(true)
+      return
+    }
     responseError.value = error
   } finally {
     apiCallLoading.value = false
