@@ -185,7 +185,7 @@ const doApiCall = async (callAsIs = false) => {
       ...getRequestHeaders(props.data),
       ...currentRequestHeaders.value,
     ].reduce((acc, current) => {
-      acc[current.name.toLowerCase()] = current.value; return acc
+      acc[ callAsIs === false && isGet ? current.name.toLowerCase() : current.name ] = current.value; return acc
     }, {})
 
     // first time we call GET - we will try to convert to simple request
