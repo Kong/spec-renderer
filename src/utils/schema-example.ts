@@ -142,6 +142,9 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
     if (objData.example) {
       return objData.example
     }
+    if (Array.isArray(objData.examples) && objData.examples.length > 0 && objData.examples[0]) {
+      return objData.examples[0]
+    }
 
     if (filteringOptions.excludeNotRequired && !objData.required ) {
       return sampleObj
