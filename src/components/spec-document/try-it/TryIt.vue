@@ -176,12 +176,12 @@ const doApiCall = async (forceSimpleRequest = false) => {
 
     url.search = queryStr
     const headers = [
-        ...(authHeaders?.value || []),
-        ...getRequestHeaders(props.data),
-        ...currentRequestHeaders.value,
-      ].reduce((acc, current) => {
-        acc[current.name.toLowerCase()] = current.value; return acc
-      }, {})
+      ...(authHeaders?.value || []),
+      ...getRequestHeaders(props.data),
+      ...currentRequestHeaders.value,
+    ].reduce((acc, current) => {
+      acc[current.name.toLowerCase()] = current.value; return acc
+    }, {})
 
     if (forceSimpleRequest) {
       headers['content-type'] = 'text/plain'
