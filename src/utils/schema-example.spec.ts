@@ -151,7 +151,6 @@ describe('crawl', () => {
     }
     const res = crawl({ objData, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })
 
-    console.log(res)
     expect(res).toEqual({ from: 1, value: 250000 })
   })
 
