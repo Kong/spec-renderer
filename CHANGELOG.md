@@ -1,3 +1,10 @@
+## [1.94.18](https://github.com/Kong/spec-renderer/compare/v1.94.17...v1.94.18) (2025-06-03)
+
+
+### Bug Fixes
+
+* extract sample from examples of oData TDX-5892 ([#596](https://github.com/Kong/spec-renderer/issues/596)) ([44fa613](https://github.com/Kong/spec-renderer/commit/44fa6139b7c0089cda8232f9852f1e77a2b590a5))
+
 ## [1.94.17](https://github.com/Kong/spec-renderer/compare/v1.94.16...v1.94.17) (2025-06-03)
 
 
