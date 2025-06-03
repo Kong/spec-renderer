@@ -184,7 +184,9 @@ const doApiCall = async (forceSimpleRequest = false) => {
     }, {})
 
     if (forceSimpleRequest) {
-      headers['content-type'] = 'text/plain'
+      if (headers['content-type']) {
+        delete headers['content-type']
+      }
     }
 
     response.value = await fetch(url, {
