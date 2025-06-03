@@ -177,7 +177,7 @@ import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import ResponseTypeSelect from './endpoint/ResponseTypeSelect.vue'
 import PageHeader from '../common/PageHeader.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import { getSamplePath, getSampleQuery, getSampleBody } from '@/utils'
+import { getSamplePath, getSampleQuery, getSampleBody, getSampleHeaders } from '@/utils'
 import composables from '@/composables'
 import type { SecuritySchemeGroup } from '@/types'
 
@@ -320,7 +320,7 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
   }
   currentRequestPath.value = getSamplePath(operationData.value)
   currentRequestQuery.value = getSampleQuery(operationData.value)
-  currentRequestHeaders.value = []
+  currentRequestHeaders.value = getSampleHeaders({ data: operationData.value })
   currentRequestBody.value = activeRequestBodyContentList.value
     ? getSampleBody(
       activeRequestBodyContentList.value,
