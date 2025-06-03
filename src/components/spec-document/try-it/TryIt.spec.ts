@@ -29,7 +29,7 @@ describe('<TryIt />', () => {
     await wrapper.findTestId('tryit-call-button-123').trigger('click')
     expect(fetch).toHaveBeenCalledWith(new URL('https://global.api.konghq.com/v2/sample-path'), {
       headers: {
-        'Content-Type': 'application/json',
+        'content-type': 'application/json',
       },
       method: 'GET',
     })
