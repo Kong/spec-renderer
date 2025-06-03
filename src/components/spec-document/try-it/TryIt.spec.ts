@@ -6,12 +6,12 @@ import TryIt from './TryIt.vue'
 
 describe('<TryIt />', () => {
   vi.stubGlobal('open', vi.fn())
-  it('should call fetch with correct url', async () => {
+  it('should call fetch with correct url and headers for POST', async () => {
     const wrapper = mount(TryIt, {
       props: {
         data: {
           id: '123',
-          method: 'get',
+          method: 'post',
           path: '/sample-path',
           responses: [],
           servers: [{
@@ -30,6 +30,35 @@ describe('<TryIt />', () => {
     expect(fetch).toHaveBeenCalledWith(new URL('https://global.api.konghq.com/v2/sample-path'), {
       headers: {
         'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    })
+  })
+
+  it('should call fetch with correct url and headers for GET', async () => {
+    const wrapper = mount(TryIt, {
+      props: {
+        data: {
+          id: '123',
+          method: 'GET',
+          path: '/sample-path',
+          responses: [],
+          servers: [{
+            id: 'sample-server-id',
+            url: 'https://global.api.konghq.com/v2',
+          }],
+        },
+        serverUrl: 'https://global.api.konghq.com/v2',
+      },
+    })
+
+    expect(wrapper.findTestId('tryit-dropdown-123').exists()).toBe(false)
+
+    global.fetch = vi.fn()
+    await wrapper.findTestId('tryit-call-button-123').trigger('click')
+    // get request - first time needs to be called with content-type header deleted
+    expect(fetch).toHaveBeenCalledWith(new URL('https://global.api.konghq.com/v2/sample-path'), {
+      headers: {
       },
       method: 'GET',
     })

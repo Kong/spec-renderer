@@ -164,7 +164,12 @@ const requestBodyChanged = (newBody: string) => {
 // this is tryout state requested by property passed
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
-const doApiCall = async () => {
+/**
+ * Perform actual fetch to the api and prepare results/errors for displaying
+ * @param callAsIs when true, we do not do any modifications of the headers for GET requests, otherwise we attempt to convert get to simple request by removing 'content-type' header
+ */
+const doApiCall = async (callAsIs = false) => {
+  const isGet = props.data.method.toUpperCase() === 'GET'
   try {
     apiCallLoading.value = true
     response.value = undefined
@@ -175,19 +180,32 @@ const doApiCall = async () => {
     }
 
     url.search = queryStr
+    const headers = [
+      ...(authHeaders?.value || []),
+      ...getRequestHeaders(props.data),
+      ...currentRequestHeaders.value,
+    ].reduce((acc, current) => {
+      acc[ callAsIs === false && isGet ? current.name.toLowerCase() : current.name ] = current.value; return acc
+    }, {})
+
+    // first time we call GET - we will try to convert to simple request
+    if (callAsIs === false && isGet) {
+      if (headers['content-type']) {
+        delete headers['content-type']
+      }
+    }
+
     response.value = await fetch(url, {
       method: String(props.data.method).toUpperCase(),
-      headers: [
-        ...(authHeaders?.value || []),
-        ...getRequestHeaders(props.data),
-        ...currentRequestHeaders.value,
-      ].reduce((acc, current) => {
-        acc[current.name] = current.value; return acc
-      }
-      , { }),
+      headers,
       ...(currentRequestBody.value ? { body: currentRequestBody.value } : null),
     })
   } catch (error: any) {
+    // get request converted to simple request fails, let's try non-modified request and see
+    if (callAsIs && isGet) {
+      doApiCall(true)
+      return
+    }
     responseError.value = error
   } finally {
     apiCallLoading.value = false
