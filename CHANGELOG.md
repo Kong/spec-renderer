@@ -1,3 +1,10 @@
+## [1.94.19](https://github.com/Kong/spec-renderer/compare/v1.94.18...v1.94.19) (2025-06-03)
+
+
+### Bug Fixes
+
+* convert TryIt GET call to simple request [TDX-5864] ([#599](https://github.com/Kong/spec-renderer/issues/599)) ([6cdd89f](https://github.com/Kong/spec-renderer/commit/6cdd89fd46edeb99ad21890e8602848390e43640))
+
 ## [1.94.18](https://github.com/Kong/spec-renderer/compare/v1.94.17...v1.94.18) (2025-06-03)
 
 
