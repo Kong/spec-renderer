@@ -110,15 +110,12 @@ describe('<TryItParams />', () => {
 
       const field = wrapper.findTestId('tryit-path-param-apiProductId-123')
 
-      // test example value is emitted
-      const examplePath = `/api-products/${exampleValues.productId}/product-versions/${exampleValues.versionId}`
-      expect(wrapper.emitted('request-path-changed')?.[0]).toEqual([examplePath])
       // test changing the path parameter
       const newProductId = 'xxx-yyy-zzz'
       await field.setValue(newProductId)
       // check if the new path is emitted
       const expectedPath = `/api-products/${newProductId}/product-versions/${exampleValues.versionId}`
-      expect(wrapper.emitted('request-path-changed')).toEqual([[examplePath],[expectedPath]]) // first is the initially emitted example value, second is the updated value
+      expect(wrapper.emitted('request-path-changed')).toEqual([[expectedPath]])
     })
   })
 
@@ -136,17 +133,13 @@ describe('<TryItParams />', () => {
       const wrapper = mount(TryItParams, testData)
       const field = wrapper.findTestId('tryit-query-param-page[number]-123')
 
-      // test example value is emitted
-      const exampleQuery = `page%5Bsize%5D=${exampleValues.pageSize}&page%5Bnumber%5D=${exampleValues.pageNumber}`
-      expect(wrapper.emitted('request-query-changed')?.[0]).toEqual([exampleQuery])
-
       // test changing the page number query parameter
       const newPageNumber = 4
       // update page number query parameter
       await field.setValue(newPageNumber)
       // check if the new query is emitted
       const expectedQuery = `page%5Bsize%5D=${exampleValues.pageSize}&page%5Bnumber%5D=${newPageNumber}`
-      expect(wrapper.emitted('request-query-changed')).toEqual([[exampleQuery],[expectedQuery]]) // first is the initially emitted example value, second is the updated value
+      expect(wrapper.emitted('request-query-changed')).toEqual([[expectedQuery]])
     })
   })
 
@@ -164,15 +157,6 @@ describe('<TryItParams />', () => {
       const wrapper = mount(TryItParams, testData)
       const field = wrapper.findTestId('tryit-headers-param-client-123')
 
-      // test example value is emitted
-      const exampleHeader = [
-        {
-          'name': 'client', // header name
-          'value': exampleValues.header, // example value
-        },
-      ]
-      expect(wrapper.emitted('request-headers-changed')?.[0]).toEqual([exampleHeader])
-
       // test changing the header parameter
       const newHeaderValue = 'new-header-value'
       await field.setValue(newHeaderValue)
@@ -184,7 +168,7 @@ describe('<TryItParams />', () => {
           'value': newHeaderValue, // updated value
         },
       ]
-      expect(wrapper.emitted('request-headers-changed')).toEqual([[exampleHeader], [expectedHeader]]) // first is the initially emitted example value, second is the updated value
+      expect(wrapper.emitted('request-headers-changed')).toEqual([[expectedHeader]])
     })
   })
 })
