@@ -91,6 +91,28 @@ export const getSampleQuery = (data: IHttpOperation, fieldValues?: Record<string
   return urlParams.toString()
 }
 
+export const getSampleHeaders = ({ data, fieldValues, excludeHeaderList }: { data: IHttpOperation, fieldValues?: Record<string, string> | undefined, excludeHeaderList?: Array<string> }): Array<Record<string, string>> => {
+  const myFieldValues = fieldValues || {}
+  const headers: Array<Record<string, string>> = []
+
+  data.request?.headers?.forEach(header => {
+    if (excludeHeaderList?.includes(header.name)) {
+      return
+    }
+
+    const headerName = header.name
+    const headerValue = myFieldValues[headerName] ?? extractSampleForParam(header, headerName)
+    if (headerValue) {
+      headers.push({
+        name: headerName,
+        value: String(headerValue),
+      })
+    }
+  })
+
+  return headers
+}
+
 /**
  * Generates body from data and user inputs
  *

@@ -40,6 +40,10 @@ export const extractSampleForParam = (paramData: Record<string, any> | undefined
     return typeof paramData.default === 'object' ? JSON.stringify(paramData.default) : paramData.default
   }
 
+  if (paramData.schema?.default !== null && paramData.schema?.default !== undefined) {
+    return typeof paramData.schema.default === 'object' ? JSON.stringify(paramData.schema.default) : paramData.schema.default
+  }
+
   switch (resolveSchemaType(paramData.type)) {
     case 'boolean':
       return false

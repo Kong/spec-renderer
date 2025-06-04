@@ -72,7 +72,7 @@ import { computed, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpOperation, IHttpPathParam, IHttpQueryParam } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
-import { extractSample, getSamplePath, getSampleQuery } from '@/utils'
+import { extractSample, getSampleHeaders, getSamplePath, getSampleQuery } from '@/utils'
 import type { RequestParamTypes } from '@/types'
 import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
 import InputLabel from '@/components/common/InputLabel.vue'
@@ -192,13 +192,7 @@ watch(fieldValues, (newFieldValues) => {
     emit('request-query-changed', getSampleQuery(props.data, newFieldValues))
   }
   if (props.paramType === 'headers') {
-    const headerList = Object.keys(newFieldValues).map(key => {
-      return {
-        name: key,
-        value: newFieldValues[key],
-      }
-    }).filter(({ value }) => Boolean(value))
-    emit('request-headers-changed', headerList)
+    emit( 'request-headers-changed', getSampleHeaders({ data: props.data, fieldValues: newFieldValues, excludeHeaderList: props.excludeHeaderList }))
   }
 }, { deep: true })
 </script>

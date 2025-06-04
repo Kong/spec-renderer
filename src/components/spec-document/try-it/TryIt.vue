@@ -74,7 +74,7 @@
 import { inject, computed, ref, watch } from 'vue'
 import type { PropType, Ref } from 'vue'
 import TryItDropdown from './TryItDropdown.vue'
-import { getRequestHeaders } from '@/utils'
+import { getRequestHeaders, getSampleHeaders } from '@/utils'
 import type { IHttpOperation } from '@stoplight/types'
 import MethodBadge from '@/components/common/MethodBadge.vue'
 import TryItAuth from './TryItAuth.vue'
@@ -114,6 +114,8 @@ const { activeSecurityScheme, authHeaderMap, authQueryMap } = composables.useAut
 
 const authHeaders = computed(() => authHeaderMap.value[activeSecurityScheme.value] ?? [])
 const authQuery = computed(() => authQueryMap.value[activeSecurityScheme.value] ?? '')
+
+const authHeaderNameList = ref<Array<string>>([])
 
 const response = ref<Response | undefined>()
 const responseError = ref<Error>()
@@ -218,8 +220,6 @@ const showTryIt = computed((): boolean => {
   return !hideTryIt.value && Array.isArray(props.data.servers) && !!props.data.servers.length
 })
 
-const authHeaderNameList = computed(() => authHeaders.value?.map(({ name }) => name) ?? [])
-
 watch(() => props.serverUrl, () => {
   currentServerUrl.value = props.serverUrl
 })
@@ -229,9 +229,10 @@ watch(() => props.requestBody, (body) => {
 }, { immediate: true })
 
 watch(() => (props.data.id), () => {
+  authHeaderNameList.value = authHeaders.value?.map(({ name }) => name) ?? []
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
-  currentRequestHeaders.value = []
+  currentRequestHeaders.value = getSampleHeaders({ data: props.data, excludeHeaderList: authHeaderNameList.value })
   response.value = undefined
   responseError.value = undefined
 }, { immediate: true })
