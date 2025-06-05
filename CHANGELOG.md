@@ -1,3 +1,10 @@
+## [1.94.21](https://github.com/Kong/spec-renderer/compare/v1.94.20...v1.94.21) (2025-06-05)
+
+
+### Bug Fixes
+
+* rolling back auth header name [TDX-5925] ([#600](https://github.com/Kong/spec-renderer/issues/600)) ([84ceb87](https://github.com/Kong/spec-renderer/commit/84ceb871d4ec94accf59c9708d7709f25597a95c))
+
 ## [1.94.20](https://github.com/Kong/spec-renderer/compare/v1.94.19...v1.94.20) (2025-06-04)
 
 
