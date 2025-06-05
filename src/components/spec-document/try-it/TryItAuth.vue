@@ -113,7 +113,7 @@ const updateAuthTokens = useDebounceFn(() => {
       const tokenValue = tokenValueMap.value[schemeKey] ?? ''
 
       // @ts-ignore `name` is valid attribute of the schema
-      const schemeName = scheme.name ?? scheme.scheme ?? schemeKey
+      const schemeName = scheme.name
       // @ts-ignore `in` is valid attribute of the schema
       const schemeIn = scheme.in
       // @ts-ignore `scheme` is valid attribute of the schema
