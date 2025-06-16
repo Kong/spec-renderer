@@ -25,7 +25,8 @@ export const getRequestHeaders = (data: IHttpOperation):Array<Record<string, str
   }
   headers.push({
     name: 'Content-Type',
-    value: data.responses?.[0]?.contents?.[0]?.mediaType ?? 'application/json',
+    value: data.request?.body?.contents?.[0]?.mediaType ??
+      data.responses?.[0]?.contents?.[0]?.mediaType ?? 'application/json',
   })
   return headers
 }
