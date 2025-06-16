@@ -1,3 +1,10 @@
+## [1.94.22](https://github.com/Kong/spec-renderer/compare/v1.94.21...v1.94.22) (2025-06-16)
+
+
+### Bug Fixes
+
+* grabbing request content type from request body first [TDX-5963] ([#606](https://github.com/Kong/spec-renderer/issues/606)) ([f89cc5c](https://github.com/Kong/spec-renderer/commit/f89cc5c2eda6df5b557c27f6b5cedc2dbe351e58))
+
 ## [1.94.21](https://github.com/Kong/spec-renderer/compare/v1.94.20...v1.94.21) (2025-06-05)
 
 
