@@ -9,11 +9,11 @@ describe('request-header', () => {
         body: {
           contents: [{
             id: 'xxx',
-            mediaType: 'application/x-www-form-urlencoded'
-          }]
-        }
-      }
-    } as unknown as IHttpOperation)).toEqual([{name: 'Content-Type', value: 'application/x-www-form-urlencoded'}])
+            mediaType: 'application/x-www-form-urlencoded',
+          }],
+        },
+      },
+    } as unknown as IHttpOperation)).toEqual([{ name: 'Content-Type', value: 'application/x-www-form-urlencoded' }])
   })
 })
 
