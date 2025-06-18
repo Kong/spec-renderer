@@ -115,7 +115,8 @@ const { activeSecurityScheme, authHeaderMap, authQueryMap } = composables.useAut
 const authHeaders = computed(() => authHeaderMap.value[activeSecurityScheme.value] ?? [])
 const authQuery = computed(() => authQueryMap.value[activeSecurityScheme.value] ?? '')
 
-const authHeaderNameList = ref<Array<string>>([])
+
+const authHeaderNameList = computed(() => authHeaders.value?.map(({ name }) => name) ?? [])
 
 const response = ref<Response | undefined>()
 const responseError = ref<Error>()
@@ -183,9 +184,9 @@ const doApiCall = async (callAsIs = false) => {
 
     url.search = queryStr
     const headers = [
-      ...(authHeaders?.value || []),
       ...getRequestHeaders(props.data),
       ...currentRequestHeaders.value,
+      ...(authHeaders?.value || []),
     ].reduce((acc, current) => {
       acc[ callAsIs === false && isGet ? current.name.toLowerCase() : current.name ] = current.value; return acc
     }, {})
@@ -228,11 +229,10 @@ watch(() => props.requestBody, (body) => {
   currentRequestBody.value = body
 }, { immediate: true })
 
-watch(() => (props.data.id), () => {
-  authHeaderNameList.value = authHeaders.value?.map(({ name }) => name) ?? []
+watch(() => ({ id: props.data.id, authHeaderNameList: authHeaderNameList.value }), (newValue: any) => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
-  currentRequestHeaders.value = getSampleHeaders({ data: props.data, excludeHeaderList: authHeaderNameList.value })
+  currentRequestHeaders.value = getSampleHeaders({ data: props.data, excludeHeaderList: newValue.authHeaderNameList })
   response.value = undefined
   responseError.value = undefined
 }, { immediate: true })

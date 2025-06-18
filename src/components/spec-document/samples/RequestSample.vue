@@ -282,9 +282,9 @@ watch(() => ({
         method: newValue.method.toUpperCase(),
         url: serverUrl.toString(),
         headers: [
-          ...newValue.authHeaders,
           ...getRequestHeaders(props.data),
           ...newValue.customHeaders,
+          ...newValue.authHeaders,
         ],
         postData: {
           mimeType: 'application/json',
