@@ -1,3 +1,10 @@
+## [1.94.23](https://github.com/Kong/spec-renderer/compare/v1.94.22...v1.94.23) (2025-06-18)
+
+
+### Bug Fixes
+
+* handle double headers [TDX-5990] ([#607](https://github.com/Kong/spec-renderer/issues/607)) ([3e387bf](https://github.com/Kong/spec-renderer/commit/3e387bf4158af6a4b32985d308b3fc2dffb50c29))
+
 ## [1.94.22](https://github.com/Kong/spec-renderer/compare/v1.94.21...v1.94.22) (2025-06-16)
 
 
