@@ -139,6 +139,7 @@ const sectionBodyEmpty = computed((): boolean =>
   (!props.data.request?.query || !props.data.request?.query.length) &&
   (!props.data.request?.path || !props.data.request?.path.length) &&
   (!props.data.request?.headers || !props.data.request?.headers.length) &&
+  (!props.data.security?.length) &&
   !currentRequestBody.value &&
   !response.value &&
   !responseError.value,
