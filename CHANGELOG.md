@@ -1,3 +1,10 @@
+## [1.94.24](https://github.com/Kong/spec-renderer/compare/v1.94.23...v1.94.24) (2025-06-20)
+
+
+### Bug Fixes
+
+* **try-it:** show section body evn if auth is the onyl field present [TDX-6048] ([#609](https://github.com/Kong/spec-renderer/issues/609)) ([b030d44](https://github.com/Kong/spec-renderer/commit/b030d44ebc01d136829c451e4910ddd8bfa5999b))
+
 ## [1.94.23](https://github.com/Kong/spec-renderer/compare/v1.94.22...v1.94.23) (2025-06-18)
 
 
