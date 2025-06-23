@@ -1,3 +1,10 @@
+## [1.94.28](https://github.com/Kong/spec-renderer/compare/v1.94.27...v1.94.28) (2025-06-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @apidevtools/json-schema-ref-parser to v13 ([#608](https://github.com/Kong/spec-renderer/issues/608)) ([66131c6](https://github.com/Kong/spec-renderer/commit/66131c60e1780cbc551906907222722ec775876b))
+
 ## [1.94.27](https://github.com/Kong/spec-renderer/compare/v1.94.26...v1.94.27) (2025-06-23)
 
 
