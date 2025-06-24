@@ -282,12 +282,14 @@ watch(() => ({
         ...newValue.authHeaders,
       ]
 
+      // returns json or formencoded body based on content-type header, we need to provide headers as an plain object key = header name, value: header value
       const { body } = getFormattedBody(headers.reduce((acc, current) => {
         acc[ current.name ] = current.value; return acc
       }, {}), newValue.requestBody)
 
       serverUrl.search = queryStr
 
+      // for HTTPSnippet we need to provide questy as an array of {name, value} objects
       const qObj = Object.fromEntries(serverUrl.searchParams)
       const qObjArr = Object.keys(qObj).map(p=>{
         return { name: p, value: qObj[p] }
