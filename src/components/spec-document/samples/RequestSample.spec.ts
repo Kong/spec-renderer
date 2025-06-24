@@ -117,13 +117,13 @@ describe('<RequestSample />', () => {
             url: 'global.api.konghq.com/v2',
           }],
         },
-        serverUrl: 'global.api.konghq.com/v2',
+        serverUrl: 'global.api.konghq.com:3000/v2',
         requestPath: '/path',
       },
     })
     await flushPromises()
     const code = wrapper.findTestId('request-sample-123').html()
-    expect(code).toMatch('--url http://global.api.konghq.com/v2/path')
+    expect(code).toMatch('--url http://global.api.konghq.com:3000/v2/path')
   })
 
 })
