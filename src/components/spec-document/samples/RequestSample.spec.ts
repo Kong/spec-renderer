@@ -123,7 +123,30 @@ describe('<RequestSample />', () => {
     })
     await flushPromises()
     const code = wrapper.findTestId('request-sample-123').html()
-    expect(code).toMatch('--url http://global.api.konghq.com:3000/v2/path')
+    expect(code).toMatch('--url global.api.konghq.com:3000/v2/path')
+  })
+
+  it('should use correct URL when url is specified as {protocol}://{hostname}/api/v3 [TDX-5963]', async () => {
+
+    const wrapper = mount(RequestSample, {
+      props: {
+        data: {
+          id: '123',
+          method: 'get',
+          path: '/sample-path',
+          responses: [],
+          servers: [{
+            id: 'sample-server-id',
+            url: 'global.api.konghq.com/v2',
+          }],
+        },
+        serverUrl: '{protocol}://{hostname}/api/v3',
+        requestPath: '/path',
+      },
+    })
+    await flushPromises()
+    const code = wrapper.findTestId('request-sample-123').html()
+    expect(code).toMatch('--url protocol://hostname/api/v3')
   })
 
 })

@@ -268,7 +268,7 @@ watch(() => ({
     newValue.customHeaders !== oldValue?.customHeaders) {
 
     try {
-      let serverUrl = new URL( (!newValue.serverUrl.startsWith('http') ? 'http://' : '') + newValue.serverUrl + newValue.requestPath.replaceAll('{', '').replaceAll('}', ''))
+      let serverUrl = new URL( (newValue.serverUrl + newValue.requestPath).replaceAll('{', '').replaceAll('}', '') )
       let queryStr = newValue.requestQuery
       if (newValue.authQuery) {
         queryStr += (newValue.requestQuery ? '&' : '?') + newValue.authQuery
@@ -295,9 +295,8 @@ watch(() => ({
       // preparing reqData for HTTPSnipped as prescribed in https://github.com/Kong/httpsnippet/blob/master/README.md?plain=1#L113
       const reqData = ({
         method: newValue.method.toUpperCase(),
-        // serverURL is coming from `new URL` so the parts are normalized as they should be , origin never doesn't have trading slash, and pathname always has a leading slash.
-        // so we can just do simple concat here, and don't worry about missing/extra slashes
-        url: serverUrl.origin + serverUrl.pathname,
+        // server.origin is set to null when protocol is invalid, we we have to use server.href here
+        url: serverUrl.href,
         queryString: qObjArr,
         headers,
         postData: {

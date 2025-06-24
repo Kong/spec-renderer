@@ -199,7 +199,7 @@ const doApiCall = async (callAsIs = false) => {
       queryStr += (currentRequestQuery.value ? '&' : '?') + authQuery.value
     }
 
-    const myResponse = await fetch(url, {
+    const myResponse = await fetch(url.href, {
       method: String(props.data.method).toUpperCase(),
       headers,
       ...(body ? { body } : null),

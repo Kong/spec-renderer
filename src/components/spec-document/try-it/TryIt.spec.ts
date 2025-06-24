@@ -28,7 +28,7 @@ describe('<TryIt />', () => {
 
     global.fetch = vi.fn()
     await wrapper.findTestId('tryit-call-button-123').trigger('click')
-    expect(fetch).toHaveBeenCalledWith(new URL('https://global.api.konghq.com/v2/sample-path'), {
+    expect(fetch).toHaveBeenCalledWith('https://global.api.konghq.com/v2/sample-path', {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -70,7 +70,7 @@ describe('<TryIt />', () => {
 
     global.fetch = vi.fn()
     await wrapper.findTestId('tryit-call-button-123').trigger('click')
-    expect(fetch).toHaveBeenCalledWith(new URL('https://global.api.konghq.com/v2/sample-path'), {
+    expect(fetch).toHaveBeenCalledWith('https://global.api.konghq.com/v2/sample-path', {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -101,7 +101,7 @@ describe('<TryIt />', () => {
     global.fetch = vi.fn()
     await wrapper.findTestId('tryit-call-button-123').trigger('click')
     // get request - first time needs to be called with content-type header deleted
-    expect(fetch).toHaveBeenCalledWith(new URL('https://global.api.konghq.com/v2/sample-path'), {
+    expect(fetch).toHaveBeenCalledWith('https://global.api.konghq.com/v2/sample-path', {
       headers: {
       },
       method: 'GET',
