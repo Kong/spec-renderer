@@ -92,7 +92,7 @@ import type { PropType, Ref } from 'vue'
 import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet'
 import { requestSampleConfigs } from '@/constants'
-import { getRequestHeaders } from '@/utils'
+import { getRequestHeaders, getFormattedBody } from '@/utils'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import type { LanguageCode } from '@/types/request-languages'
@@ -267,42 +267,59 @@ watch(() => ({
     newValue.authHeaders !== oldValue?.authHeaders ||
     newValue.customHeaders !== oldValue?.customHeaders) {
 
-    // TODO: handle body change gracefully
-
     try {
-
-      let serverUrl = new URL((newValue.serverUrl + newValue.requestPath).replaceAll('{', '').replaceAll('}', ''))
+      let serverUrl = new URL( (newValue.serverUrl + newValue.requestPath).replaceAll('{', '').replaceAll('}', '') )
       let queryStr = newValue.requestQuery
       if (newValue.authQuery) {
         queryStr += (newValue.requestQuery ? '&' : '?') + newValue.authQuery
       }
+      const headers = [
+        ...getRequestHeaders(props.data),
+        ...newValue.customHeaders,
+        ...newValue.authHeaders,
+      ]
+
+      // returns json or formencoded body based on content-type header, we need to provide headers as an plain object key = header name, value: header value
+      const { body } = getFormattedBody(headers.reduce((acc, current) => {
+        acc[ current.name ] = current.value; return acc
+      }, {}), newValue.requestBody)
 
       serverUrl.search = queryStr
-      const reqData: HarRequest = ({
+
+      // for HTTPSnippet we need to provide query as an array of {name, value} objects
+      const qObj = Object.fromEntries(serverUrl.searchParams)
+      const qObjArr = Object.keys(qObj).map(p=>{
+        return { name: p, value: qObj[p] }
+      })
+
+      // preparing reqData for HTTPSnipped as prescribed in https://github.com/Kong/httpsnippet/blob/master/README.md?plain=1#L113
+      const reqData = ({
         method: newValue.method.toUpperCase(),
-        url: serverUrl.toString(),
-        headers: [
-          ...getRequestHeaders(props.data),
-          ...newValue.customHeaders,
-          ...newValue.authHeaders,
-        ],
+        // server.origin is set to null when protocol is invalid, we we have to use server.href here
+        url: serverUrl.href,
+        queryString: qObjArr,
+        headers,
         postData: {
-          mimeType: 'application/json',
-          text: newValue.requestBody,
+          // HTTPsnippet is not doing nice trying to handle with body params based on mimeType, so we going to send pre-formatted body, and
+          // make HTTPsnippet to use as is by forcing mimeType as `text/plain`
+          mimeType: 'text/plain',
+          text:  body,
         },
+
       } as unknown as HarRequest)
 
       snippet.value = new HTTPSnippet(reqData)
 
       snippetChanged = true
-    } catch {
+    } catch (err) {
+      console.error('@kong/spec-renderer: error in HTTPSnippet', err)
       snippetError = true
     }
   }
   if (snippetError) {
     requestCode.value = 'Error initializing code snippet'
   } else {
-    // if we do not have requestCode generated, or our lanf or lib are changed - we need to re-generate requestCode
+    // if we do not have requestCode generated, or our lang or lib are changed - we need to re-generate requestCode
     if (!requestCode.value || snippetChanged || newValue.lang !== oldValue?.lang || newValue.lib !== oldValue?.lib) {
       if (newValue.lang === 'json') {
         requestCode.value = newValue.requestBody

@@ -66,6 +66,7 @@
     "@vueuse/core": "^13.3.0",
     "allof-merge": "^0.6.6",
     "flatted": "^3.3.3",
+    "form-urlencoded": "^6.1.5",
     "httpsnippet": "^3.0.9",
     "lodash-es": "^4.17.21",
     "markdown-it": "^14.1.0",

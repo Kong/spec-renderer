@@ -6,7 +6,7 @@ import TryIt from './TryIt.vue'
 
 describe('<TryIt />', () => {
   vi.stubGlobal('open', vi.fn())
-  it('should call fetch with correct url and headers for POST', async () => {
+  it('should call fetch with correct url, headers and body for POST', async () => {
     const wrapper = mount(TryIt, {
       props: {
         data: {
@@ -19,6 +19,7 @@ describe('<TryIt />', () => {
             url: 'https://global.api.konghq.com/v2',
           }],
         },
+        requestBody: '{"a": "1", "b": "2"}',
         serverUrl: 'https://global.api.konghq.com/v2',
       },
     })
@@ -27,11 +28,54 @@ describe('<TryIt />', () => {
 
     global.fetch = vi.fn()
     await wrapper.findTestId('tryit-call-button-123').trigger('click')
-    expect(fetch).toHaveBeenCalledWith(new URL('https://global.api.konghq.com/v2/sample-path'), {
+    expect(fetch).toHaveBeenCalledWith('https://global.api.konghq.com/v2/sample-path', {
       headers: {
         'Content-Type': 'application/json',
       },
       method: 'POST',
+      body: '{"a": "1", "b": "2"}',
+    })
+  })
+
+  it('should format body for form-urlencoded content-type [TDX-5963]', async () => {
+    const wrapper = mount(TryIt, {
+      props: {
+        data: {
+          id: '123',
+          method: 'post',
+          path: '/sample-path',
+          responses: [],
+          request: {
+            body: {
+              id: 'bodyId',
+              contents: [
+                {
+                  id: 'mediatypeId',
+                  mediaType: 'application/x-www-form-urlencoded',
+                },
+              ],
+            },
+          },
+          servers: [{
+            id: 'sample-server-id',
+            url: 'https://global.api.konghq.com/v2',
+          }],
+        },
+        requestBody: '{"a": "1", "b": "2"}',
+        serverUrl: 'https://global.api.konghq.com/v2',
+      },
+    })
+
+    expect(wrapper.findTestId('tryit-dropdown-123').exists()).toBe(false)
+
+    global.fetch = vi.fn()
+    await wrapper.findTestId('tryit-call-button-123').trigger('click')
+    expect(fetch).toHaveBeenCalledWith('https://global.api.konghq.com/v2/sample-path', {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      method: 'POST',
+      body: 'a=1&b=2',
     })
   })
 
@@ -57,7 +101,7 @@ describe('<TryIt />', () => {
     global.fetch = vi.fn()
     await wrapper.findTestId('tryit-call-button-123').trigger('click')
     // get request - first time needs to be called with content-type header deleted
-    expect(fetch).toHaveBeenCalledWith(new URL('https://global.api.konghq.com/v2/sample-path'), {
+    expect(fetch).toHaveBeenCalledWith('https://global.api.konghq.com/v2/sample-path', {
       headers: {
       },
       method: 'GET',
