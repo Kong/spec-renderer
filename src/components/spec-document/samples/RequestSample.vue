@@ -92,7 +92,7 @@ import type { PropType, Ref } from 'vue'
 import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet'
 import { requestSampleConfigs } from '@/constants'
-import { getRequestHeaders } from '@/utils'
+import { getRequestHeaders, getFormattedBody } from '@/utils'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import type { LanguageCode } from '@/types/request-languages'
@@ -276,33 +276,47 @@ watch(() => ({
       if (newValue.authQuery) {
         queryStr += (newValue.requestQuery ? '&' : '?') + newValue.authQuery
       }
+      const headers = [
+        ...getRequestHeaders(props.data),
+        ...newValue.customHeaders,
+        ...newValue.authHeaders,
+      ]
+
+      const { body } = getFormattedBody(headers.reduce((acc, current) => {
+        acc[ current.name ] = current.value; return acc
+      }, {}), newValue.requestBody)
 
       serverUrl.search = queryStr
-      const reqData: HarRequest = ({
+
+      const qObj = Object.fromEntries(serverUrl.searchParams)
+      const qObjArr = Object.keys(qObj).map(p=>{
+        return { name: p, value: qObj[p] }
+      })
+
+      const reqData = ({
         method: newValue.method.toUpperCase(),
-        url: serverUrl.toString(),
-        headers: [
-          ...getRequestHeaders(props.data),
-          ...newValue.customHeaders,
-          ...newValue.authHeaders,
-        ],
+        url: serverUrl.origin + serverUrl.pathname,
+        queryString: qObjArr,
+        headers,
         postData: {
-          mimeType: 'application/json',
-          text: newValue.requestBody,
+          mimeType: 'text/plain',
+          text:  body,
         },
+
       } as unknown as HarRequest)
 
       snippet.value = new HTTPSnippet(reqData)
 
       snippetChanged = true
-    } catch {
+    } catch (err) {
+      console.error('@kong/spec-renderer: error in HTTPSnippet ', err)
       snippetError = true
     }
   }
   if (snippetError) {
     requestCode.value = 'Error initializing code snippet'
   } else {
-    // if we do not have requestCode generated, or our lanf or lib are changed - we need to re-generate requestCode
+    // if we do not have requestCode generated, or our lang or lib are changed - we need to re-generate requestCode
     if (!requestCode.value || snippetChanged || newValue.lang !== oldValue?.lang || newValue.lib !== oldValue?.lib) {
       if (newValue.lang === 'json') {
         requestCode.value = newValue.requestBody

@@ -3,6 +3,7 @@ import { crawl, extractSampleForParam } from './schema-example'
 import { resolveSchemaObjectFields } from './schema-model'
 import { CODE_INDENT_SPACES } from '@/constants'
 import { safeJSONParse } from './strings'
+import formurlencoded from 'form-urlencoded'
 
 const getAcceptHeader = (data: IHttpOperation): string => {
   const headers = new Set()
@@ -146,4 +147,25 @@ export const getSampleBody = (contents: Array<IMediaTypeContent>, filteringOptio
     null,
     CODE_INDENT_SPACES,
   )
+}
+
+/**
+ * reformat body based on content-type header
+ * @param headers
+ * @param body
+ * @returns
+ */
+export const getFormattedBody = (headers: Record<string, string>, body: string | null | undefined): { body: string | null | undefined, contentType: string | undefined } => {
+  let contentType:string = ''
+  for (const key of Object.keys(headers)) {
+    if (key.toLowerCase() === 'content-type') {
+      contentType = headers[key]
+    }
+  }
+
+  if (body && contentType === 'application/x-www-form-urlencoded') {
+    return { body: formurlencoded(safeJSONParse(body)), contentType }
+  }
+
+  return { body, contentType }
 }

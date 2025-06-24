@@ -74,7 +74,7 @@
 import { inject, computed, ref, watch } from 'vue'
 import type { PropType, Ref } from 'vue'
 import TryItDropdown from './TryItDropdown.vue'
-import { getRequestHeaders, getSampleHeaders } from '@/utils'
+import { getRequestHeaders, getSampleHeaders, getFormattedBody } from '@/utils'
 import type { IHttpOperation } from '@stoplight/types'
 import MethodBadge from '@/components/common/MethodBadge.vue'
 import TryItAuth from './TryItAuth.vue'
@@ -176,13 +176,8 @@ const doApiCall = async (callAsIs = false) => {
   const isGet = props.data.method.toUpperCase() === 'GET'
   try {
     apiCallLoading.value = true
-    response.value = undefined
     const url = new URL(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''))
     let queryStr = currentRequestQuery.value
-    if (authQuery.value) {
-      queryStr += (currentRequestQuery.value ? '&' : '?') + authQuery.value
-    }
-
     url.search = queryStr
     const headers = [
       ...getRequestHeaders(props.data),
@@ -192,21 +187,28 @@ const doApiCall = async (callAsIs = false) => {
       acc[ callAsIs === false && isGet ? current.name.toLowerCase() : current.name ] = current.value; return acc
     }, {})
 
+    const { body } = getFormattedBody(headers, currentRequestBody.value)
+
     // first time we call GET - we will try to convert to simple request
     if (callAsIs === false && isGet) {
       if (headers['content-type']) {
         delete headers['content-type']
       }
     }
+    if (authQuery.value) {
+      queryStr += (currentRequestQuery.value ? '&' : '?') + authQuery.value
+    }
 
-    response.value = await fetch(url, {
+    const myResponse = await fetch(url, {
       method: String(props.data.method).toUpperCase(),
       headers,
-      ...(currentRequestBody.value ? { body: currentRequestBody.value } : null),
+      ...(body ? { body: body } : null),
     })
+    response.value = myResponse
+
   } catch (error: any) {
     // get request converted to simple request fails, let's try non-modified request and see
-    if (callAsIs && isGet) {
+    if (!callAsIs && isGet) {
       doApiCall(true)
       return
     }
