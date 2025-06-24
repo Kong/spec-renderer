@@ -1,3 +1,10 @@
+## [1.94.29](https://github.com/Kong/spec-renderer/compare/v1.94.28...v1.94.29) (2025-06-24)
+
+
+### Bug Fixes
+
+* **lint:** update and run eslint config ([#611](https://github.com/Kong/spec-renderer/issues/611)) ([fd221a9](https://github.com/Kong/spec-renderer/commit/fd221a9e6a9ce8ac86c39a3b24fd544b04674546))
+
 ## [1.94.28](https://github.com/Kong/spec-renderer/compare/v1.94.27...v1.94.28) (2025-06-23)
 
 
