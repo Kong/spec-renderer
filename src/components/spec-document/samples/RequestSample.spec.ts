@@ -102,4 +102,28 @@ describe('<RequestSample />', () => {
     expect(code).toMatch('--data \'a=1&amp;b=2\'')
   })
 
+
+  it('should use correct URL when protocol is not specified [TDX-5963]', async () => {
+
+    const wrapper = mount(RequestSample, {
+      props: {
+        data: {
+          id: '123',
+          method: 'get',
+          path: '/sample-path',
+          responses: [],
+          servers: [{
+            id: 'sample-server-id',
+            url: 'global.api.konghq.com/v2',
+          }],
+        },
+        serverUrl: 'global.api.konghq.com/v2',
+        requestPath: '/path',
+      },
+    })
+    await flushPromises()
+    const code = wrapper.findTestId('request-sample-123').html()
+    expect(code).toMatch('--url http://global.api.konghq.com/v2/path')
+  })
+
 })
