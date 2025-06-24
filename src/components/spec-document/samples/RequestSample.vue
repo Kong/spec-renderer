@@ -268,7 +268,7 @@ watch(() => ({
     newValue.customHeaders !== oldValue?.customHeaders) {
 
     try {
-      let serverUrl = new URL( (!newValue.serverUrl.includes(':') ? 'http://' : '') +  newValue.serverUrl + newValue.requestPath.replaceAll('{', '').replaceAll('}', ''))
+      let serverUrl = new URL( (!newValue.serverUrl.includes(':') ? 'http://' : '') + newValue.serverUrl + newValue.requestPath.replaceAll('{', '').replaceAll('}', ''))
       let queryStr = newValue.requestQuery
       if (newValue.authQuery) {
         queryStr += (newValue.requestQuery ? '&' : '?') + newValue.authQuery
