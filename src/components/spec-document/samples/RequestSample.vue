@@ -309,7 +309,7 @@ watch(() => ({
 
       snippetChanged = true
     } catch (err) {
-      console.error('@kong/spec-renderer: error in HTTPSnippet ', err)
+      console.error('@kong/spec-renderer: error in HTTPSnippet', err)
       snippetError = true
     }
   }
