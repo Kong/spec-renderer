@@ -289,7 +289,7 @@ watch(() => ({
 
       serverUrl.search = queryStr
 
-      // for HTTPSnippet we need to provide questy as an array of {name, value} objects
+      // for HTTPSnippet we need to provide querty as an array of {name, value} objects
       const qObj = Object.fromEntries(serverUrl.searchParams)
       const qObjArr = Object.keys(qObj).map(p=>{
         return { name: p, value: qObj[p] }
