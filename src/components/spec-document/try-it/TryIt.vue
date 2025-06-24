@@ -202,7 +202,7 @@ const doApiCall = async (callAsIs = false) => {
     const myResponse = await fetch(url, {
       method: String(props.data.method).toUpperCase(),
       headers,
-      ...(body ? { body: body } : null),
+      ...(body ? { body } : null),
     })
     response.value = myResponse
 
