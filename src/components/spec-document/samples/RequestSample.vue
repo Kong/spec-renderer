@@ -293,12 +293,17 @@ watch(() => ({
         return { name: p, value: qObj[p] }
       })
 
+      // preparing reqData for HTTPSnipped as prescribed in https://github.com/Kong/httpsnippet/blob/master/README.md?plain=1#L113
       const reqData = ({
         method: newValue.method.toUpperCase(),
+        // serverURL is coming from `new URL` so the parts are normalized as they should be , origin never doesn't have trading slash, and pathname always has a leading slash.
+        // so we can just do simple concat here, and don't worry about missing/extra slashes
         url: serverUrl.origin + serverUrl.pathname,
         queryString: qObjArr,
         headers,
         postData: {
+          // HTTPsnippet is not doing nice trying to handle with body params based on mimeType, so we going to send pre-formatted body, and
+          // make HTTPsnippet to use as is by forcing mimeType as `text/plain`
           mimeType: 'text/plain',
           text:  body,
         },
