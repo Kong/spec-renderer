@@ -1,3 +1,10 @@
+## [1.94.30](https://github.com/Kong/spec-renderer/compare/v1.94.29...v1.94.30) (2025-06-24)
+
+
+### Bug Fixes
+
+* request sample and call fixes for form-encoded data [TDX-5963] ([#610](https://github.com/Kong/spec-renderer/issues/610)) ([4e8efda](https://github.com/Kong/spec-renderer/commit/4e8efda12288c328c0295d1019b2216368a58671))
+
 ## [1.94.29](https://github.com/Kong/spec-renderer/compare/v1.94.28...v1.94.29) (2025-06-24)
 
 
