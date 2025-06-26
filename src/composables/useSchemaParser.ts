@@ -202,13 +202,7 @@ export default (): {
 
     trace(options.traceParsing, 'json document available')
 
-    try {
-      // TODO: let's see if we can detect some validation errors here
-    } catch (err) {
-      console.error('@kong/spec-renderer: error in validate:', err)
-    }
-
-    trace(options.traceParsing, 'validated')
+    // TODO: let's see if we can detect some validation errors here
 
     // resolve the titles for internal refs
     jsonDocument.value = titleResolve(jsonDocument.value)
