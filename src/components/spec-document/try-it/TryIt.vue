@@ -232,12 +232,18 @@ watch(() => props.requestBody, (body) => {
   currentRequestBody.value = body
 }, { immediate: true })
 
-watch(() => ({ id: props.data.id, authHeaderNameList: authHeaderNameList.value }), (newValue: any) => {
+watch(() => ({ id: props.data.id, authHeaderNameList: authHeaderNameList.value }), (newValue: any, oldValue) => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
   currentRequestHeaders.value = getSampleHeaders({ data: props.data, excludeHeaderList: newValue.authHeaderNameList })
-  response.value = undefined
-  responseError.value = undefined
+  if (newValue.id !== oldValue?.id || (
+    Array.isArray(newValue.authHeaderNameList) &&
+    Array.isArray(oldValue?.authHeaderNameList) &&
+    newValue.authHeaderNameList.length != oldValue.authHeaderNameList.length
+  )) {
+    response.value = undefined
+    responseError.value = undefined
+  }
 }, { immediate: true })
 
 </script>
