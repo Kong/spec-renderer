@@ -254,7 +254,7 @@ const props = defineProps({
 })
 
 // TODO: introduce and handle isParsed. show parsing state while parsing
-const { parseSpecDocument, parsedDocument, tableOfContents, validationResults } = composables.useSchemaParser()
+const { parseSpecDocument, parsedDocument, tableOfContents } = composables.useSchemaParser()
 
 const currentPathTOC = ref<string>(props.currentPath)
 const currentPathDOC = ref<string>(props.currentPath)
@@ -327,7 +327,6 @@ watch(() => ({
   if (props.traceParsing) {
     console.log('parsedDocument:', <ServiceNode>parsedDocument.value)
     console.log('tableOfContents:', tableOfContents.value)
-    console.log('validationResults:', validationResults.value)
   }
 }, { immediate: true })
 </script>

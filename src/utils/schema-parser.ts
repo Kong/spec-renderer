@@ -4,7 +4,6 @@ const {
   parseSpecDocument,
   parsedDocument,
   tableOfContents,
-  validationResults,
   parseOpenApiSpecDocument,
   parseAsyncApiSpecDocument,
   downloadSpecFile,
@@ -17,5 +16,4 @@ export {
   downloadSpecFile,
   parsedDocument,
   tableOfContents,
-  validationResults,
 }

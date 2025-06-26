@@ -4,7 +4,6 @@ import { computeAPITree, transformOasToServiceNode } from '@/stoplight/elements'
 import type { ServiceNode, ParseOptions } from '@/types'
 import { parse as parseYaml } from '@stoplight/yaml'
 import type { TableOfContentsItem } from '@/stoplight/elements-core'
-import type { ValidateResult } from '@scalar/openapi-parser'
 import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
 import { stringify } from 'flatted'
@@ -34,14 +33,12 @@ export default (): {
   downloadSpecFile: () => Promise<void>
   parsedDocument: Ref<ServiceNode | string | undefined>
   tableOfContents: Ref<TableOfContentsItem[] | string | undefined>
-  validationResults: Ref<ValidateResult | string | undefined>
 } => {
 
   const parsedDocument = ref<ServiceNode | string | undefined>()
   const jsonDocument = ref<Record<string, any> | undefined>()
 
   const tableOfContents = ref<TableOfContentsItem[] | undefined>()
-  const validationResults = ref<ValidateResult | undefined>()
 
   function tryParseYamlOrObject(yamlOrObject: unknown): Record<string, unknown> | undefined {
     if (typeof yamlOrObject === 'object' && yamlOrObject !== null) return <Record<string, unknown>>yamlOrObject
@@ -206,8 +203,7 @@ export default (): {
     trace(options.traceParsing, 'json document available')
 
     try {
-      // let's see if we can detect some validation errors here
-      // validationResults.value = await validate(spec || jsonDocument.value)
+      // TODO: let's see if we can detect some validation errors here
     } catch (err) {
       console.error('@kong/spec-renderer: error in validate:', err)
     }
@@ -358,6 +354,5 @@ export default (): {
     downloadSpecFile,
     parsedDocument,
     tableOfContents,
-    validationResults,
   }
 }
