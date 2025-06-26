@@ -1,3 +1,10 @@
+## [1.94.31](https://github.com/Kong/spec-renderer/compare/v1.94.30...v1.94.31) (2025-06-26)
+
+
+### Bug Fixes
+
+* do not reset response if relative data is not changed in watcher [TDX-6090] ([#612](https://github.com/Kong/spec-renderer/issues/612)) ([f291db4](https://github.com/Kong/spec-renderer/commit/f291db4b0ae87fa335d5de8041c0e06409f0c0d9))
+
 ## [1.94.30](https://github.com/Kong/spec-renderer/compare/v1.94.29...v1.94.30) (2025-06-24)
 
 
