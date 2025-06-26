@@ -1,3 +1,10 @@
+## [1.94.32](https://github.com/Kong/spec-renderer/compare/v1.94.31...v1.94.32) (2025-06-26)
+
+
+### Bug Fixes
+
+* remove unused validation references ([#613](https://github.com/Kong/spec-renderer/issues/613)) ([4cb5ff2](https://github.com/Kong/spec-renderer/commit/4cb5ff25322e9f8033cb307419987cee1f5eb1d2))
+
 ## [1.94.31](https://github.com/Kong/spec-renderer/compare/v1.94.30...v1.94.31) (2025-06-26)
 
 
