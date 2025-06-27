@@ -1,3 +1,10 @@
+## [1.94.33](https://github.com/Kong/spec-renderer/compare/v1.94.32...v1.94.33) (2025-06-27)
+
+
+### Bug Fixes
+
+* change publish token name ([#616](https://github.com/Kong/spec-renderer/issues/616)) ([308cfcd](https://github.com/Kong/spec-renderer/commit/308cfcd2ab1a9eeb8be96891e9149b7ec7a30c2b))
+
 ## [1.94.32](https://github.com/Kong/spec-renderer/compare/v1.94.31...v1.94.32) (2025-06-26)
 
 
