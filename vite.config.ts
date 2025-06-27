@@ -109,7 +109,6 @@ export default defineConfig({
       },
     },
   },
-  // TODO: If deploying to GitHub pages, enable this line
   base: process.env.USE_SANDBOX ? '/spec-renderer' : '/',
   build: {
     emptyOutDir: process.env.AS_WEB_COMPONENT !== 'true',
