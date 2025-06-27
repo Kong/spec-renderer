@@ -1,3 +1,10 @@
+## [1.94.34](https://github.com/Kong/spec-renderer/compare/v1.94.33...v1.94.34) (2025-06-27)
+
+
+### Bug Fixes
+
+* rename bot pat secret ([#617](https://github.com/Kong/spec-renderer/issues/617)) ([a923fd0](https://github.com/Kong/spec-renderer/commit/a923fd0b61f05ff9d476d5528f40ab156d0f530a))
+
 ## [1.94.33](https://github.com/Kong/spec-renderer/compare/v1.94.32...v1.94.33) (2025-06-27)
 
 
