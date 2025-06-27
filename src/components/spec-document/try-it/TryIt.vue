@@ -221,10 +221,12 @@ const doApiCall = async (callAsIs = false) => {
 /**
  * Hide try-it section if:
  * - `hideTryIt` prop is explicitly true
+ * - or `data.servers` is empty, which means that the spec does not have any servers defined
  * - or `serverUrl` prop is not provided, so try-it snippet can't be generated
  */
 const showTryIt = computed((): boolean => {
-  return !hideTryIt.value && !!props.serverUrl
+  const specHasServers = Array.isArray(props.data.servers) && props.data.servers.length > 0
+  return !hideTryIt.value && (!!props.serverUrl || specHasServers)
 })
 
 watch(() => props.serverUrl, () => {
