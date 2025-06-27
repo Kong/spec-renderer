@@ -2,7 +2,7 @@
 
 Kong's open-source spec renderer.
 
-Extended example of the usage can be found at [Online API documentation editor](https://github.com/Kong/spec-editor), and online application is available at [api-documentation.dev](https://api-documentation.dev).
+An online API specification editor is available at [api-documentation.dev](https://api-documentation.dev), and you can view the extended usage example [in the source repository](https://github.com/Kong/spec-editor).
 
 ## Table of Contents
 
