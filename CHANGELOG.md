@@ -1,3 +1,10 @@
+## [1.94.35](https://github.com/Kong/spec-renderer/compare/v1.94.34...v1.94.35) (2025-06-27)
+
+
+### Bug Fixes
+
+* remove sandbox deployment to github pages ([#618](https://github.com/Kong/spec-renderer/issues/618)) ([12de9f0](https://github.com/Kong/spec-renderer/commit/12de9f06d2ef56fe605cab1751ed1e63127bd989))
+
 ## [1.94.34](https://github.com/Kong/spec-renderer/compare/v1.94.33...v1.94.34) (2025-06-27)
 
 
