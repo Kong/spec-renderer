@@ -1,26 +1,28 @@
 # Kong Spec Renderer
 
-> [!IMPORTANT]
-> This repository and the `@kong/spec-renderer` package are currently in development on the `main` branch. Breaking changes should be expected.
->
-> Once the `1.x` version is ready, the package name will change to `@kong/spec-renderer`.
-
 Kong's open-source spec renderer.
 
-Url for sandbox https://kong.github.io/spec-renderer (deployed from main branch)
+Extended example of the usage can be found at [Online API documentation editor](https://github.com/Kong/spec-editor), and online application is available at [api-documentation.dev](https://api-documentation.dev).
+
+## Table of Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
   - [Vue 3 Component(s)](#vue-3-components)
   - [Vue 3 Plugin](#vue-3-plugin)
   - [No/Other framework via native web components](#noother-framework-via-native-web-components)
+    - [Example for react](#-example-for-react)
+    - [Example for html/script](#-example-for-htmlscript)
   - [Props](#props)
-- [Contributing \& Local Development](#contributing--local-development)
+    - [v-model](#v-model)
+- [Contributing & Local Development](#contributing--local-development)
   - [Development Sandbox](#development-sandbox)
+    - [Build and Preview the Development Sandbox](#build-and-preview-the-development-sandbox)
   - [Lint and fix](#lint-and-fix)
   - [Testing](#testing)
   - [Build for production](#build-for-production)
   - [Committing Changes](#committing-changes)
+    - [Enforcing Commit Format](#enforcing-commit-format)
   - [Approvals](#approvals)
   - [Package Publishing](#package-publishing)
 - [Third-party packages and Thank You](#third-party-packages-and-thank-you)
@@ -308,6 +310,6 @@ This repository utilizes [Semantic Release](https://github.com/semantic-release/
 
 - Thank You [Stoplight](https://stoplight.io/) for beautiful parser and AST producer [stoplight/http-spec](https://github.com/stoplightio/http-spec).
 
-- Thank You [Stoplight](https://stoplight.io/) for excellent approach for dealing with specification's table of contents and specification's  security definitions. Found in [elements](https://github.com/stoplightio/elements) and currently placed into [src/stoplight](src/stoplight/), while [PR]() back to elements package pending.
+- Thank You [Stoplight](https://stoplight.io/) for excellent approach for dealing with specification's table of contents and specification's  security definitions. Found in [elements](https://github.com/stoplightio/elements) and currently placed into [src/stoplight](src/stoplight/), while [PR](https://github.com/stoplightio/elements/pull/2751) back to elements package pending.
 
 - Thank You [AsyncApi](https://www.asyncapi.com/) for superb [@asyncapi/parser](https://github.com/asyncapi/parser-js).
