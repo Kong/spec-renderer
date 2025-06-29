@@ -88,7 +88,7 @@ const exampleModel = computed(() => {
   return crawledExample && Object.keys(crawledExample).length ? JSON.stringify(crawledExample, null, CODE_INDENT_SPACES) : ''
 })
 
-const hiddenFieldList = computed<SchemaModelPropertyField[]>(() =>
+const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
   exampleModel.value
     ? ['info', 'description', 'example']
     : ['info', 'description'],

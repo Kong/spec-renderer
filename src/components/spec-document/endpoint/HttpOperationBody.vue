@@ -36,7 +36,7 @@ defineProps({
     default: 'Response',
   },
   contentList: {
-    type: Array as PropType<IMediaTypeContent[]>,
+    type: Array as PropType<Array<IMediaTypeContent>>,
     default: () => [],
   },
   hideReadonly: {

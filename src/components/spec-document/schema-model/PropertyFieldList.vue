@@ -36,7 +36,7 @@ const props = defineProps({
     default: '',
   },
   hiddenFieldList: {
-    type: Array as PropType<SchemaModelPropertyField[]>,
+    type: Array as PropType<Array<SchemaModelPropertyField>>,
     default: () => [],
   },
   requiredFields: {
@@ -44,7 +44,7 @@ const props = defineProps({
     default: () => [],
   },
   variantSelectItemList: {
-    type: Array as PropType<SelectItem[]>,
+    type: Array as PropType<Array<SelectItem>>,
     default: () => [],
   },
   inheritanceTypeLabel: {

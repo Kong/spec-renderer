@@ -105,7 +105,7 @@ const headersText = computed((): string => {
 
 const responseText = ref<string>('')
 
-const resultOptions = computed((): SelectItem[] => {
+const resultOptions = computed((): Array<SelectItem> => {
   const opts = []
   if (responseText.value) {
     opts.push({ value: 'body', label: 'Result' })

@@ -27,7 +27,7 @@ const { schema } = defineProps({
 
 const hiddenFields = computed(() => {
   // example is already shown under the try-it section
-  const list: SchemaModelPropertyField[] = ['example', 'examples']
+  const list: Array<SchemaModelPropertyField> = ['example', 'examples']
   // If properties are present, we don't want to show the schema type
   if (schema.properties && Object.keys(schema.properties)?.length) {
     list.push('info')

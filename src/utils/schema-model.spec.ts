@@ -4,7 +4,7 @@ import type { SchemaObject } from '@/types'
 
 describe('isValidSchemaObject', () => {
   it('returns true for valid properties', () => {
-    const validPropertyList: SchemaObject[] = [
+    const validPropertyList: Array<SchemaObject> = [
       {
         type: 'object',
         properties: {
@@ -198,7 +198,7 @@ describe('filterSchemaObjectArray', () => {
     expect(filterSchemaObjectArray([])).toEqual([])
   })
   it('returns an array of valid Schema Objects', () => {
-    const validSchemaObjectList: SchemaObject[] = [
+    const validSchemaObjectList: Array<SchemaObject> = [
       {
         type: 'object',
         properties: {

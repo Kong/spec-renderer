@@ -41,7 +41,7 @@ describe('<ModelProperty />', () => {
   })
 
   describe('renders oneOf', () => {
-    const oneOfList: SchemaObject[] = [
+    const oneOfList: Array<SchemaObject> = [
       {
         type: 'object',
         title: 'HeadingBlock',
@@ -92,7 +92,7 @@ describe('<ModelProperty />', () => {
   })
 
   describe('renders anyOf', () => {
-    const anyOfList: SchemaObject[] = [
+    const anyOfList: Array<SchemaObject> = [
       {
         type: 'object',
         title: 'HeadingBlock',

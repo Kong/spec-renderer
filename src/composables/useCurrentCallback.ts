@@ -4,7 +4,7 @@ import type { IHttpCallbackOperation } from '@stoplight/types'
 import { getSampleBody } from '@/utils/request-data'
 import useCurrentResponse from './useCurrentResponse'
 
-export default function useCurrentCallback(callbackList: ComputedRef<IHttpCallbackOperation[]>) {
+export default function useCurrentCallback(callbackList: ComputedRef<Array<IHttpCallbackOperation>>) {
   const activeCallbackKey = ref<string>(callbackList.value[0]?.key ?? '')
 
   const callbackKeyList = computed(() => callbackList.value.map(callback => {

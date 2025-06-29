@@ -34,7 +34,7 @@ import type { SelectItem } from '@/types'
 
 const props = defineProps({
   contentList:{
-    type: Array as PropType<IMediaTypeContent[]>,
+    type: Array as PropType<Array<IMediaTypeContent>>,
     required: true,
   },
   responseCode: {
@@ -66,7 +66,7 @@ const activeResponseSample = computed(() => {
   return props.description
 })
 
-const exampleSelectList = computed((): SelectItem[] => {
+const exampleSelectList = computed((): Array<SelectItem> => {
   if (props.contentList[0]?.examples) {
     return props.contentList[0].examples.map((s, index) => {
       return {

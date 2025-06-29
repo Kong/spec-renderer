@@ -22,7 +22,7 @@ export default function useSchemaVariants(schemaModel: ComputedRef<SchemaObject>
   /**
    * If the schema model has variants, it returns the list of variants, else it returns an empty array
    */
-  const variantSelectItemList = computed((): SelectItem[] => {
+  const variantSelectItemList = computed((): Array<SelectItem> => {
     return schemaVariantList.value.map((variant, index) => {
       const variantTitle = inheritedPropertyName(index, variant.title)
       return {

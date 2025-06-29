@@ -5,7 +5,7 @@ import type { SelectComponentListItem } from '@/types'
 import { getResponseCodeKey } from '@/utils/response'
 import useContentTypes from './useContentTypes'
 
-export default function useResponseCode(responseList: ComputedRef<IHttpOperationResponse[]>) {
+export default function useResponseCode(responseList: ComputedRef<Array<IHttpOperationResponse>>) {
   // from the list of responses, get the list of response codes. Used to populate the response code select dropdown
   const responseCodeList = computed(() => responseList.value?.map(response => {
     return { value: response.code, label: response.code, key: getResponseCodeKey(response.code) }
@@ -20,7 +20,7 @@ export default function useResponseCode(responseList: ComputedRef<IHttpOperation
   const responseContents = computed(() => activeResponse.value?.contents ?? [])
   const { activeContentType, activeResponseContentList, contentTypeList } = useContentTypes(responseContents)
 
-  const responseSelectComponentList = computed((): SelectComponentListItem[] => {
+  const responseSelectComponentList = computed((): Array<SelectComponentListItem> => {
     const componentList = [{
       name: ResponseSelectComponent.ResponseCodeSelectMenu,
       value: activeResponseCode.value,

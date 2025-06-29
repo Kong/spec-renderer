@@ -48,7 +48,7 @@ import { ResponseSelectComponent } from '@/types'
 
 defineProps({
   componentList: {
-    type: Array as PropType<SelectComponentListItem[]>,
+    type: Array as PropType<Array<SelectComponentListItem>>,
     required: true,
   },
 })

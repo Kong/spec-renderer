@@ -3,7 +3,7 @@ import useSchemaVariants from './useSchemaVariants'
 import { computed } from 'vue'
 import type { SchemaObject } from '@/types'
 
-const schemaList: SchemaObject[] = [
+const schemaList: Array<SchemaObject> = [
   {
     title: 'product-version',
     properties: {

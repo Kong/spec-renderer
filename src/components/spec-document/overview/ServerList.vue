@@ -74,7 +74,7 @@ import { AddIcon } from '@kong/icons'
 
 defineProps({
   serverList: {
-    type: Array as PropType<IServer[]>,
+    type: Array as PropType<Array<IServer>>,
     required: true,
   },
   allowCustomServerUrl: {

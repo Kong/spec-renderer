@@ -23,15 +23,15 @@ import RequestParamList from './RequestParamList.vue'
 
 const props = defineProps({
   query: {
-    type: Array as PropType<IHttpQueryParam[]>,
+    type: Array as PropType<Array<IHttpQueryParam>>,
     default: () => [],
   },
   path: {
-    type: Array as PropType<IHttpPathParam[]>,
+    type: Array as PropType<Array<IHttpPathParam>>,
     default: () => [],
   },
   headers: {
-    type: Array as PropType<IHttpHeaderParam[]>,
+    type: Array as PropType<Array<IHttpHeaderParam>>,
     default: () => [],
   },
   titlePrefix: {

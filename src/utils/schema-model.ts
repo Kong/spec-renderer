@@ -14,7 +14,7 @@ export function isValidSchemaObject(candidate?: unknown): candidate is SchemaObj
  * Filter util for filtering out invalid schema objects from an array of schema objects
  * Useful for infering correct types and filtering arrays of type Array<JSONSchema7Definition>
  */
-export function filterSchemaObjectArray(candidate: unknown): SchemaObject[] {
+export function filterSchemaObjectArray(candidate: unknown): Array<SchemaObject> {
   return Array.isArray(candidate) ? candidate.filter(isValidSchemaObject) : []
 }
 

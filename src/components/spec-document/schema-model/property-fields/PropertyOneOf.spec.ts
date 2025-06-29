@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils'
 import PropertyOneOf from './PropertyOneOf.vue'
 import type { SchemaObject } from '@/types'
 
-const oneOfList: SchemaObject[] = [
+const oneOfList: Array<SchemaObject> = [
   {
     title: 'oneof-first-item',
     properties: {
@@ -61,7 +61,7 @@ describe('<PropertyOneOf />', () => {
     const wrapper = mount(PropertyOneOf, {
       props: {
         // types for oneOfList prop don't allow nulls, so we assert it to do a check
-        oneOfList: oneOfListWithNulls as SchemaObject[],
+        oneOfList: oneOfListWithNulls as Array<SchemaObject>,
       },
     })
 

@@ -7,6 +7,6 @@ export enum ResponseSelectComponent {
 export interface SelectComponentListItem {
   name: ResponseSelectComponent
   value: string
-  optionList: SelectItem[]
+  optionList: Array<SelectItem>
 }
 

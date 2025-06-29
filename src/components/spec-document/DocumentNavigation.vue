@@ -47,7 +47,7 @@ import type { DocumentNavigationItem } from '@/types'
 
 defineProps({
   neighborComponentList: {
-    type: Array as PropType<DocumentNavigationItem[]>,
+    type: Array as PropType<Array<DocumentNavigationItem>>,
     required: true,
   },
   basePath: {

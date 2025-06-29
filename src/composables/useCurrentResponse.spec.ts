@@ -4,7 +4,7 @@ import { computed } from 'vue'
 import type { IHttpOperationResponse } from '@stoplight/types'
 
 describe('useCurrentResponse', () => {
-  const responseList = computed<IHttpOperationResponse[]>(() => [
+  const responseList = computed<Array<IHttpOperationResponse>>(() => [
     {
       id: 'sample-response-1',
       code: '200',

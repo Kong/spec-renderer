@@ -36,7 +36,7 @@ import { getDefaultDescription } from '@/stoplight/elements-core'
 
 defineProps({
   securitySchemeList: {
-    type: Array as PropType<HttpSecurityScheme[]>,
+    type: Array as PropType<Array<HttpSecurityScheme>>,
     required: true,
   },
 })
