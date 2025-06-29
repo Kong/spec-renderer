@@ -1,3 +1,10 @@
+## [1.94.36](https://github.com/Kong/spec-renderer/compare/v1.94.35...v1.94.36) (2025-06-29)
+
+
+### Bug Fixes
+
+* **lint:** lint fix ([#620](https://github.com/Kong/spec-renderer/issues/620)) ([dd96f65](https://github.com/Kong/spec-renderer/commit/dd96f65355439fdfa2e50ef9fbce3f364856e43d))
+
 ## [1.94.35](https://github.com/Kong/spec-renderer/compare/v1.94.34...v1.94.35) (2025-06-27)
 
 
