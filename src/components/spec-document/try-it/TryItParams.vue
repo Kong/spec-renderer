@@ -100,7 +100,7 @@ const props = defineProps({
   },
   /** list of headers to exclude from TryIt */
   excludeHeaderList: {
-    type: Array as PropType<Array<string>>,
+    type: Array as PropType<string[]>,
     default: () => [],
   },
 })

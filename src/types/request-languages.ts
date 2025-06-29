@@ -9,7 +9,7 @@ interface LanguageConfig {
   label: string
   httpSnippetLanguage: LanguageCode
   highlightLanguage: string
-  libraries?: Array<LibraryConfig>
+  libraries?: LibraryConfig[]
 }
 
-export type RequestSampleConfigs = Array<LanguageConfig>
+export type RequestSampleConfigs = LanguageConfig[]

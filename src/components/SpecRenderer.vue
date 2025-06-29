@@ -80,14 +80,13 @@
 
 <script setup lang="ts">
 import { watch, ref } from 'vue'
-import type { PropType } from 'vue'
 import composables from '../composables'
 import SpecRendererToc from './spec-renderer-toc/SpecRendererToc.vue'
 import SpecDocument from './spec-document/SpecDocument.vue'
 import { MenuIcon } from '@kong/icons'
 import SlideOut from './common/SlideOut.vue'
-import type { SpecRendererProps, NavigationTypes } from '@/types'
-import { BOOL_VALIDATOR, IS_TRUE, NUMBER_VALIDATOR } from '@/utils'
+import type { SpecRendererProps } from '@/types'
+import { IS_TRUE } from '@/utils'
 import type { ServiceNode } from '@/types'
 import { DEFAULT_EXPANDED_PROPERTIES_DEPTH } from '@/constants'
 

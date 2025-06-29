@@ -71,7 +71,7 @@ export default (): {
     const refsSet = new Set()
     const fragmentsSet = new Set()
 
-    const deepGet = (obj: Record<string, any>, keys: Array<string>) => keys.reduce((xs, x) => xs?.[x] ?? null, obj)
+    const deepGet = (obj: Record<string, any>, keys: string[]) => keys.reduce((xs, x) => xs?.[x] ?? null, obj)
     const doResolve = (fragment: Record<string, any>, parentKey: string = ''): Record<string, any> => {
       Object.keys(fragment).forEach(key => {
         try {
