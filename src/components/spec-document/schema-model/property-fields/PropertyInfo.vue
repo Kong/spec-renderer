@@ -118,7 +118,7 @@ const props = defineProps({
     default: () => [],
   },
   variantsList: {
-    type: Array as PropType<Array<SelectItem>>,
+    type: Array as PropType<SelectItem[]>,
     default: () => [],
   },
   inheritanceTypeLabel: {

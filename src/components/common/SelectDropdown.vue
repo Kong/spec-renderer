@@ -92,7 +92,7 @@ const props = defineProps({
     default: 'Select',
   },
   items: {
-    type: Object as PropType<Array<SelectItem>>,
+    type: Object as PropType<SelectItem[]>,
     required: true,
   },
   placement: {

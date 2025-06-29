@@ -188,7 +188,7 @@ const props = defineProps({
   },
 })
 
-const securitySchemeGroupList = computed<Array<SecuritySchemeGroup>>(() => {
+const securitySchemeGroupList = computed<SecuritySchemeGroup[]>(() => {
   const schemeGroupList = []
   for (const secGroup of (props.data.security ?? [])) {
     if (secGroup.length) {
@@ -209,7 +209,7 @@ const securitySchemeGroupList = computed<Array<SecuritySchemeGroup>>(() => {
   return schemeGroupList
 })
 
-provide<ComputedRef<Array<SecuritySchemeGroup>>>('security-scheme-group-list', securitySchemeGroupList)
+provide<ComputedRef<SecuritySchemeGroup[]>>('security-scheme-group-list', securitySchemeGroupList)
 
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
