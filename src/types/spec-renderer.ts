@@ -1,7 +1,59 @@
 import type { JSONSchema7, JSONSchema7Type } from 'json-schema'
 
 export interface SpecRendererProps {
-  modelValue: string
+  /** Text of the specification. */
+  spec: string
+  /**
+   * Path of the page where spec-renderer is loaded on.
+   * This is needed to compute path to individual specification details
+   */
+  basePath?: string
+  /** Selected path of the spec section (UI). */
+  currentPath?: string
+  /** URL to fetch spec document from. */
+  specUrl?: string
+  /**
+   * Allow component itself to control URL in browser URL.
+   * When false it becomes the responsibility of consuming app.
+   */
+  controlAddressBar?: boolean | 'true' | 'false'
+  /**
+   * Defines how links are specified in toc.
+   * - path - id becomes part of the URL path.
+   * - hash - uses the hash portion of the URL to keep the UI in sync with the URL.
+  */
+  navigationType?: 'path' | 'hash'
+  /** Hide schemas from TOC. */
+  hideSchemas?: boolean | 'true' | 'false'
+  /** Hide internal endpoints from TOC. */
+  hideInternal?: boolean | 'true' | 'false'
+  /** Hide deprecated endpoints from TOC. */
+  hideDeprecated?: boolean | 'true' | 'false'
+  /** Hide the "Try it" UI. */
+  hideTryIt?: boolean | 'true' | 'false'
+  /** Hide the "Insomnia" option in the "Try it" UI. */
+  hideInsomniaTryIt?: boolean | 'true' | 'false'
+  /** Console log the parsing process and stages. */
+  traceParsing?: boolean | 'true' | 'false'
+  /** Use withCredential instructions when fetching external (http) references during parsing. */
+  withCredentials?: boolean | 'true' | 'false'
+  /** Allow scrolling trough operations/schemas. */
+  allowContentScrolling?: boolean | 'true' | 'false'
+  /** Scrolling container that holds the `SpecDocument`. Use window by default. */
+  documentScrollingContainer?: string
+  /** Use default markdown styling. If your host application provides its own default styles, you may want to set to `false`. */
+  markdownStyles?: boolean | 'true' | 'false'
+  /** Allow user to add custom server url which will be added to the list of available servers. */
+  allowCustomServerUrl?: boolean | 'true' | 'false'
+  /**
+   * Hide navigation buttons at the bottom of the document.
+   * Only relevant when not in content scrolling mode.
+   */
+  hideNavigationButtons?: boolean | 'true' | 'false'
+  /** Hide the spec download button. */
+  hideDownloadButton?: boolean | 'true' | 'false'
+  /** The max depth until which nested properties should remain expanded by default. */
+  maxExpandedDepth?: number | string
 }
 
 /**
@@ -83,59 +135,3 @@ export const RangeFields = [
 ] as const
 
 export type SchemaModelPropertyField = 'info' | 'description' | 'enum' | 'pattern' | 'range' | 'example' | 'examples' | 'default' | 'additionalProperties' | typeof RangeFields[number]
-
-export interface SpecRendererProps {
-  /** Text of the specification. */
-  spec: string
-  /**
-   * Path of the page where spec-renderer is loaded on.
-   * This is needed to compute path to individual specification details
-   */
-  basePath?: string
-  /** Selected path of the spec section (ui). */
-  currentPath?: string
-  /** URL to fetch spec document from. */
-  specUrl?: string
-  /**
-   * Allow component itself to control URL in browser URL.
-   * When false it becomes the responsibility of consuming app
-   */
-  controlAddressBar?: boolean | 'true' | 'false'
-  /**
-   * Defines how links are specified in toc.
-   * - path - id becomes part of the URL path.
-   * - hash - uses the hash portion of the URL to keep the UI in sync with the URL.
-  */
-  navigationType?: 'path' | 'hash'
-  /** Hide schemas from TOC. */
-  hideSchemas?: boolean | 'true' | 'false'
-  /** Hide internal endpoints from TOC. */
-  hideInternal?: boolean | 'true' | 'false'
-  /** Hide deprecated endpoints from TOC. */
-  hideDeprecated?: boolean | 'true' | 'false'
-  /** Hide the "Try it" UI. */
-  hideTryIt?: boolean | 'true' | 'false'
-  /** Hide the "Insomnia" option in the "Try it" UI. */
-  hideInsomniaTryIt?: boolean | 'true' | 'false'
-  /** Console log the parsing process and stages. */
-  traceParsing?: boolean | 'true' | 'false'
-  /** Use withCredential instructions when fetching external (http) references during parsing. */
-  withCredentials?: boolean | 'true' | 'false'
-  /** Allow scrolling trough operations/schemas. */
-  allowContentScrolling?: boolean | 'true' | 'false'
-  /** Scrolling container that holds the `SpecDocument`. Use window by default. */
-  documentScrollingContainer?: string
-  /** Use default markdown styling. If your host application provides its own default styles, you may want to set to `false`. */
-  markdownStyles?: boolean | 'true' | 'false'
-  /** Allow user to add custom server url which will be added to the list of available servers. */
-  allowCustomServerUrl?: boolean | 'true' | 'false'
-  /**
-   * Hide navigation buttons at the bottom of the document.
-   * Only relevant when not in content scrolling mode.
-   */
-  hideNavigationButtons?: boolean | 'true' | 'false'
-  /** Hide the spec download button. */
-  hideDownloadButton?: boolean | 'true' | 'false'
-  /** The max depth until which nested properties should remain expanded by default. */
-  maxExpandedDepth?: number | string
-}
