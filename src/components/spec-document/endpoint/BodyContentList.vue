@@ -49,7 +49,7 @@ const props = defineProps({
     default: '',
   },
   contents: {
-    type: Array as PropType<Array<IMediaTypeContent>>,
+    type: Array as PropType<IMediaTypeContent[]>,
     required: true,
   },
   hideReadonly: {

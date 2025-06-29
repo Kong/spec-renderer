@@ -8,7 +8,7 @@ import { ResponseSelectComponent } from '@/types'
  *
  * @param inputContentList — List of contents. Can be a ref or a plain array
  */
-export default function useContentTypes(inputContentList: MaybeRef<Array<IMediaTypeContent>>) {
+export default function useContentTypes(inputContentList: MaybeRef<IMediaTypeContent[]>) {
   // returns content type key, e.g. 'application/json' -> 'application-json'
   const getContentTypeKey = (contentType: string) => contentType.replace('/', '-')
 

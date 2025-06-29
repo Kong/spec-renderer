@@ -391,8 +391,8 @@ const hideNavigation = computed((): boolean => {
   return IS_TRUE(props.hideNavigationButtons) && specDocument.value.children.length < DISABLE_SCROLLING_ITEMS_LIMIT
 })
 
-const neighborComponentList = computed<Array<DocumentNavigationItem>>(() => {
-  const list: Array<DocumentNavigationItem> = []
+const neighborComponentList = computed<DocumentNavigationItem[]>(() => {
+  const list: DocumentNavigationItem[] = []
 
   if (hideNavigation.value || doContentScrolling.value) {
     return list
@@ -482,7 +482,7 @@ watch(() => ({ nodesList: nodesList.value,
   }
 
   const visibleEls:Array<Record<string, any>> = []
-  const visibleIndexes: Array<number> = []
+  const visibleIndexes: number[] = []
   Array.from(newValue.wrapperRef.children).forEach((c, i) => {
     const cEl = c as HTMLElement
 

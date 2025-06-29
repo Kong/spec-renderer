@@ -153,7 +153,7 @@ const exampleModel = computed(() => {
  * - info and description fields are always hidden
  * - example field is hidden when exampleVisible prop is false or exampleModel is rendered inside the example section
  */
-const hiddenFieldList = computed<Array<SchemaModelPropertyField>>(() =>
+const hiddenFieldList = computed<SchemaModelPropertyField[]>(() =>
   exampleModel.value || !showExample.value
     ? ['info', 'description', 'example']
     : ['info', 'description'],

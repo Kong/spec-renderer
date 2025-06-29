@@ -72,12 +72,12 @@ defineProps({
 
 const { activeSecurityScheme, tokenValueMap, authHeaderMap, authQueryMap } = composables.useAuthTokenState()
 
-const securitySchemeGroupList = inject<ComputedRef<Array<SecuritySchemeGroup>>>('security-scheme-group-list', computed(() => []))
+const securitySchemeGroupList = inject<ComputedRef<SecuritySchemeGroup[]>>('security-scheme-group-list', computed(() => []))
 
 /**
  * Extracts the list of select-items for the security scheme group selector.
 */
-const securitySchemeGroupSelectItems = computed<Array<SelectItem>>(() => {
+const securitySchemeGroupSelectItems = computed<SelectItem[]>(() => {
   return securitySchemeGroupList.value.map((group) => ({
     label: group.title,
     value: group.key,

@@ -2,7 +2,7 @@ import { computed, ref, shallowRef } from 'vue'
 import { removeTrailingSlash } from '@/utils/strings'
 import type { IServer } from '@stoplight/types'
 
-type ServerList = Array<IServer>
+type ServerList = IServer[]
 type SelectedServerUrl = string
 
 const serverList = ref<ServerList>([])
