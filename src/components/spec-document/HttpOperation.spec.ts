@@ -15,7 +15,7 @@ describe('<HttpOperation />', () => {
             id: '123',
             path: '/sample-path',
             method: 'get',
-            servers: <Array<IServer>>[{
+            servers: <IServer[]>[{
               id: 'sample-server-id',
               url: 'https://stoplight.io/api',
               description: 'sample description',
@@ -31,7 +31,7 @@ describe('<HttpOperation />', () => {
         props: {
           data: <IHttpOperation>{
             id: '123',
-            servers: <Array<IServer>>[{
+            servers: <IServer[]>[{
               id: 'sample-server-id',
               url: 'https://stoplight.io/api',
               description: 'sample description',
@@ -53,7 +53,7 @@ describe('<HttpOperation />', () => {
         props: {
           data: <IHttpOperation>{
             id: '123',
-            servers: <Array<IServer>>[{
+            servers: <IServer[]>[{
               id: 'sample-server-id',
               url: 'https://stoplight.io/api',
               description: 'sample description',

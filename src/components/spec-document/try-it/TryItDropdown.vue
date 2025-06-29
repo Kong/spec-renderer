@@ -74,7 +74,7 @@ const emit = defineEmits<{
   (e: 'tryit-api-call'): void
 }>()
 
-const items: Array<SelectItem> = [
+const items: SelectItem[] = [
   {
     label: 'in Browser',
     value: 'browser',

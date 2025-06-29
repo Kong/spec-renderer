@@ -68,7 +68,7 @@ const props = defineProps({
     required: true,
   },
   serverUrlList: {
-    type: Array as PropType <Array<string>>,
+    type: Array as PropType <string[]>,
     required: true,
   },
   selectedServerUrl: {

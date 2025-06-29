@@ -93,7 +93,7 @@ export const getSampleQuery = (data: IHttpOperation, fieldValues?: Record<string
   return urlParams.toString()
 }
 
-export const getSampleHeaders = ({ data, fieldValues, excludeHeaderList }: { data: IHttpOperation, fieldValues?: Record<string, string> | undefined, excludeHeaderList?: Array<string> }): Array<Record<string, string>> => {
+export const getSampleHeaders = ({ data, fieldValues, excludeHeaderList }: { data: IHttpOperation, fieldValues?: Record<string, string> | undefined, excludeHeaderList?: string[] }): Array<Record<string, string>> => {
   const myFieldValues = fieldValues || {}
   const headers: Array<Record<string, string>> = []
 
@@ -124,7 +124,7 @@ export const getSampleHeaders = ({ data, fieldValues, excludeHeaderList }: { dat
  * @param sampleIdx index of example to be used
  * @returns query string
  */
-export const getSampleBody = (contents: Array<IMediaTypeContent>, filteringOptions: Record<string, boolean> = { excludeReadonly: true, excludeNotRequired: false }, sampleIdx: number = 0): string => {
+export const getSampleBody = (contents: IMediaTypeContent[], filteringOptions: Record<string, boolean> = { excludeReadonly: true, excludeNotRequired: false }, sampleIdx: number = 0): string => {
   if (!contents.length || !contents[0]) {
     return ''
   }
