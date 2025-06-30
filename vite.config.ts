@@ -139,10 +139,10 @@ export default defineConfig({
         }
         : path.resolve(__dirname, './src/index.ts'),
       external: externalDependencies,
-      output: process.env.USE_SANDBOX || process.env.VITE_AS_WEB_COMPONENT === 'true'
+      output: process.env.USE_SANDBOX
         ? undefined
         : {
-          globals: {
+          globals: process.env.AS_WEB_COMPONENT === 'true' ? undefined : {
             vue: 'Vue',
           },
           exports: 'named',
