@@ -23,7 +23,7 @@
         href="https://api-documentation.dev/"
         target="_blank"
       >
-        api-documentation.dev
+        API documentation editor
         <ExternalLinkIcon
           decorative
           :size="KUI_ICON_SIZE_30"
