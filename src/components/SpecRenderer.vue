@@ -15,6 +15,7 @@
           class="spec-renderer-toc"
           :control-address-bar="controlAddressBar"
           :current-path="currentPathTOC"
+          :hide-powered-by="false"
           :navigation-type="navigationType"
           :table-of-contents="tableOfContents"
           @item-selected="itemSelected"
@@ -29,6 +30,7 @@
           class="spec-renderer-toc"
           :control-address-bar="controlAddressBar"
           :current-path="currentPathTOC"
+          :hide-powered-by="false"
           :navigation-type="navigationType"
           :table-of-contents="tableOfContents"
           @item-selected="itemSelected"
@@ -110,6 +112,7 @@ const {
   allowCustomServerUrl = true,
   hideNavigationButtons = true,
   hideDownloadButton = false,
+  hidePoweredBy = true,
   maxExpandedDepth = DEFAULT_EXPANDED_PROPERTIES_DEPTH,
 } = defineProps<SpecRendererProps>()
 

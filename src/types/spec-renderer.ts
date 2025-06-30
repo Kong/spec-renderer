@@ -52,6 +52,8 @@ export interface SpecRendererProps {
   hideNavigationButtons?: boolean | 'true' | 'false'
   /** Hide the spec download button. */
   hideDownloadButton?: boolean | 'true' | 'false'
+  /** Hide the "Powered by Kong" content in the SpecRendererTOC. */
+  hidePoweredBy?: boolean | 'true' | 'false'
   /** The max depth until which nested properties should remain expanded by default. */
   maxExpandedDepth?: number | string
 }

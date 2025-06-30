@@ -17,5 +17,6 @@ Required<'specUrl'> |
 'allowCustomServerUrl' |
 'hideNavigationButtons' |
 'hideDownloadButton' |
+'hidePoweredBy' |
 'maxExpandedDepth'
 > { }
