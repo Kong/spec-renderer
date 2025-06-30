@@ -56,11 +56,11 @@
         <label for="default-md-styling">Default markdown styling</label>
         |
         <input
-          id="hide-powered-by"
+          id="show-powered-by"
           v-model="showPoweredBy"
           type="checkbox"
         >
-        <label for="hide-powered-by">Hide powered by</label>
+        <label for="show-powered-by">Show powered by</label>
         |
         <label for="navigation-type">Navigation: &nbsp;</label>
         <select
@@ -85,11 +85,11 @@
       :current-path="currentPath"
       :hide-deprecated="hideDeprecated"
       :hide-navigation-buttons="hideNavigationButtons"
-      :hide-powered-by="showPoweredBy"
       :hide-schemas="hideSchemas"
       :hide-try-it="hideTryIt"
       :markdown-styles="markdownStyles"
       :navigation-type="navigationType"
+      :show-powered-by="showPoweredBy"
       :spec="specText"
       :spec-url="specUrl"
       :trace-parsing="true"
@@ -117,7 +117,7 @@ const hideDeprecated = ref<boolean>(false)
 const hideTryIt = ref<boolean>(false)
 const allowContentScrolling = ref<boolean>(true)
 const markdownStyles = ref<boolean>(true)
-const showPoweredBy = ref<boolean>(true)
+const showPoweredBy = ref<boolean>(false)
 const allowCustomServerUrl = ref<boolean>(true)
 const hideNavigationButtons = ref<boolean>(false)
 

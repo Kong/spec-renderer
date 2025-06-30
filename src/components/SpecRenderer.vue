@@ -15,8 +15,8 @@
           class="spec-renderer-toc"
           :control-address-bar="controlAddressBar"
           :current-path="currentPathTOC"
-          :hide-powered-by="showPoweredBy"
           :navigation-type="navigationType"
+          :show-powered-by="showPoweredBy"
           :table-of-contents="tableOfContents"
           @item-selected="itemSelected"
         />
@@ -30,8 +30,8 @@
           class="spec-renderer-toc"
           :control-address-bar="controlAddressBar"
           :current-path="currentPathTOC"
-          :hide-powered-by="showPoweredBy"
           :navigation-type="navigationType"
+          :show-powered-by="showPoweredBy"
           :table-of-contents="tableOfContents"
           @item-selected="itemSelected"
         />
