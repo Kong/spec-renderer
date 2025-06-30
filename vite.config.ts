@@ -127,7 +127,7 @@ export default defineConfig({
             return `kong-spec-renderer.${process.env.VITE_AS_WEB_COMPONENT === 'true' ? 'web-component.' : ''}${format}.js`
           }
         },
-        formats: ['es', 'cjs'],
+        formats: ['es', 'cjs', 'umd'],
         cssFileName: 'spec-renderer',
       },
     minify: true,
