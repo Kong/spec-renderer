@@ -204,7 +204,6 @@ const tocAndDocComponents = async () => {
     <kong-spec-renderer
       spec-url="https://raw.githubusercontent.com/Kong/spec-renderer/refs/heads/main/sandbox/public/specs/beer-and-coffee.yaml"
       navigation-type="hash"
-      hide-insomnia-try-it="true"
     />
 
     <script type="module">

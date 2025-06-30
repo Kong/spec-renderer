@@ -36,7 +36,6 @@ export {
 
 // Exports a function that registers all custom elements as native web components
 export function registerKongSpecRenderer(): void {
-
   if (!customElements.get('kong-spec-renderer')) {
     const specRendererCustomElement = defineCustomElement(SpecRenderer)
     customElements.define('kong-spec-renderer', specRendererCustomElement)
@@ -64,6 +63,3 @@ if (typeof window !== 'undefined') {
   // @ts-ignore
   window.registerKongSpecRenderer = registerKongSpecRenderer
 }
-
-// TODO: REMOVE BEFORE MERGE
-registerKongSpecRenderer()
