@@ -1,3 +1,10 @@
+# [1.95.0](https://github.com/Kong/spec-renderer/compare/v1.94.37...v1.95.0) (2025-06-30)
+
+
+### Features
+
+* **nitro:** prep for nitro integration ([#619](https://github.com/Kong/spec-renderer/issues/619)) ([e14216d](https://github.com/Kong/spec-renderer/commit/e14216d1366dedd0e5b78036de3f594eb25bd98b))
+
 ## [1.94.37](https://github.com/Kong/spec-renderer/compare/v1.94.36...v1.94.37) (2025-06-30)
 
 
