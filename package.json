@@ -33,7 +33,7 @@
     "dev": "cross-env USE_SANDBOX=true vite",
     "build": "pnpm run typecheck && pnpm run build:package && pnpm run build:webcomponent && pnpm run build:types && pnpm run build:aliases",
     "build:package": "vite build -m production",
-    "build:webcomponent": "cross-env AS_WEB_COMPONENT='true' vite build -m production",
+    "build:webcomponent": "cross-env VITE_AS_WEB_COMPONENT='true' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "build:aliases": "tsc-alias -p './tsconfig.build.json'",
     "build:analyzer": "BUILD_VISUALIZER='true' vite build -m production",
