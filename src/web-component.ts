@@ -29,8 +29,6 @@ export function registerKongSpecRenderer(): void {
     const schemaRendererCustomElement = defineCustomElement(SchemaRenderer)
     customElements.define('kong-schema-renderer', schemaRendererCustomElement)
   }
-
-  console.log('elements registered')
 }
 
 // Auto-register the function to the window object
