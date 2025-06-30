@@ -15,7 +15,7 @@
       />
     </ul>
     <div
-      v-if="!hidePoweredBy"
+      v-if="showPoweredBy"
       class="powered-by"
     >
       <a
@@ -95,11 +95,11 @@ const props = defineProps({
     type: String as PropType<NavigationTypes>,
     default: 'path',
   },
-  /** Hide the "Powered by Kong" content in the SpecRendererTOC. Defaults to `true`. */
-  hidePoweredBy: {
+  /** Show the "Powered by Kong" content in the SpecRendererTOC. Defaults to `false`. */
+  showPoweredBy: {
     type: [Boolean, String],
     validator: BOOL_VALIDATOR,
-    default: true,
+    default: false,
   },
 })
 

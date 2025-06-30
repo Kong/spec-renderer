@@ -57,7 +57,7 @@
         |
         <input
           id="hide-powered-by"
-          v-model="hidePoweredBy"
+          v-model="showPoweredBy"
           type="checkbox"
         >
         <label for="hide-powered-by">Hide powered by</label>
@@ -85,7 +85,7 @@
       :current-path="currentPath"
       :hide-deprecated="hideDeprecated"
       :hide-navigation-buttons="hideNavigationButtons"
-      :hide-powered-by="hidePoweredBy"
+      :hide-powered-by="showPoweredBy"
       :hide-schemas="hideSchemas"
       :hide-try-it="hideTryIt"
       :markdown-styles="markdownStyles"
@@ -117,7 +117,7 @@ const hideDeprecated = ref<boolean>(false)
 const hideTryIt = ref<boolean>(false)
 const allowContentScrolling = ref<boolean>(true)
 const markdownStyles = ref<boolean>(true)
-const hidePoweredBy = ref<boolean>(true)
+const showPoweredBy = ref<boolean>(true)
 const allowCustomServerUrl = ref<boolean>(true)
 const hideNavigationButtons = ref<boolean>(false)
 
