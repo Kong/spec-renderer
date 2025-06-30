@@ -19,7 +19,7 @@ const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
 // !Important: always externalize `shiki/onig.wasm`
 const externalDependencies: string[] = ['shiki/onig.wasm']
 // If not loading sandbox, externalize vue
-if (!process.env.USE_SANDBOX && process.env.AS_WEB_COMPONENT !== 'true') {
+if (!process.env.USE_SANDBOX && process.env.VITE_AS_WEB_COMPONENT !== 'true') {
   externalDependencies.push('vue')
 }
 // https://vitejs.dev/config/
@@ -79,7 +79,7 @@ export default defineConfig({
     }),
     vue({
       features: {
-        customElement: process.env.AS_WEB_COMPONENT === 'true',
+        customElement: process.env.VITE_AS_WEB_COMPONENT === 'true',
       },
       template: {
         compilerOptions: {
@@ -111,23 +111,23 @@ export default defineConfig({
   },
   base: process.env.USE_SANDBOX ? '/spec-renderer' : '/',
   build: {
-    emptyOutDir: process.env.AS_WEB_COMPONENT !== 'true',
+    emptyOutDir: process.env.VITE_AS_WEB_COMPONENT !== 'true',
     commonjsOptions: {
       transformMixedEsModules: true,
     },
     lib: process.env.USE_SANDBOX
       ? undefined
       : {
-        entry: path.resolve(__dirname, 'src/index.ts'),
+        entry: process.env.VITE_AS_WEB_COMPONENT === 'true' ? path.resolve(__dirname, 'src/web-component.ts') : path.resolve(__dirname, 'src/index.ts'),
         name: 'KongSpecRenderer',
         fileName: (format) => {
           if (format === 'cjs') {
-            return `kong-spec-renderer.${process.env.AS_WEB_COMPONENT === 'true' ? 'web-component.' : ''}cjs`
+            return `kong-spec-renderer.${process.env.VITE_AS_WEB_COMPONENT === 'true' ? 'web-component.' : ''}cjs`
           } else {
-            return `kong-spec-renderer.${process.env.AS_WEB_COMPONENT === 'true' ? 'web-component.' : ''}${format}.js`
+            return `kong-spec-renderer.${process.env.VITE_AS_WEB_COMPONENT === 'true' ? 'web-component.' : ''}${format}.js`
           }
         },
-        formats: ['es', 'cjs'],
+        formats: ['es', 'cjs', 'umd'],
         cssFileName: 'spec-renderer',
       },
     minify: true,
@@ -139,10 +139,10 @@ export default defineConfig({
         }
         : path.resolve(__dirname, './src/index.ts'),
       external: externalDependencies,
-      output: process.env.USE_SANDBOX || process.env.AS_WEB_COMPONENT === 'true'
+      output: process.env.USE_SANDBOX
         ? undefined
         : {
-          globals: {
+          globals: process.env.AS_WEB_COMPONENT === 'true' ? undefined : {
             vue: 'Vue',
           },
           exports: 'named',

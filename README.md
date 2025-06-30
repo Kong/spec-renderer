@@ -144,7 +144,6 @@ This is to renderer SchemaRenderer component
 
 ### No/Other framework via native web components
 
-
 Import the package and call the provided `registerSpecRenderer` function.
 
 #### - Example for react
@@ -190,14 +189,28 @@ const tocAndDocComponents = async () => {
 #### - Example for html/script
 
 ```html
-<html>
+<html lang="en">
   <head>
-    <script src="./lib/kong-spec-renderer.web-component.umd.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@kong/spec-renderer@^1/dist/spec-renderer.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+    <style>
+    body { font-family: 'Inter', Roboto, Helvetica, sans-serif; }
+    </style>
   </head>
   <body>
-     <kong-spec-renderer
-      spec="openapi: 3.1.0 ..."
+    <kong-spec-renderer
+      spec-url="https://raw.githubusercontent.com/Kong/spec-renderer/refs/heads/main/sandbox/public/specs/beer-and-coffee.yaml"
+      navigation-type="hash"
     />
+
+    <script type="module">
+    import { registerKongSpecRenderer } from 'https://cdn.jsdelivr.net/npm/@kong/spec-renderer@^1/dist/kong-spec-renderer.web-component.es.js'
+    registerKongSpecRenderer()
+    </script>
   </body>
 </html>
 ```
@@ -207,11 +220,7 @@ As of now only `SpecRenderer` as single component is supported for this. Let us 
 
 ### Props
 
-#### `v-model`
-
-- type: `String`
-- required: `false`
-- default: `''`
+[Check out the `SpecRendererProps` interface](./src/types/spec-renderer.ts) for all props valid for the `SpecRenderer` component.
 
 ## Contributing & Local Development
 

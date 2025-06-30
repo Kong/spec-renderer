@@ -16,6 +16,7 @@
           :control-address-bar="controlAddressBar"
           :current-path="currentPathTOC"
           :navigation-type="navigationType"
+          :show-powered-by="showPoweredBy"
           :table-of-contents="tableOfContents"
           @item-selected="itemSelected"
         />
@@ -30,6 +31,7 @@
           :control-address-bar="controlAddressBar"
           :current-path="currentPathTOC"
           :navigation-type="navigationType"
+          :show-powered-by="showPoweredBy"
           :table-of-contents="tableOfContents"
           @item-selected="itemSelected"
         />
@@ -80,184 +82,45 @@
 
 <script setup lang="ts">
 import { watch, ref } from 'vue'
-import type { PropType } from 'vue'
 import composables from '../composables'
 import SpecRendererToc from './spec-renderer-toc/SpecRendererToc.vue'
 import SpecDocument from './spec-document/SpecDocument.vue'
 import { MenuIcon } from '@kong/icons'
 import SlideOut from './common/SlideOut.vue'
-import type { NavigationTypes } from '@/types'
-import { BOOL_VALIDATOR, IS_TRUE, NUMBER_VALIDATOR } from '@/utils'
+import type { SpecRendererProps } from '@/types'
+import { IS_TRUE } from '@/utils'
 import type { ServiceNode } from '@/types'
 import { DEFAULT_EXPANDED_PROPERTIES_DEPTH } from '@/constants'
 
-const props = defineProps({
-  /**
-   * Text of the specification.
-   */
-  spec: {
-    type: String,
-    required: true,
-  },
-  /**
-   * Path of the page where spec-renderer is loaded on.
-   * his is needed to compute path to individual specification details
-   */
-  basePath: {
-    type: String,
-    default: '',
-  },
-  /**
-   * Selected path of the spec section (ui)
-   */
-  currentPath: {
-    type: String,
-    default: '/',
-  },
-  /**
-   * URL to fetch spec document from
-   */
-  specUrl: {
-    type: String,
-    default: '',
-  },
-  /**
-   * Allow component itself to control URL in browser URL.
-   * When false it becomes the responsibility of consuming app
-   */
-  controlAddressBar: {
-    type: [Boolean, String],
-    validator: BOOL_VALIDATOR,
-    default: true,
-  },
-  /**
-      Defines how links are specified in toc
-        path - id becomes part of the URL path.
-        hash - uses the hash portion of the URL to keep the UI in sync with the URL.
-  */
-  navigationType: {
-    type: String as PropType<NavigationTypes>,
-    default: 'path',
-  },
-  /**
-   * hide schemas from TOC
-   */
-  hideSchemas: {
-    type: [Boolean, String],
-    validator: BOOL_VALIDATOR,
-    default: false,
-  },
-  /**
-   * hide internal endpoints from TOC
-   */
-  hideInternal: {
-    type: [Boolean, String],
-    validator: BOOL_VALIDATOR,
-    default: false,
-  },
-  /**
-   * hide deprecated endpoints from TOC
-   */
-  hideDeprecated: {
-    type: [Boolean, String],
-    validator: BOOL_VALIDATOR,
-    default: false,
-  },
-  /**
-   * Do not show TryIt section
-   */
-  hideTryIt: {
-    type: [Boolean, String],
-    validator: BOOL_VALIDATOR,
-    default: false,
-  },
-  /**
-   * Do not show  Insomnia option in TryIt
-   */
-  hideInsomniaTryIt: {
-    type: [Boolean, String],
-    validator: BOOL_VALIDATOR,
-    default: false,
-  },
-  /**
-   * console out parsing process and stages
-   */
-  traceParsing: {
-    type: [Boolean, String],
-    validator: BOOL_VALIDATOR,
-    default: false,
-  },
-  /**
-   * use withCredential instructions when fetching external (http) references during parsing
-   */
-  withCredentials: {
-    type: [Boolean, String],
-    validator: BOOL_VALIDATOR,
-    default: false,
-  },
-  /**
-   * Allow scrolling trough operations/schemas
-   */
-  allowContentScrolling: {
-    type: [Boolean, String],
-    validator: BOOL_VALIDATOR,
-    default: true,
-  },
-  /**
-   * scrolling container that holds SpecDocument, use window by default
-   */
-  documentScrollingContainer: {
-    type: String,
-    default: '',
-  },
-  /**
-   * Use default markdown styling. If your host application provides its own default styles, you may want to set to `false`.
-   */
-  markdownStyles: {
-    type: [Boolean, String],
-    validator: BOOL_VALIDATOR,
-    default: true,
-  },
-  /**
-   * Allow user to add custom server url which will be added to the list of available servers
-   */
-  allowCustomServerUrl: {
-    type: [Boolean, String],
-    validator: BOOL_VALIDATOR,
-    default: true,
-  },
-  /**
-   * Hide navigation buttons at the bottom of the document.
-   * Only relevant when not in content scrolling mode.
-   */
-  hideNavigationButtons: {
-    type: [Boolean, String],
-    validator: BOOL_VALIDATOR,
-    default: true,
-  },
-  /**
-   * Hide the spec download button.
-   */
-  hideDownloadButton: {
-    type: [Boolean, String],
-    validator: BOOL_VALIDATOR,
-    default: false,
-  },
-  /**
-   * The max depth until which nested properties should remain expanded by default.
-  */
-  maxExpandedDepth: {
-    type: [Number, String],
-    validator: NUMBER_VALIDATOR,
-    default: DEFAULT_EXPANDED_PROPERTIES_DEPTH,
-  },
-})
+const {
+  spec,
+  basePath = '',
+  currentPath = '/',
+  specUrl = '',
+  controlAddressBar = true,
+  navigationType = 'path',
+  hideSchemas = false,
+  hideInternal = false,
+  hideDeprecated = false,
+  hideTryIt = false,
+  hideInsomniaTryIt = false,
+  traceParsing = false,
+  withCredentials = false,
+  allowContentScrolling = true,
+  documentScrollingContainer = '',
+  markdownStyles = true,
+  allowCustomServerUrl = true,
+  hideNavigationButtons = true,
+  hideDownloadButton = false,
+  showPoweredBy = false,
+  maxExpandedDepth = DEFAULT_EXPANDED_PROPERTIES_DEPTH,
+} = defineProps<SpecRendererProps>()
 
 // TODO: introduce and handle isParsed. show parsing state while parsing
 const { parseSpecDocument, parsedDocument, tableOfContents } = composables.useSchemaParser()
 
-const currentPathTOC = ref<string>(props.currentPath)
-const currentPathDOC = ref<string>(props.currentPath)
+const currentPathTOC = ref<string>(currentPath)
+const currentPathDOC = ref<string>(currentPath)
 
 const itemSelected = (id: any) => {
   /*
@@ -301,11 +164,11 @@ const onDocumentScroll = (path: string) => {
 }
 
 watch(() => ({
-  specUrl: props.specUrl,
-  spec: props.spec,
-  hideSchemas: props.hideSchemas,
-  hideInternal: props.hideInternal,
-  hideDeprecated: props.hideDeprecated,
+  specUrl: specUrl,
+  spec: spec,
+  hideSchemas: hideSchemas,
+  hideInternal: hideInternal,
+  hideDeprecated: hideDeprecated,
 }), async (changed, prev) => {
 
   // we want to reset currentPath if document changed. if new document is getting loadedm we want to keep the path
@@ -318,13 +181,13 @@ watch(() => ({
     hideSchemas: IS_TRUE(changed.hideSchemas),
     hideInternal: IS_TRUE(changed.hideInternal),
     hideDeprecated: IS_TRUE(changed.hideDeprecated),
-    traceParsing: IS_TRUE(props.traceParsing),
+    traceParsing: IS_TRUE(traceParsing),
     ...(changed.specUrl ? { specUrl: changed.specUrl } : null),
-    withCredentials: IS_TRUE(props.withCredentials),
+    withCredentials: IS_TRUE(withCredentials),
     currentPath: currentPathTOC.value,
   })
 
-  if (props.traceParsing) {
+  if (traceParsing) {
     console.log('parsedDocument:', <ServiceNode>parsedDocument.value)
     console.log('tableOfContents:', tableOfContents.value)
   }
@@ -458,7 +321,12 @@ Styles for SpecRendererToc that need to live here so that they apply to the TOC 
 Otherwise host app should have control over these styles.
 */
 .slideout-toc {
+  .slideout-content {
+    flex-grow: 1;
+  }
+
   .spec-renderer-toc {
+    height: 100%;
     position: relative; // important, need this for scrolling to selected item
 
     > {
