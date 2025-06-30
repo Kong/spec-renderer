@@ -321,7 +321,7 @@ Styles for SpecRendererToc that need to live here so that they apply to the TOC 
 Otherwise host app should have control over these styles.
 */
 .slideout-toc {
-  :deep(.slideout-content) {
+  .slideout-content {
     flex-grow: 1;
   }
 
@@ -339,7 +339,7 @@ Otherwise host app should have control over these styles.
 
         // last item (usually schemas)
         &:last-child {
-          padding-bottom: var(--kui-space-70, $kui-space-70);
+          padding-bottom: var(--kui-space-0, $kui-space-0);
         }
       }
     }
