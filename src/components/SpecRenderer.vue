@@ -321,7 +321,12 @@ Styles for SpecRendererToc that need to live here so that they apply to the TOC 
 Otherwise host app should have control over these styles.
 */
 .slideout-toc {
+  :deep(.slideout-content) {
+    flex-grow: 1;
+  }
+
   .spec-renderer-toc {
+    height: 100%;
     position: relative; // important, need this for scrolling to selected item
 
     > {
