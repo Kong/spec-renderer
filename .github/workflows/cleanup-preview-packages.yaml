@@ -14,8 +14,8 @@ jobs:
     name: Cleanup PR Previews
     runs-on: ubuntu-latest
     env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN_PRIVATE_PUBLISH }}
-      GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
+      GITHUB_TOKEN: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
 
     steps:
       - name: Checkout Source Code

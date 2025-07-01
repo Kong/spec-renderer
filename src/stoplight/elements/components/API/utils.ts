@@ -224,7 +224,7 @@ const isDeprecated = (node: ServiceChildNode | ServiceNode): boolean => {
 }
 
 interface AddTagGroupsToTreeParams<T extends GroupableNode> {
-  groups: TagGroup<T>[]
+  groups: Array<TagGroup<T>>
   ungrouped: T[]
   tree: TableOfContentsItem[]
   itemsType: TableOfContentsGroup['itemsType']

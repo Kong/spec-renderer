@@ -18,7 +18,7 @@ jobs:
         - name: Checkout
           uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
           with:
-            token: ${{ secrets.KONGPONENTS_BOT_PAT }}
+            token: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
 
         - name: Setup git
           run: |
@@ -27,7 +27,7 @@ jobs:
 
         - name: Create .npmrc
           env:
-            NPM_TOKEN: ${{ secrets.NPM_TOKEN_PRIVATE_PUBLISH }}
+            NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
           # Reference the env variable NPM_TOKEN here, not the secret
           run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
 
@@ -44,5 +44,5 @@ jobs:
           uses: cycjimmy/semantic-release-action@c4a2fa890676fc2db25ad0aacd8ab4a0f1f4c024 # v4.2.1
           env:
             # Since branch protections are on (pushing commits) you need to use a bot PAT
-            GITHUB_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
-            NPM_TOKEN: ${{ secrets.NPM_TOKEN_PRIVATE_PUBLISH }}
+            GITHUB_TOKEN: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
+            NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}

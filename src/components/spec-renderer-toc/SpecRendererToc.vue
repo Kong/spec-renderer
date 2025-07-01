@@ -14,6 +14,26 @@
         @item-selected="selectItem"
       />
     </ul>
+    <div
+      v-if="showPoweredBy"
+      class="powered-by"
+    >
+      <a
+        class="powered-by-button secondary"
+        href="https://api-documentation.dev/"
+        target="_blank"
+      >
+        API documentation editor
+        <ExternalLinkIcon
+          decorative
+          :size="KUI_ICON_SIZE_30"
+        />
+      </a>
+      <a
+        href="https://konghq.com"
+        target="_blank"
+      >Powered by Kong</a>
+    </div>
   </nav>
 </template>
 
@@ -26,6 +46,8 @@ import type { NavigationTypes } from '@/types'
 import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '@/stoplight/elements-core'
 import { BOOL_VALIDATOR, IS_TRUE } from '@/utils'
 import { parse as parseFlatted } from 'flatted'
+import { ExternalLinkIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 
 const props = defineProps({
   tableOfContents: {
@@ -72,6 +94,12 @@ const props = defineProps({
   navigationType: {
     type: String as PropType<NavigationTypes>,
     default: 'path',
+  },
+  /** Show the "Powered by Kong" content in the SpecRendererTOC. Defaults to `false`. */
+  showPoweredBy: {
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
+    default: false,
   },
 })
 
@@ -172,12 +200,15 @@ const selectItem = (id: any) => {
 .table-of-contents {
   background-color: var(--kui-color-background-transparent, $kui-color-background-transparent); // transparent so that it doesn't interfere with the parent's background
   box-sizing: border-box;
-  overflow-x: hidden;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 100%;
 
   > ul {
     margin: var(--kui-space-0, $kui-space-0);
+    overflow-x: hidden;
+    overflow-y: auto;
     padding-left: var(--kui-space-0, $kui-space-0);
 
     > *:first-child + * {
@@ -185,5 +216,40 @@ const selectItem = (id: any) => {
       padding-top: var(--kui-space-50, $kui-space-50);
     }
   }
+}
+
+.powered-by {
+  background-color: var(--kui-color-background, $kui-color-background);
+  border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+  bottom: 0;
+  box-sizing: border-box;
+  padding: var(--kui-space-70, $kui-space-70);
+  text-align: center;
+  user-select: none;
+
+  a {
+    box-sizing: border-box;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    font-family: var(--kui-font-family-text, $kui-font-family-text);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+    line-height: var(--kui-line-height-20, $kui-line-height-20);
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+
+    &:not(.powered-by-button):hover {
+      color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+      text-decoration: underline;
+    }
+  }
+}
+
+.powered-by-button {
+  @include button-default;
+  box-sizing: border-box;
+  display: flex;
+  margin-bottom: var(--kui-space-30, $kui-space-30);
+  text-decoration: none;
+  width: 100%;
 }
 </style>

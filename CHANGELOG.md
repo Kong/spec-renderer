@@ -1,3 +1,45 @@
+# [1.95.0](https://github.com/Kong/spec-renderer/compare/v1.94.37...v1.95.0) (2025-06-30)
+
+
+### Features
+
+* **nitro:** prep for nitro integration ([#619](https://github.com/Kong/spec-renderer/issues/619)) ([e14216d](https://github.com/Kong/spec-renderer/commit/e14216d1366dedd0e5b78036de3f594eb25bd98b))
+
+## [1.94.37](https://github.com/Kong/spec-renderer/compare/v1.94.36...v1.94.37) (2025-06-30)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable version ([#622](https://github.com/Kong/spec-renderer/issues/622)) ([c96d27a](https://github.com/Kong/spec-renderer/commit/c96d27aa836b53f9cd90360c90423f1bf6aa5690))
+
+## [1.94.36](https://github.com/Kong/spec-renderer/compare/v1.94.35...v1.94.36) (2025-06-29)
+
+
+### Bug Fixes
+
+* **lint:** lint fix ([#620](https://github.com/Kong/spec-renderer/issues/620)) ([dd96f65](https://github.com/Kong/spec-renderer/commit/dd96f65355439fdfa2e50ef9fbce3f364856e43d))
+
+## [1.94.35](https://github.com/Kong/spec-renderer/compare/v1.94.34...v1.94.35) (2025-06-27)
+
+
+### Bug Fixes
+
+* remove sandbox deployment to github pages ([#618](https://github.com/Kong/spec-renderer/issues/618)) ([12de9f0](https://github.com/Kong/spec-renderer/commit/12de9f06d2ef56fe605cab1751ed1e63127bd989))
+
+## [1.94.34](https://github.com/Kong/spec-renderer/compare/v1.94.33...v1.94.34) (2025-06-27)
+
+
+### Bug Fixes
+
+* rename bot pat secret ([#617](https://github.com/Kong/spec-renderer/issues/617)) ([a923fd0](https://github.com/Kong/spec-renderer/commit/a923fd0b61f05ff9d476d5528f40ab156d0f530a))
+
+## [1.94.33](https://github.com/Kong/spec-renderer/compare/v1.94.32...v1.94.33) (2025-06-27)
+
+
+### Bug Fixes
+
+* change publish token name ([#616](https://github.com/Kong/spec-renderer/issues/616)) ([308cfcd](https://github.com/Kong/spec-renderer/commit/308cfcd2ab1a9eeb8be96891e9149b7ec7a30c2b))
+
 ## [1.94.32](https://github.com/Kong/spec-renderer/compare/v1.94.31...v1.94.32) (2025-06-26)
 
 

@@ -28,7 +28,7 @@ import type { SchemaObject } from '@/types'
 
 defineProps({
   paramList: {
-    type: Array as PropType<Array<IHttpParam>>,
+    type: Array as PropType<IHttpParam[]>,
     required: true,
   },
   title: {

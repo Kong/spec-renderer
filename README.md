@@ -1,26 +1,28 @@
 # Kong Spec Renderer
 
-> [!IMPORTANT]
-> This repository and the `@kong/spec-renderer` package are currently in development on the `main` branch. Breaking changes should be expected.
->
-> Once the `1.x` version is ready, the package name will change to `@kong/spec-renderer`.
-
 Kong's open-source spec renderer.
 
-Url for sandbox https://kong.github.io/spec-renderer (deployed from main branch)
+An online API specification editor is available at [api-documentation.dev](https://api-documentation.dev), and you can view the extended usage example [in the source repository](https://github.com/Kong/spec-editor).
+
+## Table of Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
   - [Vue 3 Component(s)](#vue-3-components)
   - [Vue 3 Plugin](#vue-3-plugin)
   - [No/Other framework via native web components](#noother-framework-via-native-web-components)
+    - [Example for react](#-example-for-react)
+    - [Example for html/script](#-example-for-htmlscript)
   - [Props](#props)
-- [Contributing \& Local Development](#contributing--local-development)
+    - [v-model](#v-model)
+- [Contributing & Local Development](#contributing--local-development)
   - [Development Sandbox](#development-sandbox)
+    - [Build and Preview the Development Sandbox](#build-and-preview-the-development-sandbox)
   - [Lint and fix](#lint-and-fix)
   - [Testing](#testing)
   - [Build for production](#build-for-production)
   - [Committing Changes](#committing-changes)
+    - [Enforcing Commit Format](#enforcing-commit-format)
   - [Approvals](#approvals)
   - [Package Publishing](#package-publishing)
 - [Third-party packages and Thank You](#third-party-packages-and-thank-you)
@@ -142,7 +144,6 @@ This is to renderer SchemaRenderer component
 
 ### No/Other framework via native web components
 
-
 Import the package and call the provided `registerSpecRenderer` function.
 
 #### - Example for react
@@ -188,14 +189,28 @@ const tocAndDocComponents = async () => {
 #### - Example for html/script
 
 ```html
-<html>
+<html lang="en">
   <head>
-    <script src="./lib/kong-spec-renderer.web-component.umd.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@kong/spec-renderer@^1/dist/spec-renderer.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+    <style>
+    body { font-family: 'Inter', Roboto, Helvetica, sans-serif; }
+    </style>
   </head>
   <body>
-     <kong-spec-renderer
-      spec="openapi: 3.1.0 ..."
+    <kong-spec-renderer
+      spec-url="https://raw.githubusercontent.com/Kong/spec-renderer/refs/heads/main/sandbox/public/specs/beer-and-coffee.yaml"
+      navigation-type="hash"
     />
+
+    <script type="module">
+    import { registerKongSpecRenderer } from 'https://cdn.jsdelivr.net/npm/@kong/spec-renderer@^1/dist/kong-spec-renderer.web-component.es.js'
+    registerKongSpecRenderer()
+    </script>
   </body>
 </html>
 ```
@@ -205,11 +220,7 @@ As of now only `SpecRenderer` as single component is supported for this. Let us 
 
 ### Props
 
-#### `v-model`
-
-- type: `String`
-- required: `false`
-- default: `''`
+[Check out the `SpecRendererProps` interface](./src/types/spec-renderer.ts) for all props valid for the `SpecRenderer` component.
 
 ## Contributing & Local Development
 
@@ -308,6 +319,6 @@ This repository utilizes [Semantic Release](https://github.com/semantic-release/
 
 - Thank You [Stoplight](https://stoplight.io/) for beautiful parser and AST producer [stoplight/http-spec](https://github.com/stoplightio/http-spec).
 
-- Thank You [Stoplight](https://stoplight.io/) for excellent approach for dealing with specification's table of contents and specification's  security definitions. Found in [elements](https://github.com/stoplightio/elements) and currently placed into [src/stoplight](src/stoplight/), while [PR]() back to elements package pending.
+- Thank You [Stoplight](https://stoplight.io/) for excellent approach for dealing with specification's table of contents and specification's  security definitions. Found in [elements](https://github.com/stoplightio/elements) and currently placed into [src/stoplight](src/stoplight/), while [PR](https://github.com/stoplightio/elements/pull/2751) back to elements package pending.
 
 - Thank You [AsyncApi](https://www.asyncapi.com/) for superb [@asyncapi/parser](https://github.com/asyncapi/parser-js).
