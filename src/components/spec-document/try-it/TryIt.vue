@@ -218,10 +218,15 @@ const doApiCall = async (callAsIs = false) => {
   }
 }
 
-// there is more logic that drives do we show tryouts or not
+/**
+ * Hide try-it section if:
+ * - `hideTryIt` prop is explicitly true
+ * - or `data.servers` is empty, which means that the spec does not have any servers defined
+ * - or `serverUrl` prop is not provided, so try-it snippet can't be generated
+ */
 const showTryIt = computed((): boolean => {
-  // if there are no services defined in overView we do not show tryIt
-  return !hideTryIt.value && Array.isArray(props.data.servers) && !!props.data.servers.length
+  const specHasServers = Array.isArray(props.data.servers) && props.data.servers.length > 0
+  return !hideTryIt.value && (!!props.serverUrl || specHasServers)
 })
 
 watch(() => props.serverUrl, () => {
