@@ -10,7 +10,7 @@
       >
         <ModelProperty
           v-if="param.schema"
-          :property="{...param.schema, ...populateParamProperty(param, param.schema) }"
+          :property="{ ...param.schema, ...populateParamProperty(param, param.schema) }"
           :property-name="param.name"
           :required-fields="paramItemRequiredFields(param)"
         />

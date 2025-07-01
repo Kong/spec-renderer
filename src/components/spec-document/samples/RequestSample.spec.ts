@@ -1,4 +1,4 @@
-import { describe, it, expect, vi , beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import RequestSample from './RequestSample.vue'
 import composables from '@/composables'
@@ -11,7 +11,7 @@ describe('<RequestSample />', () => {
       return {
         highlighter: {
           value: {
-            codeToHtml: (s)=> (s),
+            codeToHtml: (s) => (s),
           },
         },
       }

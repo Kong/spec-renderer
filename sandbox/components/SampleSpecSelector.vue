@@ -15,14 +15,14 @@
       </option>
 
       <option
-        v-if="specType=='all' || specType=='oas'"
+        v-if="specType == 'all' || specType == 'oas'"
         disabled
       >
         -------------------- OAS --------------------
       </option>
 
       <option
-        v-for="(o) in specType=='all' || specType=='oas' ? optionsArrayOAS : []"
+        v-for="(o) in specType == 'all' || specType == 'oas' ? optionsArrayOAS : []"
         :key="o.url"
         :value="o.url"
       >
@@ -30,13 +30,13 @@
       </option>
 
       <option
-        v-if="specType=='all' || specType=='async'"
+        v-if="specType == 'all' || specType == 'async'"
         disabled
       >
         -------------------- ASYNC --------------------
       </option>
       <option
-        v-for="(o) in specType=='all' || specType=='async' ? optionsArrayASYNC : []"
+        v-for="(o) in specType == 'all' || specType == 'async' ? optionsArrayASYNC : []"
         :key="o.url"
         :value="o.url"
       >

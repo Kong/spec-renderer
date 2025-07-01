@@ -33,7 +33,7 @@ import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import type { SelectItem } from '@/types'
 
 const props = defineProps({
-  contentList:{
+  contentList: {
     type: Array as PropType<IMediaTypeContent[]>,
     required: true,
   },

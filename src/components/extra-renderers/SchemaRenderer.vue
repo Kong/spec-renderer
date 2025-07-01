@@ -1,7 +1,7 @@
 <template>
   <div
     class="schema-renderer"
-    :class="{'reset-margin': markdownStyles}"
+    :class="{ 'reset-margin': markdownStyles }"
   >
     <PageHeader
       v-if="showHeader && schemaTitle"
@@ -13,7 +13,7 @@
 
     <div
       class="schema-renderer-content"
-      :class="{'model-example-visible': showExample}"
+      :class="{ 'model-example-visible': showExample }"
     >
       <div>
         <PropertyFieldList

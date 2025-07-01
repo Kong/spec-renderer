@@ -112,7 +112,7 @@ const orderedFieldList = computed(() => {
       props: {
         description: props.property.description,
       },
-      eventHandlers:{},
+      eventHandlers: {},
       key: 'property-description',
     })
   }
@@ -122,7 +122,7 @@ const orderedFieldList = computed(() => {
       props: {
         enumValueList: props.property.enum,
       },
-      eventHandlers:{},
+      eventHandlers: {},
       key: 'property-enum',
     })
   }
@@ -132,7 +132,7 @@ const orderedFieldList = computed(() => {
       props: {
         pattern: props.property.pattern,
       },
-      eventHandlers:{},
+      eventHandlers: {},
       key: 'property-pattern',
     })
   }
@@ -143,7 +143,7 @@ const orderedFieldList = computed(() => {
       props: {
         defaultValue: props.property.default,
       },
-      eventHandlers:{},
+      eventHandlers: {},
       key: 'property-default',
     })
   }
@@ -176,7 +176,7 @@ const orderedFieldList = computed(() => {
       props: {
         example: props.property.examples || props.property.example,
       },
-      eventHandlers:{},
+      eventHandlers: {},
       key: 'property-example',
     })
   }
@@ -187,7 +187,7 @@ const orderedFieldList = computed(() => {
       props: {
         additionalProperties: props.property.additionalProperties,
       },
-      eventHandlers:{},
+      eventHandlers: {},
       key: 'property-additional-properties',
     })
   }

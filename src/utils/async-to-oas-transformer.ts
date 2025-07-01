@@ -66,7 +66,7 @@ export const transformMessage = (message: MessageInterface): AsyncMessageNode =>
  * @param operation Return operation type
  * @returns
  */
-const getOperationType = (operation: OperationInterface) =>{
+const getOperationType = (operation: OperationInterface) => {
   if (operation.isSend()) {
     if (operation.reply() !== undefined) {
       return PayloadType.REQUEST
@@ -179,7 +179,7 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
     // @ts-ignore version of async is not yet in SpecVersion enum
     specVersion: SpecVersion.ASYNC + ' ' + specV,
     uri: '/',
-    tags:[],
+    tags: [],
     children: [],
     data: <IHttpService>{
       id: 'undefined',

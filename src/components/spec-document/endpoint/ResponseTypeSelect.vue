@@ -60,9 +60,9 @@ const emit = defineEmits<{
 
 function handleSelectInputChange(item: SelectItem, componentName: ResponseSelectComponent) {
   if (componentName === ResponseSelectComponent.ResponseCodeSelectMenu) {
-    emit('update-response-code',item.value)
+    emit('update-response-code', item.value)
   } else if (componentName === ResponseSelectComponent.ContentTypeSelectMenu) {
-    emit('update-content-type',item.value)
+    emit('update-content-type', item.value)
   }
 }
 </script>

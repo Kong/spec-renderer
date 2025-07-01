@@ -1,7 +1,7 @@
 <template>
   <div
     class="property-info"
-    :class="{'deprecated-property': deprecated}"
+    :class="{ 'deprecated-property': deprecated }"
     data-testid="property-field-info"
   >
     <span

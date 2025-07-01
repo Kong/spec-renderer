@@ -91,7 +91,7 @@ const props = defineProps({
 const channel = computed(() => (props.data.operation.channels().all()[0]))
 
 //@ts-ignore ignore types for now
-const serverList = computed(():string[] => ((props.data.operation.channels().all() || []).map(l => l.address()).filter(a=>(!!a))))
+const serverList = computed(():string[] => ((props.data.operation.channels().all() || []).map(l => l.address()).filter(a => (!!a))))
 
 const operationData = computed((): Record<string, any> => {
   return {
@@ -107,7 +107,7 @@ const operationData = computed((): Record<string, any> => {
 const acceptedMessages = computed((): AsyncMessageObject[] => {
   const resList: AsyncMessageObject[] = []
 
-  props.data.operation.messages().all().forEach((message: MessageInterface)=> {
+  props.data.operation.messages().all().forEach((message: MessageInterface) => {
     resList.push(transformMessage(message).data)
   })
   return resList
@@ -120,7 +120,7 @@ const requestParams = computed(() => {
     resList.push({
       id: parameter.id(),
       name: parameter.id(),
-      ...(parameter.hasSchema() ? { schema : transformSchema(parameter.schema()) } : null),
+      ...(parameter.hasSchema() ? { schema: transformSchema(parameter.schema()) } : null),
     })
   })
   return resList

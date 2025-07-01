@@ -19,7 +19,7 @@ import { CopyIcon, CheckIcon } from '@kong/icons'
 import { useClipboard } from '@vueuse/core'
 
 const props = defineProps({
-  content:{
+  content: {
     required: true,
     type: String,
   },
