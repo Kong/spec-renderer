@@ -1,3 +1,10 @@
+## [1.95.1](https://github.com/Kong/spec-renderer/compare/v1.95.0...v1.95.1) (2025-07-01)
+
+
+### Bug Fixes
+
+* **try-it:** update hide try-it logic to use server-url [TDX-6048] ([#615](https://github.com/Kong/spec-renderer/issues/615)) ([c1424f4](https://github.com/Kong/spec-renderer/commit/c1424f4dd951fb4dc6f7ec37ae8a15dc7cc56848))
+
 # [1.95.0](https://github.com/Kong/spec-renderer/compare/v1.94.37...v1.95.0) (2025-06-30)
 
 
