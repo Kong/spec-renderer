@@ -51,7 +51,7 @@
       </div>
     </div>
 
-    <CopyButton :content="selectedServerUrl+path" />
+    <CopyButton :content="selectedServerUrl + path" />
   </div>
 </template>
 

@@ -13,7 +13,7 @@
     </template>
 
     <div
-      v-if="paramType !== 'body'&& params && Object.keys(params).length"
+      v-if="paramType !== 'body' && params && Object.keys(params).length"
       class="wide"
     >
       <div

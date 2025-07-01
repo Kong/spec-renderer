@@ -19,10 +19,10 @@ export const findMatchingNode = (spDoc: ServiceNode, forPath: string): ServiceCh
 
    child with uri = '/paths/list/get' and tags: `system`, `mesh`. this item should be returned as path whith tag matched the path.
  */
-  const multiTagNodes = spDoc.children.filter(child=> child.tags.length > 1)
+  const multiTagNodes = spDoc.children.filter(child => child.tags.length > 1)
   for (const multiTagNode of multiTagNodes) {
     for (const tagName of multiTagNode.tags) {
-      if (multiTagNode.uri.split('/').toSpliced(2, 0 , slugify(tagName).toLowerCase()).join('/') === forPath) {
+      if (multiTagNode.uri.split('/').toSpliced(2, 0, slugify(tagName).toLowerCase()).join('/') === forPath) {
         return multiTagNode
       }
     }

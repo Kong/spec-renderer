@@ -114,7 +114,7 @@ const {
   inheritanceTypeLabel,
 } = useSchemaVariants(resolvedSchemaObject)
 
-const nestedPropertiesPresent = computed<boolean>(() =>{
+const nestedPropertiesPresent = computed<boolean>(() => {
   if (selectedSchemaModel.value?.properties) {
     return Boolean(Object.keys(selectedSchemaModel.value?.properties).length)
   }

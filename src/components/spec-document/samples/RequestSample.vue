@@ -288,7 +288,7 @@ watch(() => ({
 
       // for HTTPSnippet we need to provide query as an array of {name, value} objects
       const qObj = Object.fromEntries(serverUrl.searchParams)
-      const qObjArr = Object.keys(qObj).map(p=>{
+      const qObjArr = Object.keys(qObj).map(p => {
         return { name: p, value: qObj[p] }
       })
 
@@ -303,7 +303,7 @@ watch(() => ({
           // HTTPsnippet is not doing nice trying to handle with body params based on mimeType, so we going to send pre-formatted body, and
           // make HTTPsnippet to use as is by forcing mimeType as `text/plain`
           mimeType: 'text/plain',
-          text:  body,
+          text: body,
         },
 
       } as unknown as HarRequest)

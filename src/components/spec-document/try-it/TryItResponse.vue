@@ -80,7 +80,7 @@ const props = defineProps({
   },
   response: {
     type: Object as PropType<Response>,
-    default: () =>{ },
+    default: () => { },
   },
   responseError: {
     type: Object as PropType<Error>,

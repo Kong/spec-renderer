@@ -1,7 +1,7 @@
 <template>
   <div
     class="document-navigation"
-    :class="{'single-item': neighborComponentList.length === 1}"
+    :class="{ 'single-item': neighborComponentList.length === 1 }"
   >
     <a
       v-for="(component) in neighborComponentList"
@@ -9,7 +9,7 @@
       class="document-navigation-link"
       :class="component.type"
       :data-testid="`document-navigation-link-${component.type}`"
-      :href="`${basePath}${navigationType==='hash' ? '#' : ''}${component.uri}`"
+      :href="`${basePath}${navigationType === 'hash' ? '#' : ''}${component.uri}`"
       @click.prevent="selectItem(component.uri)"
     >
 

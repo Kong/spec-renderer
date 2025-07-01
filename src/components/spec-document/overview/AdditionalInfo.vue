@@ -34,7 +34,7 @@
           </a>
         </div>
         <component
-          :is="license?.url ? 'a': 'p'"
+          :is="license?.url ? 'a' : 'p'"
           v-if="license?.name"
           class="overview-additional-info-license"
           data-testid="overview-additional-info-license"

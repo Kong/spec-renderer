@@ -7,7 +7,7 @@
     <a
       :class="{ 'single-word': isSingleWord, 'active': isActive }"
       data-testid="node-item-title-link"
-      :href="`${basePath}${navigationType==='hash' ? '#' : ''}${item.id}`"
+      :href="`${basePath}${navigationType === 'hash' ? '#' : ''}${item.id}`"
       :title="itemTitle"
       @click.prevent="selectItem(item.id)"
     >

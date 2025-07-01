@@ -30,7 +30,7 @@
         <component
           :is="itemComponent(child)"
           v-for="(child, idx) in item.items"
-          :key="idx + ' ' + child.title+child"
+          :key="idx + ' ' + child.title + child"
           :active-path="activePath"
           :item="child"
           :root="isGroup(child) ? false : undefined"
@@ -87,7 +87,7 @@ const onClick = (event: Event) => {
     isExpanded.value = !isExpanded.value
   }
 }
-watch(()=>(props.item.initiallyExpanded), (newValue) => {
+watch(() => (props.item.initiallyExpanded), (newValue) => {
   isExpanded.value = newValue
 })
 </script>

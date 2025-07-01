@@ -40,7 +40,7 @@ export function computeTagGroups<T extends GroupableNode>(
 
           we will keep first occurrence (toc item) with url: /paths/list/get. but inject tag into second occurrence (/paths/mesh/list/get)
         */
-        const nodeUri = i === 0 ? node.uri : node.uri.split('/').toSpliced(2, 0 , slugify(tagName).toLowerCase()).join('/')
+        const nodeUri = i === 0 ? node.uri : node.uri.split('/').toSpliced(2, 0, slugify(tagName).toLowerCase()).join('/')
         const tagId = tagName.toLowerCase()
         if (groupsByTagId[tagId]) {
           groupsByTagId[tagId].items.push({ ...node, ...{ uri: nodeUri } })
