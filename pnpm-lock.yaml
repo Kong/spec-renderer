@@ -12,8 +12,8 @@ importers:
   .:
     dependencies:
       '@apidevtools/json-schema-ref-parser':
-        specifier: ^13.0.5
-        version: 13.0.5
+        specifier: ^14.0.2
+        version: 14.0.3
       '@asyncapi/openapi-schema-parser':
         specifier: ^3.0.24
         version: 3.0.24
@@ -229,9 +229,9 @@ packages:
   '@antfu/utils@0.7.10':
     resolution: {integrity: sha512-+562v9k4aI80m1+VuMHehNJWLOFjBnXn3tdOitzD0il5b7smkSBal4+a3oKiQTbrwMmN/TBUMDvbdoWDehgOww==}
 
-  '@apidevtools/json-schema-ref-parser@13.0.5':
-    resolution: {integrity: sha512-xfh4xVJD62gG6spIc7lwxoWT+l16nZu1ELyU8FkjaP/oD2yP09EvLAU6KhtudN9aML2Khhs9pY6Slr7KGTES3w==}
-    engines: {node: '>= 16'}
+  '@apidevtools/json-schema-ref-parser@14.0.3':
+    resolution: {integrity: sha512-XtI3vr6mq5ySDV7j+/ya7m9UDkRYN91NeSM5CBjGE8EZHXTuu5duHMm5emG+X8tmjRCYpEkWpHfxHpVR91owVg==}
+    engines: {node: '>= 20'}
 
   '@asamuzakjp/css-color@2.8.3':
     resolution: {integrity: sha512-GIc76d9UI1hCvOATjZPyHFmE5qhRccp3/zGfMPapK3jBi+yocEzp6BBB0UnfRYP9NP4FANqUZYb0hnfs3TM3hw==}
@@ -750,6 +750,7 @@ packages:
 
   '@evilmartians/lefthook@1.11.14':
     resolution: {integrity: sha512-vh6lqXVwh7uhI5C/gKB7InW8RyMFYXN27U4Hlum8ZBcDrOviF9fmcBJf4C6ZboWkD3j8v1qp4psc3bwynhPlTQ==}
+    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -5555,7 +5556,7 @@ snapshots:
 
   '@antfu/utils@0.7.10': {}
 
-  '@apidevtools/json-schema-ref-parser@13.0.5':
+  '@apidevtools/json-schema-ref-parser@14.0.3':
     dependencies:
       '@types/json-schema': 7.0.15
       js-yaml: 4.1.0
