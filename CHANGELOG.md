@@ -1,3 +1,10 @@
+## [1.95.4](https://github.com/Kong/spec-renderer/compare/v1.95.3...v1.95.4) (2025-07-09)
+
+
+### Bug Fixes
+
+* reading example from schema.example [TDX-6193] ([#628](https://github.com/Kong/spec-renderer/issues/628)) ([da56477](https://github.com/Kong/spec-renderer/commit/da56477e9a2a0f2da65ce0e93b1116c406cb4497))
+
 ## [1.95.3](https://github.com/Kong/spec-renderer/compare/v1.95.2...v1.95.3) (2025-07-09)
 
 
