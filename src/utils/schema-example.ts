@@ -25,6 +25,13 @@ export const extractSampleForParam = (paramData: Record<string, any> | undefined
     }
   }
 
+  if (paramData.schema?.example) {
+    exampleValue = paramData.schema?.example
+    if (exampleValue !== undefined) {
+      return exampleValue
+    }
+  }
+
   if (paramData.examples) {
     exampleValue = paramData.examples[0]
     if (exampleValue !== undefined) {

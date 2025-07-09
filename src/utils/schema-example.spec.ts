@@ -56,6 +56,25 @@ describe('extractSampleForParam', () => {
     expect(extractSampleForParam({ type: 'array' }, 'key')).toEqual('[]')
   })
 
+  it('should return example if defined in the schema', () => {
+    expect(extractSampleForParam({
+      'name': 'groupNumber',
+      'style': 'simple',
+      'examples': [
+        {
+          'id': '92b28d2be6cbd',
+          'value': 92,
+          'key': 'default',
+        },
+      ],
+      'schema': {
+        'type': 'integer',
+        'format': 'int64',
+        'example': 92,
+      },
+    }, 'groupNumber')).toEqual(92)
+  })
+
 })
 
 describe('crawl', () => {
