@@ -1,3 +1,10 @@
+## [1.95.6](https://github.com/Kong/spec-renderer/compare/v1.95.5...v1.95.6) (2025-07-10)
+
+
+### Bug Fixes
+
+* pin @apidevtools/json-schema-ref-parser version to v14.0.3 ([#637](https://github.com/Kong/spec-renderer/issues/637)) ([a716238](https://github.com/Kong/spec-renderer/commit/a716238dad237c96065ffa44552205689f9f2ff1))
+
 ## [1.95.5](https://github.com/Kong/spec-renderer/compare/v1.95.4...v1.95.5) (2025-07-10)
 
 
