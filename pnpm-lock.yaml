@@ -24,8 +24,8 @@ importers:
         specifier: ^1.1.7
         version: 1.1.7(vue@3.5.17(typescript@5.8.3))
       '@kong/icons':
-        specifier: ^1.31.0
-        version: 1.31.0(vue@3.5.17(typescript@5.8.3))
+        specifier: ^1.33.0
+        version: 1.33.0(vue@3.5.17(typescript@5.8.3))
       '@stoplight/http-spec':
         specifier: ^7.1.0
         version: 7.1.0
@@ -855,8 +855,8 @@ packages:
     peerDependencies:
       eslint: '>= 9.23.0'
 
-  '@kong/icons@1.31.0':
-    resolution: {integrity: sha512-tphJTLicE+H1e64IUbHqXcGTj5AHKEvrroVc2WfFEbHketrVARsMZ0aBcgQa0Xuh5MSBK2/wabyt88mTXUYrAw==}
+  '@kong/icons@1.33.0':
+    resolution: {integrity: sha512-uPnzg1WkJs6z22tftFfoo1/VG2fzeDssx+ubc1sX1K7bzbGwAQXR3VLnw4W8g8JoMrNpqo+FP3dm8/8ynkb7GA==}
     engines: {node: '>=18.17.0', pnpm: '>=9.14.4 || >=10.1.0'}
     peerDependencies:
       vue: '>= 3.3.4 < 4'
@@ -6284,7 +6284,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@kong/icons@1.31.0(vue@3.5.17(typescript@5.8.3))':
+  '@kong/icons@1.33.0(vue@3.5.17(typescript@5.8.3))':
     dependencies:
       vue: 3.5.17(typescript@5.8.3)
 
