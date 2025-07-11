@@ -73,7 +73,7 @@
     "shiki": "^3.7.0"
   },
   "resolutions": {
-    "openapi3-ts": "4.4.0"
+    "openapi3-ts": "4.5.0"
   },
   "devDependencies": {
     "@babel/types": "^7.27.7",
@@ -102,7 +102,7 @@
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.29.0",
     "jsdom": "^26.1.0",
-    "openapi3-ts": "4.4.0",
+    "openapi3-ts": "4.5.0",
     "postcss": "^8.5.6",
     "postcss-html": "^1.8.0",
     "rimraf": "^6.0.1",
@@ -189,7 +189,7 @@
     "node": ">=18.17.0"
   },
   "volta": {
-    "node": "22.16.0",
+    "node": "22.17.0",
     "pnpm": "10.12.4"
   },
   "config": {
