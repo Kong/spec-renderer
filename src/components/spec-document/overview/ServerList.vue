@@ -18,8 +18,13 @@
         >
           <div class="server-item-header">
             <span>Server {{ index + 1 }}:</span>
-            <span>{{ server.url }}</span>
+            <span>{{ server.origUrl || server.url }}</span>
           </div>
+          <ServerVariables
+            v-if="server.variables"
+            :server="server"
+            @set-server-variable="handleVariableChange"
+          />
           <MarkdownRenderer
             v-if="server.description"
             :markdown="server.description"
@@ -66,11 +71,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { NetworkIcon } from '@kong/icons'
-import type { IServer } from '@stoplight/types'
+import type { IServer } from '@/types'
 import type { PropType } from 'vue'
 import OverviewPanel from './OverviewPanel.vue'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import { AddIcon } from '@kong/icons'
+import ServerVariables from './ServerVariables.vue'
 
 defineProps({
   serverList: {
@@ -85,7 +91,12 @@ defineProps({
 
 const emit = defineEmits<{
   (e: 'add-custom-url', url: string): void
+  (e: 'set-server-variable', serverId: string, variableKey: string, variableValue: string): void
 }>()
+
+const handleVariableChange = (serverId: string, variableKey: string, variableValue: string) => {
+  emit('set-server-variable', serverId, variableKey, variableValue)
+}
 
 const showCustomUrlInput = ref<boolean>(false)
 const customURl = ref('')

@@ -17,7 +17,7 @@ describe('<HttpOperation />', () => {
             method: 'get',
             servers: <IServer[]>[{
               id: 'sample-server-id',
-              url: 'https://stoplight.io/api',
+              url: 'https://localhost.io/api',
               description: 'sample description',
             }],
           },
@@ -33,7 +33,7 @@ describe('<HttpOperation />', () => {
             id: '123',
             servers: <IServer[]>[{
               id: 'sample-server-id',
-              url: 'https://stoplight.io/api',
+              url: 'https://localhost.io/api',
               description: 'sample description',
             }],
           },
@@ -55,7 +55,7 @@ describe('<HttpOperation />', () => {
             id: '123',
             servers: <IServer[]>[{
               id: 'sample-server-id',
-              url: 'https://stoplight.io/api',
+              url: 'https://localhost.io/api',
               description: 'sample description',
             }],
           },

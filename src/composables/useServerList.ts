@@ -1,6 +1,6 @@
 import { computed, ref, shallowRef } from 'vue'
 import { removeTrailingSlash } from '@/utils/strings'
-import type { IServer } from '@stoplight/types'
+import type { IServer } from '@/types'
 
 type ServerList = IServer[]
 type SelectedServerUrl = string
@@ -19,16 +19,36 @@ const selectedServerUrl = shallowRef<SelectedServerUrl>('')
 export default function useServerList() {
 
   /**
+   * format url from the server variables
+   * @param idx
+   * @param server
+   * @returns
+   */
+  const getServerUrl = (idx: number, server: IServer): string => {
+    if (!server) {
+      return ''
+    }
+    let url = server.origUrl || server.url
+    if (server.variables) {
+      for (const key of Object.keys(server.variables)) {
+        url = url.replace(`{${key}}`, server.variables[key].extensions?.value as string || server.variables[key].default)
+      }
+    }
+    return removeTrailingSlash(url)
+  }
+
+  /**
    * Initialize the centralized state for server list.
    */
   const initialize = (newServerList: ServerList) => {
     // strip trailing slash from server urls
-    const filteredServerList = newServerList.map((server) => ({
+    const filteredServerList = newServerList.map((server, idx) => ({
       ...server,
-      url: removeTrailingSlash(server.url),
+      origUrl: server.url,
+      url: getServerUrl(idx, server),
     }))
     serverList.value = filteredServerList
-    selectedServerUrl.value = filteredServerList[0]?.url || ''
+    selectedServerUrl.value = getServerUrl(0, filteredServerList[0])
   }
 
   /**
@@ -52,6 +72,33 @@ export default function useServerList() {
   }
 
   /**
+   * Setting server variable
+   * @param serverId
+   * @param variableKey
+   * @param variableValue
+   * @returns
+   */
+  const setServerVariable = (serverId: string, variableKey: string, variableValue: string): void => {
+    const serverIdx = serverList.value.findIndex(s => s.id === serverId)
+    console.log(serverId, serverIdx)
+    if (serverIdx === -1) {
+      return
+    }
+
+    const server = serverList.value[serverIdx]
+    if (!server || ! server.variables || !server.variables[variableKey]) {
+      return
+    }
+    if (!server.variables[variableKey].extensions) {
+      server.variables[variableKey].extensions = {}
+    }
+    server.variables[variableKey].extensions.value = variableValue
+
+    server.url = getServerUrl(serverIdx, server)
+    selectedServerUrl.value = server.url
+  }
+
+  /**
    * Get the list of server URLs from the state.
    */
   const serverUrlList = computed(() => serverList.value?.map(server => server.url) ?? [])
@@ -63,5 +110,6 @@ export default function useServerList() {
     initialize,
     addServerUrl,
     removeServerUrl,
+    setServerVariable,
   }
 }

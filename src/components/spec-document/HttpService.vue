@@ -37,6 +37,7 @@
         :allow-custom-server-url="allowCustomServerUrl"
         :server-list="serverList"
         @add-custom-url="addServerUrl"
+        @set-server-variable="handleVariableChange"
       />
       <SecurityList
         v-if="Array.isArray(data.securitySchemes) && data.securitySchemes.length"
@@ -83,10 +84,15 @@ const props = defineProps({
   },
 })
 
-const { serverList, addServerUrl } = composables.useServerList()
+const { serverList, addServerUrl, setServerVariable } = composables.useServerList()
 const { downloadSpecFile } = composables.useSchemaParser()
 
 const additionalInfoVisible = computed(() => props.data.externalDocs?.url || props.data.contact?.url || props.data.contact?.email || props.data.license?.name)
+
+const handleVariableChange = (serverId: string, variableKey: string, variableValue: string) => {
+  setServerVariable(serverId, variableKey, variableValue)
+}
+
 </script>
 
 <style lang="scss" scoped>

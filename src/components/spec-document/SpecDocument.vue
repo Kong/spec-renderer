@@ -319,7 +319,7 @@ const nodesList = computed(() => {
     nList.push(...specDocument.value.children.filter(child => (child.tags || []).length === 0 && child.type !== 'model'))
 
     // next by tag ordered
-    specDocument.value.tags.forEach((t: string) => {
+    specDocument.value.tags?.forEach((t: string) => {
       nList.push(...specDocument.value.children.filter((child: any) => (child.tags || []).includes(t)))
     })
 
@@ -568,7 +568,7 @@ watch(() => ({
     renderPlain.value = false
 
     // initialize the centralized state for server list
-    initialize(serviceNode.value?.data.servers || [])
+    initialize(serviceNode.value?.data?.servers || [])
   }
 
   if (!doContentScrolling.value) {
