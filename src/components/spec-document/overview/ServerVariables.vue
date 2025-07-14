@@ -65,19 +65,24 @@ const handleVariableChange = (serverId: string, variableKey: string, variableVal
   .variables-label {
     margin-right: var(--kui-space-40, $kui-space-40);
   }
+
   .variable-container {
-    padding: var(--kui-space-20, $kui-space-20);
-    margin: var(--kui-space-20, $kui-space-20);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     display: inline;
+    margin: var(--kui-space-20, $kui-space-20);
+    padding: var(--kui-space-20, $kui-space-20);
     white-space: nowrap;
 
     input {
       border: none;
       field-sizing: content;
     }
+
     :deep(.trigger-button) {
       @include small-bordered-trigger-button;
+
+      // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+      // stylelint-disable-next-line no-duplicate-selectors
       & {
         border: none;
       }
