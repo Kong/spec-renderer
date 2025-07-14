@@ -80,7 +80,6 @@ export default function useServerList() {
    */
   const setServerVariable = (serverId: string, variableKey: string, variableValue: string): void => {
     const serverIdx = serverList.value.findIndex(s => s.id === serverId)
-    console.log(serverId, serverIdx)
     if (serverIdx === -1) {
       return
     }
