@@ -5,23 +5,23 @@
   >
     <span class="variables-label">Variables</span>
     <div
-      v-for="key in Object.keys(server.variables)"
+      v-for="(value, key) in server.variables"
       :key="`${server.id}-${key}`"
       class="variable-container"
     >
       {{ key }}:
       <SelectDropdown
-        v-if="server.variables[key].enum"
+        v-if="value.enum"
         :data-testid="`${server.id}-${key}-select`"
-        :items="enumToSelectItem(server.variables[key].enum)"
-        :model-value="server.variables[key].extensions?.value as string || server.variables[key].default"
+        :items="enumToSelectItem(value.enum)"
+        :model-value="value.extensions?.value as string || value.default"
         @change="(item) => handleVariableChange(server.id, key, item.value)"
       />
       <input
         v-else
         :data-testid="`${server.id}-${key}-input`"
         type="text"
-        :value="server.variables[key].extensions?.value || server.variables[key].default"
+        :value="value.extensions?.value || value.default"
         @change="(e) => handleVariableChange(server.id, key, (e.target as HTMLInputElement).value)"
       >
     </div>
@@ -67,15 +67,17 @@ const handleVariableChange = (serverId: string, variableKey: string, variableVal
 
   .variable-container {
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     display: inline;
-    margin: var(--kui-space-20, $kui-space-20);
-    padding: var(--kui-space-20, $kui-space-20);
+    margin: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
+    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
     white-space: nowrap;
 
     input {
       border: none;
       field-sizing: content;
     }
+
 
     :deep(.trigger-button) {
       @include small-bordered-trigger-button;
@@ -84,6 +86,7 @@ const handleVariableChange = (serverId: string, variableKey: string, variableVal
       // stylelint-disable-next-line no-duplicate-selectors
       & {
         border: none;
+        padding-right:  var(--kui-space-0, $kui-space-0)!important;
       }
       @media (min-width: $kui-breakpoint-mobile) {
         padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
