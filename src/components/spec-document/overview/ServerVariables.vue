@@ -72,7 +72,7 @@ const handleVariableChange = (serverId: string, variableKey: string, variableVal
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     display: inline;
     margin: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
-    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
+    padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
     white-space: nowrap;
 
     input {
