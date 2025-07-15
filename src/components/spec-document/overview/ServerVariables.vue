@@ -59,7 +59,7 @@ const handleVariableChange = (serverId: string, variableKey: string, variableVal
 
 <style lang="scss" scoped>
 .variables-container {
-  padding: var(--kui-space-60, $kui-space-60) 0;
+  padding: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0);
 
   .variables-label {
     margin-right: var(--kui-space-40, $kui-space-40);
