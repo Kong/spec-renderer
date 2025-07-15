@@ -59,6 +59,8 @@ const handleVariableChange = (serverId: string, variableKey: string, variableVal
 
 <style lang="scss" scoped>
 .variables-container {
+  @include model-property-additional-field;
+
   padding: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0);
 
   .variables-label {
@@ -75,7 +77,11 @@ const handleVariableChange = (serverId: string, variableKey: string, variableVal
 
     input {
       border: none;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
       field-sizing: content;
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
+      font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+      line-height: var(--kui-line-height-20, $kui-line-height-20);
     }
 
 
@@ -86,6 +92,10 @@ const handleVariableChange = (serverId: string, variableKey: string, variableVal
       // stylelint-disable-next-line no-duplicate-selectors
       & {
         border: none;
+        color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+        font-size: var(--kui-font-size-20, $kui-font-size-20);
+        font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+        line-height: var(--kui-line-height-20, $kui-line-height-20);
         padding-right: var(--kui-space-0, $kui-space-0)!important;
       }
       @media (min-width: $kui-breakpoint-mobile) {
