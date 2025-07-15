@@ -85,7 +85,7 @@ export default function useServerList() {
     }
 
     const server = serverList.value[serverIdx]
-    if (!server || ! server.variables || !server.variables[variableKey]) {
+    if (!server || !server.variables || !server.variables[variableKey]) {
       return
     }
     if (!server.variables[variableKey].extensions) {
