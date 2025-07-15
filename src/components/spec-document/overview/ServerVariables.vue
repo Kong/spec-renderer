@@ -29,10 +29,9 @@
 </template>
 
 <script setup lang="ts">
-import type { IServer } from '@/types'
+import type { IServer, SelectItem } from '@/types'
 import type { PropType } from 'vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import type { SelectItem } from '@/types'
 
 
 defineProps({
