@@ -86,7 +86,7 @@ const handleVariableChange = (serverId: string, variableKey: string, variableVal
       // stylelint-disable-next-line no-duplicate-selectors
       & {
         border: none;
-        padding-right:  var(--kui-space-0, $kui-space-0)!important;
+        padding-right: var(--kui-space-0, $kui-space-0)!important;
       }
       @media (min-width: $kui-breakpoint-mobile) {
         padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
