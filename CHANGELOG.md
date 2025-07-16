@@ -1,3 +1,10 @@
+## [1.95.8](https://github.com/Kong/spec-renderer/compare/v1.95.7...v1.95.8) (2025-07-16)
+
+
+### Bug Fixes
+
+* server variables [TDX-6199] ([#639](https://github.com/Kong/spec-renderer/issues/639)) ([a8bf50d](https://github.com/Kong/spec-renderer/commit/a8bf50ddc1b9c5168f4f187c638e823003b2e0f6))
+
 ## [1.95.7](https://github.com/Kong/spec-renderer/compare/v1.95.6...v1.95.7) (2025-07-15)
 
 
