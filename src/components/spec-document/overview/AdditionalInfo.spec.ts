@@ -6,16 +6,16 @@ describe('<AdditionalInfo />', () => {
   it('renders correctly with all props present', () => {
     const contact = {
       name: 'sample name',
-      url: 'https://stoplight.io/contact',
-      email: 'email@stoplight.io',
+      url: 'https://localhost.io/contact',
+      email: 'email@localhost.io',
     }
     const license = {
       name: 'sample license',
-      url: 'https://stoplight.io/license',
+      url: 'https://localhost.io/license',
     }
     const externalDocs = {
       description: 'sample external docs',
-      url: 'https://stoplight.io/external-docs',
+      url: 'https://localhost.io/external-docs',
     }
 
     const wrapper = mount(AdditionalInfo, {
