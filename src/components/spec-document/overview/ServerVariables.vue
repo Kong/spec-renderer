@@ -9,7 +9,9 @@
       :key="`${server.id}-${key}`"
       class="variable-container"
     >
-      {{ key }}:
+      <span class="variable-label">
+        {{ key }}
+      </span>:
       <SelectDropdown
         v-if="value.enum"
         :data-testid="`${server.id}-${key}-select`"
@@ -59,29 +61,39 @@ const handleVariableChange = (serverId: string, variableKey: string, variableVal
 
 <style lang="scss" scoped>
 .variables-container {
-  @include model-property-additional-field;
-
+  color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
   padding: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0);
+  font: var(--kui-font-family-code, $kui-font-family-code);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kui-space-50, $kui-space-50);
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
+
+
 
   .variables-label {
-    margin-right: var(--kui-space-40, $kui-space-40);
+    margin-right: var(--kui-space-20, $kui-space-20);
+    font-size: calc(var(--kui-font-size-20, $kui-font-size-20) + 1px);
   }
 
   .variable-container {
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-    display: inline;
-    margin: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
-    padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
+    padding: var(--kui-space-0, $kui-space-0) var(--kui-space-30, $kui-space-30);
     white-space: nowrap;
+
+
+    .variable-label {
+      font: var(--kui-font-family-code, $kui-font-family-code);
+      text-transform: capitalize;
+      display: inline-block;
+    }
 
     input {
       border: none;
       color: var(--kui-color-text-neutral, $kui-color-text-neutral);
       field-sizing: content;
-      font-size: var(--kui-font-size-20, $kui-font-size-20);
       font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
-      line-height: var(--kui-line-height-20, $kui-line-height-20);
 
       &:focus {
         outline: none;
@@ -97,6 +109,7 @@ const handleVariableChange = (serverId: string, variableKey: string, variableVal
       & {
         border: none;
         color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+        font: var(--kui-font-family-code, $kui-font-family-code);
         font-size: var(--kui-font-size-20, $kui-font-size-20);
         font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
         line-height: var(--kui-line-height-20, $kui-line-height-20);
