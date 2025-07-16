@@ -62,18 +62,18 @@ const handleVariableChange = (serverId: string, variableKey: string, variableVal
 <style lang="scss" scoped>
 .variables-container {
   color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
-  padding: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0);
-  font: var(--kui-font-family-code, $kui-font-family-code);
   display: flex;
   flex-wrap: wrap;
+  font: var(--kui-font-family-code, $kui-font-family-code);
   gap: var(--kui-space-50, $kui-space-50);
   line-height: var(--kui-line-height-30, $kui-line-height-30);
+  padding: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0);
 
 
 
   .variables-label {
-    margin-right: var(--kui-space-20, $kui-space-20);
     font-size: calc(var(--kui-font-size-20, $kui-font-size-20) + 1px);
+    margin-right: var(--kui-space-20, $kui-space-20);
   }
 
   .variable-container {
@@ -84,9 +84,9 @@ const handleVariableChange = (serverId: string, variableKey: string, variableVal
 
 
     .variable-label {
+      display: inline-block;
       font: var(--kui-font-family-code, $kui-font-family-code);
       text-transform: capitalize;
-      display: inline-block;
     }
 
     input {
