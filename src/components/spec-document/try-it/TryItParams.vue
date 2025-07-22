@@ -11,7 +11,6 @@
         {{ compTitles[props.paramType] }}
       </h3>
     </template>
-
     <div
       v-if="paramType !== 'body' && params && Object.keys(params).length"
       class="wide"
@@ -51,18 +50,29 @@
       v-if="paramType === 'body' && params && Object.keys(params).length"
       class="wide body-param"
     >
+      {{ props.data.request?.body?.contents?.[0].mediaType.split('/').reverse()[0] }}
       <RequiredToggle
+        v-if="!isBinaryBody"
         v-model="excludeNotRequired"
         class="required-fields-toggle"
         :data="data"
       />
 
       <EditableCodeBlock
+        v-if="!isBinaryBody"
         class="body-param-code-block"
         :code="fieldValues.body"
         lang="json"
         @request-body-changed="requestBodyChanged"
       />
+      <button
+        v-else
+        class="choose-file-btn"
+        type="button"
+        @click="openFileDialog()"
+      >
+        Choose file
+      </button>
     </div>
   </CollapsablePanel>
 </template>
@@ -70,6 +80,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import type { PropType } from 'vue'
+import { useFileDialog } from '@vueuse/core'
 import type { IHttpOperation, IHttpPathParam, IHttpQueryParam } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import { extractSample, getSampleHeaders, getSamplePath, getSampleQuery } from '@/utils'
@@ -79,6 +90,9 @@ import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import RequiredToggle from './RequiredToggle.vue'
+import type { RequestBody } from '@/types'
+
+
 
 /**
  * This components handles path parameters, query parameters and body.
@@ -95,8 +109,8 @@ const props = defineProps({
   },
   /* coming as a property when request sample is picked in RequestSample */
   requestBody: {
-    type: String,
-    default: '',
+    type: Object as PropType<RequestBody>,
+    default: () => {},
   },
   /** list of headers to exclude from TryIt */
   excludeHeaderList: {
@@ -114,7 +128,7 @@ const emit = defineEmits<{
   (e: 'request-path-changed', newPath: string): void
   (e: 'request-query-changed', newQuery: string): void
   (e: 'request-headers-changed', newHeaders: Array<Record<string, string>>): void
-  (e: 'request-body-changed', newBody: string): void
+  (e: 'request-body-changed', newBody: RequestBody): void
 }>()
 
 const compTitles = {
@@ -123,6 +137,28 @@ const compTitles = {
   body: 'Body',
   headers: 'Headers',
 }
+
+const acceptFileType = computed(():string => {
+  const ext = props.data.request?.body?.contents?.[0].mediaType.split('/').reverse()[0]
+  if (ext) {
+    return `.${ext}`
+  }
+  return '*'
+})
+
+const { open: openFileDialog, onChange: onChangeFileDialog } = useFileDialog({
+  accept: acceptFileType.value,
+  directory: false,
+  reset: true,
+  multiple: false,
+
+})
+
+onChangeFileDialog((files) => {
+  /** do something with files */
+  console.log('files: ', files)
+  emit('request-body-changed', [])
+})
 
 
 // params schema props extracted from data (schema) or received from outside controls (reqBody)
@@ -156,6 +192,10 @@ const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Re
   return <Record<string, any>>{}
 })
 
+const isBinaryBody = computed(() => {
+  return props.data.request?.body?.contents?.[0].schema?.contentMediaType === 'application/octet-stream'
+})
+
 //
 const fieldValues = ref<Record<string, string>>({})
 
@@ -176,7 +216,7 @@ watch(params, (newParams) => {
   }
 }, { immediate: true })
 
-const requestBodyChanged = (newBody: string) => {
+const requestBodyChanged = (newBody: RequestBody) => {
   if (newBody) {
     emit('request-body-changed', newBody)
   }
@@ -225,6 +265,11 @@ watch(fieldValues, (newFieldValues) => {
 
 input[type=text] {
   @include input-default;
+}
+.choose-file-btn {
+  width: var(--kui-space-150, $kui-space-150);
+  margin: var(--kui-space-60, $kui-space-60)!important;
+  cursor: pointer;
 }
 </style>
 

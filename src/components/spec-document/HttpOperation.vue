@@ -179,7 +179,7 @@ import PageHeader from '../common/PageHeader.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import { getSamplePath, getSampleQuery, getSampleBody, getSampleHeaders } from '@/utils'
 import composables from '@/composables'
-import type { SecuritySchemeGroup } from '@/types'
+import type { SecuritySchemeGroup, RequestBody } from '@/types'
 
 const props = defineProps({
   data: {
@@ -236,7 +236,7 @@ const {
 const currentRequestPath = ref<string>('')
 const currentRequestQuery = ref<string>('')
 const currentRequestHeaders = ref<Array<Record<string, string>>>([])
-const currentRequestBody = ref<string>('')
+const currentRequestBody = ref<RequestBody>('')
 
 const { activeSecurityScheme, authHeaderMap, authQueryMap } = composables.useAuthTokenState()
 
@@ -284,7 +284,7 @@ const setRequestHeaders = (newHeaders: Array<Record<string, string>>) => {
   currentRequestHeaders.value = newHeaders
 }
 
-const setRequestBody = (newBody: string) => {
+const setRequestBody = (newBody: RequestBody) => {
   currentRequestBody.value = newBody
 }
 

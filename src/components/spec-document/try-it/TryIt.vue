@@ -74,14 +74,14 @@
 import { inject, computed, ref, watch } from 'vue'
 import type { PropType, Ref } from 'vue'
 import TryItDropdown from './TryItDropdown.vue'
-import { getRequestHeaders, getSampleHeaders, getFormattedBody } from '@/utils'
+import { getRequestHeaders, getSampleHeaders, getFormattedBody, getSamplePath, getSampleQuery } from '@/utils'
 import type { IHttpOperation } from '@stoplight/types'
 import MethodBadge from '@/components/common/MethodBadge.vue'
 import TryItAuth from './TryItAuth.vue'
 import TryItParams from './TryItParams.vue'
 import TryItResponse from './TryItResponse.vue'
-import { getSamplePath, getSampleQuery } from '@/utils'
 import composables from '@/composables'
+import type { RequestBody } from '@/types'
 
 const props = defineProps({
   data: {
@@ -93,8 +93,8 @@ const props = defineProps({
     required: true,
   },
   requestBody: {
-    type: String,
-    default: '',
+    type: Object as PropType<RequestBody>,
+    default: () => {},
   },
 })
 
@@ -107,7 +107,7 @@ const emit = defineEmits<{
   (e: 'request-path-changed', newPath: string): void
   (e: 'request-query-changed', newPath: string): void
   (e: 'request-headers-changed', newHeaders: Array<Record<string, string>>): void
-  (e: 'request-body-changed', newBody: string): void
+  (e: 'request-body-changed', newBody: RequestBody): void
 }>()
 
 const { activeSecurityScheme, authHeaderMap, authQueryMap } = composables.useAuthTokenState()
@@ -129,7 +129,7 @@ const currentRequestQuery = ref<string>('')
 
 const currentRequestHeaders = ref<Array<Record<string, string>>>([])
 
-const currentRequestBody = ref<string>('')
+const currentRequestBody = ref<RequestBody>('')
 
 const apiCallLoading = ref(false)
 
@@ -160,7 +160,7 @@ const requestHeadersChanged = (newHeaderList: Array<Record<string, string>>) => 
   emit('request-headers-changed', newHeaderList)
 }
 
-const requestBodyChanged = (newBody: string) => {
+const requestBodyChanged = (newBody: RequestBody) => {
   currentRequestBody.value = newBody
   emit('request-body-changed', newBody)
 }

@@ -99,7 +99,7 @@ import type { LanguageCode } from '@/types/request-languages'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import LanguageIcon from '@/components/common/LanguageIcon.vue'
-import type { SelectItem } from '@/types'
+import type { SelectItem, RequestBody } from '@/types'
 import RequiredToggle from '../try-it/RequiredToggle.vue'
 
 
@@ -141,8 +141,8 @@ const props = defineProps({
   },
   /* value is coming from TryIt body parameter change */
   requestBody: {
-    type: String,
-    default: '',
+    type: Object as PropType<RequestBody>,
+    default: () => {},
   },
 })
 
@@ -278,7 +278,6 @@ watch(() => ({
         ...newValue.customHeaders,
         ...newValue.authHeaders,
       ]
-
       // returns json or formencoded body based on content-type header, we need to provide headers as an plain object key = header name, value: header value
       const { body } = getFormattedBody(headers.reduce((acc, current) => {
         acc[ current.name ] = current.value; return acc
@@ -322,7 +321,7 @@ watch(() => ({
     // if we do not have requestCode generated, or our lang or lib are changed - we need to re-generate requestCode
     if (!requestCode.value || snippetChanged || newValue.lang !== oldValue?.lang || newValue.lib !== oldValue?.lib) {
       if (newValue.lang === 'json') {
-        requestCode.value = newValue.requestBody
+        requestCode.value = newValue.requestBody as string
         return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
       } else if (snippet.value) {
         requestCode.value = snippet.value.convert((newValue.lang as TargetId), newValue.lib) || ''
