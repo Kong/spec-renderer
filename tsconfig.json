@@ -18,7 +18,9 @@
     "declarationDir": "dist/types",
     "types": [
       "vite/client",
-      "@types/node"
+      "@types/node",
+      "@vitest/browser/matchers",
+      "@vitest/browser/providers/playwright"
     ],
     "paths": {
       "@/*": [

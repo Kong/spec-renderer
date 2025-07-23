@@ -58,8 +58,11 @@ jobs:
           include-hidden-files: 'true'
           if-no-files-found: error
 
-      - name: Test
-        run: pnpm run test
+      - name: Unit Tests
+        run: pnpm run test:unit
+
+      - name: Component Tests
+        run: pnpm run test:component
 
       - name: Publish Package Preview
         id: package-preview

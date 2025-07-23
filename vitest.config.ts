@@ -4,13 +4,6 @@ import viteConfig from './vite.config'
 export default mergeConfig(viteConfig, defineConfig({
   test: {
     globals: true,
-    environment: 'jsdom',
-    include: ['**/*.spec.ts'],
-    exclude: [
-      './dist/**',
-      './sandbox/**',
-      'node_modules',
-    ],
     setupFiles: ['./vitest.setup.ts'],
     deps: {
       optimizer: {
@@ -20,5 +13,37 @@ export default mergeConfig(viteConfig, defineConfig({
         },
       },
     },
+    exclude: [
+      './dist/**',
+      './sandbox/**',
+      'node_modules',
+    ],
+
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          environment: 'jsdom',
+          include: ['**/*.spec.ts'],
+          exclude: ['**/*.component.spec.ts'],
+        },
+      },
+      {
+        extends: true,
+
+        test: {
+          name: 'component',
+          include: ['**/*.component.spec.ts'],
+          browser: {
+            enabled: true,
+            provider: 'playwright',
+            instances: [
+              { browser: 'chromium' },
+            ],
+          },
+        },
+      },
+    ],
   },
 }))

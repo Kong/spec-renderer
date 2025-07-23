@@ -11,6 +11,7 @@ bundle-analyzer
 .cache
 .idea
 .husky
+__screenshots__
 
 docs/.vitepress/.temp
 docs/.vitepress/.cache
