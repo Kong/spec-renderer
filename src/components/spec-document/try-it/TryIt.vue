@@ -237,18 +237,12 @@ watch(() => props.requestBody, (body) => {
   currentRequestBody.value = body
 }, { immediate: true })
 
-watch(() => ({ id: props.data.id, authHeaderNameList: authHeaderNameList.value }), (newValue: any, oldValue) => {
+watch(() => (props.data.id), () => {
   currentRequestPath.value = getSamplePath(props.data)
   currentRequestQuery.value = getSampleQuery(props.data)
-  currentRequestHeaders.value = getSampleHeaders({ data: props.data, excludeHeaderList: newValue.authHeaderNameList })
-  if (newValue.id !== oldValue?.id || (
-    Array.isArray(newValue.authHeaderNameList) &&
-    Array.isArray(oldValue?.authHeaderNameList) &&
-    newValue.authHeaderNameList.length != oldValue.authHeaderNameList.length
-  )) {
-    response.value = undefined
-    responseError.value = undefined
-  }
+  currentRequestHeaders.value = getSampleHeaders({ data: props.data, excludeHeaderList: authHeaderNameList.value })
+  response.value = undefined
+  responseError.value = undefined
 }, { immediate: true })
 
 </script>

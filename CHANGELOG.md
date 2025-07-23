@@ -1,3 +1,10 @@
+## [1.95.11](https://github.com/Kong/spec-renderer/compare/v1.95.10...v1.95.11) (2025-07-23)
+
+
+### Bug Fixes
+
+* do not reset path and query values when headers change [TDX-6287] ([#644](https://github.com/Kong/spec-renderer/issues/644)) ([9925e83](https://github.com/Kong/spec-renderer/commit/9925e83ff457459c9752de5a3bf310df214948b5))
+
 ## [1.95.10](https://github.com/Kong/spec-renderer/compare/v1.95.9...v1.95.10) (2025-07-21)
 
 
