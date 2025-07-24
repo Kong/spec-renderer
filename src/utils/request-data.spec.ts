@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getRequestHeaders, getFormattedBody } from './request-data'
+import { getRequestHeaders, getFormattedBody, getSampleQuery } from './request-data'
 import type { IHttpOperation } from '@stoplight/types'
 
 describe('request-header', () => {
@@ -33,3 +33,57 @@ describe('getFormattedBody', () => {
   })
 })
 
+
+describe('getSampleQuery', () => {
+  it('should skip empty non-required values', () => {
+    expect(getSampleQuery({
+      id: '98ddd4beb64c5',
+      method: 'get',
+      path: '/reports',
+      request: {
+        query: [
+          // @ts-ignore just what's needed for test
+          {
+            'id': '95551eda46140',
+            'name': 'groupNpi',
+            'examples': [],
+            'description': 'Optional. Provider group NPI',
+            'required': false,
+            'schema': {
+              'type': 'string',
+              '$schema': 'http://json-schema.org/draft-07/schema#',
+              'description': 'Optional. Provider group NPI',
+            },
+            'explicitProperties': [
+              'name',
+              'in',
+              'required',
+              'description',
+              'schema',
+            ],
+          },
+          // @ts-ignore just what's needed for test
+          {
+            'id': 'a89c1e7c38da6',
+            'name': 'lastName',
+            'examples': [],
+            'description': 'Optional. Provider last name',
+            'required': true,
+            'schema': {
+              'type': 'string',
+              '$schema': 'http://json-schema.org/draft-07/schema#',
+              'description': 'Optional. Provider last name',
+            },
+            'explicitProperties': [
+              'name',
+              'in',
+              'required',
+              'description',
+              'schema',
+            ],
+          },
+        ],
+      },
+    })).toEqual('lastName=')
+  })
+})

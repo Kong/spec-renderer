@@ -24,6 +24,12 @@
           class="param-label"
           :for="`request-${paramType}-input-${params[pKey].name || pKey}-${data.id}`"
         >
+          <div
+            v-if="params[pKey].required"
+            class="required-label"
+          >
+            *
+          </div>
           {{ params[pKey].name || pKey }}
           <Tooltip
             v-if="params[pKey].description"
@@ -225,6 +231,11 @@ watch(fieldValues, (newFieldValues) => {
 
 input[type=text] {
   @include input-default;
+}
+
+.required-label {
+  color: var(--kui-icon-color-danger, $kui-icon-color-danger);
+  height: 14px;
 }
 </style>
 
