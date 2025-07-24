@@ -50,16 +50,15 @@
       v-if="paramType === 'body' && params && Object.keys(params).length"
       class="wide body-param"
     >
-      {{ props.data.request?.body?.contents?.[0].mediaType.split('/').reverse()[0] }}
       <RequiredToggle
-        v-if="!isBinaryBody"
+        v-if="!requestBody.isBinary"
         v-model="excludeNotRequired"
         class="required-fields-toggle"
         :data="data"
       />
 
       <EditableCodeBlock
-        v-if="!isBinaryBody"
+        v-if="!requestBody.isBinary"
         class="body-param-code-block"
         :code="fieldValues.body"
         lang="json"
@@ -110,7 +109,7 @@ const props = defineProps({
   /* coming as a property when request sample is picked in RequestSample */
   requestBody: {
     type: Object as PropType<RequestBody>,
-    default: () => {},
+    default: () => ({ text: '' }),
   },
   /** list of headers to exclude from TryIt */
   excludeHeaderList: {
@@ -157,7 +156,7 @@ const { open: openFileDialog, onChange: onChangeFileDialog } = useFileDialog({
 onChangeFileDialog((files) => {
   /** do something with files */
   console.log('files: ', files)
-  emit('request-body-changed', [])
+  emit('request-body-changed', { isBinary: true, content: [] })
 })
 
 
@@ -185,16 +184,17 @@ const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Re
     }, {})
   }
 
-  if (props.requestBody) {
-    return <Record<string, any>>{ body: { example: props.requestBody } }
+  if (props.requestBody?.content) {
+    if (props.requestBody.isBinary) {
+      return <Record<string, any>>{ body: {} }
+    } else {
+      return <Record<string, any>>{ body: { example: props.requestBody.content } }
+    }
   }
 
   return <Record<string, any>>{}
 })
 
-const isBinaryBody = computed(() => {
-  return props.data.request?.body?.contents?.[0].schema?.contentMediaType === 'application/octet-stream'
-})
 
 //
 const fieldValues = ref<Record<string, string>>({})
@@ -216,9 +216,9 @@ watch(params, (newParams) => {
   }
 }, { immediate: true })
 
-const requestBodyChanged = (newBody: RequestBody) => {
+const requestBodyChanged = (newBody: string) => {
   if (newBody) {
-    emit('request-body-changed', newBody)
+    emit('request-body-changed', { isBinary: false, content: newBody })
   }
 }
 

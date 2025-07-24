@@ -119,7 +119,7 @@
           :content-list="activeResponseContentList"
           :content-type="activeContentType"
           :description="activeResponseDescription"
-          :response-code="activeResponseCode"
+          :response-code="activeResponseCode || ''"
         >
           <ResponseTypeSelect
             :component-list="responseSelectComponentList"
@@ -145,7 +145,7 @@
             :content-list="activeCallbackResponseContentList"
             :content-type="activeCallbackContentType"
             :description="activeCallbackResponseDescription"
-            :response-code="activeCallbackResponseCode"
+            :response-code="activeCallbackResponseCode || ''"
           >
             <div class="calback-response-sample-header">
               <span>Callback Response</span>
@@ -236,7 +236,7 @@ const {
 const currentRequestPath = ref<string>('')
 const currentRequestQuery = ref<string>('')
 const currentRequestHeaders = ref<Array<Record<string, string>>>([])
-const currentRequestBody = ref<RequestBody>('')
+const currentRequestBody = ref<RequestBody>({ isBinary: false, content: '' })
 
 const { activeSecurityScheme, authHeaderMap, authQueryMap } = composables.useAuthTokenState()
 
@@ -289,28 +289,39 @@ const setRequestBody = (newBody: RequestBody) => {
 }
 
 const setRequestBodyByIdx = (newSampleIdx: number) => {
-  currentRequestBody.value = activeRequestBodyContentList.value.length
+  currentRequestBody.value = { isBinary: false, content: activeRequestBodyContentList.value.length
     ? getSampleBody(
       activeRequestBodyContentList.value,
       { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value },
       newSampleIdx,
     )
-    : ''
+    : '' }
 }
 
 function updateSelectedServerURL(url: string) {
   selectedServerUrl.value = url
 }
 
+const isBinaryBody = computed((): boolean => {
+  return activeRequestBodyContentList.value?.length > 0 &&
+  (activeRequestBodyContentList.value[0].schema?.format == 'binary' ||
+  activeRequestBodyContentList.value[0].schema?.contentMediaType === 'application/octet-stream')
+})
+
 function updateRequestBodyContentType(newContentType: string) {
   activeRequestBodyContentType.value = newContentType
-  currentRequestBody.value = activeRequestBodyContentList.value.length
-    ? getSampleBody(
-      activeRequestBodyContentList.value,
-      { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value },
-      0,
-    )
-    : ''
+  console.log('updateRequestBodyContentType: ', newContentType, activeRequestBodyContentList.value)
+  if (isBinaryBody.value) {
+    currentRequestBody.value = { isBinary: true, content: [] }
+  } else {
+    currentRequestBody.value = { isBinary: false, content: activeRequestBodyContentList.value.length
+      ? getSampleBody(
+        activeRequestBodyContentList.value,
+        { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value },
+        0,
+      )
+      : '' }
+  }
 }
 
 watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value } ), (newValue) => {
@@ -321,13 +332,23 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
   currentRequestPath.value = getSamplePath(operationData.value)
   currentRequestQuery.value = getSampleQuery(operationData.value)
   currentRequestHeaders.value = getSampleHeaders({ data: operationData.value })
-  currentRequestBody.value = activeRequestBodyContentList.value
-    ? getSampleBody(
-      activeRequestBodyContentList.value,
-      { excludeReadonly: true, excludeNotRequired: newValue.excludeNotRequired },
-      0,
-    )
-    : ''
+  console.log('currentRequestHeaders:', currentRequestHeaders.value, activeRequestBodyContentList.value)
+
+  if (activeRequestBodyContentList.value?.length > 0 && activeRequestBodyContentList.value[0].mediaType) {
+    currentRequestHeaders.value.push({ name: 'Content-Type', value: activeRequestBodyContentList.value[0].mediaType })
+  }
+  if (isBinaryBody.value) {
+    currentRequestBody.value = { isBinary: true, content: [] }
+  } else {
+    currentRequestBody.value = { isBinary: false, content: activeRequestBodyContentList.value
+      ? getSampleBody(
+        activeRequestBodyContentList.value,
+        { excludeReadonly: true, excludeNotRequired: newValue.excludeNotRequired },
+        0,
+      )
+      : '',
+    }
+  }
 }, { immediate: true })
 </script>
 

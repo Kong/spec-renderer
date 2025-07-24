@@ -3,4 +3,7 @@ export interface RequestFile {
 }
 
 
-export type RequestBody = string | RequestFile[]
+export interface RequestBody {
+  isBinary?: boolean
+  content?: string | RequestFile[]
+}

@@ -1,0 +1,79 @@
+openapi: 3.1.0
+info:
+  title: Document Submission API
+  version: 1.0.0
+  description: API for submitting document data as PDF or JSON.
+servers:
+  - url: http://localhost:5174/spec-renderer/api/v1
+    description: Main server
+
+paths:
+  /documents:
+    post:
+      summary: Submit Document
+      description: Accepts document data as either a PDF file or JSON text.
+      operationId: submitDocument
+      requestBody:
+        content:
+          application/pdf:
+            schema:
+              type: string
+              format: binary
+            example: "...PDF file content..."
+          application/json:
+            schema:
+              type: object
+              properties:
+                document_data:
+                  type: string
+                  description: Document data in JSON format.
+              example:
+                document_data: '{"name": "Example Document", "content": "This is example content."}'
+        required: true
+      responses:
+        '200':
+          description: Successful submission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+        '400':
+          description: Bad request - Invalid input data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+                example:
+                  error: "Invalid JSON format."
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+                example:
+                  error: "Internal server error."
+
+components:
+  schemas:
+    DocumentResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Submission confirmation message.
+        document_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the submitted document.
+      example:
+        message: "Document submitted successfully."
+        document_id: "a1b2c3d4-e5f6-7890-1234-567890abcdef"

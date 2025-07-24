@@ -94,7 +94,7 @@ const props = defineProps({
   },
   requestBody: {
     type: Object as PropType<RequestBody>,
-    default: () => {},
+    default: () => ({ text: '' }),
   },
 })
 
@@ -129,7 +129,7 @@ const currentRequestQuery = ref<string>('')
 
 const currentRequestHeaders = ref<Array<Record<string, string>>>([])
 
-const currentRequestBody = ref<RequestBody>('')
+const currentRequestBody = ref<RequestBody>({ isBinary: false, content: '' })
 
 const apiCallLoading = ref(false)
 

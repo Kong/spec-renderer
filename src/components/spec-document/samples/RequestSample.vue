@@ -142,7 +142,7 @@ const props = defineProps({
   /* value is coming from TryIt body parameter change */
   requestBody: {
     type: Object as PropType<RequestBody>,
-    default: () => {},
+    default: () => ({ content: '' }),
   },
 })
 
@@ -279,10 +279,9 @@ watch(() => ({
         ...newValue.authHeaders,
       ]
       // returns json or formencoded body based on content-type header, we need to provide headers as an plain object key = header name, value: header value
-      const { body } = getFormattedBody(headers.reduce((acc, current) => {
+      const { body: textBody } = getFormattedBody(headers.reduce((acc, current) => {
         acc[ current.name ] = current.value; return acc
       }, {}), newValue.requestBody)
-
       serverUrl.search = queryStr
 
       // for HTTPSnippet we need to provide query as an array of {name, value} objects
@@ -298,15 +297,25 @@ watch(() => ({
         url: serverUrl.href,
         queryString: qObjArr,
         headers,
-        postData: {
+        postData: !newValue.requestBody.isBinary ? {
           // HTTPsnippet is not doing nice trying to handle with body params based on mimeType, so we going to send pre-formatted body, and
           // make HTTPsnippet to use as is by forcing mimeType as `text/plain`
           mimeType: 'text/plain',
-          text: body,
+          text: textBody,
+        } : {
+          'mimeType': 'multipart/form-data',
+          'params': [{
+            'name': 'paramName',
+            'value': 'paramValue',
+            'fileName': 'example.pdf',
+            'contentType': 'application/pdf',
+            'comment': '',
+          }],
+          'text': 'plain posted data',
+          'comment': '',
         },
 
       } as unknown as HarRequest)
-
       snippet.value = new HTTPSnippet(reqData)
 
       snippetChanged = true

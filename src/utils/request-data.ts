@@ -164,22 +164,14 @@ export const getFormattedBody = (headers: Record<string, string>, body: RequestB
     }
   }
 
-  if (isBinaryBody(body)) {
+  if (body.isBinary) {
     return { body: null, contentType }
   }
 
-  if (body && contentType === 'application/x-www-form-urlencoded') {
-    return { body: formurlencoded(safeJSONParse(body)), contentType }
+  if (body.content && contentType === 'application/x-www-form-urlencoded') {
+    return { body: formurlencoded(safeJSONParse(body.content as string)), contentType }
   }
 
-  return { body: body as string, contentType }
+  return { body: body.content as string, contentType }
 }
 
-/**
- * Returns true if body is array of binary files
- * @param body
- * @returns
- */
-export const isBinaryBody = (body: RequestBody): boolean => {
-  return Array.isArray(body) && body.length > 0
-}
