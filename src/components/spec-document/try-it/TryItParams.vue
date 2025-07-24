@@ -96,9 +96,6 @@ import Tooltip from '@/components/common/TooltipPopover.vue'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import RequiredToggle from './RequiredToggle.vue'
 import type { RequestBody } from '@/types'
-
-
-
 /**
  * This components handles path parameters, query parameters and body.
  * only parts of
@@ -143,16 +140,9 @@ const compTitles = {
   headers: 'Headers',
 }
 
-const acceptFileType = computed(():string => {
-  const ext = props.data.request?.body?.contents?.[0].mediaType.split('/').reverse()[0]
-  if (ext) {
-    return `.${ext}`
-  }
-  return '*'
-})
 
 const { open: openFileDialog, onChange: onChangeFileDialog } = useFileDialog({
-  accept: acceptFileType.value,
+  accept: props.requestBody?.acceptedExt,
   directory: false,
   reset: true,
   multiple: false,
@@ -162,7 +152,7 @@ const { open: openFileDialog, onChange: onChangeFileDialog } = useFileDialog({
 onChangeFileDialog((files) => {
   /** do something with files */
   console.log('files: ', files)
-  emit('request-body-changed', { isBinary: true, content: [] })
+  emit('request-body-changed', { isBinary: true, content: files as FileList })
 })
 
 

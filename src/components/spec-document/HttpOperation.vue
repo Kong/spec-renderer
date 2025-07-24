@@ -310,7 +310,6 @@ const isBinaryBody = computed((): boolean => {
 
 function updateRequestBodyContentType(newContentType: string) {
   activeRequestBodyContentType.value = newContentType
-  console.log('updateRequestBodyContentType: ', newContentType, activeRequestBodyContentList.value)
   if (isBinaryBody.value) {
     currentRequestBody.value = { isBinary: true, content: [] }
   } else {
@@ -332,13 +331,14 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
   currentRequestPath.value = getSamplePath(operationData.value)
   currentRequestQuery.value = getSampleQuery(operationData.value)
   currentRequestHeaders.value = getSampleHeaders({ data: operationData.value })
-  console.log('currentRequestHeaders:', currentRequestHeaders.value, activeRequestBodyContentList.value)
 
+  let acceptedExt = '*'
   if (activeRequestBodyContentList.value?.length > 0 && activeRequestBodyContentList.value[0].mediaType) {
     currentRequestHeaders.value.push({ name: 'Content-Type', value: activeRequestBodyContentList.value[0].mediaType })
+    acceptedExt = `.${activeRequestBodyContentList.value[0].mediaType.split('/').reverse()[0]}`
   }
   if (isBinaryBody.value) {
-    currentRequestBody.value = { isBinary: true, content: [] }
+    currentRequestBody.value = { isBinary: true, content: [], acceptedExt }
   } else {
     currentRequestBody.value = { isBinary: false, content: activeRequestBodyContentList.value
       ? getSampleBody(

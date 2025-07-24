@@ -179,6 +179,16 @@ const doApiCall = async (callAsIs = false) => {
     const url = new URL(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''))
     let queryStr = currentRequestQuery.value
     url.search = queryStr
+
+    const formData = new FormData()
+    if (files) {
+      for (let file of files) {
+        console.log('file:', file)
+        formData.append('uploadedFile', file)
+      }
+    }
+    console.log('formData:', formData)
+
     const headers = [
       ...getRequestHeaders(props.data),
       ...currentRequestHeaders.value,

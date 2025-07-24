@@ -290,6 +290,7 @@ watch(() => ({
         return { name: p, value: qObj[p] }
       })
 
+      console.log('!!!!!!!', newValue.requestBody.content, textBody)
       // preparing reqData for HTTPSnipped as prescribed in https://github.com/Kong/httpsnippet/blob/master/README.md?plain=1#L113
       const reqData = ({
         method: newValue.method.toUpperCase(),
@@ -298,25 +299,23 @@ watch(() => ({
         url: serverUrl.href.replace(/\?.*/, ''),
         queryString: qObjArr,
         headers,
-        postData: !newValue.requestBody.isBinary ? {
+
+      } as unknown as HarRequest)
+
+      if (!newValue.requestBody.isBinary && textBody) {
+        reqData.postData = {
           // HTTPsnippet is not doing nice trying to handle with body params based on mimeType, so we going to send pre-formatted body, and
           // make HTTPsnippet to use as is by forcing mimeType as `text/plain`
           mimeType: 'text/plain',
           text: textBody,
-        } : {
-          'mimeType': 'multipart/form-data',
-          'params': [{
-            'name': 'paramName',
-            'value': 'paramValue',
-            'fileName': 'example.pdf',
-            'contentType': 'application/pdf',
-            'comment': '',
-          }],
-          'text': 'plain posted data',
-          'comment': '',
-        },
-
-      } as unknown as HarRequest)
+        }
+      }
+      if (newValue.requestBody.isBinary && newValue.requestBody.content && newValue.requestBody.content?.length > 0) {
+        reqData.postData = {
+          mimeType: 'application/pdf',
+          text: `@${(newValue.requestBody.content[0] as File).name}`,
+        }
+      }
       snippet.value = new HTTPSnippet(reqData)
 
       snippetChanged = true
@@ -334,7 +333,7 @@ watch(() => ({
         requestCode.value = newValue.requestBody as string
         return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
       } else if (snippet.value) {
-        requestCode.value = snippet.value.convert((newValue.lang as TargetId), newValue.lib) || ''
+        requestCode.value = snippet.value.convert((newValue.lang as TargetId), newValue.lib, { binary: newValue.requestBody?.isBinary }) || ''
       }
     }
   }

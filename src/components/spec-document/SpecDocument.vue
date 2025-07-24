@@ -568,7 +568,8 @@ watch(() => ({
     renderPlain.value = false
 
     // initialize the centralized state for server list
-    initialize(serviceNode.value?.data?.servers || [])
+    // sometimes, when we start with rendering model, services block is not there, so we need to grab it from the root
+    initialize(serviceNode.value?.data?.servers || newDocument.data.servers || [])
   }
 
   if (!doContentScrolling.value) {
