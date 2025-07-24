@@ -232,9 +232,10 @@ watch(fieldValues, (newFieldValues) => {
 input[type=text] {
   @include input-default;
 }
+
 .required-label {
   color: var(--kui-icon-color-danger, $kui-icon-color-danger);
-  height: var(--kui-space-60, $kui-space-60);
+  height: 14px;
 }
 </style>
 
