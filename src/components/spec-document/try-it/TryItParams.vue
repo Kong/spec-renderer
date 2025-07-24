@@ -276,6 +276,7 @@ input[type=text] {
   width: var(--kui-space-150, $kui-space-150);
   margin: var(--kui-space-60, $kui-space-60)!important;
   cursor: pointer;
+}
 
 .required-label {
   color: var(--kui-icon-color-danger, $kui-icon-color-danger);
