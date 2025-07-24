@@ -3,5 +3,5 @@
 export interface RequestBody {
   isBinary?: boolean
   acceptedExt?: string
-  content?: string | FileList
+  content?: string | FileList | File[]
 }

@@ -290,7 +290,6 @@ watch(() => ({
         return { name: p, value: qObj[p] }
       })
 
-      console.log('!!!!!!!', newValue.requestBody.content, textBody)
       // preparing reqData for HTTPSnipped as prescribed in https://github.com/Kong/httpsnippet/blob/master/README.md?plain=1#L113
       const reqData = ({
         method: newValue.method.toUpperCase(),

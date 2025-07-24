@@ -70,14 +70,25 @@
         lang="json"
         @request-body-changed="requestBodyChanged"
       />
-      <button
+      <div
         v-else
-        class="choose-file-btn"
-        type="button"
-        @click="openFileDialog()"
       >
-        Choose file
-      </button>
+        <button
+          class="choose-file-btn"
+          type="button"
+          @click="openFileDialog()"
+        >
+          Choose file
+        </button>
+        <span
+          v-if="!selectedFiles"
+          class="choose-file-text"
+        >No file selected</span>
+        <span
+          v-if="selectedFiles && selectedFiles.length > 0"
+          class="choose-file-text"
+        >{{ selectedFiles[0].name }}</span>
+      </div>
     </div>
   </CollapsablePanel>
 </template>
@@ -141,7 +152,7 @@ const compTitles = {
 }
 
 
-const { open: openFileDialog, onChange: onChangeFileDialog } = useFileDialog({
+const { files: selectedFiles, open: openFileDialog, onChange: onChangeFileDialog } = useFileDialog({
   accept: props.requestBody?.acceptedExt,
   directory: false,
   reset: true,
@@ -180,10 +191,10 @@ const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Re
     }, {})
   }
 
-  if (props.requestBody?.content) {
+  if (props.paramType === 'body') {
     if (props.requestBody.isBinary) {
       return <Record<string, any>>{ body: {} }
-    } else {
+    } else if (props.requestBody.content) {
       return <Record<string, any>>{ body: { example: props.requestBody.content } }
     }
   }
@@ -264,10 +275,12 @@ input[type=text] {
 }
 .choose-file-btn {
   width: var(--kui-space-150, $kui-space-150);
-  margin: var(--kui-space-60, $kui-space-60)!important;
+  margin: var(--kui-space-60, $kui-space-60) var(--kui-space-30, $kui-space-30)!important;
   cursor: pointer;
 }
-
+.choose-file-text {
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
+}
 .required-label {
   color: var(--kui-icon-color-danger, $kui-icon-color-danger);
   height: 14px;
