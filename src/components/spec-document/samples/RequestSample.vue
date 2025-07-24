@@ -296,7 +296,8 @@ watch(() => ({
       const reqData = ({
         method: newValue.method.toUpperCase(),
         // server.origin is set to null when protocol is invalid, we we have to use server.href here
-        url: serverUrl.href,
+        // but as queryString is passed separately we want to strip it out from url
+        url: serverUrl.href.replace(/\?.*/, ''),
         queryString: qObjArr,
         headers,
         postData: {
