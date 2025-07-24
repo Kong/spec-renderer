@@ -88,7 +88,10 @@ export const getSampleQuery = (data: IHttpOperation, fieldValues?: Record<string
   const urlParams = new URLSearchParams()
 
   Object.keys(myFieldValues).forEach(key => {
-    urlParams.append(key, myFieldValues[key])
+    const isRequired = data.request?.query?.find(r => r.name === key)?.required
+    if (isRequired || myFieldValues[key] !== '') {
+      urlParams.append(key, myFieldValues[key])
+    }
   })
 
   return urlParams.toString()
