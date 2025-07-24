@@ -1,3 +1,10 @@
+## [1.95.12](https://github.com/Kong/spec-renderer/compare/v1.95.11...v1.95.12) (2025-07-24)
+
+
+### Bug Fixes
+
+* do not include empty non-required query params into request [TDX-6287] ([#645](https://github.com/Kong/spec-renderer/issues/645)) ([a8d9003](https://github.com/Kong/spec-renderer/commit/a8d90033f4e06e932aac74ff62d5903d633a12d3))
+
 ## [1.95.11](https://github.com/Kong/spec-renderer/compare/v1.95.10...v1.95.11) (2025-07-23)
 
 
