@@ -169,25 +169,38 @@ const requestBodyChanged = (newBody: RequestBody) => {
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 /**
+ * read file into binary buffer
+ * @param file
+ */
+const readFileAsArrayBuffer = (file: File) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = (event) => {
+      resolve(event.target?.result) // The ArrayBuffer is in event.target.result
+    }
+
+    reader.onerror = (error) => {
+      reject(error) // Handle potential errors during reading
+    }
+
+    reader.readAsArrayBuffer(file) // Start reading the file
+  })
+}
+
+/**
  * Perform actual fetch to the api and prepare results/errors for displaying
  * @param callAsIs when true, we do not do any modifications of the headers for GET requests, otherwise we attempt to convert get to simple request by removing 'content-type' header
  */
 const doApiCall = async (callAsIs = false) => {
   const isGet = props.data.method.toUpperCase() === 'GET'
+
+
   try {
     apiCallLoading.value = true
     const url = new URL(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''))
     let queryStr = currentRequestQuery.value
     url.search = queryStr
-
-    const formData = new FormData()
-    if (files) {
-      for (let file of files) {
-        console.log('file:', file)
-        formData.append('uploadedFile', file)
-      }
-    }
-    console.log('formData:', formData)
 
     const headers = [
       ...getRequestHeaders(props.data),
@@ -197,7 +210,18 @@ const doApiCall = async (callAsIs = false) => {
       acc[ callAsIs === false && isGet ? current.name.toLowerCase() : current.name ] = current.value; return acc
     }, {})
 
-    const { body } = getFormattedBody(headers, currentRequestBody.value)
+    let { body: textBody } = getFormattedBody(headers, currentRequestBody.value)
+    let binaryBody = null
+    try {
+      if (currentRequestBody.value.isBinary && currentRequestBody.value.content && currentRequestBody.value.content?.length > 0) {
+        const file = (currentRequestBody.value.content[0] as File)
+        binaryBody = new Uint8Array(await readFileAsArrayBuffer(file) as Buffer)
+      }
+    } catch (error: any) {
+      responseError.value = error
+      apiCallLoading.value = false
+      return
+    }
 
     // first time we call GET - we will try to convert to simple request
     if (callAsIs === false && isGet) {
@@ -212,7 +236,7 @@ const doApiCall = async (callAsIs = false) => {
     const myResponse = await fetch(url.href, {
       method: String(props.data.method).toUpperCase(),
       headers,
-      ...(body ? { body } : null),
+      ...(textBody || binaryBody ? { body: textBody || binaryBody } : null),
     })
     response.value = myResponse
 

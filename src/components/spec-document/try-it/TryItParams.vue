@@ -162,7 +162,6 @@ const { files: selectedFiles, open: openFileDialog, onChange: onChangeFileDialog
 
 onChangeFileDialog((files) => {
   /** do something with files */
-  console.log('files: ', files)
   emit('request-body-changed', { isBinary: true, content: files as FileList })
 })
 

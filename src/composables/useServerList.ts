@@ -41,7 +41,6 @@ export default function useServerList() {
    * Initialize the centralized state for server list.
    */
   const initialize = (newServerList: ServerList) => {
-    console.log('initialize', newServerList)
     // strip trailing slash from server urls
     const filteredServerList = newServerList.map((server, idx) => ({
       ...server,
