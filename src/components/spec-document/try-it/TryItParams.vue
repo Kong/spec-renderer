@@ -272,14 +272,17 @@ watch(fieldValues, (newFieldValues) => {
 input[type=text] {
   @include input-default;
 }
+
 .choose-file-btn {
-  width: var(--kui-space-150, $kui-space-150);
-  margin: var(--kui-space-60, $kui-space-60) var(--kui-space-30, $kui-space-30)!important;
   cursor: pointer;
+  margin: var(--kui-space-60, $kui-space-60) var(--kui-space-30, $kui-space-30)!important;
+  width: 100px;
 }
+
 .choose-file-text {
-      font-size: var(--kui-font-size-20, $kui-font-size-20);
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
 }
+
 .required-label {
   color: var(--kui-icon-color-danger, $kui-icon-color-danger);
   height: 14px;
