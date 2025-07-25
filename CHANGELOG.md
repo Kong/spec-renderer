@@ -1,3 +1,10 @@
+# [1.96.0](https://github.com/Kong/spec-renderer/compare/v1.95.12...v1.96.0) (2025-07-25)
+
+
+### Features
+
+* allow body to be uploaded in tryIt [TDX-6213] ([#648](https://github.com/Kong/spec-renderer/issues/648)) ([6a76bc4](https://github.com/Kong/spec-renderer/commit/6a76bc45806be0f0a6c71abb6bd39bd1dce47c8a))
+
 ## [1.95.12](https://github.com/Kong/spec-renderer/compare/v1.95.11...v1.95.12) (2025-07-24)
 
 
