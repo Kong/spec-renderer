@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import { ref } from 'vue'
 import TryIt from './TryIt.vue'
 
@@ -19,7 +19,7 @@ describe('<TryIt />', () => {
             url: 'https://global.api.konghq.com/v2',
           }],
         },
-        requestBody: '{"a": "1", "b": "2"}',
+        requestBody: { content: '{"a": "1", "b": "2"}' },
         serverUrl: 'https://global.api.konghq.com/v2',
       },
     })
@@ -61,7 +61,7 @@ describe('<TryIt />', () => {
             url: 'https://global.api.konghq.com/v2',
           }],
         },
-        requestBody: '{"a": "1", "b": "2"}',
+        requestBody: { content: '{"a": "1", "b": "2"}' },
         serverUrl: 'https://global.api.konghq.com/v2',
       },
     })
@@ -138,4 +138,38 @@ describe('<TryIt />', () => {
     await wrapper.findTestId('tryit-insomnia-123').trigger('click')
     expect(spy).toBeCalledWith(`https://insomnia.rest/run?uri=${encodeURIComponent('/http://lcalhost/xxx')}`, '_blank')
   })
+
+  it('should renderer file selector for binary body', async () => {
+    const wrapper = mount(TryIt, {
+      props: {
+        data: {
+          id: '123',
+          method: 'post',
+          path: '/sample-path',
+          responses: [],
+          request: {
+            body: {
+              id: 'bodyId',
+              contents: [
+                {
+                  id: 'mediatypeId',
+                  mediaType: 'application/x-www-form-urlencoded',
+                },
+              ],
+            },
+          },
+          servers: [{
+            id: 'sample-server-id',
+            url: 'https://global.api.konghq.com/v2',
+          }],
+        },
+        requestBody: { isBinary: true, content: [{ name: 'test file.pdf' } as unknown as File] },
+        serverUrl: 'https://global.api.konghq.com/v2',
+      },
+    })
+    await flushPromises()
+    const code = wrapper.html()
+    expect(code).toMatch('Choose file')
+  })
+
 })

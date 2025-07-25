@@ -4,6 +4,7 @@ import { resolveSchemaObjectFields } from './schema-model'
 import { CODE_INDENT_SPACES } from '@/constants'
 import { safeJSONParse } from './strings'
 import formurlencoded from 'form-urlencoded'
+import type { RequestBody } from '@/types'
 
 const getAcceptHeader = (data: IHttpOperation): string => {
   const headers = new Set()
@@ -153,12 +154,12 @@ export const getSampleBody = (contents: IMediaTypeContent[], filteringOptions: R
 }
 
 /**
- * reformat body based on content-type header
+ * reformat body based on content-type header, for non-binary body
  * @param headers
  * @param body
  * @returns
  */
-export const getFormattedBody = (headers: Record<string, string>, body: string | null | undefined): { body: string | null | undefined, contentType: string | undefined } => {
+export const getFormattedBody = (headers: Record<string, string>, body: RequestBody): { body: string | null | undefined, contentType: string | undefined } => {
   let contentType:string = ''
   for (const key of Object.keys(headers || {})) {
     if (key.toLowerCase() === 'content-type') {
@@ -166,9 +167,14 @@ export const getFormattedBody = (headers: Record<string, string>, body: string |
     }
   }
 
-  if (body && contentType === 'application/x-www-form-urlencoded') {
-    return { body: formurlencoded(safeJSONParse(body)), contentType }
+  if (!body || body.isBinary) {
+    return { body: null, contentType }
   }
 
-  return { body, contentType }
+  if (body.content && contentType === 'application/x-www-form-urlencoded') {
+    return { body: formurlencoded(safeJSONParse(body.content as string)), contentType }
+  }
+
+  return { body: body.content as string, contentType }
 }
+

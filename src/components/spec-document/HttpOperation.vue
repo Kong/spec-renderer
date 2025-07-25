@@ -119,7 +119,7 @@
           :content-list="activeResponseContentList"
           :content-type="activeContentType"
           :description="activeResponseDescription"
-          :response-code="activeResponseCode"
+          :response-code="activeResponseCode || ''"
         >
           <ResponseTypeSelect
             :component-list="responseSelectComponentList"
@@ -145,7 +145,7 @@
             :content-list="activeCallbackResponseContentList"
             :content-type="activeCallbackContentType"
             :description="activeCallbackResponseDescription"
-            :response-code="activeCallbackResponseCode"
+            :response-code="activeCallbackResponseCode || ''"
           >
             <div class="calback-response-sample-header">
               <span>Callback Response</span>
@@ -179,7 +179,7 @@ import PageHeader from '../common/PageHeader.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import { getSamplePath, getSampleQuery, getSampleBody, getSampleHeaders } from '@/utils'
 import composables from '@/composables'
-import type { SecuritySchemeGroup } from '@/types'
+import type { SecuritySchemeGroup, RequestBody } from '@/types'
 
 const props = defineProps({
   data: {
@@ -236,7 +236,7 @@ const {
 const currentRequestPath = ref<string>('')
 const currentRequestQuery = ref<string>('')
 const currentRequestHeaders = ref<Array<Record<string, string>>>([])
-const currentRequestBody = ref<string>('')
+const currentRequestBody = ref<RequestBody>({ isBinary: false, content: '' })
 
 const { activeSecurityScheme, authHeaderMap, authQueryMap } = composables.useAuthTokenState()
 
@@ -284,33 +284,43 @@ const setRequestHeaders = (newHeaders: Array<Record<string, string>>) => {
   currentRequestHeaders.value = newHeaders
 }
 
-const setRequestBody = (newBody: string) => {
+const setRequestBody = (newBody: RequestBody) => {
   currentRequestBody.value = newBody
 }
 
 const setRequestBodyByIdx = (newSampleIdx: number) => {
-  currentRequestBody.value = activeRequestBodyContentList.value.length
+  currentRequestBody.value = { isBinary: false, content: activeRequestBodyContentList.value.length
     ? getSampleBody(
       activeRequestBodyContentList.value,
       { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value },
       newSampleIdx,
     )
-    : ''
+    : '' }
 }
 
 function updateSelectedServerURL(url: string) {
   selectedServerUrl.value = url
 }
 
+const isBinaryBody = computed((): boolean => {
+  return activeRequestBodyContentList.value?.length > 0 &&
+  (activeRequestBodyContentList.value[0].schema?.format == 'binary' ||
+  activeRequestBodyContentList.value[0].schema?.contentMediaType === 'application/octet-stream')
+})
+
 function updateRequestBodyContentType(newContentType: string) {
   activeRequestBodyContentType.value = newContentType
-  currentRequestBody.value = activeRequestBodyContentList.value.length
-    ? getSampleBody(
-      activeRequestBodyContentList.value,
-      { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value },
-      0,
-    )
-    : ''
+  if (isBinaryBody.value) {
+    currentRequestBody.value = { isBinary: true, content: [] }
+  } else {
+    currentRequestBody.value = { isBinary: false, content: activeRequestBodyContentList.value.length
+      ? getSampleBody(
+        activeRequestBodyContentList.value,
+        { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value },
+        0,
+      )
+      : '' }
+  }
 }
 
 watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value } ), (newValue) => {
@@ -321,13 +331,24 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
   currentRequestPath.value = getSamplePath(operationData.value)
   currentRequestQuery.value = getSampleQuery(operationData.value)
   currentRequestHeaders.value = getSampleHeaders({ data: operationData.value })
-  currentRequestBody.value = activeRequestBodyContentList.value
-    ? getSampleBody(
-      activeRequestBodyContentList.value,
-      { excludeReadonly: true, excludeNotRequired: newValue.excludeNotRequired },
-      0,
-    )
-    : ''
+
+  let acceptedExt = '*'
+  if (activeRequestBodyContentList.value?.length > 0 && activeRequestBodyContentList.value[0].mediaType) {
+    currentRequestHeaders.value.push({ name: 'Content-Type', value: activeRequestBodyContentList.value[0].mediaType })
+    acceptedExt = `.${activeRequestBodyContentList.value[0].mediaType.split('/').reverse()[0]}`
+  }
+  if (isBinaryBody.value) {
+    currentRequestBody.value = { isBinary: true, content: [], acceptedExt }
+  } else {
+    currentRequestBody.value = { isBinary: false, content: activeRequestBodyContentList.value
+      ? getSampleBody(
+        activeRequestBodyContentList.value,
+        { excludeReadonly: true, excludeNotRequired: newValue.excludeNotRequired },
+        0,
+      )
+      : '',
+    }
+  }
 }, { immediate: true })
 </script>
 

@@ -11,7 +11,6 @@
         {{ compTitles[props.paramType] }}
       </h3>
     </template>
-
     <div
       v-if="paramType !== 'body' && params && Object.keys(params).length"
       class="wide"
@@ -58,17 +57,38 @@
       class="wide body-param"
     >
       <RequiredToggle
+        v-if="!requestBody.isBinary"
         v-model="excludeNotRequired"
         class="required-fields-toggle"
         :data="data"
       />
 
       <EditableCodeBlock
+        v-if="!requestBody.isBinary"
         class="body-param-code-block"
         :code="fieldValues.body"
         lang="json"
         @request-body-changed="requestBodyChanged"
       />
+      <div
+        v-else
+      >
+        <button
+          class="choose-file-btn"
+          type="button"
+          @click="openFileDialog()"
+        >
+          Choose file
+        </button>
+        <span
+          v-if="!selectedFiles"
+          class="choose-file-text"
+        >No file selected</span>
+        <span
+          v-if="selectedFiles && selectedFiles.length > 0"
+          class="choose-file-text"
+        >{{ selectedFiles[0].name }}</span>
+      </div>
     </div>
   </CollapsablePanel>
 </template>
@@ -76,6 +96,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import type { PropType } from 'vue'
+import { useFileDialog } from '@vueuse/core'
 import type { IHttpOperation, IHttpPathParam, IHttpQueryParam } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import { extractSample, getSampleHeaders, getSamplePath, getSampleQuery } from '@/utils'
@@ -85,7 +106,7 @@ import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import RequiredToggle from './RequiredToggle.vue'
-
+import type { RequestBody } from '@/types'
 /**
  * This components handles path parameters, query parameters and body.
  * only parts of
@@ -101,8 +122,8 @@ const props = defineProps({
   },
   /* coming as a property when request sample is picked in RequestSample */
   requestBody: {
-    type: String,
-    default: '',
+    type: Object as PropType<RequestBody>,
+    default: () => ({ text: '' }),
   },
   /** list of headers to exclude from TryIt */
   excludeHeaderList: {
@@ -120,7 +141,7 @@ const emit = defineEmits<{
   (e: 'request-path-changed', newPath: string): void
   (e: 'request-query-changed', newQuery: string): void
   (e: 'request-headers-changed', newHeaders: Array<Record<string, string>>): void
-  (e: 'request-body-changed', newBody: string): void
+  (e: 'request-body-changed', newBody: RequestBody): void
 }>()
 
 const compTitles = {
@@ -129,6 +150,20 @@ const compTitles = {
   body: 'Body',
   headers: 'Headers',
 }
+
+
+const { files: selectedFiles, open: openFileDialog, onChange: onChangeFileDialog } = useFileDialog({
+  accept: props.requestBody?.acceptedExt,
+  directory: false,
+  reset: true,
+  multiple: false,
+
+})
+
+onChangeFileDialog((files) => {
+  /** do something with files */
+  emit('request-body-changed', { isBinary: true, content: files as FileList })
+})
 
 
 // params schema props extracted from data (schema) or received from outside controls (reqBody)
@@ -155,12 +190,17 @@ const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Re
     }, {})
   }
 
-  if (props.requestBody) {
-    return <Record<string, any>>{ body: { example: props.requestBody } }
+  if (props.paramType === 'body') {
+    if (props.requestBody.isBinary) {
+      return <Record<string, any>>{ body: {} }
+    } else if (props.requestBody.content) {
+      return <Record<string, any>>{ body: { example: props.requestBody.content } }
+    }
   }
 
   return <Record<string, any>>{}
 })
+
 
 //
 const fieldValues = ref<Record<string, string>>({})
@@ -184,7 +224,7 @@ watch(params, (newParams) => {
 
 const requestBodyChanged = (newBody: string) => {
   if (newBody) {
-    emit('request-body-changed', newBody)
+    emit('request-body-changed', { isBinary: false, content: newBody })
   }
 }
 
@@ -231,6 +271,16 @@ watch(fieldValues, (newFieldValues) => {
 
 input[type=text] {
   @include input-default;
+}
+
+.choose-file-btn {
+  cursor: pointer;
+  margin: var(--kui-space-60, $kui-space-60) var(--kui-space-30, $kui-space-30)!important;
+  width: 100px;
+}
+
+.choose-file-text {
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
 }
 
 .required-label {

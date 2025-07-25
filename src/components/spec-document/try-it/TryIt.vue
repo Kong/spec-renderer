@@ -74,14 +74,14 @@
 import { inject, computed, ref, watch } from 'vue'
 import type { PropType, Ref } from 'vue'
 import TryItDropdown from './TryItDropdown.vue'
-import { getRequestHeaders, getSampleHeaders, getFormattedBody } from '@/utils'
+import { getRequestHeaders, getSampleHeaders, getFormattedBody, getSamplePath, getSampleQuery } from '@/utils'
 import type { IHttpOperation } from '@stoplight/types'
 import MethodBadge from '@/components/common/MethodBadge.vue'
 import TryItAuth from './TryItAuth.vue'
 import TryItParams from './TryItParams.vue'
 import TryItResponse from './TryItResponse.vue'
-import { getSamplePath, getSampleQuery } from '@/utils'
 import composables from '@/composables'
+import type { RequestBody } from '@/types'
 
 const props = defineProps({
   data: {
@@ -93,8 +93,8 @@ const props = defineProps({
     required: true,
   },
   requestBody: {
-    type: String,
-    default: '',
+    type: Object as PropType<RequestBody>,
+    default: () => ({ text: '' }),
   },
 })
 
@@ -107,7 +107,7 @@ const emit = defineEmits<{
   (e: 'request-path-changed', newPath: string): void
   (e: 'request-query-changed', newPath: string): void
   (e: 'request-headers-changed', newHeaders: Array<Record<string, string>>): void
-  (e: 'request-body-changed', newBody: string): void
+  (e: 'request-body-changed', newBody: RequestBody): void
 }>()
 
 const { activeSecurityScheme, authHeaderMap, authQueryMap } = composables.useAuthTokenState()
@@ -129,7 +129,7 @@ const currentRequestQuery = ref<string>('')
 
 const currentRequestHeaders = ref<Array<Record<string, string>>>([])
 
-const currentRequestBody = ref<string>('')
+const currentRequestBody = ref<RequestBody>({ isBinary: false, content: '' })
 
 const apiCallLoading = ref(false)
 
@@ -160,7 +160,7 @@ const requestHeadersChanged = (newHeaderList: Array<Record<string, string>>) => 
   emit('request-headers-changed', newHeaderList)
 }
 
-const requestBodyChanged = (newBody: string) => {
+const requestBodyChanged = (newBody: RequestBody) => {
   currentRequestBody.value = newBody
   emit('request-body-changed', newBody)
 }
@@ -169,16 +169,39 @@ const requestBodyChanged = (newBody: string) => {
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 /**
+ * read file into binary buffer
+ * @param file
+ */
+const readFileAsArrayBuffer = (file: File) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = (event) => {
+      resolve(event.target?.result) // The ArrayBuffer is in event.target.result
+    }
+
+    reader.onerror = (error) => {
+      reject(error) // Handle potential errors during reading
+    }
+
+    reader.readAsArrayBuffer(file) // Start reading the file
+  })
+}
+
+/**
  * Perform actual fetch to the api and prepare results/errors for displaying
  * @param callAsIs when true, we do not do any modifications of the headers for GET requests, otherwise we attempt to convert get to simple request by removing 'content-type' header
  */
 const doApiCall = async (callAsIs = false) => {
   const isGet = props.data.method.toUpperCase() === 'GET'
+
+
   try {
     apiCallLoading.value = true
     const url = new URL(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''))
     let queryStr = currentRequestQuery.value
     url.search = queryStr
+
     const headers = [
       ...getRequestHeaders(props.data),
       ...currentRequestHeaders.value,
@@ -187,7 +210,18 @@ const doApiCall = async (callAsIs = false) => {
       acc[ callAsIs === false && isGet ? current.name.toLowerCase() : current.name ] = current.value; return acc
     }, {})
 
-    const { body } = getFormattedBody(headers, currentRequestBody.value)
+    let { body: textBody } = getFormattedBody(headers, currentRequestBody.value)
+    let binaryBody = null
+    try {
+      if (currentRequestBody.value.isBinary && currentRequestBody.value.content && currentRequestBody.value.content?.length > 0) {
+        const file = (currentRequestBody.value.content[0] as File)
+        binaryBody = new Uint8Array(await readFileAsArrayBuffer(file) as Buffer)
+      }
+    } catch (error: any) {
+      responseError.value = error
+      apiCallLoading.value = false
+      return
+    }
 
     // first time we call GET - we will try to convert to simple request
     if (callAsIs === false && isGet) {
@@ -202,7 +236,7 @@ const doApiCall = async (callAsIs = false) => {
     const myResponse = await fetch(url.href, {
       method: String(props.data.method).toUpperCase(),
       headers,
-      ...(body ? { body } : null),
+      ...(textBody || binaryBody ? { body: textBody || binaryBody } : null),
     })
     response.value = myResponse
 

@@ -58,7 +58,7 @@ describe('<RequestSample />', () => {
         serverUrl: 'https://global.api.konghq.com/v2',
         requestPath: '/path',
         requestQuery: 'page=1&size=20',
-        requestBody: '{"a": "1", "b": "2"}',
+        requestBody: { content: '{"a": "1", "b": "2"}' },
       },
     })
     await flushPromises()
@@ -94,7 +94,7 @@ describe('<RequestSample />', () => {
         },
         serverUrl: 'https://global.api.konghq.com/v2',
         requestPath: '/path',
-        requestBody: '{"a": "1", "b": "2"}',
+        requestBody: { content: '{"a": "1", "b": "2"}' },
       },
     })
     await flushPromises()
@@ -148,5 +148,4 @@ describe('<RequestSample />', () => {
     const code = wrapper.findTestId('request-sample-123').html()
     expect(code).toMatch('--url protocol://hostname/api/v3')
   })
-
 })
