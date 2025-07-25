@@ -23,12 +23,11 @@ describe('getFormattedBody', () => {
   })
 
   it('should return as is', () => {
-    expect(getFormattedBody({ 'content-type': 'plain/text' }, '{a: b}')).toEqual({ body: '{a: b}', contentType: 'plain/text' })
-
+    expect(getFormattedBody({ 'content-type': 'plain/text' }, { content: '{a: b}' })).toEqual({ body: '{a: b}', contentType: 'plain/text' })
   })
 
   it('should return form-url-encoded', () => {
-    expect(getFormattedBody({ 'content-type': 'application/x-www-form-urlencoded' }, '{"a": "b", "c": "d"}')).toEqual({ body: 'a=b&c=d', contentType: 'application/x-www-form-urlencoded' } )
+    expect(getFormattedBody({ 'content-type': 'application/x-www-form-urlencoded' }, { content: '{"a": "b", "c": "d"}' })).toEqual({ body: 'a=b&c=d', contentType: 'application/x-www-form-urlencoded' } )
 
   })
 })

@@ -167,7 +167,7 @@ export const getFormattedBody = (headers: Record<string, string>, body: RequestB
     }
   }
 
-  if (body.isBinary) {
+  if (!body || body.isBinary) {
     return { body: null, contentType }
   }
 
