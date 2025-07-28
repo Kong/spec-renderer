@@ -31,7 +31,7 @@
     >
       <TryItAuth
         :data="data"
-        @security-scheme-changed="securityThemeChanged"
+        @security-scheme-changed="securitySchemeChanged"
       />
 
       <TryItParams
@@ -125,7 +125,7 @@ const emit = defineEmits<{
 
 
 
-const securityThemeChanged = (newSecurityScheme: string) => {
+const securitySchemeChanged = (newSecurityScheme: string) => {
   emit('security-scheme-changed', newSecurityScheme)
 }
 

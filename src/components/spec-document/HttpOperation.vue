@@ -103,7 +103,7 @@
           @request-headers-changed="setRequestHeaders"
           @request-path-changed="setRequestPath"
           @request-query-changed="setRequestQuery"
-          @security-scheme-changed="securityThemeChanged"
+          @security-scheme-changed="securitySchemeChanged"
         />
         <RequestSample
           v-if="selectedServerUrl && currentRequestPath"
@@ -247,7 +247,7 @@ const { activeSecurityScheme, authHeadersMap, authQueryMap } = composables.useAu
 const authHeaders = computed(() => authHeadersMap.value[currentSecurityScheme.value] ?? [])
 const authQuery = computed(() => authQueryMap.value[currentSecurityScheme.value] ?? '')
 
-const securityThemeChanged = (newSecurityScheme: string) => {
+const securitySchemeChanged = (newSecurityScheme: string) => {
   currentSecurityScheme.value = newSecurityScheme
 }
 
