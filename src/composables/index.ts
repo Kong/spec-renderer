@@ -4,9 +4,9 @@ import useCurrentCallback from './useCurrentCallback'
 import useCurrentResponse from './useCurrentResponse'
 import useContentTypes from './useContentTypes'
 import useServerList from './useServerList'
-import useAuthTokenState from './useAuthTokenState'
 import useTryItState from './useTryItState'
 import useMarkdown from './useMarkdown'
+import useAuth from './useAuth'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
@@ -16,7 +16,7 @@ export default {
   useCurrentResponse,
   useContentTypes,
   useServerList,
-  useAuthTokenState,
   useTryItState,
   useMarkdown,
+  useAuth,
 }

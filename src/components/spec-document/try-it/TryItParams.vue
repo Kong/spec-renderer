@@ -18,6 +18,7 @@
       <div
         v-for="pKey in Object.keys(params)"
         :key="`${params[pKey].name}${paramType}`"
+        class="param-wrapper"
       >
         <InputLabel
           class="param-label"
@@ -245,8 +246,16 @@ watch(fieldValues, (newFieldValues) => {
 
 <style lang="scss" scoped>
 .try-it-params {
-  .param-label {
+  .param-wrapper {
     margin-bottom: var(--kui-space-40, $kui-space-40);
+
+    &:last-child {
+      margin-bottom: var(--kui-space-20, $kui-space-20);
+    }
+
+    .param-label {
+      margin-bottom: var(--kui-space-40, $kui-space-40);
+    }
   }
 
   .wide.body-param {

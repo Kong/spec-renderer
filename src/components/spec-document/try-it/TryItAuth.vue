@@ -1,6 +1,18 @@
 <template>
+  <!--
+  currentSecurityScheme: {{ currentSecurityScheme }}
+  <br>
+  props.data.security: {{ props.data.security }}
+  <br>
+  {{ activeSecurityScheme }}
+  <br>
+  {{ securitySchemeGroupList?.length }}
+  <br>
+  {{ currentSecuritySchemeMap }}
+   -->
   <CollapsablePanel
     v-if="securitySchemeGroupList?.length && data.path"
+    class="try-it-auth"
     :data-testid="`tryit-auth-${data.id}`"
   >
     <template #header>
@@ -15,42 +27,121 @@
       <SelectDropdown
         v-if="securitySchemeGroupSelectItems.length > 1"
         :id="`tryit-scheme-selector-${data.id}`"
-        v-model="activeSecurityScheme"
+        v-model="currentSecurityScheme"
         class="scheme-selector"
         :items="securitySchemeGroupSelectItems"
         placement="bottom-end"
-        @change="updateAuthTokens"
       />
     </template>
 
     <!-- body -->
     <div
-      v-for="(scheme, key) in activeSecuritySchemeMap"
+      v-for="(scheme, key) in currentSecuritySchemeMap"
       :key="scheme.id"
       class="wide"
     >
-      <InputLabel :for="`auth-token-input-${getSchemeLabel(scheme)}-${data.id}`">
-        {{ getSchemeLabel(scheme) }}
-        <Tooltip
-          v-if="scheme.description"
-          :id="`auth-token-tooltip-${getSchemeLabel(scheme)}-${data.id}`"
-          :text="scheme.description"
-        />
-      </InputLabel>
-      <input
-        :id="`auth-token-input-${getSchemeLabel(scheme)}-${data.id}`"
-        v-model="tokenValueMap[key]"
-        :aria-describedby="`auth-token-tooltip-${getSchemeLabel(scheme)}-${data.id}`"
-        autocomplete="off"
-        placeholder="App credential"
-        type="text"
+      <div
+        v-if="scheme.type === 'http' && scheme.scheme === 'basic'"
       >
+        <div class="param-wrapper">
+          <InputLabel
+            class="param-label"
+            :for="`auth-token-input-basic-username-${data.id}`"
+          >
+            Username
+            <Tooltip
+              v-if="scheme.description"
+              :id="`auth-token-tooltip-basic-username-${data.id}`"
+              :text="scheme.description"
+            />
+          </InputLabel>
+          <input
+            :id="`auth-token-input-basic-username-${data.id}`"
+            v-model="authInputs[`${key}-username`]"
+            :aria-describedby="`auth-token-tooltip-basic-username-${data.id}`"
+            autocomplete="off"
+            placeholder="Enter Username"
+            type="text"
+          >
+        </div>
+        <div class="param-wrapper">
+          <InputLabel
+            class="param-label"
+            :for="`auth-token-input-basic-password-${data.id}`"
+          >
+            Password
+            <Tooltip
+              v-if="scheme.description"
+              :id="`auth-token-tooltip-basic-password-${data.id}`"
+              :text="scheme.description"
+            />
+          </InputLabel>
+          <input
+            :id="`auth-token-input-basic-password-${data.id}`"
+            v-model="authInputs[`${key}-password`]"
+            :aria-describedby="`auth-token-tooltip-basic-password-${data.id}`"
+            autocomplete="off"
+            placeholder="Enter Password"
+            type="password"
+          >
+        </div>
+      </div>
+      <div
+        v-else-if="scheme.type === 'http' && scheme.scheme === 'bearer'"
+      >
+        <div class="param-wrapper">
+          <InputLabel
+            class="param-label"
+            :for="`auth-token-input-bearer-token-${data.id}`"
+          >
+            JWT token
+            <Tooltip
+              v-if="scheme.description"
+              :id="`auth-token-tooltip-bearer-token-${data.id}`"
+              :text="scheme.description"
+            />
+          </InputLabel>
+          <input
+            :id="`auth-token-input-bearer-token-${data.id}`"
+            v-model="authInputs[`${key}-token`]"
+            :aria-describedby="`auth-token-tooltip-bearer-token-${data.id}`"
+            autocomplete="off"
+            placeholder="Enter JWT token"
+            type="password"
+          >
+        </div>
+      </div>
+      <div
+        v-else
+      >
+        <div class="param-wrapper">
+          <InputLabel
+            class="param-label"
+            :for="`auth-token-input-${getSchemeLabel(scheme)}-${data.id}`"
+          >
+            {{ getSchemeLabel(scheme) }}
+            <Tooltip
+              v-if="scheme.description"
+              :id="`auth-token-tooltip-${getSchemeLabel(scheme)}-${data.id}`"
+              :text="scheme.description"
+            />
+          </InputLabel>
+          <input
+            :id="`auth-token-input-${getSchemeLabel(scheme)}-${data.id}`"
+            v-model="authInputs[`${key}-token`]"
+            :aria-describedby="`auth-token-tooltip-${getSchemeLabel(scheme)}-${data.id}`"
+            autocomplete="off"
+            placeholder="App credential"
+            type="password"
+          >
+        </div>
+      </div>
     </div>
   </CollapsablePanel>
 </template>
 
 <script setup lang="ts">
-import { computed, inject, watch } from 'vue'
+import { computed, inject, watch, ref } from 'vue'
 import type { ComputedRef, PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { LockIcon } from '@kong/icons'
@@ -63,14 +154,18 @@ import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import type { SecuritySchemeGroup, SelectItem } from '@/types'
 import composables from '@/composables'
 
-defineProps({
+const props = defineProps({
   data: {
     type: Object as PropType<IHttpOperation>,
     required: true,
   },
 })
 
-const { activeSecurityScheme, tokenValueMap, authHeaderMap, authQueryMap } = composables.useAuthTokenState()
+const emit = defineEmits<{
+  (e: 'security-scheme-changed', newScheme: string): void
+}>()
+
+const { activeSecurityScheme, authHeadersMap, authQueryMap, authInputs } = composables.useAuth()
 
 const securitySchemeGroupList = inject<ComputedRef<SecuritySchemeGroup[]>>('security-scheme-group-list', computed(() => []))
 
@@ -85,55 +180,46 @@ const securitySchemeGroupSelectItems = computed<SelectItem[]>(() => {
   }))
 })
 
+const currentSecurityScheme = ref<string>(props.data.security?.[0]?.[0]?.key || '')
 /**
  * Key-value pair of scheme key and the corresponding scheme object.
  */
-const activeSecuritySchemeMap = computed(() => {
-  const schemeMap: Record<string, HttpSecurityScheme> = {}
-  const schemeList = securitySchemeGroupList.value.find(group => group.key === activeSecurityScheme.value)?.schemeList ?? []
+const currentSecuritySchemeMap = ref<Record<string, HttpSecurityScheme>>({})
 
-  schemeList.forEach((scheme) => {
-    schemeMap[scheme.key] = scheme
-  })
-
-  return schemeMap
-})
 
 /**
  * Debounced function to update auth headers and queries
  */
-const updateAuthTokens = useDebounceFn(() => {
-  const headers:Array<Record<string, string>> = []
-  const query: Record<string, string> = {}
+const updateAuthData = useDebounceFn(() => {
 
-  for (const schemeKey in activeSecuritySchemeMap.value) {
-    const scheme = activeSecuritySchemeMap.value[schemeKey]
-
-    if (scheme) {
-      const tokenValue = tokenValueMap.value[schemeKey] ?? ''
-
-      // @ts-ignore `name` is valid attribute of the schema
-      const schemeName = scheme.name
-      // @ts-ignore `in` is valid attribute of the schema
-      const schemeIn = scheme.in
-      // @ts-ignore `scheme` is valid attribute of the schema
-      const isBearer = scheme.scheme == 'bearer'
-
-      if (schemeIn === 'query') {
-        query[schemeName] = tokenValue
-      } else {
-        const headerName = isBearer || !schemeName ? 'Authorization' : schemeName
-        headers.push({
-          name: headerName,
-          value: `${isBearer ? 'Bearer' : ''} ${tokenValue}`,
-        })
-      }
-
+  const append = (key: string, name: string, value: string, schemeIn: string) => {
+    if (schemeIn === 'query') {
+      authQueryMap.value[key] = `${name}=${value == undefined ? '' : value}`
+    } else {
+      authHeadersMap.value[key] = [...[{ name, value: value == undefined ? '' : value }]]
     }
   }
 
-  authHeaderMap.value[activeSecurityScheme.value] = headers
-  authQueryMap.value[activeSecurityScheme.value] = new URLSearchParams(query).toString()
+  for (const [key, scheme] of Object.entries(currentSecuritySchemeMap.value)) {
+
+    // @ts-ignore `in` is valid attribute of the schema
+    const schemeIn = scheme.in
+
+    if (scheme.type === 'http' && scheme.scheme === 'basic') {
+      const username = authInputs.value[`${key}-username`] || ''
+      const password = authInputs.value[`${key}-password`] || ''
+      const basicAuthValue = btoa(`${username}:${password}`)
+      // if the scheme is in header, we add it to the headers
+      append(key, 'Authorization', `Basic ${basicAuthValue}`, schemeIn)
+
+    } else if (scheme.type === 'http' && scheme.scheme === 'bearer') {
+      append(key, 'Authorization', `Bearer ${authInputs.value[`${key}-token`]}`, schemeIn)
+
+    } else {
+      // @ts-ignore `name` is valid attribute of the schema
+      append(key, scheme.name || 'Authorization', authInputs.value[`${key}-token`], schemeIn)
+    }
+  }
 }, 500)
 
 const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): string => {
@@ -142,45 +228,93 @@ const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): strin
 }
 
 /**
- * Keeps track of token values for the active security scheme.
+ * Keeps track of input values for the active security scheme.
  *
- * `tokenValueMap` can contain values for tokens from multiple security schemes,
+ * `authInputs can contain values for tokens from multiple security schemes,
  * but we only need to keep track of the tokens for the active security scheme.
  *
  * This reduces the number of times watchers will run for each TryItAuth component,
- * vs when we have a watcher for the entire `tokenValueMap`.
+ * vs when we have a watcher for the entire `authInputs`.
  */
-const activeTokens = computed(() => {
-  let tokens = ''
 
-  for (const schemeKey in activeSecuritySchemeMap.value) {
-    if (tokenValueMap.value[schemeKey]) {
-      tokens += tokenValueMap.value[schemeKey]
-    }
-  }
+watch(authInputs, () => {
+  // update the current auth inputs map when the auth inputs map changes
+  //currentAuthInputs.value = { ...authInputs.value }
+  console.log('!!!!!  in watch authInputs changed:', props.data.path, authInputs.value)
+  updateAuthData()
+}, { immediate: true, deep: true })
 
-  return tokens
+watch(currentSecurityScheme, (newScheme, oldScheme) => {
+  console.log('>>>>> currentSecurityScheme changed for path:', props.data.path, newScheme, oldScheme )
+  activeSecurityScheme.value = newScheme
+  emit('security-scheme-changed', newScheme)
+  updateAuthData()
 })
 
-watch(activeTokens, () => {
-  updateAuthTokens()
-}, { immediate: true })
+// when new security schema selected from the dropdown
+watch(() => ({ key: activeSecurityScheme.value, list: securitySchemeGroupList.value }), () => {
+  console.log('***** activeSecurityScheme changed:', props.data.path, props.data.security, activeSecurityScheme.value, securitySchemeGroupList.value)
+  const schemeMap: Record<string, HttpSecurityScheme> = {}
+  const schemeList = securitySchemeGroupList.value.find(group => group.key === activeSecurityScheme.value)?.schemeList ?? []
+
+  schemeList.forEach((scheme) => {
+    schemeMap[scheme.key] = scheme
+  })
+  if (Object.keys(schemeMap).length > 0) {
+    // if we have a scheme map, we set it to the currentSecuritySchemeMap
+    currentSecuritySchemeMap.value = schemeMap
+    currentSecurityScheme.value = activeSecurityScheme.value
+    return
+  }
+  // if we didn't find any from global (active), we grab one from currenct
+  if (Object.keys(currentSecuritySchemeMap.value).length == 0) {
+    const schemeList = securitySchemeGroupList.value.find(group => group.key === currentSecurityScheme.value)?.schemeList ?? []
+
+    schemeList.forEach((scheme) => {
+      schemeMap[scheme.key] = scheme
+    })
+    currentSecuritySchemeMap.value = schemeMap
+  }
+
+
+}, { immediate: true } )
+
 </script>
 
 <style lang="scss" scoped>
-.kui-icon {
-  margin-right: var(--kui-space-30, $kui-space-30)!important;
-}
 
-.scheme-selector {
-  margin-left: auto !important;
-
-  :deep(.trigger-button) {
-    @include small-bordered-trigger-button;
+.try-it-auth {
+  .kui-icon {
+    margin-right: var(--kui-space-30, $kui-space-30)!important;
   }
-}
 
-input[type=text] {
-  @include input-default;
+  .param-wrapper {
+    margin-bottom: var(--kui-space-40, $kui-space-40);
+
+    &:first-child {
+      margin-top: var(--kui-space-20, $kui-space-20);
+    }
+
+    &:last-child {
+      margin-bottom: var(--kui-space-20, $kui-space-20);
+    }
+
+    .param-label {
+      margin-bottom: var(--kui-space-30, $kui-space-30);
+    }
+  }
+
+
+  .scheme-selector {
+    margin-left: auto !important;
+
+    :deep(.trigger-button) {
+      @include small-bordered-trigger-button;
+    }
+  }
+
+  input[type=text], input[type=password] {
+    @include input-default;
+  }
 }
 </style>
