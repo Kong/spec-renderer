@@ -1,15 +1,4 @@
 <template>
-  <!--
-  currentSecurityScheme: {{ currentSecurityScheme }}
-  <br>
-  props.data.security: {{ props.data.security }}
-  <br>
-  {{ activeSecurityScheme }}
-  <br>
-  {{ securitySchemeGroupList?.length }}
-  <br>
-  {{ currentSecuritySchemeMap }}
-   -->
   <CollapsablePanel
     v-if="securitySchemeGroupList?.length && data.path"
     class="try-it-auth"
@@ -194,9 +183,9 @@ const updateAuthData = useDebounceFn(() => {
 
   const append = (key: string, name: string, value: string, schemeIn: string) => {
     if (schemeIn === 'query') {
-      authQueryMap.value[key] = `${name}=${value == undefined ? '' : value}`
+      authQueryMap.value[key] = `${name}=${value}`
     } else {
-      authHeadersMap.value[key] = [...[{ name, value: value == undefined ? '' : value }]]
+      authHeadersMap.value[key] = [...[{ name, value }]]
     }
   }
 
@@ -213,14 +202,16 @@ const updateAuthData = useDebounceFn(() => {
       append(key, 'Authorization', `Basic ${basicAuthValue}`, schemeIn)
 
     } else if (scheme.type === 'http' && scheme.scheme === 'bearer') {
-      append(key, 'Authorization', `Bearer ${authInputs.value[`${key}-token`]}`, schemeIn)
+      const value = authInputs.value[`${key}-token`] || ''
+      append(key, 'Authorization', `Bearer ${value}`, schemeIn)
 
     } else {
+      const value = authInputs.value[`${key}-token`] || ''
       // @ts-ignore `name` is valid attribute of the schema
-      append(key, scheme.name || 'Authorization', authInputs.value[`${key}-token`], schemeIn)
+      append(key, scheme.name || 'Authorization', value, schemeIn)
     }
   }
-}, 500)
+}, 100)
 
 const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): string => {
   //@ts-ignore `name` is valid property
@@ -238,14 +229,11 @@ const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): strin
  */
 
 watch(authInputs, () => {
-  // update the current auth inputs map when the auth inputs map changes
-  //currentAuthInputs.value = { ...authInputs.value }
-  console.log('!!!!!  in watch authInputs changed:', props.data.path, authInputs.value)
+  // when authInputs change, we update the auth headers and queries
   updateAuthData()
 }, { immediate: true, deep: true })
 
-watch(currentSecurityScheme, (newScheme, oldScheme) => {
-  console.log('>>>>> currentSecurityScheme changed for path:', props.data.path, newScheme, oldScheme )
+watch(currentSecurityScheme, (newScheme) => {
   activeSecurityScheme.value = newScheme
   emit('security-scheme-changed', newScheme)
   updateAuthData()
@@ -253,7 +241,6 @@ watch(currentSecurityScheme, (newScheme, oldScheme) => {
 
 // when new security schema selected from the dropdown
 watch(() => ({ key: activeSecurityScheme.value, list: securitySchemeGroupList.value }), () => {
-  console.log('***** activeSecurityScheme changed:', props.data.path, props.data.security, activeSecurityScheme.value, securitySchemeGroupList.value)
   const schemeMap: Record<string, HttpSecurityScheme> = {}
   const schemeList = securitySchemeGroupList.value.find(group => group.key === activeSecurityScheme.value)?.schemeList ?? []
 
