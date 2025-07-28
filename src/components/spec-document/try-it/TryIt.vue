@@ -31,6 +31,7 @@
     >
       <TryItAuth
         :data="data"
+        @security-scheme-changed="securityThemeChanged"
       />
 
       <TryItParams
@@ -110,11 +111,14 @@ const emit = defineEmits<{
   (e: 'request-body-changed', newBody: RequestBody): void
 }>()
 
-const { activeSecurityScheme, authHeaderMap, authQueryMap } = composables.useAuthTokenState()
+const { activeSecurityScheme, authHeaderMap, authQueryMap } = composables.useAuth()
 
 const authHeaders = computed(() => authHeaderMap.value[activeSecurityScheme.value] ?? [])
 const authQuery = computed(() => authQueryMap.value[activeSecurityScheme.value] ?? '')
 
+const securityThemeChanged = (newSecurityScheme: string) => {
+
+}
 
 const authHeaderNameList = computed(() => authHeaders.value?.map(({ name }) => name) ?? [])
 
