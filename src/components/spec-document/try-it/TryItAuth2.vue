@@ -197,9 +197,10 @@ watch(() => ({
 
     .param-label {
       margin-bottom: var(--kui-space-30, $kui-space-30);
+
       button {
-        border: none;
         background: transparent;
+        border: none;
         color: var(--kui-color-text-primary, $kui-color-text-primary);
         cursor: pointer;
         font-size: var(--kui-font-size-20, $kui-font-size-20);
@@ -223,48 +224,52 @@ watch(() => ({
       margin-left: var(--kui-space-20, $kui-space-20);
     }
   }
+
   .scope-wrapper {
-    display: flex;
     align-items: center;
+    display: flex;
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
     gap: var(--kui-space-20, $kui-space-20);
     margin-bottom: var(--kui-space-20, $kui-space-20);
-    font-size: var(--kui-font-size-20, $kui-font-size-20);
 
     input[type=checkbox] {
-      width: 12px;
-      height: 12px;
       cursor: pointer;
+      height: 12px;
+      width: 12px;
     }
 
     label {
       cursor: pointer;
     }
+
     .key-span {
-      font-weight: bold;
       font-style: italic;
+      font-weight: bold;
     }
   }
 }
+
 .loader {
-  width: 100%;
-  height: 6px;
-  border-radius: 20px;
-  color: var(--kui-color-background-primary-weak, $kui-color-background-primary-weak);
   border: var(--kui-border-width-20, $kui-border-width-20) solid;
-  position: relative;
-  margin-top: var(--kui-space-30, $kui-space-30)!important;
+  border-radius: 20px;
+  color: var(--kui-color-text-primary-weak, $kui-color-text-primary-weak);
+  height: 6px;
   margin-right: var(--kui-space-40, $kui-space-40)!important;
+  margin-top: var(--kui-space-30, $kui-space-30)!important;
+  position: relative;
+  width: 100%;
 }
+
 .loader::before {
-  content: "";
-  position: absolute;
-  margin: var(--kui-space-10, $kui-space-10);
-  inset: 0 100% 0 0;
-  border-radius: inherit;
-  background: currentColor;
   animation: l6 2s infinite;
+  background: currentColor;
+  border-radius: inherit;
+  content: "";
+  inset: 0 100% 0 0;
+  margin: var(--kui-space-10, $kui-space-10);
+  position: absolute;
 }
 @keyframes l6 {
-    100% {inset:0}
+  100% {inset: 0}
 }
 </style>
