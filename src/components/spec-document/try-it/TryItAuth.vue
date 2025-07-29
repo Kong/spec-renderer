@@ -75,6 +75,7 @@
           >
         </div>
       </div>
+
       <div
         v-else-if="scheme.type === 'http' && scheme.scheme === 'bearer'"
       >
@@ -100,6 +101,14 @@
           >
         </div>
       </div>
+
+      <TryItAuth2
+        v-else-if="scheme.type === 'oauth2' && scheme.flows.clientCredentials"
+        :data-id="data.id"
+        :scheme="scheme"
+        :scheme-key="key"
+      />
+
       <div
         v-else
       >
@@ -142,6 +151,7 @@ import Tooltip from '@/components/common/TooltipPopover.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import type { SecuritySchemeGroup, SelectItem } from '@/types'
 import composables from '@/composables'
+import TryItAuth2 from './TryItAuth2.vue'
 
 const props = defineProps({
   data: {
@@ -193,6 +203,11 @@ const updateAuthData = useDebounceFn(() => {
 
     // @ts-ignore `in` is valid attribute of the schema
     const schemeIn = scheme.in
+
+    // this is handled in TryItAuth2.vue
+    if (scheme.type === 'oauth2' && scheme.flows.clientCredentials) {
+      return
+    }
 
     if (scheme.type === 'http' && scheme.scheme === 'basic') {
       const username = authInputs.value[`${key}-username`] || ''
@@ -253,7 +268,7 @@ watch(() => ({ key: activeSecurityScheme.value, list: securitySchemeGroupList.va
     currentSecurityScheme.value = activeSecurityScheme.value
     return
   }
-  // if we didn't find any from global (active), we grab one from currenct
+  // if we didn't find any from global (active), we grab one from current
   if (Object.keys(currentSecuritySchemeMap.value).length == 0) {
     const schemeList = securitySchemeGroupList.value.find(group => group.key === currentSecurityScheme.value)?.schemeList ?? []
 
