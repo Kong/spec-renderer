@@ -94,6 +94,8 @@
       >
         <TryIt
           v-model="excludeNotRequiredInTryIt"
+          :auth-headers="authHeaders"
+          :auth-query="authQuery"
           :data="operationData"
           :request-body="currentRequestBody"
           :server-url="selectedServerUrl"
@@ -101,6 +103,7 @@
           @request-headers-changed="setRequestHeaders"
           @request-path-changed="setRequestPath"
           @request-query-changed="setRequestQuery"
+          @security-scheme-changed="securitySchemeChanged"
         />
         <RequestSample
           v-if="selectedServerUrl && currentRequestPath"
@@ -205,7 +208,6 @@ const securitySchemeGroupList = computed<SecuritySchemeGroup[]>(() => {
       })
     }
   }
-
   return schemeGroupList
 })
 
@@ -238,10 +240,16 @@ const currentRequestQuery = ref<string>('')
 const currentRequestHeaders = ref<Array<Record<string, string>>>([])
 const currentRequestBody = ref<RequestBody>({ isBinary: false, content: '' })
 
-const { activeSecurityScheme, authHeaderMap, authQueryMap } = composables.useAuthTokenState()
+const currentSecurityScheme = ref<string>(props.data.security?.[0]?.[0]?.key || '')
 
-const authHeaders = computed(() => authHeaderMap.value[activeSecurityScheme.value] ?? [])
-const authQuery = computed(() => authQueryMap.value[activeSecurityScheme.value] ?? '')
+const { activeSecurityScheme, authHeadersMap, authQueryMap } = composables.useAuth()
+
+const authHeaders = computed(() => authHeadersMap.value[currentSecurityScheme.value] ?? [])
+const authQuery = computed(() => authQueryMap.value[currentSecurityScheme.value] ?? '')
+
+const securitySchemeChanged = (newSecurityScheme: string) => {
+  currentSecurityScheme.value = newSecurityScheme
+}
 
 const {
   activeContentType: activeRequestBodyContentType,

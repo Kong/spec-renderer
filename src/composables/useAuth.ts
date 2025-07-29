@@ -13,14 +13,14 @@ import { ref } from 'vue'
 */
 
 const activeSecurityScheme = ref<string>('')
-const tokenValueMap = ref<Record<string, string>>({})
-const authHeaderMap = ref<Record<string, Array<Record<string, string>>>>({})
+const authInputs = ref<Record<string, string>>({})
+const authHeadersMap = ref<Record<string, Array<Record<string, string>>>>({})
 const authQueryMap = ref<Record<string, string>>({})
 
 /**
  * Centralized state for auth token values.
  */
-export default function useAuthTokenState() {
+export default function useAuth() {
   return {
     /**
      * state for storing the active security scheme group key.
@@ -28,26 +28,27 @@ export default function useAuthTokenState() {
      * gets initialized in HttpOperation
      */
     activeSecurityScheme,
+
     /**
-     * state for storing raw auth token values
+     * state for storing input values for security scheme, we try to keep those flat as they are fixed for specific security themes (eg, basic has username and password)
      * e.g.
      * ```
      * {
-     *   "bearerAuth": "sample-jwt",
-     *   "apiKeyAuth": "sample-x-api-key",
-     *   "API Key": "sample-api-key"
+     *   "keyAuth1-username": "sample-username",
+     *   "keyAuth1-password": "sample-password",
+     *   "keyAuth2-token": "sample-token",
      * }
      * ```
-     * Key is the security scheme key, value is the token value.
+     * Key is the security scheme key, value is the input value.
      */
-    tokenValueMap,
+    authInputs,
 
     /**
      * state for storing list of auth header objects for each security scheme.
      * e.g.
      * ```
      * {
-     *   "bearerAuth-xApiKeyAuth": [
+     *   "keyAAuthGroup1": [
      *     {
      *       "name": "Authorization",
      *       "value": "sample-api-key"
@@ -56,14 +57,21 @@ export default function useAuthTokenState() {
      *       "name": "X-API-Key",
      *       "value": "sample-x-api-key"
      *     }
+     *   "keyAAuthGroup2": [
+     *     {
+     *       "name": "Authorization",
+     *       "value": "Basic encoded-value"
+     *     },
      *   ]
      * }
      * ```
-     * The key is the securty scheme group key, value is list of auth header objects.
+     * The key is the security scheme group key, value is list of auth header objects.
      *
-     * Auth header object: key is securty scheme name, value is the token value.
+     * Auth header object: key is security scheme name, value is the token value.
      */
-    authHeaderMap,
+    authHeadersMap,
+
+
     /**
      * state for storing auth query string for each security scheme.
      * e.g.
@@ -72,7 +80,7 @@ export default function useAuthTokenState() {
      *   "apiKeyAuth-xApiKeyAuth": "apikey=sample-api-key&x-api-key=sample-x-api-key"
      * }
      * ```
-     * The key is the securty scheme group key, value is the unified query param string.
+     * The key is the security scheme group key, value is the unified query param string.
      */
     authQueryMap,
   }
