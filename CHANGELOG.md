@@ -1,3 +1,10 @@
+# [1.97.0](https://github.com/Kong/spec-renderer/compare/v1.96.0...v1.97.0) (2025-07-29)
+
+
+### Features
+
+* basic auth support [TDX-6178] ([#651](https://github.com/Kong/spec-renderer/issues/651)) ([29b3966](https://github.com/Kong/spec-renderer/commit/29b3966bc23b584046b00ba6358f3b860dcfbb4f))
+
 # [1.96.0](https://github.com/Kong/spec-renderer/compare/v1.95.12...v1.96.0) (2025-07-25)
 
 
