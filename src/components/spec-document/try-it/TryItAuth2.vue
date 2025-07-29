@@ -50,22 +50,37 @@
         class="param-label"
         :for="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
       >
-        Scopes <button>Select All</button><button>Select None</button>
+        Scopes
+        <button
+          :aria-label="`Select all scopes for ${schemeKey}`"
+          type="button"
+          @click="setAllScopes(true)"
+        >
+          Select All
+        </button>
+        <button
+          :aria-label="`Deselect all scopes for ${schemeKey}`"
+          type="button"
+          @click="setAllScopes(false)"
+        >
+          Select None
+        </button>
       </InputLabel>
 
       <div
         v-for="(scope, scopeKey) of scheme.flows.clientCredentials.scopes"
         :key="scope"
+        class="scope-wrapper"
       >
         <input
-          :id="`auth-input-oauth2-clientCredentials-scope-${scope}-${dataId}`"
-          v-model="authInputs[`${schemeKey}-scope-${scope}`]"
-          :aria-describedby="`auth-input-oauth2-clientCredentials-scope-${scope}-${dataId}`"
+          :id="`auth-input-oauth2-clientCredentials-scope-${scopeKey}-${dataId}`"
+          v-model="authInputs[`${schemeKey}-scope-${scopeKey}`]"
+          :aria-describedby="`auth-input-oauth2-clientCredentials-scope-${scopeKey}-${dataId}`"
           autocomplete="off"
           type="checkbox"
         >
-        <label :for="`auth-input-oauth2-clientCredentials-scope-${scope}-${dataId}`">
-          {{ scopeKey }} ({{ scope }})
+        <label :for="`auth-input-oauth2-clientCredentials-scope-${scopeKey}-${dataId}`">
+          <span class="key-span">{{ scopeKey }}</span> ({{ scope }})
         </label>
       </div>
     </div>
@@ -115,6 +130,14 @@ const props = defineProps({
 const { authInputs, authHeadersMap } = composables.useAuth()
 const inProcess = ref(false)
 
+const setAllScopes = (value: boolean) => {
+  Object.keys(authInputs.value)
+    .filter(key => key.startsWith(`${props.schemeKey}-scope-`))
+    .forEach(key => {
+      authInputs.value[key] = value ? 'true' : 'false'
+    })
+}
+
 const auth2ClientCredentialsAuth = () => {
   const clientId = authInputs.value[`${props.schemeKey}-clientId`] || ''
   const clientSecret = authInputs.value[`${props.schemeKey}-clientSecret`] || ''
@@ -146,6 +169,12 @@ const updateAuthData = useDebounceFn(() => {
 watch(() => ({
   clientId: authInputs.value[`${props.schemeKey}-clientId`],
   clientSecret: authInputs.value[`${props.schemeKey}-clientSecret`],
+  scopes: Object.keys(authInputs.value)
+    .filter(key => key.startsWith(`${props.schemeKey}-scope-`))
+    .reduce((obj:Record<string, string>, key) => {
+      obj[key] = authInputs.value[key]
+      return obj
+    }, {}),
 }), () => {
   updateAuthData()
 }, { immediate: true })
@@ -184,9 +213,6 @@ watch(() => ({
   input[type=text], input[type=password] {
     @include input-default;
   }
-  input[type=checkbox] {
-    background-color: red;
-  }
 
   .buttons-wrapper {
     display: flex;
@@ -195,6 +221,27 @@ watch(() => ({
 
     button {
       margin-left: var(--kui-space-20, $kui-space-20);
+    }
+  }
+  .scope-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--kui-space-20, $kui-space-20);
+    margin-bottom: var(--kui-space-20, $kui-space-20);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+
+    input[type=checkbox] {
+      width: 12px;
+      height: 12px;
+      cursor: pointer;
+    }
+
+    label {
+      cursor: pointer;
+    }
+    .key-span {
+      font-weight: bold;
+      font-style: italic;
     }
   }
 }
