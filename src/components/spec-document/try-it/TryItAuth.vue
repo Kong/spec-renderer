@@ -104,6 +104,7 @@
 
       <TryItAuth2
         v-else-if="scheme.type === 'oauth2' && scheme.flows.clientCredentials"
+        ref="auth2ComponentRef"
         :data-id="data.id"
         :scheme="scheme"
         :scheme-key="key"
@@ -139,7 +140,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, watch, ref } from 'vue'
+import { computed, inject, watch, ref, defineExpose } from 'vue'
 import type { ComputedRef, PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { LockIcon } from '@kong/icons'
@@ -159,6 +160,21 @@ const props = defineProps({
     required: true,
   },
 })
+
+const auth2ComponentRef = ref<Array<InstanceType<typeof TryItAuth2>> | null>(null)
+
+
+const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
+  if (!auth2ComponentRef.value?.[0].auth2ClientCredentialsAuth) {
+    return undefined
+  }
+  return await auth2ComponentRef.value[0].auth2ClientCredentialsAuth()
+}
+
+defineExpose({
+  auth2ClientCredentialsAuth,
+})
+
 
 const emit = defineEmits<{
   (e: 'security-scheme-changed', newScheme: string): void

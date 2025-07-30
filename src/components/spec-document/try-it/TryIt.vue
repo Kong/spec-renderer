@@ -30,6 +30,7 @@
       class="tryit-body"
     >
       <TryItAuth
+        ref="authComponentRef"
         :data="data"
         @security-scheme-changed="securitySchemeChanged"
       />
@@ -108,6 +109,8 @@ const props = defineProps({
   },
 
 })
+
+const authComponentRef = ref<InstanceType<typeof TryItAuth> | null>(null)
 
 const excludeNotRequired = defineModel({
   type: Boolean,
@@ -206,10 +209,26 @@ const readFileAsArrayBuffer = (file: File) => {
  * @param callAsIs when true, we do not do any modifications of the headers for GET requests, otherwise we attempt to convert get to simple request by removing 'content-type' header
  */
 const doApiCall = async (callAsIs = false) => {
+
   const isGet = props.data.method.toUpperCase() === 'GET'
 
+  if (authComponentRef.value && authComponentRef.value.auth2ClientCredentialsAuth) {
+    let tokenResp = undefined
+    try {
+      tokenResp = await authComponentRef.value.auth2ClientCredentialsAuth()
+      if (tokenResp && !tokenResp.ok) {
+        response.value = tokenResp
+        throw new Error(`Error: ${tokenResp.status} ${tokenResp.statusText}`)
+      }
+    } catch (error: any) {
+      responseError.value = error
+      apiCallLoading.value = false
+      return
+    }
+  }
 
   try {
+
     apiCallLoading.value = true
     const url = new URL(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''))
     let queryStr = currentRequestQuery.value
@@ -259,6 +278,7 @@ const doApiCall = async (callAsIs = false) => {
       doApiCall(true)
       return
     }
+    console.error('Error during API call', error)
     responseError.value = error
   } finally {
     apiCallLoading.value = false

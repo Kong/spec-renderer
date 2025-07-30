@@ -46,26 +46,30 @@
       v-if="scheme.flows.clientCredentials?.scopes"
       class="param-wrapper"
     >
-      <InputLabel
-        class="param-label"
-        :for="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
-      >
-        Scopes
-        <button
-          :aria-label="`Select all scopes for ${schemeKey}`"
-          type="button"
-          @click="setAllScopes(true)"
+      <div class="button-wrapper">
+        <InputLabel
+          class="param-label"
+          :for="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
         >
-          Select All
-        </button>
-        <button
-          :aria-label="`Deselect all scopes for ${schemeKey}`"
-          type="button"
-          @click="setAllScopes(false)"
-        >
-          Select None
-        </button>
-      </InputLabel>
+          Scopes
+        </InputLabel>
+        <div>
+          <button
+            :aria-label="`Select all scopes for ${schemeKey}`"
+            type="button"
+            @click="setAllScopes(true)"
+          >
+            Select all
+          </button>
+          <button
+            :aria-label="`Deselect all scopes for ${schemeKey}`"
+            type="button"
+            @click="setAllScopes(false)"
+          >
+            Deselect all
+          </button>
+        </div>
+      </div>
 
       <div
         v-for="(scope, scopeKey) of scheme.flows.clientCredentials.scopes"
@@ -78,35 +82,22 @@
           :aria-describedby="`auth-input-oauth2-clientCredentials-scope-${scopeKey}-${dataId}`"
           autocomplete="off"
           type="checkbox"
+          @change="resetToken"
         >
         <label :for="`auth-input-oauth2-clientCredentials-scope-${scopeKey}-${dataId}`">
-          <span class="key-span">{{ scopeKey }}</span> ({{ scope }})
+          <span class="key-span">{{ scopeKey }}</span> - {{ scope }}
         </label>
       </div>
-    </div>
-
-    <div class="buttons-wrapper">
-      <div
-        v-if="inProcess"
-        class="loader"
-      />
-      <button
-        :disabled="!authInputs[`${schemeKey}-clientId`] || !authInputs[`${schemeKey}-clientSecret`] || inProcess"
-        @click="auth2ClientCredentialsAuth"
-      >
-        <span v-if="inProcess">Authorizing...</span>
-        <span v-else-if="!authInputs[`${schemeKey}-token`]">Authorize</span>
-        <span v-else>Refresh Token</span>
-      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { watch, ref } from 'vue'
+import { watch, ref, defineExpose } from 'vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import composables from '@/composables'
+import { useTimeoutFn } from '@vueuse/core'
 import type { PropType } from 'vue'
 
 import type { IOauth2SecurityScheme } from '@stoplight/types'
@@ -128,31 +119,62 @@ const props = defineProps({
 
 
 const { authInputs, authHeadersMap } = composables.useAuth()
-const inProcess = ref(false)
 
-const setAllScopes = (value: boolean) => {
-  Object.keys(authInputs.value)
-    .filter(key => key.startsWith(`${props.schemeKey}-scope-`))
-    .forEach(key => {
-      authInputs.value[key] = value ? 'true' : 'false'
-    })
+const resetToken = () => {
+  authInputs.value[`${props.schemeKey}-token`] = ''
 }
 
-const auth2ClientCredentialsAuth = () => {
+const setAllScopes = (value: boolean) => {
+  Object.entries(props.scheme.flows.clientCredentials?.scopes || {}).forEach(([scopeKey]) => {
+    authInputs.value[`${props.schemeKey}-scope-${scopeKey}`] = value ? 'true' : 'false'
+  })
+}
+
+const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
   const clientId = authInputs.value[`${props.schemeKey}-clientId`] || ''
   const clientSecret = authInputs.value[`${props.schemeKey}-clientSecret`] || ''
   const btoaValue = btoa(`${clientId}:${clientSecret}`)
-  authInputs.value[`${props.schemeKey}-token`] = ''
-  inProcess.value = true
+  const scopes:string[] = []
+  if (authInputs.value[`${props.schemeKey}-token`]) {
+    return
+  }
 
-  setTimeout(() => {
-    inProcess.value = false
-    authInputs.value[`${props.schemeKey}-token`] = 'Bearer xxxx' + Date.now()
-    updateAuthData()
-  }, 5000)
+  Object.keys(authInputs.value)
+    .filter(key => key.startsWith(`${props.schemeKey}-scope-`))
+    .forEach(key => {
+      if (authInputs.value[key].toString() === 'true') {
+        scopes.push(key.replace(`${props.schemeKey}-scope-`, ''))
+      }
+    })
+
+  const resp = await fetch(props.scheme.flows.clientCredentials?.tokenUrl || '', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Basic ${btoaValue}`,
+    },
+    body: new URLSearchParams({
+      grant_type: 'client_credentials',
+      ...(scopes.length ? { scope: scopes.join(' ') } : {}),
+    }),
+  })
+
+  if (resp.ok) {
+    let resData = await resp.json()
+    authInputs.value[`${props.schemeKey}-token`] = `${resData.token_type || 'Bearer'} ${resData.access_token}`
+    await updateAuthDataImpl()
+    useTimeoutFn(() => {
+      authInputs.value[`${props.schemeKey}-token`] = ''
+    }, (resData.expires_in || 60) * 1000)
+  }
+
+  return resp
 }
 
-const updateAuthData = useDebounceFn(() => {
+defineExpose({
+  auth2ClientCredentialsAuth,
+})
+const updateAuthDataImpl = async () => {
   const clientId = authInputs.value[`${props.schemeKey}-clientId`] || ''
   const clientSecret = authInputs.value[`${props.schemeKey}-clientSecret`] || ''
 
@@ -164,17 +186,14 @@ const updateAuthData = useDebounceFn(() => {
   authHeadersMap.value[props.schemeKey] = [{
     name: 'Authorization', value: authInputs.value[`${props.schemeKey}-token`] || 'Bearer',
   }]
+}
+const updateAuthData = useDebounceFn(() => {
+  updateAuthDataImpl()
 }, 100)
 
 watch(() => ({
   clientId: authInputs.value[`${props.schemeKey}-clientId`],
   clientSecret: authInputs.value[`${props.schemeKey}-clientSecret`],
-  scopes: Object.keys(authInputs.value)
-    .filter(key => key.startsWith(`${props.schemeKey}-scope-`))
-    .reduce((obj:Record<string, string>, key) => {
-      obj[key] = authInputs.value[key]
-      return obj
-    }, {}),
 }), () => {
   updateAuthData()
 }, { immediate: true })
@@ -195,15 +214,21 @@ watch(() => ({
       margin-bottom: var(--kui-space-20, $kui-space-20);
     }
 
-    .param-label {
+    .button-wrapper {
+      display: inline-flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: var(--kui-space-30, $kui-space-30);
       margin-bottom: var(--kui-space-30, $kui-space-30);
-
+      gap: var(--kui-space-20, $kui-space-20);
       button {
         background: transparent;
         border: none;
         color: var(--kui-color-text-primary, $kui-color-text-primary);
         cursor: pointer;
         font-size: var(--kui-font-size-20, $kui-font-size-20);
+        margin-right: var(--kui-space-20, $kui-space-20);
         margin-left: var(--kui-space-20, $kui-space-20);
         padding: 0;
         text-decoration: underline;
@@ -215,19 +240,10 @@ watch(() => ({
     @include input-default;
   }
 
-  .buttons-wrapper {
-    display: flex;
-    justify-content: flex-end;
-    margin: var(--kui-space-60, $kui-space-60) 0 var(--kui-space-20, $kui-space-20)!important;
-
-    button {
-      margin-left: var(--kui-space-20, $kui-space-20);
-    }
-  }
-
   .scope-wrapper {
     align-items: center;
     display: flex;
+    line-height: 1.6;
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     gap: var(--kui-space-20, $kui-space-20);
     margin-bottom: var(--kui-space-20, $kui-space-20);
@@ -243,33 +259,8 @@ watch(() => ({
     }
 
     .key-span {
-      font-style: italic;
       font-weight: bold;
     }
   }
-}
-
-.loader {
-  border: var(--kui-border-width-20, $kui-border-width-20) solid;
-  border-radius: 20px;
-  color: var(--kui-color-text-primary-weak, $kui-color-text-primary-weak);
-  height: 6px;
-  margin-right: var(--kui-space-40, $kui-space-40)!important;
-  margin-top: var(--kui-space-30, $kui-space-30)!important;
-  position: relative;
-  width: 100%;
-}
-
-.loader::before {
-  animation: l6 2s infinite;
-  background: currentColor;
-  border-radius: inherit;
-  content: "";
-  inset: 0 100% 0 0;
-  margin: var(--kui-space-10, $kui-space-10);
-  position: absolute;
-}
-@keyframes l6 {
-  100% {inset: 0}
 }
 </style>
