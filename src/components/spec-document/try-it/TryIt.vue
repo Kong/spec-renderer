@@ -228,7 +228,6 @@ const doApiCall = async (callAsIs = false) => {
   }
 
   try {
-
     apiCallLoading.value = true
     const url = new URL(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''))
     let queryStr = currentRequestQuery.value
@@ -278,7 +277,7 @@ const doApiCall = async (callAsIs = false) => {
       doApiCall(true)
       return
     }
-    console.error('Error during API call', error)
+
     responseError.value = error
   } finally {
     apiCallLoading.value = false
