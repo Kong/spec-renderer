@@ -261,6 +261,7 @@ watch(() => ({
 
     .key-span {
       font-weight: bold;
+      margin-left: var(--kui-space-20, $kui-space-20);
     }
   }
 }
