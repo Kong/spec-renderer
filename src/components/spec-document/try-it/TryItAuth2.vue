@@ -215,21 +215,22 @@ watch(() => ({
     }
 
     .button-wrapper {
-      display: inline-flex;
-      width: 100%;
-      justify-content: space-between;
       align-items: center;
-      margin-top: var(--kui-space-30, $kui-space-30);
-      margin-bottom: var(--kui-space-30, $kui-space-30);
+      display: inline-flex;
       gap: var(--kui-space-20, $kui-space-20);
+      justify-content: space-between;
+      margin-bottom: var(--kui-space-30, $kui-space-30);
+      margin-top: var(--kui-space-30, $kui-space-30);
+      width: 100%;
+
       button {
         background: transparent;
         border: none;
         color: var(--kui-color-text-primary, $kui-color-text-primary);
         cursor: pointer;
         font-size: var(--kui-font-size-20, $kui-font-size-20);
-        margin-right: var(--kui-space-20, $kui-space-20);
         margin-left: var(--kui-space-20, $kui-space-20);
+        margin-right: var(--kui-space-20, $kui-space-20);
         padding: 0;
         text-decoration: underline;
       }
@@ -243,9 +244,9 @@ watch(() => ({
   .scope-wrapper {
     align-items: center;
     display: flex;
-    line-height: 1.6;
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     gap: var(--kui-space-20, $kui-space-20);
+    line-height: 1.6;
     margin-bottom: var(--kui-space-20, $kui-space-20);
 
     input[type=checkbox] {
