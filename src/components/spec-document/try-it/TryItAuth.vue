@@ -183,7 +183,6 @@ const emit = defineEmits<{
 const { activeSecurityScheme, authHeadersMap, authQueryMap, authInputs } = composables.useAuth()
 
 const securitySchemeGroupList = inject<ComputedRef<SecuritySchemeGroup[]>>('security-scheme-group-list', computed(() => []))
-console.log('securitySchemeGroupList', securitySchemeGroupList.value, props.data.security)
 /**
  * Extracts the list of select-items for the security scheme group selector.
 */
