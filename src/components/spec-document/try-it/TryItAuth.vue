@@ -140,7 +140,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, watch, ref, defineExpose } from 'vue'
+import { computed, inject, watch, ref } from 'vue'
 import type { ComputedRef, PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { LockIcon } from '@kong/icons'
@@ -183,7 +183,7 @@ const emit = defineEmits<{
 const { activeSecurityScheme, authHeadersMap, authQueryMap, authInputs } = composables.useAuth()
 
 const securitySchemeGroupList = inject<ComputedRef<SecuritySchemeGroup[]>>('security-scheme-group-list', computed(() => []))
-
+console.log('securitySchemeGroupList', securitySchemeGroupList.value, props.data.security)
 /**
  * Extracts the list of select-items for the security scheme group selector.
 */
