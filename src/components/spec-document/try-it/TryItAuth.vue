@@ -166,7 +166,7 @@ const auth2ComponentRef = ref<Array<InstanceType<typeof TryItAuth2>> | null>(nul
 
 const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
   if (!auth2ComponentRef.value?.[0].auth2ClientCredentialsAuth) {
-    return undefined
+    return { ok: true } as Response
   }
   return await auth2ComponentRef.value[0].auth2ClientCredentialsAuth()
 }
