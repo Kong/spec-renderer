@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, computed, ref, watch } from 'vue'
+import { inject, computed, ref, watch, useTemplateRef } from 'vue'
 import type { PropType, Ref } from 'vue'
 import TryItDropdown from './TryItDropdown.vue'
 import { getRequestHeaders, getSampleHeaders, getFormattedBody, getSamplePath, getSampleQuery } from '@/utils'
@@ -110,7 +110,7 @@ const props = defineProps({
 
 })
 
-const authComponentRef = ref<InstanceType<typeof TryItAuth> | null>(null)
+const authComponentRef = useTemplateRef<InstanceType<typeof TryItAuth>>('authComponentRef')
 
 const excludeNotRequired = defineModel({
   type: Boolean,
@@ -212,6 +212,7 @@ const doApiCall = async (callAsIs = false) => {
 
   const isGet = props.data.method.toUpperCase() === 'GET'
 
+  // now we need to call uth2ClientCredentialsAuth is present, it will set headerMaps in useAuth composable, so we do not need to do anything other than call it and wait for it to finish
   if (authComponentRef.value && authComponentRef.value.auth2ClientCredentialsAuth) {
     try {
       const tokenResp = await authComponentRef.value.auth2ClientCredentialsAuth()

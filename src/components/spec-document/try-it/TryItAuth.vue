@@ -140,7 +140,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, watch, ref } from 'vue'
+import { computed, inject, watch, ref, useTemplateRef } from 'vue'
 import type { ComputedRef, PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { LockIcon } from '@kong/icons'
@@ -161,8 +161,7 @@ const props = defineProps({
   },
 })
 
-const auth2ComponentRef = ref<Array<InstanceType<typeof TryItAuth2>> | null>(null)
-
+const auth2ComponentRef = useTemplateRef<Array<InstanceType<typeof TryItAuth2>>>('auth2ComponentRef')
 
 const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
   if (!auth2ComponentRef.value?.[0].auth2ClientCredentialsAuth) {
