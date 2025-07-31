@@ -213,9 +213,8 @@ const doApiCall = async (callAsIs = false) => {
   const isGet = props.data.method.toUpperCase() === 'GET'
 
   if (authComponentRef.value && authComponentRef.value.auth2ClientCredentialsAuth) {
-    let tokenResp = undefined
     try {
-      tokenResp = await authComponentRef.value.auth2ClientCredentialsAuth()
+      const tokenResp = await authComponentRef.value.auth2ClientCredentialsAuth()
       if (tokenResp && !tokenResp.ok) {
         response.value = tokenResp
         throw new Error(`Error: ${tokenResp.status} ${tokenResp.statusText}`)
