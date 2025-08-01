@@ -1,3 +1,10 @@
+## [1.98.4](https://github.com/Kong/spec-renderer/compare/v1.98.3...v1.98.4) (2025-08-01)
+
+
+### Bug Fixes
+
+* do not show scopes in auth2 when scopes object is empty [TDX-6235] ([#657](https://github.com/Kong/spec-renderer/issues/657)) ([18a0787](https://github.com/Kong/spec-renderer/commit/18a07871e9a6e7f7f7d2d438643b9973f01b190c))
+
 ## [1.98.3](https://github.com/Kong/spec-renderer/compare/v1.98.2...v1.98.3) (2025-08-01)
 
 
