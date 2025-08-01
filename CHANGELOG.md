@@ -1,3 +1,10 @@
+## [1.98.3](https://github.com/Kong/spec-renderer/compare/v1.98.2...v1.98.3) (2025-08-01)
+
+
+### Bug Fixes
+
+* add @apidevtools/json-schema-ref-parser so renovate is not picking it up ([#656](https://github.com/Kong/spec-renderer/issues/656)) ([f36da05](https://github.com/Kong/spec-renderer/commit/f36da05cead62c26883eb607b3d6476d18a4d134))
+
 ## [1.98.2](https://github.com/Kong/spec-renderer/compare/v1.98.1...v1.98.2) (2025-08-01)
 
 
