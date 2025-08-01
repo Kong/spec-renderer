@@ -43,7 +43,7 @@
       >
     </div>
     <div
-      v-if="scheme.flows.clientCredentials?.scopes"
+      v-if="scheme.flows.clientCredentials?.scopes && Object.keys(scheme.flows.clientCredentials.scopes).length"
       class="param-wrapper"
     >
       <div class="button-wrapper">
