@@ -10,6 +10,12 @@ import { stringify } from 'flatted'
 import { transform as transformAsync } from '@/utils/async-to-oas-transformer'
 import { isSsr } from '@/utils/ssr'
 import { kebabCase } from '@/utils/strings'
+import type { IOauth2SecurityScheme, IOauthFlowObjects as OriginalIOauthFlowObjects, IOauth2ClientCredentialsFlow } from '@stoplight/types'
+
+// Extend IOauthFlowObjects to allow string indexing
+type IOauthFlowObjects = OriginalIOauthFlowObjects & {
+  [key: string]: OriginalIOauthFlowObjects[keyof OriginalIOauthFlowObjects]
+}
 
 const trace = (doTrace: boolean | undefined, ...args: any) => {
   if (doTrace) {
@@ -237,6 +243,46 @@ export default (): {
       parsedDocument.value = transformOasToServiceNode(jsonDocument.value)
     } catch (err) {
       console.error('@kong/spec-renderer: error in transformOasToServiceNode:', err)
+    }
+
+    const fixSecurityScopes = () => {
+      if (jsonDocument.value?.components?.securitySchemes) {
+        for (const [key, scheme] of Object.entries(jsonDocument.value.components.securitySchemes)) {
+          for (const [keyFlow, flow] of Object.entries((scheme as IOauth2SecurityScheme).flows || {})) {
+            if (flow.scopes) {
+              const destSchema: IOauth2SecurityScheme | undefined = (parsedDocument.value as ServiceNode)?.data?.securitySchemes?.find(s => s.key === key) as IOauth2SecurityScheme
+              if ((destSchema?.flows as IOauthFlowObjects)?.[keyFlow]?.scopes) {
+                ((destSchema.flows as IOauthFlowObjects)[keyFlow] as IOauth2ClientCredentialsFlow).scopes = flow.scopes
+              }
+              // loop trough all security schemes and upate flows with scopes
+              for (const destSecurity of (parsedDocument.value as ServiceNode)?.data?.security || []) {
+                const dS = destSecurity.find(s => s.key === key) as IOauth2SecurityScheme
+                if ((dS?.flows as IOauthFlowObjects)?.[keyFlow]?.scopes) {
+                  ((dS.flows as IOauthFlowObjects)[keyFlow] as IOauth2ClientCredentialsFlow).scopes = flow.scopes
+                }
+              }
+              // loop trough all operations and update security there with scopes
+              for (const operation of ((parsedDocument.value as ServiceNode)?.children || []).filter((op) => op.type === 'http_operation')) {
+                if (operation.data.security) {
+                  for (const security of operation.data.security) {
+                    const dS = security.find(s => s.key === key) as IOauth2SecurityScheme
+                    if ((dS?.flows as IOauthFlowObjects)?.[keyFlow]?.scopes) {
+                      ((dS.flows as IOauthFlowObjects)[keyFlow] as IOauth2ClientCredentialsFlow).scopes = flow.scopes
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    // turns out transformOasToServiceNode is not reading scopes of security schemes, so we need to do it manually
+    try {
+      fixSecurityScopes()
+    } catch (err) {
+      console.error('@kong/spec-renderer: error in fixSecurityScopes:', err)
+
     }
 
     trace(options.traceParsing, 'transformed')

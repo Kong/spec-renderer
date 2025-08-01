@@ -1,0 +1,268 @@
+<template>
+  <div>
+    <div class="param-wrapper">
+      <InputLabel
+        class="param-label"
+        :for="`auth-input-oauth2-clientCredentials-clientId-${dataId}`"
+      >
+        Client ID
+        <Tooltip
+          v-if="scheme.description"
+          :id="`auth-tooltip-oauth2-clientCredentials-clientId-${dataId}`"
+          :text="scheme.description"
+        />
+      </InputLabel>
+      <input
+        :id="`auth-input-oauth2-clientCredentials-clientId-${dataId}`"
+        v-model="authInputs[`${schemeKey}-clientId`]"
+        :aria-describedby="`auth-input-oauth2-clientCredentials-clientId-${dataId}`"
+        autocomplete="off"
+        placeholder="Enter your application credentials"
+        type="text"
+      >
+    </div>
+    <div class="param-wrapper">
+      <InputLabel
+        class="param-label"
+        :for="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
+      >
+        Client Secret
+        <Tooltip
+          v-if="scheme.description"
+          :id="`auth-tooltip-oauth2-clientCredentials-secret-${dataId}`"
+          :text="scheme.description"
+        />
+      </InputLabel>
+      <input
+        :id="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
+        v-model="authInputs[`${schemeKey}-clientSecret`]"
+        :aria-describedby="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
+        autocomplete="off"
+        placeholder="Enter your application credentials"
+        type="password"
+      >
+    </div>
+    <div
+      v-if="scheme.flows.clientCredentials?.scopes"
+      class="param-wrapper"
+    >
+      <div class="button-wrapper">
+        <InputLabel
+          class="param-label"
+          :for="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
+        >
+          Scopes
+        </InputLabel>
+        <div>
+          <button
+            :aria-label="`Select all scopes for ${schemeKey}`"
+            type="button"
+            @click="setAllScopes(true)"
+          >
+            Select all
+          </button>
+          <button
+            :aria-label="`Deselect all scopes for ${schemeKey}`"
+            type="button"
+            @click="setAllScopes(false)"
+          >
+            Deselect all
+          </button>
+        </div>
+      </div>
+
+      <div
+        v-for="(scope, scopeKey) of scheme.flows.clientCredentials.scopes"
+        :key="scope"
+        class="scope-wrapper"
+      >
+        <input
+          :id="`auth-input-oauth2-clientCredentials-scope-${scopeKey}-${dataId}`"
+          v-model="authInputs[`${schemeKey}-scope-${scopeKey}`]"
+          :aria-describedby="`auth-input-oauth2-clientCredentials-scope-${scopeKey}-${dataId}`"
+          autocomplete="off"
+          type="checkbox"
+          @change="resetToken"
+        >
+        <label :for="`auth-input-oauth2-clientCredentials-scope-${scopeKey}-${dataId}`">
+          <span class="key-span">{{ scopeKey }}</span> - {{ scope }}
+        </label>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { watch } from 'vue'
+import InputLabel from '@/components/common/InputLabel.vue'
+import Tooltip from '@/components/common/TooltipPopover.vue'
+import composables from '@/composables'
+import { useTimeoutFn } from '@vueuse/core'
+import type { PropType } from 'vue'
+
+import type { IOauth2SecurityScheme } from '@stoplight/types'
+import { useDebounceFn } from '@vueuse/core'
+
+const props = defineProps({
+  schemeKey: {
+    type: String,
+    required: true,
+  },
+  dataId: {
+    type: String,
+    required: true,
+  },
+  scheme: {
+    type: Object as PropType<IOauth2SecurityScheme>,
+    required: true },
+})
+
+
+const { authInputs, authHeadersMap } = composables.useAuth()
+
+const resetToken = () => {
+  authInputs.value[`${props.schemeKey}-token`] = ''
+}
+
+const setAllScopes = (value: boolean) => {
+  Object.entries(props.scheme.flows.clientCredentials?.scopes || {}).forEach(([scopeKey]) => {
+    authInputs.value[`${props.schemeKey}-scope-${scopeKey}`] = value ? 'true' : 'false'
+  })
+}
+
+const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
+  const clientId = authInputs.value[`${props.schemeKey}-clientId`] || ''
+  const clientSecret = authInputs.value[`${props.schemeKey}-clientSecret`] || ''
+  const btoaValue = btoa(`${clientId}:${clientSecret}`)
+  const scopes:string[] = []
+  if (authInputs.value[`${props.schemeKey}-token`]) {
+    return
+  }
+
+  Object.keys(authInputs.value)
+    .filter(key => key.startsWith(`${props.schemeKey}-scope-`))
+    .forEach(key => {
+      if (authInputs.value[key].toString() === 'true') {
+        scopes.push(key.replace(`${props.schemeKey}-scope-`, ''))
+      }
+    })
+
+  const resp = await fetch(props.scheme.flows.clientCredentials?.tokenUrl || '', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Basic ${btoaValue}`,
+    },
+    body: new URLSearchParams({
+      grant_type: 'client_credentials',
+      ...(scopes.length ? { scope: scopes.join(' ') } : {}),
+    }),
+  })
+
+  if (resp.ok) {
+    let resData = await resp.json()
+    authInputs.value[`${props.schemeKey}-token`] = `${resData.token_type || 'Bearer'} ${resData.access_token}`
+    await updateAuthDataImpl()
+    useTimeoutFn(() => {
+      authInputs.value[`${props.schemeKey}-token`] = ''
+    }, (resData.expires_in || 60) * 1000)
+  }
+
+  return resp
+}
+
+defineExpose({
+  auth2ClientCredentialsAuth,
+})
+const updateAuthDataImpl = async () => {
+  const clientId = authInputs.value[`${props.schemeKey}-clientId`] || ''
+  const clientSecret = authInputs.value[`${props.schemeKey}-clientSecret`] || ''
+
+  if (!clientId || !clientSecret) {
+    authInputs.value[`${props.schemeKey}-token`] = ''
+  }
+
+  // now we we got ourselves a token
+  authHeadersMap.value[props.schemeKey] = [{
+    name: 'Authorization', value: authInputs.value[`${props.schemeKey}-token`] || 'Bearer',
+  }]
+}
+const updateAuthData = useDebounceFn(() => {
+  updateAuthDataImpl()
+}, 100)
+
+watch(() => ({
+  clientId: authInputs.value[`${props.schemeKey}-clientId`],
+  clientSecret: authInputs.value[`${props.schemeKey}-clientSecret`],
+}), () => {
+  updateAuthData()
+}, { immediate: true })
+
+</script>
+
+<style lang="scss" scoped>
+
+.panel-body {
+  .param-wrapper {
+    margin-bottom: var(--kui-space-40, $kui-space-40);
+
+    &:first-child {
+      margin-top: var(--kui-space-20, $kui-space-20);
+    }
+
+    &:last-child {
+      margin-bottom: var(--kui-space-20, $kui-space-20);
+    }
+
+    .button-wrapper {
+      align-items: center;
+      display: inline-flex;
+      gap: var(--kui-space-20, $kui-space-20);
+      justify-content: space-between;
+      margin-bottom: var(--kui-space-30, $kui-space-30);
+      margin-top: var(--kui-space-30, $kui-space-30);
+      width: 100%;
+
+      button {
+        background: transparent;
+        border: none;
+        color: var(--kui-color-text-primary, $kui-color-text-primary);
+        cursor: pointer;
+        font-size: var(--kui-font-size-20, $kui-font-size-20);
+        margin-left: var(--kui-space-20, $kui-space-20);
+        margin-right: var(--kui-space-20, $kui-space-20);
+        padding: 0;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  input[type=text], input[type=password] {
+    @include input-default;
+  }
+
+  .scope-wrapper {
+    align-items: center;
+    display: flex;
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    gap: var(--kui-space-20, $kui-space-20);
+    line-height: 1.6;
+    margin-bottom: var(--kui-space-20, $kui-space-20);
+
+    input[type=checkbox] {
+      cursor: pointer;
+      height: 12px;
+      width: 12px;
+    }
+
+    label {
+      cursor: pointer;
+    }
+
+    .key-span {
+      font-weight: bold;
+      margin-left: var(--kui-space-20, $kui-space-20);
+    }
+  }
+}
+</style>

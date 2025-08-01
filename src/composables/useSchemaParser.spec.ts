@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import composables from '.'
 import stripeSpec from '../../sandbox/public/specs/stripe.json'
+import type { ServiceNode } from '@/types'
 
 describe('useSchemaParser', () => {
   describe('inline-refs', () => {
@@ -357,6 +358,62 @@ components:
       expect(tableOfContents.value[1].items[1].items[0].id).toEqual('/paths/beers-ale/get')
       expect(tableOfContents.value[1].items[2].items[0].id).toEqual('/paths/mesh/beers-ale/get')
 
+    })
+  })
+
+  describe('security scopes', () => {
+    it('should parse security scopes', async () => {
+
+      const specContent = `
+openapi: 3.1.0
+info:
+  title: Red Wine API
+  description: API for retrieving information about red wines.
+  version: 1.0.0
+servers:
+  - url: https://kong-a854e05124usljo2h.kongcloud.dev
+    description: Main API server
+
+security:
+  - ClientCredentialAuth: []
+
+tags:
+  - name: Wines
+    description: Operations related to wine information
+
+paths:
+  /wines/reds:
+    get:
+      summary: List all red wines with pagination
+      description: Retrieves a list of red wines with pagination.
+      operationId: listRedWines
+      tags:
+        - Wines
+      responses:
+        '200':
+          description: Successful operation
+components:
+  securitySchemes:
+    ClientCredentialAuth:
+      type: oauth2
+      description: OAuth2 client credentials flow
+      flows:
+        clientCredentials:
+          tokenUrl: https://xy8c8zqt7hpjdhcp.us.identity.konghq.com/auth/oauth/token
+          scopes:
+            read: Grants read access
+            write: Grants write access
+    `
+      const { parseSpecDocument, parsedDocument } = composables.useSchemaParser()
+      await parseSpecDocument(specContent)
+      const scopes = {
+        'read': 'Grants read access',
+        'write': 'Grants write access',
+      }
+
+      expect((parsedDocument.value as ServiceNode).data.securitySchemes[0].flows.clientCredentials.scopes).toEqual(scopes)
+      expect((parsedDocument.value as ServiceNode).data.security[0][0].flows.clientCredentials.scopes).toEqual(scopes)
+      expect((parsedDocument.value as ServiceNode).children[0].data.security[0][0].flows.clientCredentials.scopes).toEqual(scopes)
     })
   })
 })

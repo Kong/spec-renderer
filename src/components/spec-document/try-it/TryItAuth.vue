@@ -75,6 +75,7 @@
           >
         </div>
       </div>
+
       <div
         v-else-if="scheme.type === 'http' && scheme.scheme === 'bearer'"
       >
@@ -100,6 +101,15 @@
           >
         </div>
       </div>
+
+      <TryItAuth2
+        v-else-if="scheme.type === 'oauth2' && scheme.flows.clientCredentials"
+        ref="auth2ComponentRef"
+        :data-id="data.id"
+        :scheme="scheme"
+        :scheme-key="key"
+      />
+
       <div
         v-else
       >
@@ -130,7 +140,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, watch, ref } from 'vue'
+import { computed, inject, watch, ref, useTemplateRef } from 'vue'
 import type { ComputedRef, PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { LockIcon } from '@kong/icons'
@@ -142,6 +152,7 @@ import Tooltip from '@/components/common/TooltipPopover.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import type { SecuritySchemeGroup, SelectItem } from '@/types'
 import composables from '@/composables'
+import TryItAuth2 from './TryItAuth2.vue'
 
 const props = defineProps({
   data: {
@@ -150,6 +161,20 @@ const props = defineProps({
   },
 })
 
+const auth2ComponentRef = useTemplateRef<Array<InstanceType<typeof TryItAuth2>>>('auth2ComponentRef')
+
+const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
+  if (!auth2ComponentRef.value?.[0].auth2ClientCredentialsAuth) {
+    return { ok: true } as Response
+  }
+  return await auth2ComponentRef.value[0].auth2ClientCredentialsAuth()
+}
+
+defineExpose({
+  auth2ClientCredentialsAuth,
+})
+
+
 const emit = defineEmits<{
   (e: 'security-scheme-changed', newScheme: string): void
 }>()
@@ -157,7 +182,6 @@ const emit = defineEmits<{
 const { activeSecurityScheme, authHeadersMap, authQueryMap, authInputs } = composables.useAuth()
 
 const securitySchemeGroupList = inject<ComputedRef<SecuritySchemeGroup[]>>('security-scheme-group-list', computed(() => []))
-
 /**
  * Extracts the list of select-items for the security scheme group selector.
 */
@@ -193,6 +217,11 @@ const updateAuthData = useDebounceFn(() => {
 
     // @ts-ignore `in` is valid attribute of the schema
     const schemeIn = scheme.in
+
+    // this is handled in TryItAuth2.vue
+    if (scheme.type === 'oauth2' && scheme.flows.clientCredentials) {
+      return
+    }
 
     if (scheme.type === 'http' && scheme.scheme === 'basic') {
       const username = authInputs.value[`${key}-username`] || ''
@@ -253,7 +282,7 @@ watch(() => ({ key: activeSecurityScheme.value, list: securitySchemeGroupList.va
     currentSecurityScheme.value = activeSecurityScheme.value
     return
   }
-  // if we didn't find any from global (active), we grab one from currenct
+  // if we didn't find any from global (active), we grab one from current
   if (Object.keys(currentSecuritySchemeMap.value).length == 0) {
     const schemeList = securitySchemeGroupList.value.find(group => group.key === currentSecurityScheme.value)?.schemeList ?? []
 
