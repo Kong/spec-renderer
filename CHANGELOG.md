@@ -1,3 +1,10 @@
+# [1.98.0](https://github.com/Kong/spec-renderer/compare/v1.97.0...v1.98.0) (2025-08-01)
+
+
+### Features
+
+* auth2 clientCredentials grant [TDX-6235] ([#654](https://github.com/Kong/spec-renderer/issues/654)) ([56b91bf](https://github.com/Kong/spec-renderer/commit/56b91bf824a990cbb89275cc8b58d07d8789e138))
+
 # [1.97.0](https://github.com/Kong/spec-renderer/compare/v1.96.0...v1.97.0) (2025-07-29)
 
 
