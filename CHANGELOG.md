@@ -1,3 +1,10 @@
+## [1.98.2](https://github.com/Kong/spec-renderer/compare/v1.98.1...v1.98.2) (2025-08-01)
+
+
+### Bug Fixes
+
+* text only paste to body field [TDX-6222] ([#655](https://github.com/Kong/spec-renderer/issues/655)) ([dd9c68f](https://github.com/Kong/spec-renderer/commit/dd9c68fb9a560a8a6407142c62ac7c886df7c727))
+
 ## [1.98.1](https://github.com/Kong/spec-renderer/compare/v1.98.0...v1.98.1) (2025-08-01)
 
 
