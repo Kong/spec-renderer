@@ -12,7 +12,7 @@
       v-once
       ref="editableInput"
       class="editable-code"
-      contenteditable="true"
+      contenteditable="plaintext-only"
       spellcheck="false"
       @focusout="handleFocusOut"
       @input="handleInput"
