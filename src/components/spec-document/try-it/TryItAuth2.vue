@@ -17,7 +17,7 @@
         v-model="authInputs[`${schemeKey}-clientId`]"
         :aria-describedby="`auth-input-oauth2-clientCredentials-clientId-${dataId}`"
         autocomplete="off"
-        placeholder="Enter your application credentials"
+        placeholder="Enter Client ID"
         type="text"
       >
     </div>
@@ -38,7 +38,7 @@
         v-model="authInputs[`${schemeKey}-clientSecret`]"
         :aria-describedby="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
         autocomplete="off"
-        placeholder="Enter your application credentials"
+        placeholder="Enter Client Secret"
         type="password"
       >
     </div>
@@ -163,8 +163,9 @@ const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
     let resData = await resp.json()
     authInputs.value[`${props.schemeKey}-token`] = `${resData.token_type || 'Bearer'} ${resData.access_token}`
     await updateAuthDataImpl()
-    useTimeoutFn(() => {
+    useTimeoutFn(async () => {
       authInputs.value[`${props.schemeKey}-token`] = ''
+      await updateAuthDataImpl()
     }, (resData.expires_in || 60) * 1000)
   }
 
