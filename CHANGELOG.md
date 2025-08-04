@@ -1,3 +1,10 @@
+## [1.98.5](https://github.com/Kong/spec-renderer/compare/v1.98.4...v1.98.5) (2025-08-04)
+
+
+### Bug Fixes
+
+* exporting sluginfyPath from the package [TDX-6369] ([#660](https://github.com/Kong/spec-renderer/issues/660)) ([be95e0f](https://github.com/Kong/spec-renderer/commit/be95e0f10d5d83ff541dfe5e0b4b9d6d57b2734c))
+
 ## [1.98.4](https://github.com/Kong/spec-renderer/compare/v1.98.3...v1.98.4) (2025-08-01)
 
 
