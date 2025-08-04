@@ -67,7 +67,7 @@ if (typeof window !== 'undefined') {
 /**
  * this is a utility function to slugify path names.
  * It is used to ensure that path names are consistent and can be used in URIs.
- * It replaces spaces, slashes, and curly braces with dashes, removes multiple dashes,
+ * It replaces spaces, slashes, and curly braces with dashes
  * and trims leading and trailing dashes.
  * @param name - The path name to slugify.
  * @returns The slugified path name.
