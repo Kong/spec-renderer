@@ -63,3 +63,13 @@ if (typeof window !== 'undefined') {
   // @ts-ignore
   window.registerKongSpecRenderer = registerKongSpecRenderer
 }
+
+/**
+ * this is a utility function to slugify path names.
+ * It is used to ensure that path names are consistent and can be used in URIs.
+ * It replaces spaces, slashes, and curly braces with dashes
+ * and trims leading and trailing dashes.
+ * @param name - The path name to slugify.
+ * @returns The slugified path name.
+ */
+export { slugify as slugifyPath } from '@/stoplight/elements-core/utils/string'
