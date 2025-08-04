@@ -82,8 +82,8 @@ importers:
         specifier: ^1.12.2
         version: 1.12.2
       '@kong/design-tokens':
-        specifier: ^1.17.5
-        version: 1.17.5
+        specifier: ^1.17.6
+        version: 1.17.6
       '@kong/eslint-config-kong-ui':
         specifier: 1.5.1
         version: 1.5.1(eslint@9.31.0(jiti@2.4.2))(typescript@5.8.3)
@@ -841,9 +841,9 @@ packages:
   '@keyv/serialize@1.0.3':
     resolution: {integrity: sha512-qnEovoOp5Np2JDGonIDL6Ayihw0RhnRh6vxPuHo4RDn1UOzwEo4AeIfpL6UGIrsceWrCMiVPgwRjbHu4vYFc3g==}
 
-  '@kong/design-tokens@1.17.5':
-    resolution: {integrity: sha512-RYm7cNgDComDm3RYfSTTmHJm9seSi1Pv6DG+D/8WKBN+QarCcVifB7G9hFojTC+/4EDZzWLu2DtIyn3W3wu+vw==}
-    engines: {node: '>=20.19.2', pnpm: '>=9.14.4 || >=10.1.0'}
+  '@kong/design-tokens@1.17.6':
+    resolution: {integrity: sha512-vpnC3WzPlM2llxTTkEuNDyqmSVcRUU+3UvV31rnXLWChkagfnSqnNcWmd2+TkG4FopDYObUjvGUkUKcZoywSRQ==}
+    engines: {node: '>=20.19.4', pnpm: '>=9.14.4 || >=10.1.0'}
 
   '@kong/eslint-config-kong-ui@1.5.1':
     resolution: {integrity: sha512-x9kGPrOsxJVCvVYoL8iX5KC6Xa7SqaDiKYkwBDr24bUeWXQ3ZSUvNNt1qupWUoRywekBl8UCEeIO/pjrhIYTmA==}
@@ -6245,7 +6245,7 @@ snapshots:
     dependencies:
       buffer: 6.0.3
 
-  '@kong/design-tokens@1.17.5': {}
+  '@kong/design-tokens@1.17.6': {}
 
   '@kong/eslint-config-kong-ui@1.5.1(eslint@9.31.0(jiti@2.4.2))(typescript@5.8.3)':
     dependencies:
