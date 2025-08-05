@@ -1,3 +1,10 @@
+## [1.98.6](https://github.com/Kong/spec-renderer/compare/v1.98.5...v1.98.6) (2025-08-05)
+
+
+### Bug Fixes
+
+* **schema-example:** dont wrap example arrays with an array [TDX-6041] ([#663](https://github.com/Kong/spec-renderer/issues/663)) ([cf95501](https://github.com/Kong/spec-renderer/commit/cf95501a12fe5b76aabda4b0da80013412afc489))
+
 ## [1.98.5](https://github.com/Kong/spec-renderer/compare/v1.98.4...v1.98.5) (2025-08-04)
 
 
