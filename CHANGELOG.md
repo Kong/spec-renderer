@@ -1,3 +1,10 @@
+## [1.98.7](https://github.com/Kong/spec-renderer/compare/v1.98.6...v1.98.7) (2025-08-05)
+
+
+### Bug Fixes
+
+* preserve previous entered params [FTI-6857] ([#664](https://github.com/Kong/spec-renderer/issues/664)) ([a0c20af](https://github.com/Kong/spec-renderer/commit/a0c20afa3831db024924f1426b2c468f8d6e764c))
+
 ## [1.98.6](https://github.com/Kong/spec-renderer/compare/v1.98.5...v1.98.6) (2025-08-05)
 
 
