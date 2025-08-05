@@ -118,6 +118,29 @@ describe('crawl', () => {
     expect(crawl({ objData, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })).toEqual({ age: 0, name: 'name', refToName: 0 })
   })
 
+  it('should handle array example', () => {
+    const objData = {
+      'type': 'object',
+      'properties': {
+        'numbers': {
+          'type': 'array',
+          'items': {
+            'type': 'integer',
+            'example': [1, 2, 3],
+          },
+        },
+      },
+    }
+
+    const res = crawl({ objData, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })
+    expect(res).toEqual({
+      'numbers': [
+        1,
+        2,
+        3,
+      ],
+    })
+  })
 
   it('TDX-5892, value from enum', () => {
 
