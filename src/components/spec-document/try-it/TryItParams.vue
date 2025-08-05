@@ -219,7 +219,7 @@ watch(params, (newParams) => {
     const samples = extractSample(newParams)
     Object.keys(newParams).forEach(key => {
       // we need to keep it if it was previously changed, and only sent to example, when empty
-      fieldValues.value[key] = fieldValues.value[key] || samples[key]
+      fieldValues.value[key] = Object.keys(fieldValues.value).includes(key) ? fieldValues.value[key] : samples[key]
     })
   }
 }, { immediate: true })
