@@ -1,3 +1,10 @@
+## [1.98.8](https://github.com/Kong/spec-renderer/compare/v1.98.7...v1.98.8) (2025-08-06)
+
+
+### Bug Fixes
+
+* handle empty values [FTI-6857] ([#665](https://github.com/Kong/spec-renderer/issues/665)) ([a794e92](https://github.com/Kong/spec-renderer/commit/a794e92aa7de06510f89a2a2d0462c50a55cfbe6))
+
 ## [1.98.7](https://github.com/Kong/spec-renderer/compare/v1.98.6...v1.98.7) (2025-08-05)
 
 
