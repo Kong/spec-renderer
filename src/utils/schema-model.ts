@@ -1,6 +1,5 @@
 import type { SchemaObject } from '@/types'
 import { merge } from 'allof-merge'
-import { crawl } from './schema-example'
 
 /**
  * Type guard for verifying object is of type SchemaObject
