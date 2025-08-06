@@ -28,7 +28,7 @@ export function filterSchemaObjectArray(candidate: unknown): SchemaObject[] {
 const resolveAllOf = (schema: SchemaObject): SchemaObject =>
   Array.isArray(schema?.allOf) && schema.allOf.length > 0
     ? {
-      //      ...(merge(schema, { mergeCombinarySibling: false }) as SchemaObject),
+      //      ...(merge(schema, { mergeCombinarySibling: true }) as SchemaObject),
       // when merging combinary siblings, the title is lost, so we add it back
       ...(schema.title ? { title: schema.title } : {}),
     }
