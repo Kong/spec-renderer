@@ -18,6 +18,24 @@ export function filterSchemaObjectArray(candidate: unknown): SchemaObject[] {
   return Array.isArray(candidate) ? candidate.filter(isValidSchemaObject) : []
 }
 
+
+const removeCircularRefs = (obj: Record<string, any>):Record<string, any> => {
+  const cache = new Set()
+  const jsonString = JSON.stringify(obj, (key, value) => {
+    if (typeof value === 'object' && value !== null) {
+      if (cache.has(value)) {
+        // Circular reference found, discard key
+        return
+      }
+      // Store value in our collection
+      cache.add(value)
+    }
+    return value
+  })
+  const res = JSON.parse(jsonString)
+  return res
+}
+
 /**
  * Utility to resolve allOf fields in a schema object.
  *
@@ -25,15 +43,33 @@ export function filterSchemaObjectArray(candidate: unknown): SchemaObject[] {
  * @param {SchemaObject} schema
  * @returns {SchemaObject}
  */
-const resolveAllOf = (schema: SchemaObject): SchemaObject =>
-  Array.isArray(schema?.allOf) && schema.allOf.length > 0
-    ? {
+const resolveAllOf = (schema: SchemaObject): SchemaObject => {
+  if (Array.isArray(schema?.allOf) && schema.allOf.length > 0) {
+    // do we have circular references?
+    try {
+      JSON.stringify(schema)
+    } catch {
+      // yes, we do have circular references, merge will fail, let's do it simpler way
+
+      let resolvedAllOf: SchemaObject = {}
+      for (const allEl of schema.allOf) {
+        resolvedAllOf = { ...resolveAllOf, ...allEl as Record<string, any> }
+      }
+      return removeCircularRefs({
+        ...resolvedAllOf,
+        ...(schema.title ? { title: schema.title } : {}),
+      })
+    }
+
+    // we are clean and do not have any circular refs - safe to use merge
+    return {
       ...(merge(schema, { mergeCombinarySibling: true }) as SchemaObject),
-      // when merging combinary siblings, the title is lost, so we add it back
       ...(schema.title ? { title: schema.title } : {}),
     }
-    : schema
-
+  } else {
+    return schema
+  }
+}
 /**
  * Utility to resolve the type of a schema object.
  * We return the type as it is if it's not a list.
