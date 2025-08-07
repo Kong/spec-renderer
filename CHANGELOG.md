@@ -1,3 +1,10 @@
+## [1.98.10](https://github.com/Kong/spec-renderer/compare/v1.98.9...v1.98.10) (2025-08-07)
+
+
+### Bug Fixes
+
+* too many recursive calls or other memory issues in allof-merge [TDX-6386] ([#666](https://github.com/Kong/spec-renderer/issues/666)) ([7b3a795](https://github.com/Kong/spec-renderer/commit/7b3a795f0abe5a1fdf4aec4bb64460f0d0781048))
+
 ## [1.98.9](https://github.com/Kong/spec-renderer/compare/v1.98.8...v1.98.9) (2025-08-06)
 
 
