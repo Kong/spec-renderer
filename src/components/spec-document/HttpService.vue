@@ -17,7 +17,7 @@
       </template>
       <div class="overview-page-versions">
         <LabelBadge
-          :label="`v${data.version}`"
+          :label="data.version"
           type="primary"
         />
         <LabelBadge

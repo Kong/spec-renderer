@@ -1,3 +1,10 @@
+## [1.98.9](https://github.com/Kong/spec-renderer/compare/v1.98.8...v1.98.9) (2025-08-06)
+
+
+### Bug Fixes
+
+* remove version prefix ([#669](https://github.com/Kong/spec-renderer/issues/669)) ([fb08472](https://github.com/Kong/spec-renderer/commit/fb084729552bb2a6b7d2b38e28a23ccb0148156f))
+
 ## [1.98.8](https://github.com/Kong/spec-renderer/compare/v1.98.7...v1.98.8) (2025-08-06)
 
 
