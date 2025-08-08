@@ -8,6 +8,7 @@ import type { OperationInterface, MessageInterface } from '@asyncapi/parser'
 
 export const NodeType = {
   ...OasNodeType,
+  HttpOperationTag: 'http_operation_tag',
   AsyncMessage: 'async_message',
   AsyncOperation: 'async_operation',
 } as const

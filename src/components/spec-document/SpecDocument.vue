@@ -60,6 +60,7 @@ import { NodeType } from '@/types'
 import type { ServiceNode, ServiceChildNode, DocumentNavigationItem } from '@/types'
 import HttpService from './HttpService.vue'
 import HttpOperation from './HttpOperation.vue'
+import HttpOperationTag from './HttpOperationTag.vue'
 import AsyncOperation from './AsyncOperation.vue'
 import HttpModel from './HttpModel.vue'
 import AsyncMessage from './AsyncMessage.vue'
@@ -71,6 +72,8 @@ import { BOOL_VALIDATOR, IS_TRUE, isSsr, findMatchingNode, NUMBER_VALIDATOR, con
 import type { NavigationTypes } from '@/types'
 import { stringify, parse as parseFlatted } from 'flatted'
 import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '@/stoplight/elements-core'
+import { isGroup } from '../spec-renderer-toc'
+import type { INodeTag } from '@stoplight/types'
 
 const props = defineProps({
   document: {
@@ -238,7 +241,6 @@ const specDocument = computed((): ServiceNode => {
   return <ServiceNode>props.document
 })
 
-
 const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null):
 {
   component: any
@@ -256,6 +258,8 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
     case NodeType.HttpOperation:
     case NodeType.HttpWebhook:
       return { component: HttpOperation, props: defaultProps, doc: forServiceNode }
+    case NodeType.HttpOperationTag:
+      return { component: HttpOperationTag, props: { ...forServiceNode.data }, doc: forServiceNode }
     case NodeType.AsyncOperation:
       return { component: AsyncOperation, props: defaultProps, doc: forServiceNode }
     case NodeType.HttpService:
@@ -278,6 +282,14 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
   }
 }
 
+/**
+ * Get tag data by name
+ * @param tagName The name of the tag to retrieve
+ */
+const getTagData = (tagName: string): INodeTag | undefined => {
+  const tag = specDocument.value?.data?.tags?.find(t => t.name === tagName)
+  return tag
+}
 
 const scrollingContainerEl = computed(():HTMLElement | null => {
   if (isSsr()) {
@@ -352,6 +364,13 @@ const nodesList = computed(() => {
         const childItem = item.items[i] as TableOfContentsNode
         if (childItem.id === '/') {
           continue
+        }
+        // check if the item is a tag, and if so, add it to the nodes list if it at least has a name
+        if (isGroup(childItem) && 'itemsType' in childItem) {
+          const tagData = getTagData(childItem.title)
+          if (tagData && tagData?.name) {
+            nList.push({ type: NodeType.HttpOperationTag, data: tagData, name: childItem.title })
+          }
         }
         if ((item.items[i] as TableOfContentsGroup).items) {
           crawl((item.items[i] as TableOfContentsGroup))
@@ -517,7 +536,7 @@ watch(() => ({ nodesList: nodesList.value,
   const newUri = nodesList.value[mostVisibleIdx].doc.uri
 
   // we do not want to emit content-scrolled if we are still in the process of scrolling
-  if (newUri !== lastPath.value && !newValue.isScrolling) {
+  if (newUri && newUri !== lastPath.value && !newValue.isScrolling) {
     emit('content-scrolled', newUri)
     if (props.controlAddressBar) {
     // we only have path and hash for now
