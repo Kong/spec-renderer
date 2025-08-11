@@ -122,7 +122,7 @@
     "vite": "^7.0.5",
     "vite-plugin-node-polyfills": "^0.24.0",
     "vite-plugin-replace": "^0.1.1",
-    "vite-plugin-vue-devtools": "^7.7.7",
+    "vite-plugin-vue-devtools": "^8.0.0",
     "vitest": "3.2.4",
     "vue": "^3.5.17",
     "vue-router": "^4.5.1",
