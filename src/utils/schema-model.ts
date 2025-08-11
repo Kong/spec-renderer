@@ -53,12 +53,12 @@ const resolveAllOf = (schema: SchemaObject): SchemaObject => {
 
       let resolvedAllOf: SchemaObject = {}
       for (const allEl of schema.allOf) {
-        resolvedAllOf = { ...resolveAllOf, ...allEl as Record<string, any> }
+        resolvedAllOf = { ...resolveAllOf, ...removeCircularRefs(allEl as Record<string, any>) as Record<string, any> }
       }
-      return removeCircularRefs({
+      return {
         ...resolvedAllOf,
         ...(schema.title ? { title: schema.title } : {}),
-      })
+      }
     }
 
     // we are clean and do not have any circular refs - safe to use merge
