@@ -1,3 +1,10 @@
+## [1.98.14](https://github.com/Kong/spec-renderer/compare/v1.98.13...v1.98.14) (2025-08-12)
+
+
+### Bug Fixes
+
+* add overflow-wrap anywhere for each h2 ([#676](https://github.com/Kong/spec-renderer/issues/676)) ([ea0c3cb](https://github.com/Kong/spec-renderer/commit/ea0c3cb1fa44d32f3bd9b06392a5ff2f9ff1d7cf))
+
 ## [1.98.13](https://github.com/Kong/spec-renderer/compare/v1.98.12...v1.98.13) (2025-08-12)
 
 
