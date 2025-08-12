@@ -1,3 +1,10 @@
+## [1.98.13](https://github.com/Kong/spec-renderer/compare/v1.98.12...v1.98.13) (2025-08-12)
+
+
+### Bug Fixes
+
+* resolve circular dependencies on children instead of allOf object [TDX-6386] ([#675](https://github.com/Kong/spec-renderer/issues/675)) ([8eb217d](https://github.com/Kong/spec-renderer/commit/8eb217d3b5e03d4ae8c75bfc0ce60bd89a9d8876))
+
 ## [1.98.12](https://github.com/Kong/spec-renderer/compare/v1.98.11...v1.98.12) (2025-08-11)
 
 
