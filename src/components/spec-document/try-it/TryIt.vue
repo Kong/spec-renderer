@@ -30,7 +30,7 @@
       class="tryit-body"
     >
       <TryItAuth
-        ref="authComponentRef"
+        ref="auth2ComponentTemplateRef"
         :data="data"
         @security-scheme-changed="securitySchemeChanged"
       />
@@ -110,7 +110,7 @@ const props = defineProps({
 
 })
 
-const authComponentRef = useTemplateRef<InstanceType<typeof TryItAuth>>('authComponentRef')
+const authComponentRef = useTemplateRef<InstanceType<typeof TryItAuth>>('authComponentTemplateRef')
 
 const excludeNotRequired = defineModel({
   type: Boolean,
