@@ -1,3 +1,10 @@
+## [1.98.15](https://github.com/Kong/spec-renderer/compare/v1.98.14...v1.98.15) (2025-08-12)
+
+
+### Bug Fixes
+
+* avoid naming a variable declared with useTemplateRef the same as a template ref ([#677](https://github.com/Kong/spec-renderer/issues/677)) ([f921a33](https://github.com/Kong/spec-renderer/commit/f921a33dc824eab680cf0880dcd6dded13a04111))
+
 ## [1.98.14](https://github.com/Kong/spec-renderer/compare/v1.98.13...v1.98.14) (2025-08-12)
 
 
