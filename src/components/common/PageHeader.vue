@@ -72,6 +72,7 @@ defineProps({
       font-size: var(--kui-font-size-80, $kui-font-size-80);
       font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
       line-height: var(--kui-line-height-70, $kui-line-height-70);
+      overflow-wrap: anywhere;
     }
 
     .page-header-actions {

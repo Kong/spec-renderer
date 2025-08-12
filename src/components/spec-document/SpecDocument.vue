@@ -666,10 +666,6 @@ onBeforeMount(async () => {
   }
 }
 
-:deep(h2) {
-  overflow-wrap: anywhere;
-}
-
 .nodes-wrapper {
   .overview-page, .spec-renderer-document {
     margin-bottom: var(--kui-space-100, $kui-space-100);
