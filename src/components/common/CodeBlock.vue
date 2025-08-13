@@ -20,6 +20,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  isError: {
+    type: Boolean,
+    default: false,
+  },
 })
 const { highlighter } = composables.useShiki()
 
@@ -28,7 +32,9 @@ const getHighlightLanguage = (snippetLang: LanguageCode | null | undefined): str
 }
 
 const highlightedCode = computed(():string => {
-  if (highlighter.value && props.lang) {
+  if (props.isError) {
+    return `<div class='error'>${props.code}</div>`
+  } else if (highlighter.value && props.lang) {
     const hightLightLang = getHighlightLanguage(props.lang as LanguageCode)
     return highlighter.value.codeToHtml(props.code, {
       lang: hightLightLang as string,
@@ -77,7 +83,14 @@ html.dark,
 </style>
 
 <style lang="scss" scoped>
+
 .code-block {
+  :deep(.error) {
+    color: var(--kui-color-text-danger, $kui-color-text-danger);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    font-family: var(--kui-font-family-code, $kui-font-family-code);
+    margin: var(--kui-space-60, $kui-space-60);
+  }
   :deep(pre) {
     @include pre;
 
