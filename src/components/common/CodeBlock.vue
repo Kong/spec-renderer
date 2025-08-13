@@ -87,10 +87,11 @@ html.dark,
 .code-block {
   :deep(.error) {
     color: var(--kui-color-text-danger, $kui-color-text-danger);
-    font-size: var(--kui-font-size-20, $kui-font-size-20);
     font-family: var(--kui-font-family-code, $kui-font-family-code);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
     margin: var(--kui-space-60, $kui-space-60);
   }
+
   :deep(pre) {
     @include pre;
 
