@@ -273,7 +273,7 @@ watch(() => ({
     const urlStr = (newValue.serverUrl + newValue.requestPath).replaceAll('{', '').replaceAll('}', '')
     try {
       serverUrl = new URL( urlStr )
-    } catch (e) {
+    } catch {
       let errorDetail = ''
       if (!urlStr.includes('//:')) {
         errorDetail = 'missing protocol'
