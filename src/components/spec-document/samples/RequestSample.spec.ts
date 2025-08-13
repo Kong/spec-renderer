@@ -169,7 +169,7 @@ describe('<RequestSample />', () => {
     })
     await flushPromises()
     const code = wrapper.findTestId('request-sample-123').html()
-    expect(code).toMatch('Invalid URL value \'hostname/api/v3/path\'')
+    expect(code).toContain("Invalid URL value 'hostname/api/v3/path'<br> - missing protocol")
   })
 
 })

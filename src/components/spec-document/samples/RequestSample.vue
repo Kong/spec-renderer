@@ -273,12 +273,15 @@ watch(() => ({
     const urlStr = (newValue.serverUrl + newValue.requestPath).replaceAll('{', '').replaceAll('}', '')
     try {
       serverUrl = new URL( urlStr )
-    } catch {
-      requestCode.value = `Invalid URL value '${urlStr}'`
+    } catch (e) {
+      let errorDetail = ''
+      if (!urlStr.includes('//:')) {
+        errorDetail = 'missing protocol'
+      }
+      requestCode.value = `Invalid URL value '${urlStr}'${errorDetail ? '<br/> - ' + errorDetail : ''}`
       snippetError.value = true
       return
     }
-
     try {
       let queryStr = newValue.requestQuery
       if (newValue.authQuery) {
@@ -330,7 +333,7 @@ watch(() => ({
 
       snippetChanged = true
     } catch (err) {
-      console.error('@kong/spec-renderer: error in HTTPSnippet', err)
+      console.error('@kong/spec-renderer: error in HTTPSnippet', err, urlStr)
       snippetError.value = true
     }
   }
