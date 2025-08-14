@@ -1,3 +1,10 @@
+## [1.98.16](https://github.com/Kong/spec-renderer/compare/v1.98.15...v1.98.16) (2025-08-14)
+
+
+### Bug Fixes
+
+* provide error without console.error when request url cannot be parsed [TDX-6345] ([#680](https://github.com/Kong/spec-renderer/issues/680)) ([7d7d70c](https://github.com/Kong/spec-renderer/commit/7d7d70c29b8b95ddbaf0c3399b7d3c5d663dee11))
+
 ## [1.98.15](https://github.com/Kong/spec-renderer/compare/v1.98.14...v1.98.15) (2025-08-12)
 
 
