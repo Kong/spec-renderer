@@ -79,6 +79,7 @@
         <CodeBlock
           v-if="requestCode && selectedLang"
           :code="(requestCode as string)"
+          :is-error="snippetError"
           :lang="selectedLang"
         />
       </div>
@@ -183,6 +184,8 @@ const selectedLang = ref<LanguageCode>()
 
 const selectedLangLibrary = ref<string>()
 
+const snippetError = ref<boolean>(false)
+
 const selectedLangLibraries = computed(() => {
   if (selectedLang.value) {
     return requestSampleConfigs.find(lang => lang.httpSnippetLanguage === selectedLang.value)?.libraries || []
@@ -254,7 +257,6 @@ watch(() => ({
     selectedLangLibrary.value = selectedLangLibraries.value?.length ? selectedLangLibraries.value[0].httpSnippetLibrary : undefined
   }
 
-  let snippetError = false
   let snippetChanged = false
 
   // if we selected new requestBody or if we do not have httpSNippet yet, we need to re-init it
@@ -267,8 +269,21 @@ watch(() => ({
     newValue.authHeaders !== oldValue?.authHeaders ||
     newValue.customHeaders !== oldValue?.customHeaders) {
 
+    let serverUrl: URL | undefined = undefined
+    const urlStr = (newValue.serverUrl + newValue.requestPath).replaceAll('{', '').replaceAll('}', '')
     try {
-      let serverUrl = new URL( (newValue.serverUrl + newValue.requestPath).replaceAll('{', '').replaceAll('}', '') )
+      serverUrl = new URL( urlStr )
+      snippetError.value = false
+    } catch {
+      let errorDetail = ''
+      if (!urlStr.includes('//:')) {
+        errorDetail = 'missing protocol'
+      }
+      requestCode.value = `Invalid URL value '${urlStr}'${errorDetail ? '<br/> - ' + errorDetail : ''}`
+      snippetError.value = true
+      return
+    }
+    try {
       let queryStr = newValue.requestQuery
       if (newValue.authQuery) {
         queryStr += (newValue.requestQuery ? '&' : '?') + newValue.authQuery
@@ -319,11 +334,11 @@ watch(() => ({
 
       snippetChanged = true
     } catch (err) {
-      console.error('@kong/spec-renderer: error in HTTPSnippet', err)
-      snippetError = true
+      console.error('@kong/spec-renderer: error in HTTPSnippet', err, urlStr)
+      snippetError.value = true
     }
   }
-  if (snippetError) {
+  if (snippetError.value) {
     requestCode.value = 'Error initializing code snippet'
   } else {
     // if we do not have requestCode generated, or our lang or lib are changed - we need to re-generate requestCode

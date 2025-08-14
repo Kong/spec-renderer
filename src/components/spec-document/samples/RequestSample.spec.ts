@@ -148,4 +148,28 @@ describe('<RequestSample />', () => {
     const code = wrapper.findTestId('request-sample-123').html()
     expect(code).toMatch('--url protocol://hostname/api/v3')
   })
+
+  it('should renderer error when URL is invalid', async () => {
+
+    const wrapper = mount(RequestSample, {
+      props: {
+        data: {
+          id: '123',
+          method: 'get',
+          path: '/sample-path',
+          responses: [],
+          servers: [{
+            id: 'sample-server-id',
+            url: 'global.api.konghq.com/v2',
+          }],
+        },
+        serverUrl: '{hostname}/api/v3',
+        requestPath: '/path',
+      },
+    })
+    await flushPromises()
+    const code = wrapper.findTestId('request-sample-123').html()
+    expect(code).toContain("Invalid URL value 'hostname/api/v3/path'<br> - missing protocol")
+  })
+
 })
