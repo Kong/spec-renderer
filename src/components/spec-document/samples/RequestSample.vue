@@ -273,6 +273,7 @@ watch(() => ({
     const urlStr = (newValue.serverUrl + newValue.requestPath).replaceAll('{', '').replaceAll('}', '')
     try {
       serverUrl = new URL( urlStr )
+      snippetError.value = false
     } catch {
       let errorDetail = ''
       if (!urlStr.includes('//:')) {
