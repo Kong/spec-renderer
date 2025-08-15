@@ -17,6 +17,10 @@ on:
   workflow_call:
 
 jobs:
+  npm-oidc:
+    name: Tests
+    uses: ./.github/workflows/npm.yaml
+
   test:
     name: Run Tests
     runs-on: ubuntu-latest
@@ -65,8 +69,6 @@ jobs:
         id: package-preview
         # Do not run for `alpha` or `beta` branches
         if: github.event_name == 'pull_request' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && !contains(github.head_ref || github.ref_name, 'alpha') && !contains(github.head_ref || github.ref_name, 'beta')
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
@@ -74,8 +76,6 @@ jobs:
           preid="pr.${{ github.event.pull_request.number }}.$(git rev-parse --short ${{ github.event.pull_request.head.sha }})"
           tag="pr-${{ github.event.pull_request.number }}"
           echo "preid=${preid}"
-
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
 
           # Use yarn to bump the version for the prerelease
           pnpm version prerelease --preid ${preid} --no-git-tag-version --yes --amend
