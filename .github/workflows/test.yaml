@@ -49,6 +49,9 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      - name: Test
+        run: pnpm run test
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -57,11 +60,9 @@ jobs:
           include-hidden-files: 'true'
           if-no-files-found: error
 
-      - name: Test
-        run: pnpm run test
 
   npm-oidc:
-    name: Tests
+    name: Publish PR previews
     needs: [test]
     uses: ./.github/workflows/npm.yaml
     with:
