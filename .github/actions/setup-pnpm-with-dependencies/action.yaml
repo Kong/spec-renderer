@@ -36,6 +36,8 @@ runs:
         echo "node-version=${voltaNodeVersion}">> $GITHUB_OUTPUT
         echo "pnpm-version=${voltaPnpmVersion}">> $GITHUB_OUTPUT
 
+        npm --version
+
     - name: Setup Node
       uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
       with:
@@ -45,6 +47,7 @@ runs:
     - name: Install PNPM
       shell: bash
       run: |
+        npm --version
         npm i -g pnpm@${{ steps.node-version.outputs.pnpm-version }}
         pnpm --version
 
