@@ -36,7 +36,7 @@ runs:
         echo "node-version=${voltaNodeVersion}">> $GITHUB_OUTPUT
         echo "pnpm-version=${voltaPnpmVersion}">> $GITHUB_OUTPUT
 
-        npm install npm@latest -g
+        #npm install --unsafe-perm npm@latest -g
         npm --version
 
     - name: Setup Node
