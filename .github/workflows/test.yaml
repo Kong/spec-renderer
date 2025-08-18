@@ -1,4 +1,4 @@
-name: Tests
+name: Test
 
 on:
   pull_request:
@@ -15,10 +15,6 @@ on:
 
   # Allow workflow to be called by another workflow
   workflow_call:
-
-permissions:
-  id-token: write  # Required for OIDC
-  contents: read
 
 jobs:
   test:
@@ -64,16 +60,11 @@ jobs:
           include-hidden-files: 'true'
           if-no-files-found: error
 
-  npmjs:
-    uses: ./.github/workflows/npmjs.yaml
-    needs: ["test"]
-    if: |
-      github.event_name == 'pull_request' &&
-      (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && !contains(github.head_ref || github.ref_name, 'alpha') && !contains(github.head_ref || github.ref_name, 'beta')
-    with:
-      action: publish-preview
-      build_artifact: spec-renderer-build-output-artifact
-    secrets:
-      inherit
+      - name: Dispatch preview publish
+        if: |
+          github.event_name == 'pull_request' &&
+          (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && !contains(github.head_ref || github.ref_name, 'alpha') && !contains(github.head_ref || github.ref_name, 'beta')
+        run: |
+          gh workflow run npmjs.yaml -f action=publish-preview -f build_artifact=spec-renderer-build-output-artifact
 
 

@@ -1,8 +1,7 @@
 name: NPM publishing
 
 on:
-  # Allow workflow to be called by another workflow
-  workflow_call:
+  workflow_dispatch:
     inputs:
       action:
         description: action to perform 'publish|publish-preview|cleanup-previews'
