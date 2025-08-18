@@ -14,4 +14,5 @@ jobs:
     uses: ./.github/workflows/npmjs.yaml
     with:
       action: cleanup-previews
-      github_token: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
+    secrets: inherit
+

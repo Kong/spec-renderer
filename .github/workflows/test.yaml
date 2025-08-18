@@ -69,6 +69,7 @@ jobs:
     with:
       action: publish-preview
       build_artifact: spec-renderer-build-output-artifact
-      github_token: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
+    secrets:
+      inherit
 
 

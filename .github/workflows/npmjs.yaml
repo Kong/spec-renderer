@@ -12,10 +12,6 @@ on:
         description: name of build artifact to download before publishing
         default: ''
         type: string
-      github_token:
-        description: github token capable of doing PR comments and committing releases
-        required: true
-        type: string
 
 permissions:
   id-token: write  # Required for OIDC
@@ -26,6 +22,8 @@ jobs:
     name: Setup NPM OIDC
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      token: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
     steps:
 
       - name: Checkout
@@ -93,7 +91,7 @@ jobs:
              ```sh
              ${{ steps.package-preview.outputs.npm_instructions }}
              ```
-          GITHUB_TOKEN: ${{inputs.github_token}}
+          GITHUB_TOKEN: ${{env.token}}
 
       - name: Prepare cleanup
         id: prepare-cleanup
