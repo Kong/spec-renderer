@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      token: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
+      GITHUB_TOKEN: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
     steps:
 
       - name: Checkout
@@ -91,7 +91,7 @@ jobs:
              ```sh
              ${{ steps.package-preview.outputs.npm_instructions }}
              ```
-          GITHUB_TOKEN: ${{env.token}}
+          GITHUB_TOKEN: ${{env.GITHUB_TOKEN}}
 
       - name: Prepare cleanup
         id: prepare-cleanup
