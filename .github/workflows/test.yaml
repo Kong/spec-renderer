@@ -60,15 +60,15 @@ jobs:
           include-hidden-files: 'true'
           if-no-files-found: error
 
-
-      - name: Publish PR previews
-        uses: ./.github/workflows/npmjs.yaml
-        if: |
-          github.event_name == 'pull_request' &&
-          (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && !contains(github.head_ref || github.ref_name, 'alpha') && !contains(github.head_ref || github.ref_name, 'beta')
-        with:
-          action: publish-preview
-          build_artifact: spec-renderer-build-output-artifact
-          github_token: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
+  npmjs:
+    uses: ./.github/workflows/npmjs.yaml
+    needs: ["test"]
+    if: |
+      github.event_name == 'pull_request' &&
+      (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && !contains(github.head_ref || github.ref_name, 'alpha') && !contains(github.head_ref || github.ref_name, 'beta')
+    with:
+      action: publish-preview
+      build_artifact: spec-renderer-build-output-artifact
+      github_token: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
 
 
