@@ -21,14 +21,8 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Prepare cleanup
-        id: prepare
-        run: |
-          echo "openPRs=$(gh pr list --state open --json number|jq  -cM 'map(.number|tostring)')" >> $GITHUB_OUTPUT
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-
       - name: Cleanup PR preview
-        uses: Kong/public-shared-actions/pr-previews/cleanup@main
+        uses: ./.github/workflows/npmjs.yaml
         with:
-          package: "@kong/spec-renderer"
-          openPRs: ${{ steps.prepare.outputs.openPRs }}
+          action: cleanup-previews
+          github_token: ${{ secrets.SPEC_RENDERER_BOT_PAT }}

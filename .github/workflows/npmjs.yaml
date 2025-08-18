@@ -12,6 +12,10 @@ on:
         description: name of build artifact to download before publishing
         default: ''
         type: string
+      github_token:
+        description: github token capable of doing PR comments and committing releases
+        required: true
+        type: string
 
 permissions:
   id-token: write  # Required for OIDC
@@ -40,9 +44,7 @@ jobs:
 
       - name: Publish Package Preview
         if: |
-          inputs.action == 'publish-preview' &&
-          github.event_name == 'pull_request' &&
-          (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && !contains(github.head_ref || github.ref_name, 'alpha') && !contains(github.head_ref || github.ref_name, 'beta')
+          inputs.action == 'publish-preview'
         id: package-preview
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
@@ -91,4 +93,19 @@ jobs:
              ```sh
              ${{ steps.package-preview.outputs.npm_instructions }}
              ```
-          GITHUB_TOKEN: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
+          GITHUB_TOKEN: ${{inputs.github_token}}
+
+      - name: Prepare cleanup
+        id: prepare-cleanup
+        if: |
+          inputs.action == 'cleanup-previews'
+        run: |
+          echo "openPRs=$(gh pr list --state open --json number|jq  -cM 'map(.number|tostring)')" >> $GITHUB_OUTPUT
+
+      - name:
+        uses: Kong/public-shared-actions/pr-previews/cleanup@main
+        if: |
+          inputs.action == 'cleanup-previews'
+        with:
+          package: "@kong/spec-renderer"
+          openPRs: ${{ steps.prepare-cleanup.outputs.openPRs }}
