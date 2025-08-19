@@ -11,8 +11,8 @@ on:
         description: name of build artifact to download before publishing
         default: ''
         type: string
-      artifact-id:
-        description: 'artifact id to publish'
+      run-id:
+        description: 'run identifier of the calling job'
         required: false
 
 
@@ -43,7 +43,7 @@ jobs:
         with:
           name: ${{inputs.build-artifact}}
           path: ./dist
-          artifact-id: ${{inputs.artifact-id}}
+          run-id: ${{inputs.run-id}}
 
       - name: Publish Package Preview
         id: package-preview
