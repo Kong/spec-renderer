@@ -1,15 +1,6 @@
 name: NPMJS publishing
 
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - labeled
-    branches:
-      - main
-
   workflow_dispatch:
     inputs:
       action:
@@ -20,7 +11,7 @@ on:
         description: name of build artifact to download before publishing
         default: ''
         type: string
-      run_id:
+      run-id:
         description: 'run identifier of the calling job'
         required: false
 
@@ -52,7 +43,7 @@ jobs:
         with:
           name: ${{inputs.build-artifact}}
           path: ./dist
-          run_id: ${{inputs.run_id}}
+          run-id: ${{inputs.run-id}}
 
       - name: Publish Package Preview
         id: package-preview
