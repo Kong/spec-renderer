@@ -20,6 +20,9 @@ on:
         description: name of build artifact to download before publishing
         default: ''
         type: string
+      run_id:
+        description: 'run identifier of the calling job'
+        required: false
 
 
 permissions:
@@ -27,14 +30,15 @@ permissions:
   contents: read
 
 jobs:
-  npmjs:
-    name: Setup NPM OIDC
+  npmjs-publish-preview:
+    if: |
+      inputs.action == 'publish-preview'
+    name: Npmjs Publish Previews
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
       GITHUB_TOKEN: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
     steps:
-
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
@@ -42,16 +46,13 @@ jobs:
         uses: ./.github/actions/setup-pnpm-with-dependencies/
 
       - name: Download Build Artifacts
-        if: |
-          inputs.build_artifact != ''
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: ${{inputs.build-artifact}}
           path: ./dist
+          run_id: ${{inputs.run_id}}
 
       - name: Publish Package Preview
-        if: |
-          inputs.action == 'publish-preview'
         id: package-preview
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
@@ -102,17 +103,22 @@ jobs:
              ```
           GITHUB_TOKEN: ${{env.GITHUB_TOKEN}}
 
+  npmjs-cleanup-previews:
+    if: |
+      inputs.action == 'cleanup-previews'
+    name: Npmjs Cleanup Previews
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GITHUB_TOKEN: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
+    steps:
       - name: Prepare cleanup
         id: prepare-cleanup
-        if: |
-          inputs.action == 'cleanup-previews'
         run: |
           echo "openPRs=$(gh pr list --state open --json number|jq  -cM 'map(.number|tostring)')" >> $GITHUB_OUTPUT
 
       - name:
         uses: Kong/public-shared-actions/pr-previews/cleanup@main
-        if: |
-          inputs.action == 'cleanup-previews'
         with:
           package: "@kong/spec-renderer"
           openPRs: ${{ steps.prepare-cleanup.outputs.openPRs }}
