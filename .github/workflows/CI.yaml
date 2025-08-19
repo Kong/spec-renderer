@@ -33,7 +33,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
 
   run-tests:
-    name: Build and Test
+    name: Tests
     uses: ./.github/workflows/test.yaml
 
   publish-preview:
