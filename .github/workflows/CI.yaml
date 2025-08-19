@@ -147,4 +147,10 @@ jobs:
         env:
           # Since branch protections are on (pushing commits) you need to use a bot PAT
           GITHUB_TOKEN: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
+
+        # as of now cycjimmy/semantic-release-action is not publishing  to npmjs as
+        # trusted publishing is not yet supported, so we want to do a publish as separate step
+      - name: Publish to npm
+        if: github.event_name == 'push'
+        run: |
+          npm publish

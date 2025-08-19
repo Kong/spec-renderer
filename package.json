@@ -1,6 +1,6 @@
 {
   "name": "@kong/spec-renderer",
-  "version": "1.98.18",
+  "version": "1.98.20",
   "description": "Kong's open-source spec renderer",
   "license": "Apache-2.0",
   "type": "module",
@@ -172,7 +172,12 @@
           "changelogFile": "CHANGELOG.md"
         }
       ],
-      "@semantic-release/npm",
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": false
+        }
+      ],
       [
         "@semantic-release/git",
         {
