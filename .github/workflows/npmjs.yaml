@@ -45,6 +45,7 @@ jobs:
           name: ${{inputs.build-artifact}}
           path: ./dist
           run-id: ${{inputs.run-id}}
+          github-token: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
 
       - name: Publish Package Preview
         id: package-preview
