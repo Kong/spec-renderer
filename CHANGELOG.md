@@ -1,3 +1,10 @@
+## [1.98.20](https://github.com/Kong/spec-renderer/compare/v1.98.19...v1.98.20) (2025-08-19)
+
+
+### Bug Fixes
+
+* publishing in separate step ([42dc477](https://github.com/Kong/spec-renderer/commit/42dc4774b88537b2386009b591a9a8e9fd0a0cf4))
+
 ## [1.98.19](https://github.com/Kong/spec-renderer/compare/v1.98.18...v1.98.19) (2025-08-19)
 
 
