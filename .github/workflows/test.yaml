@@ -1,4 +1,4 @@
-name: Test
+name: Tests
 
 on:
   pull_request:
@@ -57,6 +57,7 @@ jobs:
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        id: upload-artifact
         with:
           name: spec-renderer-build-output-artifact
           path: ./dist/**
@@ -68,5 +69,5 @@ jobs:
           github.event_name == 'pull_request' &&
           (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && !contains(github.head_ref || github.ref_name, 'alpha') && !contains(github.head_ref || github.ref_name, 'beta')
         run: |
-          gh workflow run npmjs.yaml --ref ${{ github.head_ref || github.ref_name }} -f action=publish-preview -f build-artifact=spec-renderer-build-output-artifact -f run-id=${{ github.run_id }}
+          gh workflow run npmjs.yaml --ref ${{ github.head_ref || github.ref_name }} -f action=publish-preview -f build-artifact=spec-renderer-build-output-artifact -f artifact-id=${{ steps.upload-artifact.outputs.artifact-id }}
 

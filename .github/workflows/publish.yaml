@@ -11,7 +11,7 @@ jobs:
     uses: ./.github/workflows/test.yaml
 
   publish:
-      name: Build and Publish
+      name: Publish
       needs: [run-tests]
       runs-on: ubuntu-latest
       steps:
