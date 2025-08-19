@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - chore/KHCP-17660_npmjs-trusted-3
+
   pull_request:
     types:
       - opened
@@ -154,5 +154,4 @@ jobs:
       - name: Publish to npm
         if: github.event_name == 'push'
         run: |
-          npm --version
           npm publish

@@ -152,7 +152,6 @@
     "branches": [
       "+([0-9])?(.{+([0-9]),x}).x",
       "main",
-      "chore/KHCP-17660_npmjs-trusted-3",
       "next",
       "next-major",
       {
