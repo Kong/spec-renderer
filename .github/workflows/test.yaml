@@ -55,6 +55,7 @@ jobs:
       - name: Test
         run: pnpm run test
 
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         id: upload-artifact
@@ -69,5 +70,15 @@ jobs:
           github.event_name == 'pull_request' &&
           (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && !contains(github.head_ref || github.ref_name, 'alpha') && !contains(github.head_ref || github.ref_name, 'beta')
         run: |
-          gh workflow run npmjs.yaml --ref ${{ github.head_ref || github.ref_name }} -f action=publish-preview -f build-artifact=spec-renderer-build-output-artifact -f run-id=${{ github.run_id }}
+
+          preid="pr.${{ github.event.pull_request.number }}.$(git rev-parse --short ${{ github.event.pull_request.head.sha }})"
+          tag="pr-${{ github.event.pull_request.number }}"
+          echo "preid=${preid}"
+
+          gh workflow run npmjs.yaml --ref ${{ github.head_ref || github.ref_name }} \
+            -f action=publish-preview \
+            -f build-artifact=spec-renderer-build-output-artifact \
+            -f run-id=${{ github.run_id }} \
+            -f preview-pre-id=${preid} \
+            -f preview-tag=${tag}
 

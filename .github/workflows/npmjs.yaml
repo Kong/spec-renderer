@@ -11,6 +11,12 @@ on:
         description: name of build artifact to download before publishing
         default: ''
         type: string
+      preview-pre-id:
+        description: pre-id of preview version
+        type: string
+      preview-tag:
+        description: tag of the preview version
+        type: string
       run-id:
         description: 'run identifier of the calling job'
         required: false
@@ -45,7 +51,7 @@ jobs:
           name: ${{inputs.build-artifact}}
           path: ./dist
           run-id: ${{inputs.run-id}}
-          github-token: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
+          github-token: ${{env.GITHUB_TOKEN}}
 
       - name: Publish Package Preview
         id: package-preview
@@ -53,9 +59,8 @@ jobs:
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
 
-          preid="pr.${{ github.event.pull_request.number }}.$(git rev-parse --short ${{ github.event.pull_request.head.sha }})"
-          tag="pr-${{ github.event.pull_request.number }}"
-          echo "preid=${preid}"
+          preid="${{inputs.preview-pre-id}}"
+          tag="${{inputs.preview-tag}}"
 
           # Use yarn to bump the version for the prerelease
           pnpm version prerelease --preid ${preid} --no-git-tag-version --yes --amend
