@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - chore/KHCP-17660_npmjs-trusted-3
   pull_request:
     types:
       - opened
@@ -12,7 +13,6 @@ on:
       - labeled
     branches:
       - main
-      - chore/KHCP-17660_npmjs-trusted-3
 
 permissions:
   id-token: write
