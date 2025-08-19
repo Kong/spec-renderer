@@ -72,7 +72,8 @@ jobs:
         run: |
 
           preid="pr.${{ github.event.pull_request.number }}.$(git rev-parse --short ${{ github.event.pull_request.head.sha }})"
-          tag="pr-${{ github.event.pull_request.number }}"
+          pr=${{ github.event.pull_request.number }}
+          tag="pr-${pr}"
           echo "preid=${preid}"
 
           gh workflow run npmjs.yaml --ref ${{ github.head_ref || github.ref_name }} \
@@ -80,5 +81,6 @@ jobs:
             -f build-artifact=spec-renderer-build-output-artifact \
             -f run-id=${{ github.run_id }} \
             -f preview-pre-id=${preid} \
-            -f preview-tag=${tag}
+            -f preview-tag=${tag} \
+            -f preview-pr-number=${pr}
 
