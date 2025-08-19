@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   remove-prev-comments:
-    name: Build and Publish
+    name: Remove PR preview comments
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     timeout-minutes: 20

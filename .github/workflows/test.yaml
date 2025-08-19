@@ -21,7 +21,9 @@ jobs:
         uses: ./.github/actions/setup-pnpm-with-dependencies/
 
       - name: Stylelint
-        run: pnpm run stylelint
+        run: |
+          echo "${{github.event_name}}"
+          pnpm run stylelint
 
       - name: Lint
         run: pnpm run lint
