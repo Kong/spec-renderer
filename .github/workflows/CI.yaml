@@ -147,3 +147,4 @@ jobs:
         env:
           # Since branch protections are on (pushing commits) you need to use a bot PAT
           GITHUB_TOKEN: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
