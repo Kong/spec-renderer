@@ -1,0 +1,33 @@
+name: Tests
+
+on:
+
+  # Allow calling manually from GitHub
+  workflow_dispatch:
+
+  # Allow workflow to be called by another workflow
+  workflow_call:
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup PNPM with Dependencies
+        uses: ./.github/actions/setup-pnpm-with-dependencies/
+
+      - name: Stylelint
+        run: pnpm run stylelint
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Test
+        run: pnpm run test
+
