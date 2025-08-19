@@ -16,12 +16,18 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
 
+
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Dispatch preview cleanup
-        id: prepare
-        run: |
-          gh workflow run npmjs.yaml --ref ${{ github.head_ref || github.ref_name }} -f action=cleanup-previews
+      - name: Dispatch preview publish
+        uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7 # v4
+        with:
+          workflow: npmjs.yaml
+          token: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
+          inputs: '{ "action": "cleanup-previews" }'
+          wait-for-completion: true
+          ref: ${{ github.head_ref || github.ref_name }}
+
 
