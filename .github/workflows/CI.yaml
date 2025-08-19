@@ -62,21 +62,17 @@ jobs:
       - name: Setup git
         run: |
           git config --global user.email "konnectx-engineers+kongponents-bot@konghq.com"
-          git config --global user.name 'kongponents-bot'
+          git config --global user.name 'kong-bot'
 
       - name: Publish Package Preview
         id: package-preview
         # Do not run for `alpha` or `beta` branches
         if: github.event_name == 'pull_request' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && !contains(github.head_ref || github.ref_name, 'alpha') && !contains(github.head_ref || github.ref_name, 'beta')
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
         run: |
 
           preid="pr.${{ github.event.pull_request.number }}.$(git rev-parse --short ${{ github.event.pull_request.head.sha }})"
           tag="pr-${{ github.event.pull_request.number }}"
           echo "preid=${preid}"
-
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
 
           # Use yarn to bump the version for the prerelease
           pnpm version prerelease --preid ${preid} --no-git-tag-version --yes --amend
@@ -133,6 +129,11 @@ jobs:
 
       - name: Setup PNPM with Dependencies
         uses: ./.github/actions/setup-pnpm-with-dependencies/
+
+      - name: Setup git
+        run: |
+          git config --global user.email "konnectx-engineers+kongponents-bot@konghq.com"
+          git config --global user.name 'kong-bot'
 
       - name: Download Build Artifacts
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
