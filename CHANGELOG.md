@@ -1,3 +1,11 @@
+## [1.98.19](https://github.com/Kong/spec-renderer/compare/v1.98.18...v1.98.19) (2025-08-19)
+
+
+### Bug Fixes
+
+* cycjimmy/semantic-release-action with npmjs trusted [KHCP-17660] ([#691](https://github.com/Kong/spec-renderer/issues/691)) ([135f342](https://github.com/Kong/spec-renderer/commit/135f3427ab8831e2749b64bd94321e52e868e414))
+* using NPM_TOKEN for cycjimmy/semantic-release-action [KHCP-17660] ([#690](https://github.com/Kong/spec-renderer/issues/690)) ([935a94e](https://github.com/Kong/spec-renderer/commit/935a94e8f173713fbb60fdc65d8ee6c1d2bb4260))
+
 ## [1.98.18](https://github.com/Kong/spec-renderer/compare/v1.98.17...v1.98.18) (2025-08-19)
 
 
