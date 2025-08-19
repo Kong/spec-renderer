@@ -9,6 +9,11 @@ concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
 
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+  actions: read
+
 jobs:
   cleanup:
     name: Cleanup PR Previews
