@@ -23,5 +23,5 @@ jobs:
       - name: Dispatch preview cleanup
         id: prepare
         run: |
-          gh workflow run npmjs.yaml --ref ${{ github.head_ref || github.ref_name }} -f action=cleanup-previews -f run-id=${{github.event.inputs.id}}
+          gh workflow run npmjs.yaml --ref ${{ github.head_ref || github.ref_name }} -f action=cleanup-previews -f run-id=run-id=${{ github.run_id }}
 

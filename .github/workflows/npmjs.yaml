@@ -7,7 +7,7 @@ on:
         description: action to perform 'publish|publish-preview|cleanup-previews'
         required: true
         type: string
-      build_artifact:
+      build-artifact:
         description: name of build artifact to download before publishing
         default: ''
         type: string
