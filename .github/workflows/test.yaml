@@ -79,7 +79,7 @@ jobs:
         with:
           workflow: npmjs.yaml
           token: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
-          inputs: '{ "action": "publish-preview", "build-artifact": "spec-renderer-build-output-artifact", "run-id": "${{ github.run_id }}", "preview-pre-id": "${{steps.prepare-preview.outputs.preid}}", "preview-tag": "pr-${{ github.event.pull_request.number }}", preview-pr-number" : "${{ github.event.pull_request.number }}" }'
+          inputs: '{ "action": "publish-preview", "build-artifact": "spec-renderer-build-output-artifact", "run-id": "${{ github.run_id }}", "preview-pre-id": "${{steps.prepare-preview.outputs.preid}}", "preview-tag": "pr-${{ github.event.pull_request.number }}", "preview-pr-number" : "${{ github.event.pull_request.number }}" }'
           wait-for-completion: true
           ref: ${{ github.head_ref || github.ref_name }}
 
