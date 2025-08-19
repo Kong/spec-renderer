@@ -1,4 +1,4 @@
-name: NPM publishing
+name: NPMJS publishing
 
 on:
   pull_request:
@@ -30,6 +30,8 @@ permissions:
   contents: read
 
 jobs:
+
+  # publish package preview
   npmjs-publish-preview:
     if: |
       inputs.action == 'publish-preview'
@@ -103,6 +105,7 @@ jobs:
              ```
           GITHUB_TOKEN: ${{env.GITHUB_TOKEN}}
 
+  # clean old preview versions
   npmjs-cleanup-previews:
     if: |
       inputs.action == 'cleanup-previews'
@@ -112,6 +115,13 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
     steps:
+
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup PNPM with Dependencies
+        uses: ./.github/actions/setup-pnpm-with-dependencies/
+
       - name: Prepare cleanup
         id: prepare-cleanup
         run: |
