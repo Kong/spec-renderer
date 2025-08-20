@@ -1,3 +1,10 @@
+# [1.99.0](https://github.com/Kong/spec-renderer/compare/v1.98.19...v1.99.0) (2025-08-20)
+
+
+### Features
+
+* bumping spec-renderer version [KHCP-17660] ([#692](https://github.com/Kong/spec-renderer/issues/692)) ([c48227e](https://github.com/Kong/spec-renderer/commit/c48227e219a85d221eba51fa0754290dd1813216))
+
 ## [1.98.19](https://github.com/Kong/spec-renderer/compare/v1.98.18...v1.98.19) (2025-08-19)
 
 
