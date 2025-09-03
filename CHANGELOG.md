@@ -1,3 +1,10 @@
+# [1.100.0](https://github.com/Kong/spec-renderer/compare/v1.99.1...v1.100.0) (2025-09-03)
+
+
+### Features
+
+* **spec-document:** add support for endpoint tags [TDX-6042] ([#672](https://github.com/Kong/spec-renderer/issues/672)) ([2951449](https://github.com/Kong/spec-renderer/commit/2951449a3aa4032a3b3e1eda5a7e99e6cb0b85c2))
+
 ## [1.99.1](https://github.com/Kong/spec-renderer/compare/v1.99.0...v1.99.1) (2025-09-03)
 
 
