@@ -286,9 +286,9 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
  * Get tag data by name
  * @param tagName The name of the tag to retrieve
  */
-const getTagData = (tagName: string): INodeTag | undefined => {
+const getTagData = (tagName: string): Omit<INodeTag, 'id'> | undefined => {
   const tag = specDocument.value?.data?.tags?.find(t => t.name === tagName)
-  return tag
+  return tag ? { name: tag.name, description: tag?.description } : undefined
 }
 
 const scrollingContainerEl = computed(():HTMLElement | null => {

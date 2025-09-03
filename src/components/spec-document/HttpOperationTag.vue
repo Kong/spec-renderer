@@ -1,5 +1,6 @@
 <template>
   <PageHeader
+    :id="`tag-${kebabCase(name)}`"
     class="http-operation-header"
     :description="description"
     :title="name"
@@ -8,6 +9,7 @@
 
 <script setup lang="ts">
 import PageHeader from '../common/PageHeader.vue'
+import { kebabCase } from '@/utils'
 
 defineProps({
   name: {
