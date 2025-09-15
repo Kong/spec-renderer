@@ -1,0 +1,1053 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "KongAir APIs",
+    "description": "Consolidated API specification for KongAir Flights, Bookings, and Routes services.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.kongair.dev",
+      "description": "KongAir API Dev"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Flight": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "string"
+          },
+          "route_id": {
+            "type": "string"
+          },
+          "scheduled_departure": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "scheduled_arrival": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "number",
+          "route_id",
+          "scheduled_departure",
+          "scheduled_arrival"
+        ]
+      },
+      "FlightDetails": {
+        "type": "object",
+        "properties": {
+          "flight_number": {
+            "type": "string"
+          },
+          "in_flight_entertainment": {
+            "type": "boolean"
+          },
+          "meal_options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "aircraft_type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "flight_number",
+          "in_flight_entertainment",
+          "meal_options",
+          "aircraft_type"
+        ]
+      },
+      "Booking": {
+        "type": "object",
+        "properties": {
+          "ticket_number": {
+            "type": "string"
+          },
+          "flight": {
+            "type": "object",
+            "properties": {
+              "number": {
+                "type": "string"
+              },
+              "route_id": {
+                "type": "string"
+              },
+              "scheduled_departure": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "scheduled_arrival": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "seat": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "ticket_number",
+          "flight"
+        ]
+      },
+      "BookingRequest": {
+        "type": "object",
+        "properties": {
+          "flight_number": {
+            "type": "string"
+          },
+          "seat": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "flight_number"
+        ]
+      },
+      "BookingResponse": {
+        "type": "object",
+        "properties": {
+          "ticket_number": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "ticket_number"
+        ]
+      },
+      "Route": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "destination": {
+            "type": "string"
+          },
+          "avg_duration": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "origin",
+          "destination",
+          "avg_duration"
+        ]
+      }
+    }
+  },
+  "paths": {
+    "/flights/health": {
+      "get": {
+        "summary": "Health check endpoint for Flights service",
+        "description": "Endpoint that returns the Flights service health status.",
+        "tags": [
+          "Flights"
+        ],
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Service is unhealthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "unhealthy"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/flights": {
+      "get": {
+        "summary": "Get KongAir planned flights",
+        "description": "Returns all the scheduled flights for a given day",
+        "operationId": "get-flights",
+        "tags": [
+          "Flights"
+        ],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Filter by date (defaults to current day)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with scheduled flights",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Flight"
+                  }
+                },
+                "examples": {
+                  "Example Flights List": {
+                    "value": [
+                      {
+                        "number": "KD924",
+                        "route_id": "LHR-SFO",
+                        "scheduled_departure": "2024-03-20T09:12:28Z",
+                        "scheduled_arrival": "2024-03-20T19:12:28Z"
+                      },
+                      {
+                        "number": "KD925",
+                        "route_id": "SFO-LHR",
+                        "scheduled_departure": "2024-03-21T09:12:28Z",
+                        "scheduled_arrival": "2024-03-21T19:12:28Z"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new flight",
+        "description": "Creates a new flight in the system.",
+        "tags": [
+          "Flights"
+        ],
+        "requestBody": {
+          "description": "Flight details to create",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Flight"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Flight created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Flight"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/flights/{flightNumber}": {
+      "get": {
+        "summary": "Get a specific flight by flight number",
+        "description": "Returns a specific flight given its flight number",
+        "operationId": "get-flight-by-number",
+        "tags": [
+          "Flights"
+        ],
+        "parameters": [
+          {
+            "name": "flightNumber",
+            "in": "path",
+            "description": "The flight number",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with the requested flight",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Flight"
+                },
+                "examples": {
+                  "Example Flight KD924": {
+                    "value": {
+                      "number": "KD924",
+                      "route_id": "LHR-SFO",
+                      "scheduled_departure": "2024-03-20T09:12:28Z",
+                      "scheduled_arrival": "2024-03-20T19:12:28Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Flight not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an existing flight",
+        "description": "Updates an existing flight completely.",
+        "tags": [
+          "Flights"
+        ],
+        "parameters": [
+          {
+            "name": "flightNumber",
+            "in": "path",
+            "description": "The flight number to update",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updated flight details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Flight"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Flight updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Flight"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Flight not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Partially update an existing flight",
+        "description": "Partially updates an existing flight.",
+        "tags": [
+          "Flights"
+        ],
+        "parameters": [
+          {
+            "name": "flightNumber",
+            "in": "path",
+            "description": "The flight number to update",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Partial flight details to update",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Flight"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Flight updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Flight"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Flight not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a flight",
+        "description": "Deletes a flight from the system.",
+        "tags": [
+          "Flights"
+        ],
+        "parameters": [
+          {
+            "name": "flightNumber",
+            "in": "path",
+            "description": "The flight number to delete",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Flight deleted successfully"
+          },
+          "404": {
+            "description": "Flight not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/flights/{flightNumber}/details": {
+      "get": {
+        "summary": "Fetch more details about a flight",
+        "description": "Fetch more details about a flight",
+        "operationId": "get-flight-details",
+        "tags": [
+          "Flights"
+        ],
+        "parameters": [
+          {
+            "name": "flightNumber",
+            "in": "path",
+            "description": "The flight number",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with the requested flight details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlightDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Flight not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookings/health": {
+      "get": {
+        "summary": "Health check endpoint for Bookings service",
+        "description": "Endpoint that returns the Bookings service health status.",
+        "tags": [
+          "Bookings"
+        ],
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Service is unhealthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "unhealthy"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookings": {
+      "get": {
+        "summary": "Get a customer's current bookings",
+        "description": "Returns a list of bookings for the current customer.",
+        "operationId": "get-bookings",
+        "tags": [
+          "Bookings"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Booking"
+                  }
+                },
+                "examples": {
+                  "Example Bookings list response": {
+                    "value": [
+                      {
+                        "ticket_number": "CDF3412",
+                        "seat": "32A",
+                        "flight": {
+                          "number": "KA924",
+                          "route_id": "LHR-SFO",
+                          "scheduled_departure": "2023-09-03T09:15:00Z",
+                          "scheduled_arrival": "2023-09-03T14:23:00Z"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new customer booking",
+        "description": "Creates a new booking for a customer.",
+        "operationId": "post-booking",
+        "tags": [
+          "Bookings"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Booking request details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookingRequest"
+              },
+              "examples": {
+                "Example new booking request body": {
+                  "value": {
+                    "flight_number": "KA924",
+                    "seat": "32A"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Booking Created Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingResponse"
+                },
+                "examples": {
+                  "Example new booking response body": {
+                    "value": {
+                      "ticket_number": "CDF3412"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found, likely for the flight_number given",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Not found"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookings/{ticketNumber}": {
+      "get": {
+        "summary": "Get a specific booking by ticket number",
+        "description": "Returns a specific booking given its ticket number.",
+        "operationId": "get-booking-by-ticket-number",
+        "tags": [
+          "Bookings"
+        ],
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "description": "The ticket number",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with the requested booking",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Booking not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an existing booking",
+        "description": "Updates an existing booking completely.",
+        "tags": [
+          "Bookings"
+        ],
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "description": "The ticket number to update",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updated booking details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Booking"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Booking updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Booking not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Partially update an existing booking",
+        "description": "Partially updates an existing booking.",
+        "tags": [
+          "Bookings"
+        ],
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "description": "The ticket number to update",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Partial booking details to update",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Booking"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Booking updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Booking not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a booking",
+        "description": "Deletes a booking from the system.",
+        "tags": [
+          "Bookings"
+        ],
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "description": "The ticket number to delete",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Booking deleted successfully"
+          },
+          "404": {
+            "description": "Booking not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/routes/health": {
+      "get": {
+        "summary": "Health check endpoint for Kubernetes",
+        "description": "Endpoint that returns the service health status.",
+        "tags": [
+          "Routes"
+        ],
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Service is unhealthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "unhealthy"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/routes/{id}": {
+      "get": {
+        "summary": "Request a specific KongAir route by id",
+        "description": "Returns a specific route from a given Route ID",
+        "operationId": "get-route",
+        "tags": [
+          "Routes"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "String route ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with the found Route",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Route"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Route not found"
+          }
+        }
+      }
+    },
+    "/routes": {
+      "get": {
+        "summary": "Request all the KongAir routes",
+        "description": "Returns all the routes KongAir is currently registered to fly.\\nA Route is a pairing between origin and destination airport codes.",
+        "operationId": "get-routes",
+        "tags": [
+          "Routes"
+        ],
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "query",
+            "description": "Filter routes by origin airport code.  To filter by multiple origin airports, provide an array of airport codes (e.g., `origin=LHR&origin=JFK`).",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with the registered Routes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Route"
+                  }
+                },
+                "examples": {
+                  "lhr-sfo": {
+                    "value": [
+                      {
+                        "id": "LHR-SFO",
+                        "origin": "LHR",
+                        "destination": "SFO",
+                        "avg_duration": 660
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    },
+    {
+      "BearerAuth": []
+    }
+  ]
+}

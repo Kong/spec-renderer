@@ -188,6 +188,9 @@ const tocAndDocComponents = async () => {
 
 #### - Example for html/script
 
+> [!Note]
+> See the example in [sandbox/web-component.html](./sandbox/web-component.html)
+
 ```html
 <html lang="en">
   <head>
@@ -203,7 +206,7 @@ const tocAndDocComponents = async () => {
   </head>
   <body>
     <kong-spec-renderer
-      spec-url="https://raw.githubusercontent.com/Kong/spec-renderer/refs/heads/main/sandbox/public/specs/beer-and-coffee.yaml"
+      spec-url="https://raw.githubusercontent.com/Kong/spec-renderer/refs/heads/main/sandbox/public/specs/kong-air.json"
       navigation-type="hash"
     />
 
