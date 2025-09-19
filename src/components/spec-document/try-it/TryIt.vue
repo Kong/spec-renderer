@@ -110,7 +110,7 @@ const props = defineProps({
 
 })
 
-const authComponentRef = useTemplateRef<InstanceType<typeof TryItAuth>>('authComponentTemplateRef')
+const authComponentRef = useTemplateRef<InstanceType<typeof TryItAuth>>('auth2ComponentTemplateRef')
 
 const excludeNotRequired = defineModel({
   type: Boolean,
