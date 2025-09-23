@@ -1,3 +1,10 @@
+## [1.100.2](https://github.com/Kong/spec-renderer/compare/v1.100.1...v1.100.2) (2025-09-23)
+
+
+### Bug Fixes
+
+* **try-it:** use correct ref for authComponent ([#710](https://github.com/Kong/spec-renderer/issues/710)) ([7950267](https://github.com/Kong/spec-renderer/commit/79502673814d417878cdccfb18fc25fe33d24a28))
+
 ## [1.100.1](https://github.com/Kong/spec-renderer/compare/v1.100.0...v1.100.1) (2025-09-05)
 
 
