@@ -119,6 +119,7 @@ const popoverTrigger = computed((): HTMLElement | null => triggerWrapperRef.valu
 const timer = ref<number | null>(null)
 
 const togglePopover = () => {
+  console.log('togglePopover')
   if (!isVisible.value) {
     showPopover()
   } else {
@@ -128,7 +129,6 @@ const togglePopover = () => {
 
 const showPopover = async () => {
   console.log('showPopover')
-
   if (!props.disabled) {
     if (timer.value) {
       clearTimeout(timer.value)
@@ -147,21 +147,20 @@ const hidePopover = () => {
 }
 
 const clickHandler = (event: Event) => {
-  console.log('clickHandler')
-
   const target = event.target as HTMLElement
 
   if (popoverTrigger.value?.contains(target) && !popoverRef.value?.contains(target)) {
+    console.log('clickHandler0')
     // toggle popover if clicked within the trigger
 
     togglePopover()
-  } else if (popoverRef.value?.contains(target) && !triggerWrapperRef.value?.contains(target)) {
+  } else if (popoverRef.value?.contains(target) && !triggerWrapperRef.value?.contains(target) && props.closeOnPopoverClick) {
+    console.log('clickHandler1')
     // close the popover if closeOnPopoverClick is true
 
-    if (props.closeOnPopoverClick) {
-      hidePopover()
-    }
+    hidePopover()
   } else if (isVisible.value && !popoverWrapperRef.value?.contains(target)) {
+    console.log('clickHandler2')
     // close popover if clicked outside of the popover
 
     hidePopover()
