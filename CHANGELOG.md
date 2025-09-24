@@ -1,3 +1,17 @@
+## [1.100.4](https://github.com/Kong/spec-renderer/compare/v1.100.3...v1.100.4) (2025-09-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.38.0 ([#708](https://github.com/Kong/spec-renderer/issues/708)) ([2ecfd7a](https://github.com/Kong/spec-renderer/commit/2ecfd7ac09e61b795e6d1225c684e665893c6e85))
+
+## [1.100.3](https://github.com/Kong/spec-renderer/compare/v1.100.2...v1.100.3) (2025-09-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @vueuse/core to ^13.9.0 ([#712](https://github.com/Kong/spec-renderer/issues/712)) ([ae31037](https://github.com/Kong/spec-renderer/commit/ae310370960a7ef38627172d779d5ea99f14a328))
+
 ## [1.100.2](https://github.com/Kong/spec-renderer/compare/v1.100.1...v1.100.2) (2025-09-23)
 
 
