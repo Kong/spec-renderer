@@ -67,7 +67,7 @@ jobs:
       - name: Publish Package Preview
         id: package-preview
         # Do not run for `alpha` or `beta` branches
-        if: github.event_name == 'pull_request' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && !contains(github.head_ref || github.ref_name, 'alpha') && !contains(github.head_ref || github.ref_name, 'beta')
+        if: github.event_name == 'pull_request' && (!(github.actor == 'renovate[bot]' || github.actor == 'mend[bot]') || contains(github.event.pull_request.labels.*.name, 'create preview package')) && !contains(github.head_ref || github.ref_name, 'alpha') && !contains(github.head_ref || github.ref_name, 'beta')
         run: |
 
           preid="pr.${{ github.event.pull_request.number }}.$(git rev-parse --short ${{ github.event.pull_request.head.sha }})"
