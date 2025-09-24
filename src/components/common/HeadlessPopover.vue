@@ -145,6 +145,7 @@ const hidePopover = () => {
 }
 
 const clickHandler = (event: Event) => {
+  // use composedPath() because event.target returns shenanigans in web component build
   const target = event.composedPath().length ? event.composedPath()[0] as HTMLElement : event.target as HTMLElement
 
   if (popoverTrigger.value?.contains(target) && !popoverRef.value?.contains(target)) {
