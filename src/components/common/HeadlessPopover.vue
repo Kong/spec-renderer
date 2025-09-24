@@ -147,8 +147,8 @@ const hidePopover = () => {
 }
 
 const clickHandler = (event: Event) => {
-  console.log('clickHandler')
   const target = event.target as HTMLElement
+  console.log('clickHandler', target)
 
   if (popoverTrigger.value?.contains(target) && !popoverRef.value?.contains(target)) {
     console.log('clickHandler0')
