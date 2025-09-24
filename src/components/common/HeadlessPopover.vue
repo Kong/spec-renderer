@@ -152,6 +152,7 @@ const clickHandler = (event: Event) => {
   console.log('currentTarget', event.currentTarget)
   console.log('trigger', popoverTrigger.value)
   console.log('trigger contains target', popoverTrigger.value?.contains(target))
+  console.log('composed path', event.composedPath())
 
   if (popoverTrigger.value?.contains(target) && !popoverRef.value?.contains(target)) {
     console.log('clickHandler0')
