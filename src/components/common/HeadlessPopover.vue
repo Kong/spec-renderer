@@ -127,6 +127,8 @@ const togglePopover = () => {
 }
 
 const showPopover = async () => {
+  console.log('showPopover')
+
   if (!props.disabled) {
     if (timer.value) {
       clearTimeout(timer.value)
@@ -145,6 +147,8 @@ const hidePopover = () => {
 }
 
 const clickHandler = (event: Event) => {
+  console.log('clickHandler')
+
   const target = event.target as HTMLElement
 
   if (popoverTrigger.value?.contains(target) && !popoverRef.value?.contains(target)) {
