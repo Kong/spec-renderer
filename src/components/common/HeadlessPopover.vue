@@ -119,7 +119,6 @@ const popoverTrigger = computed((): HTMLElement | null => triggerWrapperRef.valu
 const timer = ref<number | null>(null)
 
 const togglePopover = () => {
-  console.log('togglePopover')
   if (!isVisible.value) {
     showPopover()
   } else {
@@ -128,7 +127,6 @@ const togglePopover = () => {
 }
 
 const showPopover = async () => {
-  console.log('showPopover')
   if (!props.disabled) {
     if (timer.value) {
       clearTimeout(timer.value)
