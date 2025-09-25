@@ -145,18 +145,17 @@ const hidePopover = () => {
 }
 
 const clickHandler = (event: Event) => {
-  const target = event.target as HTMLElement
+  // use composedPath() because event.target returns shenanigans in web component build
+  const target = event.composedPath().length ? event.composedPath()[0] as HTMLElement : event.target as HTMLElement
 
   if (popoverTrigger.value?.contains(target) && !popoverRef.value?.contains(target)) {
     // toggle popover if clicked within the trigger
 
     togglePopover()
-  } else if (popoverRef.value?.contains(target) && !triggerWrapperRef.value?.contains(target)) {
+  } else if (popoverRef.value?.contains(target) && !triggerWrapperRef.value?.contains(target) && props.closeOnPopoverClick) {
     // close the popover if closeOnPopoverClick is true
 
-    if (props.closeOnPopoverClick) {
-      hidePopover()
-    }
+    hidePopover()
   } else if (isVisible.value && !popoverWrapperRef.value?.contains(target)) {
     // close popover if clicked outside of the popover
 
