@@ -1,3 +1,10 @@
+## [1.100.5](https://github.com/Kong/spec-renderer/compare/v1.100.4...v1.100.5) (2025-09-25)
+
+
+### Bug Fixes
+
+* **popover:** dropdowns in web component [TDX-6649] ([#717](https://github.com/Kong/spec-renderer/issues/717)) ([d176dc8](https://github.com/Kong/spec-renderer/commit/d176dc80475bcbdf8d54c532895f9f6fa6215792))
+
 ## [1.100.4](https://github.com/Kong/spec-renderer/compare/v1.100.3...v1.100.4) (2025-09-24)
 
 
