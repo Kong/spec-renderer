@@ -70,7 +70,7 @@
     "lodash-es": "^4.17.21",
     "markdown-it": "^14.1.0",
     "sanitize-html": "^2.17.0",
-    "shiki": "^3.8.1"
+    "shiki": "^3.12.2"
   },
   "resolutions": {
     "openapi3-ts": "4.5.0"
@@ -80,7 +80,7 @@
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
-    "@evilmartians/lefthook": "^1.12.3",
+    "@evilmartians/lefthook": "^1.13.0",
     "@kong/design-tokens": "^1.18.0",
     "@kong/eslint-config-kong-ui": "1.5.5",
     "@semantic-release/changelog": "^6.0.3",
@@ -107,8 +107,8 @@
     "postcss-html": "^1.8.0",
     "rimraf": "^6.0.1",
     "rollup-plugin-visualizer": "^6.0.3",
-    "sass": "^1.90.0",
-    "sass-embedded": "^1.90.0",
+    "sass": "^1.92.1",
+    "sass-embedded": "^1.92.1",
     "semantic-release": "^24.2.7",
     "stylelint": "^16.24.0",
     "stylelint-config-html": "^1.1.0",
@@ -194,8 +194,8 @@
     "node": ">=18.17.0"
   },
   "volta": {
-    "node": "24.6.0",
-    "pnpm": "10.14.0"
+    "node": "24.8.0",
+    "pnpm": "10.16.1"
   },
   "config": {
     "commitizen": {
