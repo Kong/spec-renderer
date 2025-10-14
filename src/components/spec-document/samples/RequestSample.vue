@@ -39,6 +39,10 @@
               <LanguageIcon lang="java" />
               {{ item.label }}
             </template>
+            <template #csharp-item-content="{ item }">
+              <LanguageIcon lang="csharp" />
+              {{ item.label }}
+            </template>
             <template #ruby-item-content="{ item }">
               <LanguageIcon lang="ruby" />
               {{ item.label }}
