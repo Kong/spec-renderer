@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import {
-  LanguageBashIcon,
+  LanguageShellIcon,
   LanguagePythonIcon,
   LanguageNodejsIcon,
   LanguageJavaIcon,
@@ -33,10 +33,10 @@ const props = defineProps({
   },
 })
 
-const iconComponent = computed((): typeof LanguageBashIcon => {
+const iconComponent = computed((): typeof LanguageShellIcon => {
   switch (props.lang) {
     case 'bash':
-      return LanguageBashIcon
+      return LanguageShellIcon
     case 'python':
       return LanguagePythonIcon
     case 'node':
@@ -51,7 +51,7 @@ const iconComponent = computed((): typeof LanguageBashIcon => {
       return LanguageRubyIcon
     case 'swift':
       return LanguageSwiftIcon
-    case 'c#':
+    case 'csharp':
       return LanguageCSharpIcon
     case 'c++':
       return LanguageCPlusPlusIcon
@@ -64,7 +64,7 @@ const iconComponent = computed((): typeof LanguageBashIcon => {
     case 'json':
       return LanguageJsonIcon
     default:
-      return LanguageBashIcon
+      return LanguageShellIcon
   }
 })
 </script>

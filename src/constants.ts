@@ -115,6 +115,11 @@ export const requestSampleConfigs: RequestSampleConfigs = [
     // ],
   },
   {
+    label: 'CSharp',
+    httpSnippetLanguage: 'csharp',
+    highlightLanguage: 'csharp',
+  },
+  {
     label: 'Ruby',
     httpSnippetLanguage: 'ruby',
     highlightLanguage: 'ruby',

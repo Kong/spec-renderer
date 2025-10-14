@@ -31,6 +31,7 @@ export default function useShiki(): {
         import('shiki/langs/go.mjs'),
         import('shiki/langs/ruby.mjs'),
         import('shiki/langs/fish.mjs'),
+        import('shiki/langs/csharp.mjs'),
       ],
       // Important: If running in SSR, the host application must have a `shiki/onig.wasm` file available at the root of the assets. If in new Konnect Dev Portal, this is already handled.
       engine: createOnigurumaEngine(() => {

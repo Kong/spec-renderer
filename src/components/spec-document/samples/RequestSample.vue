@@ -43,6 +43,10 @@
               <LanguageIcon lang="ruby" />
               {{ item.label }}
             </template>
+            <template #csharp-item-content="{ item }">
+              <LanguageIcon lang="csharp" />
+              {{ item.label }}
+            </template>
           </SelectDropdown>
           &nbsp;
           <!-- TODO: use SelectDropdown here when we start supporting libraries -->
