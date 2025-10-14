@@ -1,3 +1,10 @@
+## [1.100.6](https://github.com/Kong/spec-renderer/compare/v1.100.5...v1.100.6) (2025-10-14)
+
+
+### Bug Fixes
+
+* add C# to the list of languages to produce example code [TDX-6810] ([360ca81](https://github.com/Kong/spec-renderer/commit/360ca81fd897c3f5f8024c642fbabb47f6788060))
+
 ## [1.100.5](https://github.com/Kong/spec-renderer/compare/v1.100.4...v1.100.5) (2025-09-25)
 
 
