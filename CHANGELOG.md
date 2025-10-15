@@ -1,3 +1,10 @@
+## [1.100.7](https://github.com/Kong/spec-renderer/compare/v1.100.6...v1.100.7) (2025-10-15)
+
+
+### Bug Fixes
+
+* rename CSharp label [TDX-6810] ([#733](https://github.com/Kong/spec-renderer/issues/733)) ([9711835](https://github.com/Kong/spec-renderer/commit/9711835be3a8d97dc6fc35f95093a80e3239a75c))
+
 ## [1.100.6](https://github.com/Kong/spec-renderer/compare/v1.100.5...v1.100.6) (2025-10-15)
 
 
