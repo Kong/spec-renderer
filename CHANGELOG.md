@@ -1,3 +1,10 @@
+# [1.101.0](https://github.com/Kong/spec-renderer/compare/v1.100.7...v1.101.0) (2025-10-15)
+
+
+### Features
+
+* bumping version [TDX-6810] ([a1423f5](https://github.com/Kong/spec-renderer/commit/a1423f545ddfa99642ba9afc15dab2f3cc494d54))
+
 ## [1.100.7](https://github.com/Kong/spec-renderer/compare/v1.100.6...v1.100.7) (2025-10-15)
 
 
