@@ -1,6 +1,6 @@
 {
   "extends": [
-    "github>Kong/public-shared-renovate:kong-frontend-config.json"
+    "Kong/public-shared-renovate//scoped/frontend/base"
   ],
   "packageRules": [
     {
