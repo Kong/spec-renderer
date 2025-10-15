@@ -115,7 +115,7 @@ export const requestSampleConfigs: RequestSampleConfigs = [
     // ],
   },
   {
-    label: 'CSharp',
+    label: 'C#',
     httpSnippetLanguage: 'csharp',
     highlightLanguage: 'csharp',
   },
