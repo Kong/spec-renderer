@@ -13,6 +13,15 @@
 ### Bug Fixes
 
 * add C# to the list of languages to produce example code [TDX-6810] ([#731](https://github.com/Kong/spec-renderer/issues/731)) ([b5df096](https://github.com/Kong/spec-renderer/commit/b5df09615f0b56bb2288a4447d9251831a26ce2e))
+* bumping package version to remove publishing conflicts ([f98c185](https://github.com/Kong/spec-renderer/commit/f98c1854340b9ce0737bfc8344dce409870f79d2))
+* **deps:** update dependency @kong/icons to ^1.39.0 ([#728](https://github.com/Kong/spec-renderer/issues/728)) ([f7aa953](https://github.com/Kong/spec-renderer/commit/f7aa953bf0e4f104e49237a3847b603859e6cce5))
+
+## [1.100.6](https://github.com/Kong/spec-renderer/compare/v1.100.5...v1.100.6) (2025-10-15)
+
+
+### Bug Fixes
+
+* add C# to the list of languages to produce example code [TDX-6810] ([#731](https://github.com/Kong/spec-renderer/issues/731)) ([b5df096](https://github.com/Kong/spec-renderer/commit/b5df09615f0b56bb2288a4447d9251831a26ce2e))
 * **deps:** update dependency @kong/icons to ^1.39.0 ([#728](https://github.com/Kong/spec-renderer/issues/728)) ([f7aa953](https://github.com/Kong/spec-renderer/commit/f7aa953bf0e4f104e49237a3847b603859e6cce5))
 
 ## [1.100.6](https://github.com/Kong/spec-renderer/compare/v1.100.5...v1.100.6) (2025-10-15)
