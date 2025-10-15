@@ -19,6 +19,13 @@
 
 * **deps:** update dependency @kong/icons to ^1.39.0 ([#728](https://github.com/Kong/spec-renderer/issues/728)) ([f7aa953](https://github.com/Kong/spec-renderer/commit/f7aa953bf0e4f104e49237a3847b603859e6cce5))
 
+## [1.100.6](https://github.com/Kong/spec-renderer/compare/v1.100.5...v1.100.6) (2025-10-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.39.0 ([#728](https://github.com/Kong/spec-renderer/issues/728)) ([f7aa953](https://github.com/Kong/spec-renderer/commit/f7aa953bf0e4f104e49237a3847b603859e6cce5))
+
 ## [1.100.5](https://github.com/Kong/spec-renderer/compare/v1.100.4...v1.100.5) (2025-09-25)
 
 
