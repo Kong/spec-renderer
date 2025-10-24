@@ -5,14 +5,18 @@
   >
     <span class="field-title">Allowed values:</span>
     <span class="enum-field-list">
-      <span
+      <template
         v-for="value in enumValueList"
-        :key="value?.toString()"
-        class="property-field-enum-value"
-        :data-testid="`property-field-enum-value-${value}`"
       >
-        {{ value }}
-      </span>
+        <span
+          v-if="value"
+          :key="value?.toString()"
+          class="property-field-enum-value"
+          :data-testid="`property-field-enum-value-${value}`"
+        >
+          {{ value }}
+        </span>
+      </template>
     </span>
   </p>
 </template>
