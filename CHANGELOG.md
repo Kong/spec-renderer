@@ -1,3 +1,10 @@
+## [1.101.1](https://github.com/Kong/spec-renderer/compare/v1.101.0...v1.101.1) (2025-10-27)
+
+
+### Bug Fixes
+
+* **enum:** only render enum badge for valid enum value [TDX-6899] ([#737](https://github.com/Kong/spec-renderer/issues/737)) ([417ed6f](https://github.com/Kong/spec-renderer/commit/417ed6fe885b01f9890d8ef03c8d4122ac916d42))
+
 # [1.101.0](https://github.com/Kong/spec-renderer/compare/v1.100.7...v1.101.0) (2025-10-15)
 
 
