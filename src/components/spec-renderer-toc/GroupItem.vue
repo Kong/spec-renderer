@@ -6,7 +6,7 @@
   >
     <button
       v-if="!item.hideTitle"
-      ref="collapseTriggerRef"
+      ref="collapseTrigger"
       :aria-controls="collapseGroupId"
       :aria-expanded="isExpanded"
       data-testid="group-item-button"
@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, useTemplateRef, watch } from 'vue'
 import type { PropType } from 'vue'
 import type { TableOfContentsGroup } from '@/stoplight/elements-core'
 import { itemComponent, isGroup } from './index'
@@ -79,7 +79,7 @@ const selectItem = (id: any) => {
 }
 
 const isExpanded = ref<boolean>(props.item.hideTitle || props.item.initiallyExpanded)
-const collapseTriggerRef = ref<HTMLElement | null>(null)
+const collapseTriggerRef = useTemplateRef('collapseTrigger')
 
 
 const onClick = (event: Event) => {

@@ -104,7 +104,7 @@
 
       <TryItAuth2
         v-else-if="scheme.type === 'oauth2' && scheme.flows.clientCredentials"
-        ref="auth2ComponentTemplateRef"
+        ref="auth2ComponentTemplate"
         :data-id="data.id"
         :scheme="scheme"
         :scheme-key="key"
@@ -161,7 +161,7 @@ const props = defineProps({
   },
 })
 
-const auth2ComponentRef = useTemplateRef<Array<InstanceType<typeof TryItAuth2>>>('auth2ComponentTemplateRef')
+const auth2ComponentRef = useTemplateRef<Array<InstanceType<typeof TryItAuth2>>>('auth2ComponentTemplate')
 
 const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
   if (!auth2ComponentRef.value?.[0].auth2ClientCredentialsAuth) {

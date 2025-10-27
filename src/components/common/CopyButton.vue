@@ -1,6 +1,5 @@
 <template>
   <button
-    ref="copyButton"
     class="copy-button"
     :title="copied ? 'Copied!' : 'Copy'"
     @click.stop="copyCode"
@@ -14,7 +13,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { CopyIcon, CheckIcon } from '@kong/icons'
 import { useClipboard } from '@vueuse/core'
 
@@ -33,7 +31,6 @@ const props = defineProps({
   },
 })
 
-const copyButton = ref<HTMLButtonElement>()
 const { copy, copied } = useClipboard({ source: props.content, legacy: true })
 
 async function copyCode(): Promise<void> {

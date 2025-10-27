@@ -1,12 +1,12 @@
 <template>
   <div
-    ref="popoverWrapperRef"
+    ref="popoverWrapper"
     class="popover"
     data-testid="popover"
     v-bind="sanitizedAttrs"
   >
     <div
-      ref="triggerWrapperRef"
+      ref="triggerWrapper"
       class="popover-trigger-wrapper"
     >
       <slot />
@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, computed, watch, useAttrs } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed, watch, useAttrs, useTemplateRef } from 'vue'
 import type { PropType } from 'vue'
 import { useFloating, autoUpdate, offset, flip } from '@floating-ui/vue'
 import type { Placement } from '@floating-ui/vue'
@@ -109,8 +109,8 @@ const sanitizedAttrs = computed(() => {
   return strippedAttrs
 })
 
-const popoverWrapperRef = ref<HTMLElement | null>(null)
-const triggerWrapperRef = ref<HTMLElement | null>(null)
+const popoverWrapperRef = useTemplateRef('popoverWrapper')
+const triggerWrapperRef = useTemplateRef('triggerWrapper')
 const popoverRef = ref<HTMLElement | null>(null)
 const isVisible = ref<boolean>(false)
 

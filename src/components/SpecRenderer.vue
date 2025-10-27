@@ -10,7 +10,6 @@
       >
         <SpecRendererToc
           v-if="slideoutTocVisible"
-          ref="specRendererSlideoutTocRef"
           :base-path="basePath"
           class="spec-renderer-toc"
           :control-address-bar="controlAddressBar"
@@ -25,7 +24,6 @@
       <aside>
         <SpecRendererToc
           v-if="tableOfContents && !slideoutTocVisible"
-          ref="specRendererTocRef"
           :base-path="basePath"
           class="spec-renderer-toc"
           :control-address-bar="controlAddressBar"

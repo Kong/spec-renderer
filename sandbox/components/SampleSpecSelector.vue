@@ -45,7 +45,7 @@
     </select>
 
     <button
-      ref="dropZoneRef"
+      ref="dropZone"
       class="dropzone"
       @click="dropzoneClick()"
     >
@@ -53,7 +53,7 @@
     </button>
 
     <input
-      ref="fileInputRef"
+      ref="fileInput"
       style="position: absolute; visibility: hidden;"
       type="file"
       @change="finputChange"
@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, useTemplateRef } from 'vue'
 import type { PropType } from 'vue'
 import { useDropZone } from '@vueuse/core'
 
@@ -83,8 +83,8 @@ const emit = defineEmits<{
 }>()
 
 const specSelector = ref<HTMLSelectElement | null>(null)
-const dropZoneRef = ref<HTMLDivElement>()
-const fileInputRef = ref<HTMLInputElement>()
+const dropZoneRef = useTemplateRef('dropZone')
+const fileInputRef = useTemplateRef('fileInput')
 const savedSpec = ref()
 
 const fName = ref<string>('Drop your own spec file')

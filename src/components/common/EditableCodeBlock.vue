@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 
-import { ref, watch } from 'vue'
+import { ref, useTemplateRef, watch } from 'vue'
 import CodeBlock from './CodeBlock.vue'
 import { CODE_INDENT_SPACES } from '@/constants'
 
@@ -59,7 +59,7 @@ const formatCode = (codeToFormat: string, codeLang: string): string => {
 }
 
 // ref to contentEditable element
-const editableInput = ref<HTMLDivElement | null>()
+const editableInputRef = useTemplateRef('editableInput')
 
 // to hold editable code content
 const editableCode = ref<string>(formatCode(props.code, props.lang))
@@ -77,7 +77,7 @@ const cursorPosition = ref<number>(0)
  * @param eol  (boolean, when true cursor is set to the end of the line)
  */
 const setCursorPosition = (customPosition: number, eol: boolean) => {
-  if (typeof window === 'undefined' || !editableInput.value || !editableInput.value.childNodes[0]) {
+  if (typeof window === 'undefined' || !editableInputRef.value || !editableInputRef.value.childNodes[0]) {
     return
   }
   // select text from a window
@@ -87,24 +87,24 @@ const setCursorPosition = (customPosition: number, eol: boolean) => {
   const selectedRange = document.createRange()
   let rangeNode = 0
   let rangePos = customPosition
-  for (let i = 0; i < editableInput.value.childNodes.length; i++) {
-    const contentLen = (editableInput.value.childNodes[i]?.textContent || '').length
+  for (let i = 0; i < editableInputRef.value.childNodes.length; i++) {
+    const contentLen = (editableInputRef.value.childNodes[i]?.textContent || '').length
     if (rangePos - contentLen <= 0) {
       break
     }
     rangeNode++
     rangePos -= contentLen
-    if (editableInput.value.childNodes[i]?.nodeName === 'BR') {
+    if (editableInputRef.value.childNodes[i]?.nodeName === 'BR') {
       rangePos--
     }
   }
 
-  if (!editableInput.value.childNodes[rangeNode]) return
+  if (!editableInputRef.value.childNodes[rangeNode]) return
 
   if (eol) {
-    rangePos = editableInput.value.childNodes[rangeNode].textContent?.length || 0
+    rangePos = editableInputRef.value.childNodes[rangeNode].textContent?.length || 0
   }
-  selectedRange.setStart(editableInput.value.childNodes[rangeNode], rangePos)
+  selectedRange.setStart(editableInputRef.value.childNodes[rangeNode], rangePos)
   // collapse the range at boundaries
   selectedRange.collapse(true)
 
@@ -115,7 +115,7 @@ const setCursorPosition = (customPosition: number, eol: boolean) => {
   selection?.addRange(selectedRange)
 
   // focus the cursor
-  editableInput.value.focus()
+  editableInputRef.value.focus()
 }
 
 
@@ -124,19 +124,19 @@ const setCursorPosition = (customPosition: number, eol: boolean) => {
  * get cursor position
  */
 const getCursorPosition = () => {
-  if (typeof window === 'undefined' || !editableInput.value) {
+  if (typeof window === 'undefined' || !editableInputRef.value) {
     return 0
   }
   const selection = window.getSelection()
   if (!selection) {
     return 0
   }
-  const currentArray = editableInput.value.innerText.split('')
+  const currentArray = editableInputRef.value.innerText.split('')
 
   const range = selection.rangeCount > 0 ? selection?.getRangeAt(0) : null
   if (range) {
     const clonedRange = range?.cloneRange()
-    clonedRange?.selectNodeContents(editableInput.value)
+    clonedRange?.selectNodeContents(editableInputRef.value)
     clonedRange?.setEnd(range.endContainer, range?.endOffset)
 
     // here we have a string but no \n -s , so we would need to count number of \n  in this fragment
@@ -202,8 +202,8 @@ const handleInput = (e: Event) => {
           // inject indentations
 
           cText = cText.substring(0, cursorPosition.value) + Array(paddings + 1).join(' ') + cText.substring(cursorPosition.value)
-          if (editableInput.value) {
-            editableInput.value.innerText = cText
+          if (editableInputRef.value) {
+            editableInputRef.value.innerText = cText
           }
           // force presented code to the resulting one
           presentedCode.value = cText
@@ -242,15 +242,15 @@ const handleFocusOut = (e: Event) => {
   const cText = (e.target as HTMLElement).innerText
   let resText = formatCode(cText, props.lang)
   editableCode.value = resText
-  if (editableInput.value) {
-    editableInput.value.innerText = editableCode.value
+  if (editableInputRef.value) {
+    editableInputRef.value.innerText = editableCode.value
   }
   presentedCode.value = resText
   emit('request-body-changed', resText)
 }
 
 
-watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInput.value }),
+watch(() => ({ code: props.code, lang: props.lang, editableInput: editableInputRef.value }),
   ({ code: newCode, lang: newLang, editableInput: newEditableInput }) => {
     if (newCode !== newEditableInput?.innerText) {
       editableCode.value = formatCode(newCode, newLang)

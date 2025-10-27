@@ -5,7 +5,7 @@
     v-bind="sanitizedAttrs"
   >
     <input
-      ref="switchInputRef"
+      ref="switchInput"
       hidden
       tabindex="-1"
       type="checkbox"
@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, useAttrs, computed } from 'vue'
+import { ref, useAttrs, computed, useTemplateRef } from 'vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 
 defineOptions({
@@ -97,7 +97,7 @@ const switchControlElAttrs = computed((): Record<string, any> => {
 
 const toggleValue = defineModel<boolean>({ required: true })
 
-const switchInputRef = ref<HTMLInputElement | null>(null)
+const switchInputRef = useTemplateRef('switchInput')
 
 const propagateInputEvent = (event: Event): void => {
   if (props.disabled) {

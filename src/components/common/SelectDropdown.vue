@@ -1,6 +1,6 @@
 <template>
   <Popover
-    ref="selectPopoverRef"
+    ref="selectPopover"
     :aria-activedescendant="selectedItem ? `${selectedItem.key ? selectedItem.key : selectedItem.value}-item` : undefined"
     :aria-labelledby="attrs.id ? String(attrs.id) : undefined"
     class="select-dropdown"
@@ -77,7 +77,7 @@ defineOptions({
   inheritAttrs: false,
 })
 
-import { computed, useAttrs, watch } from 'vue'
+import { computed, useAttrs, useTemplateRef, watch } from 'vue'
 import type { PropType } from 'vue'
 import Popover from './HeadlessPopover.vue'
 import { ChevronDownIcon } from '@kong/icons'
@@ -129,7 +129,7 @@ const sanitizedAttrs = computed(() => {
 
 const selectValue = defineModel<string>({ default: '' })
 
-const selectPopoverRef = ref<InstanceType<typeof Popover> | null>(null)
+const selectPopoverRef = useTemplateRef('selectPopover')
 
 const selectItem = (value: string) => {
   selectValue.value = value

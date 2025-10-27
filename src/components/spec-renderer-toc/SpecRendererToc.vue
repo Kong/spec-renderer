@@ -1,6 +1,6 @@
 <template>
   <nav
-    ref="tocNavRef"
+    ref="tocNav"
     class="table-of-contents"
     data-testid="table-of-contents"
   >
@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { provide, computed, ref, watch, nextTick } from 'vue'
+import { provide, computed, ref, watch, nextTick, useTemplateRef } from 'vue'
 import type { PropType, ComputedRef } from 'vue'
 import { itemComponent } from './index'
 import { useScroll } from '@vueuse/core'
@@ -112,7 +112,7 @@ const emit = defineEmits<{
   (e: 'item-selected', id: string): void
 }>()
 
-const tocNavRef = ref<HTMLElement | null>(null)
+const tocNavRef = useTemplateRef('tocNav')
 
 const scrollableContainerRef = ref<HTMLElement | null>(null)
 
