@@ -30,7 +30,7 @@
 
     <details
       v-else-if="nestedPropertiesPresent"
-      ref="nested-fields"
+      ref="nestedFields"
     >
       <summary
         class="nested-fields-summary"
