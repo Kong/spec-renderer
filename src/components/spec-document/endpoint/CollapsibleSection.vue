@@ -6,7 +6,7 @@
   >
     <summary
       class="endpoint-collapsible-section-header"
-      @click="expanded = !expanded"
+      @click="toggleState"
     >
       <slot name="title">
         <h3 v-if="title">
@@ -16,7 +16,7 @@
       <ChevronRightIcon
         class="chevron-icon"
         :class="{ 'expanded': expanded }"
-        :size="16"
+        :size="KUI_ICON_SIZE_30"
       />
     </summary>
     <div
@@ -31,6 +31,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ChevronRightIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 
 defineProps({
   borderVisible: {
@@ -42,7 +43,14 @@ defineProps({
     default: '',
   },
 })
-const expanded = ref(true)
+
+const expanded = ref<boolean>(true)
+
+const toggleState = (e: Event) => {
+  if (!(e.target as HTMLElement).dataset.selectDropdownTrigger) {
+    expanded.value = !expanded.value
+  }
+}
 </script>
 
 <style lang="scss" scoped>
