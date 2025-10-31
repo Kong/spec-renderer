@@ -1,12 +1,12 @@
 <template>
   <div
-    ref="popoverWrapperRef"
+    ref="popoverWrapper"
     class="popover"
     data-testid="popover"
     v-bind="sanitizedAttrs"
   >
     <div
-      ref="triggerWrapperRef"
+      ref="triggerWrapper"
       class="popover-trigger-wrapper"
     >
       <slot />
@@ -38,11 +38,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, computed, watch, useAttrs } from 'vue'
+import { ref, onMounted, computed, watch, useAttrs, useTemplateRef } from 'vue'
 import type { PropType } from 'vue'
 import { useFloating, autoUpdate, offset, flip } from '@floating-ui/vue'
 import type { Placement } from '@floating-ui/vue'
 import { PopoverPlacementVariants } from '@/types'
+import { useEventListener } from '@vueuse/core'
 
 defineOptions({
   inheritAttrs: false,
@@ -109,8 +110,8 @@ const sanitizedAttrs = computed(() => {
   return strippedAttrs
 })
 
-const popoverWrapperRef = ref<HTMLElement | null>(null)
-const triggerWrapperRef = ref<HTMLElement | null>(null)
+const popoverWrapperRef = useTemplateRef('popoverWrapper')
+const triggerWrapperRef = useTemplateRef('triggerWrapper')
 const popoverRef = ref<HTMLElement | null>(null)
 const isVisible = ref<boolean>(false)
 
@@ -186,40 +187,16 @@ onMounted(() => {
   if (document) {
     // handle various click events to determine how to handle the click event in a generic clickHandler function
     // we don't set any other click event listeners on purpose to avoid conflict of event listeners
-    document?.addEventListener('click', clickHandler)
+    useEventListener(document, 'click', clickHandler)
 
     if (popoverTrigger.value && props.openOnMouseover) {
-      popoverTrigger.value.addEventListener('mouseenter', showPopover)
-      popoverTrigger.value.addEventListener('focus', showPopover)
-      popoverTrigger.value.addEventListener('mouseleave', hidePopover)
-      popoverTrigger.value.addEventListener('blur', hidePopover)
+      useEventListener(popoverTrigger.value, ['mouseenter', 'focus'], showPopover)
+      useEventListener(popoverTrigger.value, ['mouseleave', 'blur'], hidePopover)
     }
 
     if (popoverRef.value && props.openOnMouseover) {
-      popoverRef.value.addEventListener('mouseenter', showPopover)
-      popoverRef.value.addEventListener('focusin', showPopover)
-      popoverRef.value.addEventListener('mouseleave', hidePopover)
-      popoverRef.value.addEventListener('focusout', hidePopover)
-    }
-  }
-})
-
-onBeforeUnmount(() => {
-  if (document) {
-    document?.removeEventListener('click', clickHandler)
-
-    if (popoverTrigger.value && props.openOnMouseover) {
-      popoverTrigger.value.removeEventListener('mouseenter', showPopover)
-      popoverTrigger.value.removeEventListener('focus', showPopover)
-      popoverTrigger.value.removeEventListener('mouseleave', hidePopover)
-      popoverTrigger.value.removeEventListener('blur', hidePopover)
-    }
-
-    if (popoverRef.value && props.openOnMouseover) {
-      popoverRef.value.removeEventListener('mouseenter', showPopover)
-      popoverRef.value.removeEventListener('focusin', showPopover)
-      popoverRef.value.removeEventListener('mouseleave', hidePopover)
-      popoverRef.value.removeEventListener('focusout', hidePopover)
+      useEventListener(popoverRef.value, ['mouseenter', 'focusin'], showPopover)
+      useEventListener(popoverRef.value, ['mouseleave', 'focusout'], hidePopover)
     }
   }
 })

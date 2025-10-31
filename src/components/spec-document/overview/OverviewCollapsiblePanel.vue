@@ -1,8 +1,5 @@
 <template>
-  <details
-    ref="overviewCollapsiblePanelDetail"
-    class="overview-collapsible-panel"
-  >
+  <details class="overview-collapsible-panel">
     <summary
       class="overview-collapsible-panel-header"
       @click="expanded = !expanded"

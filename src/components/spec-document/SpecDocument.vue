@@ -20,7 +20,7 @@
   </div>
   <div
     v-else-if="serviceNode"
-    ref="wrapperRef"
+    ref="wrapper"
     class="nodes-wrapper"
     :class="{ 'reset-margin': markdownStyles }"
   >
@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, provide, computed, nextTick, onBeforeMount } from 'vue'
+import { watch, ref, provide, computed, nextTick, onBeforeMount, useTemplateRef } from 'vue'
 import { useMagicKeys, useWindowScroll, useWindowSize, useElementSize, useScroll, until, whenever } from '@vueuse/core'
 import composables from '@/composables'
 import type { PropType, ComputedRef } from 'vue'
@@ -226,7 +226,7 @@ const toRenderer = ref<Array<'true' | 'false' | 'forced'>>([])
 const lastY = ref<number>()
 const processScrolling = ref<boolean>(false)
 const lastPath = ref<string>()
-const wrapperRef = ref<HTMLElement | null>(null)
+const wrapperRef = useTemplateRef('wrapper')
 const renderPlain = ref<boolean>(false)
 
 const specDocument = computed((): ServiceNode => {

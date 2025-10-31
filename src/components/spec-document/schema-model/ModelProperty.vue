@@ -1,7 +1,7 @@
 <template>
   <div
     :id="propertyId"
-    ref="model-property"
+    ref="modelProperty"
     class="model-property"
     :data-testid="dataTestId"
   >
@@ -30,7 +30,7 @@
 
     <details
       v-else-if="nestedPropertiesPresent"
-      ref="nested-fields"
+      ref="nestedFields"
     >
       <summary
         class="nested-fields-summary"
@@ -100,8 +100,8 @@ const maxExpandedDepth = inject<Ref<number>>('max-expanded-depth', ref(DEFAULT_E
 
 const nestedPropertiesExpanded = ref(props.depth < maxExpandedDepth.value)
 
-const currentElement = useTemplateRef('model-property')
-const nestedFieldsDetails = useTemplateRef('nested-fields')
+const currentElement = useTemplateRef('modelProperty')
+const nestedFieldsDetails = useTemplateRef('nestedFields')
 
 const dataTestId = computed(() => `model-property-${kebabCase(props.propertyName)}`)
 const propertyId = computed(() => props.basePathId ? kebabCase(`${props.basePathId}-${props.propertyName}`) : undefined)

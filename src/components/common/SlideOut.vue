@@ -14,7 +14,6 @@
       <Transition name="spec-renderer-slide-in">
         <div
           v-show="visible"
-          ref="slideoutContainerRef"
           class="slideout-container"
           data-testid="slideout-container"
         >
@@ -48,7 +47,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onUnmounted, watch, useAttrs } from 'vue'
+import { onUnmounted, watch, useAttrs } from 'vue'
 import { CloseIcon } from '@kong/icons'
 
 defineOptions({
@@ -79,8 +78,6 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'close'): void
 }>()
-
-const slideoutContainerRef = ref<HTMLElement | null>(null)
 
 const handleClose = (e: any): void => {
   // close on escape key
