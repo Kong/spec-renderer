@@ -84,7 +84,6 @@ import { ChevronDownIcon } from '@kong/icons'
 import type { SelectItem } from '@/types'
 import type { Placement } from '@floating-ui/vue'
 import { PopoverPlacementVariants } from '@/types'
-import { ref } from 'vue'
 
 const props = defineProps({
   triggerButton: {

@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onUnmounted, watch, useAttrs } from 'vue'
+import { onUnmounted, watch, useAttrs } from 'vue'
 import { CloseIcon } from '@kong/icons'
 
 defineOptions({
