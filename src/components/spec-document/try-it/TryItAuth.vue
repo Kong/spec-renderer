@@ -161,10 +161,10 @@ const props = defineProps({
   },
 })
 
-const auth2ComponentRef = useTemplateRef<Array<InstanceType<typeof TryItAuth2>>>('auth2ComponentTemplate')
+const auth2ComponentRef = useTemplateRef('auth2ComponentTemplate')
 
 const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
-  if (!auth2ComponentRef.value?.[0].auth2ClientCredentialsAuth) {
+  if (!auth2ComponentRef.value?.[0]?.auth2ClientCredentialsAuth) {
     return { ok: true } as Response
   }
   return await auth2ComponentRef.value[0].auth2ClientCredentialsAuth()

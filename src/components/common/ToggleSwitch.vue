@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, useAttrs, computed, useTemplateRef } from 'vue'
+import { useAttrs, computed, useTemplateRef } from 'vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 
 defineOptions({

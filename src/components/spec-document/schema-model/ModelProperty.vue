@@ -2,7 +2,7 @@
   <div
     :id="propertyId"
     ref="modelProperty"
-    class="modelProperty"
+    class="model-property"
     :data-testid="dataTestId"
   >
     <PropertyFieldList
