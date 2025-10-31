@@ -1,3 +1,10 @@
+## [1.101.2](https://github.com/Kong/spec-renderer/compare/v1.101.1...v1.101.2) (2025-10-31)
+
+
+### Bug Fixes
+
+* collapsible section chevron bug, misc refactors [TDX-6738] ([#738](https://github.com/Kong/spec-renderer/issues/738)) ([0c3875d](https://github.com/Kong/spec-renderer/commit/0c3875dec88ab0cadfaa773935129e5c71248325))
+
 ## [1.101.1](https://github.com/Kong/spec-renderer/compare/v1.101.0...v1.101.1) (2025-10-27)
 
 
