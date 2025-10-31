@@ -47,6 +47,7 @@ defineProps({
 const expanded = ref<boolean>(true)
 
 const toggleState = (e: Event) => {
+  // Prevent toggling when clicking on dropdown triggers inside the header
   if (!(e.target as HTMLElement).dataset.selectDropdownTrigger) {
     expanded.value = !expanded.value
   }

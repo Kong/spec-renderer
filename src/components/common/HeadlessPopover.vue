@@ -190,17 +190,13 @@ onMounted(() => {
     useEventListener(document, 'click', clickHandler)
 
     if (popoverTrigger.value && props.openOnMouseover) {
-      useEventListener(popoverTrigger.value, 'mouseenter', showPopover)
-      useEventListener(popoverTrigger.value, 'focus', showPopover)
-      useEventListener(popoverTrigger.value, 'mouseleave', hidePopover)
-      useEventListener(popoverTrigger.value, 'blur', hidePopover)
+      useEventListener(popoverTrigger.value, ['mouseenter', 'focus'], showPopover)
+      useEventListener(popoverTrigger.value, ['mouseleave', 'blur'], hidePopover)
     }
 
     if (popoverRef.value && props.openOnMouseover) {
-      useEventListener(popoverRef.value, 'mouseenter', showPopover)
-      useEventListener(popoverRef.value, 'focusin', showPopover)
-      useEventListener(popoverRef.value, 'mouseleave', hidePopover)
-      useEventListener(popoverRef.value, 'focusout', hidePopover)
+      useEventListener(popoverRef.value, ['mouseenter', 'focusin'], showPopover)
+      useEventListener(popoverRef.value, ['mouseleave', 'focusout'], hidePopover)
     }
   }
 })
