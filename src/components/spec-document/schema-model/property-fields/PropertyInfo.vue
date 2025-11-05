@@ -155,6 +155,8 @@ function handleSelectChange(selecteditem: SelectItem) {
 
 <style lang="scss" scoped>
 .property-info {
+  align-items: baseline;
+  display: flex;
   font-family: var(--kui-font-family-code, $kui-font-family-code);
 
   &.deprecated-property {
