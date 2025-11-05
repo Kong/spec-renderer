@@ -1,3 +1,10 @@
+## [1.101.3](https://github.com/Kong/spec-renderer/compare/v1.101.2...v1.101.3) (2025-11-05)
+
+
+### Bug Fixes
+
+* improve property name selection on double click [TDX-6935] ([#742](https://github.com/Kong/spec-renderer/issues/742)) ([746c500](https://github.com/Kong/spec-renderer/commit/746c50046d5ca6018f0def399fc20e9de9e2df21))
+
 ## [1.101.2](https://github.com/Kong/spec-renderer/compare/v1.101.1...v1.101.2) (2025-10-31)
 
 
