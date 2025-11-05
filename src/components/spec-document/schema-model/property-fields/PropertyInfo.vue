@@ -157,6 +157,10 @@ function handleSelectChange(selecteditem: SelectItem) {
 .property-info {
   font-family: var(--kui-font-family-code, $kui-font-family-code);
 
+  span {
+    display: inline-flex;
+  }
+
   &.deprecated-property {
     .property-title-name {
       text-decoration: line-through;
