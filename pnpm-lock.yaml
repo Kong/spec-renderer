@@ -79,8 +79,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1(@types/node@24.10.1)(typescript@5.9.2)
       '@evilmartians/lefthook':
-        specifier: ^1.12.3
-        version: 1.12.3
+        specifier: ^2.0.2
+        version: 2.0.4
       '@kong/design-tokens':
         specifier: ^1.18.0
         version: 1.18.0
@@ -770,8 +770,8 @@ packages:
     resolution: {integrity: sha512-Z5kJ+wU3oA7MMIqVR9tyZRtjYPr4OC004Q4Rw7pgOKUOKkJfZ3O24nz3WYfGRpMDNmcOi3TwQOmgm7B7Tpii0w==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@evilmartians/lefthook@1.12.3':
-    resolution: {integrity: sha512-MtXIt8h+EVTv5tCGLzh9UwbA/LRv6esdPJOHlxr8NDKHbFnbo8PvU5uVQcm3PAQTd4DZN3HoyokqrwGwntoq6w==}
+  '@evilmartians/lefthook@2.0.4':
+    resolution: {integrity: sha512-Va5LR45LkXMk3VXuLhSXerPIlRagk0+Sk34B+wib6r2nTlF6RA2Ta4xU3RX5utR4Yt4zWrxJ5lS6NrcqQ1pj2w==}
     cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
@@ -6284,7 +6284,7 @@ snapshots:
       '@eslint/core': 0.15.2
       levn: 0.4.1
 
-  '@evilmartians/lefthook@1.12.3': {}
+  '@evilmartians/lefthook@2.0.4': {}
 
   '@faker-js/faker@5.5.3': {}
 
