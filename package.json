@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "14.0.3",
+    "@asyncapi/avro-schema-parser": "^3.0.24",
     "@asyncapi/openapi-schema-parser": "^3.0.24",
     "@asyncapi/parser": "^3.4.0",
     "@floating-ui/vue": "^1.1.9",

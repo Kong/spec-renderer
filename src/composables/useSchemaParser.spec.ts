@@ -416,6 +416,72 @@ components:
       expect((parsedDocument.value as ServiceNode).children[0].data.security[0][0].flows.clientCredentials.scopes).toEqual(scopes)
     })
   })
+
+  describe('async api parsing', () => {
+    it('should parse avro', async () => {
+      const specContent = `asyncapi: 3.0.0
+info:
+  title: Traffic Light Events
+  version: '1.0.0'
+
+servers:
+  kafka-broker:
+    host: localhost:9092
+    protocol: kafka
+
+channels:
+  traffic-light.state:
+    address: traffic-light.state
+    messages:
+      trafficLightState:
+        $ref: "#/components/messages/TrafficLightStateMessage"
+
+operations:
+  publishTrafficLightState:
+    action: send
+    channel:
+      $ref: "#/channels/traffic-light.state"
+    messages:
+      - $ref: "#/channels/traffic-light.state/messages/trafficLightState"
+
+  consumeTrafficLightState:
+    action: receive
+    channel:
+      $ref: "#/channels/traffic-light.state"
+    messages:
+      - $ref: "#/channels/traffic-light.state/messages/trafficLightState"
+
+components:
+  messages:
+    TrafficLightStateMessage:
+      name: TrafficLightStateMessage
+      title: Traffic Light State
+      summary: Current state of a traffic light
+      contentType: application/avro-binary
+      payload:
+        schemaFormat: application/vnd.apache.avro+json;version=1.9.0
+        schema:
+          type: record
+          name: TrafficLightState
+          namespace: com.example.traffic
+          fields:
+            - name: intersectionId
+              type: string
+            - name: state
+              type:
+                type: enum
+                name: LightState
+                symbols: ["RED", "YELLOW", "GREEN"]
+            - name: changedAt
+              type: string
+`
+
+      const { parseSpecDocument, tableOfContents } = composables.useSchemaParser()
+      await parseSpecDocument(specContent)
+      expect(tableOfContents.value?.length).toEqual(3)
+
+    })
+  })
 })
 
 
