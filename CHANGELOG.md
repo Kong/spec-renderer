@@ -1,3 +1,31 @@
+## [1.101.7](https://github.com/Kong/spec-renderer/compare/v1.101.6...v1.101.7) (2025-11-17)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#723](https://github.com/Kong/spec-renderer/issues/723)) ([5a5c18b](https://github.com/Kong/spec-renderer/commit/5a5c18bb0a8d23db8afebff2a4ab526dfdf0836a))
+
+## [1.101.6](https://github.com/Kong/spec-renderer/compare/v1.101.5...v1.101.6) (2025-11-17)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#721](https://github.com/Kong/spec-renderer/issues/721)) ([1a70907](https://github.com/Kong/spec-renderer/commit/1a70907c8d2969e79eb48dd892421de591a24722))
+
+## [1.101.5](https://github.com/Kong/spec-renderer/compare/v1.101.4...v1.101.5) (2025-11-17)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#734](https://github.com/Kong/spec-renderer/issues/734)) ([18a307f](https://github.com/Kong/spec-renderer/commit/18a307f3e98644397ae49b4f81e412467f046492))
+
+## [1.101.4](https://github.com/Kong/spec-renderer/compare/v1.101.3...v1.101.4) (2025-11-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @vueuse/core to v14 ([#741](https://github.com/Kong/spec-renderer/issues/741)) ([b47129d](https://github.com/Kong/spec-renderer/commit/b47129d011d0e717cd10f11d881922f285ecef66))
+
 ## [1.101.3](https://github.com/Kong/spec-renderer/compare/v1.101.2...v1.101.3) (2025-11-05)
 
 
