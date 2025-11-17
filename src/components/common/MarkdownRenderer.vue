@@ -216,9 +216,9 @@ html.dark,
       border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
       color: var(--kui-color-text, $kui-color-text);
       font-size: var(--kui-font-size-20, $kui-font-size-20);
+      overflow-wrap: break-word;
       padding: var(--kui-space-10, $kui-space-10) var(--kui-space-20, $kui-space-20);
       white-space: break-spaces;
-      word-wrap: break-word;
     }
 
     pre {
