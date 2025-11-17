@@ -418,6 +418,7 @@ components:
   })
 
   describe('async api parsing', () => {
+
     it('should parse avro', async () => {
       const specContent = `asyncapi: 3.0.0
 info:
