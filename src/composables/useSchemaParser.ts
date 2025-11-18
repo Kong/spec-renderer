@@ -109,8 +109,11 @@ export default (): {
     if (!asyncParser) {
       const AsyncParser:any = await import('@asyncapi/parser/browser')
       const OpenAPISchemaParser:any = await import('@asyncapi/openapi-schema-parser')
+      const AvroSchemaParser: any = await import('@asyncapi/avro-schema-parser')
+
       asyncParser = new AsyncParser.default()
       asyncParser.registerSchemaParser(OpenAPISchemaParser.default())
+      asyncParser.registerSchemaParser(AvroSchemaParser.default())
     }
 
     let specToParse = spec

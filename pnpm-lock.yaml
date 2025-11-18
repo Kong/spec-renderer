@@ -14,6 +14,9 @@ importers:
       '@apidevtools/json-schema-ref-parser':
         specifier: 14.0.3
         version: 14.0.3
+      '@asyncapi/avro-schema-parser':
+        specifier: ^3.0.24
+        version: 3.0.24
       '@asyncapi/openapi-schema-parser':
         specifier: ^3.0.24
         version: 3.0.24
@@ -253,6 +256,9 @@ packages:
 
   '@asamuzakjp/nwsapi@2.3.9':
     resolution: {integrity: sha512-n8GuYSrI9bF7FFZ/SjhwevlHc8xaVlb/7HmHelnc/PZXBD2ZR49NnN9sMMuDdEGPeeRQ5d0hqlSlEpgCX3Wl0Q==}
+
+  '@asyncapi/avro-schema-parser@3.0.24':
+    resolution: {integrity: sha512-YMyr2S2heMrWHRyECknjHeejlZl5exUSv9nD1gTejAT13fSf0PqIRydZ9ZuoglCLBg55AeehypR2zLIBu/9kHQ==}
 
   '@asyncapi/openapi-schema-parser@3.0.24':
     resolution: {integrity: sha512-7wz2yVDedJMS+TzOuqCvRWJMc6pNHICKZcOhnW6ZvyVLAh7hYIqQE1WA4OoXT4cKVbwSU3V2Q4bZagSsAIQd6Q==}
@@ -5784,6 +5790,14 @@ snapshots:
       lru-cache: 11.2.2
 
   '@asamuzakjp/nwsapi@2.3.9': {}
+
+  '@asyncapi/avro-schema-parser@3.0.24':
+    dependencies:
+      '@asyncapi/parser': 3.4.0
+      '@types/json-schema': 7.0.15
+      avsc: 5.7.7
+    transitivePeerDependencies:
+      - encoding
 
   '@asyncapi/openapi-schema-parser@3.0.24':
     dependencies:
