@@ -10,10 +10,10 @@
   margin: var(--kui-space-0, $kui-space-0);
   margin-bottom: var(--kui-space-70, $kui-space-70);
   overflow-wrap: break-word;
+  overflow-wrap: normal;
   overflow-x: auto;
   padding: var(--kui-space-70, $kui-space-70);
   white-space: pre;
   word-break: normal;
   word-spacing: normal;
-  word-wrap: normal;
 }

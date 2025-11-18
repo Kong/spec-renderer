@@ -21,6 +21,7 @@
   padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
 
   @media (min-width: $kui-breakpoint-mobile) {
+    // stylelint-disable-next-line no-invalid-position-declaration
     padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
   }
 }

@@ -305,11 +305,11 @@ html.dark,
     line-height: var(--kui-line-height-30, $kui-line-height-30);
     min-width: fit-content;
     outline: none;
+    overflow-wrap: break-word;
     position: absolute;
     top: 8px;
     white-space: break-spaces;
     width: calc(100% - calc(4ch + 14px) - 8px); // 100% - left offset - 8px padding
-    word-wrap: break-word;
   }
 
   &.error-wrapper {

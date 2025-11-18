@@ -106,8 +106,8 @@ html.dark,
 
     code {
       background: var(--kui-color-background-transparent, $kui-color-background-transparent) !important;
+      overflow-wrap: break-word;
       white-space: break-spaces;
-      word-wrap: break-word;
     }
 
     $codeblock-line-count-width: 4ch;

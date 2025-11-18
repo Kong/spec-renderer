@@ -10,6 +10,7 @@
   line-height: var(--kui-line-height-40, $kui-line-height-40);
 
   @media (min-width: $kui-breakpoint-mobile) {
+    // stylelint-disable-next-line no-invalid-position-declaration
     font-size: var(--kui-font-size-30, $kui-font-size-30);
   }
 }
