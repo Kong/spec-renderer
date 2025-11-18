@@ -1,3 +1,10 @@
+## [1.101.9](https://github.com/Kong/spec-renderer/compare/v1.101.8...v1.101.9) (2025-11-18)
+
+
+### Bug Fixes
+
+* support for Avro schemes in async spec parsing [TDX-7063] ([#743](https://github.com/Kong/spec-renderer/issues/743)) ([c267f14](https://github.com/Kong/spec-renderer/commit/c267f145d5d23786a78a50673807046536a3557a))
+
 ## [1.101.8](https://github.com/Kong/spec-renderer/compare/v1.101.7...v1.101.8) (2025-11-18)
 
 
