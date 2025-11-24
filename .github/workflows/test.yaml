@@ -19,6 +19,8 @@ jobs:
 
       - name: Setup PNPM with Dependencies
         uses: ./.github/actions/setup-pnpm-with-dependencies/
+        with:
+          force-install: 'true'
 
       - name: Stylelint
         run: pnpm run stylelint
