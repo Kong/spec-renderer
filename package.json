@@ -135,7 +135,8 @@
       "@evilmartians/lefthook",
       "@parcel/watcher",
       "esbuild",
-      "vue-demi"
+      "vue-demi",
+      "web-types-lit"
     ]
   },
   "repository": {
