@@ -71,8 +71,7 @@
     "lodash-es": "^4.17.21",
     "markdown-it": "^14.1.0",
     "sanitize-html": "^2.17.0",
-    "shiki": "^3.15.0",
-    "web-types-lit": "0.1.1"
+    "shiki": "^3.15.0"
   },
   "resolutions": {
     "openapi3-ts": "4.5.0"
@@ -135,8 +134,7 @@
       "@evilmartians/lefthook",
       "@parcel/watcher",
       "esbuild",
-      "vue-demi",
-      "web-types-lit"
+      "vue-demi"
     ]
   },
   "repository": {
