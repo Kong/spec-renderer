@@ -1,3 +1,10 @@
+# [1.102.0](https://github.com/Kong/spec-renderer/compare/v1.101.9...v1.102.0) (2025-11-25)
+
+
+### Features
+
+* adopt PR audit [KHCP-18541] ([#747](https://github.com/Kong/spec-renderer/issues/747)) ([7faa793](https://github.com/Kong/spec-renderer/commit/7faa793ecb7bb164b8e6658ea70bc5415248eb99))
+
 ## [1.101.9](https://github.com/Kong/spec-renderer/compare/v1.101.8...v1.101.9) (2025-11-18)
 
 
