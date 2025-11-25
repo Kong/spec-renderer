@@ -6,7 +6,6 @@ settings:
 
 overrides:
   openapi3-ts: 4.5.0
-  jsonpath-plus@<10.2.0: '>=10.2.0'
   jsonpath-plus@<10.3.0: '>=10.3.0'
   elliptic@<=6.6.0: '>=6.6.1'
   '@babel/helpers@<7.26.10': '>=7.26.10'
@@ -14,8 +13,6 @@ overrides:
   brace-expansion@>=1.0.0 <=1.1.11: '>=1.1.12'
   brace-expansion@>=2.0.0 <=2.0.1: '>=2.0.2'
   pbkdf2@<=3.1.2: '>=3.1.3'
-  pbkdf2@>=3.0.10 <=3.1.2: '>=3.1.3'
-  elliptic@<6.6.0: '>=6.6.0'
   sha.js@<=2.4.11: '>=2.4.12'
   cipher-base@<=1.0.4: '>=1.0.5'
   tmp@<=0.2.3: '>=0.2.4'
