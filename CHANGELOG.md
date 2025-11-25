@@ -1,3 +1,10 @@
+## [1.102.1](https://github.com/Kong/spec-renderer/compare/v1.102.0...v1.102.1) (2025-11-25)
+
+
+### Bug Fixes
+
+* back to publishing using semantic-release [KHCP-17673] ([#748](https://github.com/Kong/spec-renderer/issues/748)) ([0aeb96f](https://github.com/Kong/spec-renderer/commit/0aeb96fa3e15d819a8e16cb31de0e66eaa0f7efd))
+
 # [1.102.0](https://github.com/Kong/spec-renderer/compare/v1.101.9...v1.102.0) (2025-11-25)
 
 
