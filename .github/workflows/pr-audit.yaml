@@ -16,6 +16,10 @@ on:
       - edited
       - dismissed
 
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   pr-audit:
     name: Audit
