@@ -1,3 +1,10 @@
+## [1.102.2](https://github.com/Kong/spec-renderer/compare/v1.102.1...v1.102.2) (2025-11-28)
+
+
+### Bug Fixes
+
+* trigger pr-audit on PR labeling ([#753](https://github.com/Kong/spec-renderer/issues/753)) ([b40fefc](https://github.com/Kong/spec-renderer/commit/b40fefc6090c1fab5db1727f22ff5958101afef2))
+
 ## [1.102.1](https://github.com/Kong/spec-renderer/compare/v1.102.0...v1.102.1) (2025-11-25)
 
 
