@@ -1,3 +1,11 @@
+## [1.102.2](https://github.com/Kong/spec-renderer/compare/v1.102.1...v1.102.2) (2025-12-03)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.41.0 ([#757](https://github.com/Kong/spec-renderer/issues/757)) ([09a6e72](https://github.com/Kong/spec-renderer/commit/09a6e729a80f74975b23da005e1cb1923ad9657f))
+* trigger pr-audit on PR labeling ([#753](https://github.com/Kong/spec-renderer/issues/753)) ([b40fefc](https://github.com/Kong/spec-renderer/commit/b40fefc6090c1fab5db1727f22ff5958101afef2))
+
 ## [1.102.2](https://github.com/Kong/spec-renderer/compare/v1.102.1...v1.102.2) (2025-12-02)
 
 
