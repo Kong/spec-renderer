@@ -43,57 +43,86 @@
       >
     </div>
     <div
-      v-if="scheme.flows.clientCredentials?.scopes && Object.keys(scheme.flows.clientCredentials.scopes).length"
-      class="param-wrapper"
+      v-if="extraTokenRequestParameters"
     >
-      <div class="button-wrapper">
-        <InputLabel
-          class="param-label"
-          :for="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
-        >
-          Scopes
-        </InputLabel>
-        <div>
-          <button
-            :aria-label="`Select all scopes for ${schemeKey}`"
-            type="button"
-            @click="setAllScopes(true)"
-          >
-            Select all
-          </button>
-          <button
-            :aria-label="`Deselect all scopes for ${schemeKey}`"
-            type="button"
-            @click="setAllScopes(false)"
-          >
-            Deselect all
-          </button>
-        </div>
-      </div>
-
       <div
-        v-for="(scope, scopeKey) of scheme.flows.clientCredentials.scopes"
-        :key="scope"
-        class="scope-wrapper"
+        v-for="extraParam in extraTokenRequestParameters"
+        :key="extraParam.name"
+        class="param-wrapper"
       >
-        <input
-          :id="`auth-input-oauth2-clientCredentials-scope-${scopeKey}-${dataId}`"
-          v-model="authInputs[`${schemeKey}-scope-${scopeKey}`]"
-          :aria-describedby="`auth-input-oauth2-clientCredentials-scope-${scopeKey}-${dataId}`"
-          autocomplete="off"
-          type="checkbox"
-          @change="resetToken"
+        <InputLabel
+          class="param-label param-label-extra"
+          :for="`auth-input-oauth2-clientCredentials-${extraParam.name}-${dataId}`"
         >
-        <label :for="`auth-input-oauth2-clientCredentials-scope-${scopeKey}-${dataId}`">
-          <span class="key-span">{{ scopeKey }}</span> - {{ scope }}
-        </label>
+          {{ extraParam.name }}
+          <Tooltip
+            v-if="extraParam.description"
+            :id="`auth-tooltip-oauth2-clientCredentials-${extraParam.name}-${dataId}`"
+            :text="extraParam.description"
+          />
+        </InputLabel>
+        <input
+          :id="`auth-input-oauth2-clientCredentials-${extraParam.name}-${dataId}`"
+          v-model="authInputs[`${schemeKey}-${extraParam.name}`]"
+          :aria-describedby="`auth-input-oauth2-clientCredentials-${extraParam.name}-${dataId}`"
+          autocomplete="off"
+          :placeholder="`Enter ${extraParam.name}`"
+          type="text"
+        >
+      </div>
+      <div
+        v-if="scheme.flows.clientCredentials?.scopes && Object.keys(scheme.flows.clientCredentials.scopes).length"
+        class="param-wrapper"
+      >
+        <div class="button-wrapper">
+          <InputLabel
+            class="param-label"
+            :for="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
+          >
+            Scopes
+          </InputLabel>
+          <div>
+            <button
+              :aria-label="`Select all scopes for ${schemeKey}`"
+              type="button"
+              @click="setAllScopes(true)"
+            >
+              Select all
+            </button>
+            <button
+              :aria-label="`Deselect all scopes for ${schemeKey}`"
+              type="button"
+              @click="setAllScopes(false)"
+            >
+              Deselect all
+            </button>
+          </div>
+        </div>
+
+        <div
+          v-for="(scope, scopeKey) of scheme.flows.clientCredentials.scopes"
+          :key="scope"
+          class="scope-wrapper"
+        >
+          <input
+            :id="`auth-input-oauth2-clientCredentials-scope-${scopeKey}-${dataId}`"
+            v-model="authInputs[`${schemeKey}-scope-${scopeKey}`]"
+            :aria-describedby="`auth-input-oauth2-clientCredentials-scope-${scopeKey}-${dataId}`"
+            autocomplete="off"
+            type="checkbox"
+            @change="resetToken"
+          >
+          <label :for="`auth-input-oauth2-clientCredentials-scope-${scopeKey}-${dataId}`">
+            <span class="key-span">{{ scopeKey }}</span> - {{ scope }}
+          </label>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue'
+import { watch, computed, onMounted } from 'vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import composables from '@/composables'
@@ -124,6 +153,9 @@ const resetToken = () => {
   authInputs.value[`${props.schemeKey}-token`] = ''
 }
 
+const extraTokenRequestParameters = computed(() => (props.scheme.extensions?.['x-kong-client-credentials-config'] as Record<string, any>)?.extraTokenRequestParameters)
+const omitEmptyParameters = computed(() => (props.scheme.extensions?.['x-kong-client-credentials-config'] as Record<string, any>)?.omitEmptyParameters || false)
+
 const setAllScopes = (value: boolean) => {
   Object.entries(props.scheme.flows.clientCredentials?.scopes || {}).forEach(([scopeKey]) => {
     authInputs.value[`${props.schemeKey}-scope-${scopeKey}`] = value ? 'true' : 'false'
@@ -147,6 +179,15 @@ const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
       }
     })
 
+  const extraParams: Record<string, string> = { }
+  for (const extraParam of extraTokenRequestParameters.value || []) {
+    const key = `${props.schemeKey}-${extraParam.name}`
+    if (omitEmptyParameters.value && !authInputs.value[key]) {
+      continue
+    }
+    extraParams[extraParam.name] = authInputs.value[key] || ''
+  }
+
   const resp = await fetch(props.scheme.flows.clientCredentials?.tokenUrl || '', {
     method: 'POST',
     headers: {
@@ -156,6 +197,7 @@ const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
     body: new URLSearchParams({
       grant_type: 'client_credentials',
       ...(scopes.length ? { scope: scopes.join(' ') } : {}),
+      ...extraParams,
     }),
   })
 
@@ -199,9 +241,22 @@ watch(() => ({
   updateAuthData()
 }, { immediate: true })
 
+watch(extraTokenRequestParameters, (newValue) => {
+  for (const extraParam of newValue || []) {
+    const key = `${props.schemeKey}-${extraParam.name}`
+    if (!(key in authInputs.value )) {
+      authInputs.value[key] = extraParam.value || ''
+    }
+  }
+}, { immediate: true, deep: true })
+
 </script>
 
 <style lang="scss" scoped>
+
+.param-label-extra {
+  text-transform: capitalize;
+}
 
 .panel-body {
   .param-wrapper {
