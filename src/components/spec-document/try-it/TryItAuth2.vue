@@ -182,7 +182,7 @@ const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
   const extraParams: Record<string, string> = { }
   for (const extraParam of extraTokenRequestParameters.value || []) {
     const key = `${props.schemeKey}-${extraParam.name}`
-    if (omitEmptyParameters.value && !authInputs.value[key]) {
+    if (extraParam.omitIfEmpty && !authInputs.value[key]) {
       continue
     }
     extraParams[extraParam.name] = authInputs.value[key] || ''
