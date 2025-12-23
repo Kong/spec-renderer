@@ -248,6 +248,7 @@ watch(extraTokenRequestParameters, (newValue) => {
       authInputs.value[key] = extraParam.defaultValue || ''
     }
   }
+  console.log('extra params changed', authInputs.value)
 }, { immediate: true, deep: true })
 
 </script>
