@@ -55,6 +55,13 @@
           :for="`auth-input-oauth2-clientCredentials-${extraParam.name}-${dataId}`"
         >
           {{ extraParam.label || extraParam.name }}
+          <div
+            v-if="extraParam.required"
+            class="required-label"
+          >
+            *
+          </div>
+
           <Tooltip
             v-if="extraParam.description"
             :id="`auth-tooltip-oauth2-clientCredentials-${extraParam.name}-${dataId}`"
@@ -66,7 +73,7 @@
           v-model="authInputs[`${schemeKey}-${extraParam.name}`]"
           :aria-describedby="`auth-input-oauth2-clientCredentials-${extraParam.name}-${dataId}`"
           autocomplete="off"
-          :placeholder="`Enter ${extraParam.name}`"
+          :placeholder="`Enter ${extraParam.label || extraParam.name}`"
           type="text"
         >
       </div>
@@ -245,10 +252,9 @@ watch(extraTokenRequestParameters, (newValue) => {
   for (const extraParam of newValue || []) {
     const key = `${props.schemeKey}-${extraParam.name}`
     if (!(key in authInputs.value )) {
-      authInputs.value[key] = extraParam.defaultValue || ''
+      authInputs.value[key] = extraParam.value || ''
     }
   }
-  console.log('extra params changed', authInputs.value)
 }, { immediate: true, deep: true })
 
 </script>

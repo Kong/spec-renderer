@@ -23,7 +23,7 @@ components:
           - name: audience
             label: Audience
             required: true
-            defaultValue: https://api.vitu.com/v1
+            value: https://api.vitu.com/v1
 
       flows:
         clientCredentials:
@@ -31,13 +31,15 @@ components:
 ```
 
 `extraTokenRequestParameters` - array of additional request parameters to be sent to token endpoint.
+
 each parameter can have the following fields:
+
 - `name` (string, required) - name of the parameter
-- `label` (string, optional) - label of the parameter
-- `description` (string, optional) - description of the parameter
-- `defaultValue` (string, optional) - default value of the parameter
-- `omitIfEmpty` (boolean, optional) - if true, the parameter will be omitted if the value is empty
-- `required` (boolean, optional) - if true, the parameter is required
-- `readonly` (boolean, optional) - if true, the parameter
-- `hidden` (boolean, optional) - if true, the parameter will be hidden from the UI but send to the token endpoint
+- `label` (string, optional) - label of the parameter, if not provided, `name` will be used
+- `description` (string, optional) - description of the parameter, default tooltip will be shown if provided. default: ''
+- `value` (string, optional) - default value of the parameter, default: ''
+- `omitIfEmpty` (boolean, optional) - if true, the parameter will be omitted in the request if the value is empty, default: false
+- `required` (boolean, optional) - if true, the parameter is required, default: false
+- `readOnly` (boolean, optional) - if true, the user cannot edit value of the parameter, default: false
+- `hidden` (boolean, optional) - if true, the parameter will be hidden from the UI but send to the token endpoint, default: false
 

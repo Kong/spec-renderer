@@ -2,10 +2,10 @@ export interface ExtraTokenRequestParameter {
   name: string
   label?: string
   description?: string
-  defaultValue?: string
+  value?: string
   omitIfEmpty?: boolean
   required?: boolean
-  readonly?: boolean
+  readOnly?: boolean
   hidden?: boolean
 }
 
