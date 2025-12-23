@@ -73,6 +73,7 @@
           v-model="authInputs[`${schemeKey}-${extraParam.name}`]"
           :aria-describedby="`auth-input-oauth2-clientCredentials-${extraParam.name}-${dataId}`"
           autocomplete="off"
+          :disabled="extraParam.readOnly"
           :placeholder="`Enter ${extraParam.label || extraParam.name}`"
           type="text"
         >
@@ -186,15 +187,24 @@ const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
       }
     })
 
+  //throw new Error('Test error')
+  let extraParamError = ''
   const extraParams: Record<string, string> = { }
   for (const extraParam of extraTokenRequestParameters.value || []) {
     const key = `${props.schemeKey}-${extraParam.name}`
+    if (extraParam.required && !authInputs.value[key]) {
+      extraParamError += `Parameter ${extraParam.label || extraParam.name} is required in token request.\n`
+      break
+    }
     if (extraParam.omitIfEmpty && !authInputs.value[key]) {
       continue
     }
     extraParams[extraParam.name] = authInputs.value[key] || ''
   }
 
+  if (extraParamError) {
+    throw new Error(extraParamError)
+  }
   const resp = await fetch(props.scheme.flows.clientCredentials?.tokenUrl || '', {
     method: 'POST',
     headers: {
