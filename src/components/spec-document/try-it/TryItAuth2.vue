@@ -46,7 +46,7 @@
       v-if="extraTokenRequestParameters"
     >
       <div
-        v-for="extraParam in extraTokenRequestParameters"
+        v-for="extraParam in extraTokenRequestParameters.filter(param => !param.hidden)"
         :key="extraParam.name"
         class="param-wrapper"
       >
@@ -54,7 +54,7 @@
           class="param-label param-label-extra"
           :for="`auth-input-oauth2-clientCredentials-${extraParam.name}-${dataId}`"
         >
-          {{ extraParam.name }}
+          {{ extraParam.label || extraParam.name }}
           <Tooltip
             v-if="extraParam.description"
             :id="`auth-tooltip-oauth2-clientCredentials-${extraParam.name}-${dataId}`"
@@ -122,13 +122,14 @@
 </template>
 
 <script setup lang="ts">
-import { watch, computed, onMounted } from 'vue'
+import { watch, computed } from 'vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import composables from '@/composables'
 import { useTimeoutFn } from '@vueuse/core'
 import type { PropType } from 'vue'
 
+import type { XKongClientCredentialsConfig, ExtraTokenRequestParameter } from '@/types'
 import type { IOauth2SecurityScheme } from '@stoplight/types'
 import { useDebounceFn } from '@vueuse/core'
 
@@ -153,8 +154,7 @@ const resetToken = () => {
   authInputs.value[`${props.schemeKey}-token`] = ''
 }
 
-const extraTokenRequestParameters = computed(() => (props.scheme.extensions?.['x-kong-client-credentials-config'] as Record<string, any>)?.extraTokenRequestParameters)
-const omitEmptyParameters = computed(() => (props.scheme.extensions?.['x-kong-client-credentials-config'] as Record<string, any>)?.omitEmptyParameters || false)
+const extraTokenRequestParameters = computed((): ExtraTokenRequestParameter[] => (props.scheme.extensions?.['x-kong-client-credentials-config'] as XKongClientCredentialsConfig)?.extraTokenRequestParameters || [])
 
 const setAllScopes = (value: boolean) => {
   Object.entries(props.scheme.flows.clientCredentials?.scopes || {}).forEach(([scopeKey]) => {
@@ -245,7 +245,7 @@ watch(extraTokenRequestParameters, (newValue) => {
   for (const extraParam of newValue || []) {
     const key = `${props.schemeKey}-${extraParam.name}`
     if (!(key in authInputs.value )) {
-      authInputs.value[key] = extraParam.value || ''
+      authInputs.value[key] = extraParam.defaultValue || ''
     }
   }
 }, { immediate: true, deep: true })
@@ -253,10 +253,6 @@ watch(extraTokenRequestParameters, (newValue) => {
 </script>
 
 <style lang="scss" scoped>
-
-.param-label-extra {
-  text-transform: capitalize;
-}
 
 .panel-body {
   .param-wrapper {
