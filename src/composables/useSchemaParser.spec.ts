@@ -485,4 +485,154 @@ components:
   })
 })
 
+describe('extensions', () => {
+  it('should parse x-kong-client-credentials-config extension', async () => {
+    const specContent = `
+openapi: 3.1.0
+info:
+  title: OAuth2 Client Credentials Flow API
+  version: 1.0.0
+  description: API demonstrating OAuth2 Client Credentials flow.
+
+servers:
+  - url: 'https://example.com/api'
+    description: Main server
+
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      x-kong-client-credentials-config:
+        extraTokenRequestParameters:
+          - name: organization
+            label: Organization
+            description: The organization identifier
+            omitIfEmpty: true
+            required: true
+          - name: audience
+            label: Audience
+            value: https://api.vitu.com/v1
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://example.com/oauth/token'
+          scopes:
+            read:products: Grants read access to products
+            write:products: Grants write access to products
+
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the product
+        name:
+          type: string
+          description: Name of the product
+        description:
+          type: string
+          description: Detailed description of the product
+      example:
+        id: 'a1b2c3d4-e5f6-7890-1234-567890abcdef'
+        name: Sample Product
+        description: This is a sample product description.
+
+security:
+  - oauth2: [read:products, write:products]
+
+paths:
+  /products:
+    get:
+      summary: Retrieve a list of products
+      operationId: getProducts
+      x-kong-client-credentials-config-onmethod:
+        omitEmptyParameters: false
+        extraTokenRequestParameters:
+          - name: organization
+          - name: audience
+            value: https://api.vitu.com/v1
+      tags:
+        - Products
+      security:
+        - oauth2: [read:products]
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of items to return
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          description: Number of items to skip for pagination
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: A list of products.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+                  meta:
+                    type: object
+                    properties:
+                      page:
+                        type: object
+                        properties:
+                          offset:
+                            type: integer
+                            description: The number of items to skip.
+                            example: 0
+                          limit:
+                            type: integer
+                            description: The number of items to return.
+                            example: 20
+                          total:
+                            type: integer
+                            description: The total number of items available.
+                            example: 100
+                          estimated_total:
+                            type: boolean
+                            description: Indicates whether the total is an estimate.
+                            example: true
+        '401':
+          description: Authentication required
+        '403':
+          description: Insufficient permissions
+
+tags:
+  - name: Products
+    description: Operations related to products
+`
+    const { parseSpecDocument, parsedDocument } = composables.useSchemaParser()
+    await parseSpecDocument(specContent)
+    expect((parsedDocument.value as ServiceNode).data.securitySchemes[0].extensions['x-kong-client-credentials-config'].extraTokenRequestParameters).toEqual([
+      {
+        name: 'organization',
+        label: 'Organization',
+        description: 'The organization identifier',
+        omitIfEmpty: true,
+        required: true,
+      },
+      {
+        name: 'audience',
+        label: 'Audience',
+        value: 'https://api.vitu.com/v1',
+      },
+    ])
+  })
+})
 
