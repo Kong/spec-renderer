@@ -63,7 +63,7 @@
     "@stoplight/json": "^3.21.7",
     "@stoplight/types": "^14.1.1",
     "@stoplight/yaml": "^4.3.0",
-    "@vueuse/core": "^14.0.0",
+    "@vueuse/core": "^14.1.0",
     "allof-merge": "^0.6.6",
     "flatted": "^3.3.3",
     "form-urlencoded": "^6.1.6",
@@ -71,7 +71,7 @@
     "lodash-es": "^4.17.22",
     "markdown-it": "^14.1.0",
     "sanitize-html": "^2.17.0",
-    "shiki": "^3.15.0"
+    "shiki": "^3.20.0"
   },
   "resolutions": {
     "openapi3-ts": "4.5.0"
@@ -102,14 +102,14 @@
     "cross-env": "^10.1.0",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.39.2",
-    "jsdom": "^27.2.0",
+    "jsdom": "^27.4.0",
     "openapi3-ts": "4.5.0",
     "postcss": "^8.5.6",
     "postcss-html": "^1.8.0",
     "rimraf": "^6.1.2",
     "rollup-plugin-visualizer": "^6.0.5",
     "sass": "^1.94.3",
-    "sass-embedded": "^1.93.3",
+    "sass-embedded": "^1.97.1",
     "semantic-release": "^25.0.2",
     "stylelint": "^16.26.1",
     "stylelint-config-html": "^1.1.0",
@@ -140,7 +140,7 @@
       "openapi3-ts": "4.5.0",
       "jsonpath-plus@<10.3.0": ">=10.3.0",
       "elliptic@<=6.6.0": ">=6.6.1",
-      "@babel/helpers@<7.26.10": ">=7.26.10",
+      "@babel/helpers@<7.26.10": ">=7.28.4",
       "cross-spawn@>=7.0.0 <7.0.5": ">=7.0.6",
       "brace-expansion@>=1.0.0 <=1.1.11": ">=1.1.12",
       "brace-expansion@>=2.0.0 <=2.0.1": ">=2.0.2",
@@ -206,8 +206,8 @@
     "node": ">=18.17.0"
   },
   "volta": {
-    "node": "24.11.1",
-    "pnpm": "10.20.0"
+    "node": "24.12.0",
+    "pnpm": "10.26.2"
   },
   "config": {
     "commitizen": {
