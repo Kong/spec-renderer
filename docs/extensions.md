@@ -2,7 +2,7 @@
 
 ## x-kong-client-credentials-config
 
-Allows to specify additional request parameters (body) rro be send to auth2 token endpoint when using client credentials flow.
+Allows to specify additional request parameters (body) to be send to auth2 token endpoint when using client credentials flow.
 
 ![](./images/XKongClientCredentialsConfig.png)
 
