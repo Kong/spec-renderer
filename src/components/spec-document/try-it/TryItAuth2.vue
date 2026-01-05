@@ -187,7 +187,6 @@ const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
       }
     })
 
-  //throw new Error('Test error')
   let extraParamError = ''
   const extraParams: Record<string, string> = { }
   for (const extraParam of extraTokenRequestParameters.value || []) {
