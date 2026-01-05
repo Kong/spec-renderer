@@ -1,3 +1,19 @@
+# [1.103.0](https://github.com/Kong/spec-renderer/compare/v1.102.1...v1.103.0) (2026-01-05)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#754](https://github.com/Kong/spec-renderer/issues/754)) ([0848e21](https://github.com/Kong/spec-renderer/commit/0848e218052549c3b03d71e0fc30ee59b84c3355))
+* **deps:** update all non-major dependencies with stable versions ([#755](https://github.com/Kong/spec-renderer/issues/755)) ([95b18b1](https://github.com/Kong/spec-renderer/commit/95b18b1380720fc8251489b0e0eb757b11ecc489))
+* **deps:** update dependency @kong/icons to ^1.41.0 ([#757](https://github.com/Kong/spec-renderer/issues/757)) ([09a6e72](https://github.com/Kong/spec-renderer/commit/09a6e729a80f74975b23da005e1cb1923ad9657f))
+* **deps:** update qs to resolve vulnerabilities ([#772](https://github.com/Kong/spec-renderer/issues/772)) ([8cafd5b](https://github.com/Kong/spec-renderer/commit/8cafd5b6cd32dab86f32c2f72ebe9d4e814b2791))
+* trigger pr-audit on PR labeling ([#753](https://github.com/Kong/spec-renderer/issues/753)) ([b40fefc](https://github.com/Kong/spec-renderer/commit/b40fefc6090c1fab5db1727f22ff5958101afef2))
+
+
+### Features
+
+* support for x-kong-client-credentials-config extension [TDX-7964] ([#767](https://github.com/Kong/spec-renderer/issues/767)) ([8527517](https://github.com/Kong/spec-renderer/commit/85275177d090dc123b8697d6b32a2ce1b6b3253f))
+
 ## [1.102.2](https://github.com/Kong/spec-renderer/compare/v1.102.1...v1.102.2) (2026-01-05)
 
 
