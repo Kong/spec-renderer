@@ -23,7 +23,7 @@ components:
           - name: audience
             label: Audience
             required: true
-            value: https://api.vitu.com/v1
+            value: https://api.audience.com/v1
 
       flows:
         clientCredentials:
