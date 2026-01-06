@@ -26,7 +26,7 @@ describe('<TryItAuth2 />', () => {
                 {
                   'name': 'audience',
                   'label': 'Audience',
-                  'value': 'https://api.vitu.com/v1',
+                  'value': 'https://api.audience.com/v1',
                 },
               ],
             },
