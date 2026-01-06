@@ -266,6 +266,7 @@ const doApiCall = async (callAsIs = false) => {
 
     const myResponse = await fetch(url.href, {
       method: String(props.data.method).toUpperCase(),
+      cache: 'no-cache',
       headers,
       ...(textBody || binaryBody ? { body: textBody || binaryBody } : null),
     })

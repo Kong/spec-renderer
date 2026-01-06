@@ -33,6 +33,7 @@ describe('<TryIt />', () => {
         'Content-Type': 'application/json',
       },
       method: 'POST',
+      cache: 'no-cache',
       body: '{"a": "1", "b": "2"}',
     })
   })
@@ -74,6 +75,7 @@ describe('<TryIt />', () => {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
+      cache: 'no-cache',
       method: 'POST',
       body: 'a=1&b=2',
     })
@@ -104,6 +106,7 @@ describe('<TryIt />', () => {
     expect(fetch).toHaveBeenCalledWith('https://global.api.konghq.com/v2/sample-path', {
       headers: {
       },
+      cache: 'no-cache',
       method: 'GET',
     })
   })
