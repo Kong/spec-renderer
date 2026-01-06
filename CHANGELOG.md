@@ -1,3 +1,10 @@
+## [1.103.1](https://github.com/Kong/spec-renderer/compare/v1.103.0...v1.103.1) (2026-01-06)
+
+
+### Bug Fixes
+
+* no cache for token when token not returned [TDC-7260] ([#773](https://github.com/Kong/spec-renderer/issues/773)) ([536e532](https://github.com/Kong/spec-renderer/commit/536e5320880fb869be43016241913d51684f3dc3))
+
 # [1.103.0](https://github.com/Kong/spec-renderer/compare/v1.102.1...v1.103.0) (2026-01-05)
 
 
