@@ -1,3 +1,10 @@
+## [1.103.2](https://github.com/Kong/spec-renderer/compare/v1.103.1...v1.103.2) (2026-01-06)
+
+
+### Bug Fixes
+
+*  hide customer reference from extension documentation ([#774](https://github.com/Kong/spec-renderer/issues/774)) ([db9080f](https://github.com/Kong/spec-renderer/commit/db9080fa5d2f4033db988c6956d2c9856e08f785))
+
 ## [1.103.1](https://github.com/Kong/spec-renderer/compare/v1.103.0...v1.103.1) (2026-01-06)
 
 
