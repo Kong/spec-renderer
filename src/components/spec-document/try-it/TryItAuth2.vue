@@ -206,6 +206,7 @@ const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
   }
   const resp = await fetch(props.scheme.flows.clientCredentials?.tokenUrl || '', {
     method: 'POST',
+    cache: 'no-cache',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       Authorization: `Basic ${btoaValue}`,
@@ -218,15 +219,16 @@ const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
   })
 
   if (resp.ok) {
-    let resData = await resp.json()
-    authInputs.value[`${props.schemeKey}-token`] = `${resData.token_type || 'Bearer'} ${resData.access_token}`
-    await updateAuthDataImpl()
-    useTimeoutFn(async () => {
-      authInputs.value[`${props.schemeKey}-token`] = ''
+    const resData = await resp.json()
+    if (resData.access_token) {
+      authInputs.value[`${props.schemeKey}-token`] = `${resData.token_type || 'Bearer'} ${resData.access_token}`
       await updateAuthDataImpl()
-    }, (resData.expires_in || 60) * 1000)
+      useTimeoutFn(async () => {
+        authInputs.value[`${props.schemeKey}-token`] = ''
+        await updateAuthDataImpl()
+      }, (resData.expires_in || 60) * 1000)
+    }
   }
-
   return resp
 }
 
