@@ -175,4 +175,86 @@ describe('<TryIt />', () => {
     expect(code).toMatch('Choose file')
   })
 
+  it('should render component with insomnia option when hideTryIt is set to true', async () => {
+    const wrapper = mount(TryIt, {
+      props: {
+        data: {
+          id: '123',
+          method: 'post',
+          path: '/sample-path',
+          responses: [],
+          request: {
+            body: {
+              id: 'bodyId',
+              contents: [
+                {
+                  id: 'mediatypeId',
+                  mediaType: 'application/x-www-form-urlencoded',
+                },
+              ],
+            },
+          },
+          servers: [{
+            id: 'sample-server-id',
+            url: 'https://global.api.konghq.com/v2',
+          }],
+        },
+        requestBody: { isBinary: true, content: [{ name: 'test file.pdf' } as unknown as File] },
+        serverUrl: 'https://global.api.konghq.com/v2',
+      },
+      global: {
+        provide: {
+          ['hide-tryit']: ref(true),
+        },
+      },
+    })
+
+    await flushPromises()
+
+    const component = wrapper.findTestId('tryit-wrapper-123')
+
+    expect(component.exists()).toBe(true)
+  })
+
+  it('should render component with browser option when hideInsomniaTryIt is set to true', async () => {
+    const wrapper = mount(TryIt, {
+      props: {
+        data: {
+          id: '123',
+          method: 'post',
+          path: '/sample-path',
+          responses: [],
+          request: {
+            body: {
+              id: 'bodyId',
+              contents: [
+                {
+                  id: 'mediatypeId',
+                  mediaType: 'application/x-www-form-urlencoded',
+                },
+              ],
+            },
+          },
+          servers: [{
+            id: 'sample-server-id',
+            url: 'https://global.api.konghq.com/v2',
+          }],
+        },
+        requestBody: { isBinary: true, content: [{ name: 'test file.pdf' } as unknown as File] },
+        serverUrl: 'https://global.api.konghq.com/v2',
+      },
+      global: {
+        provide: {
+          ['hide-tryit']: ref(false),
+          ['hide-insomnia-tryit']: ref(true),
+        },
+      },
+    })
+
+    await flushPromises()
+
+    const component = wrapper.findTestId('tryit-wrapper-123')
+
+    expect(component.exists()).toBe(true)
+  })
 })

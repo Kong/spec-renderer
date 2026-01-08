@@ -183,6 +183,7 @@ const requestBodyChanged = (newBody: RequestBody) => {
 
 // this is tryout state requested by property passed
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
+const hideInsomniaTryIt = inject<Ref<boolean>>('hide-insomnia-tryit', ref(false))
 
 /**
  * read file into binary buffer
@@ -287,13 +288,13 @@ const doApiCall = async (callAsIs = false) => {
 
 /**
  * Hide try-it section if:
- * - `hideTryIt` prop is explicitly true
+ * - `hideTryIt` and `hideInsomniaTryIt` props are explicitly true
  * - or `data.servers` is empty, which means that the spec does not have any servers defined
  * - or `serverUrl` prop is not provided, so try-it snippet can't be generated
  */
 const showTryIt = computed((): boolean => {
   const specHasServers = Array.isArray(props.data.servers) && props.data.servers.length > 0
-  return !hideTryIt.value && (!!props.serverUrl || specHasServers)
+  return (!hideTryIt.value || !hideInsomniaTryIt.value) && (!!props.serverUrl || specHasServers)
 })
 
 watch(() => props.serverUrl, () => {
