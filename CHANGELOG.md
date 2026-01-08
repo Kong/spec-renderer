@@ -1,3 +1,10 @@
+## [1.103.3](https://github.com/Kong/spec-renderer/compare/v1.103.2...v1.103.3) (2026-01-08)
+
+
+### Bug Fixes
+
+* **spec-renderer:** show try it in insomnia separately from try it [TDX-7288] ([#776](https://github.com/Kong/spec-renderer/issues/776)) ([9df598b](https://github.com/Kong/spec-renderer/commit/9df598b34b40b5953805c1be21142490c62ba932))
+
 ## [1.103.2](https://github.com/Kong/spec-renderer/compare/v1.103.1...v1.103.2) (2026-01-06)
 
 
