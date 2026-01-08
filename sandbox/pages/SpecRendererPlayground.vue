@@ -28,6 +28,13 @@
         <label for="hide-tryit">Hide TryIt</label>
         |
         <input
+          id="hide-tryit-insomnia"
+          v-model="hideTryItInsomnia"
+          type="checkbox"
+        >
+        <label for="hide-tryit-insomnia">Hide TryIt Insomnia</label>
+        |
+        <input
           id="hide-navigation-buttons"
           v-model="hideNavigationButtons"
           type="checkbox"
@@ -84,6 +91,7 @@
       :control-address-bar="true"
       :current-path="currentPath"
       :hide-deprecated="hideDeprecated"
+      :hide-insomnia-try-it="hideTryItInsomnia"
       :hide-navigation-buttons="hideNavigationButtons"
       :hide-schemas="hideSchemas"
       :hide-try-it="hideTryIt"
@@ -115,6 +123,7 @@ const currentPath = ref<string>(navigationType.value === 'path' ? route.path : r
 const hideSchemas = ref<boolean>(false)
 const hideDeprecated = ref<boolean>(false)
 const hideTryIt = ref<boolean>(false)
+const hideTryItInsomnia = ref<boolean>(false)
 const allowContentScrolling = ref<boolean>(true)
 const markdownStyles = ref<boolean>(true)
 const showPoweredBy = ref<boolean>(false)
