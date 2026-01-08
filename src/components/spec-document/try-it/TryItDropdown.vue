@@ -5,7 +5,7 @@
   >
     <button
       class="call-button"
-      :class="{ 'no-dropdown': !showInsomnia }"
+      :class="{ 'no-dropdown': !showInsomnia || hideTryIt }"
       :data-testid="`tryit-call-button-${data.id}`"
       :disabled="isLoading"
       @click="startApiCall"
@@ -19,7 +19,7 @@
     </button>
 
     <SelectDropdown
-      v-if="showInsomnia"
+      v-if="showInsomnia && !hideTryIt"
       :id="`tryit-dropdown-${data.id}`"
       class="tryit-dropdown"
       :data-testid="`tryit-dropdown-${data.id}`"
@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref, computed } from 'vue'
+import { inject, ref, computed, watch } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { IHttpOperation } from '@stoplight/types'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
@@ -74,26 +74,35 @@ const emit = defineEmits<{
   (e: 'tryit-api-call'): void
 }>()
 
-const items: SelectItem[] = [
-  {
-    label: 'in Browser',
-    value: 'browser',
-    key: 'browser',
-  },
-  {
-    label: 'in Insomnia',
-    value: 'insomnia',
-    key: 'insomnia',
-  },
-]
-
-
 const hideInsomniaTryIt = inject<Ref<boolean>>('hide-insomnia-tryit', ref(false))
+const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 const specUrl = inject<Ref<string>>('spec-url', ref(''))
 
 // when property forced or url of the specification is not provided
 const showInsomnia = computed((): boolean => {
   return !(hideInsomniaTryIt.value || !specUrl.value)
+})
+
+const items = computed((): SelectItem[] => {
+  const _items: SelectItem[] = []
+
+  if (!hideTryIt.value) {
+    _items.push({
+      label: 'in Browser',
+      value: 'browser',
+      key: 'browser',
+    })
+  }
+
+  if (showInsomnia.value) {
+    _items.push({
+      label: 'in Insomnia',
+      value: 'insomnia',
+      key: 'insomnia',
+    })
+  }
+
+  return _items
 })
 
 const tryItIcon = computed(() => {
@@ -125,6 +134,16 @@ const selectionChanged = (item: SelectItem) => {
   selectedTryItMethodKey.value = item.key || 'browser'
   startApiCall()
 }
+
+watch([hideTryIt, showInsomnia], () => {
+  if (hideTryIt.value && showInsomnia.value) {
+    selectedTryItMethodKey.value = 'insomnia'
+  } else {
+    selectedTryItMethodKey.value = 'browser'
+  }
+}, {
+  immediate: true,
+})
 </script>
 
 <style lang="scss" scoped>
