@@ -24,14 +24,14 @@ export default function useServerList() {
    * @param server
    * @returns
    */
-  const getServerUrl = (idx: number, server: IServer): string => {
+  const getServerUrl = (idx: number, server: IServer | undefined): string => {
     if (!server) {
       return ''
     }
     let url = server.origUrl || server.url
     if (server.variables) {
-      for (const key of Object.keys(server.variables)) {
-        url = url.replace(`{${key}}`, server.variables[key].extensions?.value as string || server.variables[key].default)
+      for (const [key, value] of Object.entries(server.variables)) {
+        url = url.replace(`{${key}}`, value.extensions?.value as string || value.default)
       }
     }
     return removeTrailingSlash(url)
@@ -47,6 +47,7 @@ export default function useServerList() {
       origUrl: server.url,
       url: getServerUrl(idx, server),
     }))
+
     serverList.value = filteredServerList
     selectedServerUrl.value = getServerUrl(0, filteredServerList[0])
   }

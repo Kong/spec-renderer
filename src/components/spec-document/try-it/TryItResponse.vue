@@ -151,7 +151,7 @@ const selectedResOption = ref<string>()
 
 watch(resultOptions, (options) => {
   if (options.length) {
-    selectedResOption.value = options[0].value
+    selectedResOption.value = options[0]?.value
   }
 }, { immediate: true })
 

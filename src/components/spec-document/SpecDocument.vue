@@ -33,7 +33,7 @@
       <div v-if="node.component">
         <component
           :is="node.component"
-          v-if="['true', 'forced'].includes(toRenderer[idx])"
+          v-if="toRenderer[idx] == 'true' || toRenderer[idx] == 'forced'"
           v-bind="node.props"
         />
         <div
@@ -201,7 +201,7 @@ const { initialize } = composables.useServerList()
 // listen to Cmd+F to render the raw document for each endpoint to enable search
 const keys = useMagicKeys()
 
-whenever(keys['meta+f'], () => {
+whenever(() => keys['meta+f']?.value, () => {
   renderPlain.value = true
 }, { once: true })
 
@@ -241,7 +241,7 @@ const specDocument = computed((): ServiceNode => {
   return <ServiceNode>props.document
 })
 
-const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null):
+const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | null | undefined):
 {
   component: any
   props: any
@@ -456,7 +456,7 @@ const forceRenderer = (visibleIdx: number[]) => {
     newToRenderer[i] = toRenderer.value[i]
     if (visibleIdx.includes(i)) {
       newToRenderer[i] = 'true'
-    } else if (newToRenderer[i] !== 'true' && ((i - visibleIdx[visibleIdx.length - 1]) <= SECTIONS_TO_RENDER) && ((visibleIdx[0] - i) <= SECTIONS_TO_RENDER)) {
+    } else if (newToRenderer[i] !== 'true' && ((i - visibleIdx[visibleIdx.length - 1]!) <= SECTIONS_TO_RENDER) && ((visibleIdx[0]! - i) <= SECTIONS_TO_RENDER)) {
       newToRenderer[i] = 'forced'
     } else {
       // to remove already rendered uncomment this line
@@ -531,9 +531,9 @@ watch(() => ({ nodesList: nodesList.value,
 
 
   // now out of all elements in visibleEls we  need to find the one that is most visible
-  const mostVisibleIdx = visibleEls[0].idx
+  const mostVisibleIdx = visibleEls[0]?.idx
   forceRenderer(visibleIndexes)
-  const newUri = nodesList.value[mostVisibleIdx].doc.uri
+  const newUri = nodesList.value[mostVisibleIdx]?.doc.uri
 
   // we do not want to emit content-scrolled if we are still in the process of scrolling
   if (newUri && newUri !== lastPath.value && !newValue.isScrolling) {

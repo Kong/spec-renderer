@@ -199,18 +199,18 @@ const selectedLangLibraries = computed(() => {
 })
 
 const getFirstSampleKey = (examples: INodeExample[]): string | null => {
-  if (Array.isArray(examples) && examples.length) {
+  if (Array.isArray(examples) && examples.length && examples[0]) {
     return examples[0].key
   } else {
     return null
   }
 }
 
-const selectedRequestSample = ref<string | null>(props.data?.request?.body?.contents && props.data.request.body.contents.length ? getFirstSampleKey(props.data.request.body.contents[0].examples as INodeExample[]) : null)
+const selectedRequestSample = ref<string | null>(props.data?.request?.body?.contents && props.data.request.body.contents.length ? getFirstSampleKey(props.data.request.body.contents[0]?.examples as INodeExample[]) : null)
 
 const requestSamples = computed((): INodeExample[] => {
   if (props.data?.request?.body?.contents && props.data.request.body.contents.length &&
-    Array.isArray(props.data.request.body.contents[0].examples) &&
+    Array.isArray(props.data.request.body.contents[0]?.examples) &&
     props.data.request.body.contents[0].examples.length) {
     return props.data.request.body.contents[0].examples as INodeExample[]
   } else {
@@ -258,7 +258,7 @@ watch(() => ({
   }
 
   if (newValue.lang !== oldValue?.lang) {
-    selectedLangLibrary.value = selectedLangLibraries.value?.length ? selectedLangLibraries.value[0].httpSnippetLibrary : undefined
+    selectedLangLibrary.value = selectedLangLibraries.value?.length ? selectedLangLibraries.value[0]?.httpSnippetLibrary : undefined
   }
 
   let snippetChanged = false
@@ -298,8 +298,11 @@ watch(() => ({
         ...newValue.authHeaders,
       ]
       // returns json or formencoded body based on content-type header, we need to provide headers as an plain object key = header name, value: header value
-      const { body: textBody } = getFormattedBody(headers.reduce((acc, current) => {
-        acc[ current.name ] = current.value; return acc
+      const { body: textBody } = getFormattedBody(headers.reduce<Record<string, string>>((acc, current) => {
+        if (current.name && current.value !== undefined) {
+          acc[current.name] = current.value
+        }
+        return acc
       }, {}), newValue.requestBody)
       serverUrl.search = queryStr
 

@@ -161,9 +161,9 @@ export const getSampleBody = (contents: IMediaTypeContent[], filteringOptions: R
  */
 export const getFormattedBody = (headers: Record<string, string>, body: RequestBody): { body: string | null | undefined, contentType: string | undefined } => {
   let contentType:string = ''
-  for (const key of Object.keys(headers || {})) {
+  for (const [key, value] of Object.entries(headers || {})) {
     if (key.toLowerCase() === 'content-type') {
-      contentType = headers[key]
+      contentType = value
     }
   }
 

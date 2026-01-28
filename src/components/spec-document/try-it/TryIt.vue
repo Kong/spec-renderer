@@ -132,7 +132,7 @@ const securitySchemeChanged = (newSecurityScheme: string) => {
   emit('security-scheme-changed', newSecurityScheme)
 }
 
-const authHeaderNameList = computed(() => props.authHeaders.map(({ name }) => name) ?? [])
+const authHeaderNameList = computed<string[]>(() => props.authHeaders.map(({ name }) => name).filter((name): name is string => !!name) ?? [])
 
 const response = ref<Response | undefined>()
 const responseError = ref<Error>()
@@ -239,7 +239,10 @@ const doApiCall = async (callAsIs = false) => {
       ...currentRequestHeaders.value,
       ...(props.authHeaders || []),
     ].reduce((acc, current) => {
-      acc[ callAsIs === false && isGet ? current.name.toLowerCase() : current.name ] = current.value; return acc
+      if (current.name && current.value !== undefined) {
+        acc[callAsIs === false && isGet ? current.name.toLowerCase() : current.name] = current.value
+      }
+      return acc
     }, {})
 
     let { body: textBody } = getFormattedBody(headers, currentRequestBody.value)

@@ -4,7 +4,7 @@
  * @param input
  * @returns {string}
  */
-export function slugify(input: string): string {
+export function slugify(input: string | undefined): string {
   if (!input) {
     return ''
   }
