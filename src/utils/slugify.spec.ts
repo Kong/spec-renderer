@@ -43,6 +43,6 @@ describe('slugify', () => {
   })
 
   it('should handle undefined value', () => {
-    expect(slugify(undefined!)).toBe('')
+    expect(slugify(undefined)).toBe('')
   })
 })

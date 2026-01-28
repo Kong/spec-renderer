@@ -72,7 +72,7 @@ const emit = defineEmits<{
 }>()
 
 // make sure the collapse group id is unique
-const collapseGroupId = `spec-renderer-toc-group-${slugify(props.item.title)}-${slugify(props.item.items[0].title)}`
+const collapseGroupId = `spec-renderer-toc-group-${slugify(props.item.title)}-${slugify(props.item.items[0]?.title)}`
 
 const selectItem = (id: any) => {
   emit('item-selected', id)

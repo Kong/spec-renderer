@@ -115,7 +115,7 @@ const acceptedMessages = computed((): AsyncMessageObject[] => {
 
 const requestParams = computed(() => {
   const resList: IHttpParam[] = []
-  channel.value.parameters().all().forEach((parameter: ChannelParameterInterface) => {
+  channel.value?.parameters().all().forEach((parameter: ChannelParameterInterface) => {
     //@ts-ignore ignore types for now
     resList.push({
       id: parameter.id(),

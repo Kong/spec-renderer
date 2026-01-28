@@ -99,12 +99,14 @@ const setCursorPosition = (customPosition: number, eol: boolean) => {
     }
   }
 
-  if (!editableInputRef.value.childNodes[rangeNode]) return
+  const childNode = editableInputRef.value.childNodes[rangeNode]
+
+  if (!childNode) return
 
   if (eol) {
-    rangePos = editableInputRef.value.childNodes[rangeNode].textContent?.length || 0
+    rangePos = childNode.textContent?.length || 0
   }
-  selectedRange.setStart(editableInputRef.value.childNodes[rangeNode], rangePos)
+  selectedRange.setStart(childNode, rangePos)
   // collapse the range at boundaries
   selectedRange.collapse(true)
 
@@ -183,9 +185,11 @@ const handleInput = (e: Event) => {
       let lineIdx = 0
       // let's fine prev line where Enter was clicked
       do {
-        currentIdx += (linesArray[lineIdx].length + 1)
+        const currentLine = linesArray[lineIdx]
+        if (currentLine === undefined) continue
+        currentIdx += (currentLine.length + 1)
         if (currentIdx >= cursorPosition.value) {
-          prevLine = linesArray[lineIdx]
+          prevLine = currentLine
         }
         lineIdx++
       } while (prevLine === '' && lineIdx <= linesArray.length - 1)

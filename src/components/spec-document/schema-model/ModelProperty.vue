@@ -23,7 +23,7 @@
         :base-path-id="propertyId"
         :depth="depth"
         :property="selectedSchemaModel"
-        :property-name="selectedSchemaModel.title || variantSelectItemList[selectedVariantIndex].label"
+        :property-name="selectedSchemaModel.title || variantSelectItemList[selectedVariantIndex]?.label || ''"
         :required-fields="selectedSchemaModel.required"
       />
     </div>

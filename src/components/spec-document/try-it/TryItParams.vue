@@ -16,36 +16,36 @@
       class="wide"
     >
       <div
-        v-for="pKey in Object.keys(params)"
-        :key="`${params[pKey].name}${paramType}`"
+        v-for="(pValue, pKey) in params"
+        :key="`${pValue.name}${paramType}`"
         class="param-wrapper"
       >
         <InputLabel
           class="param-label"
-          :for="`request-${paramType}-input-${params[pKey].name || pKey}-${data.id}`"
+          :for="`request-${paramType}-input-${pValue.name || pKey}-${data.id}`"
         >
           <div
-            v-if="params[pKey].required"
+            v-if="pValue.required"
             class="required-label"
           >
             *
           </div>
-          {{ params[pKey].name || pKey }}
+          {{ pValue.name || pKey }}
           <Tooltip
-            v-if="params[pKey].description"
-            :id="`request-${paramType}-tooltip-${params[pKey].name || pKey}-${data.id}`"
+            v-if="pValue.description"
+            :id="`request-${paramType}-tooltip-${pValue.name || pKey}-${data.id}`"
           >
             <template #content>
               <MarkdownRenderer
-                :markdown="params[pKey].description"
+                :markdown="pValue.description"
               />
             </template>
           </Tooltip>
         </InputLabel>
         <input
-          :id="`request-${paramType}-input-${params[pKey].name || pKey}-${data.id}`"
+          :id="`request-${paramType}-input-${pValue.name || pKey}-${data.id}`"
           v-model="fieldValues[pKey]"
-          :aria-describedby="`request-${paramType}-tooltip-${params[pKey].name || pKey}-${data.id}`"
+          :aria-describedby="`request-${paramType}-tooltip-${pValue.name || pKey}-${data.id}`"
           autocomplete="off"
           :data-testid="`tryit-${paramType}-param-${pKey}-${data.id}`"
           type="text"
@@ -65,7 +65,7 @@
       />
 
       <EditableCodeBlock
-        v-if="!requestBody.isBinary"
+        v-if="!requestBody.isBinary && fieldValues.body"
         class="body-param-code-block"
         :code="fieldValues.body"
         lang="json"
@@ -88,7 +88,7 @@
         <span
           v-if="selectedFiles && selectedFiles.length > 0"
           class="choose-file-text"
-        >{{ selectedFiles[0].name }}</span>
+        >{{ selectedFiles[0]?.name }}</span>
       </div>
     </div>
   </CollapsablePanel>
@@ -210,7 +210,7 @@ const contentToCopy = computed((): string => {
   if (props.paramType !== 'body') {
     return ''
   }
-  return fieldValues.value.body
+  return fieldValues.value.body ?? ''
 })
 
 // calculating initial values for the fields,

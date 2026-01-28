@@ -312,8 +312,8 @@ function updateSelectedServerURL(url: string) {
 
 const isBinaryBody = computed((): boolean => {
   return activeRequestBodyContentList.value?.length > 0 &&
-  (activeRequestBodyContentList.value[0].schema?.format == 'binary' ||
-  activeRequestBodyContentList.value[0].schema?.contentMediaType === 'application/octet-stream')
+  (activeRequestBodyContentList.value[0]?.schema?.format == 'binary' ||
+  activeRequestBodyContentList.value[0]?.schema?.contentMediaType === 'application/octet-stream')
 })
 
 function updateRequestBodyContentType(newContentType: string) {
@@ -333,7 +333,7 @@ function updateRequestBodyContentType(newContentType: string) {
 
 watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value } ), (newValue) => {
   // if active security scheme is not set, set it to the first one
-  if (!activeSecurityScheme.value && securitySchemeGroupList.value.length) {
+  if (!activeSecurityScheme.value && securitySchemeGroupList.value.length && securitySchemeGroupList.value[0]) {
     activeSecurityScheme.value = securitySchemeGroupList.value[0].key
   }
   currentRequestPath.value = getSamplePath(operationData.value)
@@ -341,7 +341,7 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
   currentRequestHeaders.value = getSampleHeaders({ data: operationData.value })
 
   let acceptedExt = '*'
-  if (activeRequestBodyContentList.value?.length > 0 && activeRequestBodyContentList.value[0].mediaType) {
+  if (activeRequestBodyContentList.value?.length > 0 && activeRequestBodyContentList.value[0]?.mediaType) {
     currentRequestHeaders.value.push({ name: 'Content-Type', value: activeRequestBodyContentList.value[0].mediaType })
     acceptedExt = `.${activeRequestBodyContentList.value[0].mediaType.split('/').reverse()[0]}`
   }

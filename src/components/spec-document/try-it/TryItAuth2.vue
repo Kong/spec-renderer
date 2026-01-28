@@ -182,7 +182,7 @@ const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
   Object.keys(authInputs.value)
     .filter(key => key.startsWith(`${props.schemeKey}-scope-`))
     .forEach(key => {
-      if (authInputs.value[key].toString() === 'true') {
+      if (authInputs.value[key]?.toString() === 'true') {
         scopes.push(key.replace(`${props.schemeKey}-scope-`, ''))
       }
     })
