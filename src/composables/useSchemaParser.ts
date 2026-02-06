@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { computeAPITree, transformOasToServiceNode } from '@/stoplight/elements'
 import type { ServiceNode, ParseOptions } from '@/types'
-import { parse as parseYaml } from '@stoplight/yaml'
+import { parse as parseYaml, safeStringify } from '@stoplight/yaml'
 import type { TableOfContentsItem } from '@/stoplight/elements-core'
 import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
@@ -36,7 +36,7 @@ export default (): {
   parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
   parseOpenApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
   parseAsyncApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
-  downloadSpecFile: () => Promise<void>
+  downloadSpecFile: (format?: 'json' | 'yaml') => Promise<void>
   parsedDocument: Ref<ServiceNode | string | undefined>
   tableOfContents: Ref<TableOfContentsItem[] | string | undefined>
 } => {
@@ -363,16 +363,29 @@ export default (): {
     }
   }
 
-  const downloadSpecFile = async () => {
+  const downloadSpecFile = async (format?: 'json' | 'yaml') => {
     if (isSsr() || !specText) return
 
     try {
-      const fileExtension = jsonOrYaml(specText)
+      let content: string
+      const originalFormat = jsonOrYaml(specText)
+      const targetFormat = format || originalFormat
+      if (targetFormat === originalFormat) {
+        content = specText
+      } else {
+        const parsedSpec = originalFormat === 'json'
+          ? JSON.parse(specText)
+          : parseYaml(specText)
+        content = targetFormat === 'json'
+          ? JSON.stringify(parsedSpec, null, 2)
+          : safeStringify(parsedSpec, { indent: 2 })
+      }
+
       const pathBasedName = window.location.pathname.replace(/[^a-zA-Z0-9]/g, '') // remove all non alphanumeric charaters from the path
       const baseFileName = specTitle || pathBasedName || 'spec-file' // ensure a non-empty base name, so provided a default fallback
-      const downloadFileName = `${kebabCase(baseFileName)}.${fileExtension}`
+      const downloadFileName = `${kebabCase(baseFileName)}.${targetFormat}`
 
-      const blob = new Blob([specText], { type: fileExtension === 'json' ? 'application/json' : 'text/yaml' })
+      const blob = new Blob([content], { type: targetFormat === 'json' ? 'application/json' : 'text/yaml' })
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
 
