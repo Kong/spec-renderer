@@ -1,3 +1,10 @@
+## [1.103.6](https://github.com/Kong/spec-renderer/compare/v1.103.5...v1.103.6) (2026-02-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency allof-merge to ^0.6.8 ([#787](https://github.com/Kong/spec-renderer/issues/787)) ([a6e0370](https://github.com/Kong/spec-renderer/commit/a6e03703097b1220374cbca9f23f8a2403d85b71))
+
 ## [1.103.5](https://github.com/Kong/spec-renderer/compare/v1.103.4...v1.103.5) (2026-02-04)
 
 
