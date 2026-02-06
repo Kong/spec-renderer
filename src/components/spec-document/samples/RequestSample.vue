@@ -414,6 +414,10 @@ watch(() => ({
   }
 
   :deep(.code-block pre) {
+    height: 300px;
+    resize: vertical;
+    min-height: 50px;
+    max-height: fit-content;
     border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     border-top-left-radius: var(--kui-border-radius-0, $kui-border-radius-0);

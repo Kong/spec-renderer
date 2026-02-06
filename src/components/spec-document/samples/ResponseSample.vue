@@ -95,5 +95,12 @@ const exampleSelectList = computed((): SelectItem[] => {
       }
     }
   }
+
+  :deep(pre) {
+    height: 300px;
+    resize: vertical;
+    min-height: 50px;
+    max-height: fit-content;
+  }
 }
 </style>
