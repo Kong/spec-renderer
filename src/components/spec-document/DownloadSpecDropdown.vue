@@ -3,7 +3,7 @@
     <button
       class="download-spec-btn"
       data-testid="download-spec-btn"
-      @click="downloadWithFormat"
+      @click="downloadSpecFile(selectedFormat)"
     >
       Download
     </button>
@@ -36,7 +36,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import SelectDropdown from '../common/SelectDropdown.vue'
 import composables from '@/composables'
 import type { SelectItem } from '@/types'
@@ -50,7 +49,7 @@ defineProps({
 
 const { downloadSpecFile } = composables.useSchemaParser()
 
-const selectedFormat = ref<'json' | 'yaml'>('json')
+let selectedFormat: 'json' | 'yaml' = 'json'
 
 const downloadFormatItems: SelectItem[] = [
   { label: 'JSON', value: 'json', key: 'json' },
@@ -58,12 +57,8 @@ const downloadFormatItems: SelectItem[] = [
 ]
 
 const selectFormat = (item: SelectItem) => {
-  selectedFormat.value = item.value as 'json' | 'yaml'
-  downloadWithFormat()
-}
-
-const downloadWithFormat = () => {
-  downloadSpecFile(selectedFormat.value)
+  selectedFormat = item.value as 'json' | 'yaml'
+  downloadSpecFile(selectedFormat)
 }
 </script>
 
@@ -94,8 +89,10 @@ const downloadWithFormat = () => {
 
     :deep(.trigger-button) {
       border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      border-bottom-left-radius: var(--kui-border-radius-0, $kui-border-radius-0);
       border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
       border-left-width: var(--kui-border-width-0, $kui-border-width-0);
+      border-top-left-radius: var(--kui-border-radius-0, $kui-border-radius-0);
       border-top-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
       height: 100%;
       padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
