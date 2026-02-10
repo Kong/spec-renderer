@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{ 'is-resizable': isResizable }">
     <VNode />
   </div>
 </template>
@@ -21,6 +21,10 @@ const props = defineProps({
     default: '',
   },
   isError: {
+    type: Boolean,
+    default: false,
+  },
+  isResizable: {
     type: Boolean,
     default: false,
   },
@@ -137,6 +141,17 @@ html.dark,
         top: 0;
         width: $codeblock-line-count-width;
       }
+    }
+  }
+}
+
+.is-resizable {
+  .code-block {
+    :deep(pre) {
+      height: 300px;
+      max-height: fit-content;
+      min-height: 50px;
+      resize: vertical;
     }
   }
 }

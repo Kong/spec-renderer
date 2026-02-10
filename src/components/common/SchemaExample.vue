@@ -12,6 +12,7 @@
     </div>
     <CodeBlock
       :code="schemaExampleJson"
+      :is-resizable="isResizable"
       lang="json"
     />
   </div>
@@ -29,6 +30,10 @@ defineProps({
   title: {
     type: String,
     default: 'Example',
+  },
+  isResizable: {
+    type: Boolean,
+    default: false,
   },
 })
 </script>

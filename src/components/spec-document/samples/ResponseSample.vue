@@ -2,6 +2,7 @@
   <SchemaExample
     class="response-sample"
     data-testid="response-sample"
+    :is-resizable="true"
     :schema-example-json="activeResponseSample"
   >
     <slot />
@@ -96,11 +97,5 @@ const exampleSelectList = computed((): SelectItem[] => {
     }
   }
 
-  :deep(pre) {
-    height: 300px;
-    resize: vertical;
-    min-height: 50px;
-    max-height: fit-content;
-  }
 }
 </style>
