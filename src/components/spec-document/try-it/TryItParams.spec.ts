@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import TryItParams from './TryItParams.vue'
+import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
 import type { RequestParamTypes } from '@/types'
 
 
@@ -140,6 +141,64 @@ describe('<TryItParams />', () => {
       // check if the new query is emitted
       const expectedQuery = `page%5Bsize%5D=${exampleValues.pageSize}&page%5Bnumber%5D=${newPageNumber}`
       expect(wrapper.emitted('request-query-changed')).toEqual([[expectedQuery]])
+    })
+  })
+
+  describe('body parameters', () => {
+    const requiredOnlyBody = JSON.stringify({ name: '' }, null, 2)
+    const fullBody = JSON.stringify({ name: '', age: 0 }, null, 2)
+
+    const bodyData = {
+      id: '456',
+      method: 'post',
+      path: '/users',
+      responses: [],
+      servers: [],
+      request: {
+        body: {
+          id: 'body-1',
+          contents: [
+            {
+              id: 'content-1',
+              mediaType: 'application/json',
+              schema: {
+                type: 'object',
+                required: ['name'],
+                properties: {
+                  name: { type: 'string' },
+                  age: { type: 'integer' },
+                },
+              },
+            },
+          ],
+        },
+      },
+    }
+
+    it('should update body content when required toggle changes', async () => {
+      const wrapper = mount(TryItParams, {
+        props: {
+          paramType: <RequestParamTypes>'body',
+          data: bodyData as any,
+          requestBody: { isBinary: false, content: requiredOnlyBody },
+          modelValue: true,
+        },
+      })
+
+      // Verify initial body content (required-only)
+      const codeBlock = wrapper.findComponent(EditableCodeBlock)
+      expect(codeBlock.exists()).toBe(true)
+      expect(codeBlock.props('code')).toBe(requiredOnlyBody)
+
+      // Simulate toggle change: parent regenerates body with all fields
+      await wrapper.setProps({
+        modelValue: false,
+        requestBody: { isBinary: false, content: fullBody },
+      })
+
+      // Verify body content updated to include all fields
+      const updatedCodeBlock = wrapper.findComponent(EditableCodeBlock)
+      expect(updatedCodeBlock.props('code')).toBe(fullBody)
     })
   })
 
