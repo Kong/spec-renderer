@@ -36,7 +36,7 @@ export default (): {
   parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
   parseOpenApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
   parseAsyncApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
-  downloadSpecFile: (format?: 'json' | 'yaml') => Promise<void>
+  downloadSpecFile: (format?: 'json' | 'yaml', content?: string) => Promise<void>
   parsedDocument: Ref<ServiceNode | string | undefined>
   tableOfContents: Ref<TableOfContentsItem[] | string | undefined>
 } => {
@@ -363,20 +363,21 @@ export default (): {
     }
   }
 
-  const downloadSpecFile = async (format?: 'json' | 'yaml') => {
-    if (isSsr() || !specText) return
+  const downloadSpecFile = async (format?: 'json' | 'yaml', content?: string) => {
+    const rawSpec = content || specText
+    if (isSsr() || !rawSpec) return
 
     try {
-      let content: string
-      const originalFormat = jsonOrYaml(specText)
+      let downloadContent: string
+      const originalFormat = jsonOrYaml(rawSpec)
       const targetFormat = format || originalFormat
       if (targetFormat === originalFormat) {
-        content = specText
+        downloadContent = rawSpec
       } else {
         const parsedSpec = originalFormat === 'json'
-          ? JSON.parse(specText)
-          : parseYaml(specText)
-        content = targetFormat === 'json'
+          ? JSON.parse(rawSpec)
+          : parseYaml(rawSpec)
+        downloadContent = targetFormat === 'json'
           ? JSON.stringify(parsedSpec, null, 2)
           : safeStringify(parsedSpec, { indent: 2 })
       }
@@ -385,7 +386,7 @@ export default (): {
       const baseFileName = specTitle || pathBasedName || 'spec-file' // ensure a non-empty base name, so provided a default fallback
       const downloadFileName = `${kebabCase(baseFileName)}.${targetFormat}`
 
-      const blob = new Blob([content], { type: targetFormat === 'json' ? 'application/json' : 'text/yaml' })
+      const blob = new Blob([downloadContent], { type: targetFormat === 'json' ? 'application/json' : 'text/yaml' })
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
 

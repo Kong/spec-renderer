@@ -800,6 +800,16 @@ paths: {}`
       expect(consoleSpy).toHaveBeenCalled()
       expect(mockClick).not.toHaveBeenCalled()
     })
+
+    it('uses provided content parameter instead of parsed specText', async () => {
+      const { downloadSpecFile } = composables.useSchemaParser()
+
+      await downloadSpecFile('json', jsonSpec)
+
+      expect(getCreatedBlob().type).toBe('application/json')
+      expect(getDownloadFilename()).toMatch(/\.json$/)
+      expect(mockClick).toHaveBeenCalled()
+    })
   })
 })
 
