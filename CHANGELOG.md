@@ -1,3 +1,10 @@
+# [1.104.0](https://github.com/Kong/spec-renderer/compare/v1.103.7...v1.104.0) (2026-02-11)
+
+
+### Features
+
+* make request/response sample re-sizable ([#790](https://github.com/Kong/spec-renderer/issues/790)) ([0dcc339](https://github.com/Kong/spec-renderer/commit/0dcc339adf2c3aacd76528251df03e3fb16d841b))
+
 ## [1.103.7](https://github.com/Kong/spec-renderer/compare/v1.103.6...v1.103.7) (2026-02-09)
 
 
