@@ -58,6 +58,7 @@
     >
       <CodeBlock
         :code="headersText"
+        :is-resizable="true"
         lang="json"
       />
     </div>
@@ -143,6 +144,7 @@ const responseBodyComponent = computed(() => {
       code: responseText.value,
       lang: requestLang.value,
       class: 'response-body',
+      isResizable: true,
     },
   }
 })
@@ -218,8 +220,7 @@ watch(() => props.response, async (res) => {
 }
 
 :deep(.response-body pre) {
-  max-height: 200px;
-  overflow-y: auto;
+  height: 200px;
 }
 
 h3 {

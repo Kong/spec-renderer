@@ -84,6 +84,7 @@
           v-if="requestCode && selectedLang"
           :code="(requestCode as string)"
           :is-error="snippetError"
+          :is-resizable="true"
           :lang="selectedLang"
         />
       </div>
