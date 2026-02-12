@@ -12,6 +12,7 @@
       </template>
 
       <BodyContentList
+        :base-path-id="basePathId"
         :contents="contentList"
         :description="description"
         :hide-readonly="hideReadonly"
@@ -27,6 +28,10 @@ import CollapsibleSection from './CollapsibleSection.vue'
 import BodyContentList from './BodyContentList.vue'
 
 defineProps({
+  basePathId: {
+    type: String,
+    default: '',
+  },
   description: {
     type: String,
     default: '',

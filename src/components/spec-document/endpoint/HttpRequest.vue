@@ -20,6 +20,7 @@ import { computed, toRefs } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpPathParam, IHttpQueryParam, IHttpHeaderParam } from '@stoplight/types'
 import RequestParamList from './RequestParamList.vue'
+import { kebabCase } from '@/utils'
 
 const props = defineProps({
   query: {
@@ -33,6 +34,10 @@ const props = defineProps({
   headers: {
     type: Array as PropType<IHttpHeaderParam[]>,
     default: () => [],
+  },
+  basePathId: {
+    type: String,
+    default: '',
   },
   titlePrefix: {
     type: String,
@@ -53,6 +58,7 @@ const componentList = computed(() => {
         paramList: query.value,
         title: `${titlePrefixWithSpace}Query Parameters`,
         'data-testid': 'endpoint-query-param-list',
+        ...(props.basePathId ? { basePathId: kebabCase(`${props.basePathId}-query`) } : null),
       },
       key: 'query',
     })
@@ -64,6 +70,7 @@ const componentList = computed(() => {
         paramList: path.value,
         title: `${titlePrefixWithSpace}Path Parameters`,
         'data-testid': 'endpoint-path-param-list',
+        ...(props.basePathId ? { basePathId: kebabCase(`${props.basePathId}-path`) } : null),
       },
       key: 'path',
     })
@@ -75,6 +82,7 @@ const componentList = computed(() => {
         paramList: headers.value,
         title: `${titlePrefixWithSpace}Headers`,
         'data-testid': 'endpoint-header-param-list',
+        ...(props.basePathId ? { basePathId: kebabCase(`${props.basePathId}-header`) } : null),
       },
       key: 'headers',
     })

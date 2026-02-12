@@ -10,6 +10,7 @@
       >
         <ModelProperty
           v-if="param.schema"
+          :base-path-id="basePathId"
           :property="{ ...param.schema, ...populateParamProperty(param, param.schema) }"
           :property-name="param.name"
           :required-fields="paramItemRequiredFields(param)"
@@ -27,6 +28,10 @@ import CollapsibleSection from './CollapsibleSection.vue'
 import type { SchemaObject } from '@/types'
 
 defineProps({
+  basePathId: {
+    type: String,
+    default: '',
+  },
   paramList: {
     type: Array as PropType<IHttpParam[]>,
     required: true,

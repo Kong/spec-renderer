@@ -24,10 +24,14 @@
             {{ content.schema.title }}
           </h4>
         </template>
-        <ContentListItemSchema :schema="parseSchema(content.schema)" />
+        <ContentListItemSchema
+          :base-path-id="basePathId"
+          :schema="parseSchema(content.schema)"
+        />
       </CollapsibleSection>
       <ContentListItemSchema
         v-else-if="content.schema"
+        :base-path-id="basePathId"
         :schema="parseSchema(content.schema)"
       />
     </template>
@@ -44,6 +48,10 @@ import type { SchemaObject } from '@/types'
 import { removeFieldsFromSchemaObject, removeReadonlyFields, resolveSchemaObjectFields } from '@/utils'
 
 const props = defineProps({
+  basePathId: {
+    type: String,
+    default: '',
+  },
   description: {
     type: String,
     default: '',

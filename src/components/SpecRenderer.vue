@@ -60,6 +60,7 @@
           :current-path="currentPathDOC"
           :document="parsedDocument"
           :document-scrolling-container="documentScrollingContainer"
+          :enable-property-links="enablePropertyLinks"
           :hide-download-button="hideDownloadButton"
           :hide-insomnia-try-it="hideInsomniaTryIt"
           :hide-navigation-buttons="hideNavigationButtons"
@@ -112,6 +113,7 @@ const {
   hideDownloadButton = false,
   showPoweredBy = false,
   maxExpandedDepth = DEFAULT_EXPANDED_PROPERTIES_DEPTH,
+  enablePropertyLinks = false,
 } = defineProps<SpecRendererProps>()
 
 // TODO: introduce and handle isParsed. show parsing state while parsing

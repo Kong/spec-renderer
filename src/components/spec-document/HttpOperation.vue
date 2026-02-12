@@ -32,9 +32,11 @@
         <HttpRequest
           v-if="operationData.request"
           v-bind="operationData.request"
+          :base-path-id="operationBasePathId"
         >
           <HttpOperationBody
             v-if="activeRequestBodyContentList.length"
+            :base-path-id="requestBodyBasePathId"
             class="http-operation-request-body"
             :content-list="activeRequestBodyContentList"
             :description="operationData.request.body?.description"
@@ -49,6 +51,7 @@
         </HttpRequest>
 
         <HttpOperationBody
+          :base-path-id="responseBasePathId"
           class="http-operation-response"
           :content-list="activeResponseContentList"
           :description="activeResponseDescription"
@@ -75,6 +78,7 @@
 
           <template #callback-response>
             <HttpOperationBody
+              :base-path-id="callbackResponseBasePathId"
               :content-list="activeCallbackResponseContentList"
               :description="activeCallbackResponseDescription"
               title="Callback Response"
@@ -180,7 +184,7 @@ import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import ResponseTypeSelect from './endpoint/ResponseTypeSelect.vue'
 import PageHeader from '../common/PageHeader.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import { getSamplePath, getSampleQuery, getSampleBody, getSampleHeaders } from '@/utils'
+import { getSamplePath, getSampleQuery, getSampleBody, getSampleHeaders, kebabCase } from '@/utils'
 import composables from '@/composables'
 import type { SecuritySchemeGroup, RequestBody } from '@/types'
 
@@ -214,6 +218,7 @@ const securitySchemeGroupList = computed<SecuritySchemeGroup[]>(() => {
 provide<ComputedRef<SecuritySchemeGroup[]>>('security-scheme-group-list', securitySchemeGroupList)
 
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
+const enablePropertyLinks = inject<Ref<boolean>>('enable-property-links', ref(false))
 
 const excludeNotRequiredInTryIt = ref<boolean>(true)
 const excludeNotRequiredInSample = ref<boolean>(true)
@@ -225,6 +230,23 @@ const operationData = computed(() => ({
 }))
 
 const isWebhookOperation = computed(() => 'name' in props.data)
+
+const operationBasePathId = computed(() =>
+  enablePropertyLinks.value && operationData.value.id ? kebabCase(operationData.value.id) : '',
+)
+const requestBodyBasePathId = computed(() =>
+  operationBasePathId.value ? kebabCase(`${operationBasePathId.value}-request-body`) : '',
+)
+const responseBasePathId = computed(() =>
+  enablePropertyLinks.value && operationData.value.id && activeResponseCode.value
+    ? kebabCase(`${operationData.value.id}-response-${activeResponseCode.value}`)
+    : '',
+)
+const callbackResponseBasePathId = computed(() =>
+  enablePropertyLinks.value && operationData.value.id && activeCallbackKey.value && activeCallbackResponseCode.value
+    ? kebabCase(`${operationData.value.id}-callback-${activeCallbackKey.value}-response-${activeCallbackResponseCode.value}`)
+    : '',
+)
 
 const excludeNotRequired = computed((): boolean => {
   return hideTryIt.value ? excludeNotRequiredInSample.value : excludeNotRequiredInTryIt.value

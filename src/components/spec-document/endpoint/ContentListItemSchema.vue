@@ -6,6 +6,7 @@
       :required-fields="schema.required"
     />
     <ModelNode
+      :base-path-id="basePathId"
       :schema="schema"
       :title="schema.title"
     />
@@ -19,6 +20,10 @@ import ModelNode from '@/components/spec-document/schema-model/ModelNode.vue'
 import PropertyFieldList from '@/components/spec-document/schema-model/PropertyFieldList.vue'
 
 const { schema } = defineProps({
+  basePathId: {
+    type: String,
+    default: '',
+  },
   schema: {
     type: Object as PropType<SchemaObject>,
     required: true,

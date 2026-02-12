@@ -193,6 +193,14 @@ const props = defineProps({
     validator: NUMBER_VALIDATOR,
     default: DEFAULT_EXPANDED_PROPERTIES_DEPTH,
   },
+  /**
+   * Enable links to individual properties of operation request/response schemas.
+   */
+  enablePropertyLinks: {
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
+    default: false,
+  },
 })
 
 const { highlighter, createHighlighter } = composables.useShiki()
@@ -214,6 +222,7 @@ provide<ComputedRef<boolean>>('hide-tryit', computed((): boolean => IS_TRUE(prop
 provide<ComputedRef<boolean>>('hide-insomnia-tryit', computed((): boolean => IS_TRUE(props.hideInsomniaTryIt)))
 provide<ComputedRef<boolean>>('markdown-styles', computed((): boolean => IS_TRUE(props.markdownStyles)))
 provide<ComputedRef<number>>('max-expanded-depth', computed((): number => convertToNumber(props.maxExpandedDepth) || DEFAULT_EXPANDED_PROPERTIES_DEPTH))
+provide<ComputedRef<boolean>>('enable-property-links', computed((): boolean => IS_TRUE(props.enablePropertyLinks)))
 
 const emit = defineEmits<{
   (e: 'path-not-found', requestedPath: string): void

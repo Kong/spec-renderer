@@ -56,6 +56,8 @@ export interface SpecRendererProps {
   showPoweredBy?: boolean | 'true' | 'false'
   /** The max depth until which nested properties should remain expanded by default. */
   maxExpandedDepth?: number | string
+  /** Enable links to individual properties of operation request/response schemas. */
+  enablePropertyLinks?: boolean | 'true' | 'false'
 }
 
 /**
