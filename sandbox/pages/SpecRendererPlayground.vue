@@ -116,7 +116,7 @@ import { useRoute as useVueRoute } from 'vue-router'
 
 const route = useVueRoute()
 
-const navigationType = ref<NavigationTypes>(route.hash ? 'hash' : 'path')
+const navigationType = ref<NavigationTypes>(route.hash?.startsWith('#/') ? 'hash' : 'path')
 
 const specText = ref<string>('')
 const specUrl = ref<string>('')

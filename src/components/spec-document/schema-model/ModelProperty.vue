@@ -137,8 +137,9 @@ onMounted(() => {
   if (hash.length) {
     // if the hash is the same as the current component's propertyId it means we want to show the current component
     // so we scroll to the current component
+    // delay to ensure parent container scroll (e.g. SpecDocument) settles first
     if (hash === propertyIDHash) {
-      currentElement.value?.scrollIntoView({ behavior: 'smooth' })
+      setTimeout(() => currentElement.value?.scrollIntoView({ behavior: 'smooth' }), 100)
     } else if (hash.startsWith(propertyIDHash)) {
       nestedPropertiesExpanded.value = true
       // only mess with the details element during mounted

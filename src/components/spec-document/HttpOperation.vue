@@ -184,7 +184,7 @@ import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import ResponseTypeSelect from './endpoint/ResponseTypeSelect.vue'
 import PageHeader from '../common/PageHeader.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import { getSamplePath, getSampleQuery, getSampleBody, getSampleHeaders, kebabCase } from '@/utils'
+import { getSamplePath, getSampleQuery, getSampleBody, getSampleHeaders, slugify } from '@/utils'
 import composables from '@/composables'
 import type { SecuritySchemeGroup, RequestBody } from '@/types'
 
@@ -231,20 +231,24 @@ const operationData = computed(() => ({
 
 const isWebhookOperation = computed(() => 'name' in props.data)
 
-const operationBasePathId = computed(() =>
-  enablePropertyLinks.value && operationData.value.id ? kebabCase(operationData.value.id) : '',
-)
+const operationBasePathId = computed(() => {
+  if (!enablePropertyLinks.value) return ''
+  const method = operationData.value.method
+  const pathOrName = operationData.value.path || operationData.value.name
+  if (!method || !pathOrName) return ''
+  return slugify(`${method} ${pathOrName.replace(/[/{}]+/g, ' ')}`)
+})
 const requestBodyBasePathId = computed(() =>
-  operationBasePathId.value ? kebabCase(`${operationBasePathId.value}-request-body`) : '',
+  operationBasePathId.value ? slugify(`${operationBasePathId.value}-request-body`) : '',
 )
 const responseBasePathId = computed(() =>
-  enablePropertyLinks.value && operationData.value.id && activeResponseCode.value
-    ? kebabCase(`${operationData.value.id}-response-${activeResponseCode.value}`)
+  operationBasePathId.value && activeResponseCode.value
+    ? slugify(`${operationBasePathId.value}-response-${activeResponseCode.value}`)
     : '',
 )
 const callbackResponseBasePathId = computed(() =>
-  enablePropertyLinks.value && operationData.value.id && activeCallbackKey.value && activeCallbackResponseCode.value
-    ? kebabCase(`${operationData.value.id}-callback-${activeCallbackKey.value}-response-${activeCallbackResponseCode.value}`)
+  operationBasePathId.value && activeCallbackKey.value && activeCallbackResponseCode.value
+    ? slugify(`${operationBasePathId.value}-callback-${activeCallbackKey.value}-response-${activeCallbackResponseCode.value}`)
     : '',
 )
 
