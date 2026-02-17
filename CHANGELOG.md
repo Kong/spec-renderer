@@ -1,3 +1,10 @@
+## [1.104.2](https://github.com/Kong/spec-renderer/compare/v1.104.1...v1.104.2) (2026-02-17)
+
+
+### Bug Fixes
+
+* required toggle not updating code block ([#793](https://github.com/Kong/spec-renderer/issues/793)) ([4643e33](https://github.com/Kong/spec-renderer/commit/4643e33e2ce5d74c1e21f4419ac15334319c4ac2))
+
 ## [1.104.1](https://github.com/Kong/spec-renderer/compare/v1.104.0...v1.104.1) (2026-02-17)
 
 
