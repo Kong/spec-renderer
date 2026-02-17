@@ -89,7 +89,7 @@ describe('<DownloadSpecDropdown />', () => {
       expect(mockDownloadSpecFile).toHaveBeenCalledWith('yaml')
     })
 
-    it('remembers selected format when Download button is clicked after dropdown selection', async () => {
+    it('Download button always uses JSON format regardless of dropdown selection', async () => {
       const wrapper = mount(DownloadSpecDropdown, {
         attachTo: document.body,
       })
@@ -101,10 +101,10 @@ describe('<DownloadSpecDropdown />', () => {
       expect(mockDownloadSpecFile).toHaveBeenCalledWith('yaml')
       mockDownloadSpecFile.mockClear()
 
-      // Click Download button, it should use remembered 'yaml' format
+      // Click Download button — should always use 'json' default
       await wrapper.findTestId('download-spec-btn').trigger('click')
 
-      expect(mockDownloadSpecFile).toHaveBeenCalledWith('yaml')
+      expect(mockDownloadSpecFile).toHaveBeenCalledWith('json')
     })
   })
 })

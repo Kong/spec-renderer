@@ -3,7 +3,7 @@
     <button
       class="download-spec-btn"
       data-testid="download-spec-btn"
-      @click="downloadSpecFile(selectedFormat)"
+      @click="downloadSpecFile('json')"
     >
       Download
     </button>
@@ -49,16 +49,13 @@ defineProps({
 
 const { downloadSpecFile } = composables.useSchemaParser()
 
-let selectedFormat: 'json' | 'yaml' = 'json'
-
 const downloadFormatItems: SelectItem[] = [
   { label: 'JSON', value: 'json', key: 'json' },
   { label: 'YAML', value: 'yaml', key: 'yaml' },
 ]
 
 const selectFormat = (item: SelectItem) => {
-  selectedFormat = item.value as 'json' | 'yaml'
-  downloadSpecFile(selectedFormat)
+  downloadSpecFile(item.value as 'json' | 'yaml')
 }
 </script>
 
