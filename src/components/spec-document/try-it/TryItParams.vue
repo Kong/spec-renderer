@@ -206,7 +206,7 @@ const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Re
 //
 const fieldValues = ref<Record<string, string>>({})
 
-let lastExcludeNotRequired = excludeNotRequired.value
+let lastExcludeNotRequiredSinceParamsChanged = excludeNotRequired.value
 
 const contentToCopy = computed((): string => {
   if (props.paramType !== 'body') {
@@ -219,15 +219,15 @@ const contentToCopy = computed((): string => {
 watch(params, (newParams) => {
   if (newParams) {
     const samples = extractSample(newParams)
-    const toggleChanged = props.paramType === 'body' && excludeNotRequired.value !== lastExcludeNotRequired
-    lastExcludeNotRequired = excludeNotRequired.value
+    const toggleChanged = props.paramType === 'body' && excludeNotRequired.value !== lastExcludeNotRequiredSinceParamsChanged
+    lastExcludeNotRequiredSinceParamsChanged = excludeNotRequired.value
 
     Object.keys(newParams).forEach(key => {
       // we need to keep it if it was previously changed, and only sent to example, when empty
       // but when the required toggle changed, force-update body with the newly filtered content
-      fieldValues.value[key] = (Object.keys(fieldValues.value).includes(key) && !toggleChanged)
-        ? fieldValues.value[key]
-        : samples[key]
+      if (!Object.keys(fieldValues.value).includes(key) || toggleChanged) {
+        fieldValues.value[key] = samples[key]
+      }
     })
   }
 }, { immediate: true })
