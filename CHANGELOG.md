@@ -1,3 +1,10 @@
+## [1.104.1](https://github.com/Kong/spec-renderer/compare/v1.104.0...v1.104.1) (2026-02-17)
+
+
+### Bug Fixes
+
+* audit fixes ([#797](https://github.com/Kong/spec-renderer/issues/797)) ([8e89b17](https://github.com/Kong/spec-renderer/commit/8e89b17bca94dd5a6cf2c10e246dc556d4676bad))
+
 # [1.104.0](https://github.com/Kong/spec-renderer/compare/v1.103.7...v1.104.0) (2026-02-11)
 
 
