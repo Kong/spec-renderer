@@ -20,14 +20,14 @@ describe('<DownloadSpecDropdown />', () => {
   })
 
   describe('rendering', () => {
-    it('renders the download button with text "Download"', () => {
+    it('renders the trigger button with text "Download"', () => {
       const wrapper = mount(DownloadSpecDropdown, {
         attachTo: document.body,
       })
 
-      const btn = wrapper.findTestId('download-spec-btn')
-      expect(btn.exists()).toBe(true)
-      expect(btn.text()).toBe('Download')
+      const trigger = wrapper.findTestId('trigger-button')
+      expect(trigger.exists()).toBe(true)
+      expect(trigger.text()).toContain('Download')
     })
 
     it('renders the format dropdown', () => {
@@ -56,15 +56,16 @@ describe('<DownloadSpecDropdown />', () => {
   })
 
   describe('interactions', () => {
-    it('calls downloadSpecFile with "json" when Download button is clicked', async () => {
+    it('opens dropdown when trigger button is clicked without downloading', async () => {
       const wrapper = mount(DownloadSpecDropdown, {
         attachTo: document.body,
       })
 
-      await wrapper.findTestId('download-spec-btn').trigger('click')
+      await wrapper.findTestId('trigger-button').trigger('click')
 
-      expect(mockDownloadSpecFile).toHaveBeenCalledOnce()
-      expect(mockDownloadSpecFile).toHaveBeenCalledWith('json')
+      expect(mockDownloadSpecFile).not.toHaveBeenCalled()
+      expect(wrapper.findTestId('download-json-btn').exists()).toBe(true)
+      expect(wrapper.findTestId('download-yaml-btn').exists()).toBe(true)
     })
 
     it('calls downloadSpecFile with "json" when JSON option is clicked', async () => {
@@ -87,24 +88,6 @@ describe('<DownloadSpecDropdown />', () => {
       await wrapper.findTestId('download-yaml-btn').trigger('click')
 
       expect(mockDownloadSpecFile).toHaveBeenCalledWith('yaml')
-    })
-
-    it('Download button always uses JSON format regardless of dropdown selection', async () => {
-      const wrapper = mount(DownloadSpecDropdown, {
-        attachTo: document.body,
-      })
-
-      // Select YAML from dropdown
-      await wrapper.findTestId('trigger-button').trigger('click')
-      await wrapper.findTestId('download-yaml-btn').trigger('click')
-
-      expect(mockDownloadSpecFile).toHaveBeenCalledWith('yaml')
-      mockDownloadSpecFile.mockClear()
-
-      // Click Download button — should always use 'json' default
-      await wrapper.findTestId('download-spec-btn').trigger('click')
-
-      expect(mockDownloadSpecFile).toHaveBeenCalledWith('json')
     })
   })
 })
