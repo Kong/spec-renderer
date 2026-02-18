@@ -8,7 +8,7 @@
         v-if="!hideDownloadButton"
         #actions
       >
-        <DownloadSpecDropdown :id="`download-format-${data.name}`" />
+        <DownloadSpecDropdown :id="`download-format-${kebabCase(data.name)}`" />
       </template>
       <div class="overview-page-versions">
         <LabelBadge
@@ -60,6 +60,7 @@ import PageHeader from '../common/PageHeader.vue'
 import MarkdownRenderer from '../common/MarkdownRenderer.vue'
 import DownloadSpecDropdown from './DownloadSpecDropdown.vue'
 import composables from '@/composables'
+import { kebabCase } from '@/utils/strings'
 
 const props = defineProps({
   data: {

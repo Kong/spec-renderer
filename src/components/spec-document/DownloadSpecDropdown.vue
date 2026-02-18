@@ -1,6 +1,5 @@
 <template>
   <SelectDropdown
-    :id="id"
     class="download-dropdown"
     data-testid="download-format-dropdown"
     :items="downloadFormatItems"
@@ -32,13 +31,6 @@
 import SelectDropdown from '../common/SelectDropdown.vue'
 import composables from '@/composables'
 import type { SelectItem } from '@/types'
-
-defineProps({
-  id: {
-    type: String,
-    default: 'download-format',
-  },
-})
 
 const { downloadSpecFile } = composables.useSchemaParser()
 
