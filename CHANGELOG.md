@@ -1,3 +1,10 @@
+# [1.105.0](https://github.com/Kong/spec-renderer/compare/v1.104.3...v1.105.0) (2026-02-19)
+
+
+### Features
+
+* **download-spec:** support download in YAML or JSON ([#789](https://github.com/Kong/spec-renderer/issues/789)) ([bd10aa0](https://github.com/Kong/spec-renderer/commit/bd10aa0f33bd6f9d969326b9ce2fa73a5915ff74))
+
 ## [1.104.3](https://github.com/Kong/spec-renderer/compare/v1.104.2...v1.104.3) (2026-02-19)
 
 
