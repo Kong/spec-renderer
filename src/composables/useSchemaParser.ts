@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { computeAPITree, transformOasToServiceNode } from '@/stoplight/elements'
 import type { ServiceNode, ParseOptions } from '@/types'
-import { parse as parseYaml } from '@stoplight/yaml'
+import { parse as parseYaml, safeStringify } from '@stoplight/yaml'
 import type { TableOfContentsItem } from '@/stoplight/elements-core'
 import refParser from '@apidevtools/json-schema-ref-parser'
 import { isLocalRef } from '@stoplight/json'
@@ -36,7 +36,7 @@ export default (): {
   parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
   parseOpenApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
   parseAsyncApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
-  downloadSpecFile: () => Promise<void>
+  downloadSpecFile: (format?: 'json' | 'yaml', content?: string) => Promise<void>
   parsedDocument: Ref<ServiceNode | string | undefined>
   tableOfContents: Ref<TableOfContentsItem[] | string | undefined>
 } => {
@@ -363,16 +363,30 @@ export default (): {
     }
   }
 
-  const downloadSpecFile = async () => {
-    if (isSsr() || !specText) return
+  const downloadSpecFile = async (format?: 'json' | 'yaml', content?: string) => {
+    const rawSpec = content || specText
+    if (isSsr() || !rawSpec) return
 
     try {
-      const fileExtension = jsonOrYaml(specText)
+      let downloadContent: string
+      const originalFormat = jsonOrYaml(rawSpec)
+      const targetFormat = format || originalFormat
+      if (targetFormat === originalFormat) {
+        downloadContent = rawSpec
+      } else {
+        const parsedSpec = originalFormat === 'json'
+          ? JSON.parse(rawSpec)
+          : parseYaml(rawSpec)
+        downloadContent = targetFormat === 'json'
+          ? JSON.stringify(parsedSpec, null, 2)
+          : safeStringify(parsedSpec, { indent: 2 })
+      }
+
       const pathBasedName = window.location.pathname.replace(/[^a-zA-Z0-9]/g, '') // remove all non alphanumeric charaters from the path
       const baseFileName = specTitle || pathBasedName || 'spec-file' // ensure a non-empty base name, so provided a default fallback
-      const downloadFileName = `${kebabCase(baseFileName)}.${fileExtension}`
+      const downloadFileName = `${kebabCase(baseFileName)}.${targetFormat}`
 
-      const blob = new Blob([specText], { type: fileExtension === 'json' ? 'application/json' : 'text/yaml' })
+      const blob = new Blob([downloadContent], { type: targetFormat === 'json' ? 'application/json' : 'text/yaml' })
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
 

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import composables from '.'
 import stripeSpec from '../../sandbox/public/specs/stripe.json'
 import type { ServiceNode } from '@/types'
@@ -633,6 +633,183 @@ tags:
         value: 'https://api.vitu.com/v1',
       },
     ])
+  })
+
+  describe('downloadSpecFile', () => {
+    const jsonSpec = JSON.stringify({
+      openapi: '3.1.0',
+      info: { title: 'Test API', version: '1.0.0' },
+      paths: {},
+    }, null, 2)
+
+    const yamlSpec = `openapi: "3.1.0"
+info:
+  title: Test API
+  version: "1.0.0"
+paths: {}`
+
+    let mockCreateObjectURL: ReturnType<typeof vi.fn>
+    let mockRevokeObjectURL: ReturnType<typeof vi.fn>
+    let mockSetAttribute: ReturnType<typeof vi.spyOn>
+    let mockClick: ReturnType<typeof vi.spyOn>
+
+    beforeEach(() => {
+      mockCreateObjectURL = vi.fn().mockReturnValue('blob:mock-url')
+      mockRevokeObjectURL = vi.fn()
+      mockClick = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
+      mockSetAttribute = vi.spyOn(HTMLAnchorElement.prototype, 'setAttribute')
+      window.URL.createObjectURL = mockCreateObjectURL
+      window.URL.revokeObjectURL = mockRevokeObjectURL
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    const getDownloadFilename = () => {
+      const call = mockSetAttribute.mock.calls.find((args) => args[0] === 'download')
+      return call?.[1] as string | undefined
+    }
+
+    const getCreatedBlob = () => mockCreateObjectURL.mock.calls[0]?.[0] as Blob
+
+    it('downloads JSON spec as JSON with correct MIME type and filename', async () => {
+      const { parseSpecDocument, downloadSpecFile } = composables.useSchemaParser()
+      await parseSpecDocument(jsonSpec)
+
+      await downloadSpecFile('json')
+
+      expect(getCreatedBlob().type).toBe('application/json')
+      expect(getDownloadFilename()).toBe('test-api.json')
+      expect(mockClick).toHaveBeenCalled()
+      expect(mockRevokeObjectURL).toHaveBeenCalledWith('blob:mock-url')
+    })
+
+    it('downloads YAML spec as YAML with correct MIME type and filename', async () => {
+      const { parseSpecDocument, downloadSpecFile } = composables.useSchemaParser()
+      await parseSpecDocument(yamlSpec)
+
+      await downloadSpecFile('yaml')
+
+      expect(getCreatedBlob().type).toBe('text/yaml')
+      expect(getDownloadFilename()).toBe('test-api.yaml')
+      expect(mockClick).toHaveBeenCalled()
+    })
+
+    it('converts JSON spec to YAML for download', async () => {
+      const { parseSpecDocument, downloadSpecFile } = composables.useSchemaParser()
+      await parseSpecDocument(jsonSpec)
+
+      await downloadSpecFile('yaml')
+
+      expect(getCreatedBlob().type).toBe('text/yaml')
+      expect(getDownloadFilename()).toBe('test-api.yaml')
+      expect(mockClick).toHaveBeenCalled()
+    })
+
+    it('converts YAML spec to JSON for download', async () => {
+      const { parseSpecDocument, downloadSpecFile } = composables.useSchemaParser()
+      await parseSpecDocument(yamlSpec)
+
+      await downloadSpecFile('json')
+
+      expect(getCreatedBlob().type).toBe('application/json')
+      expect(getDownloadFilename()).toBe('test-api.json')
+      expect(mockClick).toHaveBeenCalled()
+    })
+
+    it('defaults to JSON format when spec starts with "{"', async () => {
+      const { parseSpecDocument, downloadSpecFile } = composables.useSchemaParser()
+      await parseSpecDocument(jsonSpec)
+
+      await downloadSpecFile()
+
+      expect(getCreatedBlob().type).toBe('application/json')
+      expect(getDownloadFilename()).toMatch(/\.json$/)
+    })
+
+    it('defaults to YAML format when spec does not start with "{"', async () => {
+      const { parseSpecDocument, downloadSpecFile } = composables.useSchemaParser()
+      await parseSpecDocument(yamlSpec)
+
+      await downloadSpecFile()
+
+      expect(getCreatedBlob().type).toBe('text/yaml')
+      expect(getDownloadFilename()).toMatch(/\.yaml$/)
+    })
+
+    it('uses kebab-cased spec title as filename', async () => {
+      const specWithTitle = JSON.stringify({
+        openapi: '3.1.0',
+        info: { title: 'My Cool API', version: '1.0.0' },
+        paths: {},
+      }, null, 2)
+
+      const { parseSpecDocument, downloadSpecFile } = composables.useSchemaParser()
+      await parseSpecDocument(specWithTitle)
+
+      await downloadSpecFile('json')
+
+      expect(getDownloadFilename()).toBe('my-cool-api.json')
+    })
+
+    it('falls back to spec-file when title and pathname are empty', async () => {
+      const specNoTitle = JSON.stringify({
+        openapi: '3.1.0',
+        info: { version: '1.0.0' },
+        paths: {},
+      }, null, 2)
+
+      const { parseSpecDocument, downloadSpecFile } = composables.useSchemaParser()
+      await parseSpecDocument(specNoTitle)
+
+      // Mock pathname to return '/' which becomes empty string after regex
+      Object.defineProperty(window, 'location', {
+        value: { pathname: '/' },
+        writable: true,
+        configurable: true,
+      })
+
+      await downloadSpecFile('json')
+
+      expect(getDownloadFilename()).toBe('spec-file.json')
+    })
+
+    it('properly cleans up DOM and revokes object URL', async () => {
+      const { parseSpecDocument, downloadSpecFile } = composables.useSchemaParser()
+      await parseSpecDocument(jsonSpec)
+
+      await downloadSpecFile('json')
+
+      expect(mockClick).toHaveBeenCalled()
+      expect(mockRevokeObjectURL).toHaveBeenCalledWith('blob:mock-url')
+    })
+
+    it('catches conversion errors and logs to console.error', async () => {
+      const { parseSpecDocument, downloadSpecFile } = composables.useSchemaParser()
+      await parseSpecDocument(jsonSpec)
+
+      // Force JSON.parse to throw during conversion
+      vi.spyOn(JSON, 'parse').mockImplementation(() => {
+        throw new Error('parse error')
+      })
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+      await downloadSpecFile('yaml')
+
+      expect(consoleSpy).toHaveBeenCalled()
+      expect(mockClick).not.toHaveBeenCalled()
+    })
+
+    it('uses provided content parameter instead of parsed specText', async () => {
+      const { downloadSpecFile } = composables.useSchemaParser()
+
+      await downloadSpecFile('json', jsonSpec)
+
+      expect(getCreatedBlob().type).toBe('application/json')
+      expect(getDownloadFilename()).toMatch(/\.json$/)
+      expect(mockClick).toHaveBeenCalled()
+    })
   })
 })
 
