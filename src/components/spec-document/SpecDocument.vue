@@ -213,7 +213,9 @@ provide<ComputedRef<string>>('base-path', computed((): string => props.basePath)
 provide<ComputedRef<boolean>>('hide-tryit', computed((): boolean => IS_TRUE(props.hideTryIt)))
 provide<ComputedRef<boolean>>('hide-insomnia-tryit', computed((): boolean => IS_TRUE(props.hideInsomniaTryIt)))
 provide<ComputedRef<boolean>>('markdown-styles', computed((): boolean => IS_TRUE(props.markdownStyles)))
+provide<ComputedRef<string>>('navigation-type', computed((): string => props.navigationType ?? 'path'))
 provide<ComputedRef<number>>('max-expanded-depth', computed((): number => convertToNumber(props.maxExpandedDepth) || DEFAULT_EXPANDED_PROPERTIES_DEPTH))
+provide<ComputedRef<boolean>>('control-address-bar', computed((): boolean => IS_TRUE(props.controlAddressBar)))
 
 const emit = defineEmits<{
   (e: 'path-not-found', requestedPath: string): void
@@ -257,7 +259,7 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
       return { component: ArticleNode, props: defaultProps, doc: forServiceNode }
     case NodeType.HttpOperation:
     case NodeType.HttpWebhook:
-      return { component: HttpOperation, props: defaultProps, doc: forServiceNode }
+      return { component: HttpOperation, props: { ...defaultProps, uri: forServiceNode.uri }, doc: forServiceNode }
     case NodeType.HttpOperationTag:
       return { component: HttpOperationTag, props: { ...forServiceNode.data }, doc: forServiceNode }
     case NodeType.AsyncOperation:
@@ -539,7 +541,7 @@ watch(() => ({ nodesList: nodesList.value,
   if (newUri && newUri !== lastPath.value && !newValue.isScrolling) {
     emit('content-scrolled', newUri)
     if (props.controlAddressBar) {
-    // we only have path and hash for now
+      // we only have path and hash for now
       const newPath = props.navigationType === 'path' ? props.basePath + newUri : props.basePath + '#' + newUri
       window.history[scrolledItemsCounter.value++ > 0 ? 'replaceState' : 'pushState']({}, '', newPath)
     }

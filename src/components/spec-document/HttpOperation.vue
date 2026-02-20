@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="httpOperationEl"
     class="http-operation"
     :data-testid="`http-operation-${operationData.id}`"
   >
@@ -11,6 +12,20 @@
       :title="operationData.name"
       :type="isWebhookOperation ? 'WEBHOOK' : ''"
     >
+      <template
+        v-if="controlAddressBar && operationPermalinkUrl"
+        #actions
+      >
+        <a
+          class="operation-permalink"
+          data-testid="operation-permalink-button"
+          :href="operationPermalinkUrl"
+          title="Copy link"
+          @click.prevent="handleOperationPermalinkClick"
+        >
+          <LinkIcon size="16px" />
+        </a>
+      </template>
       <ServerEndpoint
         v-if="serverUrlList.length || operationData.path"
         class="http-operation-server-endpoint"
@@ -180,6 +195,7 @@ import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import ResponseTypeSelect from './endpoint/ResponseTypeSelect.vue'
 import PageHeader from '../common/PageHeader.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
+import { LinkIcon } from '@kong/icons'
 import { getSamplePath, getSampleQuery, getSampleBody, getSampleHeaders } from '@/utils'
 import composables from '@/composables'
 import type { SecuritySchemeGroup, RequestBody } from '@/types'
@@ -188,6 +204,10 @@ const props = defineProps({
   data: {
     type: Object as PropType<IHttpOperation | IHttpWebhookOperation>,
     required: true,
+  },
+  uri: {
+    type: String,
+    default: '',
   },
 })
 
@@ -214,6 +234,11 @@ const securitySchemeGroupList = computed<SecuritySchemeGroup[]>(() => {
 provide<ComputedRef<SecuritySchemeGroup[]>>('security-scheme-group-list', securitySchemeGroupList)
 
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
+const basePath = inject<Ref<string>>('base-path', ref(''))
+const navigationType = inject<Ref<string>>('navigation-type', ref('path'))
+const controlAddressBar = inject<Ref<boolean>>('control-address-bar', ref(false))
+
+const httpOperationEl = ref<HTMLElement | null>(null)
 
 const excludeNotRequiredInTryIt = ref<boolean>(true)
 const excludeNotRequiredInSample = ref<boolean>(true)
@@ -225,6 +250,17 @@ const operationData = computed(() => ({
 }))
 
 const isWebhookOperation = computed(() => 'name' in props.data)
+
+const operationPermalinkUrl = computed(() => {
+  if (!props.uri) return ''
+  return navigationType.value === 'hash'
+    ? `${basePath.value}#${props.uri}`
+    : `${basePath.value}${props.uri}`
+})
+
+function handleOperationPermalinkClick() {
+  httpOperationEl.value?.scrollIntoView({ behavior: 'smooth' })
+}
 
 const excludeNotRequired = computed((): boolean => {
   return hideTryIt.value ? excludeNotRequiredInSample.value : excludeNotRequiredInTryIt.value
@@ -372,6 +408,27 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
 .http-operation {
   .http-operation-header {
     margin-bottom: var(--kui-space-90, $kui-space-90);
+
+    :deep(.page-header-actions) {
+      margin-left: 0;
+    }
+
+    .operation-permalink {
+      @include default-button-reset;
+
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      visibility: hidden;
+
+      &:hover {
+        color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+      }
+    }
+
+    &:hover {
+      .operation-permalink {
+        visibility: visible;
+      }
+    }
   }
 
   .http-operation-container {
