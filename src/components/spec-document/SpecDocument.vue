@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, provide, computed, nextTick, onBeforeMount, onMounted, onUnmounted, useTemplateRef } from 'vue'
+import { watch, ref, provide, computed, nextTick, onBeforeMount, useTemplateRef } from 'vue'
 import { useMagicKeys, useWindowScroll, useWindowSize, useElementSize, useScroll, until, whenever } from '@vueuse/core'
 import composables from '@/composables'
 import type { PropType, ComputedRef } from 'vue'
@@ -213,9 +213,7 @@ provide<ComputedRef<string>>('base-path', computed((): string => props.basePath)
 provide<ComputedRef<boolean>>('hide-tryit', computed((): boolean => IS_TRUE(props.hideTryIt)))
 provide<ComputedRef<boolean>>('hide-insomnia-tryit', computed((): boolean => IS_TRUE(props.hideInsomniaTryIt)))
 provide<ComputedRef<boolean>>('markdown-styles', computed((): boolean => IS_TRUE(props.markdownStyles)))
-provide<ComputedRef<string>>('navigation-type', computed((): string => props.navigationType ?? 'path'))
 provide<ComputedRef<number>>('max-expanded-depth', computed((): number => convertToNumber(props.maxExpandedDepth) || DEFAULT_EXPANDED_PROPERTIES_DEPTH))
-provide<ComputedRef<boolean>>('control-address-bar', computed((): boolean => IS_TRUE(props.controlAddressBar)))
 
 const emit = defineEmits<{
   (e: 'path-not-found', requestedPath: string): void
