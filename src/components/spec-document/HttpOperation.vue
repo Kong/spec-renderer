@@ -13,17 +13,20 @@
       :type="isWebhookOperation ? 'WEBHOOK' : ''"
     >
       <template
-        v-if="controlAddressBar && operationPermalinkUrl"
+        v-if="permalinkUrl"
         #actions
       >
         <a
           class="operation-permalink"
           data-testid="operation-permalink-button"
-          :href="operationPermalinkUrl"
-          title="Copy link"
+          :href="permalinkUrl"
+          :title="copied ? 'Copied!' : 'Copy link'"
           @click.prevent="handleOperationPermalinkClick"
         >
-          <LinkIcon size="16px" />
+          <component
+            :is="copied ? CheckIcon : LinkIcon"
+            size="16px"
+          />
         </a>
       </template>
       <ServerEndpoint
@@ -195,7 +198,8 @@ import ServerEndpoint from './endpoint/ServerEndpoint.vue'
 import ResponseTypeSelect from './endpoint/ResponseTypeSelect.vue'
 import PageHeader from '../common/PageHeader.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import { LinkIcon } from '@kong/icons'
+import { LinkIcon, CheckIcon } from '@kong/icons'
+import { useClipboard } from '@vueuse/core'
 import { getSamplePath, getSampleQuery, getSampleBody, getSampleHeaders } from '@/utils'
 import composables from '@/composables'
 import type { SecuritySchemeGroup, RequestBody } from '@/types'
@@ -205,7 +209,7 @@ const props = defineProps({
     type: Object as PropType<IHttpOperation | IHttpWebhookOperation>,
     required: true,
   },
-  uri: {
+  permalinkUrl: {
     type: String,
     default: '',
   },
@@ -234,11 +238,9 @@ const securitySchemeGroupList = computed<SecuritySchemeGroup[]>(() => {
 provide<ComputedRef<SecuritySchemeGroup[]>>('security-scheme-group-list', securitySchemeGroupList)
 
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
-const basePath = inject<Ref<string>>('base-path', ref(''))
-const navigationType = inject<Ref<string>>('navigation-type', ref('path'))
-const controlAddressBar = inject<Ref<boolean>>('control-address-bar', ref(false))
 
 const httpOperationEl = ref<HTMLElement | null>(null)
+const { copy, copied } = useClipboard({ legacy: true })
 
 const excludeNotRequiredInTryIt = ref<boolean>(true)
 const excludeNotRequiredInSample = ref<boolean>(true)
@@ -251,14 +253,14 @@ const operationData = computed(() => ({
 
 const isWebhookOperation = computed(() => 'name' in props.data)
 
-const operationPermalinkUrl = computed(() => {
-  if (!props.uri) return ''
-  return navigationType.value === 'hash'
-    ? `${basePath.value}#${props.uri}`
-    : `${basePath.value}${props.uri}`
-})
-
-function handleOperationPermalinkClick() {
+async function handleOperationPermalinkClick() {
+  if (props.permalinkUrl) {
+    const currentUrl = window.location.pathname + window.location.hash
+    if (currentUrl !== props.permalinkUrl) {
+      window.history.pushState({}, '', props.permalinkUrl)
+    }
+    await copy(window.location.href)
+  }
   httpOperationEl.value?.scrollIntoView({ behavior: 'smooth' })
 }
 

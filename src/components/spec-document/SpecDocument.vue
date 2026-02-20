@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, provide, computed, nextTick, onBeforeMount, useTemplateRef } from 'vue'
+import { watch, ref, provide, computed, nextTick, onBeforeMount, onMounted, onUnmounted, useTemplateRef } from 'vue'
 import { useMagicKeys, useWindowScroll, useWindowSize, useElementSize, useScroll, until, whenever } from '@vueuse/core'
 import composables from '@/composables'
 import type { PropType, ComputedRef } from 'vue'
@@ -258,8 +258,14 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
     case NodeType.Article:
       return { component: ArticleNode, props: defaultProps, doc: forServiceNode }
     case NodeType.HttpOperation:
-    case NodeType.HttpWebhook:
-      return { component: HttpOperation, props: { ...defaultProps, uri: forServiceNode.uri }, doc: forServiceNode }
+    case NodeType.HttpWebhook: {
+      const permalinkUrl = IS_TRUE(props.controlAddressBar) && forServiceNode.uri
+        ? (props.navigationType === 'path'
+          ? props.basePath + forServiceNode.uri
+          : props.basePath + '#' + forServiceNode.uri)
+        : ''
+      return { component: HttpOperation, props: { ...defaultProps, permalinkUrl }, doc: forServiceNode }
+    }
     case NodeType.HttpOperationTag:
       return { component: HttpOperationTag, props: { ...forServiceNode.data }, doc: forServiceNode }
     case NodeType.AsyncOperation:
@@ -543,7 +549,10 @@ watch(() => ({ nodesList: nodesList.value,
     if (props.controlAddressBar) {
       // we only have path and hash for now
       const newPath = props.navigationType === 'path' ? props.basePath + newUri : props.basePath + '#' + newUri
-      window.history[scrolledItemsCounter.value++ > 0 ? 'replaceState' : 'pushState']({}, '', newPath)
+      const currentUrl = window.location.pathname + window.location.hash
+      if (currentUrl !== newPath) {
+        window.history[scrolledItemsCounter.value++ > 0 ? 'replaceState' : 'pushState']({}, '', newPath)
+      }
     }
     lastPath.value = newUri
   }

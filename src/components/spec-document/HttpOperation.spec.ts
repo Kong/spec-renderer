@@ -1,6 +1,8 @@
 import { ref } from 'vue'
-import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { mount, flushPromises } from '@vue/test-utils'
+
+window.HTMLElement.prototype.scrollIntoView = vi.fn()
 import HttpOperation from './HttpOperation.vue'
 import type { IHttpOperation, IServer } from '@stoplight/types'
 import composables from '@/composables'
@@ -152,6 +154,81 @@ describe('<HttpOperation />', () => {
 
       // server endpoint is not rendered
       expect(wrapper.findTestId(`server-endpoint-${data.id}`).exists()).toBe(false)
+    })
+  })
+
+  describe('permalink', () => {
+    const operationData: IHttpOperation = {
+      id: 'op1',
+      path: '/foo',
+      method: 'get',
+      responses: [],
+    }
+
+    beforeEach(() => {
+      // useClipboard({ legacy: true }) falls back to document.execCommand in jsdom
+      document.execCommand = vi.fn().mockReturnValue(true)
+      vi.spyOn(window.history, 'pushState').mockImplementation(() => {})
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    it('does not render permalink button when permalinkUrl prop is not set', () => {
+      const wrapper = mount(HttpOperation, { props: { data: operationData } })
+      expect(wrapper.findTestId('operation-permalink-button').exists()).toBe(false)
+    })
+
+    it('renders permalink button when permalinkUrl prop is set', () => {
+      const wrapper = mount(HttpOperation, {
+        props: { data: operationData, permalinkUrl: '/base/operations/op1' },
+      })
+      expect(wrapper.findTestId('operation-permalink-button').exists()).toBe(true)
+    })
+
+    it('permalink button href matches permalinkUrl', () => {
+      const wrapper = mount(HttpOperation, {
+        props: { data: operationData, permalinkUrl: '/base/operations/op1' },
+      })
+      expect(wrapper.findTestId('operation-permalink-button').attributes('href')).toBe('/base/operations/op1')
+    })
+
+    it('calls window.history.pushState with permalinkUrl on click', async () => {
+      const permalink = '/base/operations/op1'
+      const wrapper = mount(HttpOperation, {
+        props: { data: operationData, permalinkUrl: permalink },
+      })
+      await wrapper.findTestId('operation-permalink-button').trigger('click')
+      await flushPromises()
+      expect(window.history.pushState).toHaveBeenCalledWith({}, '', permalink)
+    })
+
+    it('does not call pushState when current URL already matches permalinkUrl', async () => {
+      // jsdom default: pathname='/', hash='' → currentUrl='/'
+      const wrapper = mount(HttpOperation, {
+        props: { data: operationData, permalinkUrl: '/' },
+      })
+      await wrapper.findTestId('operation-permalink-button').trigger('click')
+      await flushPromises()
+      expect(window.history.pushState).not.toHaveBeenCalled()
+    })
+
+    it('triggers clipboard copy on click', async () => {
+      const wrapper = mount(HttpOperation, {
+        props: { data: operationData, permalinkUrl: '/base/operations/op1' },
+      })
+      await wrapper.findTestId('operation-permalink-button').trigger('click')
+      await flushPromises()
+      // useClipboard falls back to document.execCommand('copy') in jsdom
+      expect(document.execCommand).toHaveBeenCalledWith('copy')
+    })
+
+    it('shows "Copy link" title on permalink button', () => {
+      const wrapper = mount(HttpOperation, {
+        props: { data: operationData, permalinkUrl: '/base/operations/op1' },
+      })
+      expect(wrapper.findTestId('operation-permalink-button').attributes('title')).toBe('Copy link')
     })
   })
 })
