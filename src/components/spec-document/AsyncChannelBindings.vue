@@ -15,7 +15,7 @@
           :items="protocolSelectItems"
         >
           <template #trigger-content>
-            <span class="protocol-label">{{ selectedProtocol.toUpperCase() }}</span>
+            <span>{{ selectedProtocol.toUpperCase() }}</span>
           </template>
         </SelectDropdown>
         <LabelBadge
