@@ -98,9 +98,9 @@ const displayValue = computed(() =>
   }
 
   .binding-nested-rows {
+    border-left: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     margin-left: 4px;
     padding-left: var(--kui-space-50, $kui-space-50);
-    border-left: 1px solid var(--kui-color-text-neutral-weaker, $kui-color-text-neutral-weaker);
   }
 }
 </style>
