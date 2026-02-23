@@ -20,6 +20,7 @@
         </SelectDropdown>
         <LabelBadge
           v-else
+          class="protocol-badge"
           :label="selectedProtocol.toUpperCase()"
           size="small"
           type="neutral"
@@ -95,13 +96,25 @@ const bindingEntries = computed((): Array<[string, any]> =>
 
   .protocol-selector {
     :deep(.trigger-button) {
-      background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
-      color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+      border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+      font-family: var(--kui-font-family-code, $kui-font-family-code);
       font-size: var(--kui-font-size-20, $kui-font-size-20);
-      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-      line-height: var(--kui-line-height-20, $kui-line-height-20);
-      padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
+      font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+      line-height: var(--kui-line-height-40, $kui-line-height-40);
+      padding: var(--kui-space-0, $kui-space-0) var(--kui-space-30, $kui-space-30);
     }
+  }
+
+  :deep(.protocol-badge) {
+    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+    font-family: var(--kui-font-family-code, $kui-font-family-code);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+    line-height: var(--kui-line-height-40, $kui-line-height-40);
+    padding: var(--kui-space-0, $kui-space-0) var(--kui-space-30, $kui-space-30);
   }
 
   .channel-bindings-content {
