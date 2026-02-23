@@ -43,6 +43,10 @@
         title="Parameters"
       />
     </section>
+    <AsyncChannelBindings
+      v-if="channel"
+      :channel="channel"
+    />
     <div v-if="acceptedMessages.length">
       <CollapsibleSection
         v-for="message in acceptedMessages"
@@ -78,6 +82,7 @@ import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import { transformSchema, transformMessage } from '@/utils/async-to-oas-transformer'
 import CollapsibleSection from './endpoint/CollapsibleSection.vue'
 import AsyncMessage from './AsyncMessage.vue'
+import AsyncChannelBindings from './AsyncChannelBindings.vue'
 
 const props = defineProps({
   data: {
