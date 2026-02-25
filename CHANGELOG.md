@@ -1,3 +1,10 @@
+# [1.106.0](https://github.com/Kong/spec-renderer/compare/v1.105.1...v1.106.0) (2026-02-25)
+
+
+### Features
+
+* anchor link for operations [TDX-7134] ([#801](https://github.com/Kong/spec-renderer/issues/801)) ([ee9db4e](https://github.com/Kong/spec-renderer/commit/ee9db4eabfbe1e74f6e1c75be8a8d06ce433fdc8))
+
 ## [1.105.1](https://github.com/Kong/spec-renderer/compare/v1.105.0...v1.105.1) (2026-02-23)
 
 
