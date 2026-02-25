@@ -52,6 +52,8 @@ export interface SpecRendererProps {
   hideNavigationButtons?: boolean | 'true' | 'false'
   /** Hide the spec download button. */
   hideDownloadButton?: boolean | 'true' | 'false'
+  /** Show a permalink icon on each operation that copies its URL to clipboard. */
+  enableOperationLinks?: boolean | 'true' | 'false'
   /** Show the "Powered by Kong" content in the SpecRendererTOC. Defaults to `false` */
   showPoweredBy?: boolean | 'true' | 'false'
   /** The max depth until which nested properties should remain expanded by default. */

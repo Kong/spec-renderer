@@ -90,6 +90,7 @@
       base-path="/spec-renderer"
       :control-address-bar="true"
       :current-path="currentPath"
+      enable-operation-links
       :hide-deprecated="hideDeprecated"
       :hide-insomnia-try-it="hideTryItInsomnia"
       :hide-navigation-buttons="hideNavigationButtons"

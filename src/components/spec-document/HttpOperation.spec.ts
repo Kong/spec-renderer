@@ -168,7 +168,6 @@ describe('<HttpOperation />', () => {
     beforeEach(() => {
       // useClipboard({ legacy: true }) falls back to document.execCommand in jsdom
       document.execCommand = vi.fn().mockReturnValue(true)
-      vi.spyOn(window.history, 'pushState').mockImplementation(() => {})
     })
 
     afterEach(() => {
@@ -192,26 +191,6 @@ describe('<HttpOperation />', () => {
         props: { data: operationData, permalinkUrl: '/base/operations/op1' },
       })
       expect(wrapper.findTestId('operation-permalink-button').attributes('href')).toBe('/base/operations/op1')
-    })
-
-    it('calls window.history.pushState with permalinkUrl on click', async () => {
-      const permalink = '/base/operations/op1'
-      const wrapper = mount(HttpOperation, {
-        props: { data: operationData, permalinkUrl: permalink },
-      })
-      await wrapper.findTestId('operation-permalink-button').trigger('click')
-      await flushPromises()
-      expect(window.history.pushState).toHaveBeenCalledWith({}, '', permalink)
-    })
-
-    it('does not call pushState when current URL already matches permalinkUrl', async () => {
-      // jsdom default: pathname='/', hash='' → currentUrl='/'
-      const wrapper = mount(HttpOperation, {
-        props: { data: operationData, permalinkUrl: '/' },
-      })
-      await wrapper.findTestId('operation-permalink-button').trigger('click')
-      await flushPromises()
-      expect(window.history.pushState).not.toHaveBeenCalled()
     })
 
     it('triggers clipboard copy on click', async () => {

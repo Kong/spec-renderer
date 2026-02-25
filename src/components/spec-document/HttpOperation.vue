@@ -1,6 +1,5 @@
 <template>
   <div
-    ref="httpOperationEl"
     class="http-operation"
     :data-testid="`http-operation-${operationData.id}`"
   >
@@ -25,7 +24,7 @@
         >
           <component
             :is="copied ? CheckIcon : LinkIcon"
-            size="16px"
+            :size="KUI_ICON_SIZE_30"
           />
         </a>
       </template>
@@ -203,6 +202,7 @@ import { useClipboard } from '@vueuse/core'
 import { getSamplePath, getSampleQuery, getSampleBody, getSampleHeaders } from '@/utils'
 import composables from '@/composables'
 import type { SecuritySchemeGroup, RequestBody } from '@/types'
+import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 
 const props = defineProps({
   data: {
@@ -239,7 +239,6 @@ provide<ComputedRef<SecuritySchemeGroup[]>>('security-scheme-group-list', securi
 
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
-const httpOperationEl = ref<HTMLElement | null>(null)
 const { copy, copied } = useClipboard({ legacy: true })
 
 const excludeNotRequiredInTryIt = ref<boolean>(true)
@@ -255,13 +254,8 @@ const isWebhookOperation = computed(() => 'name' in props.data)
 
 async function handleOperationPermalinkClick() {
   if (props.permalinkUrl) {
-    const currentUrl = window.location.pathname + window.location.hash
-    if (currentUrl !== props.permalinkUrl) {
-      window.history.pushState({}, '', props.permalinkUrl)
-    }
-    await copy(window.location.href)
+    await copy(window.location.origin + props.permalinkUrl)
   }
-  httpOperationEl.value?.scrollIntoView({ behavior: 'smooth' })
 }
 
 const excludeNotRequired = computed((): boolean => {
@@ -412,7 +406,7 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
     margin-bottom: var(--kui-space-90, $kui-space-90);
 
     :deep(.page-header-actions) {
-      margin-left: 0;
+      margin-left: var(--kui-space-0, $kui-space-0);;
     }
 
     .operation-permalink {
@@ -423,6 +417,10 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
 
       &:hover {
         color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+      }
+
+      @media (hover: none) {
+        visibility: visible;
       }
     }
 
