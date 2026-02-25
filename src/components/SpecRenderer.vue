@@ -60,6 +60,7 @@
           :current-path="currentPathDOC"
           :document="parsedDocument"
           :document-scrolling-container="documentScrollingContainer"
+          :enable-operation-links="enableOperationLinks"
           :hide-download-button="hideDownloadButton"
           :hide-insomnia-try-it="hideInsomniaTryIt"
           :hide-navigation-buttons="hideNavigationButtons"
@@ -110,6 +111,7 @@ const {
   allowCustomServerUrl = true,
   hideNavigationButtons = true,
   hideDownloadButton = false,
+  enableOperationLinks = false,
   showPoweredBy = false,
   maxExpandedDepth = DEFAULT_EXPANDED_PROPERTIES_DEPTH,
 } = defineProps<SpecRendererProps>()

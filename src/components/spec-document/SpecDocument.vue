@@ -186,6 +186,14 @@ const props = defineProps({
     default: false,
   },
   /**
+   * Show a permalink icon on each operation that copies its URL to clipboard.
+   */
+  enableOperationLinks: {
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
+    default: false,
+  },
+  /**
    * The max depth until which nested properties should remain expanded by default.
    */
   maxExpandedDepth: {
@@ -256,8 +264,14 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
     case NodeType.Article:
       return { component: ArticleNode, props: defaultProps, doc: forServiceNode }
     case NodeType.HttpOperation:
-    case NodeType.HttpWebhook:
-      return { component: HttpOperation, props: defaultProps, doc: forServiceNode }
+    case NodeType.HttpWebhook: {
+      const permalinkUrl = IS_TRUE(props.enableOperationLinks) && forServiceNode.uri
+        ? (props.navigationType === 'path'
+          ? props.basePath + forServiceNode.uri
+          : props.basePath + '#' + forServiceNode.uri)
+        : ''
+      return { component: HttpOperation, props: { ...defaultProps, permalinkUrl }, doc: forServiceNode }
+    }
     case NodeType.HttpOperationTag:
       return { component: HttpOperationTag, props: { ...forServiceNode.data }, doc: forServiceNode }
     case NodeType.AsyncOperation:
@@ -539,7 +553,7 @@ watch(() => ({ nodesList: nodesList.value,
   if (newUri && newUri !== lastPath.value && !newValue.isScrolling) {
     emit('content-scrolled', newUri)
     if (props.controlAddressBar) {
-    // we only have path and hash for now
+      // we only have path and hash for now
       const newPath = props.navigationType === 'path' ? props.basePath + newUri : props.basePath + '#' + newUri
       window.history[scrolledItemsCounter.value++ > 0 ? 'replaceState' : 'pushState']({}, '', newPath)
     }
