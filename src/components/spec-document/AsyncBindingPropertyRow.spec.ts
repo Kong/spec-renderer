@@ -35,6 +35,17 @@ describe('<AsyncBindingPropertyRow />', () => {
     })
   })
 
+  describe('empty object value', () => {
+    it('renders a flat row, not an expandable', () => {
+      const wrapper = mount(AsyncBindingPropertyRow, {
+        props: { propKey: 'config', value: {} },
+      })
+
+      expect(wrapper.findTestId('binding-row-config').exists()).toBe(true)
+      expect(wrapper.findTestId('binding-expandable-config').exists()).toBe(false)
+    })
+  })
+
   describe('object value', () => {
     it('renders an expandable row', () => {
       const wrapper = mount(AsyncBindingPropertyRow, {

@@ -1,6 +1,6 @@
 <template>
   <details
-    v-if="isObject"
+    v-if="isNested"
     class="binding-property-row--expandable"
     :data-testid="`binding-expandable-${propKey}`"
   >
@@ -42,8 +42,12 @@ const props = defineProps<{
   value: unknown
 }>()
 
-const isObject = computed(
-  () => typeof props.value === 'object' && props.value !== null && !Array.isArray(props.value),
+const isNested = computed(
+  () =>
+    typeof props.value === 'object' &&
+    props.value !== null &&
+    !Array.isArray(props.value) &&
+    Object.keys(props.value).length > 0,
 )
 
 const displayValue = computed(() =>
@@ -84,6 +88,8 @@ const displayValue = computed(() =>
 }
 
 .binding-property-row--expandable {
+  margin: var(--kui-space-0, $kui-space-0);
+
   &[open] > .binding-property-row .binding-chevron {
     transform: rotate(90deg);
   }

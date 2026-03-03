@@ -15,7 +15,7 @@
           :items="protocolSelectItems"
         >
           <template #trigger-content>
-            <span>{{ selectedProtocol.toUpperCase() }}</span>
+            <span class="protocol-label">{{ selectedProtocol.toUpperCase() }}</span>
           </template>
         </SelectDropdown>
         <LabelBadge
@@ -41,19 +41,16 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import type { PropType } from 'vue'
 import type { ChannelInterface } from '@asyncapi/parser'
 import CollapsibleSection from './endpoint/CollapsibleSection.vue'
 import LabelBadge from '@/components/common/LabelBadge.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import AsyncBindingPropertyRow from './AsyncBindingPropertyRow.vue'
+import { kebabCase } from '@/utils'
 
-const props = defineProps({
-  channel: {
-    type: Object as PropType<ChannelInterface>,
-    required: true,
-  },
-})
+const props = defineProps<{
+  channel: ChannelInterface
+}>()
 
 const bindings = computed(() => props.channel.bindings().all())
 const hasBindings = computed(() => bindings.value.length > 0)
@@ -68,7 +65,7 @@ watch(protocols, (newProtocols) => {
 })
 
 const protocolSelectItems = computed(() =>
-  protocols.value.map(p => ({ label: p.toUpperCase(), value: p, key: p })),
+  protocols.value.map(p => ({ label: p.toUpperCase(), value: p, key: kebabCase(p) })),
 )
 
 const currentBindingValue = computed((): Record<string, any> => {
