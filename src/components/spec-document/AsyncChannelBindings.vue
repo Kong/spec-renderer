@@ -1,6 +1,5 @@
 <template>
   <CollapsibleSection
-    v-if="hasBindings"
     :border-visible="false"
     class="async-channel-bindings"
   >
@@ -53,7 +52,6 @@ const props = defineProps<{
 }>()
 
 const bindings = computed(() => props.channel.bindings().all())
-const hasBindings = computed(() => bindings.value.length > 0)
 const protocols = computed(() => bindings.value.map(b => b.protocol()))
 
 const selectedProtocol = ref<string>(protocols.value[0] ?? '')

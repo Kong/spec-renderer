@@ -22,19 +22,7 @@ const multiProtocolChannel = makeMockChannel([
   { protocol: 'amqp', value: { exchange: { name: 'events', type: 'topic' } } },
 ])
 
-const emptyChannel = makeMockChannel([])
-
 describe('<AsyncChannelBindings />', () => {
-  describe('with no bindings', () => {
-    it('does not render the section', () => {
-      const wrapper = mount(AsyncChannelBindings, {
-        props: { channel: emptyChannel },
-      })
-
-      expect(wrapper.find('.async-channel-bindings').exists()).toBe(false)
-    })
-  })
-
   describe('with a single binding', () => {
     it('renders the section', () => {
       const wrapper = mount(AsyncChannelBindings, {

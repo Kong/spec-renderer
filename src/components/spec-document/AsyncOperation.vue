@@ -44,7 +44,7 @@
       />
     </section>
     <AsyncChannelBindings
-      v-if="channel"
+      v-if="channel && channel.bindings().all().length"
       :channel="channel"
     />
     <div v-if="acceptedMessages.length">
