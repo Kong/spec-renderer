@@ -1,3 +1,10 @@
+# [1.107.0](https://github.com/Kong/spec-renderer/compare/v1.106.1...v1.107.0) (2026-03-03)
+
+
+### Features
+
+* AsyncAPI channel bindings [TDX-7153] ([#803](https://github.com/Kong/spec-renderer/issues/803)) ([c0d8e17](https://github.com/Kong/spec-renderer/commit/c0d8e176f51b1862b309108cce231025bcdce6b1))
+
 ## [1.106.1](https://github.com/Kong/spec-renderer/compare/v1.106.0...v1.106.1) (2026-03-03)
 
 
