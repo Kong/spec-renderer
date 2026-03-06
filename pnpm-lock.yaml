@@ -32,6 +32,7 @@ overrides:
   rollup@>=4.0.0 <4.59.0: '>=4.59.0'
   minimatch@<10.2.3: '>=10.2.3'
   ajv@<6.14.0: ^6.14.0
+  immutable@>=5.0.0 <5.1.5: '>=5.1.5'
 
 importers:
 
@@ -3269,8 +3270,8 @@ packages:
   immer@9.0.21:
     resolution: {integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==}
 
-  immutable@5.0.2:
-    resolution: {integrity: sha512-1NU7hWZDkV7hJ4PJ9dur9gTNQ4ePNPN4k9/0YhwjzykTi/+3Q5pF93YU5QoVj8BuOnhLgaY8gs0U2pj4kSYVcw==}
+  immutable@5.1.5:
+    resolution: {integrity: sha512-t7xcm2siw+hlUM68I+UEOK+z84RzmN59as9DZ7P1l0994DKUWV7UXBMQZVxaoMSRQ+PBZbHCOoBt7a2wxOMt+A==}
 
   import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
@@ -9293,7 +9294,7 @@ snapshots:
 
   immer@9.0.21: {}
 
-  immutable@5.0.2: {}
+  immutable@5.1.5: {}
 
   import-fresh@3.3.0:
     dependencies:
@@ -10648,7 +10649,7 @@ snapshots:
     dependencies:
       '@bufbuild/protobuf': 2.5.2
       colorjs.io: 0.5.2
-      immutable: 5.0.2
+      immutable: 5.1.5
       rxjs: 7.8.1
       supports-color: 8.1.1
       sync-child-process: 1.0.2
@@ -10676,7 +10677,7 @@ snapshots:
   sass@1.97.3:
     dependencies:
       chokidar: 4.0.1
-      immutable: 5.0.2
+      immutable: 5.1.5
       source-map-js: 1.2.1
     optionalDependencies:
       '@parcel/watcher': 2.5.0
