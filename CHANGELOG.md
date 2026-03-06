@@ -1,3 +1,10 @@
+## [1.107.1](https://github.com/Kong/spec-renderer/compare/v1.107.0...v1.107.1) (2026-03-06)
+
+
+### Bug Fixes
+
+* immutable audit fix ([#811](https://github.com/Kong/spec-renderer/issues/811)) ([11235c6](https://github.com/Kong/spec-renderer/commit/11235c667e942bfbcf846417e579af6f6baadfe1))
+
 # [1.107.0](https://github.com/Kong/spec-renderer/compare/v1.106.1...v1.107.0) (2026-03-03)
 
 
