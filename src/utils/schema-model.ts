@@ -67,7 +67,7 @@ const removeCircularRefs = (obj: Record<string, any>): Record<string, any> => {
       })
     }
   } catch (error) {
-    console.error('Error during removeCircularRefs:', error)
+    throw new Error(`Failed to remove circular references: ${error}`)
   }
 
   return rootClone
