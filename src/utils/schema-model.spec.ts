@@ -441,5 +441,54 @@ describe('removeReadonlyFields', () => {
       }
       expect(removeFieldsFromSchemaObject(schemaObject)).toEqual(expectedSchemaObject)
     })
+
+    it('does not recurse infinitely for circular references', () => {
+      type CircularSchemaObject = SchemaObject & {
+        parent?: SchemaObject
+      }
+
+      const schemaObject: SchemaObject = {
+        type: 'object',
+        properties: {
+          id: {
+            type: 'string',
+          },
+        },
+      }
+
+      const itemsSchema: CircularSchemaObject = {
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            readOnly: true,
+          },
+          age: {
+            type: 'number',
+          },
+        },
+      }
+
+      // create circular references between schemaObject and itemsSchema
+      schemaObject.items = itemsSchema
+      itemsSchema.parent = schemaObject
+
+      expect(removeFieldsFromSchemaObject(schemaObject)).toEqual({
+        type: 'object',
+        properties: {
+          id: {
+            type: 'string',
+          },
+        },
+        items: {
+          type: 'object',
+          properties: {
+            age: {
+              type: 'number',
+            },
+          },
+        },
+      })
+    })
   })
 })

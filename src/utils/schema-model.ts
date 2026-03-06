@@ -18,22 +18,55 @@ export function filterSchemaObjectArray(candidate: unknown): SchemaObject[] {
   return Array.isArray(candidate) ? candidate.filter(isValidSchemaObject) : []
 }
 
+/**
+ * Clones an object graph into a tree by dropping repeated object references.
+ *
+ * Why this exists:
+ * - `JSON.stringify` fails on circular structures.
+ * - Recursive walkers can overflow the call stack for deeply nested schemas.
+ *
+ * How it works:
+ * - Uses a DFS stack (iterative traversal, no recursion).
+ * - Uses a WeakMap to track objects that were already cloned.
+ * - If a value was already seen, we skip assigning that key.
+ *
+ * Result:
+ * - Circular links and duplicate shared refs are removed.
+ * - Primitive values and the first encounter of each object are preserved.
+ */
+const removeCircularRefs = (obj: Record<string, any>): Record<string, any> => {
+  const rootClone: Record<string, any> = Array.isArray(obj) ? [] : {}
+  const seen = new WeakMap<object, Record<string, any>>()
+  seen.set(obj, rootClone)
 
-const removeCircularRefs = (obj: Record<string, any>):Record<string, any> => {
-  const cache = new Set()
-  const jsonString = JSON.stringify(obj, (key, value) => {
-    if (typeof value === 'object' && value !== null) {
-      if (cache.has(value)) {
-        // Circular reference found, discard key
+  const stack: Array<{ source: Record<string, any>, target: Record<string, any> }> = [{ source: obj, target: rootClone }]
+
+  // Iterate explicitly to avoid recursive stack growth on deep schemas.
+  while (stack.length > 0) {
+    const current = stack.pop()
+    if (!current) continue
+
+    const { source, target } = current
+
+    Object.keys(source).forEach((key) => {
+      const value = source[key]
+
+      if (typeof value === 'object' && value !== null) {
+        // Skip repeated refs (including circular refs) to keep result tree-shaped.
+        if (seen.has(value)) return
+
+        const childClone: Record<string, any> = Array.isArray(value) ? [] : {}
+        seen.set(value, childClone)
+        target[key] = childClone
+        stack.push({ source: value, target: childClone })
         return
       }
-      // Store value in our collection
-      cache.add(value)
-    }
-    return value
-  })
-  const res = JSON.parse(jsonString)
-  return res
+
+      target[key] = value
+    })
+  }
+
+  return rootClone
 }
 
 /**
@@ -53,7 +86,7 @@ const resolveAllOf = (schema: SchemaObject): SchemaObject => {
 
       let resolvedAllOf: SchemaObject = {}
       for (const allEl of schema.allOf) {
-        resolvedAllOf = { ...resolveAllOf, ...removeCircularRefs(allEl as Record<string, any>) as Record<string, any> }
+        resolvedAllOf = { ...resolvedAllOf, ...removeCircularRefs(allEl as Record<string, any>) as Record<string, any> }
       }
       return {
         ...resolvedAllOf,
@@ -182,20 +215,26 @@ function filterSchemaProperties(
  * - oneOf/anyOf
  */
 export function removeFieldsFromSchemaObject(schemaObject: SchemaObject, filterMethod: SchemaPropertyFilterMethod = removeReadonlyFields): SchemaObject {
-  const newObj: SchemaObject = JSON.parse(JSON.stringify(schemaObject))
+  let newObj: SchemaObject
 
-  if (schemaObject.properties) {
-    const filteredProperties = filterSchemaProperties(schemaObject.properties, filterMethod)
+  try {
+    newObj = JSON.parse(JSON.stringify(schemaObject))
+  } catch {
+    newObj = removeCircularRefs(schemaObject)
+  }
+
+  if (newObj.properties) {
+    const filteredProperties = filterSchemaProperties(newObj.properties, filterMethod)
     newObj.properties = filteredProperties
   }
-  if (isValidSchemaObject(schemaObject.items)) {
+  if (isValidSchemaObject(newObj.items)) {
     // items itself is a valid schema object, so we need to filter its properties, oneOf and anyOf
-    const filteredItemsObject = removeFieldsFromSchemaObject(schemaObject.items, filterMethod)
+    const filteredItemsObject = removeFieldsFromSchemaObject(newObj.items, filterMethod)
     newObj.items = filteredItemsObject
   }
-  if (schemaObject.oneOf?.length) {
+  if (newObj.oneOf?.length) {
     const newOneOfList: SchemaObject['oneOf'] = []
-    schemaObject.oneOf.forEach((item) => {
+    newObj.oneOf.forEach((item) => {
       // if the item is not a valid schema object or it fails the condiiton in filterMethod, we skip it
       if (!isValidSchemaObject(item) || filterMethod(item)) return
 
@@ -205,9 +244,9 @@ export function removeFieldsFromSchemaObject(schemaObject: SchemaObject, filterM
     })
     newObj.oneOf = newOneOfList
   }
-  if (schemaObject.anyOf?.length) {
+  if (newObj.anyOf?.length) {
     const newAnyOfList: SchemaObject['anyOf'] = []
-    schemaObject.anyOf.forEach((item) => {
+    newObj.anyOf.forEach((item) => {
       if (!isValidSchemaObject(item) || filterMethod(item)) return
       const filteredProperties = filterSchemaProperties(item.properties, filterMethod)
       newAnyOfList.push({ ...item, properties: filteredProperties })
