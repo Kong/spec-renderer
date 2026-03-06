@@ -36,34 +36,38 @@ export function filterSchemaObjectArray(candidate: unknown): SchemaObject[] {
  */
 const removeCircularRefs = (obj: Record<string, any>): Record<string, any> => {
   const rootClone: Record<string, any> = Array.isArray(obj) ? [] : {}
-  const seen = new WeakMap<object, Record<string, any>>()
-  seen.set(obj, rootClone)
+  try {
+    const seen = new WeakMap<object, Record<string, any>>()
+    seen.set(obj, rootClone)
 
-  const stack: Array<{ source: Record<string, any>, target: Record<string, any> }> = [{ source: obj, target: rootClone }]
+    const stack: Array<{ source: Record<string, any>, target: Record<string, any> }> = [{ source: obj, target: rootClone }]
 
-  // Iterate explicitly to avoid recursive stack growth on deep schemas.
-  while (stack.length > 0) {
-    const current = stack.pop()
-    if (!current) continue
+    // Iterate explicitly to avoid recursive stack growth on deep schemas.
+    while (stack.length > 0) {
+      const current = stack.pop()
+      if (!current) continue
 
-    const { source, target } = current
+      const { source, target } = current
 
-    Object.keys(source).forEach((key) => {
-      const value = source[key]
+      Object.keys(source).forEach((key) => {
+        const value = source[key]
 
-      if (typeof value === 'object' && value !== null) {
-        // Skip repeated refs (including circular refs) to keep result tree-shaped.
-        if (seen.has(value)) return
+        if (typeof value === 'object' && value !== null) {
+          // Skip repeated refs (including circular refs) to keep result tree-shaped.
+          if (seen.has(value)) return
 
-        const childClone: Record<string, any> = Array.isArray(value) ? [] : {}
-        seen.set(value, childClone)
-        target[key] = childClone
-        stack.push({ source: value, target: childClone })
-        return
-      }
+          const childClone: Record<string, any> = Array.isArray(value) ? [] : {}
+          seen.set(value, childClone)
+          target[key] = childClone
+          stack.push({ source: value, target: childClone })
+          return
+        }
 
-      target[key] = value
-    })
+        target[key] = value
+      })
+    }
+  } catch (error) {
+    console.error('Error during removeCircularRefs:', error)
   }
 
   return rootClone
@@ -215,13 +219,7 @@ function filterSchemaProperties(
  * - oneOf/anyOf
  */
 export function removeFieldsFromSchemaObject(schemaObject: SchemaObject, filterMethod: SchemaPropertyFilterMethod = removeReadonlyFields): SchemaObject {
-  let newObj: SchemaObject
-
-  try {
-    newObj = JSON.parse(JSON.stringify(schemaObject))
-  } catch {
-    newObj = removeCircularRefs(schemaObject)
-  }
+  const newObj: SchemaObject = removeCircularRefs(schemaObject)
 
   if (newObj.properties) {
     const filteredProperties = filterSchemaProperties(newObj.properties, filterMethod)
