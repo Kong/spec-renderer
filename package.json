@@ -86,7 +86,7 @@
     "@kong/eslint-config-kong-ui": "1.6.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@stylistic/stylelint-plugin": "^4.0.1",
+    "@stylistic/stylelint-plugin": "^5.0.1",
     "@types/jsdom": "^27.0.0",
     "@types/json-schema": "^7.0.15",
     "@types/markdown-it": "^14.1.2",
