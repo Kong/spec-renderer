@@ -1,3 +1,11 @@
+## [1.107.2](https://github.com/Kong/spec-renderer/compare/v1.107.1...v1.107.2) (2026-03-23)
+
+
+### Bug Fixes
+
+* audit fixes for undici and flatted ([#817](https://github.com/Kong/spec-renderer/issues/817)) ([1a2d7f9](https://github.com/Kong/spec-renderer/commit/1a2d7f967b27d96129bef8f6a3124fe4c6b5bf03))
+* **schema-example:** add support for examples object [TDX-7760] ([#816](https://github.com/Kong/spec-renderer/issues/816)) ([da419e1](https://github.com/Kong/spec-renderer/commit/da419e13055c4197ba7b51f6f654fdefa9ee7fec))
+
 ## [1.107.1](https://github.com/Kong/spec-renderer/compare/v1.107.0...v1.107.1) (2026-03-06)
 
 
