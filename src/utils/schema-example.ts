@@ -2,6 +2,14 @@ import { MAX_NESTED_LEVELS } from '@/constants'
 import { resolveSchemaObjectFields, resolveSchemaType } from './schema-model'
 
 /**
+ * util to extract example value from a given example, as example can be a primitive value or an object with value field
+ *
+ * @param example The example to extract value from
+ * @returns The extracted example value
+ */
+const extractExampleValue = (example: any): any => typeof example === 'object' && example?.value ? example.value : example
+
+/**
  * Returning sample value for single parameter
  *
  * @param paramData
@@ -15,11 +23,13 @@ export const extractSampleForParam = (paramData: Record<string, any> | undefined
 
   let exampleValue = paramData.example
   if (exampleValue !== undefined) {
+    exampleValue = extractExampleValue(exampleValue)
     return exampleValue
   }
 
   if (paramData.schema?.examples) {
     exampleValue = paramData.schema?.examples[0]
+    exampleValue = extractExampleValue(exampleValue)
     if (exampleValue !== undefined) {
       return exampleValue
     }
@@ -27,6 +37,7 @@ export const extractSampleForParam = (paramData: Record<string, any> | undefined
 
   if (paramData.schema?.example) {
     exampleValue = paramData.schema?.example
+    exampleValue = extractExampleValue(exampleValue)
     if (exampleValue !== undefined) {
       return exampleValue
     }
@@ -34,6 +45,10 @@ export const extractSampleForParam = (paramData: Record<string, any> | undefined
 
   if (paramData.examples) {
     exampleValue = paramData.examples[0]
+    exampleValue = extractExampleValue(exampleValue)
+    if (exampleValue !== undefined) {
+      return exampleValue
+    }
     if (exampleValue !== undefined) {
       return exampleValue
     }

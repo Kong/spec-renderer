@@ -13,12 +13,36 @@ describe('extractSampleForParam', () => {
     expect(extractSampleForParam({ example: 'xxx' }, 'key')).toEqual('xxx')
   })
 
+  it('should extract value from example object with value field', () => {
+    expect(extractSampleForParam({ example: { value: 'xxx' } }, 'key')).toEqual('xxx')
+  })
+
+  it('should extract numeric value from example object with value field', () => {
+    expect(extractSampleForParam({ example: { value: 42 } }, 'key')).toEqual(42)
+  })
+
   it('should return example from schema', () => {
     expect(extractSampleForParam({ schema: { examples: ['xxx'] } }, 'key')).toEqual('xxx')
   })
 
+  it('should extract value from schema examples object with value field', () => {
+    expect(extractSampleForParam({ schema: { examples: [{ value: 'xxx' }] } }, 'key')).toEqual('xxx')
+  })
+
+  it('should return schema example if present', () => {
+    expect(extractSampleForParam({ schema: { example: 'xxx' } }, 'key')).toEqual('xxx')
+  })
+
+  it('should extract value from schema example object with value field', () => {
+    expect(extractSampleForParam({ schema: { example: { value: 99 } } }, 'key')).toEqual(99)
+  })
+
   it('should handle examples array', () => {
     expect(extractSampleForParam({ examples: ['xxx'] }, 'key')).toEqual('xxx')
+  })
+
+  it('should extract value from examples array object with value field', () => {
+    expect(extractSampleForParam({ examples: [{ value: 'xxx' }] }, 'key')).toEqual('xxx')
   })
 
   it('should return first element of enum', () => {
