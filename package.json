@@ -67,7 +67,7 @@
     "allof-merge": "^0.6.8",
     "flatted": "^3.3.3",
     "form-urlencoded": "^6.1.6",
-    "httpsnippet": "^3.0.9",
+    "httpsnippet": "^3.0.10",
     "lodash-es": "^4.17.23",
     "markdown-it": "^14.1.1",
     "sanitize-html": "^2.17.1",

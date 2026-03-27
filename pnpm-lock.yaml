@@ -82,8 +82,8 @@ importers:
         specifier: ^6.1.6
         version: 6.1.6
       httpsnippet:
-        specifier: ^3.0.9
-        version: 3.0.9
+        specifier: ^3.0.10
+        version: 3.0.10
       lodash-es:
         specifier: ^4.17.23
         version: 4.17.23
@@ -3289,9 +3289,9 @@ packages:
     resolution: {integrity: sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==}
     engines: {node: '>= 14'}
 
-  httpsnippet@3.0.9:
-    resolution: {integrity: sha512-d5GazgvgT+xd+oltAVJPe+s62mJ5DKGw7yF7Put1fimLc5KwPzbH8Ef/AOMTUwOBSeS3iDqyt9wgYHm+Jyh0CA==}
-    engines: {node: ^14.19.1 || ^16.14.2 || ^18.0.0 || ^20.0.0}
+  httpsnippet@3.0.10:
+    resolution: {integrity: sha512-1P102HsVslaT3IVfuUfVwxenfbogFiihqosnaKUScd/sON1omdZZCWdmzm6baRz4u1Va0CTI/7svLckCu9iNBw==}
+    engines: {node: '>=20'}
     hasBin: true
 
   human-signals@2.1.0:
@@ -9395,7 +9395,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  httpsnippet@3.0.9:
+  httpsnippet@3.0.10:
     dependencies:
       chalk: 4.1.2
       event-stream: 4.0.1
