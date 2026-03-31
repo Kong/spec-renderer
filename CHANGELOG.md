@@ -1,3 +1,10 @@
+## [1.107.4](https://github.com/Kong/spec-renderer/compare/v1.107.3...v1.107.4) (2026-03-31)
+
+
+### Bug Fixes
+
+* **pnpm:** enforce vulnerability protections ([#831](https://github.com/Kong/spec-renderer/issues/831)) ([3a6b969](https://github.com/Kong/spec-renderer/commit/3a6b9694ec2a45d44b2785490084c395d63082d0))
+
 ## [1.107.3](https://github.com/Kong/spec-renderer/compare/v1.107.2...v1.107.3) (2026-03-30)
 
 
