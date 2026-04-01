@@ -373,7 +373,7 @@ function updateRequestBodyContentType(newContentType: string) {
   }
 }
 
-watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value } ), (newValue) => {
+watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value } ), () => {
   // if active security scheme is not set, set it to the first one
   if (!activeSecurityScheme.value && securitySchemeGroupList.value.length && securitySchemeGroupList.value[0]) {
     activeSecurityScheme.value = securitySchemeGroupList.value[0].key
