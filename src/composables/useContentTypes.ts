@@ -1,19 +1,16 @@
-import { computed, ref, unref } from 'vue'
-import type { MaybeRef } from 'vue'
+import { computed, ref } from 'vue'
+import type { ComputedRef } from 'vue'
 import type { IMediaTypeContent } from '@stoplight/types'
 import { ResponseSelectComponent } from '@/types'
 
 /**
  * Composable to manage active content type for a list of contents
  *
- * @param inputContentList — List of contents. Can be a ref or a plain array
+ * @param contentList — List of contents. Will always be a computed property to maintain reactivity.
  */
-export default function useContentTypes(inputContentList: MaybeRef<IMediaTypeContent[]>) {
+export default function useContentTypes(contentList: ComputedRef<IMediaTypeContent[]>) {
   // returns content type key, e.g. 'application/json' -> 'application-json'
   const getContentTypeKey = (contentType: string) => contentType.replace('/', '-')
-
-  // compute the list of contents, since inputContentList can be a ref or a plain array
-  const contentList = computed(() => unref(inputContentList))
 
   // compute the list of content types for the active response. Used to populate the content-type select dropdown
   // e.g. ['application/json', 'application/xml']

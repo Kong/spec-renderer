@@ -283,11 +283,13 @@ const securitySchemeChanged = (newSecurityScheme: string) => {
   currentSecurityScheme.value = newSecurityScheme
 }
 
+const requestBodyContents = computed(() => operationData.value.request?.body?.contents ?? [])
 const {
   activeContentType: activeRequestBodyContentType,
   activeResponseContentList: activeRequestBodyContentList,
   contentSelectComponentList,
-} = composables.useContentTypes(operationData.value.request?.body?.contents ?? [])
+  contentTypeList: activeRequestBodyContentTypeList,
+} = composables.useContentTypes(requestBodyContents)
 
 // refs and computed properties to manage currently active response object
 const responseList = computed(() => props.data.responses ?? [])
@@ -350,8 +352,16 @@ const isBinaryBody = computed((): boolean => {
 
 function updateRequestBodyContentType(newContentType: string) {
   activeRequestBodyContentType.value = newContentType
+
+  let acceptedExt = '*'
+
+  if (activeRequestBodyContentList.value?.length > 0 && activeRequestBodyContentList.value[0]?.mediaType) {
+    currentRequestHeaders.value.push({ name: 'Content-Type', value: activeRequestBodyContentList.value[0].mediaType })
+    acceptedExt = `.${activeRequestBodyContentList.value[0].mediaType.split('/').reverse()[0]}`
+  }
+
   if (isBinaryBody.value) {
-    currentRequestBody.value = { isBinary: true, content: [] }
+    currentRequestBody.value = { isBinary: true, content: [], acceptedExt }
   } else {
     currentRequestBody.value = { isBinary: false, content: activeRequestBodyContentList.value.length
       ? getSampleBody(
@@ -372,23 +382,8 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
   currentRequestQuery.value = getSampleQuery(operationData.value)
   currentRequestHeaders.value = getSampleHeaders({ data: operationData.value })
 
-  let acceptedExt = '*'
-  if (activeRequestBodyContentList.value?.length > 0 && activeRequestBodyContentList.value[0]?.mediaType) {
-    currentRequestHeaders.value.push({ name: 'Content-Type', value: activeRequestBodyContentList.value[0].mediaType })
-    acceptedExt = `.${activeRequestBodyContentList.value[0].mediaType.split('/').reverse()[0]}`
-  }
-  if (isBinaryBody.value) {
-    currentRequestBody.value = { isBinary: true, content: [], acceptedExt }
-  } else {
-    currentRequestBody.value = { isBinary: false, content: activeRequestBodyContentList.value
-      ? getSampleBody(
-        activeRequestBodyContentList.value,
-        { excludeReadonly: true, excludeNotRequired: newValue.excludeNotRequired },
-        0,
-      )
-      : '',
-    }
-  }
+  // re-initialize request body & content type when operation or excludeNotRequired flag changes
+  updateRequestBodyContentType(activeRequestBodyContentTypeList.value[0]?.value ?? '')
 }, { immediate: true })
 </script>
 
