@@ -1,3 +1,10 @@
+## [1.107.5](https://github.com/Kong/spec-renderer/compare/v1.107.4...v1.107.5) (2026-04-02)
+
+
+### Bug Fixes
+
+* audit fixes for lodash and picomatch ([#834](https://github.com/Kong/spec-renderer/issues/834)) ([e4981e2](https://github.com/Kong/spec-renderer/commit/e4981e2999dd2f9e71179e667f7e637c8ce570f5))
+
 ## [1.107.4](https://github.com/Kong/spec-renderer/compare/v1.107.3...v1.107.4) (2026-03-31)
 
 
