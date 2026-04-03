@@ -213,6 +213,13 @@ const fieldValues = ref<Record<string, string>>({})
  * force-update fieldValues.body with the newly filtered content from the parent.
  */
 const lastExcludeNotRequiredSinceParamsChanged = ref(excludeNotRequired.value)
+/**
+ * Tracks the operation id as of the last params watcher invocation.
+ * Used to detect when the user navigated to a different operation, so we can
+ * force-update all fieldValues with the new operation's samples instead of
+ * preserving stale values from the previous operation.
+ */
+const currentEndpointID = ref(props.data.id)
 
 const contentToCopy = computed((): string => {
   if (props.paramType !== 'body') {
@@ -225,13 +232,18 @@ const contentToCopy = computed((): string => {
 watch(params, (newParams) => {
   if (newParams) {
     const samples = extractSample(newParams)
+
+    // check if user navigated to a new endpoint/operation
+    const operationChanged = props.data.id !== currentEndpointID.value
+    currentEndpointID.value = props.data.id
+
     const toggleChanged = props.paramType === 'body' && excludeNotRequired.value !== lastExcludeNotRequiredSinceParamsChanged.value
     lastExcludeNotRequiredSinceParamsChanged.value = excludeNotRequired.value
 
     Object.keys(newParams).forEach(key => {
-      // we need to keep it if it was previously changed, and only sent to example, when empty
-      // but when the required toggle changed, force-update body with the newly filtered content
-      if (!Object.keys(fieldValues.value).includes(key) || toggleChanged) {
+      // preserve user-edited values while on the same operation
+      // but force-update when the required toggle changed or the user navigated to a different operation
+      if (!Object.keys(fieldValues.value).includes(key) || toggleChanged || operationChanged) {
         fieldValues.value[key] = samples[key]
       }
     })
