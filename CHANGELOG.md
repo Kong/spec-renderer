@@ -1,3 +1,10 @@
+## [1.107.6](https://github.com/Kong/spec-renderer/compare/v1.107.5...v1.107.6) (2026-04-03)
+
+
+### Bug Fixes
+
+* request-body reactivity in paginated mode [TDX-7806] ([#832](https://github.com/Kong/spec-renderer/issues/832)) ([daec252](https://github.com/Kong/spec-renderer/commit/daec252e9496b4f2a97d043c25421bb82693b67a))
+
 ## [1.107.5](https://github.com/Kong/spec-renderer/compare/v1.107.4...v1.107.5) (2026-04-02)
 
 
