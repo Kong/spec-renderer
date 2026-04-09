@@ -1,3 +1,10 @@
+## [1.107.9](https://github.com/Kong/spec-renderer/compare/v1.107.8...v1.107.9) (2026-04-09)
+
+
+### Bug Fixes
+
+* render array request body in spec ([#825](https://github.com/Kong/spec-renderer/issues/825)) ([b284a1e](https://github.com/Kong/spec-renderer/commit/b284a1e11ebc7edf09abe57560629b4f74b6215d))
+
 ## [1.107.8](https://github.com/Kong/spec-renderer/compare/v1.107.7...v1.107.8) (2026-04-09)
 
 
