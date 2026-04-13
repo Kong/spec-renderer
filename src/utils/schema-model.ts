@@ -49,14 +49,24 @@ const resolveAllOf = (schema: SchemaObject): SchemaObject => {
     try {
       JSON.stringify(schema)
     } catch {
-      // yes, we do have circular references, merge will fail, let's do it simpler way
-
-      let resolvedAllOf: SchemaObject = {}
-      for (const allEl of schema.allOf) {
-        resolvedAllOf = { ...resolveAllOf, ...removeCircularRefs(allEl as Record<string, any>) as Record<string, any> }
-      }
+      // circular references detected, for each allOf item, only call removeCircularRefs if the
+      // item itself is circular, otherwise use it as-is to preserve shared schema references
+      // (e.g. two properties pointing to the same $ref object). also strip oneOf/anyOf to
+      // avoid showing inherited variant selectors
+      const cleanedAllOf = filterSchemaObjectArray(schema.allOf).map((item) => {
+        let result: SchemaObject
+        try {
+          JSON.stringify(item)
+          result = { ...item }
+        } catch {
+          result = removeCircularRefs(item)
+        }
+        delete result.oneOf
+        delete result.anyOf
+        return result
+      })
       return {
-        ...resolvedAllOf,
+        ...(merge({ ...schema, allOf: cleanedAllOf }, { mergeCombinarySibling: true }) as SchemaObject),
         ...(schema.title ? { title: schema.title } : {}),
       }
     }
