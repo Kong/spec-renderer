@@ -7,7 +7,12 @@ import { resolveSchemaObjectFields, resolveSchemaType } from './schema-model'
  * @param example The example to extract value from
  * @returns The extracted example value
  */
-const extractExampleValue = (example: any): any => typeof example === 'object' && example?.value ? example.value : example
+const extractExampleValue = (example: any): any => {
+  if (example !== null && typeof example === 'object' && Object.hasOwn(example, 'value')) {
+    return example.value
+  }
+  return example
+}
 
 /**
  * Returning sample value for single parameter
@@ -30,7 +35,7 @@ export const extractSampleForParam = (paramData: Record<string, any> | undefined
   if (paramData.schema?.examples) {
     exampleValue = paramData.schema?.examples[0]
     exampleValue = extractExampleValue(exampleValue)
-    if (exampleValue !== undefined) {
+    if (exampleValue !== undefined && exampleValue !== null) {
       return exampleValue
     }
   }
@@ -38,7 +43,7 @@ export const extractSampleForParam = (paramData: Record<string, any> | undefined
   if (paramData.schema?.example) {
     exampleValue = paramData.schema?.example
     exampleValue = extractExampleValue(exampleValue)
-    if (exampleValue !== undefined) {
+    if (exampleValue !== undefined && exampleValue !== null) {
       return exampleValue
     }
   }
@@ -46,10 +51,7 @@ export const extractSampleForParam = (paramData: Record<string, any> | undefined
   if (paramData.examples) {
     exampleValue = paramData.examples[0]
     exampleValue = extractExampleValue(exampleValue)
-    if (exampleValue !== undefined) {
-      return exampleValue
-    }
-    if (exampleValue !== undefined) {
+    if (exampleValue !== undefined && exampleValue !== null) {
       return exampleValue
     }
   }
@@ -66,7 +68,7 @@ export const extractSampleForParam = (paramData: Record<string, any> | undefined
     return typeof paramData.schema.default === 'object' ? JSON.stringify(paramData.schema.default) : paramData.schema.default
   }
 
-  switch (resolveSchemaType(paramData.type)) {
+  switch (resolveSchemaType(paramData.type ?? paramData.schema?.type)) {
     case 'boolean':
       return false
     case 'integer':

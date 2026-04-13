@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getRequestHeaders, getFormattedBody, getSampleQuery, getSampleBody } from './request-data'
+import { extractSample, getRequestHeaders, getFormattedBody, getSampleQuery, getSampleBody } from './request-data'
 import type { IHttpOperation } from '@stoplight/types'
 
 describe('request-header', () => {
@@ -66,8 +66,23 @@ describe('getSampleBody', () => {
   })
 })
 
+describe('extractSample', () => {
+  it('should use param name as key when input is an array (Stoplight format)', () => {
+    // data.request.query is an IHttpQueryParam array, not a Record.
+    // extractSample must use param.name as both the output key and the key
+    // passed to extractSampleForParam, not the array index.
+    const result = extractSample([
+      // @ts-ignore testing array input
+      { name: 'query', schema: { type: 'string' }, examples: [{ id: '1', key: 'default', value: null }] },
+      // @ts-ignore
+      { name: 'page', schema: { type: 'integer' }, examples: [] },
+    ])
+    expect(result).toEqual({ query: 'query', page: 0 })
+  })
+})
+
 describe('getSampleQuery', () => {
-  it('should skip empty non-required values', () => {
+  it('should include required params and non-required params with non-empty example values', () => {
     expect(getSampleQuery({
       id: '98ddd4beb64c5',
       method: 'get',
@@ -86,13 +101,6 @@ describe('getSampleQuery', () => {
               '$schema': 'http://json-schema.org/draft-07/schema#',
               'description': 'Optional. Provider group NPI',
             },
-            'explicitProperties': [
-              'name',
-              'in',
-              'required',
-              'description',
-              'schema',
-            ],
           },
           // @ts-ignore just what's needed for test
           {
@@ -106,16 +114,63 @@ describe('getSampleQuery', () => {
               '$schema': 'http://json-schema.org/draft-07/schema#',
               'description': 'Optional. Provider last name',
             },
-            'explicitProperties': [
-              'name',
-              'in',
-              'required',
-              'description',
-              'schema',
-            ],
           },
         ],
       },
-    })).toEqual('lastName=')
+    })).toEqual('groupNpi=groupNpi&lastName=lastName')
+  })
+
+  it('should skip non-required params whose example value is an explicit empty string', () => {
+    expect(getSampleQuery({
+      id: 'test-id',
+      method: 'get',
+      path: '/search',
+      request: {
+        query: [
+          // @ts-ignore
+          {
+            name: 'optional',
+            required: false,
+            examples: [{ id: '1', key: 'default', value: '' }],
+            schema: { type: 'string' },
+          },
+          // @ts-ignore
+          {
+            name: 'required',
+            required: true,
+            examples: [{ id: '2', key: 'default', value: '' }],
+            schema: { type: 'string' },
+          },
+        ],
+      },
+    })).toEqual('required=')
+  })
+
+  it('should use param names (not array indices) for Stoplight params with null examples', () => {
+    expect(getSampleQuery({
+      id: '913107ebad7de',
+      method: 'get',
+      path: '/search',
+      request: {
+        query: [
+          // @ts-ignore
+          {
+            id: '3aea5c6215895',
+            name: 'query',
+            required: false,
+            examples: [{ id: '94444b275ec09', value: null, key: 'default' }],
+            schema: { type: 'string', examples: [null] },
+          },
+          // @ts-ignore
+          {
+            id: 'dc4d5d8651257',
+            name: 'filter',
+            required: false,
+            examples: [{ id: '93d27aa688c6b', key: 'default', value: null }],
+            schema: { type: 'string' },
+          },
+        ],
+      },
+    })).toEqual('query=query&filter=filter')
   })
 })
