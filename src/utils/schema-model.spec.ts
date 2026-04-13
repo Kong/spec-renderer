@@ -156,6 +156,47 @@ describe('resolveSchemaObjectFields', () => {
       expect(resolveSchemaObjectFields(invalidSchemaObject)).toStrictEqual(invalidSchemaObject)
     }
   })
+  it('returns Schema Object with merged allOf fields when circular references exist', () => {
+    const parentSchema: SchemaObject = { type: 'object', allOf: [] }
+    const firstAllOfObject: SchemaObject = {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+      },
+      required: ['name'],
+      oneOf: [parentSchema], // circular reference back to parentSchema
+    }
+    const secondAllOfObject: SchemaObject = {
+      type: 'object',
+      properties: {
+        age: { type: 'number' },
+      },
+      required: ['age'],
+    }
+    parentSchema.allOf = [firstAllOfObject, secondAllOfObject]
+
+    const result = resolveSchemaObjectFields(parentSchema)
+    expect(result.properties).toHaveProperty('name')
+    expect(result.properties).toHaveProperty('age')
+    expect(result.required).toContain('name')
+    expect(result.required).toContain('age')
+  })
+
+  it('preserves title in Schema Object with merged allOf fields when circular references exist', () => {
+    const parentSchema: SchemaObject = { title: 'ParentTitle', type: 'object', allOf: [] }
+    const firstAllOfObject: SchemaObject = {
+      type: 'object',
+      properties: { name: { type: 'string' } },
+      oneOf: [parentSchema], // circular reference back to parentSchema
+    }
+    parentSchema.allOf = [firstAllOfObject, { type: 'object', properties: { age: { type: 'number' } } }]
+
+    const result = resolveSchemaObjectFields(parentSchema)
+    expect(result.title).toBe('ParentTitle')
+    expect(result.properties).toHaveProperty('name')
+    expect(result.properties).toHaveProperty('age')
+  })
+
   it('returns Schema Object with merged allOf fields', () => {
     const firstAllOfObject: SchemaObject = {
       type: 'object',
