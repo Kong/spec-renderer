@@ -1,3 +1,10 @@
+## [1.107.11](https://github.com/Kong/spec-renderer/compare/v1.107.10...v1.107.11) (2026-04-13)
+
+
+### Bug Fixes
+
+* resolve allOf fields not rendering for schemas with circular references ([#844](https://github.com/Kong/spec-renderer/issues/844)) ([981efea](https://github.com/Kong/spec-renderer/commit/981efeae57e5e0f4c4586abeba94c04c207316a1))
+
 ## [1.107.10](https://github.com/Kong/spec-renderer/compare/v1.107.9...v1.107.10) (2026-04-13)
 
 
