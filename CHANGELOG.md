@@ -1,3 +1,10 @@
+## [1.107.10](https://github.com/Kong/spec-renderer/compare/v1.107.9...v1.107.10) (2026-04-13)
+
+
+### Bug Fixes
+
+* **schema-example:** handle null example values [TDX-7862] ([#845](https://github.com/Kong/spec-renderer/issues/845)) ([544fc7b](https://github.com/Kong/spec-renderer/commit/544fc7b39dc8b4c2903571f5f42808b2326cb772))
+
 ## [1.107.9](https://github.com/Kong/spec-renderer/compare/v1.107.8...v1.107.9) (2026-04-09)
 
 
