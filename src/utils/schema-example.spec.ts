@@ -99,6 +99,47 @@ describe('extractSampleForParam', () => {
     }, 'groupNumber')).toEqual(92)
   })
 
+  it('should fall through to type-based generation when schema.examples contains null', () => {
+    expect(extractSampleForParam({
+      schema: { type: 'string', examples: [null] },
+    }, 'myParam')).toEqual('myParam')
+  })
+
+  it('should fall through to type-based generation when Stoplight examples object has value: null', () => {
+    expect(extractSampleForParam({
+      examples: [{ id: 'abc123', key: 'default', value: null }],
+      schema: { type: 'string' },
+    }, 'myParam')).toEqual('myParam')
+  })
+
+  it('should use schema.type for type-based generation when paramData.type is absent', () => {
+    expect(extractSampleForParam({ schema: { type: 'integer' } }, 'myParam')).toEqual(0)
+    expect(extractSampleForParam({ schema: { type: 'boolean' } }, 'myParam')).toEqual(false)
+    expect(extractSampleForParam({ schema: { type: 'array' } }, 'myParam')).toEqual('[]')
+  })
+
+  it('should fall through to type-based generation for full Stoplight param shape with null examples', () => {
+    expect(extractSampleForParam({
+      id: '3aea5c6215895',
+      name: 'query',
+      style: 'form',
+      examples: [{ id: '94444b275ec09', value: null, key: 'default' }],
+      description: 'The search term (can be empty).',
+      required: false,
+      schema: {
+        type: 'string',
+        examples: [null],
+      },
+    }, 'query')).toEqual('query')
+  })
+
+  it('should return empty string value from Stoplight examples object without falling through', () => {
+    expect(extractSampleForParam({
+      examples: [{ id: 'abc', key: 'default', value: '', summary: '--' }],
+      schema: { type: 'string' },
+    }, 'myParam')).toEqual('')
+  })
+
 })
 
 describe('crawl', () => {

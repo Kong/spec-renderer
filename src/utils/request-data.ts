@@ -45,7 +45,8 @@ export const extractSample = (paramData: Record<string, any> | undefined): Recor
   }
 
   Object.keys(paramData).forEach((key) => {
-    samples[paramData[key]?.name || key] = extractSampleForParam(paramData[key], key)
+    const paramName = paramData[key]?.name || key
+    samples[paramName] = extractSampleForParam(paramData[key], paramName)
   })
   return samples
 }
