@@ -1,6 +1,6 @@
 import type { IHttpOperation, IMediaTypeContent } from '@stoplight/types'
 import { crawl, extractSampleForParam } from './schema-example'
-import { resolveSchemaObjectFields } from './schema-model'
+import { resolveSchemaObjectFields, resolveSchemaType } from './schema-model'
 import { CODE_INDENT_SPACES } from '@/constants'
 import { safeJSONParse } from './strings'
 import formurlencoded from 'form-urlencoded'
@@ -143,14 +143,12 @@ export const getSampleBody = (contents: IMediaTypeContent[], filteringOptions: R
     }
   }
 
-  return JSON.stringify(
-    crawl({
-      objData: resolveSchemaObjectFields(contents[0].schema) as Record<string, any>,
-      filteringOptions,
-    }),
-    null,
-    CODE_INDENT_SPACES,
-  )
+  const isArraySchema = resolveSchemaType(contents[0].schema?.type) === 'array'
+  const sample = crawl({
+    objData: resolveSchemaObjectFields(contents[0].schema) as Record<string, any>,
+    filteringOptions,
+  })
+  return JSON.stringify(isArraySchema && !Array.isArray(sample) ? [sample] : sample, null, CODE_INDENT_SPACES)
 }
 
 /**

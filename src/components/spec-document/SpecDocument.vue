@@ -606,7 +606,7 @@ watch(() => ({
   }
 
   if (!doContentScrolling.value) {
-    if (!highlighter.value) {
+    if (!highlighter.value && !isSsr()) {
       await createHighlighter()
     }
     // case when scrolling is not enabled - we do not need to do anything else

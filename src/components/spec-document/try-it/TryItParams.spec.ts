@@ -175,6 +175,79 @@ describe('<TryItParams />', () => {
       },
     }
 
+    it('should update body content when the operation changes', async () => {
+      const operationABody = JSON.stringify({ name: '' }, null, 2)
+      const operationBBody = JSON.stringify({ email: '' }, null, 2)
+
+      const operationA = {
+        id: 'op-a',
+        method: 'post',
+        path: '/users',
+        responses: [],
+        servers: [],
+        request: {
+          body: {
+            id: 'body-a',
+            contents: [
+              {
+                id: 'content-a',
+                mediaType: 'application/json',
+                schema: {
+                  type: 'object',
+                  properties: { name: { type: 'string' } },
+                  example: operationABody,
+                },
+              },
+            ],
+          },
+        },
+      }
+
+      const operationB = {
+        id: 'op-b',
+        method: 'post',
+        path: '/contacts',
+        responses: [],
+        servers: [],
+        request: {
+          body: {
+            id: 'body-b',
+            contents: [
+              {
+                id: 'content-b',
+                mediaType: 'application/json',
+                schema: {
+                  type: 'object',
+                  properties: { email: { type: 'string' } },
+                  example: operationBBody,
+                },
+              },
+            ],
+          },
+        },
+      }
+
+      const wrapper = mount(TryItParams, {
+        props: {
+          paramType: 'body',
+          data: operationA as any,
+          requestBody: { isBinary: false, content: operationABody },
+          modelValue: true,
+        },
+      })
+
+      expect(wrapper.findComponent(EditableCodeBlock).props('code')).toBe(operationABody)
+
+      // Simulate navigating to a different operation — both data.id and requestBody change
+      await wrapper.setProps({
+        data: operationB as any,
+        requestBody: { isBinary: false, content: operationBBody },
+      })
+
+      // fieldValues.body should be force-updated because the operation changed
+      expect(wrapper.findComponent(EditableCodeBlock).props('code')).toBe(operationBBody)
+    })
+
     it('should update body content when required toggle changes', async () => {
       const wrapper = mount(TryItParams, {
         props: {

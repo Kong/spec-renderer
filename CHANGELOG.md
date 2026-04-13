@@ -1,3 +1,60 @@
+## [1.107.9](https://github.com/Kong/spec-renderer/compare/v1.107.8...v1.107.9) (2026-04-09)
+
+
+### Bug Fixes
+
+* render array request body in spec ([#825](https://github.com/Kong/spec-renderer/issues/825)) ([b284a1e](https://github.com/Kong/spec-renderer/commit/b284a1e11ebc7edf09abe57560629b4f74b6215d))
+
+## [1.107.8](https://github.com/Kong/spec-renderer/compare/v1.107.7...v1.107.8) (2026-04-09)
+
+
+### Bug Fixes
+
+* audit issues ([#842](https://github.com/Kong/spec-renderer/issues/842)) ([677a55c](https://github.com/Kong/spec-renderer/commit/677a55c17ee78326d069bfaa3d332dd9967a2699))
+
+## [1.107.7](https://github.com/Kong/spec-renderer/compare/v1.107.6...v1.107.7) (2026-04-08)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#802](https://github.com/Kong/spec-renderer/issues/802)) ([1f630df](https://github.com/Kong/spec-renderer/commit/1f630dfe05d0b899611546c7c882481995de8ac9))
+
+## [1.107.6](https://github.com/Kong/spec-renderer/compare/v1.107.5...v1.107.6) (2026-04-03)
+
+
+### Bug Fixes
+
+* request-body reactivity in paginated mode [TDX-7806] ([#832](https://github.com/Kong/spec-renderer/issues/832)) ([daec252](https://github.com/Kong/spec-renderer/commit/daec252e9496b4f2a97d043c25421bb82693b67a))
+
+## [1.107.5](https://github.com/Kong/spec-renderer/compare/v1.107.4...v1.107.5) (2026-04-02)
+
+
+### Bug Fixes
+
+* audit fixes for lodash and picomatch ([#834](https://github.com/Kong/spec-renderer/issues/834)) ([e4981e2](https://github.com/Kong/spec-renderer/commit/e4981e2999dd2f9e71179e667f7e637c8ce570f5))
+
+## [1.107.4](https://github.com/Kong/spec-renderer/compare/v1.107.3...v1.107.4) (2026-03-31)
+
+
+### Bug Fixes
+
+* **pnpm:** enforce vulnerability protections ([#831](https://github.com/Kong/spec-renderer/issues/831)) ([3a6b969](https://github.com/Kong/spec-renderer/commit/3a6b9694ec2a45d44b2785490084c395d63082d0))
+
+## [1.107.3](https://github.com/Kong/spec-renderer/compare/v1.107.2...v1.107.3) (2026-03-30)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#798](https://github.com/Kong/spec-renderer/issues/798)) ([05164ca](https://github.com/Kong/spec-renderer/commit/05164ca02f9be1989729d178d1932deb3ac59078))
+
+## [1.107.2](https://github.com/Kong/spec-renderer/compare/v1.107.1...v1.107.2) (2026-03-23)
+
+
+### Bug Fixes
+
+* audit fixes for undici and flatted ([#817](https://github.com/Kong/spec-renderer/issues/817)) ([1a2d7f9](https://github.com/Kong/spec-renderer/commit/1a2d7f967b27d96129bef8f6a3124fe4c6b5bf03))
+* **schema-example:** add support for examples object [TDX-7760] ([#816](https://github.com/Kong/spec-renderer/issues/816)) ([da419e1](https://github.com/Kong/spec-renderer/commit/da419e13055c4197ba7b51f6f654fdefa9ee7fec))
+
 ## [1.107.1](https://github.com/Kong/spec-renderer/compare/v1.107.0...v1.107.1) (2026-03-06)
 
 

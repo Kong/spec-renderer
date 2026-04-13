@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getRequestHeaders, getFormattedBody, getSampleQuery } from './request-data'
+import { getRequestHeaders, getFormattedBody, getSampleQuery, getSampleBody } from './request-data'
 import type { IHttpOperation } from '@stoplight/types'
 
 describe('request-header', () => {
@@ -32,6 +32,39 @@ describe('getFormattedBody', () => {
   })
 })
 
+
+describe('getSampleBody', () => {
+  it('should wrap array schema body in an array', () => {
+    const contents = [{
+      id: 'test',
+      mediaType: 'application/json',
+      schema: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            firstName: { type: 'string', example: 'John' },
+          },
+        },
+      },
+    }]
+    expect(getSampleBody(contents as any)).toEqual(JSON.stringify([{ firstName: 'John' }], null, 2))
+  })
+
+  it('should not wrap object schema body in an array', () => {
+    const contents = [{
+      id: 'test',
+      mediaType: 'application/json',
+      schema: {
+        type: 'object',
+        properties: {
+          firstName: { type: 'string', example: 'John' },
+        },
+      },
+    }]
+    expect(getSampleBody(contents as any)).toEqual(JSON.stringify({ firstName: 'John' }, null, 2))
+  })
+})
 
 describe('getSampleQuery', () => {
   it('should skip empty non-required values', () => {
