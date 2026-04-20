@@ -19,6 +19,7 @@ describe('request-header', () => {
 
 describe('getFormattedBody', () => {
   it('should handle null body', () => {
+    // @ts-expect-error verifying null body is handled gracefully
     expect(getFormattedBody({}, null)).toEqual({ body: null, contentType: '' })
   })
 
@@ -72,17 +73,27 @@ describe('extractSample', () => {
     // extractSample must use param.name as both the output key and the key
     // passed to extractSampleForParam, not the array index.
     const result = extractSample([
-      // @ts-ignore testing array input
       { name: 'query', schema: { type: 'string' }, examples: [{ id: '1', key: 'default', value: null }] },
-      // @ts-ignore
-      { name: 'page', schema: { type: 'integer' }, examples: [] },
+      { name: 'page', schema: { type: 'integer' }, examples: [], required: true },
     ])
     expect(result).toEqual({ query: 'query', page: 0 })
+  })
+
+  it('only includes params that are required or have an explicit example/default value', () => {
+    const result = extractSample([
+      { name: 'page', schema: { type: 'integer' }, examples: [], required: true }, // included because required param
+      { name: 'endRow', schema: { type: 'integer', default: 75 }, examples: [] }, // included because of default value, even though not required
+      { name: 'filter', example: 'active', schema: { type: 'string' } }, // included because of explicit example
+      { name: 'status', schema: { type: 'string' }, examples: [{ id: '1', key: 'default', value: 'active' }] }, // included because of explicit example
+      { name: 'sort', schema: { type: 'string' }, examples: [] }, // skipped: no example/default value and optional
+      { name: 'query', schema: { type: 'string' }, examples: [] }, // skipped: no example/default value and optional
+    ])
+    expect(result).toEqual({ page: 0, endRow: 75, filter: 'active', status: 'active' })
   })
 })
 
 describe('getSampleQuery', () => {
-  it('should include required params and non-required params with non-empty example values', () => {
+  it('should include required params and exclude non-required params with no example or default', () => {
     expect(getSampleQuery({
       id: '98ddd4beb64c5',
       method: 'get',
@@ -117,7 +128,7 @@ describe('getSampleQuery', () => {
           },
         ],
       },
-    })).toEqual('groupNpi=groupNpi&lastName=lastName')
+    })).toEqual('lastName=lastName')
   })
 
   it('should skip non-required params whose example value is an explicit empty string', () => {
