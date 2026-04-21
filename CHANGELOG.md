@@ -1,3 +1,10 @@
+## [1.107.13](https://github.com/Kong/spec-renderer/compare/v1.107.12...v1.107.13) (2026-04-21)
+
+
+### Bug Fixes
+
+* **example-generation:** do not generate sample values for optional params [TDX-7895] ([#850](https://github.com/Kong/spec-renderer/issues/850)) ([e54ebeb](https://github.com/Kong/spec-renderer/commit/e54ebeb890cd90d6923356b63bb5a918b0dc9f67))
+
 ## [1.107.12](https://github.com/Kong/spec-renderer/compare/v1.107.11...v1.107.12) (2026-04-16)
 
 
