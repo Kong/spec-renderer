@@ -34,6 +34,24 @@ export const getRequestHeaders = (data: IHttpOperation):Array<Record<string, str
 }
 
 /**
+ * Returns true if the param has an example or default value provided in the spec.
+ * Used to decide whether to pre-populate the Try-It form for optional params.
+ *
+ * @param param the parameter object to check for examples/defaults
+ * @returns true if the parameter has an example or default value explicitly defined, false otherwise
+ */
+const hasExplicitExample = (param: unknown): boolean => {
+  if (typeof param !== 'object' || param === null) return false
+  const p = param as Record<string, any>
+  return p.example !== undefined ||
+    (Array.isArray(p.examples) && p.examples.length > 0) ||
+    p.schema?.example !== undefined ||
+    (Array.isArray(p.schema?.examples) && p.schema.examples.length > 0) ||
+    p.default !== undefined ||
+    p.schema?.default !== undefined
+}
+
+/**
  * Extract sample value from provided params definition (works for params, query)
  * @param paramData operation parameter data
  * @returns object key - field name| value - field sample value
@@ -44,10 +62,14 @@ export const extractSample = (paramData: Record<string, any> | undefined): Recor
     return {}
   }
 
-  Object.keys(paramData).forEach((key) => {
-    const paramName = paramData[key]?.name || key
-    samples[paramName] = extractSampleForParam(paramData[key], paramName)
-  })
+  for (const [key, param] of Object.entries(paramData)) {
+    // only generate an example value if the param is either required, or has an explicit example/default value set
+    // so that we avoid generating examples for optional params without examples
+    if (param?.required || hasExplicitExample(param)) {
+      const paramName = param?.name || key
+      samples[paramName] = extractSampleForParam(param, paramName)
+    }
+  }
   return samples
 }
 
