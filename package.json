@@ -70,7 +70,7 @@
     "httpsnippet": "^3.0.10",
     "lodash-es": "^4.18.1",
     "markdown-it": "^14.1.1",
-    "sanitize-html": "^2.17.2",
+    "sanitize-html": "^2.17.3",
     "shiki": "^3.23.0"
   },
   "resolutions": {
