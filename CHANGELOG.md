@@ -1,3 +1,10 @@
+## [1.107.15](https://github.com/Kong/spec-renderer/compare/v1.107.14...v1.107.15) (2026-04-24)
+
+
+### Bug Fixes
+
+* **security:** autofix Template Injection in GitHub Workflows Action ([#859](https://github.com/Kong/spec-renderer/issues/859)) ([9297bb6](https://github.com/Kong/spec-renderer/commit/9297bb60a29d0d343479e97cafcc97e90dc88484))
+
 ## [1.107.14](https://github.com/Kong/spec-renderer/compare/v1.107.13...v1.107.14) (2026-04-22)
 
 
