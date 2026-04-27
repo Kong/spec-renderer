@@ -17,3 +17,4 @@ docs/.vitepress/.cache
 docs/.vitepress/cache
 docs/.vitepress/dist
 .claude/settings.local.json
+CLAUDE.md
