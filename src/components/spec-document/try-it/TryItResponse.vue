@@ -71,8 +71,10 @@ import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import type { PropType } from 'vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import type { SelectItem } from '@/types'
+import type { SelectItem, SecuritySchemeMaskRule } from '@/types'
 import { CODE_INDENT_SPACES } from '@/constants'
+import type { IHttpOperationResponse } from '@stoplight/types'
+import { maskBodyExample, findResponseSchema } from '@/utils'
 
 const props = defineProps({
   dataId: {
@@ -87,6 +89,14 @@ const props = defineProps({
     type: Object as PropType<Error>,
     default: () => { },
   },
+  maskRules: {
+    type: Array as PropType<SecuritySchemeMaskRule[]>,
+    default: () => [],
+  },
+  responseSchemas: {
+    type: Array as PropType<IHttpOperationResponse[]>,
+    default: () => [],
+  },
 })
 
 const errorText = computed((): string => {
@@ -98,7 +108,8 @@ const headersText = computed((): string => {
   const headers = <Record<string, any>>{}
   if (props.response) {
     for (const pair of props.response.headers.entries()) {
-      headers[pair[0]] = pair[1]
+      const maskedRule = props.maskRules.find(r => r.location === 'header' && r.paramName.toLowerCase() === pair[0].toLowerCase())
+      headers[pair[0]] = maskedRule ? maskedRule.placeholder : pair[1]
     }
   }
   return Object.keys(headers).length ? JSON.stringify(headers, null, CODE_INDENT_SPACES) : ''
@@ -162,7 +173,10 @@ const requestLang = ref<string>('')
 watch(() => props.response, async (res) => {
   if (res) {
     if (res.headers.get('content-type')?.includes('/json')) {
-      responseText.value = JSON.stringify(await res.json(), null, CODE_INDENT_SPACES)
+      const parsed = await res.json()
+      const schema = findResponseSchema(props.responseSchemas, res.status, res.headers.get('content-type') ?? 'application/json')
+      const masked = schema ? maskBodyExample(parsed, schema) : parsed
+      responseText.value = JSON.stringify(masked, null, CODE_INDENT_SPACES)
       requestLang.value = 'json'
     } else if (isResponseImage.value) {
       const blob = await res.blob()

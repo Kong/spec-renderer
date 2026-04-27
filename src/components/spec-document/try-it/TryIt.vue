@@ -65,8 +65,10 @@
       <TryItResponse
         v-if="response || responseError"
         :data-id="data.id"
+        :mask-rules="maskRules"
         :response="response"
         :response-error="responseError"
+        :response-schemas="data.responses ?? []"
       />
     </div>
   </div>
@@ -78,6 +80,7 @@ import type { PropType, Ref } from 'vue'
 import TryItDropdown from './TryItDropdown.vue'
 import { getRequestHeaders, getSampleHeaders, getFormattedBody, getSamplePath, getSampleQuery } from '@/utils'
 import type { IHttpOperation } from '@stoplight/types'
+import type { SecuritySchemeMaskRule } from '@/types'
 import MethodBadge from '@/components/common/MethodBadge.vue'
 import TryItAuth from './TryItAuth.vue'
 import TryItParams from './TryItParams.vue'
@@ -107,7 +110,11 @@ const props = defineProps({
     type: String,
     default: '',
   },
-
+  /* mask rules derived from the operation's security schemes */
+  maskRules: {
+    type: Array as PropType<SecuritySchemeMaskRule[]>,
+    default: () => [],
+  },
 })
 
 const authComponentRef = useTemplateRef('auth2ComponentTemplate')

@@ -45,3 +45,92 @@ each parameter can have the following properties:
 | `readOnly` | If true, the user cannot edit value of the parameter | `false` |
 | `hidden` | If true, the parameter will be hidden from the UI but sent to the token endpoint | `false` |
 
+---
+
+## x-sensitive-data
+
+Marks a schema property as sensitive so its value is masked in displayed examples and API responses.
+The actual value is **never sent** — masking is display-only.
+
+### Mask strategies
+
+| Strategy | Result | Use when |
+|----------|--------|----------|
+| `full` | `***` | Hide the value entirely |
+| `remove` | *(field omitted)* | Remove the field from the example |
+| `hash` | `[hash:3d2a1f8c]` | Show that two values are equal without revealing either |
+| `regex` | partial mask (e.g. `***@example.com`) | Mask only part of the value |
+
+### Usage
+
+Add `x-sensitive-data` to any schema property:
+
+```yaml
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          example: alice
+        password:
+          type: string
+          x-sensitive-data:
+            mask: full        # displayed as ***
+        email:
+          type: string
+          x-sensitive-data:
+            mask: regex
+            pattern: ^[^@]+  # displayed as ***@example.com
+        apiToken:
+          type: string
+          x-sensitive-data:
+            mask: remove      # field omitted from example entirely
+```
+
+### Where masking is applied
+
+| Surface | What is masked |
+|---------|----------------|
+| Request body example (code samples) | Properties with `x-sensitive-data` |
+| Response body example (code samples) | Properties with `x-sensitive-data` |
+| TryIt response body | Properties with `x-sensitive-data` |
+| TryIt response headers | Auth headers from `securitySchemes` (automatic, no annotation needed) |
+| Code sample auth headers/query | Auth values from `securitySchemes` (automatic) |
+
+> **Note:** TryIt API calls always send the **real** credential values. Masking only affects what is displayed on screen.
+
+### How it works
+
+```mermaid
+flowchart TD
+    spec[OpenAPI Spec]
+
+    spec -->|securitySchemes| rules[buildSecuritySchemeMaskRules produces placeholder rules e.g. Bearer YOUR_TOKEN]
+    spec -->|x-sensitive-data on properties| crawl[crawl / getSampleBody generates body example]
+
+    rules -->|masked auth headers & query| RS[Code Sample display]
+    rules -->|real auth headers & query| TI[TryIt API call sends real credentials]
+
+    crawl -->|applyMask per property| RS
+    crawl -->|applyMask per property| RespS[Response Sample display]
+
+    TI -->|actual HTTP response| mask[maskBodyExample findResponseSchema]
+    mask -->|masked body| TR[TryIt Response display]
+
+    rules -->|maskAuthHeaders| TR
+```
+
+**Step by step:**
+
+1. **Code samples** — When the renderer generates a code snippet, `buildSecuritySchemeMaskRules` reads the operation's `securitySchemes` and replaces real auth header/query values with placeholders like `Bearer {YOUR_TOKEN}` or `{YOUR_API_KEY}`.
+
+2. **Body examples** — `crawl()` walks the schema to build an example object. For each property with `x-sensitive-data`, it calls `applyMask` before adding the value to the example. This covers both request and response body samples shown in code snippets.
+
+3. **TryIt request** — The real credential values are always sent so the API call works correctly. Masking does not affect the actual HTTP request.
+
+4. **TryIt response body** — After receiving a response, `findResponseSchema` looks up the matching response schema (exact status code → wildcard e.g. `4XX` → `default`). `maskBodyExample` then recursively walks the parsed response JSON and masks any property marked with `x-sensitive-data`.
+
+5. **TryIt response headers** — Response headers are checked against the security scheme mask rules. Any header name matching a rule (e.g. `Authorization`) is replaced with its placeholder before display.
+

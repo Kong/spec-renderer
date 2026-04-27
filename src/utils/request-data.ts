@@ -1,6 +1,7 @@
 import type { IHttpOperation, IMediaTypeContent } from '@stoplight/types'
 import { crawl, extractSampleForParam } from './schema-example'
 import { resolveSchemaObjectFields, resolveSchemaType } from './schema-model'
+import { maskBodyExample } from './sensitive-data-masking'
 import { CODE_INDENT_SPACES } from '@/constants'
 import { safeJSONParse } from './strings'
 import formurlencoded from 'form-urlencoded'
@@ -162,7 +163,9 @@ export const getSampleBody = (contents: IMediaTypeContent[], filteringOptions: R
     ) {
       // @ts-ignore value is valid property of example
       const exampleValue = safeJSONParse(contents[0].examples[sampleIdx].value)
-      return JSON.stringify(exampleValue as Record<string, any>, null, CODE_INDENT_SPACES)
+      const schema = resolveSchemaObjectFields(contents[0].schema) as Record<string, any>
+      const maskedValue = maskBodyExample(exampleValue, schema)
+      return JSON.stringify(maskedValue as Record<string, any>, null, CODE_INDENT_SPACES)
     }
   }
 

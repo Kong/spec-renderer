@@ -1,5 +1,7 @@
 import { MAX_NESTED_LEVELS } from '@/constants'
 import { resolveSchemaObjectFields, resolveSchemaType } from './schema-model'
+import { applyMask } from './sensitive-data-masking'
+import type { XSensitiveData } from '@/types'
 
 /**
  * util to extract example value from a given example, as example can be a primitive value or an object with value field
@@ -243,6 +245,15 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
             nestedLevel: nestedLevel + 1,
             filteringOptions,
           }) ?? extractSampleForParam(oData, key)
+      }
+
+      const sensitiveConfig = oData['x-sensitive-data'] as XSensitiveData | undefined
+      if (sensitiveConfig) {
+        if (sensitiveConfig.mask === 'remove') {
+          delete sampleObj[key]
+        } else if (Object.prototype.hasOwnProperty.call(sampleObj, key)) {
+          sampleObj[key] = applyMask(sampleObj[key], sensitiveConfig)
+        }
       }
     }
 

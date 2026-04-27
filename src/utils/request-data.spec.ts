@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { extractSample, getRequestHeaders, getFormattedBody, getSampleQuery, getSampleBody } from './request-data'
-import type { IHttpOperation } from '@stoplight/types'
+import type { IHttpOperation, IMediaTypeContent } from '@stoplight/types'
+import type { JSONSchema7 } from 'json-schema'
+import type { XSensitiveData } from '@/types'
 
 describe('request-header', () => {
   it('TDX-5963 should grab from request mediaType before looking at response', () => {
@@ -183,5 +185,43 @@ describe('getSampleQuery', () => {
         ],
       },
     })).toEqual('query=query&filter=filter')
+  })
+})
+
+describe('getSampleBody x-sensitive-data masking', () => {
+  it('masks fields with x-sensitive-data when using crawl-generated examples', () => {
+    const contents: IMediaTypeContent[] = [{
+      id: 'c1',
+      mediaType: 'application/json',
+      schema: {
+        type: 'object',
+        properties: {
+          password: { type: 'string', 'x-sensitive-data': { mask: 'full' } as XSensitiveData } as JSONSchema7,
+          name: { type: 'string', example: 'Alice' } as JSONSchema7,
+        },
+      },
+    }]
+    const result = JSON.parse(getSampleBody(contents))
+    expect(result.password).toBe('***')
+    expect(result.name).toBe('Alice')
+  })
+
+  it('masks fields with x-sensitive-data when using explicit examples', () => {
+    const contents: IMediaTypeContent[] = [{
+      id: 'c1',
+      mediaType: 'application/json',
+      schema: {
+        type: 'object',
+        properties: {
+          token: { type: 'string', 'x-sensitive-data': { mask: 'full' } as XSensitiveData } as JSONSchema7,
+          user: { type: 'string' },
+        },
+      },
+      // @ts-ignore value is valid property of INodeExample
+      examples: [{ key: 'default', value: JSON.stringify({ token: 'secret-token', user: 'Alice' }) }],
+    }]
+    const result = JSON.parse(getSampleBody(contents, {}, 0))
+    expect(result.token).toBe('***')
+    expect(result.user).toBe('Alice')
   })
 })

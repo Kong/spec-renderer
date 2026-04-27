@@ -1,4 +1,5 @@
 import type { JSONSchema7, JSONSchema7Type } from 'json-schema'
+import type { XSensitiveData } from './sensitive-data'
 
 export interface SpecRendererProps {
   /** Text of the specification. */
@@ -83,6 +84,7 @@ export interface SchemaObject extends JSONSchema7 {
      */
     explicitProperties?: string[]
   }
+  'x-sensitive-data'?: XSensitiveData
 }
 
 
