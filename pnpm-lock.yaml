@@ -61,8 +61,8 @@ importers:
         specifier: ^1.1.11
         version: 1.1.11(vue@3.5.32(typescript@5.9.3))
       '@kong/icons':
-        specifier: ^1.50.0
-        version: 1.50.0(vue@3.5.32(typescript@5.9.3))
+        specifier: ^1.54.0
+        version: 1.54.0(vue@3.5.32(typescript@5.9.3))
       '@stoplight/http-spec':
         specifier: ^7.1.0
         version: 7.1.0
@@ -119,8 +119,8 @@ importers:
         specifier: ^2.1.6
         version: 2.1.6
       '@kong/design-tokens':
-        specifier: ^1.20.1
-        version: 1.20.1
+        specifier: ^1.22.1
+        version: 1.22.1
       '@kong/eslint-config-kong-ui':
         specifier: 1.6.2
         version: 1.6.2(@typescript-eslint/parser@8.47.0(eslint@9.39.4(jiti@2.4.2))(typescript@5.9.3))(eslint@9.39.4(jiti@2.4.2))(typescript@5.9.3)
@@ -949,8 +949,8 @@ packages:
   '@keyv/serialize@1.1.1':
     resolution: {integrity: sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA==}
 
-  '@kong/design-tokens@1.20.1':
-    resolution: {integrity: sha512-F5WCq8hvsLh3xpWuIZ7YmC1n2ZDA93K8fHcLpnVaVRBtbAkS4mr4yuSAmQgeCrUg1ceWx/xRwU+T8rHA0X6+uw==}
+  '@kong/design-tokens@1.22.1':
+    resolution: {integrity: sha512-puuWDrkZz7PoWOj/I/HA5VQyKK7QBEEh9cIItdfpQlEjFH4PUsXutg9IYRIyoSuoKpP3YYlPsZl60qBIIMrh6A==}
     engines: {node: '>=20.19.5', pnpm: '>=10.28.2'}
 
   '@kong/eslint-config-kong-ui@1.6.2':
@@ -959,8 +959,8 @@ packages:
     peerDependencies:
       eslint: '>= 9.37.0'
 
-  '@kong/icons@1.50.0':
-    resolution: {integrity: sha512-fNOnfauy1QV+AwYJcEv9IU1eGc0FrUPky8f4vL/SRR4/E6lBvqrbpGI0pBVNqW9VjUi4CkKqO4XGPtEXM9XbHg==}
+  '@kong/icons@1.54.0':
+    resolution: {integrity: sha512-yWBxzYlsbSajpmZb/xw3NYf17nqwjYVaTbAu1Z7Es0oVwnmxdutn4AcFCYyzpo+6L5MgAtsWvDT4BvexYb052g==}
     engines: {node: '>=18.17.0', pnpm: '>=10.28.2'}
     peerDependencies:
       vue: '>= 3.3.4 < 4'
@@ -1619,6 +1619,7 @@ packages:
 
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
+    deprecated: Potential CWE-502 - Update to 1.3.1 or higher
 
   '@vitejs/plugin-vue@6.0.6':
     resolution: {integrity: sha512-u9HHgfrq3AjXlysn0eINFnWQOJQLO9WN6VprZ8FXl7A2bYisv3Hui9Ij+7QZ41F/WYWarHjwBbXtD7dKg3uxbg==}
@@ -5483,6 +5484,7 @@ packages:
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   v8-compile-cache-lib@3.0.1:
@@ -6580,7 +6582,7 @@ snapshots:
 
   '@keyv/serialize@1.1.1': {}
 
-  '@kong/design-tokens@1.20.1': {}
+  '@kong/design-tokens@1.22.1': {}
 
   '@kong/eslint-config-kong-ui@1.6.2(@typescript-eslint/parser@8.47.0(eslint@9.39.4(jiti@2.4.2))(typescript@5.9.3))(eslint@9.39.4(jiti@2.4.2))(typescript@5.9.3)':
     dependencies:
@@ -6602,7 +6604,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@kong/icons@1.50.0(vue@3.5.32(typescript@5.9.3))':
+  '@kong/icons@1.54.0(vue@3.5.32(typescript@5.9.3))':
     dependencies:
       vue: 3.5.32(typescript@5.9.3)
 
