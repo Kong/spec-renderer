@@ -121,7 +121,7 @@
     "tslib": "^2.8.1",
     "typescript": "^5.9.3",
     "vite": "^7.3.2",
-    "vite-plugin-node-polyfills": "^0.25.0",
+    "vite-plugin-node-polyfills": "^0.26.0",
     "vite-plugin-replace": "^0.1.1",
     "vite-plugin-vue-devtools": "^8.1.1",
     "vitest": "3.2.4",
