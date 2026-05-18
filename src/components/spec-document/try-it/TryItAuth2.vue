@@ -342,7 +342,7 @@ watch(extraTokenRequestParameters, (newValue) => {
       @include default-button-reset;
       color: var(--kui-color-text-neutral, $kui-color-text-neutral);
       position: absolute;
-      right: var(--kui-space-40, $kui-space-40);
+      right: 0;
 
       &:hover {
         color: var(--kui-color-text, $kui-color-text);
