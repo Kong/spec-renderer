@@ -389,6 +389,7 @@ watch(() => ({ key: activeSecurityScheme.value, list: securitySchemeGroupList.va
     .visibility-toggle-btn {
       @include default-button-reset;
       color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      padding-right: var(--kui-space-40, $kui-space-40);
       position: absolute;
       right: 0;
 
