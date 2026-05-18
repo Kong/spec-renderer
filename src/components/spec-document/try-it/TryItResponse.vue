@@ -17,6 +17,17 @@
             {{ response?.status }}
           </span>
         </h3>
+        <button
+          v-if="hasMasking(bodySchema, maskRules)"
+          class="mask-toggle-button"
+          :title="showMasked ? 'Show sensitive data' : 'Mask sensitive data'"
+          @click="showMasked = !showMasked"
+        >
+          <component
+            :is="showMasked ? VisibilityOffIcon : VisibilityIcon"
+            size="16px"
+          />
+        </button>
       </div>
       <SelectDropdown
         :id="`response-option-select-${dataId}`"
@@ -69,12 +80,13 @@
 import { computed, watch, ref } from 'vue'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
+import { VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
 import type { PropType } from 'vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import type { SelectItem, SecuritySchemeMaskRule } from '@/types'
 import { CODE_INDENT_SPACES } from '@/constants'
 import type { IHttpOperationResponse } from '@stoplight/types'
-import { maskBodyExample, findResponseSchema } from '@/utils'
+import { maskBodyExample, findResponseSchema, hasMasking } from '@/utils'
 
 const props = defineProps({
   dataId: {
@@ -99,23 +111,43 @@ const props = defineProps({
   },
 })
 
+// showMasked defaults to true — when the spec has masking (security schemes or x-sensitive-data),
+// the toggle appears and data is masked by default; hidden otherwise via v-if="hasMasking(...)"
+const showMasked = ref<boolean>(true)
+
+// Raw display text (one variant, properly formatted per content type)
+const rawResponseText = ref<string>('')
+// Parsed JSON — only set for JSON responses; null for images/text
+const parsedJson = ref<unknown>(null)
+// Resolved schema — needed for hasMasking() toggle visibility check and masked computation
+const bodySchema = ref<Record<string, any> | undefined>()
+
+// Compute masked version on demand when the toggle is on; otherwise return raw text
+const responseText = computed((): string => {
+  if (showMasked.value && parsedJson.value !== null && bodySchema.value) {
+    return JSON.stringify(maskBodyExample(parsedJson.value, bodySchema.value), null, CODE_INDENT_SPACES)
+  }
+  return rawResponseText.value
+})
+
 const errorText = computed((): string => {
   return props.responseError?.message || ''
 })
 
 const headersText = computed((): string => {
-
   const headers = <Record<string, any>>{}
   if (props.response) {
     for (const pair of props.response.headers.entries()) {
-      const maskedRule = props.maskRules.find(r => r.location === 'header' && r.paramName.toLowerCase() === pair[0].toLowerCase())
-      headers[pair[0]] = maskedRule ? maskedRule.placeholder : pair[1]
+      if (showMasked.value) {
+        const maskedRule = props.maskRules.find(r => r.location === 'header' && r.paramName.toLowerCase() === pair[0].toLowerCase())
+        headers[pair[0]] = maskedRule ? maskedRule.placeholder : pair[1]
+      } else {
+        headers[pair[0]] = pair[1]
+      }
     }
   }
   return Object.keys(headers).length ? JSON.stringify(headers, null, CODE_INDENT_SPACES) : ''
 })
-
-const responseText = ref<string>('')
 
 const resultOptions = computed((): SelectItem[] => {
   const opts = []
@@ -173,20 +205,26 @@ const requestLang = ref<string>('')
 watch(() => props.response, async (res) => {
   if (res) {
     if (res.headers.get('content-type')?.includes('/json')) {
-      const parsed = await res.json()
-      const schema = findResponseSchema(props.responseSchemas, res.status, res.headers.get('content-type') ?? 'application/json')
-      const masked = schema ? maskBodyExample(parsed, schema) : parsed
-      responseText.value = JSON.stringify(masked, null, CODE_INDENT_SPACES)
+      const json = await res.json()
+      parsedJson.value = json
+      bodySchema.value = findResponseSchema(props.responseSchemas, res.status, res.headers.get('content-type') ?? 'application/json')
+      rawResponseText.value = JSON.stringify(json, null, CODE_INDENT_SPACES)
       requestLang.value = 'json'
     } else if (isResponseImage.value) {
       const blob = await res.blob()
-      responseText.value = URL.createObjectURL(blob)
+      parsedJson.value = null
+      bodySchema.value = undefined
+      rawResponseText.value = URL.createObjectURL(blob)
     } else {
-      responseText.value = await res.text()
+      parsedJson.value = null
+      bodySchema.value = undefined
+      rawResponseText.value = await res.text()
       requestLang.value = 'text'
     }
   } else {
-    responseText.value = ''
+    parsedJson.value = null
+    bodySchema.value = undefined
+    rawResponseText.value = ''
     requestLang.value = ''
   }
 }, { immediate: true })
@@ -195,8 +233,19 @@ watch(() => props.response, async (res) => {
 
 <style lang="scss" scoped>
 .h-wrapper {
+  align-items: center;
   display: flex;
   flex: 1;
+  gap: var(--kui-space-40, $kui-space-40);
+
+  .mask-toggle-button {
+    @include default-button-reset;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+
+    &:hover {
+      color: var(--kui-color-text, $kui-color-text);
+    }
+  }
 }
 
 .response-status:before {

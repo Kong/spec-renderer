@@ -247,12 +247,14 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
           }) ?? extractSampleForParam(oData, key)
       }
 
-      const sensitiveConfig = oData['x-sensitive-data'] as XSensitiveData | undefined
-      if (sensitiveConfig) {
-        if (sensitiveConfig.mask === 'remove') {
-          delete sampleObj[key]
-        } else if (Object.prototype.hasOwnProperty.call(sampleObj, key)) {
-          sampleObj[key] = applyMask(sampleObj[key], sensitiveConfig)
+      if (!filteringOptions.skipMasking) {
+        const sensitiveConfig = oData['x-sensitive-data'] as XSensitiveData | undefined
+        if (sensitiveConfig) {
+          if (sensitiveConfig.mask === 'remove') {
+            delete sampleObj[key]
+          } else if (Object.prototype.hasOwnProperty.call(sampleObj, key)) {
+            sampleObj[key] = applyMask(sampleObj[key], sensitiveConfig)
+          }
         }
       }
     }

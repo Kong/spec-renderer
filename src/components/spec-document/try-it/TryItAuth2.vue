@@ -33,14 +33,27 @@
           :text="scheme.description"
         />
       </InputLabel>
-      <input
-        :id="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
-        v-model="authInputs[`${schemeKey}-clientSecret`]"
-        :aria-describedby="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
-        autocomplete="off"
-        placeholder="Enter Client Secret"
-        type="password"
-      >
+      <div class="input-wrapper">
+        <input
+          :id="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
+          v-model="authInputs[`${schemeKey}-clientSecret`]"
+          :aria-describedby="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
+          autocomplete="off"
+          placeholder="Enter Client Secret"
+          :type="showClientSecret ? 'text' : 'password'"
+        >
+        <button
+          :aria-label="showClientSecret ? 'Hide client secret' : 'Show client secret'"
+          class="visibility-toggle-btn"
+          type="button"
+          @click="showClientSecret = !showClientSecret"
+        >
+          <component
+            :is="showClientSecret ? VisibilityIcon : VisibilityOffIcon"
+            size="16px"
+          />
+        </button>
+      </div>
     </div>
     <div
       v-if="extraTokenRequestParameters"
@@ -130,7 +143,8 @@
 </template>
 
 <script setup lang="ts">
-import { watch, computed } from 'vue'
+import { watch, computed, ref } from 'vue'
+import { VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import composables from '@/composables'
@@ -157,6 +171,8 @@ const props = defineProps({
 
 
 const { authInputs, authHeadersMap } = composables.useAuth()
+
+const showClientSecret = ref(false)
 
 const resetToken = () => {
   authInputs.value[`${props.schemeKey}-token`] = ''
@@ -307,8 +323,31 @@ watch(extraTokenRequestParameters, (newValue) => {
     }
   }
 
-  input[type=text], input[type=password] {
+  input[type=text] {
     @include input-default;
+  }
+
+  .input-wrapper {
+    align-items: center;
+    display: flex;
+    position: relative;
+
+    input {
+      flex: 1;
+      @include input-default;
+      padding-right: var(--kui-space-80, $kui-space-80);
+    }
+
+    .visibility-toggle-btn {
+      @include default-button-reset;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      position: absolute;
+      right: var(--kui-space-40, $kui-space-40);
+
+      &:hover {
+        color: var(--kui-color-text, $kui-color-text);
+      }
+    }
   }
 
   .scope-wrapper {

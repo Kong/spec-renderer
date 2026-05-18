@@ -3,6 +3,7 @@ import { extractSample, getRequestHeaders, getFormattedBody, getSampleQuery, get
 import type { IHttpOperation, IMediaTypeContent } from '@stoplight/types'
 import type { JSONSchema7 } from 'json-schema'
 import type { XSensitiveData } from '@/types'
+import { MASK_PLACEHOLDER } from './sensitive-data-masking'
 
 describe('request-header', () => {
   it('TDX-5963 should grab from request mediaType before looking at response', () => {
@@ -202,7 +203,7 @@ describe('getSampleBody x-sensitive-data masking', () => {
       },
     }]
     const result = JSON.parse(getSampleBody(contents))
-    expect(result.password).toBe('***')
+    expect(result.password).toBe(MASK_PLACEHOLDER)
     expect(result.name).toBe('Alice')
   })
 
@@ -221,7 +222,43 @@ describe('getSampleBody x-sensitive-data masking', () => {
       examples: [{ key: 'default', value: JSON.stringify({ token: 'secret-token', user: 'Alice' }) }],
     }]
     const result = JSON.parse(getSampleBody(contents, {}, 0))
-    expect(result.token).toBe('***')
+    expect(result.token).toBe(MASK_PLACEHOLDER)
+    expect(result.user).toBe('Alice')
+  })
+
+  it('returns unmasked values when skipMasking is true (crawl-generated)', () => {
+    const contents: IMediaTypeContent[] = [{
+      id: 'c1',
+      mediaType: 'application/json',
+      schema: {
+        type: 'object',
+        properties: {
+          password: { type: 'string', example: 'hunter2', 'x-sensitive-data': { mask: 'full' } as XSensitiveData } as JSONSchema7,
+          name: { type: 'string', example: 'Alice' } as JSONSchema7,
+        },
+      },
+    }]
+    const result = JSON.parse(getSampleBody(contents, {}, 0, true))
+    expect(result.password).toBe('hunter2')
+    expect(result.name).toBe('Alice')
+  })
+
+  it('returns unmasked values when skipMasking is true (explicit examples)', () => {
+    const contents: IMediaTypeContent[] = [{
+      id: 'c1',
+      mediaType: 'application/json',
+      schema: {
+        type: 'object',
+        properties: {
+          token: { type: 'string', 'x-sensitive-data': { mask: 'full' } as XSensitiveData } as JSONSchema7,
+          user: { type: 'string' },
+        },
+      },
+      // @ts-ignore value is valid property of INodeExample
+      examples: [{ key: 'default', value: JSON.stringify({ token: 'secret-token', user: 'Alice' }) }],
+    }]
+    const result = JSON.parse(getSampleBody(contents, {}, 0, true))
+    expect(result.token).toBe('secret-token')
     expect(result.user).toBe('Alice')
   })
 })

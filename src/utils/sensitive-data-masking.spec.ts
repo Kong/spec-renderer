@@ -8,60 +8,62 @@ import {
   maskAuthQuery,
   maskBodyExample,
   findResponseSchema,
+  hasMasking,
+  MASK_PLACEHOLDER,
 } from './sensitive-data-masking'
 import type { XSensitiveData } from '@/types'
 import type { HttpSecurityScheme, IHttpOperationResponse } from '@stoplight/types'
 import type { JSONSchema7 } from 'json-schema'
 
 describe('applyMask', () => {
-  it('returns *** for full mask', () => {
-    expect(applyMask('secret', { mask: 'full' })).toBe('***')
+  it('returns MASK_PLACEHOLDER for full mask', () => {
+    expect(applyMask('secret', { mask: 'full' })).toBe(MASK_PLACEHOLDER)
   })
 
   it('returns undefined for remove mask', () => {
     expect(applyMask('secret', { mask: 'remove' })).toBeUndefined()
   })
 
-  it('returns hash string for hash mask', () => {
+  it('returns plain hex hash for hash mask', () => {
     const result = applyMask('secret', { mask: 'hash' }) as string
-    expect(result).toMatch(/^\[hash:[0-9a-f]{8}\]$/)
+    expect(result).toMatch(/^[0-9a-f]{8}$/)
   })
 
   it('applies regex mask with pattern', () => {
-    expect(applyMask('hello@example.com', { mask: 'regex', pattern: '^[^@]+' })).toBe('***@example.com')
+    expect(applyMask('hello@example.com', { mask: 'regex', pattern: '^[^@]+' })).toBe(`${MASK_PLACEHOLDER}@example.com`)
   })
 
-  it('falls back to *** for regex mask with invalid pattern', () => {
-    expect(applyMask('value', { mask: 'regex', pattern: '[invalid' })).toBe('***')
+  it('falls back to MASK_PLACEHOLDER for regex mask with invalid pattern', () => {
+    expect(applyMask('value', { mask: 'regex', pattern: '[invalid' })).toBe(MASK_PLACEHOLDER)
   })
 
-  it('falls back to *** for regex mask without pattern', () => {
-    expect(applyMask('value', { mask: 'regex' })).toBe('***')
+  it('falls back to MASK_PLACEHOLDER for regex mask without pattern', () => {
+    expect(applyMask('value', { mask: 'regex' })).toBe(MASK_PLACEHOLDER)
   })
 
   it('converts non-string values to string before masking', () => {
-    expect(applyMask(12345, { mask: 'full' })).toBe('***')
-    expect(applyMask(null, { mask: 'full' })).toBe('***')
+    expect(applyMask(12345, { mask: 'full' })).toBe(MASK_PLACEHOLDER)
+    expect(applyMask(null, { mask: 'full' })).toBe(MASK_PLACEHOLDER)
   })
 })
 
 describe('maskRegex', () => {
-  it('replaces matched parts with ***', () => {
-    expect(maskRegex('hello world', 'world')).toBe('hello ***')
+  it('replaces matched parts with MASK_PLACEHOLDER', () => {
+    expect(maskRegex('hello world', 'world')).toBe(`hello ${MASK_PLACEHOLDER}`)
   })
 
   it('replaces all occurrences', () => {
-    expect(maskRegex('aXbXc', 'X')).toBe('a***b***c')
+    expect(maskRegex('aXbXc', 'X')).toBe(`a${MASK_PLACEHOLDER}b${MASK_PLACEHOLDER}c`)
   })
 
-  it('returns *** for invalid pattern', () => {
-    expect(maskRegex('value', '[invalid')).toBe('***')
+  it('returns MASK_PLACEHOLDER for invalid pattern', () => {
+    expect(maskRegex('value', '[invalid')).toBe(MASK_PLACEHOLDER)
   })
 })
 
 describe('maskHash', () => {
-  it('returns a [hash:xxxxxxxx] format string', () => {
-    expect(maskHash('anything')).toMatch(/^\[hash:[0-9a-f]{8}\]$/)
+  it('returns an 8-character hex string', () => {
+    expect(maskHash('anything')).toMatch(/^[0-9a-f]{8}$/)
   })
 
   it('produces consistent output for the same input', () => {
@@ -81,31 +83,31 @@ describe('buildSecuritySchemeMaskRules', () => {
   it('creates header rule for apiKey in header', () => {
     const security = [[{ type: 'apiKey', name: 'X-API-Key', in: 'header', key: 'apiKey' }]] as HttpSecurityScheme[][]
     const rules = buildSecuritySchemeMaskRules(security)
-    expect(rules).toContainEqual({ location: 'header', paramName: 'X-API-Key', placeholder: '{YOUR_API_KEY}' })
+    expect(rules).toContainEqual({ location: 'header', paramName: 'X-API-Key', placeholder: MASK_PLACEHOLDER })
   })
 
   it('creates query rule for apiKey in query', () => {
     const security = [[{ type: 'apiKey', name: 'api_key', in: 'query', key: 'apiKey' }]] as HttpSecurityScheme[][]
     const rules = buildSecuritySchemeMaskRules(security)
-    expect(rules).toContainEqual({ location: 'query', paramName: 'api_key', placeholder: '{YOUR_API_KEY}' })
+    expect(rules).toContainEqual({ location: 'query', paramName: 'api_key', placeholder: MASK_PLACEHOLDER })
   })
 
   it('creates Authorization header rule for http basic', () => {
     const security = [[{ type: 'http', scheme: 'basic', key: 'basicAuth' }]] as HttpSecurityScheme[][]
     const rules = buildSecuritySchemeMaskRules(security)
-    expect(rules).toContainEqual({ location: 'header', paramName: 'Authorization', placeholder: 'Basic {CREDENTIALS}' })
+    expect(rules).toContainEqual({ location: 'header', paramName: 'Authorization', placeholder: MASK_PLACEHOLDER })
   })
 
   it('creates Authorization header rule for http bearer', () => {
     const security = [[{ type: 'http', scheme: 'bearer', key: 'bearerAuth' }]] as HttpSecurityScheme[][]
     const rules = buildSecuritySchemeMaskRules(security)
-    expect(rules).toContainEqual({ location: 'header', paramName: 'Authorization', placeholder: 'Bearer {YOUR_TOKEN}' })
+    expect(rules).toContainEqual({ location: 'header', paramName: 'Authorization', placeholder: MASK_PLACEHOLDER })
   })
 
   it('creates Authorization header rule for oauth2', () => {
     const security = [[{ type: 'oauth2', flows: {}, key: 'oauth2' }]] as HttpSecurityScheme[][]
     const rules = buildSecuritySchemeMaskRules(security)
-    expect(rules).toContainEqual({ location: 'header', paramName: 'Authorization', placeholder: 'Bearer {ACCESS_TOKEN}' })
+    expect(rules).toContainEqual({ location: 'header', paramName: 'Authorization', placeholder: MASK_PLACEHOLDER })
   })
 
   it('deduplicates rules with the same location and paramName', () => {
@@ -129,11 +131,11 @@ describe('buildSecuritySchemeMaskRules', () => {
 })
 
 describe('maskAuthHeaders', () => {
-  const rules = [{ location: 'header' as const, paramName: 'Authorization', placeholder: 'Bearer {YOUR_TOKEN}' }]
+  const rules = [{ location: 'header' as const, paramName: 'Authorization', placeholder: MASK_PLACEHOLDER }]
 
   it('replaces matching header value with placeholder', () => {
     const headers = [{ name: 'Authorization', value: 'Bearer real-token' }]
-    expect(maskAuthHeaders(headers, rules)).toEqual([{ name: 'Authorization', value: 'Bearer {YOUR_TOKEN}' }])
+    expect(maskAuthHeaders(headers, rules)).toEqual([{ name: 'Authorization', value: MASK_PLACEHOLDER }])
   })
 
   it('leaves non-matching headers unchanged', () => {
@@ -144,7 +146,7 @@ describe('maskAuthHeaders', () => {
   it('matches case-insensitively', () => {
     const headers = [{ name: 'authorization', value: 'Bearer real-token' }]
     const result = maskAuthHeaders(headers, rules)
-    expect(result[0]!.value).toBe('Bearer {YOUR_TOKEN}')
+    expect(result[0]!.value).toBe(MASK_PLACEHOLDER)
   })
 
   it('returns original array when no rules', () => {
@@ -160,11 +162,11 @@ describe('maskAuthHeaders', () => {
 })
 
 describe('maskAuthQuery', () => {
-  const rules = [{ location: 'query' as const, paramName: 'api_key', placeholder: '{YOUR_API_KEY}' }]
+  const rules = [{ location: 'query' as const, paramName: 'api_key', placeholder: MASK_PLACEHOLDER }]
 
   it('masks matching query param value', () => {
     const result = maskAuthQuery('api_key=secret123', rules)
-    expect(result).toContain('api_key=%7BYOUR_API_KEY%7D')
+    expect(result).toContain(`api_key=${encodeURIComponent(MASK_PLACEHOLDER)}`)
   })
 
   it('leaves non-matching params unchanged', () => {
@@ -191,7 +193,7 @@ describe('maskBodyExample', () => {
   it('masks a property with full strategy', () => {
     const example = { password: 'secret' }
     const schema = { properties: { password: { type: 'string', 'x-sensitive-data': { mask: 'full' } as XSensitiveData } } }
-    expect(maskBodyExample(example, schema)).toEqual({ password: '***' })
+    expect(maskBodyExample(example, schema)).toEqual({ password: MASK_PLACEHOLDER })
   })
 
   it('removes a property with remove strategy', () => {
@@ -204,7 +206,7 @@ describe('maskBodyExample', () => {
     const example = { email: 'user@example.com' }
     const schema = { properties: { email: { type: 'string', 'x-sensitive-data': { mask: 'regex', pattern: '^[^@]+' } as XSensitiveData } } }
     const result = maskBodyExample(example, schema) as Record<string, string>
-    expect(result.email).toBe('***@example.com')
+    expect(result.email).toBe(`${MASK_PLACEHOLDER}@example.com`)
   })
 
   it('leaves properties without x-sensitive-data unchanged', () => {
@@ -226,7 +228,7 @@ describe('maskBodyExample', () => {
         },
       },
     }
-    expect(maskBodyExample(example, schema)).toEqual({ user: { password: '***', name: 'Alice' } })
+    expect(maskBodyExample(example, schema)).toEqual({ user: { password: MASK_PLACEHOLDER, name: 'Alice' } })
   })
 
   it('handles arrays by applying schema to each item', () => {
@@ -235,7 +237,7 @@ describe('maskBodyExample', () => {
       type: 'array',
       items: { properties: { token: { type: 'string', 'x-sensitive-data': { mask: 'full' } as XSensitiveData } } },
     }
-    expect(maskBodyExample(example, schema)).toEqual([{ token: '***' }, { token: '***' }])
+    expect(maskBodyExample(example, schema)).toEqual([{ token: MASK_PLACEHOLDER }, { token: MASK_PLACEHOLDER }])
   })
 
   it('returns non-object values unchanged', () => {
@@ -249,6 +251,31 @@ describe('maskBodyExample', () => {
     const schema = { properties: { password: { 'x-sensitive-data': { mask: 'full' } as XSensitiveData } } }
     maskBodyExample(example, schema)
     expect(example.password).toBe('secret')
+  })
+})
+
+describe('hasMasking', () => {
+  it('returns false when schema has no x-sensitive-data and no mask rules', () => {
+    const schema = { properties: { name: { type: 'string' } } }
+    expect(hasMasking(schema, [])).toBe(false)
+  })
+
+  it('returns true when schema has x-sensitive-data on a property', () => {
+    const schema = { properties: { password: { type: 'string', 'x-sensitive-data': { mask: 'full' } as XSensitiveData } } }
+    expect(hasMasking(schema, [])).toBe(true)
+  })
+
+  it('returns true when mask rules are present (even without schema)', () => {
+    expect(hasMasking(undefined, [{ location: 'header', paramName: 'Authorization', placeholder: MASK_PLACEHOLDER }])).toBe(true)
+  })
+
+  it('returns true when both schema and rules are present', () => {
+    const schema = { properties: { token: { type: 'string', 'x-sensitive-data': { mask: 'full' } as XSensitiveData } } }
+    expect(hasMasking(schema, [{ location: 'header', paramName: 'Authorization', placeholder: MASK_PLACEHOLDER }])).toBe(true)
+  })
+
+  it('returns false for undefined schema and empty rules', () => {
+    expect(hasMasking(undefined, [])).toBe(false)
   })
 })
 

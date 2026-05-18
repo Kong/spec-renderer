@@ -152,7 +152,7 @@ export const getSampleHeaders = ({ data, fieldValues, excludeHeaderList }: { dat
  * @param sampleIdx index of example to be used
  * @returns query string
  */
-export const getSampleBody = (contents: IMediaTypeContent[], filteringOptions: Record<string, boolean> = { excludeReadonly: true, excludeNotRequired: false }, sampleIdx: number = 0): string => {
+export const getSampleBody = (contents: IMediaTypeContent[], filteringOptions: Record<string, boolean> = { excludeReadonly: true, excludeNotRequired: false }, sampleIdx: number = 0, skipMasking: boolean = false): string => {
   if (!contents.length || !contents[0]) {
     return ''
   }
@@ -164,15 +164,16 @@ export const getSampleBody = (contents: IMediaTypeContent[], filteringOptions: R
       // @ts-ignore value is valid property of example
       const exampleValue = safeJSONParse(contents[0].examples[sampleIdx].value)
       const schema = resolveSchemaObjectFields(contents[0].schema) as Record<string, any>
-      const maskedValue = maskBodyExample(exampleValue, schema)
+      const maskedValue = skipMasking ? exampleValue : maskBodyExample(exampleValue, schema)
       return JSON.stringify(maskedValue as Record<string, any>, null, CODE_INDENT_SPACES)
     }
   }
 
   const isArraySchema = resolveSchemaType(contents[0].schema?.type) === 'array'
+  // Pass skipMasking into filteringOptions so doCrawl() can read it via filteringOptions.skipMasking
   const sample = crawl({
     objData: resolveSchemaObjectFields(contents[0].schema) as Record<string, any>,
-    filteringOptions,
+    filteringOptions: { ...filteringOptions, skipMasking },
   })
   return JSON.stringify(isArraySchema && !Array.isArray(sample) ? [sample] : sample, null, CODE_INDENT_SPACES)
 }

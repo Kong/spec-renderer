@@ -56,10 +56,10 @@ The actual value is **never sent** — masking is display-only.
 
 | Strategy | Result | Use when |
 |----------|--------|----------|
-| `full` | `***` | Hide the value entirely |
+| `full` | `••••••` | Hide the value entirely |
 | `remove` | *(field omitted)* | Remove the field from the example |
-| `hash` | `[hash:3d2a1f8c]` | Show that two values are equal without revealing either |
-| `regex` | partial mask (e.g. `***@example.com`) | Mask only part of the value |
+| `hash` | `3d2a1f8c` | Show that two values are equal without revealing either |
+| `regex` | partial mask (e.g. `••••••@example.com`) | Mask only part of the value |
 
 ### Usage
 
@@ -77,12 +77,12 @@ components:
         password:
           type: string
           x-sensitive-data:
-            mask: full        # displayed as ***
+            mask: full        # displayed as ••••••
         email:
           type: string
           x-sensitive-data:
             mask: regex
-            pattern: ^[^@]+  # displayed as ***@example.com
+            pattern: ^[^@]+  # displayed as ••••••@example.com
         apiToken:
           type: string
           x-sensitive-data:
@@ -100,6 +100,10 @@ components:
 | Code sample auth headers/query | Auth values from `securitySchemes` (automatic) |
 
 > **Note:** TryIt API calls always send the **real** credential values. Masking only affects what is displayed on screen.
+
+### Toggle
+
+Each panel that contains masked data shows a **"Mask sensitive data"** toggle (on by default). Turn it off to reveal the real values inline without leaving the page. The toggle is hidden when no masking is active for that panel.
 
 ### How it works
 
@@ -124,7 +128,7 @@ flowchart TD
 
 **Step by step:**
 
-1. **Code samples** — When the renderer generates a code snippet, `buildSecuritySchemeMaskRules` reads the operation's `securitySchemes` and replaces real auth header/query values with placeholders like `Bearer {YOUR_TOKEN}` or `{YOUR_API_KEY}`.
+1. **Code samples** — When the renderer generates a code snippet, `buildSecuritySchemeMaskRules` reads the operation's `securitySchemes` and replaces real auth header/query values with `••••••`.
 
 2. **Body examples** — `crawl()` walks the schema to build an example object. For each property with `x-sensitive-data`, it calls `applyMask` before adding the value to the example. This covers both request and response body samples shown in code snippets.
 

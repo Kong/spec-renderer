@@ -8,6 +8,7 @@
       <slot name="header" />
 
       <div class="btn-container">
+        <slot name="actions" />
         <CopyButton
           v-if="contentToCopy && !isCollapsed"
           :content="contentToCopy"
@@ -96,7 +97,9 @@ const toggleState = (e: Event) => {
     }
 
     .btn-container {
-      align-self: flex-end;
+      align-items: center;
+      display: flex;
+      gap: var(--kui-space-50, $kui-space-50);
       padding-left: var(--kui-space-30, $kui-space-30);
 
       .collapse-trigger-btn {

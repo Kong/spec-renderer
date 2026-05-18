@@ -73,6 +73,21 @@
           />
         </div>
       </template>
+      <template
+        v-if="hasMaskedData"
+        #actions
+      >
+        <button
+          class="mask-toggle-button"
+          :title="showMasked ? 'Show sensitive data' : 'Mask sensitive data'"
+          @click="showMasked = !showMasked"
+        >
+          <component
+            :is="showMasked ? VisibilityOffIcon : VisibilityIcon"
+            size="16px"
+          />
+        </button>
+      </template>
       <!-- body -->
       <RequiredToggle
         v-if="hideTryIt"
@@ -98,14 +113,15 @@ import type { PropType, Ref } from 'vue'
 import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet'
 import { requestSampleConfigs } from '@/constants'
-import { getRequestHeaders, getFormattedBody } from '@/utils'
+import { getRequestHeaders, getFormattedBody, maskAuthHeaders, maskAuthQuery, hasMasking, MASK_PLACEHOLDER, getSampleBody } from '@/utils'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
+import { VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
 import type { LanguageCode } from '@/types/request-languages'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import LanguageIcon from '@/components/common/LanguageIcon.vue'
-import type { SelectItem, RequestBody } from '@/types'
+import type { SelectItem, RequestBody, SecuritySchemeMaskRule } from '@/types'
 import RequiredToggle from '../try-it/RequiredToggle.vue'
 
 
@@ -150,6 +166,10 @@ const props = defineProps({
     type: Object as PropType<RequestBody>,
     default: () => ({ content: '' }),
   },
+  maskRules: {
+    type: Array as PropType<SecuritySchemeMaskRule[]>,
+    default: () => [],
+  },
 })
 
 const excludeNotRequired = defineModel({
@@ -158,6 +178,32 @@ const excludeNotRequired = defineModel({
 })
 
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
+
+const showMasked = ref<boolean>(true)
+const hasMaskedData = computed(() => hasMasking(undefined, props.maskRules))
+const activeAuthHeaders = computed(() =>
+  showMasked.value ? maskAuthHeaders(props.authHeaders, props.maskRules) : props.authHeaders,
+)
+const activeAuthQuery = computed(() =>
+  showMasked.value ? maskAuthQuery(props.authQuery, props.maskRules) : props.authQuery,
+)
+
+// Re-generate the body without masking when the user toggles unmask, but only when the
+// current body content is still the masked schema example (contains MASK_PLACEHOLDER).
+// If the user has typed their own value in TryIt, it won't contain the placeholder, so
+// we leave it alone.
+const activeBodyContent = computed((): RequestBody => {
+  if (!showMasked.value &&
+      typeof props.requestBody.content === 'string' &&
+      props.requestBody.content.includes(MASK_PLACEHOLDER)) {
+    const contents = props.data.request?.body?.contents ?? []
+    if (contents.length) {
+      const sampleIdx = Math.max(0, requestSamples.value.findIndex(s => s.key === selectedRequestSample.value))
+      return { ...props.requestBody, content: getSampleBody(contents, {}, sampleIdx, true) }
+    }
+  }
+  return props.requestBody
+})
 
 const emit = defineEmits<{
   (e: 'request-body-sample-idx-changed', samlpleIdx: number): void
@@ -245,12 +291,12 @@ watch(() => ({
   lang: selectedLang.value,
   lib: selectedLangLibrary.value,
   serverUrl: props.serverUrl,
-  authHeaders: props.authHeaders,
+  authHeaders: activeAuthHeaders.value,
   customHeaders: props.customHeaders,
   requestPath: props.requestPath,
   requestQuery: props.requestQuery,
-  authQuery: props.authQuery,
-  requestBody: props.requestBody,
+  authQuery: activeAuthQuery.value,
+  requestBody: activeBodyContent.value,
 }), (newValue, oldValue) => {
 
   if (newValue.method !== oldValue?.method && requestConfigs.value?.[0]) {
@@ -355,7 +401,13 @@ watch(() => ({
         requestCode.value = newValue.requestBody as string
         return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
       } else if (snippet.value) {
-        requestCode.value = snippet.value.convert((newValue.lang as TargetId), newValue.lib, { binary: newValue.requestBody?.isBinary }) || ''
+        const raw = snippet.value.convert((newValue.lang as TargetId), newValue.lib, { binary: newValue.requestBody?.isBinary }) || ''
+        // HTTPSnippet percent-encodes non-ASCII characters in query param values.
+        // Decode the encoded form of our bullet placeholder back to its display form.
+        const encodedMask = encodeURIComponent(MASK_PLACEHOLDER)
+        requestCode.value = Array.isArray(raw)
+          ? raw.map(c => c.replaceAll(encodedMask, MASK_PLACEHOLDER))
+          : raw.replaceAll(encodedMask, MASK_PLACEHOLDER)
       }
     }
   }
@@ -365,6 +417,15 @@ watch(() => ({
 <style lang="scss" scoped>
 
 .request-sample-wrapper {
+  .mask-toggle-button {
+    @include default-button-reset;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+
+    &:hover {
+      color: var(--kui-color-text, $kui-color-text);
+    }
+  }
+
   .select-wrapper {
     display: flex;
     flex: 1;

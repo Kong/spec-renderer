@@ -2,23 +2,28 @@ import type { HttpSecurityScheme, IHttpOperationResponse } from '@stoplight/type
 import type { XSensitiveData, SecuritySchemeMaskRule } from '@/types'
 import { resolveSchemaObjectFields } from './schema-model'
 
+// ─── Mask placeholder ─────────────────────────────────────────────────────────
+
+/** The character sequence used to replace masked values in all displayed output. */
+export const MASK_PLACEHOLDER = '••••••'
+
 // ─── Basic masking functions ──────────────────────────────────────────────────
 
 /**
- * Replace parts of a string matched by a regex pattern with ***.
+ * Replace parts of a string matched by a regex pattern with ••••••.
  *
  * Example:
- *   maskRegex('hello@example.com', '^[^@]+')  →  '***@example.com'
- *   maskRegex('aXbXc', 'X')                   →  'a***b***c'
+ *   maskRegex('hello@example.com', '^[^@]+')  →  '••••••@example.com'
+ *   maskRegex('aXbXc', 'X')                   →  'a••••••b••••••c'
  */
 export const maskRegex = (value: string, pattern: string): string => {
   try {
     // 'g' flag replaces every occurrence, not just the first
     const re = new RegExp(pattern, 'g')
-    return value.replace(re, '***')
+    return value.replace(re, MASK_PLACEHOLDER)
   } catch {
     // Invalid regex pattern — fall back to full mask rather than throwing
-    return '***'
+    return MASK_PLACEHOLDER
   }
 }
 
@@ -27,9 +32,9 @@ export const maskRegex = (value: string, pattern: string): string => {
  * Useful when you want to show that two values are the same without revealing either.
  *
  * Example:
- *   maskHash('my-secret-token')  →  '[hash:3d2a1f8c]'
- *   maskHash('my-secret-token')  →  '[hash:3d2a1f8c]'  (same input → same output)
- *   maskHash('different-token')  →  '[hash:7b4e9a12]'  (different input → different hash)
+ *   maskHash('my-secret-token')  →  '3d2a1f8c'
+ *   maskHash('my-secret-token')  →  '3d2a1f8c'  (same input → same output)
+ *   maskHash('different-token')  →  '7b4e9a12'  (different input → different hash)
  */
 export const maskHash = (value: string): string => {
   // djb2-style hash — fast, synchronous, good enough for display-only fingerprinting
@@ -41,7 +46,7 @@ export const maskHash = (value: string): string => {
     hash = hash >>> 0
   }
   // Pad to 8 hex digits so the output length is always consistent
-  return `[hash:${hash.toString(16).padStart(8, '0')}]`
+  return hash.toString(16).padStart(8, '0')
 }
 
 /**
@@ -49,9 +54,9 @@ export const maskHash = (value: string): string => {
  * Returns undefined when mask is 'remove' (caller should delete the key).
  *
  * Examples:
- *   applyMask('secret123', { mask: 'full' })                        →  '***'
- *   applyMask('hello@example.com', { mask: 'regex', pattern: '^[^@]+' })  →  '***@example.com'
- *   applyMask('secret123', { mask: 'hash' })                        →  '[hash:3d2a1f8c]'
+ *   applyMask('secret123', { mask: 'full' })                        →  '••••••'
+ *   applyMask('hello@example.com', { mask: 'regex', pattern: '^[^@]+' })  →  '••••••@example.com'
+ *   applyMask('secret123', { mask: 'hash' })                        →  '3d2a1f8c'
  *   applyMask('secret123', { mask: 'remove' })                      →  undefined
  */
 export const applyMask = (value: unknown, config: XSensitiveData): unknown => {
@@ -64,10 +69,10 @@ export const applyMask = (value: unknown, config: XSensitiveData): unknown => {
   switch (config.mask) {
     case 'full':
       // Replace the entire value with a fixed placeholder
-      return '***'
+      return MASK_PLACEHOLDER
     case 'regex':
       // Replace only the matched portion; fall back to full mask if no pattern given
-      return config.pattern ? maskRegex(str, config.pattern) : '***'
+      return config.pattern ? maskRegex(str, config.pattern) : MASK_PLACEHOLDER
     case 'hash':
       // Replace the value with a deterministic fingerprint
       return maskHash(str)
@@ -94,8 +99,8 @@ export const applyMask = (value: unknown, config: XSensitiveData): unknown => {
  *
  * Example output:
  *   [
- *     { location: 'header', paramName: 'X-API-Key',     placeholder: '{YOUR_API_KEY}' },
- *     { location: 'header', paramName: 'Authorization', placeholder: 'Bearer {YOUR_TOKEN}' },
+ *     { location: 'header', paramName: 'X-API-Key',     placeholder: '••••••' },
+ *     { location: 'header', paramName: 'Authorization', placeholder: '••••••' },
  *   ]
  */
 export const buildSecuritySchemeMaskRules = (security: HttpSecurityScheme[][]): SecuritySchemeMaskRule[] => {
@@ -118,16 +123,16 @@ export const buildSecuritySchemeMaskRules = (security: HttpSecurityScheme[][]): 
     for (const scheme of group) {
       if (scheme.type === 'apiKey') {
         // apiKey: the spec tells us exactly which header or query param carries the key
-        add({ location: scheme.in, paramName: scheme.name, placeholder: '{YOUR_API_KEY}' })
+        add({ location: scheme.in, paramName: scheme.name, placeholder: MASK_PLACEHOLDER })
       } else if (scheme.type === 'http' && scheme.scheme === 'basic') {
         // HTTP Basic sends credentials in Authorization as 'Basic <base64-encoded-user:pass>'
-        add({ location: 'header', paramName: 'Authorization', placeholder: 'Basic {CREDENTIALS}' })
+        add({ location: 'header', paramName: 'Authorization', placeholder: MASK_PLACEHOLDER })
       } else if (scheme.type === 'http' && (scheme.scheme === 'bearer' || scheme.scheme === 'digest')) {
         // HTTP Bearer / Digest both use the Authorization header
-        add({ location: 'header', paramName: 'Authorization', placeholder: 'Bearer {YOUR_TOKEN}' })
+        add({ location: 'header', paramName: 'Authorization', placeholder: MASK_PLACEHOLDER })
       } else if (scheme.type === 'oauth2') {
         // OAuth2 access tokens are passed as 'Bearer <token>' in the Authorization header
-        add({ location: 'header', paramName: 'Authorization', placeholder: 'Bearer {ACCESS_TOKEN}' })
+        add({ location: 'header', paramName: 'Authorization', placeholder: MASK_PLACEHOLDER })
       }
       // openIdConnect and unknown types are not handled — no known param name to mask
     }
@@ -145,8 +150,8 @@ export const buildSecuritySchemeMaskRules = (security: HttpSecurityScheme[][]): 
  *
  * Example:
  *   headers = [{ name: 'Authorization', value: 'Bearer real-token-abc' }]
- *   rules   = [{ location: 'header', paramName: 'Authorization', placeholder: 'Bearer {YOUR_TOKEN}' }]
- *   result  → [{ name: 'Authorization', value: 'Bearer {YOUR_TOKEN}' }]
+ *   rules   = [{ location: 'header', paramName: 'Authorization', placeholder: '••••••' }]
+ *   result  → [{ name: 'Authorization', value: '••••••' }]
  */
 export const maskAuthHeaders = (
   headers: Array<Record<string, string>>,
@@ -173,10 +178,8 @@ export const maskAuthHeaders = (
  *
  * Example:
  *   queryString = 'api_key=secret-key-123&page=1'
- *   rules       = [{ location: 'query', paramName: 'api_key', placeholder: '{YOUR_API_KEY}' }]
- *   result      → 'api_key=%7BYOUR_API_KEY%7D&page=1'
- *
- * Note: URLSearchParams encodes placeholder braces ({ → %7B, } → %7D), which is correct for URLs.
+ *   rules       = [{ location: 'query', paramName: 'api_key', placeholder: '••••••' }]
+ *   result      → 'api_key=••••••&page=1'
  */
 export const maskAuthQuery = (queryString: string, rules: SecuritySchemeMaskRule[]): string => {
   // Nothing to do if the string is empty or no rules exist
@@ -218,7 +221,7 @@ export const maskAuthQuery = (queryString: string, rules: SecuritySchemeMaskRule
  *       address:  { type: 'object', properties: { zip: { type: 'string' } } },
  *     }
  *   }
- *   result  → { password: '***', name: 'Alice', address: { zip: '12345' } }
+ *   result  → { password: '••••••', name: 'Alice', address: { zip: '12345' } }
  */
 export const maskBodyExample = (example: unknown, schema: Record<string, any>): unknown => {
   // Primitive, null, or undefined values have no nested structure to mask
@@ -262,6 +265,39 @@ export const maskBodyExample = (example: unknown, schema: Record<string, any>): 
   }
 
   return result
+}
+
+// ─── Schema sensitive-data detection ─────────────────────────────────────────
+
+/**
+ * Return true if any property in the schema (recursively) has an x-sensitive-data annotation.
+ * Used internally by hasMasking — prefer calling hasMasking directly.
+ */
+const _schemaHasSensitiveData = (schema: Record<string, any> | undefined): boolean => {
+  if (!schema) return false
+  for (const propSchema of Object.values(schema.properties ?? {})) {
+    const prop = propSchema as Record<string, any>
+    if (prop?.['x-sensitive-data']) return true
+    if (prop?.type === 'object' && _schemaHasSensitiveData(prop)) return true
+    if (prop?.items && _schemaHasSensitiveData(prop.items as Record<string, any>)) return true
+  }
+  return false
+}
+
+/**
+ * Return true when any masking is active — either from x-sensitive-data schema annotations
+ * or from security-scheme mask rules. Use this to decide whether to show the masked/unmasked toggle.
+ *
+ * Example:
+ *   hasMasking(schema, [])          — true when schema has x-sensitive-data properties
+ *   hasMasking(undefined, rules)    — true when there are auth mask rules
+ *   hasMasking(schema, rules)       — true when either applies
+ */
+export const hasMasking = (
+  schema: Record<string, any> | undefined,
+  maskRules: SecuritySchemeMaskRule[] = [],
+): boolean => {
+  return maskRules.length > 0 || _schemaHasSensitiveData(schema)
 }
 
 // ─── Response schema lookup ───────────────────────────────────────────────────

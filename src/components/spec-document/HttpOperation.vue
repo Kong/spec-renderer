@@ -126,10 +126,11 @@
         <RequestSample
           v-if="selectedServerUrl && currentRequestPath"
           v-model="excludeNotRequiredInSample"
-          :auth-headers="maskedAuthHeaders"
-          :auth-query="maskedAuthQuery"
+          :auth-headers="authHeaders"
+          :auth-query="authQuery"
           :custom-headers="currentRequestHeaders"
           :data="operationData"
+          :mask-rules="maskRules"
           :request-body="currentRequestBody"
           :request-path="currentRequestPath"
           :request-query="currentRequestQuery"
@@ -186,7 +187,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, inject, provide } from 'vue'
 import type { ComputedRef, PropType, Ref } from 'vue'
-import { buildSecuritySchemeMaskRules, maskAuthHeaders, maskAuthQuery } from '@/utils'
+import { buildSecuritySchemeMaskRules } from '@/utils'
 import type { SecuritySchemeMaskRule } from '@/types'
 import type { IHttpOperation, IHttpWebhookOperation } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
@@ -285,8 +286,6 @@ const authQuery = computed(() => authQueryMap.value[currentSecurityScheme.value]
 const maskRules = computed<SecuritySchemeMaskRule[]>(() =>
   buildSecuritySchemeMaskRules(props.data.security ?? []),
 )
-const maskedAuthHeaders = computed(() => maskAuthHeaders(authHeaders.value, maskRules.value))
-const maskedAuthQuery = computed(() => maskAuthQuery(authQuery.value, maskRules.value))
 
 const securitySchemeChanged = (newSecurityScheme: string) => {
   currentSecurityScheme.value = newSecurityScheme

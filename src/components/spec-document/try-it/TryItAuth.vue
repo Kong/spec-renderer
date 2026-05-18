@@ -65,14 +65,27 @@
               :text="scheme.description"
             />
           </InputLabel>
-          <input
-            :id="`auth-token-input-basic-password-${data.id}`"
-            v-model="authInputs[`${key}-password`]"
-            :aria-describedby="`auth-token-tooltip-basic-password-${data.id}`"
-            autocomplete="off"
-            placeholder="Enter Password"
-            type="password"
-          >
+          <div class="input-wrapper">
+            <input
+              :id="`auth-token-input-basic-password-${data.id}`"
+              v-model="authInputs[`${key}-password`]"
+              :aria-describedby="`auth-token-tooltip-basic-password-${data.id}`"
+              autocomplete="off"
+              placeholder="Enter Password"
+              :type="showFields[`${key}-password`] ? 'text' : 'password'"
+            >
+            <button
+              :aria-label="showFields[`${key}-password`] ? 'Hide password' : 'Show password'"
+              class="visibility-toggle-btn"
+              type="button"
+              @click="showFields[`${key}-password`] = !showFields[`${key}-password`]"
+            >
+              <component
+                :is="showFields[`${key}-password`] ? VisibilityIcon : VisibilityOffIcon"
+                size="16px"
+              />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -91,14 +104,27 @@
               :text="scheme.description"
             />
           </InputLabel>
-          <input
-            :id="`auth-token-input-bearer-token-${data.id}`"
-            v-model="authInputs[`${key}-token`]"
-            :aria-describedby="`auth-token-tooltip-bearer-token-${data.id}`"
-            autocomplete="off"
-            placeholder="Enter JWT token"
-            type="password"
-          >
+          <div class="input-wrapper">
+            <input
+              :id="`auth-token-input-bearer-token-${data.id}`"
+              v-model="authInputs[`${key}-token`]"
+              :aria-describedby="`auth-token-tooltip-bearer-token-${data.id}`"
+              autocomplete="off"
+              placeholder="Enter JWT token"
+              :type="showFields[`${key}-token`] ? 'text' : 'password'"
+            >
+            <button
+              :aria-label="showFields[`${key}-token`] ? 'Hide token' : 'Show token'"
+              class="visibility-toggle-btn"
+              type="button"
+              @click="showFields[`${key}-token`] = !showFields[`${key}-token`]"
+            >
+              <component
+                :is="showFields[`${key}-token`] ? VisibilityIcon : VisibilityOffIcon"
+                size="16px"
+              />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -125,14 +151,27 @@
               :text="scheme.description"
             />
           </InputLabel>
-          <input
-            :id="`auth-token-input-${getSchemeLabel(scheme)}-${data.id}`"
-            v-model="authInputs[`${key}-token`]"
-            :aria-describedby="`auth-token-tooltip-${getSchemeLabel(scheme)}-${data.id}`"
-            autocomplete="off"
-            placeholder="App credential"
-            type="password"
-          >
+          <div class="input-wrapper">
+            <input
+              :id="`auth-token-input-${getSchemeLabel(scheme)}-${data.id}`"
+              v-model="authInputs[`${key}-token`]"
+              :aria-describedby="`auth-token-tooltip-${getSchemeLabel(scheme)}-${data.id}`"
+              autocomplete="off"
+              placeholder="App credential"
+              :type="showFields[`${key}-token`] ? 'text' : 'password'"
+            >
+            <button
+              :aria-label="showFields[`${key}-token`] ? 'Hide credential' : 'Show credential'"
+              class="visibility-toggle-btn"
+              type="button"
+              @click="showFields[`${key}-token`] = !showFields[`${key}-token`]"
+            >
+              <component
+                :is="showFields[`${key}-token`] ? VisibilityIcon : VisibilityOffIcon"
+                size="16px"
+              />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -143,7 +182,7 @@
 import { computed, inject, watch, ref, useTemplateRef } from 'vue'
 import type { ComputedRef, PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
-import { LockIcon } from '@kong/icons'
+import { LockIcon, VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import type { IHttpOperation, HttpSecurityScheme } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
@@ -180,6 +219,9 @@ const emit = defineEmits<{
 }>()
 
 const { activeSecurityScheme, authHeadersMap, authQueryMap, authInputs } = composables.useAuth()
+
+// tracks which password fields are currently revealed; keyed by `${schemeKey}-fieldname`
+const showFields = ref<Record<string, boolean>>({})
 
 const securitySchemeGroupList = inject<ComputedRef<SecuritySchemeGroup[]>>('security-scheme-group-list', computed(() => []))
 /**
@@ -329,8 +371,31 @@ watch(() => ({ key: activeSecurityScheme.value, list: securitySchemeGroupList.va
     }
   }
 
-  input[type=text], input[type=password] {
+  input[type=text] {
     @include input-default;
+  }
+
+  .input-wrapper {
+    align-items: center;
+    display: flex;
+    position: relative;
+
+    input {
+      flex: 1;
+      @include input-default;
+      padding-right: var(--kui-space-80, $kui-space-80);
+    }
+
+    .visibility-toggle-btn {
+      @include default-button-reset;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      position: absolute;
+      right: var(--kui-space-40, $kui-space-40);
+
+      &:hover {
+        color: var(--kui-color-text, $kui-color-text);
+      }
+    }
   }
 }
 </style>
