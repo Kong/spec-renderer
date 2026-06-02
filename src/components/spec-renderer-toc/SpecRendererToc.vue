@@ -26,7 +26,7 @@
         API documentation editor
         <ExternalLinkIcon
           decorative
-          :size="KUI_ICON_SIZE_30"
+          :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
         />
       </a>
       <a

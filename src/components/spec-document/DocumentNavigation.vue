@@ -15,15 +15,15 @@
 
       <ArrowLeftIcon
         v-if="component.type === 'previous'"
-        :color="KUI_COLOR_TEXT_PRIMARY"
+        :color="`var(--kui-color-text-primary, ${KUI_COLOR_TEXT_PRIMARY})`"
         decorative
-        :size="KUI_ICON_SIZE_40"
+        :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
       />
       <ArrowRightIcon
         v-else
-        :color="KUI_COLOR_TEXT_PRIMARY"
+        :color="`var(--kui-color-text-primary, ${KUI_COLOR_TEXT_PRIMARY})`"
         decorative
-        :size="KUI_ICON_SIZE_40"
+        :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
       />
       <span class="navigation-title">
         {{ component.name }}
