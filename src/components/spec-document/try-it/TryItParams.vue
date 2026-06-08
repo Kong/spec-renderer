@@ -11,6 +11,22 @@
         {{ compTitles[props.paramType] }}
       </h3>
     </template>
+    <template
+      v-if="paramType === 'body' && hasMaskedData"
+      #actions
+    >
+      <button
+        class="mask-toggle-button"
+        :title="showMasked ? 'Show sensitive data' : 'Mask sensitive data'"
+        type="button"
+        @click.stop="showMasked = !showMasked"
+      >
+        <component
+          :is="showMasked ? VisibilityOffIcon : VisibilityIcon"
+          :size="KUI_ICON_SIZE_30"
+        />
+      </button>
+    </template>
     <div
       v-if="paramType !== 'body' && params && Object.keys(params).length"
       class="wide"
@@ -64,8 +80,14 @@
         :data="data"
       />
 
+      <CodeBlock
+        v-if="!requestBody.isBinary && fieldValues.body && hasMaskedData && showMasked"
+        class="body-param-code-block"
+        :code="maskedBodyCode"
+        lang="json"
+      />
       <EditableCodeBlock
-        v-if="!requestBody.isBinary && fieldValues.body"
+        v-else-if="!requestBody.isBinary && fieldValues.body"
         class="body-param-code-block"
         :code="fieldValues.body"
         lang="json"
@@ -100,14 +122,18 @@ import type { PropType } from 'vue'
 import { useFileDialog } from '@vueuse/core'
 import type { IHttpOperation, IHttpPathParam, IHttpQueryParam } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
-import { extractSample, getSampleHeaders, getSamplePath, getSampleQuery } from '@/utils'
+import { extractSample, getSampleHeaders, getSamplePath, getSampleQuery, hasMasking, maskBodyExample, resolveSchemaObjectFields, safeJSONParse } from '@/utils'
 import type { RequestParamTypes } from '@/types'
+import CodeBlock from '@/components/common/CodeBlock.vue'
 import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import RequiredToggle from './RequiredToggle.vue'
 import type { RequestBody } from '@/types'
+import { CODE_INDENT_SPACES } from '@/constants'
+import { VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 /**
  * This components handles path parameters, query parameters and body.
  * only parts of
@@ -221,11 +247,37 @@ const lastExcludeNotRequiredSinceParamsChanged = ref(excludeNotRequired.value)
  */
 const currentEndpointID = ref(props.data.id)
 
+const showMasked = ref<boolean>(true)
+
+const hasMaskedData = computed((): boolean => {
+  if (props.paramType !== 'body') return false
+  const contents = props.data.request?.body?.contents ?? []
+  if (!contents.length) return false
+  const schema = contents[0]?.schema
+    ? resolveSchemaObjectFields(contents[0].schema) as Record<string, any>
+    : undefined
+  return hasMasking(schema, [])
+})
+
 const contentToCopy = computed((): string => {
   if (props.paramType !== 'body') {
     return ''
   }
-  return fieldValues.value.body ?? ''
+  return showMasked.value ? maskedBodyCode.value : (fieldValues.value.body ?? '')
+})
+
+// fieldValues.body holds the unmasked body (sent via requestBodyChanged when user edits).
+// This computed provides a masked version for read-only display when showMasked is true.
+const maskedBodyCode = computed((): string => {
+  const raw = fieldValues.value.body
+  if (!raw) return raw ?? ''
+  const contents = props.data.request?.body?.contents ?? []
+  if (!contents.length) return raw
+  const parsed = safeJSONParse(raw)
+  if (!parsed || typeof parsed !== 'object') return raw
+  const schema = resolveSchemaObjectFields(contents[0]?.schema) as Record<string, any>
+  const masked = maskBodyExample(parsed, schema)
+  return JSON.stringify(masked, null, CODE_INDENT_SPACES)
 })
 
 // calculating initial values for the fields,
@@ -252,6 +304,7 @@ watch(params, (newParams) => {
 
 const requestBodyChanged = (newBody: string) => {
   if (newBody) {
+    fieldValues.value.body = newBody
     emit('request-body-changed', { isBinary: false, content: newBody })
   }
 }
@@ -322,6 +375,15 @@ input[type=text] {
 .required-label {
   color: var(--kui-icon-color-danger, $kui-icon-color-danger);
   height: 14px;
+}
+
+.mask-toggle-button {
+  @include default-button-reset;
+  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+
+  &:hover {
+    color: var(--kui-color-text, $kui-color-text);
+  }
 }
 </style>
 

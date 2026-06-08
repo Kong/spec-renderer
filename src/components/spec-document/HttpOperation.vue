@@ -344,6 +344,7 @@ const setRequestBodyByIdx = (newSampleIdx: number) => {
       activeRequestBodyContentList.value,
       { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value },
       newSampleIdx,
+      true,
     )
     : '' }
 }
@@ -376,6 +377,7 @@ function updateRequestBodyContentType(newContentType: string) {
         activeRequestBodyContentList.value,
         { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value },
         0,
+        true,
       )
       : '' }
   }

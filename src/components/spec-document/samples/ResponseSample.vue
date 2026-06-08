@@ -15,7 +15,7 @@
       >
         <component
           :is="showMasked ? VisibilityOffIcon : VisibilityIcon"
-          size="16px"
+          :size="KUI_ICON_SIZE_30"
         />
       </button>
       <SelectDropdown
@@ -38,11 +38,12 @@
 import { ref, computed } from 'vue'
 import type { PropType } from 'vue'
 import type { IMediaTypeContent } from '@stoplight/types'
-import { getSampleBody } from '@/utils'
+import { getSampleBody, hasMasking, resolveSchemaObjectFields } from '@/utils'
 import SchemaExample from '@/components/common/SchemaExample.vue'
 import CopyButton from '@/components/common/CopyButton.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import { VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import type { SelectItem } from '@/types'
 
 const props = defineProps({
@@ -84,8 +85,10 @@ const activeResponseSample = computed(() => {
 // Only show toggle when masking actually changes the output
 const hasMaskedData = computed(() => {
   if (!props.contentList.length) return false
-  const idx = parseInt(activeResponseSampleIndex.value) || 0
-  return getSampleBody(props.contentList, {}, idx, false) !== getSampleBody(props.contentList, {}, idx, true)
+  const schema = props.contentList[0]?.schema
+    ? resolveSchemaObjectFields(props.contentList[0].schema) as Record<string, any>
+    : undefined
+  return hasMasking(schema, [])
 })
 
 const exampleSelectList = computed((): SelectItem[] => {
