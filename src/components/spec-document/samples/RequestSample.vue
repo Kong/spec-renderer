@@ -112,8 +112,8 @@ import { watch, ref, computed, inject } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet'
-import { requestSampleConfigs } from '@/constants'
-import { getRequestHeaders, getFormattedBody, maskAuthHeaders, maskAuthQuery, hasMasking, MASK_PLACEHOLDER, getSampleBody } from '@/utils'
+import { requestSampleConfigs, CODE_INDENT_SPACES } from '@/constants'
+import { getRequestHeaders, getFormattedBody, maskAuthHeaders, maskAuthQuery, hasMasking, MASK_PLACEHOLDER, getSampleBody, maskBodyExample, safeJSONParse, resolveSchemaObjectFields } from '@/utils'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import { VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
@@ -180,7 +180,13 @@ const excludeNotRequired = defineModel({
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 const showMasked = ref<boolean>(true)
-const hasMaskedData = computed(() => hasMasking(undefined, props.maskRules))
+const hasMaskedData = computed(() => {
+  const contents = props.data.request?.body?.contents ?? []
+  const schema = contents[0]?.schema
+    ? resolveSchemaObjectFields(contents[0].schema) as Record<string, any>
+    : undefined
+  return hasMasking(schema, props.maskRules)
+})
 const activeAuthHeaders = computed(() =>
   showMasked.value ? maskAuthHeaders(props.authHeaders, props.maskRules) : props.authHeaders,
 )
@@ -188,21 +194,35 @@ const activeAuthQuery = computed(() =>
   showMasked.value ? maskAuthQuery(props.authQuery, props.maskRules) : props.authQuery,
 )
 
-// Re-generate the body without masking when the user toggles unmask, but only when the
-// current body content is still the masked schema example (contains MASK_PLACEHOLDER).
-// If the user has typed their own value in TryIt, it won't contain the placeholder, so
-// we leave it alone.
 const activeBodyContent = computed((): RequestBody => {
-  if (!showMasked.value &&
-      typeof props.requestBody.content === 'string' &&
-      props.requestBody.content.includes(MASK_PLACEHOLDER)) {
-    const contents = props.data.request?.body?.contents ?? []
-    if (contents.length) {
-      const sampleIdx = Math.max(0, requestSamples.value.findIndex(s => s.key === selectedRequestSample.value))
-      return { ...props.requestBody, content: getSampleBody(contents, {}, sampleIdx, true) }
-    }
+  if (typeof props.requestBody.content !== 'string') {
+    return props.requestBody
   }
-  return props.requestBody
+
+  if (!showMasked.value) {
+    // User toggled to see unmasked — regenerate from schema without masking, but only
+    // when the current content still holds the masked placeholder (not a custom user value).
+    if (props.requestBody.content.includes(MASK_PLACEHOLDER)) {
+      const contents = props.data.request?.body?.contents ?? []
+      if (contents.length) {
+        const sampleIdx = Math.max(0, requestSamples.value.findIndex(s => s.key === selectedRequestSample.value))
+        return { ...props.requestBody, content: getSampleBody(contents, {}, sampleIdx, true) }
+      }
+    }
+    return props.requestBody
+  }
+
+  // showMasked is true — re-apply masking to the current (possibly user-edited) content
+  // so that sensitive fields are always masked in the curl snippet regardless of edits.
+  const contents = props.data.request?.body?.contents ?? []
+  if (!contents.length) return props.requestBody
+
+  const parsed = safeJSONParse(props.requestBody.content)
+  if (!parsed || typeof parsed !== 'object') return props.requestBody
+
+  const schema = resolveSchemaObjectFields(contents[0]?.schema) as Record<string, any>
+  const masked = maskBodyExample(parsed, schema)
+  return { ...props.requestBody, content: JSON.stringify(masked, null, CODE_INDENT_SPACES) }
 })
 
 const emit = defineEmits<{
