@@ -6,7 +6,7 @@ export default {
   ],
   plugins: [
     'stylelint-order',
-    '@kong/design-tokens/stylelint-plugin',
+    '@kong/stylelint-plugin-design-tokens',
     '@stylistic/stylelint-plugin',
   ],
   rules: {
@@ -27,7 +27,7 @@ export default {
         message: "Expected custom property \"%s\" to be sourced from @kong/design-tokens with prefix '--kui-'",
       },
     ],
-    '@kong/design-tokens/use-proper-token': true,
+    '@kong/stylelint-plugin-design-tokens/use-proper-token': true,
     'rule-empty-line-before': ['always', { ignore: ['after-comment', 'first-nested'] }],
     '@stylistic/block-opening-brace-space-before': 'always',
     '@stylistic/declaration-colon-space-after': 'always',

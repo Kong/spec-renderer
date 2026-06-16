@@ -1,15 +1,15 @@
 import eslintKongUiConfig from '@kong/eslint-config-kong-ui'
-import designTokens from '@kong/design-tokens/eslint-plugin'
+import designTokens from '@kong/eslint-plugin-design-tokens'
 
 export default [
   ...eslintKongUiConfig,
   {
     files: ['**/*.vue'],
     plugins: {
-      '@kong/design-tokens': designTokens,
+      '@kong/eslint-plugin-design-tokens': designTokens,
     },
     rules: {
-      '@kong/design-tokens/token-constant-requires-css-var': 'error',
+      '@kong/eslint-plugin-design-tokens/token-constant-requires-css-var': 'error',
     },
   },
 ]
