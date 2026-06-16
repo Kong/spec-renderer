@@ -275,7 +275,7 @@ html.dark,
 [data-portal-color-mode="dark"] {
   // Force the scrollable container to match the shiki background color
   .editable-code-wrapper {
-    background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-strongest) !important;
+    background-color: var(--kui-color-background-neutral-weakest, var(--kui-color-background-neutral-strongest, $kui-color-background-neutral-strongest)) !important;
   }
 }
 </style>

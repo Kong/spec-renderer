@@ -28,6 +28,7 @@ export default {
       },
     ],
     '@kong/stylelint-plugin-design-tokens/use-proper-token': true,
+    '@kong/stylelint-plugin-design-tokens/token-var-usage': true,
     'rule-empty-line-before': ['always', { ignore: ['after-comment', 'first-nested'] }],
     '@stylistic/block-opening-brace-space-before': 'always',
     '@stylistic/declaration-colon-space-after': 'always',
