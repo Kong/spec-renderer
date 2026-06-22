@@ -4,7 +4,7 @@
 @mixin toc-item {
   align-items: center;
   // transparent so that it doesn't interfere with the parent's background color
-  background-color: var(--kui-color-background-transparent, $kui-color-background-transparent); 
+  background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
   display: flex;
@@ -16,7 +16,8 @@
   padding: var(--kui-space-30, $kui-space-30);
   text-align: left;
   text-decoration: none;
-  transition: color var(--kui-animation-duration-20, $kui-animation-duration-20) ease,
+  transition:
+    color var(--kui-animation-duration-20, $kui-animation-duration-20) ease,
     background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
 
   &:hover:not(.active) {

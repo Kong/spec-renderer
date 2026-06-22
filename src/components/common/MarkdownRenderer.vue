@@ -42,7 +42,8 @@ html.dark,
     .shiki span {
       /* stylelint-disable custom-property-pattern */
       /** !Important: The CSS custom property does not match the SCSS variable here purposefully so that it falls back to a dark color */
-      --shiki-dark-bg: var(--kui-color-background-neutral-weakest, #{var(--kui-color-background-neutral-strongest, $kui-color-background-neutral-strongest)});
+      /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/token-var-usage */
+      --shiki-dark-bg: var(--kui-color-background-neutral-weakest, #{$kui-color-background-neutral-strongest});
       background-color: var(--shiki-dark-bg) !important;
       color: var(--shiki-dark) !important;
       /* Optional, if you also want font styles */
