@@ -8,7 +8,7 @@
       <span class="binding-key binding-key--parent">{{ propKey }}</span>
       <ChevronRightIcon
         class="binding-chevron"
-        :size="KUI_ICON_SIZE_30"
+        :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
       />
     </summary>
     <div class="binding-nested-rows">

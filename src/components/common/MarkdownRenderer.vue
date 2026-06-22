@@ -42,6 +42,7 @@ html.dark,
     .shiki span {
       /* stylelint-disable custom-property-pattern */
       /** !Important: The CSS custom property does not match the SCSS variable here purposefully so that it falls back to a dark color */
+      /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/token-var-usage */
       --shiki-dark-bg: var(--kui-color-background-neutral-weakest, #{$kui-color-background-neutral-strongest});
       background-color: var(--shiki-dark-bg) !important;
       color: var(--shiki-dark) !important;
@@ -130,7 +131,7 @@ html.dark,
         padding-right: var(--kui-space-20, $kui-space-20);
         position: absolute;
         text-decoration: none;
-        // stylelint-disable-next-line @kong/design-tokens/use-proper-token
+        /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
         top: calc(var(--kui-space-80, $kui-space-80) + 2px);
         transition: opacity 0.2s ease-in-out;
         user-select: none;
