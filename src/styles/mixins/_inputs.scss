@@ -45,8 +45,7 @@
   }
 
   &:focus {
-    box-shadow:
-      var(--kui-shadow-border-primary, $kui-shadow-border-primary), var(--kui-shadow-focus, $kui-shadow-focus);
+    box-shadow: var(--kui-shadow-border-primary, $kui-shadow-border-primary), var(--kui-shadow-focus, $kui-shadow-focus);
   }
 
   &:disabled {
