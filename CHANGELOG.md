@@ -1,3 +1,10 @@
+## [1.107.17](https://github.com/Kong/spec-renderer/compare/v1.107.16...v1.107.17) (2026-06-22)
+
+
+### Bug Fixes
+
+* **tokens:** enforce token css var usage ([#871](https://github.com/Kong/spec-renderer/issues/871)) ([fef08c6](https://github.com/Kong/spec-renderer/commit/fef08c61ce79ff00d6a4dd11ae43c7e1de585266))
+
 ## [1.107.16](https://github.com/Kong/spec-renderer/compare/v1.107.15...v1.107.16) (2026-05-15)
 
 
