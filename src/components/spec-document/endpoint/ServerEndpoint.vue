@@ -119,7 +119,7 @@ const selectItems = computed(() => props.serverUrlList.map((url) => ({ label: ur
         font-family: var(--kui-font-family-code, $kui-font-family-code);
         gap: var(--kui-space-0, $kui-space-0);
         overflow-wrap: anywhere;
-        padding: var(--kui-space-0, $kui-space-0) var(--kui-space-10, $kui-space-10);
+        padding: var(--kui-space-0, $kui-space-0) var(--kui-space-20, $kui-space-20);
         text-align: left;
 
         .select-chevron-icon {
