@@ -125,7 +125,7 @@
     "vite-plugin-node-polyfills": "^0.26.0",
     "vite-plugin-replace": "^0.1.1",
     "vite-plugin-vue-devtools": "^8.1.2",
-    "vitest": "3.2.4",
+    "vitest": "3.2.6",
     "vue": "^3.5.34",
     "vue-router": "^4.6.4",
     "vue-tsc": "^3.2.9"
