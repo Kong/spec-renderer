@@ -80,6 +80,21 @@
         :data="data"
       />
 
+      <p
+        v-if="hasMaskedData && showMasked"
+        class="masked-body-hint"
+      >
+        <InfoIcon :size="KUI_ICON_SIZE_30" />
+        Sensitive values are masked.
+        <button
+          class="masked-body-hint-action"
+          type="button"
+          @click.stop="showMasked = false"
+        >
+          Unmask
+        </button>
+        to edit.
+      </p>
       <CodeBlock
         v-if="!requestBody.isBinary && fieldValues.body && hasMaskedData && showMasked"
         class="body-param-code-block"
@@ -132,7 +147,7 @@ import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import RequiredToggle from './RequiredToggle.vue'
 import type { RequestBody } from '@/types'
 import { CODE_INDENT_SPACES } from '@/constants'
-import { VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
+import { InfoIcon, VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 /**
  * This components handles path parameters, query parameters and body.
@@ -383,6 +398,27 @@ input[type=text] {
 
   &:hover {
     color: var(--kui-color-text, $kui-color-text);
+  }
+}
+
+.masked-body-hint {
+  align-items: center;
+  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+  display: flex;
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+  gap: var(--kui-space-30, $kui-space-30);
+  margin: var(--kui-space-0, $kui-space-0);
+  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
+
+  .masked-body-hint-action {
+    @include default-button-reset;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    text-decoration: underline;
+
+    &:hover {
+      color: var(--kui-color-text, $kui-color-text);
+    }
   }
 }
 </style>
