@@ -282,7 +282,7 @@ const _schemaHasSensitiveData = (schema: Record<string, any> | undefined): boole
   for (const propSchema of Object.values(schema.properties ?? {})) {
     const prop = resolveSchemaObjectFields(propSchema) as Record<string, any>
     if (prop?.['x-sensitive-data']) return true
-    if (prop?.type === 'object' && _schemaHasSensitiveData(prop)) return true
+    if (prop?.properties && _schemaHasSensitiveData(prop)) return true
     if (prop?.items && _schemaHasSensitiveData(resolveSchemaObjectFields(prop.items) as Record<string, any>)) return true
   }
   return false
