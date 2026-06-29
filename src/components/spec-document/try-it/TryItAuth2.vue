@@ -42,17 +42,11 @@
           placeholder="Enter Client Secret"
           :type="showClientSecret ? 'text' : 'password'"
         >
-        <button
-          :aria-label="showClientSecret ? 'Hide client secret' : 'Show client secret'"
+        <VisibilityToggleButton
+          v-model="showClientSecret"
           class="visibility-toggle-btn"
-          type="button"
-          @click="showClientSecret = !showClientSecret"
-        >
-          <component
-            :is="showClientSecret ? VisibilityIcon : VisibilityOffIcon"
-            size="16px"
-          />
-        </button>
+          label="client secret"
+        />
       </div>
     </div>
     <div
@@ -144,7 +138,7 @@
 
 <script setup lang="ts">
 import { watch, computed, ref } from 'vue'
-import { VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
+import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import composables from '@/composables'
@@ -339,15 +333,9 @@ watch(extraTokenRequestParameters, (newValue) => {
     }
 
     .visibility-toggle-btn {
-      @include default-button-reset;
-      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
       padding-right: var(--kui-space-40, $kui-space-40);
       position: absolute;
       right: 0;
-
-      &:hover {
-        color: var(--kui-color-text, $kui-color-text);
-      }
     }
   }
 

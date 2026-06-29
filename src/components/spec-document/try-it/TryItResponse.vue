@@ -17,9 +17,9 @@
             {{ response?.status }}
           </span>
         </h3>
-        <MaskToggleButton
+        <VisibilityToggleButton
           v-if="hasMasking(bodySchema, maskRules) && !props.responseError"
-          v-model="showMasked"
+          v-model="showSensitiveData"
         />
       </div>
       <SelectDropdown
@@ -73,12 +73,12 @@
 import { computed, watch, ref } from 'vue'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
-import MaskToggleButton from '@/components/common/MaskToggleButton.vue'
 import type { PropType } from 'vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import type { SelectItem, SecuritySchemeMaskRule } from '@/types'
 import { CODE_INDENT_SPACES } from '@/constants'
 import type { IHttpOperationResponse } from '@stoplight/types'
+import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
 import { maskBodyExample, findResponseSchema, hasMasking } from '@/utils'
 
 const props = defineProps({
@@ -106,7 +106,7 @@ const props = defineProps({
 
 // showMasked defaults to true — when the spec has masking (security schemes or x-sensitive-data),
 // the toggle appears and data is masked by default; hidden otherwise via v-if="hasMasking(...)"
-const showMasked = ref<boolean>(true)
+const showSensitiveData = ref<boolean>(false)
 
 // Raw display text (one variant, properly formatted per content type)
 const rawResponseText = ref<string>('')
@@ -117,7 +117,7 @@ const bodySchema = ref<Record<string, any> | undefined>()
 
 // Compute masked version on demand when the toggle is on; otherwise return raw text
 const responseText = computed((): string => {
-  if (showMasked.value && parsedJson.value !== null && bodySchema.value) {
+  if (!showSensitiveData.value && parsedJson.value !== null && bodySchema.value) {
     return JSON.stringify(maskBodyExample(parsedJson.value, bodySchema.value), null, CODE_INDENT_SPACES)
   }
   return rawResponseText.value
@@ -131,7 +131,7 @@ const headersText = computed((): string => {
   const headers = <Record<string, any>>{}
   if (props.response) {
     for (const pair of props.response.headers.entries()) {
-      if (showMasked.value) {
+      if (!showSensitiveData.value) {
         const maskedRule = props.maskRules.find(r => r.location === 'header' && r.paramName.toLowerCase() === pair[0].toLowerCase())
         headers[pair[0]] = maskedRule ? maskedRule.placeholder : pair[1]
       } else {

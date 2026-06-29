@@ -7,9 +7,9 @@
   >
     <slot />
     <div class="response-sample-header-right">
-      <MaskToggleButton
+      <VisibilityToggleButton
         v-if="hasMaskedData"
-        v-model="showMasked"
+        v-model="showSensitiveData"
       />
       <SelectDropdown
         v-if="exampleSelectList && exampleSelectList.length > 1"
@@ -35,7 +35,7 @@ import { getSampleBody, hasMasking, resolveSchemaObjectFields } from '@/utils'
 import SchemaExample from '@/components/common/SchemaExample.vue'
 import CopyButton from '@/components/common/CopyButton.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import MaskToggleButton from '@/components/common/MaskToggleButton.vue'
+import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
 import type { SelectItem } from '@/types'
 
 const props = defineProps({
@@ -58,7 +58,7 @@ const props = defineProps({
 })
 
 const activeResponseSampleIndex = ref('0')
-const showMasked = ref<boolean>(true)
+const showSensitiveData = ref<boolean>(false)
 
 const activeResponseSample = computed(() => {
   if (props.contentList.length) {
@@ -66,7 +66,7 @@ const activeResponseSample = computed(() => {
       props.contentList,
       {},
       parseInt(activeResponseSampleIndex.value) || 0,
-      !showMasked.value,
+      showSensitiveData.value,
     )
   }
 

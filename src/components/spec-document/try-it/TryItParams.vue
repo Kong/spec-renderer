@@ -15,7 +15,7 @@
       v-if="paramType === 'body' && hasMaskedData"
       #actions
     >
-      <MaskToggleButton v-model="showMasked" />
+      <VisibilityToggleButton v-model="showSensitiveData" />
     </template>
     <div
       v-if="paramType !== 'body' && params && Object.keys(params).length"
@@ -71,7 +71,7 @@
       />
 
       <p
-        v-if="hasMaskedData && showMasked"
+        v-if="hasMaskedData && !showSensitiveData"
         class="masked-body-hint"
       >
         <InfoIcon :size="KUI_ICON_SIZE_30" />
@@ -79,14 +79,14 @@
         <button
           class="masked-body-hint-action"
           type="button"
-          @click.stop="showMasked = false"
+          @click.stop="showSensitiveData = true"
         >
           Unmask
         </button>
         to edit.
       </p>
       <CodeBlock
-        v-if="!requestBody.isBinary && fieldValues.body && hasMaskedData && showMasked"
+        v-if="!requestBody.isBinary && fieldValues.body && hasMaskedData && !showSensitiveData"
         class="body-param-code-block"
         :code="maskedBodyCode"
         lang="json"
@@ -139,7 +139,7 @@ import type { RequestBody } from '@/types'
 import { CODE_INDENT_SPACES } from '@/constants'
 import { InfoIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
-import MaskToggleButton from '@/components/common/MaskToggleButton.vue'
+import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
 /**
  * This components handles path parameters, query parameters and body.
  * only parts of
@@ -253,7 +253,7 @@ const lastExcludeNotRequiredSinceParamsChanged = ref(excludeNotRequired.value)
  */
 const currentEndpointID = ref(props.data.id)
 
-const showMasked = ref<boolean>(true)
+const showSensitiveData = ref<boolean>(false)
 
 const hasMaskedData = computed((): boolean => {
   if (props.paramType !== 'body') return false
@@ -269,7 +269,7 @@ const contentToCopy = computed((): string => {
   if (props.paramType !== 'body') {
     return ''
   }
-  return showMasked.value ? maskedBodyCode.value : (fieldValues.value.body ?? '')
+  return !showSensitiveData.value ? maskedBodyCode.value : (fieldValues.value.body ?? '')
 })
 
 // fieldValues.body holds the unmasked body (sent via requestBodyChanged when user edits).

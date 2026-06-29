@@ -77,7 +77,7 @@
         v-if="hasMaskedData"
         #actions
       >
-        <MaskToggleButton v-model="showMasked" />
+        <VisibilityToggleButton v-model="showSensitiveData" />
       </template>
       <!-- body -->
       <RequiredToggle
@@ -107,7 +107,7 @@ import { requestSampleConfigs, CODE_INDENT_SPACES } from '@/constants'
 import { getRequestHeaders, getFormattedBody, maskAuthHeaders, maskAuthQuery, hasMasking, MASK_PLACEHOLDER, getSampleBody, maskBodyExample, safeJSONParse, resolveSchemaObjectFields } from '@/utils'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
-import MaskToggleButton from '@/components/common/MaskToggleButton.vue'
+import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
 import type { LanguageCode } from '@/types/request-languages'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
@@ -170,7 +170,7 @@ const excludeNotRequired = defineModel({
 
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
-const showMasked = ref<boolean>(true)
+const showSensitiveData = ref<boolean>(false)
 const hasMaskedData = computed(() => {
   const contents = props.data.request?.body?.contents ?? []
   const schema = contents[0]?.schema
@@ -179,10 +179,10 @@ const hasMaskedData = computed(() => {
   return hasMasking(schema, props.maskRules)
 })
 const activeAuthHeaders = computed(() =>
-  showMasked.value ? maskAuthHeaders(props.authHeaders, props.maskRules) : props.authHeaders,
+  !showSensitiveData.value ? maskAuthHeaders(props.authHeaders, props.maskRules) : props.authHeaders,
 )
 const activeAuthQuery = computed(() =>
-  showMasked.value ? maskAuthQuery(props.authQuery, props.maskRules) : props.authQuery,
+  !showSensitiveData.value ? maskAuthQuery(props.authQuery, props.maskRules) : props.authQuery,
 )
 
 const activeBodyContent = computed((): RequestBody => {
@@ -190,7 +190,7 @@ const activeBodyContent = computed((): RequestBody => {
     return props.requestBody
   }
 
-  if (!showMasked.value) {
+  if (showSensitiveData.value) {
     // User toggled to see unmasked — regenerate from schema without masking, but only
     // when the current content still holds the masked placeholder (not a custom user value).
     if (props.requestBody.content.includes(MASK_PLACEHOLDER)) {
@@ -203,7 +203,7 @@ const activeBodyContent = computed((): RequestBody => {
     return props.requestBody
   }
 
-  // showMasked is true — re-apply masking to the current (possibly user-edited) content
+  // showSensitiveData is false — re-apply masking to the current (possibly user-edited) content
   // so that sensitive fields are always masked in the curl snippet regardless of edits.
   const contents = props.data.request?.body?.contents ?? []
   if (!contents.length) return props.requestBody

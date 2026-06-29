@@ -74,17 +74,11 @@
               placeholder="Enter Password"
               :type="showFields[`${key}-password`] ? 'text' : 'password'"
             >
-            <button
-              :aria-label="showFields[`${key}-password`] ? 'Hide password' : 'Show password'"
+            <VisibilityToggleButton
+              v-model="showFields[`${key}-password`]"
               class="visibility-toggle-btn"
-              type="button"
-              @click="showFields[`${key}-password`] = !showFields[`${key}-password`]"
-            >
-              <component
-                :is="showFields[`${key}-password`] ? VisibilityIcon : VisibilityOffIcon"
-                size="16px"
-              />
-            </button>
+              label="password"
+            />
           </div>
         </div>
       </div>
@@ -113,17 +107,11 @@
               placeholder="Enter JWT token"
               :type="showFields[`${key}-token`] ? 'text' : 'password'"
             >
-            <button
-              :aria-label="showFields[`${key}-token`] ? 'Hide token' : 'Show token'"
+            <VisibilityToggleButton
+              v-model="showFields[`${key}-token`]"
               class="visibility-toggle-btn"
-              type="button"
-              @click="showFields[`${key}-token`] = !showFields[`${key}-token`]"
-            >
-              <component
-                :is="showFields[`${key}-token`] ? VisibilityIcon : VisibilityOffIcon"
-                size="16px"
-              />
-            </button>
+              label="token"
+            />
           </div>
         </div>
       </div>
@@ -160,17 +148,11 @@
               placeholder="App credential"
               :type="showFields[`${key}-token`] ? 'text' : 'password'"
             >
-            <button
-              :aria-label="showFields[`${key}-token`] ? 'Hide credential' : 'Show credential'"
+            <VisibilityToggleButton
+              v-model="showFields[`${key}-token`]"
               class="visibility-toggle-btn"
-              type="button"
-              @click="showFields[`${key}-token`] = !showFields[`${key}-token`]"
-            >
-              <component
-                :is="showFields[`${key}-token`] ? VisibilityIcon : VisibilityOffIcon"
-                size="16px"
-              />
-            </button>
+              label="credential"
+            />
           </div>
         </div>
       </div>
@@ -182,8 +164,9 @@
 import { computed, inject, watch, ref, useTemplateRef } from 'vue'
 import type { ComputedRef, PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
-import { LockIcon, VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
+import { LockIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
+import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
 import type { IHttpOperation, HttpSecurityScheme } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import InputLabel from '@/components/common/InputLabel.vue'
@@ -387,15 +370,9 @@ watch(() => ({ key: activeSecurityScheme.value, list: securitySchemeGroupList.va
     }
 
     .visibility-toggle-btn {
-      @include default-button-reset;
-      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
       padding-right: var(--kui-space-40, $kui-space-40);
       position: absolute;
       right: 0;
-
-      &:hover {
-        color: var(--kui-color-text, $kui-color-text);
-      }
     }
   }
 }
