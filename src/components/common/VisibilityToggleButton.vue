@@ -32,7 +32,7 @@ const modelValue = defineModel<boolean>({ default: false })
   @include default-button-reset;
   color: var(--kui-color-text-neutral, $kui-color-text-neutral);
 
-&:hover {
+  &:hover {
     color: var(--kui-color-text, $kui-color-text);
   }
 }
