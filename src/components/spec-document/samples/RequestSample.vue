@@ -77,16 +77,7 @@
         v-if="hasMaskedData"
         #actions
       >
-        <button
-          class="mask-toggle-button"
-          :title="showMasked ? 'Show sensitive data' : 'Mask sensitive data'"
-          @click="showMasked = !showMasked"
-        >
-          <component
-            :is="showMasked ? VisibilityOffIcon : VisibilityIcon"
-            size="16px"
-          />
-        </button>
+        <MaskToggleButton v-model="showMasked" />
       </template>
       <!-- body -->
       <RequiredToggle
@@ -116,7 +107,7 @@ import { requestSampleConfigs, CODE_INDENT_SPACES } from '@/constants'
 import { getRequestHeaders, getFormattedBody, maskAuthHeaders, maskAuthQuery, hasMasking, MASK_PLACEHOLDER, getSampleBody, maskBodyExample, safeJSONParse, resolveSchemaObjectFields } from '@/utils'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
-import { VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
+import MaskToggleButton from '@/components/common/MaskToggleButton.vue'
 import type { LanguageCode } from '@/types/request-languages'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
@@ -437,15 +428,6 @@ watch(() => ({
 <style lang="scss" scoped>
 
 .request-sample-wrapper {
-  .mask-toggle-button {
-    @include default-button-reset;
-    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
-
-    &:hover {
-      color: var(--kui-color-text, $kui-color-text);
-    }
-  }
-
   .select-wrapper {
     display: flex;
     flex: 1;

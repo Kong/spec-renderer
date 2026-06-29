@@ -7,17 +7,10 @@
   >
     <slot />
     <div class="response-sample-header-right">
-      <button
+      <MaskToggleButton
         v-if="hasMaskedData"
-        class="mask-toggle-button"
-        :title="showMasked ? 'Show sensitive data' : 'Mask sensitive data'"
-        @click="showMasked = !showMasked"
-      >
-        <component
-          :is="showMasked ? VisibilityOffIcon : VisibilityIcon"
-          :size="KUI_ICON_SIZE_30"
-        />
-      </button>
+        v-model="showMasked"
+      />
       <SelectDropdown
         v-if="exampleSelectList && exampleSelectList.length > 1"
         id="response-sample-select"
@@ -42,8 +35,7 @@ import { getSampleBody, hasMasking, resolveSchemaObjectFields } from '@/utils'
 import SchemaExample from '@/components/common/SchemaExample.vue'
 import CopyButton from '@/components/common/CopyButton.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import { VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
-import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
+import MaskToggleButton from '@/components/common/MaskToggleButton.vue'
 import type { SelectItem } from '@/types'
 
 const props = defineProps({
@@ -111,15 +103,6 @@ const exampleSelectList = computed((): SelectItem[] => {
     align-items: center;
     display: inline-flex;
     gap: var(--kui-space-50, $kui-space-50);
-
-    .mask-toggle-button {
-      @include default-button-reset;
-      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
-
-      &:hover {
-        color: var(--kui-color-text, $kui-color-text);
-      }
-    }
 
     .response-sample-selector {
       line-height: var(--kui-line-height-30, $kui-line-height-30);

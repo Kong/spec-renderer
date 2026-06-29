@@ -15,17 +15,7 @@
       v-if="paramType === 'body' && hasMaskedData"
       #actions
     >
-      <button
-        class="mask-toggle-button"
-        :title="showMasked ? 'Show sensitive data' : 'Mask sensitive data'"
-        type="button"
-        @click.stop="showMasked = !showMasked"
-      >
-        <component
-          :is="showMasked ? VisibilityOffIcon : VisibilityIcon"
-          :size="KUI_ICON_SIZE_30"
-        />
-      </button>
+      <MaskToggleButton v-model="showMasked" />
     </template>
     <div
       v-if="paramType !== 'body' && params && Object.keys(params).length"
@@ -147,8 +137,9 @@ import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import RequiredToggle from './RequiredToggle.vue'
 import type { RequestBody } from '@/types'
 import { CODE_INDENT_SPACES } from '@/constants'
-import { InfoIcon, VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
+import { InfoIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
+import MaskToggleButton from '@/components/common/MaskToggleButton.vue'
 /**
  * This components handles path parameters, query parameters and body.
  * only parts of
@@ -390,15 +381,6 @@ input[type=text] {
 .required-label {
   color: var(--kui-icon-color-danger, $kui-icon-color-danger);
   height: 14px;
-}
-
-.mask-toggle-button {
-  @include default-button-reset;
-  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
-
-  &:hover {
-    color: var(--kui-color-text, $kui-color-text);
-  }
 }
 
 .masked-body-hint {

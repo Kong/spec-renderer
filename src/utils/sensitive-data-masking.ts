@@ -179,7 +179,11 @@ export const maskAuthHeaders = (
  * Example:
  *   queryString = 'api_key=secret-key-123&page=1'
  *   rules       = [{ location: 'query', paramName: 'api_key', placeholder: '••••••' }]
- *   result      → 'api_key=••••••&page=1'
+ *   result      → 'api_key=%E2%80%A2%E2%80%A2%E2%80%A2%E2%80%A2%E2%80%A2%E2%80%A2&page=1'
+ *
+ * Note: URLSearchParams percent-encodes non-ASCII characters (• → %E2%80%A2).
+ * Callers displaying the result in code snippets must decode encodeURIComponent(MASK_PLACEHOLDER)
+ * back to MASK_PLACEHOLDER before rendering (see RequestSample.vue).
  */
 export const maskAuthQuery = (queryString: string, rules: SecuritySchemeMaskRule[]): string => {
   // Nothing to do if the string is empty or no rules exist
@@ -276,10 +280,10 @@ export const maskBodyExample = (example: unknown, schema: Record<string, any>): 
 const _schemaHasSensitiveData = (schema: Record<string, any> | undefined): boolean => {
   if (!schema) return false
   for (const propSchema of Object.values(schema.properties ?? {})) {
-    const prop = propSchema as Record<string, any>
+    const prop = resolveSchemaObjectFields(propSchema) as Record<string, any>
     if (prop?.['x-sensitive-data']) return true
     if (prop?.type === 'object' && _schemaHasSensitiveData(prop)) return true
-    if (prop?.items && _schemaHasSensitiveData(prop.items as Record<string, any>)) return true
+    if (prop?.items && _schemaHasSensitiveData(resolveSchemaObjectFields(prop.items) as Record<string, any>)) return true
   }
   return false
 }

@@ -95,6 +95,7 @@ components:
 |---------|----------------|
 | Request body example (code samples) | Properties with `x-sensitive-data` |
 | Response body example (code samples) | Properties with `x-sensitive-data` |
+| TryIt request body | Properties with `x-sensitive-data` — shown as read-only masked view; click **Unmask** to edit |
 | TryIt response body | Properties with `x-sensitive-data` |
 | TryIt response headers | Auth headers from `securitySchemes` (automatic, no annotation needed) |
 | Code sample auth headers/query | Auth values from `securitySchemes` (automatic) |
@@ -111,7 +112,7 @@ Each panel that contains masked data shows a **"Mask sensitive data"** toggle (o
 flowchart TD
     spec[OpenAPI Spec]
 
-    spec -->|securitySchemes| rules[buildSecuritySchemeMaskRules produces placeholder rules e.g. Bearer YOUR_TOKEN]
+    spec -->|securitySchemes| rules[buildSecuritySchemeMaskRules produces placeholder rules using ••••••]
     spec -->|x-sensitive-data on properties| crawl[crawl / getSampleBody generates body example]
 
     rules -->|masked auth headers & query| RS[Code Sample display]

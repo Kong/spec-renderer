@@ -17,17 +17,10 @@
             {{ response?.status }}
           </span>
         </h3>
-        <button
-          v-if="hasMasking(bodySchema, maskRules)"
-          class="mask-toggle-button"
-          :title="showMasked ? 'Show sensitive data' : 'Mask sensitive data'"
-          @click="showMasked = !showMasked"
-        >
-          <component
-            :is="showMasked ? VisibilityOffIcon : VisibilityIcon"
-            size="16px"
-          />
-        </button>
+        <MaskToggleButton
+          v-if="hasMasking(bodySchema, maskRules) && !props.responseError"
+          v-model="showMasked"
+        />
       </div>
       <SelectDropdown
         :id="`response-option-select-${dataId}`"
@@ -80,7 +73,7 @@
 import { computed, watch, ref } from 'vue'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
-import { VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
+import MaskToggleButton from '@/components/common/MaskToggleButton.vue'
 import type { PropType } from 'vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import type { SelectItem, SecuritySchemeMaskRule } from '@/types'
@@ -238,14 +231,6 @@ watch(() => props.response, async (res) => {
   flex: 1;
   gap: var(--kui-space-40, $kui-space-40);
 
-  .mask-toggle-button {
-    @include default-button-reset;
-    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
-
-    &:hover {
-      color: var(--kui-color-text, $kui-color-text);
-    }
-  }
 }
 
 .response-status:before {
