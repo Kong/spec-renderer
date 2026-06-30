@@ -49,6 +49,7 @@ overrides:
   markdown-it@<=14.1.1: '>=14.2.0'
   linkify-it@<=5.0.0: '>=5.0.1'
   js-yaml@>=4.0.0 <=4.1.1: '>=4.2.0'
+  undici@>=7.0.0 <7.28.0: '>=7.28.0'
 
 importers:
 
@@ -5401,10 +5402,6 @@ packages:
   undici-types@7.25.0:
     resolution: {integrity: sha512-AXNgS1Byr27fTI+2bsPEkV9CxkT8H6xNyRI68b3TatlZo3RkzlqQBLL+w7SmGPVpokjHbcuNVQUWE7FRTg+LRA==}
 
-  undici@7.24.5:
-    resolution: {integrity: sha512-3IWdCpjgxp15CbJnsi/Y9TCDE7HWVN19j1hmzVhoAkY/+CJx449tVxT5wZc1Gwg8J+P0LWvzlBzxYRnHJ+1i7Q==}
-    engines: {node: '>=20.18.1'}
-
   undici@8.5.0:
     resolution: {integrity: sha512-xamtWoB1EshgjpmlXd7GGm2VfdDtw1+rD8uhry8pSNW3If6S8E0m2T2+orSKeZXEn/aPJMviCpDBA65WJt8zhg==}
     engines: {node: '>=22.19.0'}
@@ -6899,7 +6896,7 @@ snapshots:
       p-filter: 4.1.0
       semantic-release: 25.0.3(typescript@5.9.3)
       tinyglobby: 0.2.15
-      undici: 7.24.5
+      undici: 8.5.0
       url-join: 5.0.0
     transitivePeerDependencies:
       - supports-color
@@ -11462,8 +11459,6 @@ snapshots:
   undici-types@7.16.0: {}
 
   undici-types@7.25.0: {}
-
-  undici@7.24.5: {}
 
   undici@8.5.0: {}
 
