@@ -88,14 +88,15 @@ jobs:
 
           npm_instructions=""
 
-          pkg=$(pnpm publish --no-git-checks --access public --report-summary --tag "${tag}" | grep "+ "| sed 's/+ //')
+          pnpm publish --no-git-checks --access public --tag "${tag}"
 
-          if [[ -z "${pkg}" ]]; then
+          if [ $? -ne 0 ]; then
             echo "Error publishing package"
             exit -1
           fi
 
-          npm_instructions="@$(echo ${pkg}|cut -d'@' -f2)@${tag}"
+          package_name=$(jq -r ".name" package.json)
+          npm_instructions="${package_name}@${tag}"
 
           echo "npm_instructions<<EOF" >> $GITHUB_OUTPUT
           echo -e "$npm_instructions" >> $GITHUB_OUTPUT
