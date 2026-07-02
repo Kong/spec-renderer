@@ -75,7 +75,7 @@ jobs:
           echo "preid=${preid}"
 
           # Use yarn to bump the version for the prerelease
-          pnpm version prerelease --preid ${preid} --no-git-tag-version --yes --amend
+          pnpm version prerelease --preid ${preid} --no-git-tag-version --yes
 
           package_version=$(jq -r ".version" package.json)
           package=@kong/spec-renderer@"${package_version}"
