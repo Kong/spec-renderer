@@ -1,3 +1,10 @@
+## [1.107.18](https://github.com/Kong/spec-renderer/compare/v1.107.17...v1.107.18) (2026-07-03)
+
+
+### Bug Fixes
+
+* audit issues, renovate changes[KHCP-21019] ([#882](https://github.com/Kong/spec-renderer/issues/882)) ([ca20e24](https://github.com/Kong/spec-renderer/commit/ca20e24a483a1e73ab1681b1be56312ec1769779))
+
 ## [1.107.17](https://github.com/Kong/spec-renderer/compare/v1.107.16...v1.107.17) (2026-06-22)
 
 
