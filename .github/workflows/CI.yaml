@@ -75,7 +75,7 @@ jobs:
           echo "preid=${preid}"
 
           # Use yarn to bump the version for the prerelease
-          pnpm version prerelease --preid ${preid} --no-git-tag-version --yes
+          pnpm version prerelease --preid ${preid} --no-git-tag-version --yes --amend
 
           package_version=$(jq -r ".version" package.json)
           package=@kong/spec-renderer@"${package_version}"
@@ -88,15 +88,14 @@ jobs:
 
           npm_instructions=""
 
-          pnpm publish --no-git-checks --access public --tag "${tag}"
+          pkg=$(pnpm publish --no-git-checks --access public --report-summary --tag "${tag}" | grep "+ "| sed 's/+ //')
 
-          if [ $? -ne 0 ]; then
+          if [[ -z "${pkg}" ]]; then
             echo "Error publishing package"
             exit -1
           fi
 
-          package_name=$(jq -r ".name" package.json)
-          npm_instructions="${package_name}@${tag}"
+          npm_instructions="@$(echo ${pkg}|cut -d'@' -f2)@${tag}"
 
           echo "npm_instructions<<EOF" >> $GITHUB_OUTPUT
           echo -e "$npm_instructions" >> $GITHUB_OUTPUT
