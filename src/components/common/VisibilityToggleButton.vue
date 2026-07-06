@@ -6,10 +6,9 @@
     type="button"
     @click.stop="modelValue = !modelValue"
   >
-    <!-- eslint-disable @kong/eslint-plugin-design-tokens/token-constant-requires-css-var -->
     <component
       :is="modelValue ? VisibilityIcon : VisibilityOffIcon"
-      :size="KUI_ICON_SIZE_30"
+      :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
     />
   </button>
 </template>

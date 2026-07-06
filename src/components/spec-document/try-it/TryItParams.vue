@@ -74,8 +74,7 @@
         v-if="hasMaskedData && !showSensitiveData"
         class="masked-body-hint"
       >
-        <!-- eslint-disable-next-line @kong/eslint-plugin-design-tokens/token-constant-requires-css-var -->
-        <InfoIcon :size="KUI_ICON_SIZE_30" />
+        <InfoIcon :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`" />
         Sensitive values are masked.
         <button
           class="masked-body-hint-action"
