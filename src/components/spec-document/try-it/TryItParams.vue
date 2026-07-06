@@ -255,14 +255,14 @@ const currentEndpointID = ref(props.data.id)
 
 const showSensitiveData = ref<boolean>(false)
 
+const bodySchema = computed((): Record<string, any> | undefined => {
+  const schema = props.data.request?.body?.contents?.[0]?.schema
+  return schema ? resolveSchemaObjectFields(schema) as Record<string, any> : undefined
+})
+
 const hasMaskedData = computed((): boolean => {
   if (props.paramType !== 'body') return false
-  const contents = props.data.request?.body?.contents ?? []
-  if (!contents.length) return false
-  const schema = contents[0]?.schema
-    ? resolveSchemaObjectFields(contents[0].schema) as Record<string, any>
-    : undefined
-  return hasMasking(schema, [])
+  return hasMasking(bodySchema.value, [])
 })
 
 const contentToCopy = computed((): string => {
@@ -277,12 +277,10 @@ const contentToCopy = computed((): string => {
 const maskedBodyCode = computed((): string => {
   const raw = fieldValues.value.body
   if (!raw) return raw ?? ''
-  const contents = props.data.request?.body?.contents ?? []
-  if (!contents.length) return raw
+  if (!bodySchema.value) return raw
   const parsed = safeJSONParse(raw)
   if (!parsed || typeof parsed !== 'object') return raw
-  const schema = resolveSchemaObjectFields(contents[0]?.schema) as Record<string, any>
-  const masked = maskBodyExample(parsed, schema)
+  const masked = maskBodyExample(parsed, bodySchema.value)
   return JSON.stringify(masked, null, CODE_INDENT_SPACES)
 })
 

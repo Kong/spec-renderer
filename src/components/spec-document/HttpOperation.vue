@@ -128,6 +128,7 @@
           v-model="excludeNotRequiredInSample"
           :auth-headers="authHeaders"
           :auth-query="authQuery"
+          :content-type="activeRequestBodyContentType"
           :custom-headers="currentRequestHeaders"
           :data="operationData"
           :mask-rules="maskRules"

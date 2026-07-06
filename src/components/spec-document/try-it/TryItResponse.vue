@@ -117,7 +117,9 @@ const bodySchema = ref<Record<string, any> | undefined>()
 // either the body schema has x-sensitive-data fields, or the response headers
 // include an auth header that matches a mask rule.
 const hasMaskedData = computed((): boolean => {
+  // auth rules apply to request headers only, not the response body — pass [] intentionally
   if (hasMasking(bodySchema.value, [])) return true
+  // auth credential echoed back in a response header (e.g. token refresh)
   return props.maskRules.some(r =>
     r.location === 'header' && !!(props.response?.headers.get(r.paramName.toLowerCase())),
   )

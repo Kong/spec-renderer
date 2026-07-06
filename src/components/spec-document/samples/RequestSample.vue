@@ -161,6 +161,10 @@ const props = defineProps({
     type: Array as PropType<SecuritySchemeMaskRule[]>,
     default: () => [],
   },
+  contentType: {
+    type: String,
+    default: '',
+  },
 })
 
 const excludeNotRequired = defineModel({
@@ -171,13 +175,12 @@ const excludeNotRequired = defineModel({
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 const showSensitiveData = ref<boolean>(false)
-const hasMaskedData = computed((): boolean => {
+const bodySchema = computed((): Record<string, any> | undefined => {
   const contents = props.data.request?.body?.contents ?? []
-  const schema = contents[0]?.schema
-    ? resolveSchemaObjectFields(contents[0].schema) as Record<string, any>
-    : undefined
-  return hasMasking(schema, props.maskRules)
+  const entry = contents.find(c => c.mediaType === props.contentType) ?? contents[0]
+  return entry?.schema ? resolveSchemaObjectFields(entry.schema) as Record<string, any> : undefined
 })
+const hasMaskedData = computed((): boolean => hasMasking(bodySchema.value, props.maskRules))
 const activeAuthHeaders = computed(() =>
   !showSensitiveData.value ? maskAuthHeaders(props.authHeaders, props.maskRules) : props.authHeaders,
 )
@@ -188,15 +191,12 @@ const activeAuthQuery = computed(() =>
 // Builds the masked body, re-computes only when requestBody or schema changes
 const maskedBodyContent = computed((): RequestBody | null => {
   if (typeof props.requestBody.content !== 'string') return null
-
-  const contents = props.data.request?.body?.contents ?? []
-  if (!contents.length) return null
+  if (!bodySchema.value) return null
 
   const parsed = safeJSONParse(props.requestBody.content)
   if (!parsed || typeof parsed !== 'object') return null
 
-  const schema = resolveSchemaObjectFields(contents[0]?.schema) as Record<string, any>
-  const masked = maskBodyExample(parsed, schema)
+  const masked = maskBodyExample(parsed, bodySchema.value)
   return { ...props.requestBody, content: JSON.stringify(masked, null, CODE_INDENT_SPACES) }
 })
 

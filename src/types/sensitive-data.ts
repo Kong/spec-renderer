@@ -5,8 +5,6 @@ export interface XSensitiveData {
   mask: SensitiveDataMaskType
   /** Regex pattern string — only used when mask is 'regex' */
   pattern?: string
-  /** Hash algorithm name — only used when mask is 'hash' (e.g. 'sha256') */
-  algorithm?: string
 }
 
 export interface SecuritySchemeMaskRule {

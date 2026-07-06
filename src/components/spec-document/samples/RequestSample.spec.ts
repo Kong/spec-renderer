@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
+import type { IHttpOperation } from '@stoplight/types'
 import RequestSample from './RequestSample.vue'
+import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
 import composables from '@/composables'
 
 
@@ -170,6 +172,97 @@ describe('<RequestSample />', () => {
     await flushPromises()
     const code = wrapper.findTestId('request-sample-123').html()
     expect(code).toContain("Invalid URL value 'hostname/api/v3/path'<br> - missing protocol")
+  })
+
+  describe('content-type based masking', () => {
+    const baseData = <IHttpOperation>{
+      id: '123',
+      method: 'post',
+      path: '/sample-path',
+      responses: [],
+      servers: [{ id: 'server-id', url: 'https://api.example.com' }],
+      request: {
+        body: {
+          id: 'bodyId',
+          contents: [
+            {
+              id: 'content-json',
+              mediaType: 'application/json',
+              schema: {
+                type: 'object',
+                properties: {
+                  username: { type: 'string' },
+                  password: { type: 'string', 'x-sensitive-data': { mask: 'redact' } },
+                },
+              },
+            },
+            {
+              id: 'content-xml',
+              mediaType: 'application/xml',
+              schema: {
+                type: 'object',
+                properties: {
+                  token: { type: 'string', 'x-sensitive-data': { mask: 'redact' } },
+                  name: { type: 'string' },
+                },
+              },
+            },
+            {
+              id: 'content-plain',
+              mediaType: 'text/plain',
+              schema: { type: 'string' },
+            },
+          ],
+        },
+      },
+    }
+
+    const baseProps = {
+      serverUrl: 'https://api.example.com',
+      requestPath: '/sample-path',
+      maskRules: [],
+    }
+
+    it('shows VisibilityToggleButton when contentType has sensitive fields', async () => {
+      const wrapper = mount(RequestSample, {
+        props: { ...baseProps, data: baseData, contentType: 'application/json' },
+      })
+      await flushPromises()
+      expect(wrapper.findComponent(VisibilityToggleButton).exists()).toBe(true)
+    })
+
+    it('shows VisibilityToggleButton for second content type with sensitive fields', async () => {
+      const wrapper = mount(RequestSample, {
+        props: { ...baseProps, data: baseData, contentType: 'application/xml' },
+      })
+      await flushPromises()
+      expect(wrapper.findComponent(VisibilityToggleButton).exists()).toBe(true)
+    })
+
+    it('hides VisibilityToggleButton when active contentType has no sensitive fields', async () => {
+      const wrapper = mount(RequestSample, {
+        props: { ...baseProps, data: baseData, contentType: 'text/plain' },
+      })
+      await flushPromises()
+      expect(wrapper.findComponent(VisibilityToggleButton).exists()).toBe(false)
+    })
+
+    it('falls back to contents[0] schema when contentType is empty', async () => {
+      const wrapper = mount(RequestSample, {
+        props: { ...baseProps, data: baseData, contentType: '' },
+      })
+      await flushPromises()
+      // contents[0] is application/json which has a sensitive field
+      expect(wrapper.findComponent(VisibilityToggleButton).exists()).toBe(true)
+    })
+
+    it('falls back to contents[0] schema when contentType is unknown', async () => {
+      const wrapper = mount(RequestSample, {
+        props: { ...baseProps, data: baseData, contentType: 'application/unknown' },
+      })
+      await flushPromises()
+      expect(wrapper.findComponent(VisibilityToggleButton).exists()).toBe(true)
+    })
   })
 
 })
