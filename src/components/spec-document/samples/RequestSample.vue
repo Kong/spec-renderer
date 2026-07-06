@@ -104,7 +104,7 @@ import type { PropType, Ref } from 'vue'
 import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet'
 import { requestSampleConfigs, CODE_INDENT_SPACES } from '@/constants'
-import { getRequestHeaders, getFormattedBody, maskAuthHeaders, maskAuthQuery, hasMasking, MASK_PLACEHOLDER, getSampleBody, maskBodyExample, safeJSONParse, resolveSchemaObjectFields } from '@/utils'
+import { getRequestHeaders, getFormattedBody, maskAuthHeaders, maskAuthQuery, hasMasking, MASK_PLACEHOLDER, maskBodyExample, safeJSONParse, resolveSchemaObjectFields } from '@/utils'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
@@ -171,7 +171,7 @@ const excludeNotRequired = defineModel({
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
 
 const showSensitiveData = ref<boolean>(false)
-const hasMaskedData = computed(() => {
+const hasMaskedData = computed((): boolean => {
   const contents = props.data.request?.body?.contents ?? []
   const schema = contents[0]?.schema
     ? resolveSchemaObjectFields(contents[0].schema) as Record<string, any>
@@ -185,36 +185,25 @@ const activeAuthQuery = computed(() =>
   !showSensitiveData.value ? maskAuthQuery(props.authQuery, props.maskRules) : props.authQuery,
 )
 
-const activeBodyContent = computed((): RequestBody => {
-  if (typeof props.requestBody.content !== 'string') {
-    return props.requestBody
-  }
+// Builds the masked body, re-computes only when requestBody or schema changes
+const maskedBodyContent = computed((): RequestBody | null => {
+  if (typeof props.requestBody.content !== 'string') return null
 
-  if (showSensitiveData.value) {
-    // User toggled to see unmasked — regenerate from schema without masking, but only
-    // when the current content still holds the masked placeholder (not a custom user value).
-    if (props.requestBody.content.includes(MASK_PLACEHOLDER)) {
-      const contents = props.data.request?.body?.contents ?? []
-      if (contents.length) {
-        const sampleIdx = Math.max(0, requestSamples.value.findIndex(s => s.key === selectedRequestSample.value))
-        return { ...props.requestBody, content: getSampleBody(contents, {}, sampleIdx, true) }
-      }
-    }
-    return props.requestBody
-  }
-
-  // showSensitiveData is false — re-apply masking to the current (possibly user-edited) content
-  // so that sensitive fields are always masked in the curl snippet regardless of edits.
   const contents = props.data.request?.body?.contents ?? []
-  if (!contents.length) return props.requestBody
+  if (!contents.length) return null
 
   const parsed = safeJSONParse(props.requestBody.content)
-  if (!parsed || typeof parsed !== 'object') return props.requestBody
+  if (!parsed || typeof parsed !== 'object') return null
 
   const schema = resolveSchemaObjectFields(contents[0]?.schema) as Record<string, any>
   const masked = maskBodyExample(parsed, schema)
   return { ...props.requestBody, content: JSON.stringify(masked, null, CODE_INDENT_SPACES) }
 })
+
+// Selects between masked body result and raw body based on the visibility toggle
+const activeBodyContent = computed((): RequestBody =>
+  (!showSensitiveData.value && maskedBodyContent.value) ? maskedBodyContent.value : props.requestBody,
+)
 
 const emit = defineEmits<{
   (e: 'request-body-sample-idx-changed', samlpleIdx: number): void

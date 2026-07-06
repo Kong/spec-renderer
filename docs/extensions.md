@@ -50,7 +50,7 @@ each parameter can have the following properties:
 ## x-sensitive-data
 
 Marks a schema property as sensitive so its value is masked in displayed examples and API responses.
-The actual value is **never sent** — masking is display-only.
+Masking is display-only — sensitive values are replaced with a placeholder in all displayed output.
 
 ### Mask strategies
 
@@ -86,6 +86,10 @@ components:
         apiToken:
           type: string
           x-sensitive-data:
+            mask: hash        # displayed as 8-char hex fingerprint e.g. 3d2a1f8c
+        internalNote:
+          type: string
+          x-sensitive-data:
             mask: remove      # field omitted from example entirely
 ```
 
@@ -104,38 +108,46 @@ components:
 
 ### Toggle
 
-Each panel that contains masked data shows a **"Mask sensitive data"** toggle (on by default). Turn it off to reveal the real values inline without leaving the page. The toggle is hidden when no masking is active for that panel.
+Each panel that contains masked data shows a **visibility toggle** (masked by default). Click **Show sensitive data** to reveal real values inline; click **Hide sensitive data** to re-mask. The toggle is hidden when no masking is active for that panel.
 
 ### How it works
 
 ```mermaid
 flowchart TD
     spec[OpenAPI Spec]
+    rules[Derive auth mask rules]
+    crawl[Generate body example from schema]
+    mask[Apply masking to response body]
 
-    spec -->|securitySchemes| rules[buildSecuritySchemeMaskRules produces placeholder rules using ••••••]
-    spec -->|x-sensitive-data on properties| crawl[crawl / getSampleBody generates body example]
+    subgraph Display
+        RS[Code Sample]
+        RespS[Response Sample]
+        TR[TryIt Response]
+    end
 
-    rules -->|masked auth headers & query| RS[Code Sample display]
-    rules -->|real auth headers & query| TI[TryIt API call sends real credentials]
+    spec -->|securitySchemes| rules
+    spec -->|x-sensitive-data| crawl
 
-    crawl -->|applyMask per property| RS
-    crawl -->|applyMask per property| RespS[Response Sample display]
-
-    TI -->|actual HTTP response| mask[maskBodyExample findResponseSchema]
-    mask -->|masked body| TR[TryIt Response display]
-
+    rules -->|masked placeholders| RS
+    rules -->|real credentials| TI[TryIt API call]
     rules -->|maskAuthHeaders| TR
+
+    crawl -->|applyMask| RS
+    crawl -->|applyMask| RespS
+
+    TI -->|HTTP response| mask
+    mask -->|masked body| TR
 ```
 
 **Step by step:**
 
-1. **Code samples** — When the renderer generates a code snippet, `buildSecuritySchemeMaskRules` reads the operation's `securitySchemes` and replaces real auth header/query values with `••••••`.
+1. **Code samples** — The renderer reads the operation's `securitySchemes` and derives auth mask rules that replace real header/query values with `••••••`.
 
-2. **Body examples** — `crawl()` walks the schema to build an example object. For each property with `x-sensitive-data`, it calls `applyMask` before adding the value to the example. This covers both request and response body samples shown in code snippets.
+2. **Body examples** — The schema is walked to build an example object. For each property with `x-sensitive-data`, the configured mask strategy is applied before the value is added to the example. This covers both request and response body samples shown in code snippets.
 
 3. **TryIt request** — The real credential values are always sent so the API call works correctly. Masking does not affect the actual HTTP request.
 
-4. **TryIt response body** — After receiving a response, `findResponseSchema` looks up the matching response schema (exact status code → wildcard e.g. `4XX` → `default`). `maskBodyExample` then recursively walks the parsed response JSON and masks any property marked with `x-sensitive-data`.
+4. **TryIt response body** — After receiving a response, the matching response schema is looked up (exact status code → wildcard e.g. `4XX` → `default`). The parsed response JSON is then recursively walked and any property marked with `x-sensitive-data` is masked.
 
-5. **TryIt response headers** — Response headers are checked against the security scheme mask rules. Any header name matching a rule (e.g. `Authorization`) is replaced with its placeholder before display.
+5. **TryIt response headers** — Response headers are checked against the auth mask rules. Any header name matching a rule (e.g. `Authorization`) is replaced with its placeholder before display.
 

@@ -75,7 +75,7 @@ const activeResponseSample = computed(() => {
 })
 
 // Only show toggle when masking actually changes the output
-const hasMaskedData = computed(() => {
+const hasMaskedData = computed((): boolean => {
   if (!props.contentList.length) return false
   const schema = props.contentList[0]?.schema
     ? resolveSchemaObjectFields(props.contentList[0].schema) as Record<string, any>

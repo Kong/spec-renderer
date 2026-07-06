@@ -18,11 +18,9 @@
 import { VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 
-withDefaults(defineProps<{
+const { label = 'sensitive data' } = defineProps<{
   label?: string
-}>(), {
-  label: 'sensitive data',
-})
+}>()
 
 const modelValue = defineModel<boolean>({ default: false })
 </script>
