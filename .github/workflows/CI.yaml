@@ -74,7 +74,7 @@ jobs:
           tag="pr-${{ github.event.pull_request.number }}"
           echo "preid=${preid}"
 
-          # Use yarn to bump the version for the prerelease
+          # Use pnpm to bump the version for the prerelease
           pnpm version prerelease --preid ${preid} --no-git-tag-version --yes
 
           package_version=$(jq -r ".version" package.json)
