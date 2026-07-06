@@ -18,7 +18,7 @@
           </span>
         </h3>
         <VisibilityToggleButton
-          v-if="hasMasking(bodySchema, maskRules) && !props.responseError"
+          v-if="hasMaskedData && !props.responseError"
           v-model="showSensitiveData"
         />
       </div>
@@ -104,24 +104,35 @@ const props = defineProps({
   },
 })
 
-// showMasked defaults to true — when the spec has masking (security schemes or x-sensitive-data),
-// the toggle appears and data is masked by default; hidden otherwise via v-if="hasMasking(...)"
 const showSensitiveData = ref<boolean>(false)
 
 // Raw display text (one variant, properly formatted per content type)
 const rawResponseText = ref<string>('')
 // Parsed JSON — only set for JSON responses; null for images/text
 const parsedJson = ref<unknown>(null)
-// Resolved schema — needed for hasMasking() toggle visibility check and masked computation
+// Resolved schema — needed for toggle visibility check and masked computation
 const bodySchema = ref<Record<string, any> | undefined>()
 
-// Compute masked version on demand when the toggle is on; otherwise return raw text
-const responseText = computed((): string => {
-  if (!showSensitiveData.value && parsedJson.value !== null && bodySchema.value) {
-    return JSON.stringify(maskBodyExample(parsedJson.value, bodySchema.value), null, CODE_INDENT_SPACES)
-  }
-  return rawResponseText.value
+// Show the toggle only when masking is actually active for this response:
+// either the body schema has x-sensitive-data fields, or the response headers
+// include an auth header that matches a mask rule.
+const hasMaskedData = computed((): boolean => {
+  if (hasMasking(bodySchema.value, [])) return true
+  return props.maskRules.some(r =>
+    r.location === 'header' && !!(props.response?.headers.get(r.paramName.toLowerCase())),
+  )
 })
+
+// Builds the masked body; recomputes only when parsedJson or bodySchema changes.
+const maskedResponseText = computed((): string | null => {
+  if (parsedJson.value === null || !bodySchema.value) return null
+  return JSON.stringify(maskBodyExample(parsedJson.value, bodySchema.value), null, CODE_INDENT_SPACES)
+})
+
+// Selects between cached masked result and raw text based on the visibility toggle.
+const responseText = computed((): string =>
+  (!showSensitiveData.value && maskedResponseText.value !== null) ? maskedResponseText.value : rawResponseText.value,
+)
 
 const errorText = computed((): string => {
   return props.responseError?.message || ''

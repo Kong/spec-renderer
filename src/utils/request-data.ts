@@ -163,8 +163,9 @@ export const getSampleBody = (contents: IMediaTypeContent[], filteringOptions: R
     ) {
       // @ts-ignore value is valid property of example
       const exampleValue = safeJSONParse(contents[0].examples[sampleIdx].value)
-      const schema = resolveSchemaObjectFields(contents[0].schema) as Record<string, any>
-      const maskedValue = skipMasking ? exampleValue : maskBodyExample(exampleValue, schema)
+      const maskedValue = skipMasking
+        ? exampleValue
+        : maskBodyExample(exampleValue, resolveSchemaObjectFields(contents[0].schema) as Record<string, any>)
       return JSON.stringify(maskedValue as Record<string, any>, null, CODE_INDENT_SPACES)
     }
   }
