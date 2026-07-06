@@ -272,9 +272,10 @@ const contentToCopy = computed((): string => {
   return !showSensitiveData.value ? maskedBodyCode.value : (fieldValues.value.body ?? '')
 })
 
-// fieldValues.body holds the unmasked body (sent via requestBodyChanged when user edits).
-// This computed provides a masked version for read-only display when showMasked is true.
+// Check showSensitiveData first so Vue drops fieldValues.body as a dependency while editing,
+// avoiding parse+mask on every keystroke when the masked view is hidden.
 const maskedBodyCode = computed((): string => {
+  if (showSensitiveData.value) return ''
   const raw = fieldValues.value.body
   if (!raw) return raw ?? ''
   if (!bodySchema.value) return raw
