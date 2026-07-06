@@ -1,7 +1,7 @@
 lockfileVersion: '9.0'
 
 settings:
-  autoInstallPeers: false
+  autoInstallPeers: true
   excludeLinksFromLockfile: false
 
 overrides:
@@ -1907,6 +1907,11 @@ packages:
 
   ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependencies:
+      ajv: ^8.0.0
+    peerDependenciesMeta:
+      ajv:
+        optional: true
 
   ajv@6.14.0:
     resolution: {integrity: sha512-IWrosm/yrn43eiKqkfkHis7QioDleaXQHdDVPKg0FSwwd/DuvyX79TZnFOnYpB7dcsFAMmtFztZuXPDvSePkFw==}
@@ -5954,7 +5959,7 @@ snapshots:
       '@openapi-contrib/openapi-schema-to-json-schema': 3.2.0
       ajv: 8.18.0
       ajv-errors: 3.0.0(ajv@8.18.0)
-      ajv-formats: 2.1.1
+      ajv-formats: 2.1.1(ajv@8.18.0)
     transitivePeerDependencies:
       - encoding
 
@@ -5974,7 +5979,7 @@ snapshots:
       '@types/urijs': 1.19.25
       ajv: 8.18.0
       ajv-errors: 3.0.0(ajv@8.18.0)
-      ajv-formats: 2.1.1
+      ajv-formats: 2.1.1(ajv@8.18.0)
       avsc: 5.7.7
       js-yaml: 4.3.1
       jsonpath-plus: 10.4.0
@@ -7228,7 +7233,7 @@ snapshots:
       '@types/json-schema': 7.0.15
       ajv: 8.18.0
       ajv-errors: 3.0.0(ajv@8.18.0)
-      ajv-formats: 2.1.1
+      ajv-formats: 2.1.1(ajv@8.18.0)
       es-aggregate-error: 1.0.13
       jsonpath-plus: 7.1.0
       lodash: 4.17.23
@@ -7260,7 +7265,7 @@ snapshots:
       ajv: 8.18.0
       ajv-draft-04: 1.0.0(ajv@8.18.0)
       ajv-errors: 3.0.0(ajv@8.18.0)
-      ajv-formats: 2.1.1
+      ajv-formats: 2.1.1(ajv@8.18.0)
       lodash: 4.17.23
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -7786,8 +7791,8 @@ snapshots:
     dependencies:
       ajv: 8.18.0
 
-  ajv-formats@2.1.1:
-    dependencies:
+  ajv-formats@2.1.1(ajv@8.18.0):
+    optionalDependencies:
       ajv: 8.18.0
 
   ajv@6.14.0:
