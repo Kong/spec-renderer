@@ -248,6 +248,57 @@ describe('<TryItParams />', () => {
       expect(wrapper.findComponent(EditableCodeBlock).props('code')).toBe(operationBBody)
     })
 
+    it('should update body content when content type changes', async () => {
+      const jsonBody = JSON.stringify({ clientSecret: '' }, null, 2)
+      const xmlBody = JSON.stringify({ password: '' }, null, 2)
+
+      const multiContentData = {
+        id: 'op-multi',
+        method: 'post',
+        path: '/credentials',
+        responses: [],
+        servers: [],
+        request: {
+          body: {
+            id: 'body-multi',
+            contents: [
+              {
+                id: 'content-json',
+                mediaType: 'application/json',
+                schema: { type: 'object', properties: { clientSecret: { type: 'string' } } },
+              },
+              {
+                id: 'content-xml',
+                mediaType: 'application/xml',
+                schema: { type: 'object', properties: { password: { type: 'string' } } },
+              },
+            ],
+          },
+        },
+      }
+
+      const wrapper = mount(TryItParams, {
+        props: {
+          paramType: 'body' as RequestParamTypes,
+          data: multiContentData as any,
+          requestBody: { isBinary: false, content: jsonBody },
+          contentType: 'application/json',
+          modelValue: true,
+        },
+      })
+
+      expect(wrapper.findComponent(EditableCodeBlock).props('code')).toBe(jsonBody)
+
+      // Simulate parent switching to application/xml — both contentType and requestBody update
+      await wrapper.setProps({
+        contentType: 'application/xml',
+        requestBody: { isBinary: false, content: xmlBody },
+      })
+
+      // fieldValues.body must be force-updated because the content type changed
+      expect(wrapper.findComponent(EditableCodeBlock).props('code')).toBe(xmlBody)
+    })
+
     it('should update body content when required toggle changes', async () => {
       const wrapper = mount(TryItParams, {
         props: {

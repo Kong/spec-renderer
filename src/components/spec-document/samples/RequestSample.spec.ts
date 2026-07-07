@@ -192,7 +192,7 @@ describe('<RequestSample />', () => {
                 type: 'object',
                 properties: {
                   username: { type: 'string' },
-                  password: { type: 'string', 'x-sensitive-data': { mask: 'redact' } },
+                  password: { type: 'string', 'x-sensitive-data': { mask: 'full' } },
                 },
               },
             },
@@ -202,7 +202,7 @@ describe('<RequestSample />', () => {
               schema: {
                 type: 'object',
                 properties: {
-                  token: { type: 'string', 'x-sensitive-data': { mask: 'redact' } },
+                  token: { type: 'string', 'x-sensitive-data': { mask: 'full' } },
                   name: { type: 'string' },
                 },
               },

@@ -113,6 +113,7 @@
           v-model="excludeNotRequiredInTryIt"
           :auth-headers="authHeaders"
           :auth-query="authQuery"
+          :content-type="activeRequestBodyContentType"
           :data="operationData"
           :mask-rules="maskRules"
           :request-body="currentRequestBody"

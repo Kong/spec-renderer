@@ -233,9 +233,11 @@ export const maskBodyExample = (example: unknown, schema: Record<string, any>): 
   if (typeof example !== 'object') return example
 
   if (Array.isArray(example)) {
-    // For arrays, apply the same item schema to every element
-    const itemSchema = schema?.items
-      ? resolveSchemaObjectFields(schema.items) as Record<string, any>
+    // schema.items may be absent when resolveSchemaObjectFields already hoisted the items
+    // properties to the top level for display — fall back to schema itself in that case.
+    const rawItemSchema = schema?.items ?? schema
+    const itemSchema = rawItemSchema
+      ? resolveSchemaObjectFields(rawItemSchema) as Record<string, any>
       : {}
     return example.map(item => maskBodyExample(item, itemSchema))
   }

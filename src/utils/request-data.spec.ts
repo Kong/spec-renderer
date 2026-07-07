@@ -243,6 +243,55 @@ describe('getSampleBody x-sensitive-data masking', () => {
     expect(result.name).toBe('Alice')
   })
 
+  it('replaces field value with 8-char hex fingerprint for hash strategy', () => {
+    const contents: IMediaTypeContent[] = [{
+      id: 'c1',
+      mediaType: 'application/json',
+      schema: {
+        type: 'object',
+        properties: {
+          apiToken: { type: 'string', example: 'tok_super_secret', 'x-sensitive-data': { mask: 'hash' } as XSensitiveData } as JSONSchema7,
+          name: { type: 'string', example: 'Alice' } as JSONSchema7,
+        },
+      },
+    }]
+    const result = JSON.parse(getSampleBody(contents))
+    expect(result.apiToken).toMatch(/^[0-9a-f]{8}$/)
+    expect(result.name).toBe('Alice')
+  })
+
+  it('replaces only the matched portion for regex strategy', () => {
+    const contents: IMediaTypeContent[] = [{
+      id: 'c1',
+      mediaType: 'application/json',
+      schema: {
+        type: 'object',
+        properties: {
+          email: { type: 'string', example: 'alice@example.com', 'x-sensitive-data': { mask: 'regex', pattern: '^[^@]+' } as XSensitiveData } as JSONSchema7,
+        },
+      },
+    }]
+    const result = JSON.parse(getSampleBody(contents))
+    expect(result.email).toBe(`${MASK_PLACEHOLDER}@example.com`)
+  })
+
+  it('omits field entirely for remove strategy', () => {
+    const contents: IMediaTypeContent[] = [{
+      id: 'c1',
+      mediaType: 'application/json',
+      schema: {
+        type: 'object',
+        properties: {
+          internalNote: { type: 'string', example: 'admin note', 'x-sensitive-data': { mask: 'remove' } as XSensitiveData } as JSONSchema7,
+          name: { type: 'string', example: 'Alice' } as JSONSchema7,
+        },
+      },
+    }]
+    const result = JSON.parse(getSampleBody(contents))
+    expect(result.internalNote).toBeUndefined()
+    expect(result.name).toBe('Alice')
+  })
+
   it('returns unmasked values when skipMasking is true (explicit examples)', () => {
     const contents: IMediaTypeContent[] = [{
       id: 'c1',

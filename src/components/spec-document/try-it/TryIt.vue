@@ -56,6 +56,7 @@
 
       <TryItParams
         v-model="excludeNotRequired"
+        :content-type="contentType"
         :data="data"
         param-type="body"
         :request-body="currentRequestBody"
@@ -114,6 +115,10 @@ const props = defineProps({
   maskRules: {
     type: Array as PropType<SecuritySchemeMaskRule[]>,
     default: () => [],
+  },
+  contentType: {
+    type: String,
+    default: '',
   },
 })
 

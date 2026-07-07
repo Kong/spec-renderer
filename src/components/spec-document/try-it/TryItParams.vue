@@ -163,6 +163,10 @@ const props = defineProps({
     type: Array as PropType<string[]>,
     default: () => [],
   },
+  contentType: {
+    type: String,
+    default: '',
+  },
 })
 
 const excludeNotRequired = defineModel({
@@ -252,12 +256,21 @@ const lastExcludeNotRequiredSinceParamsChanged = ref(excludeNotRequired.value)
  * preserving stale values from the previous operation.
  */
 const currentEndpointID = ref(props.data.id)
+/**
+ * Tracks the active content type as of the last params watcher invocation.
+ * Used to detect when the user switched content types, so we force-update
+ * fieldValues.body with the new content type's sample instead of keeping
+ * stale values whose fields won't match the new schema.
+ */
+const lastContentType = ref(props.contentType)
 
 const showSensitiveData = ref<boolean>(false)
 
 const bodySchema = computed((): Record<string, any> | undefined => {
-  const schema = props.data.request?.body?.contents?.[0]?.schema
-  return schema ? resolveSchemaObjectFields(schema) as Record<string, any> : undefined
+  const contents = props.data.request?.body?.contents
+  if (!contents?.length) return undefined
+  const entry = (props.contentType ? contents.find(c => c.mediaType === props.contentType) : undefined) ?? contents[0]
+  return entry?.schema ? resolveSchemaObjectFields(entry.schema) as Record<string, any> : undefined
 })
 
 const hasMaskedData = computed((): boolean => {
@@ -297,10 +310,13 @@ watch(params, (newParams) => {
     const toggleChanged = props.paramType === 'body' && excludeNotRequired.value !== lastExcludeNotRequiredSinceParamsChanged.value
     lastExcludeNotRequiredSinceParamsChanged.value = excludeNotRequired.value
 
+    const contentTypeChanged = props.paramType === 'body' && props.contentType !== lastContentType.value
+    lastContentType.value = props.contentType
+
     Object.keys(newParams).forEach(key => {
       // preserve user-edited values while on the same operation
-      // but force-update when the required toggle changed or the user navigated to a different operation
-      if (!Object.keys(fieldValues.value).includes(key) || toggleChanged || operationChanged) {
+      // but force-update when the required toggle changed, the user navigated to a different operation, or the content type switched
+      if (!Object.keys(fieldValues.value).includes(key) || toggleChanged || operationChanged || contentTypeChanged) {
         fieldValues.value[key] = samples[key]
       }
     })

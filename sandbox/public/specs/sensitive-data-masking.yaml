@@ -20,10 +20,8 @@ info:
   version: 1.0.0
 
 servers:
-  - url: https://global.api.konghq.com/v2
-  - url: https://us.api.konghq.com/v2
-  - url: https://eu.api.konghq.com/v2
-  - url: https://au.api.konghq.com/v2
+  - url: http://localhost:5173/mock
+    description: Local sandbox mock — run `USE_SANDBOX=true pnpm dev`, CORS-safe
 
 # ─── Security schemes ────────────────────────────────────────────────────────
 # Each scheme here should produce a masked placeholder in code samples.
@@ -65,7 +63,7 @@ components:
       description: OAuth2 client credentials. Code samples show `••••••`.
       flows:
         clientCredentials:
-          tokenUrl: https://auth.example.com/oauth/token
+          tokenUrl: http://localhost:5173/mock/oauth/token
           scopes:
             read: Read access
             write: Write access
@@ -454,3 +452,104 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaymentMethod'
+
+  # ── 11. Multiple content types — content-type switcher masking ───────────────
+  /credentials:
+    post:
+      summary: Submit credentials
+      description: |
+        Request body has two content types with **different** sensitive fields each.
+        Switching the content-type dropdown should update which fields are masked
+        in both the static code sample and the TryIt body panel.
+
+        - **application/json** — `clientSecret` → `••••••` (full), `apiKey` → 8-char hex (hash)
+        - **application/xml**  — `password` → `••••••` (full), `token` → omitted (remove)
+      operationId: submitCredentials
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                clientId:
+                  type: string
+                  example: client_abc123
+                clientSecret:
+                  type: string
+                  x-sensitive-data:
+                    mask: full
+                apiKey:
+                  type: string
+                  x-sensitive-data:
+                    mask: hash
+          application/xml:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: alice
+                password:
+                  type: string
+                  x-sensitive-data:
+                    mask: full
+                token:
+                  type: string
+                  x-sensitive-data:
+                    mask: remove
+      responses:
+        '200':
+          description: Credentials accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: accepted
+
+  # ── 12. Response header masking — auth credential echoed in response headers ─
+  /auth/refresh:
+    post:
+      summary: Refresh token
+      description: |
+        The mock server echoes the incoming `Authorization` request header back
+        as a response header — simulating a token-refresh flow that returns a new
+        credential in the response.
+
+        **What to verify in TryIt:**
+        1. Enter any Bearer token in the auth panel and click Send.
+        2. Open the **Headers** tab in the response panel.
+        3. The `Authorization` value should appear as `••••••` (masked by the
+           `BearerAuth` rule) when the visibility toggle is off.
+        4. The visibility toggle itself should appear because `hasMaskedData`
+           detects the auth header in the response headers.
+      operationId: refreshToken
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+                  example: rt_abc123def456
+      responses:
+        '200':
+          description: Token refreshed
+          headers:
+            Authorization:
+              description: New Bearer token — echoed back by the mock server
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'

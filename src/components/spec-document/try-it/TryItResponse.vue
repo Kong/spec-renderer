@@ -113,16 +113,15 @@ const parsedJson = ref<unknown>(null)
 // Resolved schema — needed for toggle visibility check and masked computation
 const bodySchema = ref<Record<string, any> | undefined>()
 
-// Show the toggle only when masking is actually active for this response:
-// either the body schema has x-sensitive-data fields, or the response headers
-// include an auth header that matches a mask rule.
+// Show the toggle only for the active view: body masking on Result, header masking on Headers.
 const hasMaskedData = computed((): boolean => {
-  // auth rules apply to request headers only, not the response body — pass [] intentionally
-  if (hasMasking(bodySchema.value, [])) return true
-  // auth credential echoed back in a response header (e.g. token refresh)
-  return props.maskRules.some(r =>
-    r.location === 'header' && !!(props.response?.headers.get(r.paramName.toLowerCase())),
-  )
+  if (selectedResOption.value === 'headers') {
+    // show toggle only when an auth credential is actually present in the response headers
+    return props.maskRules.some(r =>
+      r.location === 'header' && !!(props.response?.headers.get(r.paramName.toLowerCase())),
+    )
+  }
+  return hasMasking(bodySchema.value, [])
 })
 
 // Builds the masked body; recomputes only when parsedJson or bodySchema changes.
@@ -201,7 +200,8 @@ const responseBodyComponent = computed(() => {
 const selectedResOption = ref<string>()
 
 watch(resultOptions, (options) => {
-  if (options.length) {
+  // Only reset when the active option (Result/Headers/Error) is no longer available to preserve selection across visibility toggles
+  if (options.length && !options.some(o => o.value === selectedResOption.value)) {
     selectedResOption.value = options[0]?.value
   }
 }, { immediate: true })
@@ -227,6 +227,8 @@ watch(() => props.response, async (res) => {
       rawResponseText.value = await res.text()
       requestLang.value = 'text'
     }
+    // reset to first option (Result/Headers/Error) on each new response
+    selectedResOption.value = resultOptions.value[0]?.value
   } else {
     parsedJson.value = null
     bodySchema.value = undefined
