@@ -20,8 +20,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: http://localhost:5173/mock
-    description: Local sandbox mock — run `USE_SANDBOX=true pnpm dev`, CORS-safe
+  - url: https://global.api.konghq.com/v2
 
 # ─── Security schemes ────────────────────────────────────────────────────────
 # Each scheme here should produce a masked placeholder in code samples.

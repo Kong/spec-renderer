@@ -22,66 +22,10 @@ const externalDependencies: string[] = ['shiki/onig.wasm']
 if (!process.env.USE_SANDBOX && process.env.VITE_AS_WEB_COMPONENT !== 'true') {
   externalDependencies.push('vue')
 }
-// Mock API for the sensitive-data-masking sandbox spec
-const mockSensitiveDataPlugin = {
-  name: 'mock-sensitive-data-api',
-  configureServer(server: any) {
-    server.middlewares.use((req, res, next) => {
-      const url = req.url ?? ''
-      if (!url.startsWith('/mock')) return next()
-
-      const pathname = (url.slice('/mock'.length) || '/').split('?')[0]
-
-      res.setHeader('Content-Type', 'application/json')
-
-      const send = (status: number, body: unknown) => {
-        res.statusCode = status
-        res.end(JSON.stringify(body))
-      }
-
-      if (req.method === 'GET' && /^\/users\/[^/]+$/.test(pathname)) {
-        send(200, { id: 'usr_123abc', username: 'alice', email: 'alice@example.com', password: 'hunter2', apiToken: 'tok_super_secret_xyz987', internalNote: 'internal admin note' })
-      } else if (req.method === 'POST' && pathname === '/auth/login') {
-        send(200, { accessToken: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c3JfMTIzIn0.secret_sig', refreshToken: 'rt_abc123def456ghi789', expiresIn: 3600, user: { id: 'usr_123abc', username: 'alice', email: 'alice@example.com', password: 'hunter2', apiToken: 'tok_super_secret_xyz987' } })
-      } else if (req.method === 'POST' && pathname === '/auth/refresh') {
-        // echo the Authorization header back to simulate a token-refresh response
-        const authHeader = req.headers['authorization']
-        if (authHeader) res.setHeader('Authorization', authHeader)
-        send(200, { accessToken: 'eyJhbGciOiJIUzI1NiJ9.new.token', refreshToken: 'rt_new_refresh_xyz', expiresIn: 3600 })
-      } else if (req.method === 'GET' && pathname === '/profile') {
-        send(200, { id: 'usr_123abc', username: 'alice', email: 'alice@example.com', password: 'hunter2', apiToken: 'tok_super_secret_xyz987', internalNote: 'internal note' })
-      } else if (req.method === 'GET' && pathname === '/audit-logs') {
-        send(200, [
-          { eventId: 'evt_789xyz', action: 'login', actorEmail: 'alice@example.com', ipAddress: '192.168.1.42', timestamp: '2024-01-15T10:30:00Z' },
-          { eventId: 'evt_790abc', action: 'update_profile', actorEmail: 'bob@example.com', ipAddress: '10.0.0.1', timestamp: '2024-01-15T11:00:00Z' },
-        ])
-      } else if (req.method === 'POST' && pathname === '/users') {
-        send(201, { id: 'usr_new_456', username: 'newuser', email: 'newuser@example.com', password: 'newpassword123', apiToken: 'tok_new_api_token_abc', internalNote: 'newly created' })
-      } else if (req.method === 'POST' && pathname === '/payment-methods') {
-        send(201, { type: 'card', card: { last4: '4242', expiry: '12/26', cvv: '123', holderName: 'Alice Smith' } })
-      } else if (req.method === 'POST' && pathname === '/oauth/token') {
-        send(200, { access_token: 'mock_oauth_token_abc123', token_type: 'Bearer', expires_in: 3600 })
-      } else if (req.method === 'POST' && pathname === '/credentials') {
-        send(200, { status: 'accepted' })
-      } else if (req.method === 'GET' && pathname === '/reports') {
-        send(200, { total: 2, items: [{ id: 'rpt_001' }, { id: 'rpt_002' }] })
-      } else if (req.method === 'GET' && pathname === '/admin/settings') {
-        send(200, { maintenanceMode: false })
-      } else if (req.method === 'GET' && pathname === '/orders') {
-        send(200, { items: [{ orderId: 'ord_abc123' }, { orderId: 'ord_def456' }] })
-      } else if (req.method === 'GET' && pathname === '/metrics') {
-        send(200, { requestCount: 1042, errorRate: 0.02 })
-      } else {
-        send(404, { message: 'Not found' })
-      }
-    })
-  },
-}
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    mockSensitiveDataPlugin,
     replaceCodePlugin({
       /**
        *  This is to avoid warning:
