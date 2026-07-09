@@ -166,7 +166,7 @@ describe('maskAuthQuery', () => {
 
   it('masks matching query param value', () => {
     const result = maskAuthQuery('api_key=secret123', rules)
-    expect(result).toContain(`api_key=${encodeURIComponent(MASK_PLACEHOLDER)}`)
+    expect(result).toBe(`api_key=${MASK_PLACEHOLDER}`)
   })
 
   it('leaves non-matching params unchanged', () => {
