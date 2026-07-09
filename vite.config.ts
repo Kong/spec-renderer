@@ -22,7 +22,6 @@ const externalDependencies: string[] = ['shiki/onig.wasm']
 if (!process.env.USE_SANDBOX && process.env.VITE_AS_WEB_COMPONENT !== 'true') {
   externalDependencies.push('vue')
 }
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
