@@ -1,6 +1,6 @@
 import { MAX_NESTED_LEVELS } from '@/constants'
 import { resolveSchemaObjectFields, resolveSchemaType } from './schema-model'
-import { applyMask } from './sensitive-data-masking'
+import { applyMask, SENSITIVE_DATA_KEY } from './sensitive-data-masking'
 import type { XSensitiveData } from '@/types'
 
 /**
@@ -248,7 +248,7 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
       }
 
       if (!filteringOptions.skipMasking) {
-        const sensitiveConfig = oData['x-sensitive-data'] as XSensitiveData | undefined
+        const sensitiveConfig = oData[SENSITIVE_DATA_KEY] as XSensitiveData | undefined
         if (sensitiveConfig) {
           if (sensitiveConfig.mask === 'remove') {
             delete sampleObj[key]

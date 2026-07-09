@@ -2,7 +2,6 @@
   <button
     :aria-label="modelValue ? `Hide ${label}` : `Show ${label}`"
     class="visibility-toggle-button"
-    :title="modelValue ? `Hide ${label}` : `Show ${label}`"
     type="button"
     @click.stop="modelValue = !modelValue"
   >

@@ -402,8 +402,7 @@ watch(() => ({
         return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
       } else if (snippet.value) {
         const raw = snippet.value.convert((newValue.lang as TargetId), newValue.lib, { binary: newValue.requestBody?.isBinary }) || ''
-        // HTTPSnippet percent-encodes non-ASCII characters in query param values.
-        // Decode the encoded form of our bullet placeholder back to its display form.
+        // HTTPSnippet percent-encodes non-ASCII characters in query param values (• → %E2%80%A2).
         const encodedMask = encodeURIComponent(MASK_PLACEHOLDER)
         requestCode.value = Array.isArray(raw)
           ? raw.map(c => c.replaceAll(encodedMask, MASK_PLACEHOLDER))

@@ -7,6 +7,9 @@ import { resolveSchemaObjectFields } from './schema-model'
 /** The character sequence used to replace masked values in all displayed output. */
 export const MASK_PLACEHOLDER = '••••••'
 
+/** The OpenAPI extension key that carries masking configuration on a schema property. */
+export const SENSITIVE_DATA_KEY = 'x-sensitive-data'
+
 // ─── Basic masking functions ──────────────────────────────────────────────────
 
 /**
@@ -179,11 +182,7 @@ export const maskAuthHeaders = (
  * Example:
  *   queryString = 'api_key=secret-key-123&page=1'
  *   rules       = [{ location: 'query', paramName: 'api_key', placeholder: '••••••' }]
- *   result      → 'api_key=%E2%80%A2%E2%80%A2%E2%80%A2%E2%80%A2%E2%80%A2%E2%80%A2&page=1'
- *
- * Note: URLSearchParams percent-encodes non-ASCII characters (• → %E2%80%A2).
- * Callers displaying the result in code snippets must decode encodeURIComponent(MASK_PLACEHOLDER)
- * back to MASK_PLACEHOLDER before rendering (see RequestSample.vue).
+ *   result      → 'api_key=••••••&page=1'
  */
 export const maskAuthQuery = (queryString: string, rules: SecuritySchemeMaskRule[]): string => {
   // Nothing to do if the string is empty or no rules exist
@@ -207,7 +206,10 @@ export const maskAuthQuery = (queryString: string, rules: SecuritySchemeMaskRule
     }
   }
 
-  return prefix + params.toString()
+  // URLSearchParams percent-encodes non-ASCII characters (• → %E2%80%A2).
+  // Decode the placeholder back to its display form so consumers get a clean string.
+  const encoded = encodeURIComponent(MASK_PLACEHOLDER)
+  return (prefix + params.toString()).replaceAll(encoded, MASK_PLACEHOLDER)
 }
 
 // ─── Body example masking for x-sensitive-data ───────────────────────────────
@@ -254,7 +256,7 @@ export const maskBodyExample = (example: unknown, schema: Record<string, any>): 
       ? resolveSchemaObjectFields(rawPropSchema) as Record<string, any>
       : {}
 
-    const sensitiveConfig = propSchema?.['x-sensitive-data'] as XSensitiveData | undefined
+    const sensitiveConfig = propSchema?.[SENSITIVE_DATA_KEY] as XSensitiveData | undefined
 
     if (sensitiveConfig?.mask === 'remove') {
       // 'remove' strategy: simply don't copy this key into the result
@@ -283,9 +285,8 @@ const _schemaHasSensitiveData = (schema: Record<string, any> | undefined): boole
   if (!schema) return false
   for (const propSchema of Object.values(schema.properties ?? {})) {
     const prop = resolveSchemaObjectFields(propSchema) as Record<string, any>
-    if (prop?.['x-sensitive-data']) return true
+    if (prop?.[SENSITIVE_DATA_KEY]) return true
     if (prop?.properties && _schemaHasSensitiveData(prop)) return true
-    if (prop?.items && _schemaHasSensitiveData(resolveSchemaObjectFields(prop.items) as Record<string, any>)) return true
   }
   return false
 }
@@ -335,12 +336,8 @@ export const findResponseSchema = (
   const candidates: IHttpOperationResponse[] = [
     // 1. Exact match: '200' matches response with code '200'
     responses.find(r => r.code === statusStr),
-    // 2. Wildcard match: '404' matches response with code '4XX' (same first digit)
-    responses.find(r =>
-      r.code.length === 3 &&
-      r.code[1] === 'X' && r.code[2] === 'X' &&
-      r.code[0] === statusStr[0],
-    ),
+    // 2. Wildcard match: '404' matches response with code '4XX' or '4xx' (same first digit)
+    responses.find(r => /^[1-5]xx$/i.test(r.code) && r.code[0] === statusStr[0]),
     // 3. Default fallback: catches any status code not matched above
     responses.find(r => r.code === 'default'),
   ].filter((r): r is IHttpOperationResponse => r !== undefined)
