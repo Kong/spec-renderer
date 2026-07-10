@@ -86,6 +86,7 @@ defineProps({
   .overview-additional-info-external-docs,
   .overview-additional-info-contact {
     display: block;
+    width: fit-content;
   }
 
   .overview-additional-info-license[href],
