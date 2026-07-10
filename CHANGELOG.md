@@ -1,3 +1,10 @@
+## [1.108.1](https://github.com/Kong/spec-renderer/compare/v1.108.0...v1.108.1) (2026-07-10)
+
+
+### Bug Fixes
+
+* **styles:** additional info links styles ([#904](https://github.com/Kong/spec-renderer/issues/904)) ([a9ff272](https://github.com/Kong/spec-renderer/commit/a9ff272b10294bfb028ff9915cc893b2913d51d0))
+
 # [1.108.0](https://github.com/Kong/spec-renderer/compare/v1.107.20...v1.108.0) (2026-07-10)
 
 
