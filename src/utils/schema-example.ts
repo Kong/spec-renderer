@@ -215,23 +215,29 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
 
       if (oDataType === 'array' || oDataType === 'object' || oData.allOf) {
         if (oDataType === 'array') {
-          // if it's an array of objects, we'll generate the sample array item by crawling again
-          // else, if there's no inherited fields, we'll generate the sample array item using extractSampleForParam
-          const exampleArrayItem = oData.itemType === 'object'
-            ? doCrawl({
-              objData: oData || {},
-              parentKey: key,
-              nestedLevel: nestedLevel + 1,
-              filteringOptions,
-            })
-            : crawlInheritedProperties({
-              objData: oData,
-              parentKey: key,
-              nestedLevel: nestedLevel + 1,
-              filteringOptions,
-            }) ?? extractSampleForParam(oData, key)
-          // if the exampleArrayItem is itself an array then we don't need to wrap it in an array
-          sampleObj[key] = Array.isArray(exampleArrayItem) ? exampleArrayItem : [exampleArrayItem]
+          // if the array property itself has a default value, use it as-is rather than
+          // synthesizing an item example, since the default already represents the whole array
+          if (Array.isArray(oData.default)) {
+            sampleObj[key] = oData.default
+          } else {
+            // if it's an array of objects, we'll generate the sample array item by crawling again
+            // else, if there's no inherited fields, we'll generate the sample array item using extractSampleForParam
+            const exampleArrayItem = oData.itemType === 'object'
+              ? doCrawl({
+                objData: oData || {},
+                parentKey: key,
+                nestedLevel: nestedLevel + 1,
+                filteringOptions,
+              })
+              : crawlInheritedProperties({
+                objData: oData,
+                parentKey: key,
+                nestedLevel: nestedLevel + 1,
+                filteringOptions,
+              }) ?? extractSampleForParam(oData, key)
+            // if the exampleArrayItem is itself an array then we don't need to wrap it in an array
+            sampleObj[key] = Array.isArray(exampleArrayItem) ? exampleArrayItem : [exampleArrayItem]
+          }
         } else if (oDataType === 'object' || oData.allOf) {
           const res = doCrawl({ objData: oData || {}, parentKey: key, nestedLevel: nestedLevel + 1, filteringOptions })
           if (res !== null) {

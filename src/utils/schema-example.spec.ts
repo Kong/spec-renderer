@@ -208,6 +208,47 @@ describe('crawl', () => {
     })
   })
 
+  it('should render array default as an actual empty array, not a stringified one', () => {
+    const objData = {
+      'type': 'object',
+      'properties': {
+        'allowed_control_planes': {
+          'type': 'array',
+          'items': {
+            'type': 'string',
+            'format': 'uuid',
+          },
+          'default': [],
+        },
+      },
+    }
+
+    const res = crawl({ objData, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })
+    expect(res).toEqual({
+      'allowed_control_planes': [],
+    })
+  })
+
+  it('should render a non-empty array default as-is', () => {
+    const objData = {
+      'type': 'object',
+      'properties': {
+        'tags': {
+          'type': 'array',
+          'items': {
+            'type': 'string',
+          },
+          'default': ['a', 'b'],
+        },
+      },
+    }
+
+    const res = crawl({ objData, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })
+    expect(res).toEqual({
+      'tags': ['a', 'b'],
+    })
+  })
+
   it('TDX-5892, value from enum', () => {
 
     const objData = {
