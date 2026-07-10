@@ -1,14 +1,12 @@
 import type { HttpSecurityScheme, IHttpOperationResponse } from '@stoplight/types'
 import type { XSensitiveData, SecuritySchemeMaskRule } from '@/types'
 import { resolveSchemaObjectFields } from './schema-model'
+import { OAS_EXT_SENSITIVE_DATA } from '@/oas-extensions'
 
 // ─── Mask placeholder ─────────────────────────────────────────────────────────
 
 /** The character sequence used to replace masked values in all displayed output. */
 export const MASK_PLACEHOLDER = '••••••'
-
-/** The OpenAPI extension key that carries masking configuration on a schema property. */
-export const SENSITIVE_DATA_KEY = 'x-sensitive-data'
 
 // ─── Basic masking functions ──────────────────────────────────────────────────
 
@@ -256,7 +254,7 @@ export const maskBodyExample = (example: unknown, schema: Record<string, any>): 
       ? resolveSchemaObjectFields(rawPropSchema) as Record<string, any>
       : {}
 
-    const sensitiveConfig = propSchema?.[SENSITIVE_DATA_KEY] as XSensitiveData | undefined
+    const sensitiveConfig = propSchema?.[OAS_EXT_SENSITIVE_DATA] as XSensitiveData | undefined
 
     if (sensitiveConfig?.mask === 'remove') {
       // 'remove' strategy: simply don't copy this key into the result
@@ -285,7 +283,7 @@ const _schemaHasSensitiveData = (schema: Record<string, any> | undefined): boole
   if (!schema) return false
   for (const propSchema of Object.values(schema.properties ?? {})) {
     const prop = resolveSchemaObjectFields(propSchema) as Record<string, any>
-    if (prop?.[SENSITIVE_DATA_KEY]) return true
+    if (prop?.[OAS_EXT_SENSITIVE_DATA]) return true
     if (prop?.properties && _schemaHasSensitiveData(prop)) return true
   }
   return false

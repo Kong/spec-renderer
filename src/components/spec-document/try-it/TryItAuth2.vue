@@ -148,6 +148,7 @@ import type { PropType } from 'vue'
 import type { XKongClientCredentialsConfig, ExtraTokenRequestParameter } from '@/types'
 import type { IOauth2SecurityScheme } from '@stoplight/types'
 import { useDebounceFn } from '@vueuse/core'
+import { OAS_EXT_KONG_CLIENT_CREDENTIALS } from '@/oas-extensions'
 
 const props = defineProps({
   schemeKey: {
@@ -172,7 +173,7 @@ const resetToken = () => {
   authInputs.value[`${props.schemeKey}-token`] = ''
 }
 
-const extraTokenRequestParameters = computed((): ExtraTokenRequestParameter[] => (props.scheme.extensions?.['x-kong-client-credentials-config'] as XKongClientCredentialsConfig)?.extraTokenRequestParameters || [])
+const extraTokenRequestParameters = computed((): ExtraTokenRequestParameter[] => (props.scheme.extensions?.[OAS_EXT_KONG_CLIENT_CREDENTIALS] as XKongClientCredentialsConfig)?.extraTokenRequestParameters || [])
 
 const setAllScopes = (value: boolean) => {
   Object.entries(props.scheme.flows.clientCredentials?.scopes || {}).forEach(([scopeKey]) => {

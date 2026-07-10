@@ -106,10 +106,9 @@ const props = defineProps({
 
 const showSensitiveData = ref<boolean>(false)
 
-// Raw display text (one variant, properly formatted per content type)
-const rawResponseText = ref<string>('')
-// Parsed JSON — only set for JSON responses; null for images/text
-const parsedJson = ref<unknown>(null)
+// Response body - object for JSON, string for text/image blob URL
+const responseContent = ref<unknown>(null)
+const responseBodyType = ref<'json' | 'image' | 'text' | ''>('')
 // Resolved schema — needed for toggle visibility check and masked computation
 const bodySchema = ref<Record<string, any> | undefined>()
 
@@ -124,16 +123,17 @@ const hasMaskedData = computed((): boolean => {
   return hasMasking(bodySchema.value, [])
 })
 
-// Builds the masked body; recomputes only when parsedJson or bodySchema changes.
+// Builds the masked body
 const maskedResponseText = computed((): string | null => {
-  if (parsedJson.value === null || !bodySchema.value) return null
-  return JSON.stringify(maskBodyExample(parsedJson.value, bodySchema.value), null, CODE_INDENT_SPACES)
+  if (responseBodyType.value !== 'json' || !bodySchema.value) return null
+  return JSON.stringify(maskBodyExample(responseContent.value, bodySchema.value), null, CODE_INDENT_SPACES)
 })
 
-// Selects between cached masked result and raw text based on the visibility toggle.
-const responseText = computed((): string =>
-  (!showSensitiveData.value && maskedResponseText.value !== null) ? maskedResponseText.value : rawResponseText.value,
-)
+const responseText = computed((): string => {
+  if (!showSensitiveData.value && maskedResponseText.value !== null) return maskedResponseText.value
+  if (responseBodyType.value === 'json') return JSON.stringify(responseContent.value, null, CODE_INDENT_SPACES)
+  return String(responseContent.value ?? '')
+})
 
 const errorText = computed((): string => {
   return props.responseError?.message || ''
@@ -171,7 +171,7 @@ const resultOptions = computed((): SelectItem[] => {
   return opts
 })
 
-const isResponseImage = computed(() => props.response.headers.get('content-type')?.includes('image') ?? false)
+const isResponseImage = computed(() => responseBodyType.value === 'image')
 
 // Returns the component & props to be used to display the response body
 const responseBodyComponent = computed(() => {
@@ -206,34 +206,32 @@ watch(resultOptions, (options) => {
   }
 }, { immediate: true })
 
-const requestLang = ref<string>('')
+const requestLang = computed(() => responseBodyType.value === 'json' ? 'json' : 'text')
 
 watch(() => props.response, async (res) => {
   if (res) {
-    if (res.headers.get('content-type')?.includes('/json')) {
+    const contentType = res.headers.get('content-type') ?? ''
+    if (contentType.includes('/json')) {
       const json = await res.json()
-      parsedJson.value = json
-      bodySchema.value = findResponseSchema(props.responseSchemas, res.status, res.headers.get('content-type') ?? 'application/json')
-      rawResponseText.value = JSON.stringify(json, null, CODE_INDENT_SPACES)
-      requestLang.value = 'json'
-    } else if (isResponseImage.value) {
+      responseContent.value = json
+      responseBodyType.value = 'json'
+      bodySchema.value = findResponseSchema(props.responseSchemas, res.status, contentType || 'application/json')
+    } else if (contentType.includes('image')) {
       const blob = await res.blob()
-      parsedJson.value = null
+      responseContent.value = URL.createObjectURL(blob)
+      responseBodyType.value = 'image'
       bodySchema.value = undefined
-      rawResponseText.value = URL.createObjectURL(blob)
     } else {
-      parsedJson.value = null
+      responseContent.value = await res.text()
+      responseBodyType.value = 'text'
       bodySchema.value = undefined
-      rawResponseText.value = await res.text()
-      requestLang.value = 'text'
     }
     // reset to first option (Result/Headers/Error) on each new response
     selectedResOption.value = resultOptions.value[0]?.value
   } else {
-    parsedJson.value = null
+    responseContent.value = null
+    responseBodyType.value = ''
     bodySchema.value = undefined
-    rawResponseText.value = ''
-    requestLang.value = ''
   }
 }, { immediate: true })
 
