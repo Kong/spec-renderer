@@ -1,3 +1,10 @@
+# [1.108.0](https://github.com/Kong/spec-renderer/compare/v1.107.20...v1.108.0) (2026-07-10)
+
+
+### Features
+
+* sanitize sensitive data in spec-renderer [KHCP-20404] ([#860](https://github.com/Kong/spec-renderer/issues/860)) ([2700eba](https://github.com/Kong/spec-renderer/commit/2700ebad96200f04693d4917c694946e0f40aea0))
+
 ## [1.107.20](https://github.com/Kong/spec-renderer/compare/v1.107.19...v1.107.20) (2026-07-06)
 
 
