@@ -113,7 +113,9 @@
           v-model="excludeNotRequiredInTryIt"
           :auth-headers="authHeaders"
           :auth-query="authQuery"
+          :content-type="activeRequestBodyContentType"
           :data="operationData"
+          :mask-rules="maskRules"
           :request-body="currentRequestBody"
           :server-url="selectedServerUrl"
           @request-body-changed="setRequestBody"
@@ -127,8 +129,10 @@
           v-model="excludeNotRequiredInSample"
           :auth-headers="authHeaders"
           :auth-query="authQuery"
+          :content-type="activeRequestBodyContentType"
           :custom-headers="currentRequestHeaders"
           :data="operationData"
+          :mask-rules="maskRules"
           :request-body="currentRequestBody"
           :request-path="currentRequestPath"
           :request-query="currentRequestQuery"
@@ -185,6 +189,8 @@
 <script setup lang="ts">
 import { ref, computed, watch, inject, provide } from 'vue'
 import type { ComputedRef, PropType, Ref } from 'vue'
+import { buildSecuritySchemeMaskRules } from '@/utils'
+import type { SecuritySchemeMaskRule } from '@/types'
 import type { IHttpOperation, IHttpWebhookOperation } from '@stoplight/types'
 import HttpRequest from './endpoint/HttpRequest.vue'
 import HttpOperationBody from './endpoint/HttpOperationBody.vue'
@@ -279,6 +285,10 @@ const { activeSecurityScheme, authHeadersMap, authQueryMap } = composables.useAu
 const authHeaders = computed(() => authHeadersMap.value[currentSecurityScheme.value] ?? [])
 const authQuery = computed(() => authQueryMap.value[currentSecurityScheme.value] ?? '')
 
+const maskRules = computed<SecuritySchemeMaskRule[]>(() =>
+  buildSecuritySchemeMaskRules(props.data.security ?? []),
+)
+
 const securitySchemeChanged = (newSecurityScheme: string) => {
   currentSecurityScheme.value = newSecurityScheme
 }
@@ -336,6 +346,7 @@ const setRequestBodyByIdx = (newSampleIdx: number) => {
       activeRequestBodyContentList.value,
       { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value },
       newSampleIdx,
+      true,
     )
     : '' }
 }
@@ -368,6 +379,7 @@ function updateRequestBodyContentType(newContentType: string) {
         activeRequestBodyContentList.value,
         { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value },
         0,
+        true,
       )
       : '' }
   }

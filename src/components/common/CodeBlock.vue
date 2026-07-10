@@ -10,6 +10,7 @@ import composables from '@/composables'
 import { requestSampleConfigs } from '@/constants'
 import type { LanguageCode } from '@/types/request-languages'
 import { KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST, KUI_COLOR_BACKGROUND_NEUTRAL_STRONGEST } from '@kong/design-tokens'
+import { MASK_PLACEHOLDER } from '@/utils'
 
 const props = defineProps({
   code: {
@@ -36,11 +37,12 @@ const getHighlightLanguage = (snippetLang: LanguageCode | null | undefined): str
 }
 
 const highlightedCode = computed(():string => {
+  let html = ''
   if (props.isError) {
-    return `<div class='error'>${props.code}</div>`
+    html = `<div class='error'>${props.code}</div>`
   } else if (highlighter.value && props.lang) {
     const hightLightLang = getHighlightLanguage(props.lang as LanguageCode)
-    return highlighter.value.codeToHtml(props.code, {
+    html = highlighter.value.codeToHtml(props.code, {
       lang: hightLightLang as string,
       themes: {
         light: 'catppuccin-latte',
@@ -58,7 +60,10 @@ const highlightedCode = computed(():string => {
       },
     })
   }
-  return ''
+  if (html && props.code.includes(MASK_PLACEHOLDER)) {
+    html = html.replaceAll(MASK_PLACEHOLDER, `<span class="sensitive-masked">${MASK_PLACEHOLDER}</span>`)
+  }
+  return html
 })
 
 const VNode = () => h('div', { class: 'code-block', innerHTML: highlightedCode.value })
@@ -155,5 +160,11 @@ html.dark,
       resize: vertical;
     }
   }
+}
+
+:deep(.sensitive-masked) {
+  background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
+  border-radius: var(--kui-border-radius-10, $kui-border-radius-10);
+  padding: var(--kui-space-0, $kui-space-0) var(--kui-space-10, $kui-space-10);
 }
 </style>

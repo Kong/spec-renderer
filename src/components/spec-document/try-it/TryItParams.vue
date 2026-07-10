@@ -11,6 +11,12 @@
         {{ compTitles[props.paramType] }}
       </h3>
     </template>
+    <template
+      v-if="paramType === 'body' && hasMaskedData"
+      #actions
+    >
+      <VisibilityToggleButton v-model="showSensitiveData" />
+    </template>
     <div
       v-if="paramType !== 'body' && params && Object.keys(params).length"
       class="wide"
@@ -64,8 +70,29 @@
         :data="data"
       />
 
+      <p
+        v-if="hasMaskedData && !showSensitiveData"
+        class="masked-body-hint"
+      >
+        <InfoIcon :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`" />
+        Sensitive values are masked.
+        <button
+          class="masked-body-hint-action"
+          type="button"
+          @click.stop="showSensitiveData = true"
+        >
+          Unmask
+        </button>
+        to edit.
+      </p>
+      <CodeBlock
+        v-if="!requestBody.isBinary && fieldValues.body && hasMaskedData && !showSensitiveData"
+        class="body-param-code-block"
+        :code="maskedBodyCode"
+        lang="json"
+      />
       <EditableCodeBlock
-        v-if="!requestBody.isBinary && fieldValues.body"
+        v-else-if="!requestBody.isBinary && fieldValues.body"
         class="body-param-code-block"
         :code="fieldValues.body"
         lang="json"
@@ -100,14 +127,19 @@ import type { PropType } from 'vue'
 import { useFileDialog } from '@vueuse/core'
 import type { IHttpOperation, IHttpPathParam, IHttpQueryParam } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
-import { extractSample, getSampleHeaders, getSamplePath, getSampleQuery } from '@/utils'
+import { extractSample, getSampleHeaders, getSamplePath, getSampleQuery, hasMasking, maskBodyExample, resolveSchemaObjectFields, safeJSONParse } from '@/utils'
 import type { RequestParamTypes } from '@/types'
+import CodeBlock from '@/components/common/CodeBlock.vue'
 import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import RequiredToggle from './RequiredToggle.vue'
 import type { RequestBody } from '@/types'
+import { CODE_INDENT_SPACES } from '@/constants'
+import { InfoIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
+import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
 /**
  * This components handles path parameters, query parameters and body.
  * only parts of
@@ -130,6 +162,10 @@ const props = defineProps({
   excludeHeaderList: {
     type: Array as PropType<string[]>,
     default: () => [],
+  },
+  contentType: {
+    type: String,
+    default: '',
   },
 })
 
@@ -220,12 +256,46 @@ const lastExcludeNotRequiredSinceParamsChanged = ref(excludeNotRequired.value)
  * preserving stale values from the previous operation.
  */
 const currentEndpointID = ref(props.data.id)
+/**
+ * Tracks the active content type as of the last params watcher invocation.
+ * Used to detect when the user switched content types, so we force-update
+ * fieldValues.body with the new content type's sample instead of keeping
+ * stale values whose fields won't match the new schema.
+ */
+const lastContentType = ref(props.contentType)
+
+const showSensitiveData = ref<boolean>(false)
+
+const bodySchema = computed((): Record<string, any> | undefined => {
+  const contents = props.data.request?.body?.contents
+  if (!contents?.length) return undefined
+  const entry = (props.contentType ? contents.find(c => c.mediaType === props.contentType) : undefined) ?? contents[0]
+  return entry?.schema ? resolveSchemaObjectFields(entry.schema) as Record<string, any> : undefined
+})
+
+const hasMaskedData = computed((): boolean => {
+  if (props.paramType !== 'body') return false
+  return hasMasking(bodySchema.value, [])
+})
 
 const contentToCopy = computed((): string => {
   if (props.paramType !== 'body') {
     return ''
   }
-  return fieldValues.value.body ?? ''
+  return !showSensitiveData.value ? maskedBodyCode.value : (fieldValues.value.body ?? '')
+})
+
+// Check showSensitiveData first so Vue drops fieldValues.body as a dependency while editing,
+// avoiding parse+mask on every keystroke when the masked view is hidden.
+const maskedBodyCode = computed((): string => {
+  if (showSensitiveData.value) return ''
+  const raw = fieldValues.value.body
+  if (!raw) return raw ?? ''
+  if (!bodySchema.value) return raw
+  const parsed = safeJSONParse(raw)
+  if (!parsed || typeof parsed !== 'object') return raw
+  const masked = maskBodyExample(parsed, bodySchema.value)
+  return JSON.stringify(masked, null, CODE_INDENT_SPACES)
 })
 
 // calculating initial values for the fields,
@@ -240,10 +310,13 @@ watch(params, (newParams) => {
     const toggleChanged = props.paramType === 'body' && excludeNotRequired.value !== lastExcludeNotRequiredSinceParamsChanged.value
     lastExcludeNotRequiredSinceParamsChanged.value = excludeNotRequired.value
 
+    const contentTypeChanged = props.paramType === 'body' && props.contentType !== lastContentType.value
+    lastContentType.value = props.contentType
+
     Object.keys(newParams).forEach(key => {
       // preserve user-edited values while on the same operation
-      // but force-update when the required toggle changed or the user navigated to a different operation
-      if (!Object.keys(fieldValues.value).includes(key) || toggleChanged || operationChanged) {
+      // but force-update when the required toggle changed, the user navigated to a different operation, or the content type switched
+      if (!Object.keys(fieldValues.value).includes(key) || toggleChanged || operationChanged || contentTypeChanged) {
         fieldValues.value[key] = samples[key]
       }
     })
@@ -252,6 +325,7 @@ watch(params, (newParams) => {
 
 const requestBodyChanged = (newBody: string) => {
   if (newBody) {
+    fieldValues.value.body = newBody
     emit('request-body-changed', { isBinary: false, content: newBody })
   }
 }
@@ -322,6 +396,27 @@ input[type=text] {
 .required-label {
   color: var(--kui-icon-color-danger, $kui-icon-color-danger);
   height: 14px;
+}
+
+.masked-body-hint {
+  align-items: center;
+  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+  display: flex;
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+  gap: var(--kui-space-30, $kui-space-30);
+  margin: var(--kui-space-0, $kui-space-0);
+  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
+
+  .masked-body-hint-action {
+    @include default-button-reset;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    text-decoration: underline;
+
+    &:hover {
+      color: var(--kui-color-text, $kui-color-text);
+    }
+  }
 }
 </style>
 

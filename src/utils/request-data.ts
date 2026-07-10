@@ -1,6 +1,7 @@
 import type { IHttpOperation, IMediaTypeContent } from '@stoplight/types'
 import { crawl, extractSampleForParam } from './schema-example'
 import { resolveSchemaObjectFields, resolveSchemaType } from './schema-model'
+import { maskBodyExample } from './sensitive-data-masking'
 import { CODE_INDENT_SPACES } from '@/constants'
 import { safeJSONParse } from './strings'
 import formurlencoded from 'form-urlencoded'
@@ -151,7 +152,7 @@ export const getSampleHeaders = ({ data, fieldValues, excludeHeaderList }: { dat
  * @param sampleIdx index of example to be used
  * @returns query string
  */
-export const getSampleBody = (contents: IMediaTypeContent[], filteringOptions: Record<string, boolean> = { excludeReadonly: true, excludeNotRequired: false }, sampleIdx: number = 0): string => {
+export const getSampleBody = (contents: IMediaTypeContent[], filteringOptions: Record<string, boolean> = { excludeReadonly: true, excludeNotRequired: false }, sampleIdx: number = 0, skipMasking: boolean = false): string => {
   if (!contents.length || !contents[0]) {
     return ''
   }
@@ -162,14 +163,18 @@ export const getSampleBody = (contents: IMediaTypeContent[], filteringOptions: R
     ) {
       // @ts-ignore value is valid property of example
       const exampleValue = safeJSONParse(contents[0].examples[sampleIdx].value)
-      return JSON.stringify(exampleValue as Record<string, any>, null, CODE_INDENT_SPACES)
+      const maskedValue = skipMasking
+        ? exampleValue
+        : maskBodyExample(exampleValue, resolveSchemaObjectFields(contents[0].schema) as Record<string, any>)
+      return JSON.stringify(maskedValue as Record<string, any>, null, CODE_INDENT_SPACES)
     }
   }
 
   const isArraySchema = resolveSchemaType(contents[0].schema?.type) === 'array'
+  // Pass skipMasking into filteringOptions so doCrawl() can read it via filteringOptions.skipMasking
   const sample = crawl({
     objData: resolveSchemaObjectFields(contents[0].schema) as Record<string, any>,
-    filteringOptions,
+    filteringOptions: { ...filteringOptions, skipMasking },
   })
   return JSON.stringify(isArraySchema && !Array.isArray(sample) ? [sample] : sample, null, CODE_INDENT_SPACES)
 }

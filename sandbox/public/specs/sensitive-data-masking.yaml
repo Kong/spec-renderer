@@ -1,0 +1,554 @@
+openapi: 3.1.0
+info:
+  title: Sensitive Data Masking
+  description: |
+    A spec designed to test different masking scenarios in the spec-renderer:-
+
+    - **Automatic masking (security schemes)**
+      - API key in header → `••••••` in code samples
+      - API key in query  → `••••••` in code samples
+      - HTTP Bearer       → `••••••` in code samples
+      - HTTP Basic        → `••••••` in code samples
+      - HTTP Digest       → `••••••` in code samples
+      - OAuth2            → `••••••` in code samples
+
+    - **Opt-in masking (x-sensitive-data on schema properties)**
+      - `mask: full`   → value replaced with `••••••`
+      - `mask: remove` → field omitted from example
+      - `mask: hash`   → value replaced with a plain 8-character hex fingerprint (e.g. `3d2a1f8c`)
+      - `mask: regex`  → only the matched portion replaced with `••••••`
+  version: 1.0.0
+
+servers:
+  - url: https://global.api.konghq.com/v2
+
+# ─── Security schemes ────────────────────────────────────────────────────────
+# Each scheme here should produce a masked placeholder in code samples.
+
+security:
+  - ApiKeyHeader: []
+
+components:
+  securitySchemes:
+    ApiKeyHeader:
+      type: apiKey
+      name: X-API-Key
+      in: header
+      description: API key passed as a request header. Code samples show `••••••`.
+
+    ApiKeyQuery:
+      type: apiKey
+      name: api_key
+      in: query
+      description: API key passed as a query parameter. Code samples show `••••••`.
+
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: JWT bearer token. Code samples show `••••••`.
+
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP basic auth. Code samples show `••••••`.
+
+    DigestAuth:
+      type: http
+      scheme: digest
+      description: HTTP digest auth. Code samples show `••••••`.
+
+    OAuth2:
+      type: oauth2
+      description: OAuth2 client credentials. Code samples show `••••••`.
+      flows:
+        clientCredentials:
+          tokenUrl: http://localhost:5173/mock/oauth/token
+          scopes:
+            read: Read access
+            write: Write access
+
+  schemas:
+    # ── User: crawl-generated example with all four mask strategies ──────────
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: usr_123abc
+        username:
+          type: string
+          example: alice
+        email:
+          type: string
+          example: alice@example.com
+          x-sensitive-data:
+            mask: regex
+            pattern: ^[^@]+   # masks the local part → ••••••@example.com
+        password:
+          type: string
+          x-sensitive-data:
+            mask: full        # always shown as ••••••
+        apiToken:
+          type: string
+          x-sensitive-data:
+            mask: hash        # shown as 8-char hex fingerprint — same token = same hash
+        internalNote:
+          type: string
+          x-sensitive-data:
+            mask: remove      # field omitted entirely from the example
+
+    # ── LoginRequest: explicit inline example (bypasses crawl) ───────────────
+    # Tests the getSampleBody explicit-example code path.
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          x-sensitive-data:
+            mask: full
+        mfaCode:
+          type: string
+          x-sensitive-data:
+            mask: remove
+
+    # ── LoginResponse: response body with sensitive fields ───────────────────
+    LoginResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          x-sensitive-data:
+            mask: full
+        refreshToken:
+          type: string
+          x-sensitive-data:
+            mask: hash
+        expiresIn:
+          type: integer
+          example: 3600
+        user:
+          $ref: '#/components/schemas/User'
+
+    # ── AuditLog: array response — sensitive fields inside each item ─────────
+    AuditLogEntry:
+      type: object
+      properties:
+        eventId:
+          type: string
+          example: evt_789xyz
+        action:
+          type: string
+          example: login
+        actorEmail:
+          type: string
+          example: alice@example.com
+          x-sensitive-data:
+            mask: regex
+            pattern: ^[^@]+
+        ipAddress:
+          type: string
+          x-sensitive-data:
+            mask: full
+        timestamp:
+          type: string
+          format: date-time
+          example: '2024-01-15T10:30:00Z'
+
+    # ── NestedSecrets: deeply nested sensitive fields ─────────────────────────
+    PaymentMethod:
+      type: object
+      properties:
+        type:
+          type: string
+          example: card
+        card:
+          type: object
+          properties:
+            last4:
+              type: string
+              example: '4242'
+            expiry:
+              type: string
+              example: 12/26
+            cvv:
+              type: string
+              x-sensitive-data:
+                mask: full
+            holderName:
+              type: string
+              example: Alice Smith
+
+# ─── Paths ───────────────────────────────────────────────────────────────────
+
+paths:
+
+  # ── 1. API key in header (global security) ──────────────────────────────────
+  /users/{userId}:
+    get:
+      summary: Get user
+      description: |
+        Uses the global `ApiKeyHeader` security scheme.
+        The `X-API-Key` header value in code samples should be masked as `••••••`.
+      operationId: getUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            example: usr_123abc
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+
+  # ── 2. API key in query param ────────────────────────────────────────────────
+  /reports:
+    get:
+      summary: List reports
+      description: |
+        Uses `ApiKeyQuery`. The `api_key` query parameter in code samples should
+        be masked as `••••••`.
+      operationId: listReports
+      security:
+        - ApiKeyQuery: []
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+            example: my-secret-key
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+      responses:
+        '200':
+          description: Reports list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    example: 42
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: rpt_001
+
+  # ── 3. HTTP Bearer ───────────────────────────────────────────────────────────
+  /profile:
+    get:
+      summary: Get current user profile
+      description: |
+        Uses `BearerAuth`. The `Authorization` header in code samples should be
+        masked as `••••••`.
+        The response body contains `x-sensitive-data` fields — they should be
+        masked in both the response sample and in TryIt responses.
+      operationId: getProfile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  # ── 4. HTTP Basic auth ───────────────────────────────────────────────────────
+  /admin/settings:
+    get:
+      summary: Get admin settings
+      description: |
+        Uses `BasicAuth`. The `Authorization` header in code samples should be
+        masked as `••••••`.
+      operationId: getAdminSettings
+      security:
+        - BasicAuth: []
+      responses:
+        '200':
+          description: Settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  maintenanceMode:
+                    type: boolean
+                    example: false
+
+  # ── 5. OAuth2 ────────────────────────────────────────────────────────────────
+  /orders:
+    get:
+      summary: List orders
+      description: |
+        Uses `OAuth2`. The `Authorization` header in code samples should be
+        masked as `••••••`.
+      operationId: listOrders
+      security:
+        - OAuth2: [read]
+      responses:
+        '200':
+          description: Orders list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        orderId:
+                          type: string
+                          example: ord_abc123
+
+  # ── 6. Login — request body with explicit example + response with tokens ─────
+  /auth/login:
+    post:
+      summary: Log in
+      description: |
+        **Request body (explicit example):** The inline example below contains a real
+        `password` value. Because the `password` property has `x-sensitive-data: full`,
+        it should be shown as `••••••` in the request body example.
+        The `mfaCode` field has `mask: remove` so it should be omitted.
+
+        **Response body:** `accessToken` → `••••••`, `refreshToken` → 8-char hex fingerprint.
+      operationId: login
+      security: []   # public endpoint — no auth masking expected here
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            example:
+              username: alice
+              password: super-secret-password
+              mfaCode: '123456'
+      responses:
+        '200':
+          description: Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Invalid credentials
+
+  # ── 7. Crawl-generated body example with all four mask strategies ────────────
+  /users:
+    post:
+      summary: Create user
+      description: |
+        **Request body (crawl-generated):** The example is built from the `User` schema.
+        - `email` → `••••••@example.com` (regex mask on local part)
+        - `password` → `••••••` (full mask)
+        - `apiToken` → 8-char hex fingerprint (hash mask)
+        - `internalNote` → field omitted (remove mask)
+      operationId: createUser
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  # ── 8. Array response — sensitive fields inside each item ────────────────────
+  /audit-logs:
+    get:
+      summary: Get audit logs
+      description: |
+        Response is an array of `AuditLogEntry` objects.
+        Each item has `actorEmail` (regex mask) and `ipAddress` (full mask).
+        Both should be masked in response samples and TryIt responses.
+      operationId: getAuditLogs
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Audit log entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuditLogEntry'
+
+  # ── 9. HTTP Digest auth ──────────────────────────────────────────────────────
+  /metrics:
+    get:
+      summary: Get metrics
+      description: |
+        Uses `DigestAuth`. The `Authorization` header in code samples should be
+        masked as `••••••`.
+      operationId: getMetrics
+      security:
+        - DigestAuth: []
+      responses:
+        '200':
+          description: Metrics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  requestCount:
+                    type: integer
+                    example: 1042
+                  errorRate:
+                    type: number
+                    format: float
+                    example: 0.02
+
+  # ── 10. Nested object — sensitive field deep inside the object tree ───────────
+  /payment-methods:
+    post:
+      summary: Add payment method
+      description: |
+        The `card.cvv` field is nested two levels deep and has `mask: full`.
+        It should be masked regardless of nesting depth.
+      operationId: addPaymentMethod
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentMethod'
+      responses:
+        '201':
+          description: Payment method added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentMethod'
+
+  # ── 11. Multiple content types — content-type switcher masking ───────────────
+  /credentials:
+    post:
+      summary: Submit credentials
+      description: |
+        Request body has two content types with **different** sensitive fields each.
+        Switching the content-type dropdown should update which fields are masked
+        in both the static code sample and the TryIt body panel.
+
+        - **application/json** — `clientSecret` → `••••••` (full), `apiKey` → 8-char hex (hash)
+        - **application/xml**  — `password` → `••••••` (full), `token` → omitted (remove)
+      operationId: submitCredentials
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                clientId:
+                  type: string
+                  example: client_abc123
+                clientSecret:
+                  type: string
+                  x-sensitive-data:
+                    mask: full
+                apiKey:
+                  type: string
+                  x-sensitive-data:
+                    mask: hash
+          application/xml:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: alice
+                password:
+                  type: string
+                  x-sensitive-data:
+                    mask: full
+                token:
+                  type: string
+                  x-sensitive-data:
+                    mask: remove
+      responses:
+        '200':
+          description: Credentials accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: accepted
+
+  # ── 12. Response header masking — auth credential echoed in response headers ─
+  /auth/refresh:
+    post:
+      summary: Refresh token
+      description: |
+        The mock server echoes the incoming `Authorization` request header back
+        as a response header — simulating a token-refresh flow that returns a new
+        credential in the response.
+
+        **What to verify in TryIt:**
+        1. Enter any Bearer token in the auth panel and click Send.
+        2. Open the **Headers** tab in the response panel.
+        3. The `Authorization` value should appear as `••••••` (masked by the
+           `BearerAuth` rule) when the visibility toggle is off.
+        4. The visibility toggle itself should appear because `hasMaskedData`
+           detects the auth header in the response headers.
+      operationId: refreshToken
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+                  example: rt_abc123def456
+      responses:
+        '200':
+          description: Token refreshed
+          headers:
+            Authorization:
+              description: New Bearer token — echoed back by the mock server
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'

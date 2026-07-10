@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { crawl, extractSampleForParam } from './schema-example'
-import type { SchemaObject } from '@/types'
+import type { SchemaObject, XSensitiveData } from '@/types'
+import { MASK_PLACEHOLDER } from './sensitive-data-masking'
 import householdSpec from '../../sandbox/public/specs/Household_openspec_V11.json'
 import composables from '@/composables'
 
@@ -271,6 +272,48 @@ describe('crawl', () => {
 
     const result = crawl({ objData: node.data, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })
     expect(result).toBeInstanceOf(Object)
+  })
+})
+
+describe('crawl x-sensitive-data', () => {
+  it('masks a property value when x-sensitive-data is present', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        password: { type: 'string', 'x-sensitive-data': { mask: 'full' } as XSensitiveData },
+        name: { type: 'string', example: 'Alice' },
+      },
+    }
+    const result = crawl({ objData: schema, filteringOptions: {} }) as Record<string, any>
+    expect(result.password).toBe(MASK_PLACEHOLDER)
+    expect(result.name).toBe('Alice')
+  })
+
+  it('removes a property when mask is remove', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        secret: { type: 'string', 'x-sensitive-data': { mask: 'remove' } as XSensitiveData },
+        name: { type: 'string', example: 'Alice' },
+      },
+      required: ['secret', 'name'],
+    }
+    const result = crawl({ objData: schema, filteringOptions: {} }) as Record<string, any>
+    expect(result).not.toHaveProperty('secret')
+    expect(result.name).toBe('Alice')
+  })
+
+  it('passes through masked values unchanged when skipMasking is true', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        password: { type: 'string', example: 'hunter2', 'x-sensitive-data': { mask: 'full' } as XSensitiveData },
+        name: { type: 'string', example: 'Alice' },
+      },
+    }
+    const result = crawl({ objData: schema, filteringOptions: { skipMasking: true } }) as Record<string, any>
+    expect(result.password).toBe('hunter2')
+    expect(result.name).toBe('Alice')
   })
 })
 

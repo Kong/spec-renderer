@@ -7,6 +7,10 @@
   >
     <slot />
     <div class="response-sample-header-right">
+      <VisibilityToggleButton
+        v-if="hasMaskedData"
+        v-model="showSensitiveData"
+      />
       <SelectDropdown
         v-if="exampleSelectList && exampleSelectList.length > 1"
         id="response-sample-select"
@@ -27,10 +31,11 @@
 import { ref, computed } from 'vue'
 import type { PropType } from 'vue'
 import type { IMediaTypeContent } from '@stoplight/types'
-import { getSampleBody } from '@/utils'
+import { getSampleBody, hasMasking, resolveSchemaObjectFields } from '@/utils'
 import SchemaExample from '@/components/common/SchemaExample.vue'
 import CopyButton from '@/components/common/CopyButton.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
+import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
 import type { SelectItem } from '@/types'
 
 const props = defineProps({
@@ -53,6 +58,7 @@ const props = defineProps({
 })
 
 const activeResponseSampleIndex = ref('0')
+const showSensitiveData = ref<boolean>(false)
 
 const activeResponseSample = computed(() => {
   if (props.contentList.length) {
@@ -60,11 +66,21 @@ const activeResponseSample = computed(() => {
       props.contentList,
       {},
       parseInt(activeResponseSampleIndex.value) || 0,
+      showSensitiveData.value,
     )
   }
 
   // if content list is empty, we fallback to show the description
   return props.description
+})
+
+// Only show toggle when masking actually changes the output
+const hasMaskedData = computed((): boolean => {
+  if (!props.contentList.length) return false
+  const schema = props.contentList[0]?.schema
+    ? resolveSchemaObjectFields(props.contentList[0].schema) as Record<string, any>
+    : undefined
+  return hasMasking(schema, [])
 })
 
 const exampleSelectList = computed((): SelectItem[] => {

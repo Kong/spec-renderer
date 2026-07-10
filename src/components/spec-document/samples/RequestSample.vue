@@ -73,6 +73,12 @@
           />
         </div>
       </template>
+      <template
+        v-if="hasMaskedData"
+        #actions
+      >
+        <VisibilityToggleButton v-model="showSensitiveData" />
+      </template>
       <!-- body -->
       <RequiredToggle
         v-if="hideTryIt"
@@ -97,15 +103,16 @@ import { watch, ref, computed, inject } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet'
-import { requestSampleConfigs } from '@/constants'
-import { getRequestHeaders, getFormattedBody } from '@/utils'
+import { requestSampleConfigs, CODE_INDENT_SPACES } from '@/constants'
+import { getRequestHeaders, getFormattedBody, maskAuthHeaders, maskAuthQuery, hasMasking, MASK_PLACEHOLDER, maskBodyExample, safeJSONParse, resolveSchemaObjectFields } from '@/utils'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
+import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
 import type { LanguageCode } from '@/types/request-languages'
 import type { HarRequest, HTTPSnippet as HTTPSnippetType, TargetId } from 'httpsnippet'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import LanguageIcon from '@/components/common/LanguageIcon.vue'
-import type { SelectItem, RequestBody } from '@/types'
+import type { SelectItem, RequestBody, SecuritySchemeMaskRule } from '@/types'
 import RequiredToggle from '../try-it/RequiredToggle.vue'
 
 
@@ -150,6 +157,14 @@ const props = defineProps({
     type: Object as PropType<RequestBody>,
     default: () => ({ content: '' }),
   },
+  maskRules: {
+    type: Array as PropType<SecuritySchemeMaskRule[]>,
+    default: () => [],
+  },
+  contentType: {
+    type: String,
+    default: '',
+  },
 })
 
 const excludeNotRequired = defineModel({
@@ -158,6 +173,37 @@ const excludeNotRequired = defineModel({
 })
 
 const hideTryIt = inject<Ref<boolean>>('hide-tryit', ref(false))
+
+const showSensitiveData = ref<boolean>(false)
+const bodySchema = computed((): Record<string, any> | undefined => {
+  const contents = props.data.request?.body?.contents ?? []
+  const entry = contents.find(c => c.mediaType === props.contentType) ?? contents[0]
+  return entry?.schema ? resolveSchemaObjectFields(entry.schema) as Record<string, any> : undefined
+})
+const hasMaskedData = computed((): boolean => hasMasking(bodySchema.value, props.maskRules))
+const activeAuthHeaders = computed(() =>
+  !showSensitiveData.value ? maskAuthHeaders(props.authHeaders, props.maskRules) : props.authHeaders,
+)
+const activeAuthQuery = computed(() =>
+  !showSensitiveData.value ? maskAuthQuery(props.authQuery, props.maskRules) : props.authQuery,
+)
+
+// Builds the masked body, re-computes only when requestBody or schema changes
+const maskedBodyContent = computed((): RequestBody | null => {
+  if (typeof props.requestBody.content !== 'string') return null
+  if (!bodySchema.value) return null
+
+  const parsed = safeJSONParse(props.requestBody.content)
+  if (!parsed || typeof parsed !== 'object') return null
+
+  const masked = maskBodyExample(parsed, bodySchema.value)
+  return { ...props.requestBody, content: JSON.stringify(masked, null, CODE_INDENT_SPACES) }
+})
+
+// Selects between masked body result and raw body based on the visibility toggle
+const activeBodyContent = computed((): RequestBody =>
+  (!showSensitiveData.value && maskedBodyContent.value) ? maskedBodyContent.value : props.requestBody,
+)
 
 const emit = defineEmits<{
   (e: 'request-body-sample-idx-changed', samlpleIdx: number): void
@@ -245,12 +291,12 @@ watch(() => ({
   lang: selectedLang.value,
   lib: selectedLangLibrary.value,
   serverUrl: props.serverUrl,
-  authHeaders: props.authHeaders,
+  authHeaders: activeAuthHeaders.value,
   customHeaders: props.customHeaders,
   requestPath: props.requestPath,
   requestQuery: props.requestQuery,
-  authQuery: props.authQuery,
-  requestBody: props.requestBody,
+  authQuery: activeAuthQuery.value,
+  requestBody: activeBodyContent.value,
 }), (newValue, oldValue) => {
 
   if (newValue.method !== oldValue?.method && requestConfigs.value?.[0]) {
@@ -355,7 +401,12 @@ watch(() => ({
         requestCode.value = newValue.requestBody as string
         return requestSampleConfigs.filter(c => c.httpSnippetLanguage !== 'json')
       } else if (snippet.value) {
-        requestCode.value = snippet.value.convert((newValue.lang as TargetId), newValue.lib, { binary: newValue.requestBody?.isBinary }) || ''
+        const raw = snippet.value.convert((newValue.lang as TargetId), newValue.lib, { binary: newValue.requestBody?.isBinary }) || ''
+        // HTTPSnippet percent-encodes non-ASCII characters in query param values (• → %E2%80%A2).
+        const encodedMask = encodeURIComponent(MASK_PLACEHOLDER)
+        requestCode.value = Array.isArray(raw)
+          ? raw.map(c => c.replaceAll(encodedMask, MASK_PLACEHOLDER))
+          : raw.replaceAll(encodedMask, MASK_PLACEHOLDER)
       }
     }
   }

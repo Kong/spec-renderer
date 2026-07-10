@@ -14,6 +14,7 @@
 import { computed } from 'vue'
 import type { PropType } from 'vue'
 import { isValidSchemaObject } from '@/utils'
+import { OAS_EXT_STOPLIGHT } from '@/oas-extensions'
 import type { SchemaModelPropertyField, SchemaObject, SelectItem } from '@/types'
 import { RangeFields } from '@/types'
 
@@ -66,7 +67,7 @@ const showProperty = (field: SchemaModelPropertyField) => {
     return false
   }
 
-  const explictlyDefinedFields = props.property?.['x-stoplight']?.explicitProperties
+  const explictlyDefinedFields = props.property?.[OAS_EXT_STOPLIGHT]?.explicitProperties
 
   if (Array.isArray(explictlyDefinedFields) && explictlyDefinedFields.length) {
     // show the field only if it was explicitly defined

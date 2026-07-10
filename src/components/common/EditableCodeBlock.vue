@@ -218,12 +218,14 @@ const handleInput = (e: Event) => {
       }
     }
     presentedCode.value = cText
+    emit('request-body-changed', cText)
     return
   }
 
 
   if ((e as InputEvent).inputType === 'deleteContentBackward') {
     presentedCode.value = cText
+    emit('request-body-changed', cText)
     return
   }
 

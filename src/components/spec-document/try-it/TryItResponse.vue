@@ -17,6 +17,10 @@
             {{ response?.status }}
           </span>
         </h3>
+        <VisibilityToggleButton
+          v-if="hasMaskedData && !props.responseError"
+          v-model="showSensitiveData"
+        />
       </div>
       <SelectDropdown
         :id="`response-option-select-${dataId}`"
@@ -71,8 +75,11 @@ import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import type { PropType } from 'vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import type { SelectItem } from '@/types'
+import type { SelectItem, SecuritySchemeMaskRule } from '@/types'
 import { CODE_INDENT_SPACES } from '@/constants'
+import type { IHttpOperationResponse } from '@stoplight/types'
+import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
+import { maskBodyExample, findResponseSchema, hasMasking } from '@/utils'
 
 const props = defineProps({
   dataId: {
@@ -87,6 +94,45 @@ const props = defineProps({
     type: Object as PropType<Error>,
     default: () => { },
   },
+  maskRules: {
+    type: Array as PropType<SecuritySchemeMaskRule[]>,
+    default: () => [],
+  },
+  responseSchemas: {
+    type: Array as PropType<IHttpOperationResponse[]>,
+    default: () => [],
+  },
+})
+
+const showSensitiveData = ref<boolean>(false)
+
+// Response body - object for JSON, string for text/image blob URL
+const responseContent = ref<unknown>(null)
+const responseBodyType = ref<'json' | 'image' | 'text' | ''>('')
+// Resolved schema — needed for toggle visibility check and masked computation
+const bodySchema = ref<Record<string, any> | undefined>()
+
+// Show the toggle only for the active view: body masking on Result, header masking on Headers.
+const hasMaskedData = computed((): boolean => {
+  if (selectedResOption.value === 'headers') {
+    // show toggle only when an auth credential is actually present in the response headers
+    return props.maskRules.some(r =>
+      r.location === 'header' && !!(props.response?.headers.get(r.paramName.toLowerCase())),
+    )
+  }
+  return hasMasking(bodySchema.value, [])
+})
+
+// Builds the masked body
+const maskedResponseText = computed((): string | null => {
+  if (responseBodyType.value !== 'json' || !bodySchema.value) return null
+  return JSON.stringify(maskBodyExample(responseContent.value, bodySchema.value), null, CODE_INDENT_SPACES)
+})
+
+const responseText = computed((): string => {
+  if (!showSensitiveData.value && maskedResponseText.value !== null) return maskedResponseText.value
+  if (responseBodyType.value === 'json') return JSON.stringify(responseContent.value, null, CODE_INDENT_SPACES)
+  return String(responseContent.value ?? '')
 })
 
 const errorText = computed((): string => {
@@ -94,17 +140,19 @@ const errorText = computed((): string => {
 })
 
 const headersText = computed((): string => {
-
   const headers = <Record<string, any>>{}
   if (props.response) {
     for (const pair of props.response.headers.entries()) {
-      headers[pair[0]] = pair[1]
+      if (!showSensitiveData.value) {
+        const maskedRule = props.maskRules.find(r => r.location === 'header' && r.paramName.toLowerCase() === pair[0].toLowerCase())
+        headers[pair[0]] = maskedRule ? maskedRule.placeholder : pair[1]
+      } else {
+        headers[pair[0]] = pair[1]
+      }
     }
   }
   return Object.keys(headers).length ? JSON.stringify(headers, null, CODE_INDENT_SPACES) : ''
 })
-
-const responseText = ref<string>('')
 
 const resultOptions = computed((): SelectItem[] => {
   const opts = []
@@ -123,7 +171,7 @@ const resultOptions = computed((): SelectItem[] => {
   return opts
 })
 
-const isResponseImage = computed(() => props.response.headers.get('content-type')?.includes('image') ?? false)
+const isResponseImage = computed(() => responseBodyType.value === 'image')
 
 // Returns the component & props to be used to display the response body
 const responseBodyComponent = computed(() => {
@@ -152,28 +200,38 @@ const responseBodyComponent = computed(() => {
 const selectedResOption = ref<string>()
 
 watch(resultOptions, (options) => {
-  if (options.length) {
+  // Only reset when the active option (Result/Headers/Error) is no longer available to preserve selection across visibility toggles
+  if (options.length && !options.some(o => o.value === selectedResOption.value)) {
     selectedResOption.value = options[0]?.value
   }
 }, { immediate: true })
 
-const requestLang = ref<string>('')
+const requestLang = computed(() => responseBodyType.value === 'json' ? 'json' : 'text')
 
 watch(() => props.response, async (res) => {
   if (res) {
-    if (res.headers.get('content-type')?.includes('/json')) {
-      responseText.value = JSON.stringify(await res.json(), null, CODE_INDENT_SPACES)
-      requestLang.value = 'json'
-    } else if (isResponseImage.value) {
+    const contentType = res.headers.get('content-type') ?? ''
+    if (contentType.includes('/json')) {
+      const json = await res.json()
+      responseContent.value = json
+      responseBodyType.value = 'json'
+      bodySchema.value = findResponseSchema(props.responseSchemas, res.status, contentType || 'application/json')
+    } else if (contentType.includes('image')) {
       const blob = await res.blob()
-      responseText.value = URL.createObjectURL(blob)
+      responseContent.value = URL.createObjectURL(blob)
+      responseBodyType.value = 'image'
+      bodySchema.value = undefined
     } else {
-      responseText.value = await res.text()
-      requestLang.value = 'text'
+      responseContent.value = await res.text()
+      responseBodyType.value = 'text'
+      bodySchema.value = undefined
     }
+    // reset to first option (Result/Headers/Error) on each new response
+    selectedResOption.value = resultOptions.value[0]?.value
   } else {
-    responseText.value = ''
-    requestLang.value = ''
+    responseContent.value = null
+    responseBodyType.value = ''
+    bodySchema.value = undefined
   }
 }, { immediate: true })
 
@@ -181,8 +239,11 @@ watch(() => props.response, async (res) => {
 
 <style lang="scss" scoped>
 .h-wrapper {
+  align-items: center;
   display: flex;
   flex: 1;
+  gap: var(--kui-space-40, $kui-space-40);
+
 }
 
 .response-status:before {

@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { extractSample, getRequestHeaders, getFormattedBody, getSampleQuery, getSampleBody } from './request-data'
-import type { IHttpOperation } from '@stoplight/types'
+import type { IHttpOperation, IMediaTypeContent } from '@stoplight/types'
+import type { JSONSchema7 } from 'json-schema'
+import type { XSensitiveData } from '@/types'
+import { MASK_PLACEHOLDER } from './sensitive-data-masking'
 
 describe('request-header', () => {
   it('TDX-5963 should grab from request mediaType before looking at response', () => {
@@ -183,5 +186,128 @@ describe('getSampleQuery', () => {
         ],
       },
     })).toEqual('query=query&filter=filter')
+  })
+})
+
+describe('getSampleBody x-sensitive-data masking', () => {
+  it('masks fields with x-sensitive-data when using crawl-generated examples', () => {
+    const contents: IMediaTypeContent[] = [{
+      id: 'c1',
+      mediaType: 'application/json',
+      schema: {
+        type: 'object',
+        properties: {
+          password: { type: 'string', 'x-sensitive-data': { mask: 'full' } as XSensitiveData } as JSONSchema7,
+          name: { type: 'string', example: 'Alice' } as JSONSchema7,
+        },
+      },
+    }]
+    const result = JSON.parse(getSampleBody(contents))
+    expect(result.password).toBe(MASK_PLACEHOLDER)
+    expect(result.name).toBe('Alice')
+  })
+
+  it('masks fields with x-sensitive-data when using explicit examples', () => {
+    const contents: IMediaTypeContent[] = [{
+      id: 'c1',
+      mediaType: 'application/json',
+      schema: {
+        type: 'object',
+        properties: {
+          token: { type: 'string', 'x-sensitive-data': { mask: 'full' } as XSensitiveData } as JSONSchema7,
+          user: { type: 'string' },
+        },
+      },
+      // @ts-ignore value is valid property of INodeExample
+      examples: [{ key: 'default', value: JSON.stringify({ token: 'secret-token', user: 'Alice' }) }],
+    }]
+    const result = JSON.parse(getSampleBody(contents, {}, 0))
+    expect(result.token).toBe(MASK_PLACEHOLDER)
+    expect(result.user).toBe('Alice')
+  })
+
+  it('returns unmasked values when skipMasking is true (crawl-generated)', () => {
+    const contents: IMediaTypeContent[] = [{
+      id: 'c1',
+      mediaType: 'application/json',
+      schema: {
+        type: 'object',
+        properties: {
+          password: { type: 'string', example: 'hunter2', 'x-sensitive-data': { mask: 'full' } as XSensitiveData } as JSONSchema7,
+          name: { type: 'string', example: 'Alice' } as JSONSchema7,
+        },
+      },
+    }]
+    const result = JSON.parse(getSampleBody(contents, {}, 0, true))
+    expect(result.password).toBe('hunter2')
+    expect(result.name).toBe('Alice')
+  })
+
+  it('replaces field value with 8-char hex fingerprint for hash strategy', () => {
+    const contents: IMediaTypeContent[] = [{
+      id: 'c1',
+      mediaType: 'application/json',
+      schema: {
+        type: 'object',
+        properties: {
+          apiToken: { type: 'string', example: 'tok_super_secret', 'x-sensitive-data': { mask: 'hash' } as XSensitiveData } as JSONSchema7,
+          name: { type: 'string', example: 'Alice' } as JSONSchema7,
+        },
+      },
+    }]
+    const result = JSON.parse(getSampleBody(contents))
+    expect(result.apiToken).toMatch(/^[0-9a-f]{8}$/)
+    expect(result.name).toBe('Alice')
+  })
+
+  it('replaces only the matched portion for regex strategy', () => {
+    const contents: IMediaTypeContent[] = [{
+      id: 'c1',
+      mediaType: 'application/json',
+      schema: {
+        type: 'object',
+        properties: {
+          email: { type: 'string', example: 'alice@example.com', 'x-sensitive-data': { mask: 'regex', pattern: '^[^@]+' } as XSensitiveData } as JSONSchema7,
+        },
+      },
+    }]
+    const result = JSON.parse(getSampleBody(contents))
+    expect(result.email).toBe(`${MASK_PLACEHOLDER}@example.com`)
+  })
+
+  it('omits field entirely for remove strategy', () => {
+    const contents: IMediaTypeContent[] = [{
+      id: 'c1',
+      mediaType: 'application/json',
+      schema: {
+        type: 'object',
+        properties: {
+          internalNote: { type: 'string', example: 'admin note', 'x-sensitive-data': { mask: 'remove' } as XSensitiveData } as JSONSchema7,
+          name: { type: 'string', example: 'Alice' } as JSONSchema7,
+        },
+      },
+    }]
+    const result = JSON.parse(getSampleBody(contents))
+    expect(result.internalNote).toBeUndefined()
+    expect(result.name).toBe('Alice')
+  })
+
+  it('returns unmasked values when skipMasking is true (explicit examples)', () => {
+    const contents: IMediaTypeContent[] = [{
+      id: 'c1',
+      mediaType: 'application/json',
+      schema: {
+        type: 'object',
+        properties: {
+          token: { type: 'string', 'x-sensitive-data': { mask: 'full' } as XSensitiveData } as JSONSchema7,
+          user: { type: 'string' },
+        },
+      },
+      // @ts-ignore value is valid property of INodeExample
+      examples: [{ key: 'default', value: JSON.stringify({ token: 'secret-token', user: 'Alice' }) }],
+    }]
+    const result = JSON.parse(getSampleBody(contents, {}, 0, true))
+    expect(result.token).toBe('secret-token')
+    expect(result.user).toBe('Alice')
   })
 })

@@ -33,14 +33,21 @@
           :text="scheme.description"
         />
       </InputLabel>
-      <input
-        :id="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
-        v-model="authInputs[`${schemeKey}-clientSecret`]"
-        :aria-describedby="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
-        autocomplete="off"
-        placeholder="Enter Client Secret"
-        type="password"
-      >
+      <div class="input-wrapper">
+        <input
+          :id="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
+          v-model="authInputs[`${schemeKey}-clientSecret`]"
+          :aria-describedby="`auth-input-oauth2-clientCredentials-secret-${dataId}`"
+          autocomplete="off"
+          placeholder="Enter Client Secret"
+          :type="showClientSecret ? 'text' : 'password'"
+        >
+        <VisibilityToggleButton
+          v-model="showClientSecret"
+          class="visibility-toggle-btn"
+          label="client secret"
+        />
+      </div>
     </div>
     <div
       v-if="extraTokenRequestParameters"
@@ -130,7 +137,8 @@
 </template>
 
 <script setup lang="ts">
-import { watch, computed } from 'vue'
+import { watch, computed, ref } from 'vue'
+import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import composables from '@/composables'
@@ -140,6 +148,7 @@ import type { PropType } from 'vue'
 import type { XKongClientCredentialsConfig, ExtraTokenRequestParameter } from '@/types'
 import type { IOauth2SecurityScheme } from '@stoplight/types'
 import { useDebounceFn } from '@vueuse/core'
+import { OAS_EXT_KONG_CLIENT_CREDENTIALS } from '@/oas-extensions'
 
 const props = defineProps({
   schemeKey: {
@@ -158,11 +167,13 @@ const props = defineProps({
 
 const { authInputs, authHeadersMap } = composables.useAuth()
 
+const showClientSecret = ref(false)
+
 const resetToken = () => {
   authInputs.value[`${props.schemeKey}-token`] = ''
 }
 
-const extraTokenRequestParameters = computed((): ExtraTokenRequestParameter[] => (props.scheme.extensions?.['x-kong-client-credentials-config'] as XKongClientCredentialsConfig)?.extraTokenRequestParameters || [])
+const extraTokenRequestParameters = computed((): ExtraTokenRequestParameter[] => (props.scheme.extensions?.[OAS_EXT_KONG_CLIENT_CREDENTIALS] as XKongClientCredentialsConfig)?.extraTokenRequestParameters || [])
 
 const setAllScopes = (value: boolean) => {
   Object.entries(props.scheme.flows.clientCredentials?.scopes || {}).forEach(([scopeKey]) => {
@@ -307,8 +318,26 @@ watch(extraTokenRequestParameters, (newValue) => {
     }
   }
 
-  input[type=text], input[type=password] {
+  input[type=text] {
     @include input-default;
+  }
+
+  .input-wrapper {
+    align-items: center;
+    display: flex;
+    position: relative;
+
+    input {
+      flex: 1;
+      @include input-default;
+      padding-right: var(--kui-space-80, $kui-space-80);
+    }
+
+    .visibility-toggle-btn {
+      padding-right: var(--kui-space-40, $kui-space-40);
+      position: absolute;
+      right: 0;
+    }
   }
 
   .scope-wrapper {
