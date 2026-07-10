@@ -88,6 +88,15 @@ defineProps({
     display: block;
   }
 
+  .overview-additional-info-license[href],
+  .overview-additional-info-external-docs {
+    @include link;
+  }
+
+  .overview-additional-info-contact a {
+    @include link;
+  }
+
   > :not(:first-child) {
     margin-top: var(--kui-space-50, $kui-space-50);
   }
