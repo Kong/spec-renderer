@@ -249,6 +249,50 @@ describe('crawl', () => {
     })
   })
 
+  it('should render an empty array when array has no default and generic (non-object) items', () => {
+    const objData = {
+      'type': 'object',
+      'properties': {
+        'tags': {
+          'type': 'array',
+          'items': {
+            'type': 'string',
+          },
+        },
+      },
+    }
+
+    const res = crawl({ objData, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })
+    expect(res).toEqual({
+      'tags': [],
+    })
+  })
+
+  it('should generate a sample object inside the array when array has no default and object items', () => {
+    const objData = {
+      'type': 'object',
+      'properties': {
+        'items': {
+          'type': 'array',
+          'items': {
+            'type': 'object',
+            'properties': {
+              'id': { 'type': 'string' },
+              'count': { 'type': 'integer' },
+            },
+          },
+        },
+      },
+    }
+
+    const res = crawl({ objData, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })
+    expect(res).toEqual({
+      'items': [
+        { 'id': 'id', 'count': 0 },
+      ],
+    })
+  })
+
   it('TDX-5892, value from enum', () => {
 
     const objData = {

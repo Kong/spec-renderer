@@ -235,8 +235,13 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
                 nestedLevel: nestedLevel + 1,
                 filteringOptions,
               }) ?? extractSampleForParam(oData, key)
-            // if the exampleArrayItem is itself an array then we don't need to wrap it in an array
-            sampleObj[key] = Array.isArray(exampleArrayItem) ? exampleArrayItem : [exampleArrayItem]
+            // if the exampleArrayItem is itself an array then we don't need to wrap it in an array.
+            // extractSampleForParam falls back to the literal '[]' when the item has no example/default/enum
+            // of its own (oData.type here is always 'array', the property's own type) - in that case there's
+            // no real item to show, so render an empty array rather than wrapping the fallback string.
+            sampleObj[key] = Array.isArray(exampleArrayItem)
+              ? exampleArrayItem
+              : exampleArrayItem === '[]' ? [] : [exampleArrayItem]
           }
         } else if (oDataType === 'object' || oData.allOf) {
           const res = doCrawl({ objData: oData || {}, parentKey: key, nestedLevel: nestedLevel + 1, filteringOptions })
