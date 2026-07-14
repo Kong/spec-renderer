@@ -1,3 +1,10 @@
+## [1.108.2](https://github.com/Kong/spec-renderer/compare/v1.108.1...v1.108.2) (2026-07-14)
+
+
+### Bug Fixes
+
+* render default values for empty and non-empty arrays correctly [TDX-8454] ([#903](https://github.com/Kong/spec-renderer/issues/903)) ([7c2f6cb](https://github.com/Kong/spec-renderer/commit/7c2f6cbbddb723d5a837538b106ed2972edac6cf))
+
 ## [1.108.1](https://github.com/Kong/spec-renderer/compare/v1.108.0...v1.108.1) (2026-07-10)
 
 
