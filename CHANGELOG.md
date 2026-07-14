@@ -1,3 +1,10 @@
+## [1.108.3](https://github.com/Kong/spec-renderer/compare/v1.108.2...v1.108.3) (2026-07-14)
+
+
+### Bug Fixes
+
+* prevent serialization of nullish values in query parameters [TDX-8208] ([#908](https://github.com/Kong/spec-renderer/issues/908)) ([21895c8](https://github.com/Kong/spec-renderer/commit/21895c87a5404dd57999bfdf1658f027c5d77228))
+
 ## [1.108.2](https://github.com/Kong/spec-renderer/compare/v1.108.1...v1.108.2) (2026-07-14)
 
 
