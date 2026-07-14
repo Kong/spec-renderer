@@ -317,7 +317,9 @@ watch(params, (newParams) => {
       // preserve user-edited values while on the same operation
       // but force-update when the required toggle changed, the user navigated to a different operation, or the content type switched
       if (!Object.keys(fieldValues.value).includes(key) || toggleChanged || operationChanged || contentTypeChanged) {
-        fieldValues.value[key] = samples[key]
+        // keep params without a generated sample in the same empty state as a field the user has cleared
+        // Assigning undefined here causes URLSearchParams to serialize the literal string "undefined"
+        fieldValues.value[key] = samples[key] ?? ''
       }
     })
   }

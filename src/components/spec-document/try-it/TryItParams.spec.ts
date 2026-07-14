@@ -142,6 +142,35 @@ describe('<TryItParams />', () => {
       const expectedQuery = `page%5Bsize%5D=${exampleValues.pageSize}&page%5Bnumber%5D=${newPageNumber}`
       expect(wrapper.emitted('request-query-changed')).toEqual([[expectedQuery]])
     })
+
+    it('does not include untouched optional query parameters without examples', () => {
+      testData.props.paramType = 'query'
+      const data = structuredClone(testData.props.data)
+      data.request.query = [
+        {
+          name: 'filter',
+          required: false,
+          examples: [],
+          schema: { type: 'string' },
+        },
+        {
+          name: 'sort',
+          required: false,
+          examples: [],
+          schema: { type: 'string' },
+        },
+      ]
+
+      const wrapper = mount(TryItParams, {
+        props: {
+          ...testData.props,
+          data,
+        },
+      })
+
+      expect(wrapper.findTestId('tryit-query-param-filter-123').element).toHaveProperty('value', '')
+      expect(wrapper.findTestId('tryit-query-param-sort-123').element).toHaveProperty('value', '')
+    })
   })
 
   describe('body parameters', () => {

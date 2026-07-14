@@ -160,6 +160,29 @@ describe('getSampleQuery', () => {
     })).toEqual('required=')
   })
 
+  it('does not serialize nullish field values as strings', () => {
+    const data = {
+      id: 'test-id',
+      method: 'get',
+      path: '/search',
+      request: {
+        query: [
+          { name: 'unset', required: false },
+          { name: 'missing', required: false },
+          { name: 'empty', required: false },
+          { name: 'required', required: true },
+        ],
+      },
+    }
+
+    expect(getSampleQuery(data as any, {
+      unset: undefined,
+      missing: null,
+      empty: '',
+      required: '',
+    })).toEqual('required=')
+  })
+
   it('should use param names (not array indices) for Stoplight params with null examples', () => {
     expect(getSampleQuery({
       id: '913107ebad7de',

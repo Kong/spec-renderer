@@ -106,15 +106,16 @@ export const getSamplePath = (data: IHttpOperation, fieldValues?: Record<string,
  * @param fieldValues user inputs
  * @returns query string
  */
-export const getSampleQuery = (data: IHttpOperation, fieldValues?: Record<string, string> | undefined): string => {
+export const getSampleQuery = (data: IHttpOperation, fieldValues?: Record<string, string | null | undefined> | undefined): string => {
 
   const myFieldValues = fieldValues || extractSample(data.request?.query) || {}
   const urlParams = new URLSearchParams()
 
   Object.keys(myFieldValues).forEach(key => {
     const isRequired = data.request?.query?.find(r => r.name === key)?.required
-    if (isRequired || myFieldValues[key] !== '') {
-      urlParams.append(key, myFieldValues[key])
+    const value = myFieldValues[key]
+    if (value !== null && value !== undefined && (isRequired || value !== '')) {
+      urlParams.append(key, value)
     }
   })
 
