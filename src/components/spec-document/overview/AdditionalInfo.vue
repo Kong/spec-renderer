@@ -86,6 +86,16 @@ defineProps({
   .overview-additional-info-external-docs,
   .overview-additional-info-contact {
     display: block;
+    width: fit-content;
+  }
+
+  .overview-additional-info-license[href],
+  .overview-additional-info-external-docs {
+    @include link;
+  }
+
+  .overview-additional-info-contact a {
+    @include link;
   }
 
   > :not(:first-child) {
