@@ -70,8 +70,8 @@ importers:
         specifier: ^1.1.11
         version: 1.1.11(vue@3.5.39(typescript@5.9.3))
       '@kong/icons':
-        specifier: ^1.60.0
-        version: 1.60.0(vue@3.5.39(typescript@5.9.3))
+        specifier: ^1.61.2
+        version: 1.61.2(vue@3.5.39(typescript@5.9.3))
       '@stoplight/http-spec':
         specifier: ^7.1.0
         version: 7.1.0
@@ -991,8 +991,8 @@ packages:
       vue-eslint-parser:
         optional: true
 
-  '@kong/icons@1.60.0':
-    resolution: {integrity: sha512-WmGk/ugjTMh2+kr0TrtfKThW/oTGl79jJv0/vYOwAPqgtTun6sokJYvZtDw13aidDaLTpqiBqRO/1GnJDZhwzA==}
+  '@kong/icons@1.61.2':
+    resolution: {integrity: sha512-Q8fWPdrMIDQeFoNaA+cgtxRXooBp2P3HLjoGmmZkRd4TEYSrXh5rqXMGPWQ9HCxrEXJSHYKmIa4YMhVdhiE+jw==}
     engines: {node: '>=18.17.0', pnpm: '>=10.28.2'}
     peerDependencies:
       vue: '>= 3.3.4 < 4'
@@ -6661,7 +6661,7 @@ snapshots:
     optionalDependencies:
       vue-eslint-parser: 10.4.1(eslint@10.6.0(jiti@2.4.2))
 
-  '@kong/icons@1.60.0(vue@3.5.39(typescript@5.9.3))':
+  '@kong/icons@1.61.2(vue@3.5.39(typescript@5.9.3))':
     dependencies:
       vue: 3.5.39(typescript@5.9.3)
 
