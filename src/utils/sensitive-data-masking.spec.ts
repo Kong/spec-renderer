@@ -277,6 +277,49 @@ describe('hasMasking', () => {
   it('returns false for undefined schema and empty rules', () => {
     expect(hasMasking(undefined, [])).toBe(false)
   })
+
+  // a schema whose properties cycle back to an ancestor (a live circular object reference,
+  // as produced by dereferencing a circular $ref) must not recurse forever
+  it('does not recurse forever when the schema is circular and has no sensitive data', () => {
+    const schemaA: Record<string, any> = { properties: { name: { type: 'string' } } }
+    const schemaB: Record<string, any> = { properties: { parent: schemaA } }
+    schemaA.properties.child = schemaB
+
+    expect(() => hasMasking(schemaA, [])).not.toThrow()
+    expect(hasMasking(schemaA, [])).toBe(false)
+  })
+
+  // resolveSchemaObjectFields returns a freshly-copied object for array-typed schemas (to hoist
+  // the items' fields up), so a naive guard keyed on the resolved object would never match on
+  // repeat visits. This is the shape of the real production bug: a "children" array property
+  // whose items $ref back to the same schema.
+  it('does not recurse forever when the cycle passes through an array-typed property', () => {
+    const schemaA: Record<string, any> = {
+      properties: {
+        name: { type: 'string' },
+        children: {
+          type: 'array',
+          items: {},
+        },
+      },
+    }
+    schemaA.properties.children.items = schemaA
+
+    expect(() => hasMasking(schemaA, [])).not.toThrow()
+    expect(hasMasking(schemaA, [])).toBe(false)
+  })
+
+  it('still finds sensitive data reachable before a circular reference is hit', () => {
+    const schemaA: Record<string, any> = {
+      properties: {
+        password: { type: 'string', 'x-sensitive-data': { mask: 'full' } as XSensitiveData },
+      },
+    }
+    const schemaB: Record<string, any> = { properties: { parent: schemaA } }
+    schemaA.properties.child = schemaB
+
+    expect(hasMasking(schemaA, [])).toBe(true)
+  })
 })
 
 describe('findResponseSchema', () => {

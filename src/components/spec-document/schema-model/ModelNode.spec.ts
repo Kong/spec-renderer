@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, mount } from '@vue/test-utils'
 import ModelNode from './ModelNode.vue'
 import type { SchemaObject } from '@/types'
 
@@ -56,5 +56,40 @@ describe('<ModelNode />', () => {
     for (const property in schema.properties) {
       expect(wrapper.findTestId(`model-property-${property}`).exists()).toBe(true)
     }
+  })
+
+  // a schema whose oneOf/anyOf variants cycle back to an ancestor renders eagerly (unlike
+  // nested properties, which need a manual "Show Child Parameters" click), so without a
+  // recursion cap this would mount ModelNode/ModelProperty forever and crash the tab
+  it('does not recurse forever when oneOf variants form a cycle', () => {
+    const schemaA: SchemaObject = { type: 'object', title: 'A' }
+    const schemaB: SchemaObject = { type: 'object', title: 'B' }
+    schemaA.oneOf = [schemaB]
+    schemaB.oneOf = [schemaA]
+
+    expect(() => {
+      mount(ModelNode, {
+        props: {
+          schema: schemaA,
+          title: 'A',
+        },
+      })
+    }).not.toThrow()
+  })
+
+  it('does not recurse forever when anyOf variants form a cycle', () => {
+    const schemaA: SchemaObject = { type: 'object', title: 'A' }
+    const schemaB: SchemaObject = { type: 'object', title: 'B' }
+    schemaA.anyOf = [schemaB]
+    schemaB.anyOf = [schemaA]
+
+    expect(() => {
+      mount(ModelNode, {
+        props: {
+          schema: schemaA,
+          title: 'A',
+        },
+      })
+    }).not.toThrow()
   })
 })

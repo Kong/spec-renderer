@@ -1,6 +1,6 @@
 import type { HttpSecurityScheme, IHttpOperationResponse } from '@stoplight/types'
 import type { XSensitiveData, SecuritySchemeMaskRule } from '@/types'
-import { resolveSchemaObjectFields } from './schema-model'
+import { isValidSchemaObject, resolveSchemaObjectFields } from './schema-model'
 import { OAS_EXT_SENSITIVE_DATA } from '@/oas-extensions'
 
 // ─── Mask placeholder ─────────────────────────────────────────────────────────
@@ -278,13 +278,23 @@ export const maskBodyExample = (example: unknown, schema: Record<string, any>): 
 /**
  * Return true if any property in the schema (recursively) has an x-sensitive-data annotation.
  * Used internally by hasMasking — prefer calling hasMasking directly.
+ *
+ * `seen` guards against a circular `$ref` (preserved as a live circular object reference)
+ * recursing forever. It tracks each property's raw, pre-resolve object, not the result of
+ * resolveSchemaObjectFields: that helper returns a freshly-copied object for array-typed or
+ * allOf-bearing schemas, so tracking the resolved copy would give every visit a new identity
+ * and the guard would never match. A single visited-once set is safe here, unlike a filtering
+ * walk: this is a pure boolean predicate, so a schema's answer doesn't depend on which path
+ * reached it, and whichever branch finds sensitive data first already short-circuits the walk.
  */
-const _schemaHasSensitiveData = (schema: Record<string, any> | undefined): boolean => {
+const _schemaHasSensitiveData = (schema: Record<string, any> | undefined, seen: WeakSet<object> = new WeakSet()): boolean => {
   if (!schema) return false
   for (const propSchema of Object.values(schema.properties ?? {})) {
+    if (!isValidSchemaObject(propSchema) || seen.has(propSchema)) continue
+    seen.add(propSchema)
     const prop = resolveSchemaObjectFields(propSchema) as Record<string, any>
     if (prop?.[OAS_EXT_SENSITIVE_DATA]) return true
-    if (prop?.properties && _schemaHasSensitiveData(prop)) return true
+    if (prop?.properties && _schemaHasSensitiveData(prop, seen)) return true
   }
   return false
 }

@@ -112,7 +112,7 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
     WeakMap we store child objData's sampleObjects in weakMap so that when
     we see it's already stored, instead of extracting sampleObject again and again, we use what already extracted and stored in the WeakMap
   */
-  const seen = new WeakMap()
+  const seen = new WeakMap<Record<string, any>, Record<string, any>>()
 
   /**
  * util to generate example for inherited fields like allOf, anyOf, oneOf
@@ -190,9 +190,9 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
     /*
       here is where we do lookup into WeakMap, and we we already have record there, just return already parsed sample object
     */
-    const seenRecord = seen.get(objData)
-    if (seenRecord) {
-      return seenRecord.seenSample
+    const seenSample = seen.get(objData)
+    if (seenSample) {
+      return seenSample
     }
 
 
@@ -274,7 +274,7 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
     /*
       now, as we have sampleObj for objData extracted, we store it in the WeakMap for future child objects to use
     */
-    seen.set(objData, { sampleObj, parentKey })
+    seen.set(objData, sampleObj)
     return sampleObj
   }
 

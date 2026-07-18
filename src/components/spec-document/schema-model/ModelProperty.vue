@@ -16,7 +16,7 @@
     />
 
     <div
-      v-if="variantSelectItemList.length"
+      v-if="variantSelectItemList.length && !variantRecursionLimitReached"
       class="selected-variant-container"
     >
       <ModelProperty
@@ -25,6 +25,7 @@
         :property="selectedSchemaModel"
         :property-name="selectedSchemaModel.title || variantSelectItemList[selectedVariantIndex]?.label || ''"
         :required-fields="selectedSchemaModel.required"
+        :variant-depth="variantDepth + 1"
       />
     </div>
 
@@ -50,6 +51,7 @@
         :depth="depth + 1"
         :schema="selectedSchemaModel"
         :title="propertyName"
+        :variant-depth="variantDepth"
       />
     </details>
   </div>
@@ -65,7 +67,7 @@ import type { SchemaObject } from '@/types'
 import ModelNode from './ModelNode.vue'
 import useSchemaVariants from '@/composables/useSchemaVariants'
 import PropertyFieldList from './PropertyFieldList.vue'
-import { DEFAULT_EXPANDED_PROPERTIES_DEPTH } from '@/constants'
+import { DEFAULT_EXPANDED_PROPERTIES_DEPTH, MAX_VARIANT_RECURSION_DEPTH } from '@/constants'
 
 const props = defineProps({
   property: {
@@ -94,9 +96,19 @@ const props = defineProps({
     type: Number,
     default: 1,
   },
+  /**
+   * How many oneOf/anyOf variant hops deep the current property is.
+   * Unlike nested properties (gated behind a manual "Show Child Parameters" click),
+   * variants render eagerly, so a circular schema needs this counter to stop recursion.
+   */
+  variantDepth: {
+    type: Number,
+    default: 0,
+  },
 })
 
 const maxExpandedDepth = inject<Ref<number>>('max-expanded-depth', ref(DEFAULT_EXPANDED_PROPERTIES_DEPTH))
+const variantRecursionLimitReached = computed(() => props.variantDepth >= MAX_VARIANT_RECURSION_DEPTH)
 
 const nestedPropertiesExpanded = ref(props.depth < maxExpandedDepth.value)
 

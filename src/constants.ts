@@ -141,3 +141,8 @@ export const MIN_SCROLL_DIFFERENCE = 20
 export const DISABLE_SCROLLING_ITEMS_LIMIT = 1200
 
 export const DEFAULT_EXPANDED_PROPERTIES_DEPTH = 1
+
+// oneOf/anyOf variants render eagerly (unlike nested properties, which require a manual
+// "Show Child Parameters" click), so a schema whose variants cycle back to an ancestor needs
+// its own recursion cap to avoid mounting components forever
+export const MAX_VARIANT_RECURSION_DEPTH = 10

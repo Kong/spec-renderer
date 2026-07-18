@@ -19,12 +19,13 @@
       </div>
       <!-- if the schema model has variants, render the selected variant -->
       <ModelProperty
-        v-if="selectedSchemaModel?.oneOf || selectedSchemaModel?.anyOf"
+        v-if="(selectedSchemaModel?.oneOf || selectedSchemaModel?.anyOf) && !variantRecursionLimitReached"
         :base-path-id="basePathId"
         :depth="depth"
         :property="selectedSchemaModel"
         :property-name="selectedSchemaModel.title || variantSelectItemList[selectedVariantIndex]?.label || ''"
         :required-fields="selectedSchemaModel?.required"
+        :variant-depth="variantDepth + 1"
       />
     </template>
 
@@ -42,6 +43,7 @@
         :property="property"
         :property-name="propertyName.toString()"
         :required-fields="selectedSchemaModel?.required"
+        :variant-depth="variantDepth"
       />
     </template>
   </div>
@@ -56,6 +58,7 @@ import type { SchemaObject, SelectItem } from '@/types'
 import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 import useSchemaVariants from '@/composables/useSchemaVariants'
 import VariantLabel from '@/components/common/VariantLabel.vue'
+import { MAX_VARIANT_RECURSION_DEPTH } from '@/constants'
 
 const props = defineProps({
   schema: {
@@ -88,7 +91,18 @@ const props = defineProps({
     type: Number,
     default: 1,
   },
+  /**
+   * How many oneOf/anyOf variant hops deep the current node is.
+   * Unlike nested properties (gated behind a manual "Show Child Parameters" click),
+   * variants render eagerly, so a circular schema needs this counter to stop recursion.
+   */
+  variantDepth: {
+    type: Number,
+    default: 0,
+  },
 })
+
+const variantRecursionLimitReached = computed(() => props.variantDepth >= MAX_VARIANT_RECURSION_DEPTH)
 
 const resolvedSchemaObject = computed(() => resolveSchemaObjectFields(props.schema))
 const { variantSelectItemList, selectedSchemaModel, selectedVariantIndex, inheritanceTypeLabel } = useSchemaVariants(resolvedSchemaObject)

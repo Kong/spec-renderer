@@ -184,6 +184,33 @@ describe('crawl', () => {
     expect(crawl({ objData, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })).toEqual({ age: 0, name: 'name', refToName: 0 })
   })
 
+  it('reuses the memoized sample for a schema shared by reference across sibling properties', () => {
+    // both properties point at the exact same schema object, as two sibling properties
+    // referencing the same $ref would after dereferencing
+    const shared = {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          example: 'shared-id',
+        },
+      },
+    }
+    const objData = {
+      type: 'object',
+      properties: {
+        first: shared,
+        second: shared,
+      },
+    }
+
+    const res = crawl({ objData, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })
+    expect(res).toEqual({
+      first: { id: 'shared-id' },
+      second: { id: 'shared-id' },
+    })
+  })
+
   it('should handle array example', () => {
     const objData = {
       'type': 'object',
