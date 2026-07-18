@@ -150,10 +150,15 @@ type SchemaPropertyFilterMethod = (property: SchemaObject) => boolean
 
 /**
  * Utility to filter out fields from a properties object based on the conditions in filterMethod
+ *
+ * @param seen Memoizes the filtered result per schema object, keyed by the original object's
+ * identity. Revisiting the same object (a circular `$ref`, or a schema shared non-circularly by
+ * sibling properties) returns the already-filtered result instead of recursing again.
  */
 function filterSchemaProperties(
   propertiesObject: SchemaObject['properties'],
   filterMethod: SchemaPropertyFilterMethod,
+  seen: WeakMap<object, SchemaObject>,
 ): NonNullable<SchemaObject['properties']> {
   if (!propertiesObject) return {}
 
@@ -176,7 +181,7 @@ function filterSchemaProperties(
      * - properties under oneOf/anyOf, if present
      * which is done by calling removeFieldsFromSchemaObject
      */
-    filteredObj[key] = removeFieldsFromSchemaObject(currentItem, filterMethod)
+    filteredObj[key] = removeFieldsFromSchemaObject(currentItem, filterMethod, seen)
   })
 
   return filteredObj
@@ -190,39 +195,101 @@ function filterSchemaProperties(
  * - properties of current object
  * - items object
  * - oneOf/anyOf
+ *
+ * @param seen Internal only: memoizes the filtered result per schema object, keyed by identity
+ * (see `filterSchemaProperties` above). Without this, a circular `$ref` (the parser preserves
+ * these as live circular object references via `dereference: { circular: true }`) recurses
+ * forever, throwing "Converting circular structure to JSON" or "Maximum call stack size
+ * exceeded" and crashing the whole document render.
+ *
+ * The result is registered in `seen` before recursing into its own properties/items/oneOf/anyOf,
+ * so a cycle back to this object resolves to that same (by-then fully populated) result instead
+ * of a raw copy of the original. `seen` is never cleared, so a schema reached via more than one
+ * non-circular path is also filtered once and shared across occurrences.
+ *
+ * `seen` only guards against revisiting an object; it does not bound sheer nesting depth. A
+ * schema nested deep enough, even without a cycle, can still overflow the stack, since both
+ * `JSON.stringify` and its `removeCircularRefs` fallback walk the whole remaining subtree in one
+ * call. Each step below (the initial clone, and the properties/items/oneOf/anyOf recursion) has
+ * its own `try`/`catch` so a stack overflow (or any other error) only degrades that one step,
+ * keeping the rest of this node's already-filtered fields intact instead of discarding the whole
+ * node or document.
  */
-export function removeFieldsFromSchemaObject(schemaObject: SchemaObject, filterMethod: SchemaPropertyFilterMethod = removeReadonlyFields): SchemaObject {
-  const newObj: SchemaObject = JSON.parse(JSON.stringify(schemaObject))
+export function removeFieldsFromSchemaObject(schemaObject: SchemaObject, filterMethod: SchemaPropertyFilterMethod = removeReadonlyFields, seen: WeakMap<object, SchemaObject> = new WeakMap()): SchemaObject {
+  const cached = seen.get(schemaObject)
+  if (cached) return cached
+
+  let newObj: SchemaObject
+  // a RangeError means we've hit real stack depth (not just a circular reference, which throws
+  // TypeError). Recursing further would just repeat the same overflow at every remaining level,
+  // so give up on this whole subtree right away instead of retrying node by node.
+  let stackOverflowed = false
+  try {
+    newObj = JSON.parse(JSON.stringify(schemaObject))
+  } catch (err) {
+    if (err instanceof RangeError) {
+      newObj = { ...schemaObject }
+      stackOverflowed = true
+    } else {
+      try {
+        // schemaObject contains a circular reference; fall back to a circular-safe clone
+        newObj = removeCircularRefs(schemaObject)
+      } catch (err2) {
+        newObj = { ...schemaObject }
+        stackOverflowed = err2 instanceof RangeError
+      }
+    }
+  }
+
+  seen.set(schemaObject, newObj)
+
+  if (stackOverflowed) {
+    return newObj
+  }
 
   if (schemaObject.properties) {
-    const filteredProperties = filterSchemaProperties(schemaObject.properties, filterMethod)
-    newObj.properties = filteredProperties
+    try {
+      newObj.properties = filterSchemaProperties(schemaObject.properties, filterMethod, seen)
+    } catch {
+      // leave whatever `properties` the initial clone produced
+    }
   }
   if (isValidSchemaObject(schemaObject.items)) {
-    // items itself is a valid schema object, so we need to filter its properties, oneOf and anyOf
-    const filteredItemsObject = removeFieldsFromSchemaObject(schemaObject.items, filterMethod)
-    newObj.items = filteredItemsObject
+    try {
+      // items itself is a valid schema object, so we need to filter its properties, oneOf and anyOf
+      newObj.items = removeFieldsFromSchemaObject(schemaObject.items, filterMethod, seen)
+    } catch {
+      // leave whatever `items` the initial clone produced
+    }
   }
   if (schemaObject.oneOf?.length) {
-    const newOneOfList: SchemaObject['oneOf'] = []
-    schemaObject.oneOf.forEach((item) => {
-      // if the item is not a valid schema object or it fails the condiiton in filterMethod, we skip it
-      if (!isValidSchemaObject(item) || filterMethod(item)) return
+    try {
+      const newOneOfList: SchemaObject['oneOf'] = []
+      schemaObject.oneOf.forEach((item) => {
+        // if the item is not a valid schema object or it fails the condiiton in filterMethod, we skip it
+        if (!isValidSchemaObject(item) || filterMethod(item)) return
 
-      // if the item is valid, we remove the fields from its properties
-      const filteredProperties = filterSchemaProperties(item.properties, filterMethod)
-      newOneOfList.push({ ...item, properties: filteredProperties })
-    })
-    newObj.oneOf = newOneOfList
+        // recurse through the same cycle-safe walk used for properties/items, so an array-typed
+        // (or otherwise nested) oneOf branch is filtered and cycle-guarded too, not just its
+        // top-level properties
+        newOneOfList.push(removeFieldsFromSchemaObject(item, filterMethod, seen))
+      })
+      newObj.oneOf = newOneOfList
+    } catch {
+      // leave whatever `oneOf` the initial clone produced
+    }
   }
   if (schemaObject.anyOf?.length) {
-    const newAnyOfList: SchemaObject['anyOf'] = []
-    schemaObject.anyOf.forEach((item) => {
-      if (!isValidSchemaObject(item) || filterMethod(item)) return
-      const filteredProperties = filterSchemaProperties(item.properties, filterMethod)
-      newAnyOfList.push({ ...item, properties: filteredProperties })
-    })
-    newObj.anyOf = newAnyOfList
+    try {
+      const newAnyOfList: SchemaObject['anyOf'] = []
+      schemaObject.anyOf.forEach((item) => {
+        if (!isValidSchemaObject(item) || filterMethod(item)) return
+        newAnyOfList.push(removeFieldsFromSchemaObject(item, filterMethod, seen))
+      })
+      newObj.anyOf = newAnyOfList
+    } catch {
+      // leave whatever `anyOf` the initial clone produced
+    }
   }
 
   return newObj
