@@ -196,24 +196,19 @@ function filterSchemaProperties(
  * - items object
  * - oneOf/anyOf
  *
- * @param seen Internal only: memoizes the filtered result per schema object, keyed by identity
- * (see `filterSchemaProperties` above). Without this, a circular `$ref` (the parser preserves
- * these as live circular object references via `dereference: { circular: true }`) recurses
- * forever, throwing "Converting circular structure to JSON" or "Maximum call stack size
- * exceeded" and crashing the whole document render.
+ * @param schemaObject The schema object to filter
+ * @param filterMethod Decides whether a given property should be removed
+ * @param seen Internal only: memoizes the filtered result per schema object, keyed by identity.
+ * A circular `$ref` (preserved as a live circular object reference via
+ * `dereference: { circular: true }`) would otherwise recurse forever and crash the render, so the
+ * result is registered before recursing into its own properties/items/oneOf/anyOf, letting a
+ * cycle resolve to that same object instead of an unfiltered copy. It also means a schema reached
+ * via more than one non-circular path is filtered once and shared, not reprocessed.
  *
- * The result is registered in `seen` before recursing into its own properties/items/oneOf/anyOf,
- * so a cycle back to this object resolves to that same (by-then fully populated) result instead
- * of a raw copy of the original. `seen` is never cleared, so a schema reached via more than one
- * non-circular path is also filtered once and shared across occurrences.
- *
- * `seen` only guards against revisiting an object; it does not bound sheer nesting depth. A
- * schema nested deep enough, even without a cycle, can still overflow the stack, since both
- * `JSON.stringify` and its `removeCircularRefs` fallback walk the whole remaining subtree in one
- * call. Each step below (the initial clone, and the properties/items/oneOf/anyOf recursion) has
- * its own `try`/`catch` so a stack overflow (or any other error) only degrades that one step,
- * keeping the rest of this node's already-filtered fields intact instead of discarding the whole
- * node or document.
+ * `seen` only guards against revisiting an object, not sheer nesting depth, since a single
+ * `JSON.stringify` call (and its `removeCircularRefs` fallback) can still overflow the stack on a
+ * very deeply nested schema. Each step below has its own `try`/`catch` so that failure only
+ * degrades that one step, not the whole node or document.
  */
 export function removeFieldsFromSchemaObject(schemaObject: SchemaObject, filterMethod: SchemaPropertyFilterMethod = removeReadonlyFields, seen: WeakMap<object, SchemaObject> = new WeakMap()): SchemaObject {
   const cached = seen.get(schemaObject)
