@@ -19,7 +19,7 @@
       </div>
       <!-- if the schema model has variants, render the selected variant -->
       <ModelProperty
-        v-if="(selectedSchemaModel?.oneOf || selectedSchemaModel?.anyOf) && !isCircularVariant && !variantRecursionLimitReached"
+        v-if="rawSelectedVariant && !isCircularVariant && !variantRecursionLimitReached"
         :ancestor-schemas="ancestorsIncludingSelf"
         :base-path-id="basePathId"
         :depth="depth"

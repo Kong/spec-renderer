@@ -143,4 +143,41 @@ describe('<ModelNode />', () => {
       expect(wrapper.findTestId(`model-property-${kebabCase(`Variant${i}`)}`).exists()).toBe(true)
     }
   })
+
+  // the common case: a oneOf/anyOf variant is a plain schema with no oneOf/anyOf of its own.
+  // gating the variant render on the SELECTED variant having its own oneOf/anyOf (rather than on
+  // there being a selected variant at all) means this - the typical case - never renders
+  it('renders the selected oneOf variant even when the variant itself has no nested oneOf/anyOf', () => {
+    const wrapper = mount(ModelNode, {
+      props: {
+        schema: {
+          type: 'object',
+          title: 'Root',
+          oneOf: [
+            { type: 'object', title: 'PlainVariant', properties: { id: { type: 'string' } } },
+          ],
+        },
+        title: 'Root',
+      },
+    })
+
+    expect(wrapper.findTestId(`model-property-${kebabCase('PlainVariant')}`).exists()).toBe(true)
+  })
+
+  it('renders the selected anyOf variant even when the variant itself has no nested oneOf/anyOf', () => {
+    const wrapper = mount(ModelNode, {
+      props: {
+        schema: {
+          type: 'object',
+          title: 'Root',
+          anyOf: [
+            { type: 'object', title: 'PlainVariant', properties: { id: { type: 'string' } } },
+          ],
+        },
+        title: 'Root',
+      },
+    })
+
+    expect(wrapper.findTestId(`model-property-${kebabCase('PlainVariant')}`).exists()).toBe(true)
+  })
 })

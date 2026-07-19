@@ -245,7 +245,10 @@ export function removeFieldsFromSchemaObject(schemaObject: SchemaObject, filterM
   if (schemaObject.properties) {
     try {
       newObj.properties = filterSchemaProperties(schemaObject.properties, filterMethod, seen)
-    } catch {
+    } catch (err) {
+      // only stack depth is expected here; anything else is a real bug and should surface, not
+      // vanish into an unfiltered field
+      if (!(err instanceof RangeError)) throw err
       // leave whatever `properties` the initial clone produced
     }
   }
@@ -253,7 +256,8 @@ export function removeFieldsFromSchemaObject(schemaObject: SchemaObject, filterM
     try {
       // items itself is a valid schema object, so we need to filter its properties, oneOf and anyOf
       newObj.items = removeFieldsFromSchemaObject(schemaObject.items, filterMethod, seen)
-    } catch {
+    } catch (err) {
+      if (!(err instanceof RangeError)) throw err
       // leave whatever `items` the initial clone produced
     }
   }
@@ -270,7 +274,8 @@ export function removeFieldsFromSchemaObject(schemaObject: SchemaObject, filterM
         newOneOfList.push(removeFieldsFromSchemaObject(item, filterMethod, seen))
       })
       newObj.oneOf = newOneOfList
-    } catch {
+    } catch (err) {
+      if (!(err instanceof RangeError)) throw err
       // leave whatever `oneOf` the initial clone produced
     }
   }
@@ -282,7 +287,8 @@ export function removeFieldsFromSchemaObject(schemaObject: SchemaObject, filterM
         newAnyOfList.push(removeFieldsFromSchemaObject(item, filterMethod, seen))
       })
       newObj.anyOf = newAnyOfList
-    } catch {
+    } catch (err) {
+      if (!(err instanceof RangeError)) throw err
       // leave whatever `anyOf` the initial clone produced
     }
   }

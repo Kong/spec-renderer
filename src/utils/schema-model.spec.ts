@@ -695,4 +695,88 @@ describe('removeReadonlyFields', () => {
       expect(() => removeFieldsFromSchemaObject(root)).not.toThrow()
     })
   })
+
+  describe('error handling in filtering steps', () => {
+    // each step's try/catch is meant to tolerate stack depth (RangeError) only - anything else
+    // is a real bug in filterMethod (or a future regression) and must surface, not vanish into
+    // a silently unfiltered field
+    const throwingFilterMethod = (property: SchemaObject): boolean => {
+      if (property.title === 'boom') throw new Error('unexpected filter error')
+      return Boolean(property.readOnly)
+    }
+
+    it('propagates a non-RangeError thrown while filtering properties', () => {
+      const schemaObject: SchemaObject = {
+        type: 'object',
+        properties: { bad: { type: 'string', title: 'boom' } },
+      }
+      expect(() => removeFieldsFromSchemaObject(schemaObject, throwingFilterMethod)).toThrow('unexpected filter error')
+    })
+
+    it('propagates a non-RangeError thrown while filtering items', () => {
+      const schemaObject: SchemaObject = {
+        type: 'array',
+        items: { type: 'object', properties: { bad: { type: 'string', title: 'boom' } } },
+      }
+      expect(() => removeFieldsFromSchemaObject(schemaObject, throwingFilterMethod)).toThrow('unexpected filter error')
+    })
+
+    it('propagates a non-RangeError thrown while filtering oneOf', () => {
+      const schemaObject: SchemaObject = {
+        oneOf: [{ type: 'object', title: 'boom' }],
+      }
+      expect(() => removeFieldsFromSchemaObject(schemaObject, throwingFilterMethod)).toThrow('unexpected filter error')
+    })
+
+    it('propagates a non-RangeError thrown while filtering anyOf', () => {
+      const schemaObject: SchemaObject = {
+        anyOf: [{ type: 'object', title: 'boom' }],
+      }
+      expect(() => removeFieldsFromSchemaObject(schemaObject, throwingFilterMethod)).toThrow('unexpected filter error')
+    })
+
+    // a real 5000-level-deep schema is not a valid way to test this: JSON.stringify serializes
+    // the whole graph regardless of recursion depth, so it always overflows on the outermost
+    // call, before recursion ever reaches these four steps. Throwing RangeError directly from
+    // filterMethod exercises each step's own catch instead.
+    const rangeErrorFilterMethod = (): boolean => {
+      throw new RangeError('simulated stack depth')
+    }
+
+    it('swallows a RangeError while filtering properties and keeps the clone', () => {
+      const schemaObject: SchemaObject = { type: 'object', properties: { child: { type: 'string' } } }
+      let result: SchemaObject | undefined
+      expect(() => {
+        result = removeFieldsFromSchemaObject(schemaObject, rangeErrorFilterMethod)
+      }).not.toThrow()
+      expect(result?.properties).toEqual(schemaObject.properties)
+    })
+
+    it('swallows a RangeError while filtering items and keeps the clone', () => {
+      const schemaObject: SchemaObject = { type: 'array', items: { type: 'object', properties: { child: { type: 'string' } } } }
+      let result: SchemaObject | undefined
+      expect(() => {
+        result = removeFieldsFromSchemaObject(schemaObject, rangeErrorFilterMethod)
+      }).not.toThrow()
+      expect(result?.items).toEqual(schemaObject.items)
+    })
+
+    it('swallows a RangeError while filtering oneOf and keeps the clone', () => {
+      const schemaObject: SchemaObject = { oneOf: [{ type: 'object', title: 'A' }] }
+      let result: SchemaObject | undefined
+      expect(() => {
+        result = removeFieldsFromSchemaObject(schemaObject, rangeErrorFilterMethod)
+      }).not.toThrow()
+      expect(result?.oneOf).toEqual(schemaObject.oneOf)
+    })
+
+    it('swallows a RangeError while filtering anyOf and keeps the clone', () => {
+      const schemaObject: SchemaObject = { anyOf: [{ type: 'object', title: 'A' }] }
+      let result: SchemaObject | undefined
+      expect(() => {
+        result = removeFieldsFromSchemaObject(schemaObject, rangeErrorFilterMethod)
+      }).not.toThrow()
+      expect(result?.anyOf).toEqual(schemaObject.anyOf)
+    })
+  })
 })
