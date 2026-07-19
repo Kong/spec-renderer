@@ -16,13 +16,14 @@
     />
 
     <div
-      v-if="variantSelectItemList.length && !variantRecursionLimitReached"
+      v-if="variantSelectItemList.length && !isCircularVariant && !variantRecursionLimitReached"
       class="selected-variant-container"
     >
       <ModelProperty
+        :ancestor-schemas="ancestorsIncludingSelf"
         :base-path-id="propertyId"
         :depth="depth"
-        :property="selectedSchemaModel"
+        :property="rawSelectedVariant!"
         :property-name="selectedSchemaModel.title || variantSelectItemList[selectedVariantIndex]?.label || ''"
         :required-fields="selectedSchemaModel.required"
         :variant-depth="variantDepth + 1"
@@ -30,7 +31,7 @@
     </div>
 
     <details
-      v-else-if="nestedPropertiesPresent"
+      v-else-if="nestedPropertiesPresent && !isCircularVariant && !variantRecursionLimitReached"
       ref="nestedFields"
     >
       <summary
@@ -46,6 +47,7 @@
       </summary>
       <ModelNode
         v-if="nestedPropertiesExpanded"
+        :ancestor-schemas="ancestorsIncludingSelf"
         :base-path-id="propertyId"
         class="nested-model-node"
         :depth="depth + 1"
@@ -60,7 +62,7 @@
 <script setup lang="ts">
 import { computed, inject, onMounted, ref, useTemplateRef } from 'vue'
 import { AddIcon } from '@kong/icons'
-import { isSsr, kebabCase, resolveSchemaObjectFields } from '@/utils'
+import { isSsr, kebabCase } from '@/utils'
 import type { PropType, Ref } from 'vue'
 import type { SchemaObject } from '@/types'
 
@@ -97,13 +99,18 @@ const props = defineProps({
     default: 1,
   },
   /**
-   * How many oneOf/anyOf variant hops deep the current property is.
-   * Unlike nested properties (gated behind a manual "Show Child Parameters" click),
-   * variants render eagerly, so a circular schema needs this counter to stop recursion.
+   * Variant recursion depth backstop - see MAX_VARIANT_RECURSION_DEPTH.
    */
   variantDepth: {
     type: Number,
     default: 0,
+  },
+  /**
+   * Ancestor schemas already visited in this render chain - see useSchemaVariants.
+   */
+  ancestorSchemas: {
+    type: Object as PropType<Set<object>>,
+    default: () => new Set<object>(),
   },
 })
 
@@ -118,13 +125,16 @@ const nestedFieldsDetails = useTemplateRef('nestedFields')
 const dataTestId = computed(() => `model-property-${kebabCase(props.propertyName)}`)
 const propertyId = computed(() => props.basePathId ? kebabCase(`${props.basePathId}-${props.propertyName}`) : undefined)
 
-const resolvedSchemaObject = computed(() => resolveSchemaObjectFields(props.property))
 const {
+  resolvedSchemaObject,
   variantSelectItemList,
   selectedSchemaModel,
   selectedVariantIndex,
   inheritanceTypeLabel,
-} = useSchemaVariants(resolvedSchemaObject)
+  rawSelectedVariant,
+  isCircularVariant,
+  ancestorsIncludingSelf,
+} = useSchemaVariants(computed(() => props.property), computed(() => props.ancestorSchemas))
 
 const nestedPropertiesPresent = computed<boolean>(() => {
   if (selectedSchemaModel.value?.properties) {

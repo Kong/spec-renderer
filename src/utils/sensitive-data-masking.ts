@@ -279,13 +279,11 @@ export const maskBodyExample = (example: unknown, schema: Record<string, any>): 
  * Return true if any property in the schema (recursively) has an x-sensitive-data annotation.
  * Used internally by hasMasking — prefer calling hasMasking directly.
  *
- * `seen` guards against a circular `$ref` (preserved as a live circular object reference)
- * recursing forever. It tracks each property's raw, pre-resolve object, not the result of
- * resolveSchemaObjectFields: that helper returns a freshly-copied object for array-typed or
- * allOf-bearing schemas, so tracking the resolved copy would give every visit a new identity
- * and the guard would never match. A single visited-once set is safe here, unlike a filtering
- * walk: this is a pure boolean predicate, so a schema's answer doesn't depend on which path
- * reached it, and whichever branch finds sensitive data first already short-circuits the walk.
+ * `seen` guards against a circular `$ref` recursing forever, keyed on each property's raw,
+ * pre-resolve object (resolveSchemaObjectFields copies array/allOf schemas on every call, so
+ * keying on its output would never match a repeat visit). A visited-once set is safe here since
+ * this is a pure boolean predicate: the answer for a schema doesn't depend on which path reached
+ * it, and finding sensitive data anywhere already short-circuits the walk.
  */
 const _schemaHasSensitiveData = (schema: Record<string, any> | undefined, seen: WeakSet<object> = new WeakSet()): boolean => {
   if (!schema) return false

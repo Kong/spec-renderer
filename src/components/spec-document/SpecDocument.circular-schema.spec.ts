@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import SpecDocument from './SpecDocument.vue'
+import BodyContentList from './endpoint/BodyContentList.vue'
 import { parseOpenApiSpecDocument, parsedDocument, tableOfContents } from '@/utils/schema-parser'
 import type { ServiceNode } from '@/types'
 import type { TableOfContentsItem } from '@/stoplight/elements-core'
@@ -31,7 +32,20 @@ const recursiveSchemaSpec = {
             },
           },
         },
-        responses: { 200: { description: 'ok' } },
+        // the response reuses the same circular schema so mounting this operation page also
+        // exercises ResponseSample -> hasMasking -> _schemaHasSensitiveData, the function that
+        // actually crashed in production (a fix to a different function, removeFieldsFromSchemaObject,
+        // did not cover this path - only mounting the full page here proves it's fixed)
+        responses: {
+          200: {
+            description: 'ok',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/TreeNode' },
+              },
+            },
+          },
+        },
       },
     },
   },
@@ -52,6 +66,12 @@ const recursiveSchemaSpec = {
           children: {
             type: 'array',
             items: { $ref: '#/components/schemas/TreeNode' },
+          },
+          // a oneOf variant that cycles straight back to this same schema - the shape that
+          // triggers the ModelNode/ModelProperty variant-rendering regression, which renders
+          // eagerly (unlike children above, which needs a manual "Show Child Parameters" click)
+          variant: {
+            oneOf: [{ $ref: '#/components/schemas/TreeNode' }],
           },
         },
         additionalProperties: false,
@@ -81,11 +101,26 @@ describe('<SpecDocument /> with a self-referencing (circular) schema', () => {
       })
     }).not.toThrow()
 
-    // the readOnly `internalId` field must not appear anywhere in the rendered request body,
-    // including in the schema reached by recursing back around the cycle - not just its first
-    // occurrence (a prior version of this fix only stripped readOnly fields on the first pass
-    // through a cyclic schema, and leaked them back in on subsequent laps around the cycle)
-    expect(wrapper?.text()).not.toContain('internalId')
     expect(wrapper?.text()).toContain('children')
+
+    // the readOnly `internalId` field must not appear in the rendered REQUEST body model - the
+    // request body is the first BodyContentList on the page (hide-readonly is only passed for
+    // request bodies, HttpOperation.vue) - including after recursing back around the cycle, not
+    // just its first occurrence (a prior version of this fix only stripped readOnly fields on
+    // the first pass through a cyclic schema, and leaked them back in on subsequent laps)
+    const requestBody = wrapper?.findComponent(BodyContentList)
+    expect(requestBody?.exists()).toBe(true)
+    expect(requestBody?.text()).not.toContain('internalId')
+
+    // the readOnly field IS expected to appear in the response body model, since responses are
+    // not filtered - confirms the response model actually rendered too, not just skipped
+    expect(wrapper?.text()).toContain('internalId')
+
+    // the response sample section must have actually rendered (not been skipped or left blank)
+    // proving hasMasking ran to completion on the circular schema instead of crashing before
+    // this content could ever mount - graceful degradation means already-processed content
+    // like this still displays normally even though a sibling section (the oneOf variant above)
+    // hits a cycle guard
+    expect(wrapper?.find('[data-testid="response-sample"]').exists()).toBe(true)
   })
 })

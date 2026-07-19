@@ -142,7 +142,7 @@ export const DISABLE_SCROLLING_ITEMS_LIMIT = 1200
 
 export const DEFAULT_EXPANDED_PROPERTIES_DEPTH = 1
 
-// oneOf/anyOf variants render eagerly (unlike nested properties, which require a manual
-// "Show Child Parameters" click), so a schema whose variants cycle back to an ancestor needs
-// its own recursion cap to avoid mounting components forever
-export const MAX_VARIANT_RECURSION_DEPTH = 10
+// Backstop for oneOf/anyOf variant recursion (see useSchemaVariants' ancestor-chain guard,
+// the primary defense). Variants render eagerly, unlike nested properties, so a circular
+// schema needs a guard against mounting forever; this only kicks in if that guard is defeated.
+export const MAX_VARIANT_RECURSION_DEPTH = 50

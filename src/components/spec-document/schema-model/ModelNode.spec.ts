@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { shallowMount, mount } from '@vue/test-utils'
 import ModelNode from './ModelNode.vue'
+import ModelProperty from './ModelProperty.vue'
 import type { SchemaObject } from '@/types'
+import { kebabCase } from '@/utils'
 
 describe('<ModelNode />', () => {
   // test for a simple model with properties
@@ -91,5 +93,54 @@ describe('<ModelNode />', () => {
         },
       })
     }).not.toThrow()
+  })
+
+  // the ancestor-chain guard should stop exactly at the repeated schema, not merely somewhere
+  // before an arbitrary depth backstop - so a 2-node cycle should render each schema once, not
+  // loop around several times before the backstop catches it
+  it('stops at the exact repeat rather than looping until a depth backstop is hit', () => {
+    const schemaA: SchemaObject = { type: 'object', title: 'A' }
+    const schemaB: SchemaObject = { type: 'object', title: 'B' }
+    schemaA.oneOf = [schemaB]
+    schemaB.oneOf = [schemaA]
+
+    const wrapper = mount(ModelNode, {
+      props: {
+        schema: schemaA,
+        title: 'A',
+      },
+    })
+
+    // A renders once (top-level ModelNode's variant branch renders schema B, which then tries
+    // to render A again as its own variant - that repeat is where the guard must stop)
+    expect(wrapper.findAllComponents(ModelProperty).length).toBe(1)
+    expect(wrapper.findTestId(`model-property-${kebabCase('B')}`).exists()).toBe(true)
+  })
+
+  // a legitimately deep, non-circular chain of distinct oneOf variants must render in full -
+  // proving the ancestor-chain guard (which only stops on an actual repeat) doesn't truncate
+  // valid content the way a blunt depth cap would
+  it('fully renders a long chain of distinct oneOf variants with no repeats', () => {
+    const CHAIN_LENGTH = 20
+    const schemas: SchemaObject[] = Array.from({ length: CHAIN_LENGTH }, (_, i) => ({
+      type: 'object',
+      title: `Variant${i}`,
+    }))
+    schemas.forEach((schema, i) => {
+      if (i < schemas.length - 1) {
+        schema.oneOf = [schemas[i + 1]]
+      }
+    })
+
+    const wrapper = mount(ModelNode, {
+      props: {
+        schema: schemas[0],
+        title: 'Variant0',
+      },
+    })
+
+    for (let i = 1; i < CHAIN_LENGTH; i++) {
+      expect(wrapper.findTestId(`model-property-${kebabCase(`Variant${i}`)}`).exists()).toBe(true)
+    }
   })
 })

@@ -211,6 +211,94 @@ describe('crawl', () => {
     })
   })
 
+  // crawl() is deterministic, so this can't observe a memo hit vs. a correct recompute through
+  // output alone - it's a correctness regression guard for the array-typed shared-reference
+  // shape, not proof of memoization. resolveSchemaObjectFields returns a freshly-copied object
+  // for array-typed schemas (to hoist the items' fields up), so memoizing under that resolved
+  // copy would never match a repeat visit - the same identity-breaking shape that also affected
+  // the sensitive-data-masking guard, fixed here via the memoKey option in doCrawl.
+  it('produces correct output for an array-typed schema shared by reference across sibling properties', () => {
+    const sharedArrayProp = {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: {
+            type: 'string',
+            example: 'shared-array-id',
+          },
+        },
+      },
+    }
+    const objData = {
+      type: 'object',
+      properties: {
+        first: sharedArrayProp,
+        second: sharedArrayProp,
+      },
+    }
+
+    const res = crawl({ objData, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })
+    expect(res).toEqual({
+      first: [{ id: 'shared-array-id' }],
+      second: [{ id: 'shared-array-id' }],
+    })
+  })
+
+  // MAX_NESTED_LEVELS truncation is depth-dependent, but the memo cache key was not - a schema
+  // shared by reference at two different nesting depths must still truncate independently at
+  // each depth, not have the first-computed occurrence's result reused verbatim at the other
+  it('truncates independently for a schema shared by reference at two different nesting depths', () => {
+    const shared = {
+      type: 'object',
+      properties: {
+        a1: {
+          type: 'object',
+          properties: {
+            a2: {
+              type: 'object',
+              properties: {
+                leaf: { type: 'string', example: 'leaf-value' },
+              },
+            },
+          },
+        },
+      },
+    }
+    const objData = {
+      type: 'object',
+      properties: {
+        // reached at nestedLevel 1 - shallow enough that the full 2-level chain inside `shared`
+        // fits under MAX_NESTED_LEVELS (6) and resolves in full
+        shallow: shared,
+        // reached at nestedLevel 4 (3 wrapper hops deep) - the same 2-level chain inside
+        // `shared` now crosses MAX_NESTED_LEVELS partway through, so it must truncate before
+        // reaching `leaf`
+        wrapper1: {
+          type: 'object',
+          properties: {
+            wrapper2: {
+              type: 'object',
+              properties: {
+                wrapper3: {
+                  type: 'object',
+                  properties: {
+                    deep: shared,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    }
+
+    const res = crawl({ objData, filteringOptions: { excludeReadonly: false, excludeNotRequired: false } })
+
+    expect(JSON.stringify(res?.shallow)).toContain('leaf-value')
+    expect(JSON.stringify(res?.wrapper1.wrapper2.wrapper3.deep)).not.toContain('leaf-value')
+  })
+
   it('should handle array example', () => {
     const objData = {
       'type': 'object',
