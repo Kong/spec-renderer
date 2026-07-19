@@ -1,5 +1,5 @@
 // composable to manage schema variants for oneOf/anyOf
-import { computed, ref, unref, type ComputedRef, type Ref } from 'vue'
+import { computed, ref, unref, watch, type ComputedRef, type Ref } from 'vue'
 import type { SchemaObject, SelectItem } from '@/types'
 import { inheritedPropertyName, isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
 
@@ -47,6 +47,18 @@ export default function useSchemaVariants(
 
   // ref to store the index of the selected variant
   const selectedVariantIndex = ref<number>(0)
+
+  // the underlying schema can change on an already-mounted instance (e.g. a parent variant
+  // selection changes what gets passed down), which can leave selectedVariantIndex pointing
+  // past the end of the new, possibly shorter, variant list - reset it rather than let
+  // rawSelectedVariant silently go undefined while variantSelectItemList.length still passes
+  watch(rawVariantList, (list) => {
+    if (selectedVariantIndex.value >= list.length) {
+      selectedVariantIndex.value = 0
+    }
+  })
+
+
   /**
    * If the schema model has variants, it returns the selected variant, else it returns the schema model itself
    */

@@ -16,7 +16,7 @@
     />
 
     <div
-      v-if="variantSelectItemList.length && !isCircularVariant && !variantRecursionLimitReached"
+      v-if="rawSelectedVariant && !isCircularVariant && !variantRecursionLimitReached"
       class="selected-variant-container"
     >
       <ModelProperty
