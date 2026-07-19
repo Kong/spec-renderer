@@ -265,7 +265,7 @@ export function removeFieldsFromSchemaObject(schemaObject: SchemaObject, filterM
     try {
       const newOneOfList: SchemaObject['oneOf'] = []
       schemaObject.oneOf.forEach((item) => {
-        // if the item is not a valid schema object or it fails the condiiton in filterMethod, we skip it
+        // if the item is not a valid schema object or it fails the condition in filterMethod, we skip it
         if (!isValidSchemaObject(item) || filterMethod(item)) return
 
         // recurse through the same cycle-safe walk used for properties/items, so an array-typed
