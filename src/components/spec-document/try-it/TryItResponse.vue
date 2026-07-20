@@ -32,11 +32,20 @@
     </template>
 
     <div
-      v-if="responseText && selectedResOption === 'body'"
+      v-if="hasBodyResult && selectedResOption === 'body'"
       class="wide"
     >
+      <TryItResponseDownload
+        v-if="isBinaryResponse"
+        :content-disposition="responseContentDisposition"
+        :content-type="responseContentType"
+        :data-id="dataId"
+        :size="responseSize"
+        :url="objectUrl || ''"
+      />
       <component
         :is="responseBodyComponent.component"
+        v-else
         v-bind="responseBodyComponent.props"
       />
     </div>
@@ -71,6 +80,7 @@
 
 <script setup lang="ts">
 import { computed, watch, ref } from 'vue'
+import { useObjectUrl } from '@vueuse/core'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import type { PropType } from 'vue'
@@ -79,7 +89,8 @@ import type { SelectItem, SecuritySchemeMaskRule } from '@/types'
 import { CODE_INDENT_SPACES } from '@/constants'
 import type { IHttpOperationResponse } from '@stoplight/types'
 import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
-import { maskBodyExample, findResponseSchema, hasMasking } from '@/utils'
+import TryItResponseDownload from './TryItResponseDownload.vue'
+import { maskBodyExample, findResponseSchema, hasMasking, isTextualContentType } from '@/utils'
 
 const props = defineProps({
   dataId: {
@@ -106,11 +117,25 @@ const props = defineProps({
 
 const showSensitiveData = ref<boolean>(false)
 
-// Response body - object for JSON, string for text/image blob URL
+// Response body - object for JSON, string for text; blob-backed for image/binary
 const responseContent = ref<unknown>(null)
-const responseBodyType = ref<'json' | 'image' | 'text' | ''>('')
+const responseBodyType = ref<'json' | 'image' | 'text' | 'binary' | ''>('')
 // Resolved schema — needed for toggle visibility check and masked computation
 const bodySchema = ref<Record<string, any> | undefined>()
+
+// Blob for image & binary responses
+const responseBlob = ref<Blob | undefined>()
+const objectUrl = useObjectUrl(responseBlob)
+// Metadata used to build the response download card
+const responseContentType = ref<string>('')
+const responseContentDisposition = ref<string | null>(null)
+const responseSize = ref<number | null>(null)
+
+const isBinaryResponse = computed((): boolean => responseBodyType.value === 'binary')
+const isImageResponse = computed((): boolean => responseBodyType.value === 'image')
+
+// The Result view has renderable content for text/json (responseText), images, and binary downloads
+const hasBodyResult = computed((): boolean => !!responseText.value || isImageResponse.value || isBinaryResponse.value)
 
 // Show the toggle only for the active view: body masking on Result, header masking on Headers.
 const hasMaskedData = computed((): boolean => {
@@ -156,7 +181,7 @@ const headersText = computed((): string => {
 
 const resultOptions = computed((): SelectItem[] => {
   const opts = []
-  if (responseText.value) {
+  if (hasBodyResult.value) {
     opts.push({ value: 'body', label: 'Result' })
   }
 
@@ -179,7 +204,7 @@ const responseBodyComponent = computed(() => {
     return {
       component: 'img',
       props: {
-        src: responseText.value,
+        src: objectUrl.value,
         alt: 'response image',
         width: '300px',
       },
@@ -211,19 +236,35 @@ const requestLang = computed(() => responseBodyType.value === 'json' ? 'json' : 
 watch(() => props.response, async (res) => {
   if (res) {
     const contentType = res.headers.get('content-type') ?? ''
+    responseContentType.value = contentType
+    responseContentDisposition.value = res.headers.get('content-disposition')
     if (contentType.includes('/json')) {
       const json = await res.json()
       responseContent.value = json
       responseBodyType.value = 'json'
+      responseBlob.value = undefined
+      responseSize.value = null
       bodySchema.value = findResponseSchema(props.responseSchemas, res.status, contentType || 'application/json')
     } else if (contentType.includes('image')) {
       const blob = await res.blob()
-      responseContent.value = URL.createObjectURL(blob)
+      responseBlob.value = blob
+      responseContent.value = null
       responseBodyType.value = 'image'
+      responseSize.value = null
       bodySchema.value = undefined
-    } else {
+    } else if (isTextualContentType(contentType)) {
       responseContent.value = await res.text()
       responseBodyType.value = 'text'
+      responseBlob.value = undefined
+      responseSize.value = null
+      bodySchema.value = undefined
+    } else {
+      // binary response — offer as a download instead of decoding as text
+      const blob = await res.blob()
+      responseBlob.value = blob
+      responseContent.value = null
+      responseBodyType.value = 'binary'
+      responseSize.value = Number(res.headers.get('content-length')) || blob.size || null
       bodySchema.value = undefined
     }
     // reset to first option (Result/Headers/Error) on each new response
@@ -231,6 +272,10 @@ watch(() => props.response, async (res) => {
   } else {
     responseContent.value = null
     responseBodyType.value = ''
+    responseBlob.value = undefined
+    responseContentType.value = ''
+    responseContentDisposition.value = null
+    responseSize.value = null
     bodySchema.value = undefined
   }
 }, { immediate: true })

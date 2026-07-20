@@ -1,0 +1,83 @@
+openapi: 3.1.0
+info:
+  title: Binary Response API
+  version: 1.0.0
+  description: >
+    Exercises the TryIt binary-response handling. Endpoints return non-text
+    bodies so the response panel should offer a download card (or inline
+    preview for images) instead of rendering garbled text. Server points at
+    httpbin.org, which has CORS enabled.
+servers:
+  - url: https://httpbin.org
+    description: httpbin
+
+paths:
+  /bytes/1024:
+    get:
+      summary: Download random bytes
+      description: >
+        Returns 1024 random bytes as application/octet-stream. Expect a download
+        card producing "response.bin" — opaque binary data has no real file
+        format, so ".bin" is the correct, honest extension.
+      operationId: getRandomBytes
+      responses:
+        '200':
+          description: Random binary payload.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+
+  /image/png:
+    get:
+      summary: Fetch a PNG image
+      description: Returns a PNG image. Expect an inline image preview (not a download card).
+      operationId: getPngImage
+      responses:
+        '200':
+          description: A PNG image.
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+
+  /response-headers:
+    get:
+      summary: Binary with Content-Disposition filename
+      description: >
+        httpbin echoes the query params back as response headers, so this lets
+        us verify the download filename is taken from the Content-Disposition
+        header rather than synthesized from the content type. The
+        Access-Control-Expose-Headers param is required so the browser actually
+        exposes Content-Disposition to JS on this cross-origin response.
+      operationId: getFileWithDisposition
+      parameters:
+        - name: Content-Type
+          in: query
+          required: true
+          schema:
+            type: string
+            default: application/octet-stream
+        - name: Content-Disposition
+          in: query
+          required: true
+          schema:
+            type: string
+            default: attachment; filename="report.pdf"
+        - name: Access-Control-Expose-Headers
+          in: query
+          required: true
+          description: Without this, cross-origin browsers hide Content-Disposition from JS.
+          schema:
+            type: string
+            default: Content-Disposition
+      responses:
+        '200':
+          description: Response echoing the requested headers.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
