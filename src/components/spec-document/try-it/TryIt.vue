@@ -28,6 +28,7 @@
     <div
       v-if="!sectionBodyEmpty"
       class="tryit-body"
+      :data-testid="`tryit-body-${data.id}`"
     >
       <TryItAuth
         ref="auth2ComponentTemplate"

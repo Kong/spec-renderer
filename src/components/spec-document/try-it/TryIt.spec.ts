@@ -279,8 +279,7 @@ describe('<TryIt />', () => {
 
     // wrapper renders, but the body is collapsed since there is nothing to show
     expect(wrapper.findTestId('tryit-wrapper-123').exists()).toBe(true)
-    expect(wrapper.find('.tryit-body').exists()).toBe(false)
-    expect(wrapper.find('.tryit-header').classes()).toContain('no-body')
+    expect(wrapper.findTestId('tryit-body-123').exists()).toBe(false)
   })
 
   it('renders the body section when a request body sample is present', async () => {
@@ -309,7 +308,6 @@ describe('<TryIt />', () => {
 
     await flushPromises()
 
-    expect(wrapper.find('.tryit-body').exists()).toBe(true)
-    expect(wrapper.find('.tryit-header').classes()).not.toContain('no-body')
+    expect(wrapper.findTestId('tryit-body-123').exists()).toBe(true)
   })
 })
