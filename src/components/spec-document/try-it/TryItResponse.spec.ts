@@ -67,11 +67,11 @@ describe('<TryItResponse />', () => {
     const response = makeResponse({
       headers: {
         'content-type': 'application/pdf',
-        'content-length': '2048',
         'content-disposition': 'attachment; filename="report.pdf"',
       },
       text,
-      blob: () => Promise.resolve(new Blob(['%PDF-1.4'], { type: 'application/pdf' })),
+      // size is derived from blob.size, so pad it to 2048 bytes
+      blob: () => Promise.resolve(new Blob([new Uint8Array(2048)], { type: 'application/pdf' })),
     })
     const wrapper = mount(TryItResponse, {
       props: { dataId: 'op2', response },

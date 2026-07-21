@@ -5,10 +5,9 @@ info:
   description: >
     Exercises the TryIt binary-response handling. Endpoints return non-text
     bodies so the response panel should offer a download card (or inline
-    preview for images) instead of rendering garbled text. Server points at
-    httpbin.org, which has CORS enabled.
+    preview for images) instead of rendering garbled text.
 servers:
-  - url: https://httpbin.org
+  - url: https://httpbin.io
     description: httpbin
 
 paths:
