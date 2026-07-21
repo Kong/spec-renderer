@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { ref } from 'vue'
 import ModelProperty from './ModelProperty.vue'
+import ModelNode from './ModelNode.vue'
 import type { SchemaObject } from '@/types'
 import { kebabCase } from '@/utils'
 
@@ -140,5 +142,40 @@ describe('<ModelProperty />', () => {
       // Check if ModelProperty component renders for the first anyOf object
       expect(wrapper.findTestId(`model-property-${kebabCase(anyOfList[0].title ?? '')}`).exists()).toBe(true)
     })
+  })
+
+  // when a variant is blocked as circular, the sibling `v-else-if="nestedPropertiesPresent"`
+  // branch must not fall through and re-render the very same schema via a fresh ModelNode -
+  // that bypasses the guard entirely (it only re-triggers one hop later) and, with a
+  // config'd maxExpandedDepth above 1, mounts several duplicate copies of the same node before
+  // depth (not the cycle guard) finally stops it
+  it('does not fall through to re-render nested properties when a variant is blocked as circular', () => {
+    const treeNode: SchemaObject = {
+      type: 'object',
+      title: 'TreeNode',
+      properties: {
+        id: { type: 'string' },
+      },
+    }
+    // a nested property whose own oneOf cycles back to the root schema - the guard blocks this
+    // variant, and the bug was in what happens next on this same ModelProperty
+    const variant: SchemaObject = { oneOf: [treeNode] }
+    treeNode.properties!.variant = variant
+
+    const wrapper = mount(ModelProperty, {
+      props: {
+        property: treeNode,
+        propertyName: 'root',
+      },
+      global: {
+        provide: {
+          'max-expanded-depth': ref(5),
+        },
+      },
+    })
+
+    // only the single ModelNode rendered for the root schema's own properties should exist -
+    // not further duplicates of the same schema re-entered through the blocked variant
+    expect(wrapper.findAllComponents(ModelNode).length).toBe(1)
   })
 })

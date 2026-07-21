@@ -19,12 +19,14 @@
       </div>
       <!-- if the schema model has variants, render the selected variant -->
       <ModelProperty
-        v-if="selectedSchemaModel?.oneOf || selectedSchemaModel?.anyOf"
+        v-if="(selectedSchemaModel?.oneOf || selectedSchemaModel?.anyOf) && !isCircularVariant && !variantRecursionLimitReached"
+        :ancestor-schemas="ancestorsIncludingSelf"
         :base-path-id="basePathId"
         :depth="depth"
-        :property="selectedSchemaModel"
+        :property="rawSelectedVariant!"
         :property-name="selectedSchemaModel.title || variantSelectItemList[selectedVariantIndex]?.label || ''"
         :required-fields="selectedSchemaModel?.required"
+        :variant-depth="variantDepth + 1"
       />
     </template>
 
@@ -35,6 +37,7 @@
     >
       <ModelProperty
         v-if="isValidSchemaObject(property)"
+        :ancestor-schemas="ancestorsIncludingSelf"
         :base-path-id="basePathId"
         :class="{ 'model-node-property': index !== 0 }"
         :data-testid="`model-property-${propertyName}`"
@@ -42,6 +45,7 @@
         :property="property"
         :property-name="propertyName.toString()"
         :required-fields="selectedSchemaModel?.required"
+        :variant-depth="variantDepth"
       />
     </template>
   </div>
@@ -53,9 +57,10 @@ import type { PropType } from 'vue'
 import ModelProperty from './ModelProperty.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import type { SchemaObject, SelectItem } from '@/types'
-import { isValidSchemaObject, resolveSchemaObjectFields } from '@/utils'
+import { isValidSchemaObject } from '@/utils'
 import useSchemaVariants from '@/composables/useSchemaVariants'
 import VariantLabel from '@/components/common/VariantLabel.vue'
+import { MAX_VARIANT_RECURSION_DEPTH } from '@/constants'
 
 const props = defineProps({
   schema: {
@@ -88,10 +93,33 @@ const props = defineProps({
     type: Number,
     default: 1,
   },
+  /**
+   * Variant recursion depth backstop - see MAX_VARIANT_RECURSION_DEPTH.
+   */
+  variantDepth: {
+    type: Number,
+    default: 0,
+  },
+  /**
+   * Ancestor schemas already visited in this render chain - see useSchemaVariants.
+   */
+  ancestorSchemas: {
+    type: Object as PropType<Set<object>>,
+    default: () => new Set<object>(),
+  },
 })
 
-const resolvedSchemaObject = computed(() => resolveSchemaObjectFields(props.schema))
-const { variantSelectItemList, selectedSchemaModel, selectedVariantIndex, inheritanceTypeLabel } = useSchemaVariants(resolvedSchemaObject)
+const variantRecursionLimitReached = computed(() => props.variantDepth >= MAX_VARIANT_RECURSION_DEPTH)
+
+const {
+  variantSelectItemList,
+  selectedSchemaModel,
+  selectedVariantIndex,
+  inheritanceTypeLabel,
+  rawSelectedVariant,
+  isCircularVariant,
+  ancestorsIncludingSelf,
+} = useSchemaVariants(computed(() => props.schema), computed(() => props.ancestorSchemas))
 
 function handleVariantSelectChange(selecteditem: SelectItem) {
   selectedVariantIndex.value = Number(selecteditem.value)
