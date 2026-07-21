@@ -1,3 +1,10 @@
+## [1.108.4](https://github.com/Kong/spec-renderer/compare/v1.108.3...v1.108.4) (2026-07-21)
+
+
+### Bug Fixes
+
+* prevent circular schema references from crashing [TDX-8503, TDX-8504] ([#909](https://github.com/Kong/spec-renderer/issues/909)) ([5131ed5](https://github.com/Kong/spec-renderer/commit/5131ed5d59600d1d07fa7a573063bead7c591f1c))
+
 ## [1.108.3](https://github.com/Kong/spec-renderer/compare/v1.108.2...v1.108.3) (2026-07-14)
 
 
