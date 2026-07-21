@@ -96,6 +96,13 @@ interface CrawlOptions {
   parentKey?: string
   nestedLevel?: number
   filteringOptions: Record<string, boolean>
+  /**
+   * Identity to memoize this call's result under, if different from objData. Use the raw,
+   * pre-resolve property: resolveSchemaObjectFields copies array/allOf schemas on every call,
+   * so memoizing under its output would never hit on a repeat visit. Omit when objData is
+   * already raw (e.g. the top-level call, or an allOf member).
+   */
+  memoKey?: Record<string, any>
 }
 
 /**
@@ -109,10 +116,11 @@ interface CrawlOptions {
 export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptions }: CrawlOptions): Record<string, any> | null => {
 
   /*
-    WeakMap we store child objData's sampleObjects in weakMap so that when
-    we see it's already stored, instead of extracting sampleObject again and again, we use what already extracted and stored in the WeakMap
+    Memoizes sampleObj by object identity so a schema reused by reference isn't re-extracted.
+    Keyed on nestedLevel too: MAX_NESTED_LEVELS truncation is depth-dependent, so a memo from
+    one depth must never be reused at a different depth for the same schema.
   */
-  const seen = new WeakMap()
+  const seen = new WeakMap<Record<string, any>, Map<number, Record<string, any>>>()
 
   /**
  * util to generate example for inherited fields like allOf, anyOf, oneOf
@@ -162,7 +170,7 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
    * @param {CrawlOptions} CrawlOptions
    * @returns {Record<string, any> | null}
   */
-  const doCrawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptions }: CrawlOptions): Record<string, any> | null => {
+  const doCrawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptions, memoKey }: CrawlOptions): Record<string, any> | null => {
 
     let sampleObj = <Record<string, any>>{}
 
@@ -190,9 +198,9 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
     /*
       here is where we do lookup into WeakMap, and we we already have record there, just return already parsed sample object
     */
-    const seenRecord = seen.get(objData)
-    if (seenRecord) {
-      return seenRecord.seenSample
+    const seenSample = seen.get(memoKey ?? objData)?.get(nestedLevel)
+    if (seenSample) {
+      return seenSample
     }
 
 
@@ -228,6 +236,7 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
                 parentKey: key,
                 nestedLevel: nestedLevel + 1,
                 filteringOptions,
+                memoKey: objData.properties[key],
               })
               : crawlInheritedProperties({
                 objData: oData,
@@ -244,7 +253,7 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
               : exampleArrayItem === '[]' ? [] : [exampleArrayItem]
           }
         } else if (oDataType === 'object' || oData.allOf) {
-          const res = doCrawl({ objData: oData || {}, parentKey: key, nestedLevel: nestedLevel + 1, filteringOptions })
+          const res = doCrawl({ objData: oData || {}, parentKey: key, nestedLevel: nestedLevel + 1, filteringOptions, memoKey: objData.properties[key] })
           if (res !== null) {
             sampleObj[key] = res
           }
@@ -274,7 +283,11 @@ export const crawl = ({ objData, parentKey = '', nestedLevel = 0, filteringOptio
     /*
       now, as we have sampleObj for objData extracted, we store it in the WeakMap for future child objects to use
     */
-    seen.set(objData, { sampleObj, parentKey })
+    const identity = memoKey ?? objData
+    if (!seen.has(identity)) {
+      seen.set(identity, new Map())
+    }
+    seen.get(identity)!.set(nestedLevel, sampleObj)
     return sampleObj
   }
 

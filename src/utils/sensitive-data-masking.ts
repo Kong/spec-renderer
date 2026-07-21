@@ -1,6 +1,6 @@
 import type { HttpSecurityScheme, IHttpOperationResponse } from '@stoplight/types'
 import type { XSensitiveData, SecuritySchemeMaskRule } from '@/types'
-import { resolveSchemaObjectFields } from './schema-model'
+import { isValidSchemaObject, resolveSchemaObjectFields } from './schema-model'
 import { OAS_EXT_SENSITIVE_DATA } from '@/oas-extensions'
 
 // ─── Mask placeholder ─────────────────────────────────────────────────────────
@@ -278,13 +278,21 @@ export const maskBodyExample = (example: unknown, schema: Record<string, any>): 
 /**
  * Return true if any property in the schema (recursively) has an x-sensitive-data annotation.
  * Used internally by hasMasking — prefer calling hasMasking directly.
+ *
+ * `seen` guards against a circular `$ref` recursing forever, keyed on each property's raw,
+ * pre-resolve object (resolveSchemaObjectFields copies array/allOf schemas on every call, so
+ * keying on its output would never match a repeat visit). A visited-once set is safe here since
+ * this is a pure boolean predicate: the answer for a schema doesn't depend on which path reached
+ * it, and finding sensitive data anywhere already short-circuits the walk.
  */
-const _schemaHasSensitiveData = (schema: Record<string, any> | undefined): boolean => {
+const _schemaHasSensitiveData = (schema: Record<string, any> | undefined, seen: WeakSet<object> = new WeakSet()): boolean => {
   if (!schema) return false
   for (const propSchema of Object.values(schema.properties ?? {})) {
+    if (!isValidSchemaObject(propSchema) || seen.has(propSchema)) continue
+    seen.add(propSchema)
     const prop = resolveSchemaObjectFields(propSchema) as Record<string, any>
     if (prop?.[OAS_EXT_SENSITIVE_DATA]) return true
-    if (prop?.properties && _schemaHasSensitiveData(prop)) return true
+    if (prop?.properties && _schemaHasSensitiveData(prop, seen)) return true
   }
   return false
 }

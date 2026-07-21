@@ -141,3 +141,8 @@ export const MIN_SCROLL_DIFFERENCE = 20
 export const DISABLE_SCROLLING_ITEMS_LIMIT = 1200
 
 export const DEFAULT_EXPANDED_PROPERTIES_DEPTH = 1
+
+// Backstop for oneOf/anyOf variant recursion (see useSchemaVariants' ancestor-chain guard,
+// the primary defense). Variants render eagerly, unlike nested properties, so a circular
+// schema needs a guard against mounting forever; this only kicks in if that guard is defeated.
+export const MAX_VARIANT_RECURSION_DEPTH = 50
