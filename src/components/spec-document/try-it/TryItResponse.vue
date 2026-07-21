@@ -123,16 +123,13 @@ const bodySchema = ref<Record<string, any> | undefined>()
 
 // Blob for image & binary responses
 const responseBlob = ref<Blob | undefined>()
-// Only images need an object URL here (for inline <img>); the binary download card
-// makes its own from the blob. Scoping the source avoids a redundant URL for binary.
 const objectUrl = useObjectUrl(() => responseBodyType.value === 'image' ? responseBlob.value : undefined)
 
 const isBinaryResponse = computed((): boolean => responseBodyType.value === 'binary')
 
-// Content-Disposition is the one download-card input that can't be derived from the blob
 const responseContentDisposition = computed((): string | null => props.response?.headers?.get('content-disposition') ?? null)
 
-// The Result view has renderable content for text/json (responseText), images, and binary downloads
+// The Result view has renderable content for text/json, images, and binary downloads
 const hasBodyResult = computed((): boolean => !!responseText.value || isResponseImage.value || isBinaryResponse.value)
 
 // Show the toggle only for the active view: body masking on Result, header masking on Headers.
