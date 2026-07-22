@@ -11,7 +11,7 @@ describe('useShiki', () => {
     createHighlighterCore.mockReset()
   })
 
-  it('shares initialization between concurrent consumers', async () => {
+  it('should share initialization between concurrent consumers', async () => {
     const highlighter = { codeToHtml: vi.fn() }
     let resolveHighlighter: (value: typeof highlighter) => void = () => undefined
     createHighlighterCore.mockReturnValue(new Promise(resolve => {
@@ -29,7 +29,7 @@ describe('useShiki', () => {
     expect(second.highlighter.value?.codeToHtml).toBe(highlighter.codeToHtml)
   })
 
-  it('allows initialization to retry after a failure', async () => {
+  it('should allow initialization to retry after a failure', async () => {
     const highlighter = { codeToHtml: vi.fn() }
     createHighlighterCore.mockRejectedValueOnce(new Error('loading failed')).mockResolvedValueOnce(highlighter)
 
