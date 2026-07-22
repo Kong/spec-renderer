@@ -25,7 +25,7 @@ overrides:
   rollup@>=4.0.0 <4.59.0: '>=4.62.2'
   minimatch@<10.2.3: '>=10.2.5'
   ajv@<6.14.0: ^6.15.0
-  immutable@>=5.0.0 <5.1.5: '>=5.1.7'
+  immutable@>=5.0.0 <5.1.8: '>=5.1.8'
   flatted@<=3.4.1: '>=3.4.2'
   undici@<6.24.0: '>=8.5.0'
   handlebars@>=4.0.0 <4.7.9: '>=4.7.9'
@@ -34,6 +34,7 @@ overrides:
   lodash@<=4.17.23: '>=4.18.0'
   yaml@>=2.0.0 <2.8.3: '>=2.9.0'
   fast-uri@<=3.1.1: '>=3.1.2'
+  fast-uri@>=4.0.0 <=4.1.0: '>=4.1.1'
   uuid@<11.1.1: '>=11.1.1'
   vitest@<3.2.6: '>=3.2.6'
   brace-expansion@>=5.0.0 <5.0.6: '>=5.0.6'
@@ -2911,8 +2912,8 @@ packages:
   fast-memoize@2.5.2:
     resolution: {integrity: sha512-Ue0LwpDYErFbmNnZSF0UH6eImUwDmogUO1jyE+JbN2gsQz/jICm1Ve7t9QT0rNSsfJt+Hs4/S3GnsDVjL4HVrw==}
 
-  fast-uri@4.1.0:
-    resolution: {integrity: sha512-ZodJ2cRiLVWGi9IgPb3mbgSqM4CD3LexCHkuv0FfBXHJI1ADfucTD06m6clO2Cy5RZYsw/SiCVl/dyrFI/SYWA==}
+  fast-uri@4.1.1:
+    resolution: {integrity: sha512-YPOs1zD5TG2+EZt+r88LwF6mclA7TPkpwMP7ZN3TO2HiHS8TXvq7QA/17iJsV9dubcLo/f8eEYqMBruyQV21hQ==}
 
   fastest-levenshtein@1.0.16:
     resolution: {integrity: sha512-eRnCtTTtGZFpQCwhJiUOuxPQWRXVKYDn0b2PeHfXL6/Zi53SLAzAHfVhVWK2AryC/WH05kGfxhFIPvTF0SXQzg==}
@@ -3373,8 +3374,8 @@ packages:
   immer@9.0.21:
     resolution: {integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==}
 
-  immutable@5.1.5:
-    resolution: {integrity: sha512-t7xcm2siw+hlUM68I+UEOK+z84RzmN59as9DZ7P1l0994DKUWV7UXBMQZVxaoMSRQ+PBZbHCOoBt7a2wxOMt+A==}
+  immutable@5.1.9:
+    resolution: {integrity: sha512-m8nVez3rwrgmWxtLMt1ZYXB2Lv7OKYn/disyxAlSDYAlKSlFoPPfIAmAM/M5xqL4m4C/wAPw7S2/CNaUii1Hxg==}
 
   import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
@@ -7759,7 +7760,7 @@ snapshots:
   ajv@8.18.0:
     dependencies:
       fast-deep-equal: 3.1.3
-      fast-uri: 4.1.0
+      fast-uri: 4.1.1
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
@@ -8947,7 +8948,7 @@ snapshots:
 
   fast-memoize@2.5.2: {}
 
-  fast-uri@4.1.0: {}
+  fast-uri@4.1.1: {}
 
   fastest-levenshtein@1.0.16: {}
 
@@ -9442,7 +9443,7 @@ snapshots:
 
   immer@9.0.21: {}
 
-  immutable@5.1.5: {}
+  immutable@5.1.9: {}
 
   import-fresh@3.3.0:
     dependencies:
@@ -10791,7 +10792,7 @@ snapshots:
     dependencies:
       '@bufbuild/protobuf': 2.5.2
       colorjs.io: 0.5.2
-      immutable: 5.1.5
+      immutable: 5.1.9
       rxjs: 7.8.1
       supports-color: 8.1.1
       sync-child-process: 1.0.2
@@ -10819,7 +10820,7 @@ snapshots:
   sass@1.100.0:
     dependencies:
       chokidar: 5.0.0
-      immutable: 5.1.5
+      immutable: 5.1.9
       source-map-js: 1.2.1
     optionalDependencies:
       '@parcel/watcher': 2.5.0
@@ -10828,7 +10829,7 @@ snapshots:
   sass@1.101.0:
     dependencies:
       chokidar: 5.0.0
-      immutable: 5.1.5
+      immutable: 5.1.9
       source-map-js: 1.2.1
     optionalDependencies:
       '@parcel/watcher': 2.5.0
