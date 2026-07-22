@@ -1,11 +1,13 @@
 import type { Ref, DeepReadonly } from 'vue'
-import { ref, readonly } from 'vue'
+import { shallowRef, readonly } from 'vue'
 import { createHighlighterCore } from 'shiki/core'
 import { createOnigurumaEngine } from 'shiki/engine/oniguruma'
 import type { HighlighterCore } from 'shiki/core'
 
 
-const shikiInstance = ref<HighlighterCore>()
+// Shiki is an opaque stateful service; Vue must not proxy its internal maps.
+const shikiInstance = shallowRef<HighlighterCore>()
+let highlighterPromise: Promise<HighlighterCore> | undefined
 
 export default function useShiki(): {
   highlighter: DeepReadonly<Ref<HighlighterCore | undefined>>
@@ -14,11 +16,11 @@ export default function useShiki(): {
 
   const createHighlighter = async (): Promise<void> => {
 
-    if (shikiInstance.value) {
-      return
-    }
+    if (shikiInstance.value) return
 
-    shikiInstance.value = await createHighlighterCore({
+    // Several renderer instances can mount in the same tick. Reuse the in-flight
+    // initialization so language grammars and the WASM engine are loaded once.
+    highlighterPromise ??= createHighlighterCore({
       themes: [
         import('shiki/themes/catppuccin-latte.mjs'),
         import('shiki/themes/catppuccin-mocha.mjs'),
@@ -45,6 +47,14 @@ export default function useShiki(): {
         }
       }),
     })
+
+    try {
+      shikiInstance.value = await highlighterPromise
+    } catch (error) {
+      // Allow a later mount to retry after a transient loading failure.
+      highlighterPromise = undefined
+      throw error
+    }
   }
 
   return {
