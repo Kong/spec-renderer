@@ -1,4 +1,4 @@
-import { shallowRef } from 'vue'
+import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { computeAPITree, transformOasToServiceNode } from '@/stoplight/elements'
 import type { ServiceNode, ParseOptions } from '@/types'
@@ -41,13 +41,10 @@ export default (): {
   tableOfContents: Ref<TableOfContentsItem[] | string | undefined>
 } => {
 
-  // Parsed specifications are immutable snapshots replaced as a whole. Deep
-  // proxies add substantial overhead for large schemas without providing useful
-  // reactivity to consumers.
-  const parsedDocument = shallowRef<ServiceNode | string | undefined>()
-  const jsonDocument = shallowRef<Record<string, any> | undefined>()
+  const parsedDocument = ref<ServiceNode | string | undefined>()
+  const jsonDocument = ref<Record<string, any> | undefined>()
 
-  const tableOfContents = shallowRef<TableOfContentsItem[] | undefined>()
+  const tableOfContents = ref<TableOfContentsItem[] | undefined>()
 
   function tryParseYamlOrObject(yamlOrObject: unknown): Record<string, unknown> | undefined {
     if (typeof yamlOrObject === 'object' && yamlOrObject !== null) return <Record<string, unknown>>yamlOrObject
