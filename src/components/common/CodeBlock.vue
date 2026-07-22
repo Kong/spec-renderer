@@ -5,6 +5,7 @@
 </template>
 
 <script setup lang="ts">
+import DOMPurify from 'dompurify'
 import { computed, h } from 'vue'
 import composables from '@/composables'
 import { requestSampleConfigs } from '@/constants'
@@ -66,7 +67,16 @@ const highlightedCode = computed(():string => {
   return html
 })
 
-const VNode = () => h('div', { class: 'code-block', innerHTML: highlightedCode.value })
+function sanitizeHtml(html: string) {
+  return html
+    ? DOMPurify.sanitize(html, {
+        ALLOWED_TAGS: ['span', 'p', 'div', 'pre', 'code'],
+        ALLOWED_ATTR: ['class', 'style'],
+      })
+    : '';
+}
+
+const VNode = () => h('div', { class: 'code-block', innerHTML: sanitizeHtml(highlightedCode.value) })
 </script>
 
 <style lang="scss">
