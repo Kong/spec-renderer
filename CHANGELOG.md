@@ -1,3 +1,17 @@
+## [1.108.6](https://github.com/Kong/spec-renderer/compare/v1.108.5...v1.108.6) (2026-07-22)
+
+
+### Performance Improvements
+
+* optimize performance for shiki highlighter ([#918](https://github.com/Kong/spec-renderer/issues/918)) ([7204369](https://github.com/Kong/spec-renderer/commit/7204369fe047f7ff289a0b5bbcd4e3fc1252b725))
+
+## [1.108.5](https://github.com/Kong/spec-renderer/compare/v1.108.4...v1.108.5) (2026-07-21)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.60.0 ([#896](https://github.com/Kong/spec-renderer/issues/896)) ([63f90d8](https://github.com/Kong/spec-renderer/commit/63f90d8a81df13dc019a25836ae02a4e61c419da))
+
 ## [1.108.4](https://github.com/Kong/spec-renderer/compare/v1.108.3...v1.108.4) (2026-07-21)
 
 
