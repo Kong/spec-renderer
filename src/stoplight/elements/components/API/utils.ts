@@ -14,6 +14,16 @@ const defaults = (...args) => args.reverse().reduce((acc, obj) => ({ ...acc, ...
 type GroupableNode = OperationNode | WebhookNode | SchemaNode
 
 export type TagGroup<T extends GroupableNode> = { title: string, items: T[], initiallyExpanded: boolean }
+type XTagGroup = { title: string, items: Array<TagGroup<OperationNode>>, initiallyExpanded: boolean }
+
+const nodeToTocItem = (node: GroupableNode) => ({
+  id: node.uri,
+  slug: node.uri,
+  title: node.name,
+  type: node.type,
+  meta: isHttpOperation(node.data) || isHttpWebhookOperation(node.data) ? node.data.method : '',
+  ...(isDeprecated(node) ? { deprecated: true } : {}),
+})
 
 export function computeTagGroups<T extends GroupableNode>(
   serviceNode: ServiceNode,
@@ -82,6 +92,36 @@ export function computeTagGroups<T extends GroupableNode>(
   return { groups: orderedTagGroups, ungrouped }
 }
 
+function computeXTagGroups(tagGroups: Array<TagGroup<OperationNode>>, serviceNode: ServiceNode): XTagGroup[] {
+  const groupsByTagId = tagGroups.reduce((acc: Record<string, TagGroup<OperationNode>>, group) => {
+    acc[group.title.toLowerCase()] = group
+    return acc
+  }, {})
+
+  return serviceNode.tagGroups.flatMap((tagGroup): XTagGroup[] => {
+    const groups = tagGroup.tags.flatMap((tagName): Array<TagGroup<OperationNode>> => {
+      const tagId = tagName.toLowerCase()
+      const group = groupsByTagId[tagId]
+
+      // x-tagGroups is strict: only tags explicitly listed in a group appear in Endpoints.
+      if (!group) {
+        console.warn(`@kong/spec-renderer: skipping unknown x-tagGroups tag "${tagName}"`)
+        return []
+      }
+
+      return [group]
+    })
+
+    if (!groups.length) return []
+
+    return [{
+      title: tagGroup.name,
+      items: groups,
+      initiallyExpanded: groups.some(group => group.initiallyExpanded),
+    }]
+  })
+}
+
 interface ComputeAPITreeConfig {
   hideSchemas?: boolean
   hideInternal?: boolean
@@ -110,11 +150,6 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
 
   const hasOperationNodes = serviceNode.children.some(node => node.type === NodeType.HttpOperation)
   if (hasOperationNodes) {
-    const { groups, ungrouped } = computeTagGroups<OperationNode>(
-      serviceNode,
-      NodeType.HttpOperation,
-      mergedConfig.currentPath,
-    )
     tree.push({
       title: 'Endpoints',
       items: [],
@@ -122,14 +157,36 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
       initiallyExpanded: true, // Endpoints are always expanded by default
     })
 
-    addTagGroupsToTree({
-      groups,
-      ungrouped,
-      tree: tree.at(-1).items,
-      itemsType: NodeType.HttpOperation,
-      hideInternal: mergedConfig.hideInternal,
-      hideDeprecated: mergedConfig.hideDeprecated,
-    })
+    if (serviceNode.tagGroups?.length) {
+      // Start from normal tag groups so multi-tag URI handling stays centralized.
+      const { groups } = computeTagGroups<OperationNode>(
+        serviceNode,
+        NodeType.HttpOperation,
+        mergedConfig.currentPath,
+      )
+
+      addXTagGroupsToTree({
+        groups: computeXTagGroups(groups, serviceNode),
+        tree: tree.at(-1).items,
+        hideInternal: mergedConfig.hideInternal,
+        hideDeprecated: mergedConfig.hideDeprecated,
+      })
+    } else {
+      const { groups, ungrouped } = computeTagGroups<OperationNode>(
+        serviceNode,
+        NodeType.HttpOperation,
+        mergedConfig.currentPath,
+      )
+
+      addTagGroupsToTree({
+        groups,
+        ungrouped,
+        tree: tree.at(-1).items,
+        itemsType: NodeType.HttpOperation,
+        hideInternal: mergedConfig.hideInternal,
+        hideDeprecated: mergedConfig.hideDeprecated,
+      })
+    }
   }
 
   const hasWebhookNodes = serviceNode.children.some(node => node.type === NodeType.HttpWebhook)
@@ -247,12 +304,7 @@ const addTagGroupsToTree = <T extends GroupableNode>({
     }
 
     tree.push({
-      id: node.uri,
-      slug: node.uri,
-      title: node.name,
-      type: node.type,
-      meta: isHttpOperation(node.data) || isHttpWebhookOperation(node.data) ? node.data.method : '',
-      ...(isDeprecated(node) ? { deprecated: true } : {}),
+      ...nodeToTocItem(node),
     })
   })
 
@@ -262,14 +314,7 @@ const addTagGroupsToTree = <T extends GroupableNode>({
         return []
       }
 
-      return {
-        id: node.uri,
-        slug: node.uri,
-        title: node.name,
-        type: node.type,
-        meta: isHttpOperation(node.data) || isHttpWebhookOperation(node.data) ? node.data.method : '',
-        ...(isDeprecated(node) ? { deprecated: true } : {}),
-      }
+      return nodeToTocItem(node)
     })
 
     if (items.length) {
@@ -280,5 +325,48 @@ const addTagGroupsToTree = <T extends GroupableNode>({
         initiallyExpanded: group.initiallyExpanded,
       })
     }
+  })
+}
+
+interface AddXTagGroupsToTreeParams {
+  groups: XTagGroup[]
+  tree: TableOfContentsItem[]
+  hideInternal: boolean
+  hideDeprecated: boolean
+}
+
+const addXTagGroupsToTree = ({
+  groups,
+  tree,
+  hideInternal,
+  hideDeprecated,
+}: AddXTagGroupsToTreeParams) => {
+  groups.forEach(xTagGroup => {
+    const tagGroups = xTagGroup.items.flatMap(tagGroup => {
+      const items = tagGroup.items.flatMap(node => {
+        if ((hideInternal && isInternal(node)) || (hideDeprecated && isDeprecated(node))) {
+          return []
+        }
+
+        return nodeToTocItem(node)
+      })
+
+      if (!items.length) return []
+
+      return [{
+        title: tagGroup.title,
+        items,
+        itemsType: NodeType.HttpOperation,
+        initiallyExpanded: tagGroup.initiallyExpanded,
+      }]
+    })
+
+    if (!tagGroups.length) return
+
+    tree.push({
+      title: xTagGroup.title,
+      items: tagGroups,
+      initiallyExpanded: xTagGroup.initiallyExpanded,
+    })
   })
 }

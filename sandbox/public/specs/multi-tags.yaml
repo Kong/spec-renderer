@@ -5,6 +5,18 @@ info:
   version: 1.0.0
 servers:
   - url: https://ff90af76a1.gateways.konghq.tech
+tags:
+  - name: System
+    description: Beer operations managed by the system API.
+  - name: Mesh
+    description: Beer operations exposed through mesh services.
+x-tagGroups:
+  - name: Platform APIs
+    tags:
+      - System
+  - name: Runtime APIs
+    tags:
+      - Mesh
 paths:
   /beers/ale:
     put:
