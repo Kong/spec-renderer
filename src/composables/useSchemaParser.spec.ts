@@ -418,6 +418,54 @@ components:
   })
 
   describe('async api parsing', () => {
+    it('should preserve inline message examples without requiring schema references', async () => {
+      const specContent = `asyncapi: 3.0.0
+info:
+  title: Account Events
+  version: 1.0.0
+channels:
+  accounts:
+    address: accounts
+    messages:
+      accountEvent:
+        $ref: '#/components/messages/AccountEvent'
+operations:
+  sendAccountEvent:
+    action: send
+    channel:
+      $ref: '#/channels/accounts'
+    messages:
+      - $ref: '#/channels/accounts/messages/accountEvent'
+components:
+  messages:
+    AccountEvent:
+      name: AccountEvent
+      payload:
+        $ref: '#/components/schemas/AccountEventPayload'
+      examples:
+        - name: Profile Update
+          payload:
+            member:
+              id: '123'
+  schemas:
+    AccountEventPayload:
+      type: object
+      properties:
+        member:
+          type: object
+`
+
+      const { parseSpecDocument, parsedDocument } = composables.useSchemaParser()
+      await parseSpecDocument(specContent)
+
+      const message = (parsedDocument.value as ServiceNode).children
+        .find(child => child.uri === '/message-accountEvent')
+
+      expect(message?.data.messageExamples).toEqual([{
+        name: 'Profile Update',
+        payload: { member: { id: '123' } },
+      }])
+    })
 
     it('should parse avro', async () => {
       const specContent = `asyncapi: 3.0.0
@@ -812,4 +860,3 @@ paths: {}`
     })
   })
 })
-

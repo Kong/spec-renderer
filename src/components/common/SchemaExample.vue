@@ -5,9 +5,12 @@
     <div class="schema-example-header">
       <slot>
         <span>{{ title }}</span>
-        <CopyButton
-          :content="schemaExampleJson"
-        />
+        <div class="schema-example-header-actions">
+          <slot name="header-actions" />
+          <CopyButton
+            :content="schemaExampleJson"
+          />
+        </div>
       </slot>
     </div>
     <CodeBlock
@@ -56,6 +59,12 @@ defineProps({
     justify-content: space-between;
     line-height: var(--kui-line-height-40, $kui-line-height-40);
     padding: var(--kui-space-50, $kui-space-50);
+  }
+
+  .schema-example-header-actions {
+    align-items: center;
+    display: inline-flex;
+    gap: var(--kui-space-50, $kui-space-50);
   }
 }
 </style>

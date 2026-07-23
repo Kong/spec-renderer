@@ -19,6 +19,14 @@ export interface AsyncMessageObject extends SchemaObject {
   messageId?: string
   correlationId?: string
   message?: MessageInterface
+  messageExamples?: AsyncMessageExample[]
+}
+
+export interface AsyncMessageExample {
+  name?: string
+  summary?: string
+  payload?: Record<string, any>
+  headers?: Record<string, any>
 }
 
 export interface AsyncOperationObject extends SchemaObject {
@@ -35,4 +43,3 @@ export type AsyncOperationNode = Node<typeof NodeType.AsyncOperation, AsyncOpera
 
 export type ServiceChildNode = OperationNode | WebhookNode | SchemaNode | AsyncMessageNode | AsyncOperationNode
 export type ServiceNode = Node<typeof NodeType.HttpService, IHttpService> & { children: ServiceChildNode[] } & { specVersion: SpecVersion }
-

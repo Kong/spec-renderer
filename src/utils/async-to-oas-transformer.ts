@@ -43,6 +43,12 @@ const getOperationTypeLabel = ({
  * @returns
  */
 export const transformMessage = (message: MessageInterface): AsyncMessageNode => {
+  const messageExamples = message.examples().all().map(example => ({
+    ...(example.name() ? { name: example.name() } : null),
+    ...(example.summary() ? { summary: example.summary() } : null),
+    ...(example.hasPayload() ? { payload: example.payload() } : null),
+    ...(example.hasHeaders() ? { headers: example.headers() } : null),
+  }))
 
   return <AsyncMessageNode>{
     type: NodeType.AsyncMessage,
@@ -54,6 +60,7 @@ export const transformMessage = (message: MessageInterface): AsyncMessageNode =>
       correlationId: message.correlationId()?.location(),
       title: message.title(),
       messageId: message.id(),
+      ...(messageExamples.length ? { messageExamples } : null),
       ...(message.hasPayload() ? {
         payload: <SchemaObject>transformSchema(message.payload()),
       } : null),
@@ -340,4 +347,3 @@ export const transform = (document: AsyncAPIDocumentInterface, transformOptions:
   }
   return { toc: resTOC, document: resDOC }
 }
-
