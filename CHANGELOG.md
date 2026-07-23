@@ -1,3 +1,10 @@
+## [1.108.7](https://github.com/Kong/spec-renderer/compare/v1.108.6...v1.108.7) (2026-07-23)
+
+
+### Bug Fixes
+
+* add max-height and scrolling to SelectDropdown for better UX [TDX-8533] ([#923](https://github.com/Kong/spec-renderer/issues/923)) ([34af086](https://github.com/Kong/spec-renderer/commit/34af0868b91b0ddc7f1e52c62740c1804f92f406))
+
 ## [1.108.6](https://github.com/Kong/spec-renderer/compare/v1.108.5...v1.108.6) (2026-07-22)
 
 
