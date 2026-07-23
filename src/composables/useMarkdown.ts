@@ -1,6 +1,6 @@
 import markdownit from 'markdown-it'
 import type MarkdownIt from 'markdown-it'
-import sanitize from 'sanitize-html'
+import { sanitizeMarkdownHtml } from '@/utils/html-sanitizer'
 
 let md: MarkdownIt | null
 
@@ -25,11 +25,9 @@ export default function useMarkdown() {
     initializeMarkdown()
     try {
       const renderedText = md?.render(text) || text
-      return sanitize(renderedText, {
-        allowedTags: sanitize.defaults.allowedTags.concat(['img', 'details', 'summary']),
-      })
+      return sanitizeMarkdownHtml(renderedText)
     } catch {
-      return text
+      return sanitizeMarkdownHtml(text)
     }
   }
 

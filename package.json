@@ -65,7 +65,6 @@
     "@stoplight/yaml": "^4.3.0",
     "@vueuse/core": "^14.3.0",
     "allof-merge": "^0.6.8",
-    "dompurify": "^3.4.12",
     "flatted": "^3.4.2",
     "form-urlencoded": "^6.1.7",
     "httpsnippet": "^3.0.10",
