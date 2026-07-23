@@ -38,3 +38,19 @@ describe('<CodeBlock /> isResizable', () => {
     expect(wrapper.classes()).not.toContain('is-resizable')
   })
 })
+
+describe('<CodeBlock /> sanitization', () => {
+  it('sanitizes error HTML while preserving line breaks', () => {
+    const wrapper = mount(CodeBlock, {
+      props: {
+        code: '<img src=x onerror=alert(1)>request failed<br/>try again<script>alert(1)</script>',
+        isError: true,
+      },
+    })
+
+    expect(wrapper.find('img').exists()).toBe(false)
+    expect(wrapper.find('script').exists()).toBe(false)
+    expect(wrapper.find('br').exists()).toBe(true)
+    expect(wrapper.find('.error').text()).toBe('request failedtry again')
+  })
+})

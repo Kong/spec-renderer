@@ -11,6 +11,7 @@ import { requestSampleConfigs } from '@/constants'
 import type { LanguageCode } from '@/types/request-languages'
 import { KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST, KUI_COLOR_BACKGROUND_NEUTRAL_STRONGEST } from '@kong/design-tokens'
 import { MASK_PLACEHOLDER } from '@/utils'
+import { sanitizeCodeBlockHtml } from '@/utils/html-sanitizer'
 
 const props = defineProps({
   code: {
@@ -38,9 +39,7 @@ const getHighlightLanguage = (snippetLang: LanguageCode | null | undefined): str
 
 const highlightedCode = computed(():string => {
   let html = ''
-  if (props.isError) {
-    html = `<div class='error'>${props.code}</div>`
-  } else if (highlighter.value && props.lang) {
+  if (!props.isError && highlighter.value && props.lang) {
     const hightLightLang = getHighlightLanguage(props.lang as LanguageCode)
     html = highlighter.value.codeToHtml(props.code, {
       lang: hightLightLang as string,
@@ -66,7 +65,9 @@ const highlightedCode = computed(():string => {
   return html
 })
 
-const VNode = () => h('div', { class: 'code-block', innerHTML: highlightedCode.value })
+const VNode = () => props.isError
+  ? h('div', { class: 'code-block' }, [h('div', { class: 'error', innerHTML: sanitizeCodeBlockHtml(props.code) })])
+  : h('div', { class: 'code-block', innerHTML: sanitizeCodeBlockHtml(highlightedCode.value) })
 </script>
 
 <style lang="scss">
