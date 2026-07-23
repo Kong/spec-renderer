@@ -150,6 +150,9 @@ watch(selectValue, (newValue: string) => {
 </script>
 
 <style lang="scss" scoped>
+// Keep long option lists usable without allowing the dropdown to dominate the viewport.
+$select-dropdown-max-height: 400px;
+
 :deep(.popover-trigger-wrapper) {
   display: inline-block;
 }
@@ -209,6 +212,9 @@ watch(selectValue, (newValue: string) => {
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     box-shadow: var(--kui-shadow, $kui-shadow);
+    max-height: min($select-dropdown-max-height, calc(100vh - 16px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding: var(--kui-space-10, $kui-space-10) var(--kui-space-0, $kui-space-0);
 
     ul {

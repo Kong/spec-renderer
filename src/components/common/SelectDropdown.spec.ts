@@ -47,6 +47,24 @@ describe('<SelectDropdown />', () => {
       expect(wrapper.findAll('button[data-testid="select-item-trigger"]')[1].text()).toBe('Item 3')
     })
 
+    it('should render large option lists inside the scrollable items container', async () => {
+      const manyItems = Array.from({ length: 50 }, (_, index) => ({
+        label: `Item ${index + 1}`,
+        value: `item-${index + 1}`,
+      }))
+      const wrapper = mount(SelectDropdown, {
+        props: { items: manyItems },
+        attachTo: document.body,
+      })
+
+      await wrapper.findTestId('trigger-button').trigger('click')
+
+      const itemsContainer = wrapper.find('.select-items-container')
+      expect(itemsContainer.exists()).toBe(true)
+      expect(itemsContainer.findAll('.select-item')).toHaveLength(50)
+      wrapper.unmount()
+    })
+
     it('displays selected item label in trigger when provided through `modelValue`', () => {
       const wrapper = mount(SelectDropdown, {
         props: {
