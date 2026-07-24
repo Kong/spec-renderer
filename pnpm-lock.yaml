@@ -175,7 +175,7 @@ importers:
         version: 0.9.1(typescript@5.9.3)(vue@3.5.39(typescript@5.9.3))
       autoprefixer:
         specifier: ^10.5.1
-        version: 10.5.2(postcss@8.5.15)
+        version: 10.5.2(postcss@8.5.18)
       c8:
         specifier: ^11.0.0
         version: 11.0.0
@@ -199,7 +199,7 @@ importers:
         version: 4.6.0
       postcss:
         specifier: ^8.5.15
-        version: 8.5.15
+        version: 8.5.18
       postcss-html:
         specifier: ^1.8.1
         version: 1.8.1
@@ -226,7 +226,7 @@ importers:
         version: 1.1.0(postcss-html@1.8.1)(stylelint@17.8.0(typescript@5.9.3))
       stylelint-config-recommended-scss:
         specifier: ^17.0.1
-        version: 17.0.1(postcss@8.5.15)(stylelint@17.8.0(typescript@5.9.3))
+        version: 17.0.1(postcss@8.5.18)(stylelint@17.8.0(typescript@5.9.3))
       stylelint-config-recommended-vue:
         specifier: ^1.6.1
         version: 1.6.1(postcss-html@1.8.1)(stylelint@17.8.0(typescript@5.9.3))
@@ -4046,8 +4046,8 @@ packages:
   mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
 
-  nanoid@3.3.12:
-    resolution: {integrity: sha512-ZB9RH/39qpq5Vu6Y+NmUaFhQR6pp+M2Xt76XBnEwDaGcVAqhlvxrl3B2bKS5D3NH3QR76v3aSrKaF/Kiy7lEtQ==}
+  nanoid@3.3.16:
+    resolution: {integrity: sha512-bzlKTyNJ7+LdGIIwy8ijFpIqEQIvafahV7eYykJ8Cvh42EdJeODoJ6gUJXpQJvej1BddH8OqTXZNE/KfbWAu8Q==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
@@ -4503,12 +4503,8 @@ packages:
   postcss-value-parser@4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
 
-  postcss@8.5.15:
-    resolution: {integrity: sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==}
-    engines: {node: ^10 || ^12 || >=14}
-
-  postcss@8.5.16:
-    resolution: {integrity: sha512-vuwillviilfKZsg0VGj5R/YwwcHx4SLsIOI/7K6mQkWx+l5cUHTjj5g0AasTBcyXsbfTgrwsUNmVUb5xVwyPwg==}
+  postcss@8.5.18:
+    resolution: {integrity: sha512-xdB1oSLHbz1vRWgCDalrCqEFTWzFlhqFC5tIHLMOSUIjhm3XXQ1qrFy8S/ESr1JYRRXqM3c1QFiMZUJdUTqyMQ==}
     engines: {node: ^10 || ^12 || >=14}
 
   postman-collection@4.5.0:
@@ -7266,7 +7262,7 @@ snapshots:
       '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-tokenizer': 4.0.0
       '@csstools/media-query-list-parser': 5.0.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
-      postcss: 8.5.16
+      postcss: 8.5.18
       postcss-selector-parser: 7.1.4
       postcss-value-parser: 4.2.0
       style-search: 0.1.0
@@ -7598,7 +7594,7 @@ snapshots:
       '@vue/shared': 3.5.35
       estree-walker: 2.0.2
       magic-string: 0.30.21
-      postcss: 8.5.16
+      postcss: 8.5.18
       source-map-js: 1.2.1
 
   '@vue/compiler-sfc@3.5.39':
@@ -7610,7 +7606,7 @@ snapshots:
       '@vue/shared': 3.5.39
       estree-walker: 2.0.2
       magic-string: 0.30.21
-      postcss: 8.5.16
+      postcss: 8.5.18
       source-map-js: 1.2.1
 
   '@vue/compiler-ssr@3.5.35':
@@ -7859,13 +7855,13 @@ snapshots:
 
   at-least-node@1.0.0: {}
 
-  autoprefixer@10.5.2(postcss@8.5.15):
+  autoprefixer@10.5.2(postcss@8.5.18):
     dependencies:
       browserslist: 4.28.4
       caniuse-lite: 1.0.30001802
       fraction.js: 5.3.4
       picocolors: 1.1.1
-      postcss: 8.5.15
+      postcss: 8.5.18
       postcss-value-parser: 4.2.0
 
   available-typed-arrays@1.0.7:
@@ -10060,7 +10056,7 @@ snapshots:
       object-assign: 4.1.1
       thenify-all: 1.6.0
 
-  nanoid@3.3.12: {}
+  nanoid@3.3.16: {}
 
   natural-compare@1.4.0: {}
 
@@ -10415,24 +10411,24 @@ snapshots:
     dependencies:
       htmlparser2: 8.0.2
       js-tokens: 9.0.1
-      postcss: 8.5.15
-      postcss-safe-parser: 6.0.0(postcss@8.5.15)
+      postcss: 8.5.18
+      postcss-safe-parser: 6.0.0(postcss@8.5.18)
 
   postcss-media-query-parser@0.2.3: {}
 
   postcss-resolve-nested-selector@0.1.6: {}
 
-  postcss-safe-parser@6.0.0(postcss@8.5.15):
+  postcss-safe-parser@6.0.0(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.15
+      postcss: 8.5.18
 
-  postcss-safe-parser@7.0.1(postcss@8.5.15):
+  postcss-safe-parser@7.0.1(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.15
+      postcss: 8.5.18
 
-  postcss-scss@4.0.9(postcss@8.5.15):
+  postcss-scss@4.0.9(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.15
+      postcss: 8.5.18
 
   postcss-selector-parser@7.1.1:
     dependencies:
@@ -10444,21 +10440,15 @@ snapshots:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
-  postcss-sorting@10.0.0(postcss@8.5.15):
+  postcss-sorting@10.0.0(postcss@8.5.18):
     dependencies:
-      postcss: 8.5.15
+      postcss: 8.5.18
 
   postcss-value-parser@4.2.0: {}
 
-  postcss@8.5.15:
+  postcss@8.5.18:
     dependencies:
-      nanoid: 3.3.12
-      picocolors: 1.1.1
-      source-map-js: 1.2.1
-
-  postcss@8.5.16:
-    dependencies:
-      nanoid: 3.3.12
+      nanoid: 3.3.16
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
@@ -10734,7 +10724,7 @@ snapshots:
       is-plain-object: 5.0.0
       launder: 1.7.1
       parse-srcset: 1.0.2
-      postcss: 8.5.16
+      postcss: 8.5.18
 
   sass-embedded-all-unknown@1.100.0:
     dependencies:
@@ -11150,14 +11140,14 @@ snapshots:
       postcss-html: 1.8.1
       stylelint: 17.8.0(typescript@5.9.3)
 
-  stylelint-config-recommended-scss@17.0.1(postcss@8.5.15)(stylelint@17.8.0(typescript@5.9.3)):
+  stylelint-config-recommended-scss@17.0.1(postcss@8.5.18)(stylelint@17.8.0(typescript@5.9.3)):
     dependencies:
-      postcss-scss: 4.0.9(postcss@8.5.15)
+      postcss-scss: 4.0.9(postcss@8.5.18)
       stylelint: 17.8.0(typescript@5.9.3)
       stylelint-config-recommended: 18.0.0(stylelint@17.8.0(typescript@5.9.3))
       stylelint-scss: 7.0.0(stylelint@17.8.0(typescript@5.9.3))
     optionalDependencies:
-      postcss: 8.5.15
+      postcss: 8.5.18
 
   stylelint-config-recommended-vue@1.6.1(postcss-html@1.8.1)(stylelint@17.8.0(typescript@5.9.3)):
     dependencies:
@@ -11177,8 +11167,8 @@ snapshots:
 
   stylelint-order@8.1.1(stylelint@17.8.0(typescript@5.9.3)):
     dependencies:
-      postcss: 8.5.15
-      postcss-sorting: 10.0.0(postcss@8.5.15)
+      postcss: 8.5.18
+      postcss-sorting: 10.0.0(postcss@8.5.18)
       stylelint: 17.8.0(typescript@5.9.3)
 
   stylelint-scss@7.0.0(stylelint@17.8.0(typescript@5.9.3)):
@@ -11222,8 +11212,8 @@ snapshots:
       micromatch: 4.0.8
       normalize-path: 3.0.0
       picocolors: 1.1.1
-      postcss: 8.5.15
-      postcss-safe-parser: 7.0.1(postcss@8.5.15)
+      postcss: 8.5.18
+      postcss-safe-parser: 7.0.1(postcss@8.5.18)
       postcss-selector-parser: 7.1.1
       postcss-value-parser: 4.2.0
       string-width: 8.2.0
@@ -11693,7 +11683,7 @@ snapshots:
       esbuild: 0.28.1
       fdir: 6.5.0(picomatch@4.0.4)
       picomatch: 4.0.4
-      postcss: 8.5.16
+      postcss: 8.5.18
       rollup: 4.62.2
       tinyglobby: 0.2.17
     optionalDependencies:
