@@ -13,6 +13,18 @@ export type TableOfContentsExternalLink = {
   url: string
 }
 
+/**
+ * Static, non-clickable label used to visually separate related TOC groups.
+ *
+ * Unlike TableOfContentsGroup, this item has no children and is not collapsible.
+ * It exists so extension-provided section headings can be rendered as normal TOC
+ * siblings without pretending to be operation/model/document nodes.
+ */
+export type TableOfContentsLabel = {
+  title: string
+  type: 'label'
+}
+
 export type TableOfContentsNode<
   T = 'http_service' | 'http_operation' | 'http_webhook' | 'model' | 'article' | 'overview',
 > = {
@@ -30,7 +42,6 @@ export type TableOfContentsNodeGroup = TableOfContentsNode<'http_service'> & Tab
 export type TableOfContentsGroup = {
   title: string
   hideTitle?: boolean
-  groupLabel?: boolean
   items: TableOfContentsGroupItem[]
   itemsType?: 'article' | 'http_operation' | 'http_webhook' | 'model'
   /**
@@ -45,5 +56,6 @@ export type TableOfContentsGroupItem =
   | TableOfContentsNodeGroup
   | TableOfContentsNode
   | TableOfContentsExternalLink
+  | TableOfContentsLabel
 
 export type TableOfContentsItem = TableOfContentsGroupItem

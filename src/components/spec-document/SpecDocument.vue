@@ -72,7 +72,7 @@ import { BOOL_VALIDATOR, IS_TRUE, isSsr, findMatchingNode, NUMBER_VALIDATOR, con
 import type { NavigationTypes } from '@/types'
 import { stringify, parse as parseFlatted } from 'flatted'
 import type { TableOfContentsItem, TableOfContentsNode, TableOfContentsGroup } from '@/stoplight/elements-core'
-import { isGroup } from '../spec-renderer-toc'
+import { isGroup, isLabel } from '../spec-renderer-toc'
 import type { INodeTag } from '@stoplight/types'
 
 const props = defineProps({
@@ -375,6 +375,10 @@ const nodesList = computed(() => {
         return
       }
       for (let i = 0; i < item.items.length; i++) {
+        // Labels are sidebar-only separators; they should not create document sections.
+        if (isLabel(item.items[i])) {
+          continue
+        }
         const childItem = item.items[i] as TableOfContentsNode
         if (childItem.id === '/') {
           continue

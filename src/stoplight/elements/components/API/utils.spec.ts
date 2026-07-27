@@ -42,6 +42,7 @@ const endpointItems = (node: ServiceNode, currentPath = ''): TableOfContentsGrou
 
 const operationTitles = (items: TableOfContentsGroup['items']): string[] => items.flatMap((item) => {
   if ('items' in item) return operationTitles(item.items)
+  if ('type' in item && item.type === 'label') return []
   return item.title
 })
 
@@ -67,35 +68,29 @@ describe('computeAPITree x-tagGroups', () => {
     expect(tree).toEqual([
       {
         title: 'Admin',
-        groupLabel: true,
-        items: [
-          {
-            title: 'Invoices',
-            itemsType: 'http_operation',
-            initiallyExpanded: false,
-            items: [{ id: '/paths/invoices/get', slug: '/paths/invoices/get', title: 'List invoices', type: 'http_operation', meta: 'get' }],
-          },
-          {
-            title: 'Billing',
-            itemsType: 'http_operation',
-            initiallyExpanded: false,
-            items: [{ id: '/paths/billing/get', slug: '/paths/billing/get', title: 'List billing', type: 'http_operation', meta: 'get' }],
-          },
-        ],
-        initiallyExpanded: true,
+        type: 'label',
+      },
+      {
+        title: 'Invoices',
+        itemsType: 'http_operation',
+        initiallyExpanded: false,
+        items: [{ id: '/paths/invoices/get', slug: '/paths/invoices/get', title: 'List invoices', type: 'http_operation', meta: 'get' }],
+      },
+      {
+        title: 'Billing',
+        itemsType: 'http_operation',
+        initiallyExpanded: false,
+        items: [{ id: '/paths/billing/get', slug: '/paths/billing/get', title: 'List billing', type: 'http_operation', meta: 'get' }],
       },
       {
         title: 'Public',
-        groupLabel: true,
-        items: [
-          {
-            title: 'Customers',
-            itemsType: 'http_operation',
-            initiallyExpanded: false,
-            items: [{ id: '/paths/customers/get', slug: '/paths/customers/get', title: 'List customers', type: 'http_operation', meta: 'get' }],
-          },
-        ],
-        initiallyExpanded: true,
+        type: 'label',
+      },
+      {
+        title: 'Customers',
+        itemsType: 'http_operation',
+        initiallyExpanded: false,
+        items: [{ id: '/paths/customers/get', slug: '/paths/customers/get', title: 'List customers', type: 'http_operation', meta: 'get' }],
       },
     ])
   })
@@ -109,11 +104,10 @@ describe('computeAPITree x-tagGroups', () => {
       ],
     }))
 
-    expect(tree.map(item => item.title)).toEqual(['Core Banking'])
-    expect(asGroup(tree[0]).groupLabel).toBe(true)
-    expect(asGroup(tree[0]).items.map(item => item.title)).toEqual(['Accounts', 'Transactions'])
-    expect(asGroup(asGroup(tree[0]).items[0]).items[0].title).toBe('List accounts')
-    expect(asGroup(asGroup(tree[0]).items[1]).items[0].title).toBe('List transactions')
+    expect(tree.map(item => item.title)).toEqual(['Core Banking', 'Accounts', 'Transactions'])
+    expect(tree[0]).toEqual({ title: 'Core Banking', type: 'label' })
+    expect(asGroup(tree[1]).items[0].title).toBe('List accounts')
+    expect(asGroup(tree[2]).items[0].title).toBe('List transactions')
   })
 
   it('hides operations with unlisted tags and no tags', () => {
@@ -166,9 +160,8 @@ describe('computeAPITree x-tagGroups', () => {
       children: [operation('Get list of beers', '/paths/beers-ale/get', ['System', 'Mesh'])],
     }))
 
-    const beerGroup = asGroup(tree[0])
-    expect(asNode(asGroup(beerGroup.items[0]).items[0]).id).toBe('/paths/mesh/beers-ale/get')
-    expect(asNode(asGroup(beerGroup.items[1]).items[0]).id).toBe('/paths/beers-ale/get')
+    expect(asNode(asGroup(tree[1]).items[0]).id).toBe('/paths/mesh/beers-ale/get')
+    expect(asNode(asGroup(tree[2]).items[0]).id).toBe('/paths/beers-ale/get')
   })
 
   it('expands tag group containing the active operation', () => {
@@ -177,9 +170,8 @@ describe('computeAPITree x-tagGroups', () => {
       children: [operation('Active operation', '/paths/active/get', ['Active'])],
     }), '/paths/active/get')
 
-    const activeGroup = asGroup(tree[0])
-    expect(activeGroup.groupLabel).toBe(true)
-    expect(asGroup(activeGroup.items[0]).initiallyExpanded).toBe(true)
+    expect(tree[0]).toEqual({ title: 'Active group', type: 'label' })
+    expect(asGroup(tree[1]).initiallyExpanded).toBe(true)
   })
 
   it('filters deprecated and internal operations inside nested groups', () => {

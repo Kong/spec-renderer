@@ -9,21 +9,18 @@ const nestedTableOfContents = [
     items: [
       {
         title: 'Commerce APIs',
-        groupLabel: true,
-        initiallyExpanded: true,
+        type: 'label',
+      },
+      {
+        title: 'Orders',
+        initiallyExpanded: false,
         items: [
           {
-            title: 'Orders',
-            initiallyExpanded: false,
-            items: [
-              {
-                id: '/orders/list-orders',
-                slug: 'list-orders',
-                title: 'List orders',
-                type: 'http_operation',
-                meta: 'get',
-              },
-            ],
+            id: '/orders/list-orders',
+            slug: 'list-orders',
+            title: 'List orders',
+            type: 'http_operation',
+            meta: 'get',
           },
         ],
       },
@@ -52,13 +49,10 @@ describe('<SpecRendererToc />', () => {
     })
 
     const groups = wrapper.findAll('[data-testid="group-item"]')
-    expect(groups).toHaveLength(3)
+    expect(groups).toHaveLength(2)
     expect(groups[0].classes()).toContain('root')
     expect(groups[1].classes()).not.toContain('root')
-    expect(groups[2].classes()).not.toContain('root')
-    expect(wrapper.find('[data-testid="group-label"]').text()).toBe('Commerce APIs')
-    expect(wrapper.find('[data-testid="group-label"] + button').exists()).toBe(false)
-    expect(wrapper.find('.group-label-list').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="label-item"]').text()).toBe('Commerce APIs')
     expect(wrapper.text()).toContain('Commerce APIs')
     expect(wrapper.text()).toContain('Orders')
     expect(wrapper.text()).toContain('List orders')

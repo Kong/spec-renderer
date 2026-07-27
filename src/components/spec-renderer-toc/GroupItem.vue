@@ -1,19 +1,11 @@
 <template>
   <li
     class="group-item"
-    :class="{ root: root, 'group-label-item': item.groupLabel }"
+    :class="{ root: root }"
     data-testid="group-item"
   >
-    <div
-      v-if="item.groupLabel"
-      class="group-label"
-      data-testid="group-label"
-    >
-      {{ item.title }}
-    </div>
-
     <button
-      v-else-if="!item.hideTitle"
+      v-if="!item.hideTitle"
       ref="collapseTrigger"
       :aria-controls="collapseGroupId"
       :aria-expanded="isExpanded"
@@ -31,9 +23,8 @@
 
     <Transition name="spec-renderer-fade">
       <ul
-        v-show="item.groupLabel || isExpanded"
+        v-show="isExpanded"
         :id="collapseGroupId"
-        :class="{ 'group-label-list': item.groupLabel }"
         data-testid="group-item-list"
       >
         <component
@@ -118,25 +109,6 @@ watch(() => (props.item.initiallyExpanded), (newValue) => {
   button {
     @include default-button-reset;
     @include toc-item;
-  }
-
-  .group-label {
-    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
-    font-size: var(--kui-font-size-20, $kui-font-size-20);
-    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-    line-height: var(--kui-line-height-20, $kui-line-height-20);
-    padding: var(--kui-space-30, $kui-space-30) var(--kui-space-30, $kui-space-30) var(--kui-space-20, $kui-space-20);
-    text-transform: uppercase;
-  }
-
-  &.group-label-item {
-    gap: var(--kui-space-10, $kui-space-10);
-    padding-bottom: var(--kui-space-50, $kui-space-50);
-
-    > .group-label-list {
-      gap: var(--kui-space-10, $kui-space-10);
-      padding-left: var(--kui-space-0, $kui-space-0);
-    }
   }
 
   ul {

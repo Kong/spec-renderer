@@ -92,6 +92,12 @@ export function computeTagGroups<T extends GroupableNode>(
   return { groups: orderedTagGroups, ungrouped }
 }
 
+/**
+ * Reorders existing operation tag groups according to top-level x-tagGroups.
+ *
+ * This intentionally starts from computeTagGroups output instead of raw operations
+ * so multi-tag URI rewriting and active-path expansion stay in one place.
+ */
 function computeXTagGroups(tagGroups: Array<TagGroup<OperationNode>>, serviceNode: ServiceNode): XTagGroup[] {
   const groupsByTagId = tagGroups.reduce((acc: Record<string, TagGroup<OperationNode>>, group) => {
     acc[group.title.toLowerCase()] = group
@@ -156,6 +162,8 @@ export const computeAPITree = (serviceNode: ServiceNode, config: ComputeAPITreeC
       initiallyExpanded: true, // Endpoints are always expanded by default
     })
 
+    // exists if x-tagGroups is present in the spec and
+    // has at least one tag group with at least one tag that matches a tag on an operation
     if (serviceNode.tagGroups?.length) {
       // Start from normal tag groups so multi-tag URI handling stays centralized.
       const { groups } = computeTagGroups<OperationNode>(
@@ -362,11 +370,12 @@ const addXTagGroupsToTree = ({
 
     if (!tagGroups.length) return
 
+    // Render the x-tagGroups name as a flat TOC label followed by its tag groups.
+    // The label is visual only; tags remain the collapsible navigation items.
     tree.push({
       title: xTagGroup.title,
-      groupLabel: true,
-      items: tagGroups,
-      initiallyExpanded: true,
+      type: 'label',
     })
+    tree.push(...tagGroups)
   })
 }
