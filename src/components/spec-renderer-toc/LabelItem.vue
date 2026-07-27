@@ -24,5 +24,9 @@ defineProps<{
   list-style-type: none;
   padding: var(--kui-space-30, $kui-space-30) var(--kui-space-30, $kui-space-30) var(--kui-space-0, $kui-space-0);
   text-transform: uppercase;
+
+  &:not(:first-child) {
+    margin-top: var(--kui-space-30, $kui-space-30);
+  }
 }
 </style>
