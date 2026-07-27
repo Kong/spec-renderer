@@ -14,7 +14,7 @@ export type TableOfContentsExternalLink = {
 }
 
 /**
- * Static, non-clickable label used to visually separate related TOC groups.
+ * Static, non-clickable label used to visually separate related TOC groups. e.g. tagGroups
  *
  * Unlike TableOfContentsGroup, this item has no children and is not collapsible.
  * It exists so extension-provided section headings can be rendered as normal TOC

@@ -98,12 +98,12 @@ watch(() => (props.item.initiallyExpanded), (newValue) => {
 @mixin group-spacing {
   display: flex;
   flex-direction: column;
+  gap: var(--kui-space-20, $kui-space-20);
 }
 
 .group-item {
   @include group-spacing;
 
-  gap: var(--kui-space-20, $kui-space-20);
   list-style-type: none;
 
   button {
@@ -114,7 +114,6 @@ watch(() => (props.item.initiallyExpanded), (newValue) => {
   ul {
     @include group-spacing;
 
-    gap: var(--kui-space-20, $kui-space-20);
     padding-left: var(--kui-space-40, $kui-space-40);
   }
 
