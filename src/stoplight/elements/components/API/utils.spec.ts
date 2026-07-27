@@ -67,7 +67,7 @@ describe('computeAPITree x-tagGroups', () => {
     expect(tree).toEqual([
       {
         title: 'Admin',
-        initiallyExpanded: false,
+        groupLabel: true,
         items: [
           {
             title: 'Invoices',
@@ -82,10 +82,11 @@ describe('computeAPITree x-tagGroups', () => {
             items: [{ id: '/paths/billing/get', slug: '/paths/billing/get', title: 'List billing', type: 'http_operation', meta: 'get' }],
           },
         ],
+        initiallyExpanded: true,
       },
       {
         title: 'Public',
-        initiallyExpanded: false,
+        groupLabel: true,
         items: [
           {
             title: 'Customers',
@@ -94,8 +95,25 @@ describe('computeAPITree x-tagGroups', () => {
             items: [{ id: '/paths/customers/get', slug: '/paths/customers/get', title: 'List customers', type: 'http_operation', meta: 'get' }],
           },
         ],
+        initiallyExpanded: true,
       },
     ])
+  })
+
+  it('renders tag group labels beside tag groups rather than nesting tags under labels', () => {
+    const tree = endpointItems(serviceNode({
+      tagGroups: [{ name: 'Core Banking', tags: ['Accounts', 'Transactions'] }],
+      children: [
+        operation('List accounts', '/paths/accounts/get', ['Accounts']),
+        operation('List transactions', '/paths/transactions/get', ['Transactions']),
+      ],
+    }))
+
+    expect(tree.map(item => item.title)).toEqual(['Core Banking'])
+    expect(asGroup(tree[0]).groupLabel).toBe(true)
+    expect(asGroup(tree[0]).items.map(item => item.title)).toEqual(['Accounts', 'Transactions'])
+    expect(asGroup(asGroup(tree[0]).items[0]).items[0].title).toBe('List accounts')
+    expect(asGroup(asGroup(tree[0]).items[1]).items[0].title).toBe('List transactions')
   })
 
   it('hides operations with unlisted tags and no tags', () => {
@@ -153,14 +171,14 @@ describe('computeAPITree x-tagGroups', () => {
     expect(asNode(asGroup(beerGroup.items[1]).items[0]).id).toBe('/paths/beers-ale/get')
   })
 
-  it('expands parent groups containing the active operation', () => {
+  it('expands tag group containing the active operation', () => {
     const tree = endpointItems(serviceNode({
       tagGroups: [{ name: 'Active group', tags: ['Active'] }],
       children: [operation('Active operation', '/paths/active/get', ['Active'])],
     }), '/paths/active/get')
 
     const activeGroup = asGroup(tree[0])
-    expect(activeGroup.initiallyExpanded).toBe(true)
+    expect(activeGroup.groupLabel).toBe(true)
     expect(asGroup(activeGroup.items[0]).initiallyExpanded).toBe(true)
   })
 

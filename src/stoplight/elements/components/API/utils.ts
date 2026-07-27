@@ -14,7 +14,7 @@ const defaults = (...args) => args.reverse().reduce((acc, obj) => ({ ...acc, ...
 type GroupableNode = OperationNode | WebhookNode | SchemaNode
 
 export type TagGroup<T extends GroupableNode> = { title: string, items: T[], initiallyExpanded: boolean }
-type XTagGroup = { title: string, items: Array<TagGroup<OperationNode>>, initiallyExpanded: boolean }
+type XTagGroup = { title: string, items: Array<TagGroup<OperationNode>> }
 
 const nodeToTocItem = (node: GroupableNode) => ({
   id: node.uri,
@@ -117,7 +117,6 @@ function computeXTagGroups(tagGroups: Array<TagGroup<OperationNode>>, serviceNod
     return [{
       title: tagGroup.name,
       items: groups,
-      initiallyExpanded: groups.some(group => group.initiallyExpanded),
     }]
   })
 }
@@ -342,7 +341,7 @@ const addXTagGroupsToTree = ({
   hideDeprecated,
 }: AddXTagGroupsToTreeParams) => {
   groups.forEach(xTagGroup => {
-    const tagGroups = xTagGroup.items.flatMap(tagGroup => {
+    const tagGroups = xTagGroup.items.flatMap((tagGroup) => {
       const items = tagGroup.items.flatMap(node => {
         if ((hideInternal && isInternal(node)) || (hideDeprecated && isDeprecated(node))) {
           return []
@@ -365,8 +364,9 @@ const addXTagGroupsToTree = ({
 
     tree.push({
       title: xTagGroup.title,
+      groupLabel: true,
       items: tagGroups,
-      initiallyExpanded: xTagGroup.initiallyExpanded,
+      initiallyExpanded: true,
     })
   })
 }
