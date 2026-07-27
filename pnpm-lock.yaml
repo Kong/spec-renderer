@@ -48,7 +48,7 @@ overrides:
   '@babel/core@<8.0.0': '>=8.0.1'
   markdown-it@<=14.1.1: '>=14.2.0'
   linkify-it@<=5.0.0: '>=5.0.1'
-  js-yaml@>=4.0.0 <=4.1.1: '>=4.2.0'
+  js-yaml@>=4.0.0 <=4.1.1: '>=5.2.2'
   undici@>=7.0.0 <7.28.0: '>=7.28.0'
 
 importers:
@@ -3666,8 +3666,8 @@ packages:
   js-tokens@9.0.1:
     resolution: {integrity: sha512-mxa9E9ITFOt0ban3j6L5MpjwegGz6lBQmM1IJkWeBZGcMxto50+eWdjC/52xDbS2vy0k7vIMK0Fe2wfL9OQSpQ==}
 
-  js-yaml@5.2.1:
-    resolution: {integrity: sha512-zfLtNfQqxVqq3uaTqSkh4x4hZw3KHobGUA0fJUj4wawW8bsQLTVqpHdXSIzidh7o+4lEW36tANuAGdaFx6Zgnw==}
+  js-yaml@5.2.2:
+    resolution: {integrity: sha512-dayzUzKkJ1MkuUtZglSebU43utNXH0OWQByK9rKOOuYIO8M5TV1y+n8ALMdG0rdzBnfNkOmZEqrURepb0ejqBw==}
     hasBin: true
 
   jsdom@29.1.1:
@@ -5891,7 +5891,7 @@ snapshots:
   '@apidevtools/json-schema-ref-parser@14.0.3':
     dependencies:
       '@types/json-schema': 7.0.15
-      js-yaml: 5.2.1
+      js-yaml: 5.2.2
 
   '@asamuzakjp/css-color@5.1.11':
     dependencies:
@@ -5949,7 +5949,7 @@ snapshots:
       ajv-errors: 3.0.0(ajv@8.18.0)
       ajv-formats: 2.1.1
       avsc: 5.7.7
-      js-yaml: 5.2.1
+      js-yaml: 5.2.2
       jsonpath-plus: 10.4.0
       node-fetch: 2.6.7
     transitivePeerDependencies:
@@ -8236,7 +8236,7 @@ snapshots:
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.0
-      js-yaml: 5.2.1
+      js-yaml: 5.2.2
       parse-json: 5.2.0
     optionalDependencies:
       typescript: 5.9.3
@@ -9701,7 +9701,7 @@ snapshots:
 
   js-tokens@9.0.1: {}
 
-  js-yaml@5.2.1:
+  js-yaml@5.2.2:
     dependencies:
       argparse: 2.0.1
 
