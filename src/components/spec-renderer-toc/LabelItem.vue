@@ -17,7 +17,7 @@ defineProps<{
 
 <style lang="scss" scoped>
 .label-item {
-  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+  color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
   font-size: var(--kui-font-size-20, $kui-font-size-20);
   font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
   line-height: var(--kui-line-height-20, $kui-line-height-20);
