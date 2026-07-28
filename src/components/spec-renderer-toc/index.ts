@@ -4,6 +4,7 @@ import type {
   TableOfContentsNodeGroup,
   TableOfContentsGroup,
   TableOfContentsExternalLink,
+  TableOfContentsLabel,
 } from '@/stoplight/elements-core'
 
 import UnknownItem from './UnknownItem.vue'
@@ -11,6 +12,7 @@ import NodeItem from './NodeItem.vue'
 import GroupItem from './GroupItem.vue'
 import NodeGroupItem from './NodeGroupItem.vue'
 import ExternalLinkItem from './ExternalLinkItem.vue'
+import LabelItem from './LabelItem.vue'
 
 export function isGroup(item: TableOfContentsItem): item is TableOfContentsGroup {
   return Object.keys(item).length >= 2 && 'title' in item && 'items' in item
@@ -28,7 +30,21 @@ export function isExternalLink(item: TableOfContentsItem): item is TableOfConten
   return Object.keys(item).length === 2 && 'title' in item && 'url' in item
 }
 
+/**
+ * Returns true for non-interactive TOC section labels. e.g. tagGroups
+ *
+ * Labels are checked before node items because they also carry a `type` field,
+ * but `type: 'label'` is a presentation marker rather than a document node type.
+ */
+export function isLabel(item: TableOfContentsItem): item is TableOfContentsLabel {
+  return 'title' in item && 'type' in item && item.type === 'label'
+}
+
 export const itemComponent = (tableOfContentsItem: TableOfContentsItem) => {
+  if (isLabel(tableOfContentsItem)) {
+    return LabelItem
+  }
+
   if (isNodeGroup(tableOfContentsItem)) {
     return NodeGroupItem
   }

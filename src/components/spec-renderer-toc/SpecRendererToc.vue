@@ -134,16 +134,24 @@ const toc = computed((): TableOfContentsItem[] | undefined => {
       return undefined
     }
   }
-  const crawl = (item: TableOfContentsGroup, path: string): void => {
+  // Return whether the active item exists below this group so every ancestor expands.
+  const crawl = (item: TableOfContentsGroup, path: string): boolean => {
     if (!Array.isArray(item.items)) {
-      return
+      return false
     }
     for (let i = 0; i < item.items.length; i++) {
+      // Direct child match: expand this group so the active item is visible.
       if ((item.items[i] as TableOfContentsNode).id === path) {
         item.initiallyExpanded = true
+        return true
       }
-      crawl((item.items[i] as TableOfContentsGroup), path)
+      // Descendant match: bubble the expanded state up through nested groups.
+      if (crawl((item.items[i] as TableOfContentsGroup), path)) {
+        item.initiallyExpanded = true
+        return true
+      }
     }
+    return false
   }
   crawl({ title: '', initiallyExpanded: false, items: <TableOfContentsItem[]>newToc }, props.currentPath)
 
