@@ -1,3 +1,10 @@
+# [1.109.0](https://github.com/Kong/spec-renderer/compare/v1.108.7...v1.109.0) (2026-07-28)
+
+
+### Features
+
+* add support for x-tagGroups extension [TDX-8530] ([#924](https://github.com/Kong/spec-renderer/issues/924)) ([c1be3e9](https://github.com/Kong/spec-renderer/commit/c1be3e91c2de2e5a27a78ade818a46802ddc4fdc))
+
 ## [1.108.7](https://github.com/Kong/spec-renderer/compare/v1.108.6...v1.108.7) (2026-07-23)
 
 
