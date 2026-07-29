@@ -112,9 +112,6 @@ const sizeText = computed((): string =>
 
   .response-download-btn {
     align-items: center;
-    background-color: var(--kui-color-background, $kui-color-background);
-    border: var(--kui-border-width-20, $kui-border-width-20) solid var(--kui-color-border-primary, $kui-color-border-primary);
-    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     color: var(--kui-color-text-primary, $kui-color-text-primary);
     display: inline-flex;
     flex-shrink: 0;
