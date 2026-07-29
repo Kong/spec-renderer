@@ -205,7 +205,7 @@ import PageHeader from '../common/PageHeader.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import { LinkIcon, CheckIcon } from '@kong/icons'
 import { useClipboard } from '@vueuse/core'
-import { getSamplePath, getSampleQuery, getSampleBody, getSampleHeaders } from '@/utils'
+import { getSamplePath, getSampleQuery, getSampleBody, getSampleFormFields, getSampleHeaders } from '@/utils'
 import composables from '@/composables'
 import type { SecuritySchemeGroup, RequestBody } from '@/types'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
@@ -361,17 +361,29 @@ const isBinaryBody = computed((): boolean => {
   activeRequestBodyContentList.value[0]?.schema?.contentMediaType === 'application/octet-stream')
 })
 
+const isMultipartBody = computed((): boolean => {
+  return activeRequestBodyContentList.value?.length > 0 &&
+    activeRequestBodyContentList.value[0]?.mediaType === 'multipart/form-data'
+})
+
 function updateRequestBodyContentType(newContentType: string) {
   activeRequestBodyContentType.value = newContentType
 
   let acceptedExt = '*'
 
-  if (activeRequestBodyContentList.value?.length > 0 && activeRequestBodyContentList.value[0]?.mediaType) {
+  // multipart/form-data must not have an explicit Content-Type header - the browser generates
+  // one with the boundary parameter, and setting it manually breaks the request.
+  if (activeRequestBodyContentList.value?.length > 0 && activeRequestBodyContentList.value[0]?.mediaType && !isMultipartBody.value) {
     currentRequestHeaders.value.push({ name: 'Content-Type', value: activeRequestBodyContentList.value[0].mediaType })
     acceptedExt = `.${activeRequestBodyContentList.value[0].mediaType.split('/').reverse()[0]}`
   }
 
-  if (isBinaryBody.value) {
+  if (isMultipartBody.value) {
+    currentRequestBody.value = { isMultipart: true, formFields: getSampleFormFields(
+      activeRequestBodyContentList.value[0],
+      { excludeReadonly: true, excludeNotRequired: excludeNotRequired.value },
+    ) }
+  } else if (isBinaryBody.value) {
     currentRequestBody.value = { isBinary: true, content: [], acceptedExt }
   } else {
     currentRequestBody.value = { isBinary: false, content: activeRequestBodyContentList.value.length

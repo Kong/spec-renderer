@@ -343,7 +343,9 @@ watch(() => ({
         ...getRequestHeaders(props.data),
         ...newValue.customHeaders,
         ...newValue.authHeaders,
-      ]
+        // the browser/HTTPSnippet must set Content-Type itself (with the multipart boundary) - an
+        // explicit value here (from getRequestHeaders' default) would conflict with it
+      ].filter(h => !(newValue.requestBody.isMultipart && h.name?.toLowerCase() === 'content-type'))
       // returns json or formencoded body based on content-type header, we need to provide headers as an plain object key = header name, value: header value
       const { body: textBody } = getFormattedBody(headers.reduce<Record<string, string>>((acc, current) => {
         if (current.name && current.value !== undefined) {
@@ -370,7 +372,23 @@ watch(() => ({
 
       } as unknown as HarRequest)
 
-      if (!newValue.requestBody.isBinary && textBody) {
+      if (newValue.requestBody.isMultipart) {
+        const multipartParams: Array<{ name: string, value?: string, fileName?: string, contentType?: string }> = []
+        newValue.requestBody.formFields?.forEach(field => {
+          if (field.kind === 'file') {
+            field.files?.forEach(file => multipartParams.push({ name: field.name, fileName: file.name, contentType: field.contentType }))
+          } else if (field.kind === 'json') {
+            multipartParams.push({ name: field.name, value: field.value ?? '', contentType: field.contentType ?? 'application/json' })
+          } else if (field.value !== undefined) {
+            multipartParams.push({ name: field.name, value: field.value })
+          }
+        })
+        reqData.postData = {
+          mimeType: 'multipart/form-data',
+          params: multipartParams,
+        }
+      }
+      if (!newValue.requestBody.isBinary && !newValue.requestBody.isMultipart && textBody) {
         reqData.postData = {
           // HTTPsnippet is not doing nice trying to handle with body params based on mimeType, so we going to send pre-formatted body, and
           // make HTTPsnippet to use as is by forcing mimeType as `text/plain`

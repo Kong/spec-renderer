@@ -271,6 +271,27 @@ const doApiCall = async (callAsIs = false) => {
       return
     }
 
+    let formDataBody: FormData | null = null
+    if (currentRequestBody.value.isMultipart) {
+      formDataBody = new FormData()
+      currentRequestBody.value.formFields?.forEach(field => {
+        if (field.kind === 'file') {
+          field.files?.forEach(file => formDataBody!.append(field.name, file))
+        } else if (field.kind === 'json') {
+          formDataBody!.append(field.name, new Blob([field.value ?? ''], { type: field.contentType ?? 'application/json' }))
+        } else if (field.value !== undefined) {
+          formDataBody!.append(field.name, field.value)
+        }
+      })
+
+      // the browser must set Content-Type itself (with the multipart boundary) - any explicit
+      // value here (from getRequestHeaders' default, or a user-added header) breaks the request
+      const contentTypeKey = Object.keys(headers).find(key => key.toLowerCase() === 'content-type')
+      if (contentTypeKey) {
+        delete headers[contentTypeKey]
+      }
+    }
+
     // first time we call GET - we will try to convert to simple request
     if (callAsIs === false && isGet) {
       if (headers['content-type']) {
@@ -285,7 +306,7 @@ const doApiCall = async (callAsIs = false) => {
       method: String(props.data.method).toUpperCase(),
       cache: 'no-cache',
       headers,
-      ...(textBody || binaryBody ? { body: textBody || binaryBody } : null),
+      ...(textBody || binaryBody || formDataBody ? { body: textBody || binaryBody || formDataBody } : null),
     })
     response.value = myResponse
 

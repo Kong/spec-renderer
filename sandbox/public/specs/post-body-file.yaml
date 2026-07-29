@@ -8,6 +8,62 @@ servers:
     description: Main server
 
 paths:
+  /documents/multipart-upload:
+    post:
+      summary: Submit Document
+      description: Accepts a document file alongside metadata as a multipart/form-data submission.
+      operationId: submitDocumentMultipart
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - title
+                - file
+              properties:
+                title:
+                  type: string
+                  description: Title of the document.
+                  example: Q1 Financial Report
+                file:
+                  type: string
+                  format: binary
+                  description: The document file to upload.
+                attachments:
+                  type: array
+                  description: Optional additional files.
+                  items:
+                    type: string
+                    format: binary
+                metadata:
+                  type: object
+                  description: Optional structured metadata about the document.
+                  properties:
+                    department:
+                      type: string
+                    confidential:
+                      type: boolean
+        required: true
+      responses:
+        '200':
+          description: Successful submission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+        '400':
+          description: Bad request - Invalid input data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+                example:
+                  error: "Invalid form data."
   /documents:
     post:
       summary: Submit Document

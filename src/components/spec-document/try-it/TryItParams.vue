@@ -86,17 +86,23 @@
         to edit.
       </p>
       <CodeBlock
-        v-if="!requestBody.isBinary && fieldValues.body && hasMaskedData && !showSensitiveData"
+        v-if="!requestBody.isBinary && !requestBody.isMultipart && fieldValues.body && hasMaskedData && !showSensitiveData"
         class="body-param-code-block"
         :code="maskedBodyCode"
         lang="json"
       />
       <EditableCodeBlock
-        v-else-if="!requestBody.isBinary && fieldValues.body"
+        v-else-if="!requestBody.isBinary && !requestBody.isMultipart && fieldValues.body"
         class="body-param-code-block"
         :code="fieldValues.body"
         lang="json"
         @request-body-changed="requestBodyChanged"
+      />
+      <TryItFormData
+        v-else-if="requestBody.isMultipart"
+        :data="data"
+        :fields="requestBody.formFields ?? []"
+        @request-body-changed="emitBodyChanged"
       />
       <div
         v-else
@@ -135,6 +141,7 @@ import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import RequiredToggle from './RequiredToggle.vue'
+import TryItFormData from './TryItFormData.vue'
 import type { RequestBody } from '@/types'
 import { CODE_INDENT_SPACES } from '@/constants'
 import { InfoIcon } from '@kong/icons'
@@ -228,7 +235,7 @@ const params = computed((): Record<string, IHttpPathParam | IHttpQueryParam | Re
   }
 
   if (props.paramType === 'body') {
-    if (props.requestBody.isBinary) {
+    if (props.requestBody.isBinary || props.requestBody.isMultipart) {
       return <Record<string, any>>{ body: {} }
     } else if (props.requestBody.content) {
       return <Record<string, any>>{ body: { example: props.requestBody.content } }
@@ -274,7 +281,8 @@ const bodySchema = computed((): Record<string, any> | undefined => {
 })
 
 const hasMaskedData = computed((): boolean => {
-  if (props.paramType !== 'body') return false
+  // masking isn't implemented for the per-field multipart editor, so never show the masked-body hint for it
+  if (props.paramType !== 'body' || props.requestBody.isMultipart) return false
   return hasMasking(bodySchema.value, [])
 })
 
@@ -330,6 +338,10 @@ const requestBodyChanged = (newBody: string) => {
     fieldValues.value.body = newBody
     emit('request-body-changed', { isBinary: false, content: newBody })
   }
+}
+
+const emitBodyChanged = (newBody: RequestBody) => {
+  emit('request-body-changed', newBody)
 }
 
 // this is to fire event when fieldValues changed
