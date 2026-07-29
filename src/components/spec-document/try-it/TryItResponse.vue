@@ -35,16 +35,22 @@
       v-if="hasBodyResult && selectedResOption === 'body'"
       class="wide"
     >
-      <TryItResponseDownload
-        v-if="isBinaryResponse"
+      <BinaryResponse
+        v-if="responseBodyType === 'binary'"
         :blob="responseBlob"
         :content-disposition="responseContentDisposition"
         :data-id="dataId"
       />
-      <component
-        :is="responseBodyComponent.component"
+      <ImageResponse
+        v-else-if="responseBodyType === 'image'"
+        :blob="responseBlob"
+      />
+      <CodeResponse
         v-else
-        v-bind="responseBodyComponent.props"
+        :body-schema="bodySchema"
+        :content="responseContent"
+        :lang="responseBodyType === 'json' ? 'json' : 'text'"
+        :show-sensitive-data="showSensitiveData"
       />
     </div>
 
@@ -52,25 +58,20 @@
       v-if="errorText && selectedResOption === 'error'"
       class="wide"
     >
-      <div class="error-panel">
-        {{ errorText }}
-        <div
-          v-if="!response"
-          class="cors-error"
-        >
-          Make sure CORS is enabled for the server.
-        </div>
-      </div>
+      <ErrorResponse
+        :response="response"
+        :response-error="responseError"
+      />
     </div>
 
     <div
-      v-if="headersText && selectedResOption === 'headers'"
+      v-if="hasHeaders && selectedResOption === 'headers'"
       class="wide"
     >
-      <CodeBlock
-        :code="headersText"
-        :is-resizable="true"
-        lang="json"
+      <HeadersResponse
+        :mask-rules="maskRules"
+        :response="response"
+        :show-sensitive-data="showSensitiveData"
       />
     </div>
   </CollapsablePanel>
@@ -78,17 +79,18 @@
 
 <script setup lang="ts">
 import { computed, watch, ref } from 'vue'
-import { useObjectUrl } from '@vueuse/core'
-import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import type { PropType } from 'vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import type { SelectItem, SecuritySchemeMaskRule } from '@/types'
-import { CODE_INDENT_SPACES } from '@/constants'
 import type { IHttpOperationResponse } from '@stoplight/types'
 import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
-import TryItResponseDownload from './TryItResponseDownload.vue'
-import { maskBodyExample, findResponseSchema, hasMasking, isTextualContentType } from '@/utils'
+import BinaryResponse from './response/BinaryResponse.vue'
+import ImageResponse from './response/ImageResponse.vue'
+import CodeResponse from './response/CodeResponse.vue'
+import HeadersResponse from './response/HeadersResponse.vue'
+import ErrorResponse from './response/ErrorResponse.vue'
+import { findResponseSchema, hasMasking, isTextualContentType } from '@/utils'
 
 const props = defineProps({
   dataId: {
@@ -115,22 +117,40 @@ const props = defineProps({
 
 const showSensitiveData = ref<boolean>(false)
 
-// Response body - object for JSON, string for text; blob-backed for image/binary
+// Response body - object for JSON, string for text; blob-backed for image/binary.
+// Read once here (a Response body stream can only be consumed once); child
+// components render from this already-derived, reusable data.
 const responseContent = ref<unknown>(null)
 const responseBodyType = ref<'json' | 'image' | 'text' | 'binary' | ''>('')
+const responseBlob = ref<Blob | undefined>()
 // Resolved schema — needed for toggle visibility check and masked computation
 const bodySchema = ref<Record<string, any> | undefined>()
 
-// Blob for image & binary responses
-const responseBlob = ref<Blob | undefined>()
-const objectUrl = useObjectUrl(() => responseBodyType.value === 'image' ? responseBlob.value : undefined)
-
-const isBinaryResponse = computed((): boolean => responseBodyType.value === 'binary')
-
 const responseContentDisposition = computed((): string | null => props.response?.headers?.get('content-disposition') ?? null)
 
-// The Result view has renderable content for text/json, images, and binary downloads
-const hasBodyResult = computed((): boolean => !!responseText.value || isResponseImage.value || isBinaryResponse.value)
+// The Result view has renderable content for non-empty text/binary, and always for json/image
+const hasBodyResult = computed((): boolean => {
+  switch (responseBodyType.value) {
+    case 'json':
+    case 'image':
+      return true
+    // a response with no (or an unrecognized) content-type also lands here; without a size
+    // check it would show a misleading "download" card for what's really an empty body
+    case 'binary':
+      return !!responseBlob.value?.size
+    case 'text':
+      return !!responseContent.value
+    default:
+      return false
+  }
+})
+
+const hasHeaders = computed((): boolean => {
+  if (!props.response) return false
+  return [...props.response.headers.entries()].length > 0
+})
+
+const errorText = computed((): string => props.responseError?.message || '')
 
 // Show the toggle only for the active view: body masking on Result, header masking on Headers.
 const hasMaskedData = computed((): boolean => {
@@ -143,44 +163,13 @@ const hasMaskedData = computed((): boolean => {
   return hasMasking(bodySchema.value, [])
 })
 
-// Builds the masked body
-const maskedResponseText = computed((): string | null => {
-  if (responseBodyType.value !== 'json' || !bodySchema.value) return null
-  return JSON.stringify(maskBodyExample(responseContent.value, bodySchema.value), null, CODE_INDENT_SPACES)
-})
-
-const responseText = computed((): string => {
-  if (!showSensitiveData.value && maskedResponseText.value !== null) return maskedResponseText.value
-  if (responseBodyType.value === 'json') return JSON.stringify(responseContent.value, null, CODE_INDENT_SPACES)
-  return String(responseContent.value ?? '')
-})
-
-const errorText = computed((): string => {
-  return props.responseError?.message || ''
-})
-
-const headersText = computed((): string => {
-  const headers = <Record<string, any>>{}
-  if (props.response) {
-    for (const pair of props.response.headers.entries()) {
-      if (!showSensitiveData.value) {
-        const maskedRule = props.maskRules.find(r => r.location === 'header' && r.paramName.toLowerCase() === pair[0].toLowerCase())
-        headers[pair[0]] = maskedRule ? maskedRule.placeholder : pair[1]
-      } else {
-        headers[pair[0]] = pair[1]
-      }
-    }
-  }
-  return Object.keys(headers).length ? JSON.stringify(headers, null, CODE_INDENT_SPACES) : ''
-})
-
 const resultOptions = computed((): SelectItem[] => {
   const opts = []
   if (hasBodyResult.value) {
     opts.push({ value: 'body', label: 'Result' })
   }
 
-  if (headersText.value) {
+  if (hasHeaders.value) {
     opts.push({ value: 'headers', label: 'Headers' })
   }
 
@@ -189,32 +178,6 @@ const resultOptions = computed((): SelectItem[] => {
   }
 
   return opts
-})
-
-const isResponseImage = computed(() => responseBodyType.value === 'image')
-
-// Returns the component & props to be used to display the response body
-const responseBodyComponent = computed(() => {
-  if (isResponseImage.value) {
-    return {
-      component: 'img',
-      props: {
-        src: objectUrl.value,
-        alt: 'response image',
-        width: '300px',
-      },
-    }
-  }
-
-  return {
-    component: CodeBlock,
-    props: {
-      code: responseText.value,
-      lang: requestLang.value,
-      class: 'response-body',
-      isResizable: true,
-    },
-  }
 })
 
 const selectedResOption = ref<string>()
@@ -226,14 +189,11 @@ watch(resultOptions, (options) => {
   }
 }, { immediate: true })
 
-const requestLang = computed(() => responseBodyType.value === 'json' ? 'json' : 'text')
-
 watch(() => props.response, async (res) => {
   if (res) {
     const contentType = res.headers.get('content-type') ?? ''
     if (contentType.includes('/json')) {
-      const json = await res.json()
-      responseContent.value = json
+      responseContent.value = await res.json()
       responseBodyType.value = 'json'
       responseBlob.value = undefined
       bodySchema.value = findResponseSchema(props.responseSchemas, res.status, contentType || 'application/json')
@@ -286,31 +246,11 @@ watch(() => props.response, async (res) => {
   color: var(--kui-color-text-success, $kui-color-text-success);
 }
 
-.error-panel {
-  background-color: var(--kui-color-background-danger-weakest, $kui-color-background-danger-weakest);
-  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-  color: var(--kui-color-text-danger, $kui-color-text-danger);
-  font-family: var(--kui-font-family-code, $kui-font-family-code);
-  font-size: var(--kui-font-size-30, $kui-font-size-30);
-  line-height: var(--kui-line-height-30, $kui-line-height-30);
-  padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
-
-  .cors-error {
-    font-size: var(--kui-font-size-20, $kui-font-size-20);
-    line-height: var(--kui-line-height-20, $kui-line-height-20);
-    margin-top: var(--kui-space-40, $kui-space-40);
-  }
-}
-
 .res-option-selector {
 
   :deep(.trigger-button) {
     @include small-bordered-trigger-button;
   }
-}
-
-:deep(.response-body pre) {
-  height: 200px;
 }
 
 h3 {
