@@ -12,20 +12,13 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { PropType } from 'vue'
 
-const props = defineProps({
-  responseError: {
-    type: Object as PropType<Error>,
-    default: () => ({}),
-  },
-  response: {
-    type: Object as PropType<Response>,
-    default: undefined,
-  },
-})
+const { responseError, response } = defineProps<{
+  responseError?: Error
+  response?: Response
+}>()
 
-const errorText = computed((): string => props.responseError?.message || '')
+const errorText = computed((): string => responseError?.message || '')
 </script>
 
 <style lang="scss" scoped>

@@ -6,27 +6,34 @@ import CodeBlock from '@/components/common/CodeBlock.vue'
 /**
  * Builds a minimal fake `Response` exposing only what TryItResponse consumes.
  */
-const makeResponse = (opts: {
+const makeResponse = ({
+  headers = {},
+  status = 200,
+  ok = true,
+  json = vi.fn(),
+  text = vi.fn(),
+  blob = vi.fn(),
+}: {
   headers?: Record<string, string>
   status?: number
   ok?: boolean
   json?: () => Promise<unknown>
   text?: () => Promise<string>
   blob?: () => Promise<Blob>
-}) => {
-  const headers = new Map(
-    Object.entries(opts.headers ?? {}).map(([k, v]) => [k.toLowerCase(), v]),
+} = {}) => {
+  const headerMap = new Map(
+    Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v]),
   )
   return {
-    status: opts.status ?? 200,
-    ok: opts.ok ?? true,
+    status,
+    ok,
     headers: {
-      get: (key: string) => headers.get(key.toLowerCase()) ?? null,
-      entries: () => headers.entries(),
+      get: (key: string) => headerMap.get(key.toLowerCase()) ?? null,
+      entries: () => headerMap.entries(),
     },
-    json: opts.json ?? vi.fn(),
-    text: opts.text ?? vi.fn(),
-    blob: opts.blob ?? vi.fn(),
+    json,
+    text,
+    blob,
   } as unknown as Response
 }
 

@@ -29,40 +29,30 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { PropType } from 'vue'
 import { useObjectUrl } from '@vueuse/core'
 import { DownloadIcon, FileEmptyIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { extensionForContentType, parseContentDispositionFilename, formatBytes } from '@/utils'
 
-const props = defineProps({
+const { blob, dataId, contentDisposition = null } = defineProps<{
   /** response body to download; url/type/size are all derived from it */
-  blob: {
-    type: Object as PropType<Blob | undefined>,
-    default: undefined,
-  },
-  dataId: {
-    type: String,
-    required: true,
-  },
+  blob?: Blob
+  dataId: string
   /** Content-Disposition header value, used to honor a server-provided filename */
-  contentDisposition: {
-    type: String as PropType<string | null>,
-    default: null,
-  },
-})
+  contentDisposition?: string | null
+}>()
 
-const url = useObjectUrl(() => props.blob)
-const contentType = computed((): string => props.blob?.type ?? '')
+const url = useObjectUrl(() => blob)
+const contentType = computed((): string => blob?.type ?? '')
 
 const downloadFileName = computed((): string => {
-  const fromHeader = parseContentDispositionFilename(props.contentDisposition)
+  const fromHeader = parseContentDispositionFilename(contentDisposition)
   if (fromHeader) return fromHeader
-  return `${props.dataId || 'response'}.${extensionForContentType(contentType.value)}`
+  return `${dataId || 'response'}.${extensionForContentType(contentType.value)}`
 })
 
 const sizeText = computed((): string =>
-  props.blob ? formatBytes(props.blob.size) : '',
+  blob ? formatBytes(blob.size) : '',
 )
 </script>
 

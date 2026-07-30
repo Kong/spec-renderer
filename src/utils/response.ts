@@ -4,6 +4,14 @@ export const getResponseCodeKey = (code: string) => {
 }
 
 /**
+ * Strips parameters (e.g. charset) from a Content-Type header value and lowercases it,
+ * e.g. 'Application/JSON; charset=utf-8' -> 'application/json'.
+ */
+export const normalizeContentType = (contentType: string | null | undefined): string => {
+  return (contentType || '').split(';')[0]!.trim().toLowerCase()
+}
+
+/**
  * Content types (or subtype suffixes) whose bodies are safe to render as text.
  * `application/json` is handled separately by the caller since it is parsed.
  */
@@ -24,7 +32,7 @@ const TEXTUAL_CONTENT_TYPE_PATTERNS = [
  * is treated as binary and offered as a download instead of being decoded as text.
  */
 export const isTextualContentType = (contentType: string): boolean => {
-  const type = (contentType || '').split(';')[0]!.trim().toLowerCase()
+  const type = normalizeContentType(contentType)
   if (!type) return false
   return TEXTUAL_CONTENT_TYPE_PATTERNS.some(pattern => pattern.test(type))
 }
@@ -52,7 +60,7 @@ const CONTENT_TYPE_EXTENSION_OVERRIDES: Record<string, string> = {
  * override table where the subtype is not a good extension, and `bin` otherwise.
  */
 export const extensionForContentType = (contentType: string): string => {
-  const type = (contentType || '').split(';')[0]!.trim().toLowerCase()
+  const type = normalizeContentType(contentType)
   if (CONTENT_TYPE_EXTENSION_OVERRIDES[type]) return CONTENT_TYPE_EXTENSION_OVERRIDES[type]
   // fall back to the subtype for everything else, e.g. "application/x-custom" -> "x-custom"
   const subtype = type.split('/')[1]

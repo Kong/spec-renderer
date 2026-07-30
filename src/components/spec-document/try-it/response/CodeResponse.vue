@@ -13,26 +13,24 @@ import CodeBlock from '@/components/common/CodeBlock.vue'
 import { CODE_INDENT_SPACES } from '@/constants'
 import { maskBodyExample } from '@/utils'
 
-const props = withDefaults(defineProps<{
+const { content, lang, bodySchema, showSensitiveData = false } = defineProps<{
   /** parsed JSON body (object/array/string/number/boolean/null) when lang is 'json', raw string otherwise */
   content?: unknown
   lang: 'json' | 'text'
   bodySchema?: Record<string, any>
   showSensitiveData?: boolean
-}>(), {
-  showSensitiveData: false,
-})
+}>()
 
 // Builds the masked body — only applies to JSON, when a schema is available
 const maskedText = computed((): string | null => {
-  if (props.lang !== 'json' || !props.bodySchema) return null
-  return JSON.stringify(maskBodyExample(props.content, props.bodySchema), null, CODE_INDENT_SPACES)
+  if (lang !== 'json' || !bodySchema) return null
+  return JSON.stringify(maskBodyExample(content, bodySchema), null, CODE_INDENT_SPACES)
 })
 
 const text = computed((): string => {
-  if (!props.showSensitiveData && maskedText.value !== null) return maskedText.value
-  if (props.lang === 'json') return JSON.stringify(props.content, null, CODE_INDENT_SPACES)
-  return String(props.content ?? '')
+  if (!showSensitiveData && maskedText.value !== null) return maskedText.value
+  if (lang === 'json') return JSON.stringify(content, null, CODE_INDENT_SPACES)
+  return String(content ?? '')
 })
 </script>
 

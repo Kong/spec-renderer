@@ -126,6 +126,7 @@ const responseBlob = ref<Blob | undefined>()
 // Resolved schema — needed for toggle visibility check and masked computation
 const bodySchema = ref<Record<string, any> | undefined>()
 
+// Passed to BinaryResponse to honor a server-suggested filename
 const responseContentDisposition = computed((): string | null => props.response?.headers?.get('content-disposition') ?? null)
 
 // The Result view has renderable content for non-empty text/binary, and always for json/image
