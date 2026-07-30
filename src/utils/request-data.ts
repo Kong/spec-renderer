@@ -244,6 +244,39 @@ export const getSampleFormFields = (
   }, [])
 }
 
+export interface MultipartFormPart {
+  kind: 'text' | 'file' | 'json'
+  name: string
+  value?: string
+  file?: File
+  contentType?: string
+}
+
+/**
+ * Flattens a multipart form-data field list into one entry per actual part - a `file` field with
+ * multiple files becomes one entry per file, since neither FormData nor HAR params can represent
+ * "one field, many files" as a single entry, applying the same kind-specific defaults (e.g. json
+ * fields default to an empty value and `application/json`) needed to build both the live FormData
+ * request in "Try It" and the code snippet params in request sample.
+ *
+ * @example
+ * flattenMultipartFields([{ name: 'attachments', kind: 'file', files: [fileA, fileB] }])
+ * // => [{ kind: 'file', name: 'attachments', file: fileA }, { kind: 'file', name: 'attachments', file: fileB }]
+ */
+export const flattenMultipartFields = (formFields: RequestFormField[] = []): MultipartFormPart[] => {
+  const parts: MultipartFormPart[] = []
+  formFields.forEach(field => {
+    if (field.kind === 'file') {
+      field.files?.forEach(file => parts.push({ kind: 'file', name: field.name, file, contentType: field.contentType }))
+    } else if (field.kind === 'json') {
+      parts.push({ kind: 'json', name: field.name, value: field.value ?? '', contentType: field.contentType ?? 'application/json' })
+    } else if (field.value !== undefined) {
+      parts.push({ kind: 'text', name: field.name, value: field.value })
+    }
+  })
+  return parts
+}
+
 /**
  * reformat body based on content-type header, for non-binary body
  * @param headers

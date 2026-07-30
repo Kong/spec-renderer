@@ -108,7 +108,7 @@
         v-else
       >
         <button
-          class="choose-file-btn"
+          class="choose-file-btn secondary"
           type="button"
           @click="openFileDialog()"
         >
@@ -398,7 +398,7 @@ input[type=text] {
 }
 
 .choose-file-btn {
-  cursor: pointer;
+  @include button-default;
   margin: var(--kui-space-60, $kui-space-60) var(--kui-space-30, $kui-space-30)!important;
   width: 100px;
 }

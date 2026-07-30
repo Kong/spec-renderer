@@ -80,7 +80,7 @@
 import { inject, computed, ref, watch, useTemplateRef } from 'vue'
 import type { PropType, Ref } from 'vue'
 import TryItDropdown from './TryItDropdown.vue'
-import { getRequestHeaders, getSampleHeaders, getFormattedBody, getSamplePath, getSampleQuery } from '@/utils'
+import { getRequestHeaders, getSampleHeaders, getFormattedBody, getSamplePath, getSampleQuery, flattenMultipartFields } from '@/utils'
 import type { IHttpOperation } from '@stoplight/types'
 import type { SecuritySchemeMaskRule } from '@/types'
 import MethodBadge from '@/components/common/MethodBadge.vue'
@@ -274,13 +274,13 @@ const doApiCall = async (callAsIs = false) => {
     let formDataBody: FormData | null = null
     if (currentRequestBody.value.isMultipart) {
       formDataBody = new FormData()
-      currentRequestBody.value.formFields?.forEach(field => {
-        if (field.kind === 'file') {
-          field.files?.forEach(file => formDataBody!.append(field.name, file))
-        } else if (field.kind === 'json') {
-          formDataBody!.append(field.name, new Blob([field.value ?? ''], { type: field.contentType ?? 'application/json' }))
-        } else if (field.value !== undefined) {
-          formDataBody!.append(field.name, field.value)
+      flattenMultipartFields(currentRequestBody.value.formFields).forEach(part => {
+        if (part.kind === 'file' && part.file) {
+          formDataBody!.append(part.name, part.file)
+        } else if (part.kind === 'json') {
+          formDataBody!.append(part.name, new Blob([part.value ?? ''], { type: part.contentType ?? 'application/json' }))
+        } else if (part.value !== undefined) {
+          formDataBody!.append(part.name, part.value)
         }
       })
 

@@ -52,7 +52,7 @@
         class="file-field"
       >
         <button
-          class="choose-file-btn"
+          class="choose-file-btn secondary"
           :data-testid="`tryit-body-formfield-choose-file-${field.name}-${data.id}`"
           type="button"
           @click="chooseFile(field)"
@@ -104,10 +104,8 @@ interface FieldState {
   files?: File[]
 }
 
-// Local-only state for each field's current value/files, keyed by field name. Kept separate from
-// the `fields` prop (which only carries schema-derived defaults + metadata) so that the request
-// body round-tripping back down through TryIt/HttpOperation on every edit (see doApiCall/setRequestBody)
-// never clobbers in-progress edits - mirrors the fieldValues pattern in TryItParams.vue.
+// Local value/files per field, kept separate from the `fields` prop so in-progress edits survive
+// the request body round-tripping back down from the parent.
 const fieldState = reactive<Record<string, FieldState>>({})
 
 // Only a genuine operation change forces every field back to its schema-derived default; otherwise
@@ -190,7 +188,7 @@ input[type=text] {
 }
 
 .choose-file-btn {
-  cursor: pointer;
+  @include button-default;
   margin: var(--kui-space-0, $kui-space-0) var(--kui-space-30, $kui-space-30) var(--kui-space-0, $kui-space-0) 0!important;
   width: 100px;
 }

@@ -104,7 +104,7 @@ import type { PropType, Ref } from 'vue'
 import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet'
 import { requestSampleConfigs, CODE_INDENT_SPACES } from '@/constants'
-import { getRequestHeaders, getFormattedBody, maskAuthHeaders, maskAuthQuery, hasMasking, MASK_PLACEHOLDER, maskBodyExample, safeJSONParse, resolveSchemaObjectFields } from '@/utils'
+import { getRequestHeaders, getFormattedBody, maskAuthHeaders, maskAuthQuery, hasMasking, MASK_PLACEHOLDER, maskBodyExample, safeJSONParse, resolveSchemaObjectFields, flattenMultipartFields } from '@/utils'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
@@ -374,13 +374,13 @@ watch(() => ({
 
       if (newValue.requestBody.isMultipart) {
         const multipartParams: Array<{ name: string, value?: string, fileName?: string, contentType?: string }> = []
-        newValue.requestBody.formFields?.forEach(field => {
-          if (field.kind === 'file') {
-            field.files?.forEach(file => multipartParams.push({ name: field.name, fileName: file.name, contentType: field.contentType }))
-          } else if (field.kind === 'json') {
-            multipartParams.push({ name: field.name, value: field.value ?? '', contentType: field.contentType ?? 'application/json' })
-          } else if (field.value !== undefined) {
-            multipartParams.push({ name: field.name, value: field.value })
+        // json parts always have a value here (flattenMultipartFields defaults it to ''), so this
+        // single check covers both json and plain text parts; only file parts need their own branch
+        flattenMultipartFields(newValue.requestBody.formFields).forEach(part => {
+          if (part.kind === 'file' && part.file) {
+            multipartParams.push({ name: part.name, fileName: part.file.name, contentType: part.contentType })
+          } else if (part.value !== undefined) {
+            multipartParams.push({ name: part.name, value: part.value, contentType: part.contentType })
           }
         })
         reqData.postData = {
