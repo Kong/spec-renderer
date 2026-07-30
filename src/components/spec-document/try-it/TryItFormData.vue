@@ -84,7 +84,7 @@ import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
 import type { RequestBody, RequestFormField } from '@/types'
 
-const props = defineProps({
+const { data, fields } = defineProps({
   data: {
     type: Object as PropType<IHttpOperation>,
     required: true,
@@ -110,12 +110,12 @@ const fieldState = reactive<Record<string, FieldState>>({})
 
 // Only a genuine operation change forces every field back to its schema-derived default; otherwise
 // existing entries are preserved so the round-tripped `fields` prop doesn't reset what the user typed.
-const currentEndpointID = ref(props.data.id)
+const currentEndpointID = ref(data.id)
 
 // Resets all fields on an operation change; otherwise only fills in fields with no local state yet.
-watch(() => props.fields, (newFields) => {
-  const operationChanged = props.data.id !== currentEndpointID.value
-  currentEndpointID.value = props.data.id
+watch(() => fields, (newFields) => {
+  const operationChanged = data.id !== currentEndpointID.value
+  currentEndpointID.value = data.id
 
   const seenNames = new Set<string>()
   newFields.forEach(field => {
@@ -159,7 +159,7 @@ const setTextValue = (name: string, value: string) => {
 
 // Re-emits the full multipart RequestBody whenever any field's value/files change.
 watch(fieldState, (newFieldState) => {
-  const formFields: RequestFormField[] = props.fields.map(field => ({
+  const formFields: RequestFormField[] = fields.map(field => ({
     ...field,
     value: newFieldState[field.name]?.value,
     files: newFieldState[field.name]?.files,
