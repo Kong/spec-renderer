@@ -1,3 +1,10 @@
+# [1.110.0](https://github.com/Kong/spec-renderer/compare/v1.109.0...v1.110.0) (2026-07-30)
+
+
+### Features
+
+* handle binary responses[TDX-8495] ([#910](https://github.com/Kong/spec-renderer/issues/910)) ([046bccd](https://github.com/Kong/spec-renderer/commit/046bccdd9c8a7df7fbadefb76f11ab7b5fdbdc44))
+
 # [1.109.0](https://github.com/Kong/spec-renderer/compare/v1.108.7...v1.109.0) (2026-07-28)
 
 
