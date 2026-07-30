@@ -257,4 +257,57 @@ describe('<TryIt />', () => {
 
     expect(component.exists()).toBe(true)
   })
+
+  it('hides the body section for an operation with no params, auth, body, or response', async () => {
+    const wrapper = mount(TryIt, {
+      props: {
+        data: {
+          id: '123',
+          method: 'get',
+          path: '/sample-path',
+          responses: [],
+          servers: [{
+            id: 'sample-server-id',
+            url: 'https://global.api.konghq.com/v2',
+          }],
+        },
+        serverUrl: 'https://global.api.konghq.com/v2',
+      },
+    })
+
+    await flushPromises()
+
+    // wrapper renders, but the body is collapsed since there is nothing to show
+    expect(wrapper.findTestId('tryit-wrapper-123').exists()).toBe(true)
+    expect(wrapper.findTestId('tryit-body-123').exists()).toBe(false)
+  })
+
+  it('renders the body section when a request body sample is present', async () => {
+    const wrapper = mount(TryIt, {
+      props: {
+        data: {
+          id: '123',
+          method: 'post',
+          path: '/sample-path',
+          responses: [],
+          request: {
+            body: {
+              id: 'bodyId',
+              contents: [{ id: 'mediatypeId', mediaType: 'application/json' }],
+            },
+          },
+          servers: [{
+            id: 'sample-server-id',
+            url: 'https://global.api.konghq.com/v2',
+          }],
+        },
+        requestBody: { isBinary: false, content: '{"a": "1"}' },
+        serverUrl: 'https://global.api.konghq.com/v2',
+      },
+    })
+
+    await flushPromises()
+
+    expect(wrapper.findTestId('tryit-body-123').exists()).toBe(true)
+  })
 })
