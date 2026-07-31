@@ -1,14 +1,9 @@
 import composables from '../composables'
 
-export type { ParseResult } from '../composables/useSchemaParser'
-
-/*
- * NOTE (cross-request state bleed): `useSchemaParser()` is invoked ONCE here, so the exported
- * `parsedDocument` / `tableOfContents` refs are a single set shared by every importer for the
- * whole process lifetime. Under concurrent SSR they are last-writer-wins and can therefore hold
- * a *different* request's document. The parse functions now RETURN the request-local result
- * (`ParseResult`) — read that instead of the shared refs. The refs remain exported only for
- * backward compatibility with existing (single-request / client) consumers.
+/**
+ * `useSchemaParser()` is invoked ONCE here, so the exported `parsedDocument` / `tableOfContents`
+ * refs are shared process-wide and become last-writer-wins under concurrent SSR. Read the
+ * `ParseResult` returned by the parse functions instead; the refs remain only for backward compat.
  */
 const {
   parseSpecDocument,
@@ -24,16 +19,8 @@ export {
   parseOpenApiSpecDocument,
   parseAsyncApiSpecDocument,
   downloadSpecFile,
-  /**
-   * @deprecated Process-global ref shared by every importer; unsafe to read under concurrent SSR
-   * (it may hold another request's document). Read the `parsedDocument` field of the value returned
-   * by `parseSpecDocument` / `parseOpenApiSpecDocument` / `parseAsyncApiSpecDocument` instead.
-   */
+  /** @deprecated Shared process-global ref, unsafe under concurrent SSR. Read the `parsedDocument` field of the parse functions' returned `ParseResult` instead. */
   parsedDocument,
-  /**
-   * @deprecated Process-global ref shared by every importer; unsafe to read under concurrent SSR
-   * (it may hold another request's table of contents). Read the `tableOfContents` field of the value
-   * returned by `parseSpecDocument` / `parseOpenApiSpecDocument` / `parseAsyncApiSpecDocument` instead.
-   */
+  /** @deprecated Shared process-global ref, unsafe under concurrent SSR. Read the `tableOfContents` field of the parse functions' returned `ParseResult` instead. */
   tableOfContents,
 }

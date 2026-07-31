@@ -1,5 +1,7 @@
 import type { JSONSchema7, JSONSchema7Type } from 'json-schema'
 import type { XSensitiveData } from './sensitive-data'
+import type { ServiceNode } from './node-type'
+import type { TableOfContentsItem } from '@/stoplight/elements-core'
 
 export interface SpecRendererProps {
   /** Text of the specification. */
@@ -129,6 +131,22 @@ export interface ParseOptions {
    */
   enforceResetBeforeParsing?: boolean
 
+}
+
+/**
+ * The request-local result of a parse call (`parseSpecDocument` / `parseOpenApiSpecDocument` /
+ * `parseAsyncApiSpecDocument`).
+ *
+ * The parse functions also assign the composable's `parsedDocument` / `tableOfContents` refs for
+ * backward compatibility, but under concurrent SSR those shared refs can be overwritten by an
+ * interleaved parse. Prefer reading these returned values, which are guaranteed to belong to this
+ * specific call.
+ */
+export interface ParseResult {
+  /** The parsed service node for this call (or its web-component-safe stringified form), or `undefined` when parsing failed. */
+  parsedDocument: ServiceNode | string | undefined
+  /** The table of contents computed for this call (or its stringified form), or `undefined` when parsing failed. */
+  tableOfContents: TableOfContentsItem[] | string | undefined
 }
 
 export const RangeFields = [

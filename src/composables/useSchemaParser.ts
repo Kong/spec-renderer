@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { computeAPITree, transformOasToServiceNode } from '@/stoplight/elements'
-import type { ServiceNode, ParseOptions } from '@/types'
+import type { ServiceNode, ParseOptions, ParseResult } from '@/types'
 import { parse as parseYaml, safeStringify } from '@stoplight/yaml'
 import type { TableOfContentsItem } from '@/stoplight/elements-core'
 import refParser from '@apidevtools/json-schema-ref-parser'
@@ -15,21 +15,6 @@ import type { IOauth2SecurityScheme, IOauthFlowObjects as OriginalIOauthFlowObje
 // Extend IOauthFlowObjects to allow string indexing
 type IOauthFlowObjects = OriginalIOauthFlowObjects & {
   [key: string]: OriginalIOauthFlowObjects[keyof OriginalIOauthFlowObjects]
-}
-
-/**
- * The request-local result of a parse call.
- *
- * The parse functions also assign the composable's `parsedDocument` / `tableOfContents`
- * refs for backward compatibility, but under concurrent SSR those shared refs can be
- * overwritten by an interleaved parse. Prefer reading these returned values, which are
- * guaranteed to belong to this specific call.
- */
-export interface ParseResult {
-  /** The parsed service node for this call (or its web-component-safe stringified form), or `undefined` when parsing failed. */
-  parsedDocument: ServiceNode | string | undefined
-  /** The table of contents computed for this call (or its stringified form), or `undefined` when parsing failed. */
-  tableOfContents: TableOfContentsItem[] | string | undefined
 }
 
 const trace = (doTrace: boolean | undefined, ...args: any) => {
@@ -169,8 +154,10 @@ export default (): {
       })
 
       trace(options.traceParsing, 'async document transformed')
-      // `toc` / `transformed` are request-local; assign the shared refs for backward
-      // compatibility, then return the locals so concurrent callers each get their own result.
+      /**
+       * `toc` / `transformed` are request-local; assign the shared refs for backward compatibility,
+       * then return the locals so concurrent callers each get their own result.
+       */
       tableOfContents.value = toc
       parsedDocument.value = transformed
       return { parsedDocument: transformed, tableOfContents: toc }
@@ -212,8 +199,10 @@ export default (): {
 
     // save the spec title to be used as file name for the downloaded spec file
     specTitle = json?.info?.title
-    // Return the parsed document rather than writing the shared `jsonDocument` ref, so
-    // callers can thread it through request-local state (see parseOpenApiSpecDocument).
+    /**
+     * Return the parsed document rather than writing shared module state, so callers can thread it
+     * through request-local state (see `parseOpenApiSpecDocument`).
+     */
     return json
   }
   /**
@@ -224,12 +213,12 @@ export default (): {
 
     await saveSpecText(spec, options.specUrl)
 
-    // Request-local working document. We ALWAYS (re)bundle the provided spec — unless our own
-    // `parseSpecDocument` already did and handed us the result via `preBundledJson` — and never
-    // read the shared module `jsonDocument` ref as a cache. That makes the parse fail-safe: an
-    // omitted `enforceResetBeforeParsing` can never cause a prior request's document to be
-    // returned for this spec. (The flag is retained for backward compatibility and is now a no-op;
-    // every parse resets.)
+    /**
+     * Request-local working document. We ALWAYS (re)bundle the provided spec — unless our own
+     * `parseSpecDocument` already did and handed us the result via `preBundledJson` — and never
+     * read shared module state as a cache. That makes the parse fail-safe: an omitted
+     * `enforceResetBeforeParsing` can never return a prior request's document for this spec.
+     */
     let localJson: Record<string, any> | undefined = preBundledJson ?? await fetchAndBundle(spec, options)
     if (!localJson) {
       // was it even a spec or even something that could be converted to json?
@@ -342,9 +331,10 @@ export default (): {
       }
     }
 
-    // Backward compatibility: keep populating the shared refs so existing consumers that read
-    // `parsedDocument` / `tableOfContents` keep working for the single-request/client case.
-    // The returned values are the concurrency-safe source of truth for SSR consumers.
+    /**
+     * Backward compatibility: keep populating the shared refs for existing single-request / client
+     * consumers. The returned values are the concurrency-safe source of truth for SSR consumers.
+     */
     parsedDocument.value = localParsed
     // @ts-ignore - localToc may be a `flatted`-stringified TOC in the web-component-safe path
     tableOfContents.value = localToc
