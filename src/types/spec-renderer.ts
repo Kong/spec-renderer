@@ -122,7 +122,10 @@ export interface ParseOptions {
    */
   webComponentSafe?: boolean
   /**
-   * enforce reset of json document, enforces reset when API type specific function is called directly (portal ssr case)
+   * @deprecated No longer required. Each parse now always (re)bundles the provided spec, so parsing
+   * is fail-safe under concurrency regardless of this flag — it is retained only for backward
+   * compatibility and has no effect. Previously needed to force a reset when an API-type-specific
+   * parse function was called directly on the shared module instance (portal SSR case).
    */
   enforceResetBeforeParsing?: boolean
 
