@@ -29,13 +29,8 @@
         <InputLabel
           class="param-label"
           :for="`request-${paramType}-input-${pValue.name || pKey}-${data.id}`"
+          :required="pValue.required"
         >
-          <div
-            v-if="pValue.required"
-            class="required-label"
-          >
-            *
-          </div>
           {{ pValue.name || pKey }}
           <Tooltip
             v-if="pValue.description"
@@ -405,11 +400,6 @@ input[type=text] {
 
 .choose-file-text {
   font-size: var(--kui-font-size-20, $kui-font-size-20);
-}
-
-.required-label {
-  color: var(--kui-icon-color-danger, $kui-icon-color-danger);
-  height: 14px;
 }
 
 .masked-body-hint {

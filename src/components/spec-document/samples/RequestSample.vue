@@ -391,16 +391,14 @@ watch(() => ({
           mimeType: 'multipart/form-data',
           params: multipartParams,
         }
-      }
-      if (!newValue.requestBody.isBinary && !newValue.requestBody.isMultipart && textBody) {
+      } else if (!newValue.requestBody.isBinary && textBody) {
         reqData.postData = {
           // HTTPsnippet is not doing nice trying to handle with body params based on mimeType, so we going to send pre-formatted body, and
           // make HTTPsnippet to use as is by forcing mimeType as `text/plain`
           mimeType: 'text/plain',
           text: textBody,
         }
-      }
-      if (newValue.requestBody.isBinary && newValue.requestBody.content && newValue.requestBody.content?.length > 0) {
+      } else if (newValue.requestBody.isBinary && newValue.requestBody.content && newValue.requestBody.content?.length > 0) {
         reqData.postData = {
           mimeType: 'application/pdf',
           text: `@${(newValue.requestBody.content[0] as File).name}`,

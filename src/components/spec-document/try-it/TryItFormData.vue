@@ -8,13 +8,8 @@
       <InputLabel
         class="param-label"
         :for="field.kind === 'text' ? `request-body-formfield-input-${field.name}-${data.id}` : undefined"
+        :required="field.required"
       >
-        <div
-          v-if="field.required"
-          class="required-label"
-        >
-          *
-        </div>
         {{ field.name }}
         <Tooltip
           v-if="field.description"
@@ -188,10 +183,5 @@ input[type=text] {
 
 .choose-file-text {
   font-size: var(--kui-font-size-20, $kui-font-size-20);
-}
-
-.required-label {
-  color: var(--kui-icon-color-danger, $kui-icon-color-danger);
-  height: 14px;
 }
 </style>
