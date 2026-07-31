@@ -302,11 +302,13 @@ const doApiCall = async (callAsIs = false) => {
       queryStr += (currentRequestQuery.value ? '&' : '?') + props.authQuery
     }
 
+    const getBody = textBody || binaryBody || formDataBody
+
     const myResponse = await fetch(url.href, {
       method: String(props.data.method).toUpperCase(),
       cache: 'no-cache',
       headers,
-      ...(textBody || binaryBody || formDataBody ? { body: textBody || binaryBody || formDataBody } : null),
+      ...(getBody ? { body: getBody } : null),
     })
     response.value = myResponse
 

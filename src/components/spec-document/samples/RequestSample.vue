@@ -180,7 +180,10 @@ const bodySchema = computed((): Record<string, any> | undefined => {
   const entry = contents.find(c => c.mediaType === props.contentType) ?? contents[0]
   return entry?.schema ? resolveSchemaObjectFields(entry.schema) as Record<string, any> : undefined
 })
-const hasMaskedData = computed((): boolean => hasMasking(bodySchema.value, props.maskRules))
+const hasMaskedData = computed((): boolean => {
+  if (props.requestBody.isMultipart) return false
+  return hasMasking(bodySchema.value, props.maskRules)
+})
 const activeAuthHeaders = computed(() =>
   !showSensitiveData.value ? maskAuthHeaders(props.authHeaders, props.maskRules) : props.authHeaders,
 )
@@ -383,6 +386,7 @@ watch(() => ({
             multipartParams.push({ name: part.name, value: part.value, contentType: part.contentType })
           }
         })
+        // HTTPSnippet renders each param as its own part (e.g. curl -F) instead of a single body string
         reqData.postData = {
           mimeType: 'multipart/form-data',
           params: multipartParams,

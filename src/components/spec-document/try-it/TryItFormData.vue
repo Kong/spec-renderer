@@ -7,7 +7,7 @@
     >
       <InputLabel
         class="param-label"
-        :for="`request-body-formfield-input-${field.name}-${data.id}`"
+        :for="field.kind === 'text' ? `request-body-formfield-input-${field.name}-${data.id}` : undefined"
       >
         <div
           v-if="field.required"
@@ -67,7 +67,7 @@
           v-else
           class="choose-file-text"
           :data-testid="`tryit-body-formfield-filename-${field.name}-${data.id}`"
-        >{{ fieldState[field.name]!.files!.map(f => f.name).join(', ') }}</span>
+        >{{ fieldState[field.name].files!.map(f => f.name).join(', ') }}</span>
       </div>
     </div>
   </div>
@@ -75,7 +75,6 @@
 
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue'
-import type { PropType } from 'vue'
 import { useFileDialog } from '@vueuse/core'
 import type { IHttpOperation } from '@stoplight/types'
 import InputLabel from '@/components/common/InputLabel.vue'
@@ -84,16 +83,10 @@ import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
 import type { RequestBody, RequestFormField } from '@/types'
 
-const { data, fields } = defineProps({
-  data: {
-    type: Object as PropType<IHttpOperation>,
-    required: true,
-  },
-  fields: {
-    type: Array as PropType<RequestFormField[]>,
-    default: () => [],
-  },
-})
+const { data, fields = [] } = defineProps<{
+  data: IHttpOperation
+  fields?: RequestFormField[]
+}>()
 
 const emit = defineEmits<{
   (e: 'request-body-changed', newBody: RequestBody): void

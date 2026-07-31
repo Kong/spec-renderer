@@ -8,11 +8,13 @@ servers:
     description: Main server
 
 paths:
-  /documents/multipart-upload:
+  /post:
     post:
       summary: Submit Document
       description: Accepts a document file alongside metadata as a multipart/form-data submission.
       operationId: submitDocumentMultipart
+      servers:
+        - url: https://httpbin.io
       requestBody:
         content:
           multipart/form-data:
