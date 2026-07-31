@@ -56,4 +56,48 @@ describe('<AdditionalInfo />', () => {
     // since license URL is not present, it should render as p tag
     expect(wrapper.findTestId('overview-additional-info-license').element).instanceOf(HTMLParagraphElement)
   })
+
+  it('does not render unsafe external docs hrefs', () => {
+    const wrapper = mount(AdditionalInfo, {
+      props: {
+        externalDocs: {
+          description: 'sample external docs',
+          url: 'javascript:alert(1)',
+        },
+      },
+    })
+
+    expect(wrapper.findTestId('overview-additional-info').exists()).toBe(false)
+  })
+
+  it('renders unsafe license URLs as plain text', () => {
+    const wrapper = mount(AdditionalInfo, {
+      props: {
+        license: {
+          name: 'sample license',
+          url: 'javascript:alert(1)',
+        },
+      },
+    })
+
+    const license = wrapper.findTestId('overview-additional-info-license')
+
+    expect(license.element).instanceOf(HTMLParagraphElement)
+    expect(license.attributes('href')).toBeUndefined()
+  })
+
+  it('renders malformed contact emails as plain text', () => {
+    const wrapper = mount(AdditionalInfo, {
+      props: {
+        contact: {
+          email: 'email@example.com?subject=Injected',
+        },
+      },
+    })
+
+    const contact = wrapper.findTestId('overview-additional-info-contact')
+
+    expect(contact.text()).toContain('(email@example.com?subject=Injected)')
+    expect(contact.find('a').exists()).toBe(false)
+  })
 })

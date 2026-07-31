@@ -14,6 +14,9 @@ const markdownSanitizeOptions: sanitize.IOptions = {
   allowedTags: sanitize.defaults.allowedTags.concat(['img', 'details', 'summary']),
 }
 
+// Keep rendered spec links navigable while blocking executable or embeddable schemes.
+const allowedHrefProtocols = new Set(['http:', 'https:'])
+
 /**
  * Sanitizes syntax-highlighted code block HTML before rendering it via `innerHTML`.
  * This intentionally allows only the tags and attributes emitted by Shiki and local masking markup.
@@ -32,4 +35,49 @@ export function sanitizeMarkdownHtml(html: string): string {
   return html
     ? sanitize(html, markdownSanitizeOptions)
     : ''
+}
+
+/**
+ * Sanitizes user-provided spec URLs before binding them to an anchor `href`.
+ * The URL constructor needs a base so relative URLs can be parsed and allowed.
+ */
+export function sanitizeHref(href?: string): string | undefined {
+  const trimmedHref = href?.trim()
+
+  if (!trimmedHref) {
+    return undefined
+  }
+
+  try {
+    // This base is only used for parsing relative URLs; the returned href remains unchanged.
+    const url = new URL(trimmedHref, 'https://spec-renderer.local')
+
+    return allowedHrefProtocols.has(url.protocol) ? trimmedHref : undefined
+  } catch {
+    return undefined
+  }
+}
+
+/**
+ * Builds a safe mailto href from an OpenAPI contact email value.
+ * Contact email is an address, not a full mailto URL, so query/header syntax is rejected.
+ * This intentionally avoids full email validation; it only enforces the minimum shape needed for a safe link.
+ */
+export function sanitizeMailtoHref(email?: string): string | undefined {
+  const trimmedEmail = email?.trim()
+
+  if (!trimmedEmail) {
+    return undefined
+  }
+
+  const atIndex = trimmedEmail.indexOf('@')
+  const hasSingleAtSign = atIndex > 0 && atIndex === trimmedEmail.lastIndexOf('@') && atIndex < trimmedEmail.length - 1
+  // Block whitespace/control characters plus mailto query/fragment delimiters.
+  const hasUnsafeMailtoChars = [...trimmedEmail].some((char) => char <= ' ' || char === '?' || char === '#')
+
+  if (!hasSingleAtSign || hasUnsafeMailtoChars) {
+    return undefined
+  }
+
+  return `mailto:${trimmedEmail}`
 }
