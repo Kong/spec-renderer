@@ -1,3 +1,10 @@
+## [1.111.1](https://github.com/Kong/spec-renderer/compare/v1.111.0...v1.111.1) (2026-08-03)
+
+
+### Bug Fixes
+
+* update try it body logic for multipart ([#941](https://github.com/Kong/spec-renderer/issues/941)) ([684a02d](https://github.com/Kong/spec-renderer/commit/684a02d2695629d83299cba8cfa90e858b9e251b))
+
 # [1.111.0](https://github.com/Kong/spec-renderer/compare/v1.110.0...v1.111.0) (2026-08-03)
 
 
