@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import TryItParams from './TryItParams.vue'
+import TryItFormData from './TryItFormData.vue'
+import RequiredToggle from './RequiredToggle.vue'
 import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
 import type { RequestParamTypes } from '@/types'
 
@@ -352,6 +354,99 @@ describe('<TryItParams />', () => {
       // Verify body content updated to include all fields
       const updatedCodeBlock = wrapper.findComponent(EditableCodeBlock)
       expect(updatedCodeBlock.props('code')).toBe(fullBody)
+    })
+
+    describe('multipart/form-data body', () => {
+      const multipartData = {
+        id: 'op-multipart',
+        method: 'post',
+        path: '/upload',
+        responses: [],
+        servers: [],
+        request: {
+          body: {
+            id: 'body-multipart',
+            contents: [
+              {
+                id: 'content-multipart',
+                mediaType: 'multipart/form-data',
+                schema: {
+                  type: 'object',
+                  required: ['title'],
+                  properties: {
+                    title: { type: 'string', example: 'My upload' },
+                    avatar: { type: 'string', format: 'binary' },
+                  },
+                },
+              },
+            ],
+          },
+        },
+      }
+
+      const multipartRequestBody = {
+        isMultipart: true,
+        formFields: [
+          { name: 'title', kind: 'text' as const, required: true, value: 'My upload' },
+          { name: 'avatar', kind: 'file' as const, required: false },
+        ],
+      }
+
+      it('renders TryItFormData with per-field rows instead of the JSON editor or file button', () => {
+        const wrapper = mount(TryItParams, {
+          props: {
+            paramType: <RequestParamTypes>'body',
+            data: multipartData as any,
+            requestBody: multipartRequestBody,
+            modelValue: true,
+          },
+        })
+
+        expect(wrapper.findComponent(TryItFormData).exists()).toBe(true)
+        expect(wrapper.findComponent(EditableCodeBlock).exists()).toBe(false)
+        expect(wrapper.findTestId('tryit-body-formfield-title-op-multipart').exists()).toBe(true)
+        expect(wrapper.findComponent(RequiredToggle).exists()).toBe(true)
+      })
+
+      it('re-emits request-body-changed events from TryItFormData', async () => {
+        const wrapper = mount(TryItParams, {
+          props: {
+            paramType: <RequestParamTypes>'body',
+            data: multipartData as any,
+            requestBody: multipartRequestBody,
+            modelValue: true,
+          },
+        })
+
+        const newBody = { isMultipart: true, formFields: [{ name: 'title', kind: 'text' as const, required: true, value: 'updated' }] }
+        await wrapper.findComponent(TryItFormData).vm.$emit('request-body-changed', newBody)
+
+        expect(wrapper.emitted('request-body-changed')).toEqual([[newBody]])
+      })
+
+      it('refreshes form fields when switching operation', async () => {
+        const wrapper = mount(TryItParams, {
+          props: {
+            paramType: <RequestParamTypes>'body',
+            data: multipartData as any,
+            requestBody: multipartRequestBody,
+            modelValue: true,
+          },
+        })
+
+        expect(wrapper.findTestId('tryit-body-formfield-title-op-multipart').exists()).toBe(true)
+
+        const otherMultipartData = { ...multipartData, id: 'op-multipart-2' }
+        await wrapper.setProps({
+          data: otherMultipartData as any,
+          requestBody: {
+            isMultipart: true,
+            formFields: [{ name: 'title', kind: 'text' as const, required: true, value: 'My upload' }],
+          },
+        })
+
+        expect(wrapper.findTestId('tryit-body-formfield-title-op-multipart-2').exists()).toBe(true)
+      })
     })
   })
 

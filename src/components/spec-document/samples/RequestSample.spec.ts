@@ -105,6 +105,48 @@ describe('<RequestSample />', () => {
   })
 
 
+  it('should render a multipart/form-data snippet with -F params and no explicit content-type header', async () => {
+    const wrapper = mount(RequestSample, {
+      props: {
+        data: {
+          id: '123',
+          method: 'post',
+          path: '/upload',
+          responses: [],
+          request: {
+            body: {
+              id: 'bodyId',
+              contents: [
+                {
+                  id: 'mediatypeId',
+                  mediaType: 'multipart/form-data',
+                },
+              ],
+            },
+          },
+          servers: [{
+            id: 'sample-server-id',
+            url: 'https://global.api.konghq.com/v2',
+          }],
+        },
+        serverUrl: 'https://global.api.konghq.com/v2',
+        requestPath: '/upload',
+        requestBody: {
+          isMultipart: true,
+          formFields: [
+            { name: 'title', kind: 'text', required: true, value: 'my title' },
+            { name: 'avatar', kind: 'file', required: false, files: [new File(['abc'], 'avatar.png', { type: 'image/png' })] },
+          ],
+        },
+      },
+    })
+    await flushPromises()
+    const code = wrapper.findTestId('request-sample-123').html()
+    expect(code).toMatch('--form')
+    expect(code).toMatch('title=my title')
+    expect(code).toMatch('avatar=@avatar.png')
+  })
+
   it('should use correct URL when protocol is not specified [TDX-5963]', async () => {
 
     const wrapper = mount(RequestSample, {
