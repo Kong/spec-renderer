@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "KongAir APIs whatever else",
+    "title": "KongAir APIs",
     "description": "Consolidated API specification for KongAir Flights, Bookings, and Routes services.",
     "version": "1.0.0"
   },
