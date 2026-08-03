@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { resolveRenderOptions } from './resolve-render-options.js'
 
 describe('resolveRenderOptions', () => {
-  it('defaults every hide/verbose flag to false, content scrolling and custom-server-url to true, and branding to true, when no flags are passed', () => {
+  it('defaults every hide/verbose flag to false, content scrolling and custom-server-url to true, branding to true, and navigationType to hash, when no flags are passed', () => {
     expect(resolveRenderOptions({})).toEqual({
       hideInternal: false,
       hideDeprecated: false,
@@ -17,7 +17,7 @@ describe('resolveRenderOptions', () => {
       hideDownloadButton: false,
       enableOperationLinks: false,
       showPoweredBy: true,
-      navigationType: 'path',
+      navigationType: 'hash',
       controlAddressBar: true,
     })
   })
@@ -37,6 +37,7 @@ describe('resolveRenderOptions', () => {
       hideDownloadButton: true,
       enableOperationLinks: true,
       hidePoweredBy: true,
+      navigationType: 'path',
     })).toEqual({
       hideInternal: true,
       hideDeprecated: true,
@@ -101,10 +102,18 @@ describe('resolveRenderOptions', () => {
     expect(resolveRenderOptions({})).not.toHaveProperty('maxExpandedDepth')
   })
 
-  it('always hardcodes navigationType and controlAddressBar regardless of input', () => {
+  it('always hardcodes controlAddressBar regardless of input', () => {
     const result = resolveRenderOptions({ hideInternal: true })
 
-    expect(result.navigationType).toBe('path')
     expect(result.controlAddressBar).toBe(true)
+  })
+
+  it('defaults navigationType to hash rather than the component prop default of path, since the CLI server has no route fallback for a refresh at a deep path link', () => {
+    expect(resolveRenderOptions({})).toMatchObject({ navigationType: 'hash' })
+  })
+
+  it('uses path navigationType only when --navigation-type path is explicitly passed', () => {
+    expect(resolveRenderOptions({ navigationType: 'path' })).toMatchObject({ navigationType: 'path' })
+    expect(resolveRenderOptions({ navigationType: 'hash' })).toMatchObject({ navigationType: 'hash' })
   })
 })

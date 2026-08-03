@@ -27,6 +27,13 @@ export interface PreviewCliFlags {
   hidePoweredBy?: boolean
   /** From `--path <path>`, matching the underlying `currentPath` prop name. */
   currentPath?: string
+  /**
+   * From `--navigation-type <type>`. Defaults to `'hash'` (see `RenderOptions`
+   * below) - `'path'` is opt-in since the CLI's server doesn't fall back to
+   * the preview page for arbitrary paths, so refreshing the browser at a deep
+   * link (e.g. after `--path`, or after clicking through the doc) 404s.
+   */
+  navigationType?: 'path' | 'hash'
 }
 
 /** The `SpecRendererProps` subset the preview page applies to `<kong-spec-renderer>`. */
@@ -45,7 +52,7 @@ export interface RenderOptions {
   hideDownloadButton: boolean
   enableOperationLinks: boolean
   showPoweredBy: boolean
-  navigationType: 'path'
+  navigationType: 'path' | 'hash'
   controlAddressBar: true
   currentPath?: string
 }
@@ -54,15 +61,20 @@ export interface RenderOptions {
  * Maps parsed `preview` CLI flags to the `SpecRendererProps` subset the preview
  * page renders with.
  *
- * `navigationType` and `controlAddressBar` are always hardcoded - the CLI, not
- * the user, owns the single-page preview environment those props govern.
- * `showPoweredBy` defaults to `true` here even though the component prop
- * itself defaults to `false` - the CLI wants branding visible unless a user
- * opts out with `--hide-powered-by`. `hideNavigationButtons` defaults to
- * `true` (hidden), matching the component's own default, and only flips to
- * `false` when `--show-navigation-buttons` is explicitly passed - mainly
- * useful alongside `--no-content-scrolling`, where the prev/next buttons are
- * otherwise the only in-page way to move between operations.
+ * `controlAddressBar` is always hardcoded true - the CLI, not the user, owns
+ * the single-page preview environment that prop governs. `navigationType`
+ * defaults to `'hash'` rather than the component's own `'path'` default -
+ * with `'path'`, the CLI's server would need to fall back to the preview page
+ * for arbitrary unmatched routes to support a browser refresh at a deep link,
+ * which it doesn't do, so refreshing 404s; `'hash'` keeps the path client-side
+ * only, so a refresh always hits `/`. `showPoweredBy` defaults to `true` here
+ * even though the component prop itself defaults to `false` - the CLI wants
+ * branding visible unless a user opts out with `--hide-powered-by`.
+ * `hideNavigationButtons` defaults to `true` (hidden), matching the
+ * component's own default, and only flips to `false` when
+ * `--show-navigation-buttons` is explicitly passed - mainly useful alongside
+ * `--no-content-scrolling`, where the prev/next buttons are otherwise the
+ * only in-page way to move between operations.
  */
 export function resolveRenderOptions(flags: PreviewCliFlags): RenderOptions {
   return {
@@ -80,7 +92,7 @@ export function resolveRenderOptions(flags: PreviewCliFlags): RenderOptions {
     hideDownloadButton: flags.hideDownloadButton ?? false,
     enableOperationLinks: flags.enableOperationLinks ?? false,
     showPoweredBy: !flags.hidePoweredBy,
-    navigationType: 'path',
+    navigationType: flags.navigationType ?? 'hash',
     controlAddressBar: true,
     ...(flags.currentPath === undefined ? {} : { currentPath: flags.currentPath }),
   }

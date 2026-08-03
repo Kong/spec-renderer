@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
-import { buildBannerLines, visibleLength } from './ui.js'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { buildBannerLines, hyperlink, pc, visibleLength } from './ui.js'
 
 const BOLD = '\x1B[1m'
 const RESET = '\x1B[22m'
@@ -11,6 +11,24 @@ describe('visibleLength', () => {
 
   it('ignores ANSI color escape codes', () => {
     expect(visibleLength(`${BOLD}hello${RESET}`)).toBe(5)
+  })
+
+  it('ignores OSC 8 hyperlink wrapper sequences', () => {
+    expect(visibleLength(hyperlink('hello', 'https://example.com'))).toBe(5)
+  })
+})
+
+describe('hyperlink', () => {
+  it('wraps text in an OSC 8 escape sequence pointing at the given url', () => {
+    expect(hyperlink('click me', 'https://example.com')).toBe(
+      '\x1B]8;;https://example.com\x07click me\x1B]8;;\x07',
+    )
+  })
+
+  it('keeps the visible text intact between the escape sequences', () => {
+    const linked = hyperlink('click me', 'https://example.com')
+
+    expect(linked).toContain('click me')
   })
 })
 
@@ -31,6 +49,17 @@ describe('buildBannerLines', () => {
     const lines = buildBannerLines([
       { label: 'Spec', value: './openapi.yaml' },
       { label: 'URL', value: `${BOLD}http://localhost:4757/a/very/long/path/that/is/quite/wide${RESET}` },
+    ])
+
+    const widths = new Set(lines.map((line) => visibleLength(line)))
+
+    expect(widths.size).toBe(1)
+  })
+
+  it('keeps alignment when a row value is an OSC 8 hyperlink', () => {
+    const lines = buildBannerLines([
+      { label: 'Spec', value: hyperlink('./openapi.yaml', 'file:///tmp/openapi.yaml') },
+      { label: 'URL', value: hyperlink('http://localhost:4757', 'http://localhost:4757') },
     ])
 
     const widths = new Set(lines.map((line) => visibleLength(line)))
@@ -86,5 +115,38 @@ describe('buildBannerLines', () => {
     expect(widths[0]).toBeLessThanOrEqual(narrowWidth + 4)
     // A ~100-char URL wrapped at a ~30-char value column takes several continuation lines.
     expect(lines.length).toBeGreaterThan(6)
+  })
+})
+
+describe('pc', () => {
+  const originalNoColor = process.env.NO_COLOR
+
+  afterEach(() => {
+    if (originalNoColor === undefined) {
+      delete process.env.NO_COLOR
+    } else {
+      process.env.NO_COLOR = originalNoColor
+    }
+    vi.resetModules()
+  })
+
+  it('always colorizes output, regardless of TTY/CI auto-detection', () => {
+    // This test itself runs in a non-TTY environment (vitest's process), where
+    // picocolors' own auto-detecting default export would normally disable
+    // color - `pc` is forced on so the preview banner/log lines are always
+    // colored when actually read in a terminal.
+    expect(pc.isColorSupported).toBe(true)
+    expect(pc.cyan('x')).not.toBe('x')
+  })
+
+  it('still honors NO_COLOR as the standard explicit opt-out', async () => {
+    delete process.env.NO_COLOR
+    process.env.NO_COLOR = '1'
+    vi.resetModules()
+
+    const { pc: pcWithNoColor } = await import('./ui.js')
+
+    expect(pcWithNoColor.isColorSupported).toBe(false)
+    expect(pcWithNoColor.cyan('x')).toBe('x')
   })
 })

@@ -1,12 +1,12 @@
 import { readFile } from 'node:fs/promises'
-import pc from 'picocolors'
+import { pathToFileURL } from 'node:url'
 import { watch, type FSWatcher } from 'chokidar'
 import open from 'open'
 import { loadSpecSource } from '../spec-source.js'
 import { resolveRenderOptions, type PreviewCliFlags } from '../resolve-render-options.js'
 import { findOpenPort } from '../find-open-port.js'
 import { startPreviewServer } from '../server.js'
-import { info, printPreviewBanner } from '../ui.js'
+import { hyperlink, info, pc, printPreviewBanner } from '../ui.js'
 
 const DEFAULT_PORT = 4757
 
@@ -38,10 +38,13 @@ export async function runPreviewCommand(specArg: string, flags: PreviewCommandFl
   // differ when the requested port is `0` (OS picks any free port).
   const url = `http://localhost:${previewServer.port}`
   const isWatching = source.watch && !!source.watchPath
+  // A local file gets a `file://` link target; a remote spec's URL is
+  // already one, so it can link to itself.
+  const specLinkTarget = source.watchPath ? pathToFileURL(source.watchPath).href : specArg
 
   printPreviewBanner([
-    { label: 'Spec', value: specArg },
-    { label: 'URL', value: pc.bold(pc.underline(url)) },
+    { label: 'Spec', value: pc.bold(pc.underline(hyperlink(specArg, specLinkTarget))) },
+    { label: 'URL', value: pc.bold(pc.underline(hyperlink(url, url))) },
     { label: 'Reload', value: isWatching ? pc.green('watching for changes') : pc.yellow('not available (remote URL)') },
   ])
   console.log()
@@ -56,6 +59,11 @@ export async function runPreviewCommand(specArg: string, flags: PreviewCommandFl
     let latestChangeToken = 0
 
     watcher = watch(watchPath, {
+      // Without this, chokidar's initial scan on startup fires an `add` event
+      // for the already-existing watched file - which our `add` handler below
+      // (added to handle editors that recreate the file in place) would
+      // otherwise mistake for a real change and reload immediately on launch.
+      ignoreInitial: true,
       // Some editors/tools write a file's contents in multiple chunks before
       // the save is complete; without this, a `change` event can fire mid-write
       // and be read as truncated/invalid content, surfacing a bogus parse error
@@ -65,7 +73,17 @@ export async function runPreviewCommand(specArg: string, flags: PreviewCommandFl
         pollInterval: 20,
       },
     })
-    watcher.on('change', () => {
+    // Some editors (e.g. Vim's default writebackup save) rename the original
+    // file away and create a brand-new file at the same path, rather than
+    // writing in place. When the gap between that rename and the new file's
+    // creation exceeds chokidar's atomic-write dedup window, this surfaces as
+    // a genuine `unlink` followed by a separate `add`, instead of a single
+    // `change` - so both are treated as reload triggers, and a pending
+    // "file deleted" warning is held briefly to give a same-path `add` a
+    // chance to arrive first before assuming the file is actually gone.
+    let pendingUnlinkWarning: NodeJS.Timeout | undefined
+
+    const reloadFromDisk = (): void => {
       const changeToken = ++latestChangeToken
 
       readFile(watchPath, 'utf-8')
@@ -81,9 +99,22 @@ export async function runPreviewCommand(specArg: string, flags: PreviewCommandFl
         .catch((readError: unknown) => {
           console.error(`${pc.red('✖')} Failed to reload spec: ${readError instanceof Error ? readError.message : String(readError)}`)
         })
+    }
+
+    watcher.on('change', reloadFromDisk)
+    watcher.on('add', () => {
+      if (pendingUnlinkWarning) {
+        clearTimeout(pendingUnlinkWarning)
+        pendingUnlinkWarning = undefined
+      }
+
+      reloadFromDisk()
     })
     watcher.on('unlink', () => {
-      console.error(`${pc.red('✖')} Spec file was deleted or moved - live reload has stopped. The preview will keep showing its last-known content.`)
+      pendingUnlinkWarning = setTimeout(() => {
+        pendingUnlinkWarning = undefined
+        console.error(`${pc.red('✖')} Spec file was deleted or moved - live reload has stopped. The preview will keep showing its last-known content.`)
+      }, 500)
     })
     watcher.on('error', (watchError: unknown) => {
       console.error(`${pc.red('✖')} File watcher error: ${watchError instanceof Error ? watchError.message : String(watchError)}`)

@@ -85,7 +85,17 @@ The CLI isn't versioned independently - `--version`/`-V` always reports the inst
 | `--no-custom-server-url` | Don't let the preview add a custom server URL to the servers list - useful if you want to lock the preview to only the servers defined in the spec. | can add one |
 | `--hide-download-button` | Hide the spec download button. | `false` (shown) |
 | `--enable-operation-links` | Show a permalink icon on each operation that copies its URL to the clipboard. | `false` |
-| `--path <path>` | Open the preview at a specific operation/schema path, e.g. `/pets/{id}`, instead of the doc's overview. | overview |
+| `--path <path>` | Open the preview at a specific operation or schema, instead of the doc's overview. | overview |
+| `--navigation-type <path\|hash>` | How the current operation/schema is tracked in the URL. `path` puts it directly in the URL path (e.g. `/operations/getPets`); `hash` keeps it in the URL fragment (e.g. `#/operations/getPets`). | `hash` |
+
+> [!Note]
+> `--path` takes the rendered document's own node path, not the spec's raw OAS path - use `/operations/{operationId}` for an operation (e.g. `/operations/getPets`) or `/schemas/{SchemaName}` for a model (e.g. `/schemas/Pet`), matching the `operationId`/schema name in your spec. If the path doesn't match anything, the preview logs a warning to the browser console and falls back to the overview.
+
+> [!Note]
+> `navigationType` defaults to `hash` rather than the underlying component's own `path` default - the CLI's server doesn't fall back to the preview page for arbitrary unmatched routes, so with `path`, refreshing the browser at a deep link (from `--path`, or after clicking through the doc) 404s. `hash` keeps the current path entirely client-side, so a refresh always hits `/` and reloads correctly. Pass `--navigation-type path` if you specifically want path-style URLs and don't mind that limitation.
+
+> [!Note]
+> `--no-content-scrolling`/`--show-navigation-buttons` have no visible effect on a very large spec (1200+ operations/schemas combined) - continuous scrolling and the TOC-only navigation mode are automatically disabled above that size regardless of these flags, falling back to one-operation-at-a-time navigation with prev/next buttons shown, since rendering that many operations in one continuously-scrolling page isn't practical.
 
 > [!Note]
 > The underlying component only fully hides the "Try it" panel when **both** `--hide-try-it` and `--hide-insomnia-try-it` are set - pass both together if you want it gone entirely.

@@ -34,6 +34,7 @@ interface RawPreviewFlags {
   enableOperationLinks?: boolean
   hidePoweredBy?: boolean
   path?: string
+  navigationType?: 'path' | 'hash'
 }
 
 // The CLI isn't versioned independently - it always reports the package's
@@ -44,14 +45,25 @@ const { version } = JSON.parse(readFileSync(packageJsonPath, 'utf-8')) as { vers
 
 const program = new Command()
 
+// Flags are registered in the order that groups them logically for readers
+// of this file, not alphabetically - sort them for `--help` output instead so
+// they're easy to scan regardless of definition order. `showGlobalOptions`
+// surfaces `-V/--version` (registered on the top-level program, not the
+// `preview` subcommand) in `preview --help` too - otherwise it's easy to
+// assume it doesn't exist, since usage is always through the subcommand.
+program.configureHelp({ sortOptions: true, showGlobalOptions: true })
+
+const DOCS_URL = 'https://github.com/Kong/spec-renderer/blob/main/cli/README.md'
+
 program
   .name('kong-spec-renderer')
   .description('Preview a local OpenAPI/AsyncAPI spec using @kong/spec-renderer')
   .version(version, '-V, --version', 'output the current version')
+  .addHelpText('after', `\nDocs: ${DOCS_URL}`)
 
 program
   .command('preview')
-  .description('Render a spec file or URL in a local preview server, reloading when the file changes')
+  .description('Preview a local spec file or remote spec URL using the spec renderer.')
   .argument('<spec>', 'path to a local spec file, or a URL to a remote spec')
   .option('--port <port>', 'port to run the preview server on', parseIntFlag('--port', { max: 65535 }))
   .option('--no-open', 'do not automatically open the preview in a browser')
@@ -64,13 +76,19 @@ program
   .option('--max-expanded-depth <depth>', 'maximum depth to expand nested schema properties by default', parseIntFlag('--max-expanded-depth'))
   .option('--verbose', 'log spec parsing stages to the browser console, for troubleshooting (alias: --trace-parsing)')
   .addOption(new Option('--trace-parsing', 'alias for --verbose').hideHelp())
-  .option('--no-content-scrolling', 'navigate between operations/schemas one at a time instead of scrolling through them continuously')
+  .option('--no-content-scrolling', 'navigate between operations/schemas one at a time instead of scrolling through them continuously (has no effect above 1200 combined operations/schemas, where this is always enforced)')
   .option('--no-custom-server-url', 'do not let the preview add a custom server URL to the servers list')
   .option('--show-navigation-buttons', 'show prev/next buttons at the bottom of each operation - useful with --no-content-scrolling')
   .option('--hide-download-button', 'hide the spec download button')
   .option('--enable-operation-links', 'show a permalink icon on each operation that copies its URL to the clipboard')
   .option('--hide-powered-by', 'hide the "Powered by" branding in the table of contents')
-  .option('--path <path>', 'open the preview at a specific operation/schema path, e.g. /pets/{id}')
+  .option('--path <path>', 'open the preview at a specific operation/schema, e.g. /operations/getPets or /schemas/Pet (not the raw OAS path)')
+  .addOption(
+    new Option('--navigation-type <type>', 'how the current operation/schema is tracked in the URL - "path" breaks a browser refresh at a deep link, since the server has no route fallback for it')
+      .choices(['path', 'hash'])
+      .default('hash'),
+  )
+  .addHelpText('after', `\nDocs: ${DOCS_URL}`)
   .action(async (spec: string, raw: RawPreviewFlags) => {
     const flags: PreviewCommandFlags = {
       ...raw,

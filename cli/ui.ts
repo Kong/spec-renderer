@@ -1,4 +1,13 @@
-import pc from 'picocolors'
+import { createColors } from 'picocolors'
+
+// picocolors' default export auto-detects color support and disables it for
+// a non-TTY stdout (e.g. output piped to a file or another process) - the
+// preview banner/log lines are always meant to be colored when read in a
+// terminal, so force it on regardless of how stdout is connected. `NO_COLOR`
+// is still honored, since it's the standard explicit user opt-out. Exported
+// so other CLI modules (e.g. `commands/preview.ts`) share the same forced
+// instance rather than importing picocolors' auto-detecting default directly.
+export const pc = createColors(!process.env.NO_COLOR)
 
 const BOX_TITLE = 'Kong Spec Renderer - Preview'
 
@@ -7,12 +16,22 @@ const BOX_TITLE = 'Kong Spec Renderer - Preview'
 // box wider than the terminal, which breaks the border rendering.
 const MAX_CONTENT_WIDTH = 96
 
-// eslint-disable-next-line no-control-regex -- matches ANSI SGR escape codes, which are control characters by definition
-const ANSI_PATTERN = /\x1B\[[0-9;]*m/g
+// eslint-disable-next-line no-control-regex -- matches ANSI SGR escape codes and OSC 8 hyperlink wrappers, which are control characters by definition
+const ANSI_PATTERN = /\x1B\[[0-9;]*m|\x1B\]8;[^\x07]*\x07/g
 
-/** Visible length of a string, ignoring ANSI color escape codes. */
+/** Visible length of a string, ignoring ANSI color escape codes and OSC 8 hyperlink wrappers. */
 export function visibleLength(text: string): number {
   return text.replace(ANSI_PATTERN, '').length
+}
+
+/**
+ * Wraps `text` in an OSC 8 terminal hyperlink pointing at `url`, so it's
+ * clickable in terminals that support it (iTerm2, Kitty, Windows Terminal,
+ * VS Code's integrated terminal, etc.) - falls back to plain, unlinked text
+ * everywhere else with no visible difference.
+ */
+export function hyperlink(text: string, url: string): string {
+  return `\x1B]8;;${url}\x07${text}\x1B]8;;\x07`
 }
 
 /** Strips ANSI color escape codes from a string. */

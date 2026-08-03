@@ -45,7 +45,7 @@ const CONFIG: RenderOptions = {
   hideDownloadButton: false,
   enableOperationLinks: false,
   showPoweredBy: true,
-  navigationType: 'path',
+  navigationType: 'hash',
   controlAddressBar: true,
 }
 
