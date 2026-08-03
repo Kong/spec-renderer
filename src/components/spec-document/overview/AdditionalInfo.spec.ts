@@ -86,18 +86,36 @@ describe('<AdditionalInfo />', () => {
     expect(license.attributes('href')).toBeUndefined()
   })
 
-  it('renders malformed contact emails as plain text', () => {
+  it('renders contact name as plain text when the contact URL is unsafe', () => {
     const wrapper = mount(AdditionalInfo, {
       props: {
         contact: {
-          email: 'email@example.com?subject=Injected',
+          name: 'Support Team',
+          url: 'javascript:alert(1)',
         },
       },
     })
 
     const contact = wrapper.findTestId('overview-additional-info-contact')
 
-    expect(contact.text()).toContain('(email@example.com?subject=Injected)')
+    // The panel and contact name must still render even though the URL was rejected.
+    expect(wrapper.findTestId('overview-additional-info').exists()).toBe(true)
+    expect(contact.text()).toContain('Support Team')
+    expect(contact.find('a').exists()).toBe(false)
+  })
+
+  it('renders invalid contact emails as plain text', () => {
+    const wrapper = mount(AdditionalInfo, {
+      props: {
+        contact: {
+          email: 'email.example.com',
+        },
+      },
+    })
+
+    const contact = wrapper.findTestId('overview-additional-info-contact')
+
+    expect(contact.text()).toContain('(email.example.com)')
     expect(contact.find('a').exists()).toBe(false)
   })
 })

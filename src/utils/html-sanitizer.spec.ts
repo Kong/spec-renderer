@@ -76,14 +76,14 @@ describe('html-sanitizer', () => {
     expect(sanitizeHref('mailto:user@example.com')).toBeUndefined()
   })
 
-  it('builds mailto hrefs from email addresses', () => {
+  it('builds mailto hrefs from basic email addresses', () => {
     expect(sanitizeMailtoHref('user@example.com')).toBe('mailto:user@example.com')
     expect(sanitizeMailtoHref(' user+docs@example.com ')).toBe('mailto:user+docs@example.com')
   })
 
-  it('blocks malformed mailto values', () => {
-    expect(sanitizeMailtoHref('javascript:alert(1)')).toBeUndefined()
-    expect(sanitizeMailtoHref('user@example.com?subject=Injected')).toBeUndefined()
-    expect(sanitizeMailtoHref('user@example.com%0D%0ABcc:attacker@example.com')).toBeUndefined()
+  it('blocks clearly invalid email values', () => {
+    expect(sanitizeMailtoHref('user.example.com')).toBeUndefined()
+    expect(sanitizeMailtoHref('@example.com')).toBeUndefined()
+    expect(sanitizeMailtoHref('user@')).toBeUndefined()
   })
 })

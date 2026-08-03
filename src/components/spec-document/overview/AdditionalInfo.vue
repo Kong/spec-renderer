@@ -14,7 +14,7 @@
         data-testid="overview-additional-info"
       >
         <div
-          v-if="contactUrl || contact?.email"
+          v-if="contactUrl || contact?.email || contact?.name"
           class="overview-additional-info-contact"
           data-testid="overview-additional-info-contact"
         >
@@ -27,6 +27,9 @@
           >
             {{ contact.name }}
           </a>
+          <span v-else-if="contact?.name">
+            {{ contact.name }}
+          </span>
           <a
             v-if="contactEmailHref"
             :href="contactEmailHref"
@@ -93,7 +96,7 @@ const licenseUrl = computed(() => sanitizeHref(props.license?.url))
 const externalDocsUrl = computed(() => sanitizeHref(props.externalDocs?.url))
 
 const hasAdditionalInfo = computed(() => Boolean(
-  contactUrl.value || props.contact?.email || props.license?.name || externalDocsUrl.value,
+  contactUrl.value || props.contact?.email || props.contact?.name || props.license?.name || externalDocsUrl.value,
 ))
 </script>
 

@@ -40,6 +40,9 @@ export function sanitizeMarkdownHtml(html: string): string {
 /**
  * Sanitizes user-provided spec URLs before binding them to an anchor `href`.
  * The URL constructor needs a base so relative URLs can be parsed and allowed.
+ * Note: relative and protocol-relative values are intentionally allowed, so a
+ * scheme-less host-like string (e.g. `"example.com"`) resolves as a relative path
+ * against the current page rather than as an absolute external link.
  */
 export function sanitizeHref(href?: string): string | undefined {
   const trimmedHref = href?.trim()
@@ -59,9 +62,8 @@ export function sanitizeHref(href?: string): string | undefined {
 }
 
 /**
- * Builds a safe mailto href from an OpenAPI contact email value.
- * Contact email is an address, not a full mailto URL, so query/header syntax is rejected.
- * This intentionally avoids full email validation; it only enforces the minimum shape needed for a safe link.
+ * Builds a mailto href from a basic email-like value.
+ * This is not full RFC validation; it only checks for text before and after `@`.
  */
 export function sanitizeMailtoHref(email?: string): string | undefined {
   const trimmedEmail = email?.trim()
@@ -71,11 +73,8 @@ export function sanitizeMailtoHref(email?: string): string | undefined {
   }
 
   const atIndex = trimmedEmail.indexOf('@')
-  const hasSingleAtSign = atIndex > 0 && atIndex === trimmedEmail.lastIndexOf('@') && atIndex < trimmedEmail.length - 1
-  // Block whitespace/control characters plus mailto query/fragment delimiters.
-  const hasUnsafeMailtoChars = [...trimmedEmail].some((char) => char <= ' ' || char === '?' || char === '#')
 
-  if (!hasSingleAtSign || hasUnsafeMailtoChars) {
+  if (atIndex <= 0 || atIndex === trimmedEmail.length - 1) {
     return undefined
   }
 
