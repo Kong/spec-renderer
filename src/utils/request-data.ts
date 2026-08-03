@@ -5,7 +5,7 @@ import { maskBodyExample } from './sensitive-data-masking'
 import { CODE_INDENT_SPACES } from '@/constants'
 import { safeJSONParse } from './strings'
 import formurlencoded from 'form-urlencoded'
-import type { RequestBody } from '@/types'
+import type { RequestBody, RequestFormField } from '@/types'
 
 const getAcceptHeader = (data: IHttpOperation): string => {
   const headers = new Set()
@@ -181,6 +181,103 @@ export const getSampleBody = (contents: IMediaTypeContent[], filteringOptions: R
 }
 
 /**
+ * Generates the per-field form-data model for a `multipart/form-data` media type, so a
+ * multipart body can be edited as individual named fields (text/file/JSON) instead of a single
+ * JSON blob.
+ *
+ * @param content the active `multipart/form-data` media type entry
+ * @param filteringOptions indicates what to exclude (readonly fields, non-required fields)
+ * @returns one RequestFormField per schema property
+ *
+ * @example
+ * // schema: { type: 'object', required: ['avatar'], properties: { avatar: { type: 'string', format: 'binary' } } }
+ * // => [{ name: 'avatar', kind: 'file', required: true }]
+ */
+export const getSampleFormFields = (
+  content: IMediaTypeContent,
+  filteringOptions: Record<string, boolean> = { excludeReadonly: true, excludeNotRequired: false },
+): RequestFormField[] => {
+  const schema = resolveSchemaObjectFields(content.schema)
+  const requiredList = Array.isArray(schema.required) ? schema.required : []
+
+  return Object.entries(schema.properties ?? {}).reduce<RequestFormField[]>((fields, [name, rawProp]) => {
+    const prop = resolveSchemaObjectFields(rawProp)
+    const required = requiredList.includes(name)
+
+    if (filteringOptions.excludeNotRequired && !required) {
+      return fields
+    }
+    if (filteringOptions.excludeReadonly && prop.readOnly) {
+      return fields
+    }
+
+    const propType = resolveSchemaType(prop.type)
+    const isBinary = prop.format === 'binary' || !!prop.contentMediaType
+    const encoding = content.encodings?.find(e => e.property === name)
+
+    const field: RequestFormField = { name, kind: 'text', required }
+
+    if (isBinary) {
+      field.kind = 'file'
+      if (propType === 'array') {
+        field.multiple = true
+      }
+    } else if (propType === 'object' || propType === 'array') {
+      const sample = crawl({ objData: prop as Record<string, any>, filteringOptions })
+      field.kind = 'json'
+      field.value = JSON.stringify(propType === 'array' && !Array.isArray(sample) ? [sample] : sample, null, CODE_INDENT_SPACES)
+    } else {
+      field.value = String(extractSampleForParam(prop, name))
+    }
+
+    if (prop.description) {
+      field.description = prop.description
+    }
+    if (encoding?.mediaType) {
+      field.contentType = encoding.mediaType
+    } else if (field.kind === 'json') {
+      field.contentType = 'application/json'
+    }
+
+    fields.push(field)
+    return fields
+  }, [])
+}
+
+export interface MultipartFormPart {
+  kind: 'text' | 'file' | 'json'
+  name: string
+  value?: string
+  file?: File
+  contentType?: string
+}
+
+/**
+ * Flattens a multipart form-data field list into one entry per actual part - a `file` field with
+ * multiple files becomes one entry per file, since neither FormData nor HAR params can represent
+ * "one field, many files" as a single entry, applying the same kind-specific defaults (e.g. json
+ * fields default to an empty value and `application/json`) needed to build both the live FormData
+ * request in "Try It" and the code snippet params in request sample.
+ *
+ * @example
+ * flattenMultipartFields([{ name: 'attachments', kind: 'file', files: [fileA, fileB] }])
+ * // => [{ kind: 'file', name: 'attachments', file: fileA }, { kind: 'file', name: 'attachments', file: fileB }]
+ */
+export const flattenMultipartFields = (formFields: RequestFormField[] = []): MultipartFormPart[] => {
+  const parts: MultipartFormPart[] = []
+  formFields.forEach(field => {
+    if (field.kind === 'file') {
+      field.files?.forEach(file => parts.push({ kind: 'file', name: field.name, file, contentType: field.contentType }))
+    } else if (field.kind === 'json') {
+      parts.push({ kind: 'json', name: field.name, value: field.value ?? '', contentType: field.contentType ?? 'application/json' })
+    } else if (field.value !== undefined) {
+      parts.push({ kind: 'text', name: field.name, value: field.value })
+    }
+  })
+  return parts
+}
+
+/**
  * reformat body based on content-type header, for non-binary body
  * @param headers
  * @param body
@@ -194,7 +291,7 @@ export const getFormattedBody = (headers: Record<string, string>, body: RequestB
     }
   }
 
-  if (!body || body.isBinary) {
+  if (!body || body.isBinary || body.isMultipart) {
     return { body: null, contentType }
   }
 

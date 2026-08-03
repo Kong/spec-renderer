@@ -81,6 +81,56 @@ describe('<TryIt />', () => {
     })
   })
 
+  it('should send a FormData body with no explicit content-type header for multipart/form-data', async () => {
+    const wrapper = mount(TryIt, {
+      props: {
+        data: {
+          id: '123',
+          method: 'post',
+          path: '/upload',
+          responses: [],
+          request: {
+            body: {
+              id: 'bodyId',
+              contents: [
+                {
+                  id: 'mediatypeId',
+                  mediaType: 'multipart/form-data',
+                },
+              ],
+            },
+          },
+          servers: [{
+            id: 'sample-server-id',
+            url: 'https://global.api.konghq.com/v2',
+          }],
+        },
+        requestBody: {
+          isMultipart: true,
+          formFields: [
+            { name: 'title', kind: 'text', required: true, value: 'my title' },
+            { name: 'avatar', kind: 'file', required: false, files: [new File(['abc'], 'avatar.png', { type: 'image/png' })] },
+          ],
+        },
+        serverUrl: 'https://global.api.konghq.com/v2',
+      },
+    })
+
+    global.fetch = vi.fn()
+    await wrapper.findTestId('tryit-call-button-123').trigger('click')
+
+    expect(fetch).toHaveBeenCalledTimes(1)
+    const [url, options] = (fetch as any).mock.calls[0]
+    expect(url).toBe('https://global.api.konghq.com/v2/upload')
+    expect(options.method).toBe('POST')
+    // the browser must set Content-Type itself (with the multipart boundary)
+    expect(options.headers['Content-Type']).toBeUndefined()
+    expect(options.headers['content-type']).toBeUndefined()
+    expect(options.body).toBeInstanceOf(FormData)
+    expect(options.body.get('title')).toBe('my title')
+    expect((options.body.get('avatar') as File).name).toBe('avatar.png')
+  })
+
   it('should call fetch with correct url and headers for GET', async () => {
     const wrapper = mount(TryIt, {
       props: {

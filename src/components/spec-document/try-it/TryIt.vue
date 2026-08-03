@@ -80,7 +80,7 @@
 import { inject, computed, ref, watch, useTemplateRef } from 'vue'
 import type { PropType, Ref } from 'vue'
 import TryItDropdown from './TryItDropdown.vue'
-import { getRequestHeaders, getSampleHeaders, getFormattedBody, getSamplePath, getSampleQuery } from '@/utils'
+import { getRequestHeaders, getSampleHeaders, getFormattedBody, getSamplePath, getSampleQuery, flattenMultipartFields } from '@/utils'
 import type { IHttpOperation } from '@stoplight/types'
 import type { SecuritySchemeMaskRule } from '@/types'
 import MethodBadge from '@/components/common/MethodBadge.vue'
@@ -271,6 +271,27 @@ const doApiCall = async (callAsIs = false) => {
       return
     }
 
+    let formDataBody: FormData | null = null
+    if (currentRequestBody.value.isMultipart) {
+      formDataBody = new FormData()
+      flattenMultipartFields(currentRequestBody.value.formFields).forEach(part => {
+        if (part.kind === 'file' && part.file) {
+          formDataBody!.append(part.name, part.file)
+        } else if (part.kind === 'json') {
+          formDataBody!.append(part.name, new Blob([part.value ?? ''], { type: part.contentType ?? 'application/json' }))
+        } else if (part.value !== undefined) {
+          formDataBody!.append(part.name, part.value)
+        }
+      })
+
+      // the browser must set Content-Type itself (with the multipart boundary) - any explicit
+      // value here (from getRequestHeaders' default, or a user-added header) breaks the request
+      const contentTypeKey = Object.keys(headers).find(key => key.toLowerCase() === 'content-type')
+      if (contentTypeKey) {
+        delete headers[contentTypeKey]
+      }
+    }
+
     // first time we call GET - we will try to convert to simple request
     if (callAsIs === false && isGet) {
       if (headers['content-type']) {
@@ -281,11 +302,13 @@ const doApiCall = async (callAsIs = false) => {
       queryStr += (currentRequestQuery.value ? '&' : '?') + props.authQuery
     }
 
+    const getBody = textBody || binaryBody || formDataBody
+
     const myResponse = await fetch(url.href, {
       method: String(props.data.method).toUpperCase(),
       cache: 'no-cache',
       headers,
-      ...(textBody || binaryBody ? { body: textBody || binaryBody } : null),
+      ...(getBody ? { body: getBody } : null),
     })
     response.value = myResponse
 

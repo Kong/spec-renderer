@@ -1,0 +1,188 @@
+<template>
+  <div class="wide form-data-fields">
+    <div
+      v-for="field in fields"
+      :key="`request-body-formfield-${field.name}`"
+      class="param-wrapper"
+    >
+      <InputLabel
+        class="param-label"
+        :for="field.kind === 'text' ? `request-body-formfield-input-${field.name}-${data.id}` : undefined"
+        :required="field.required"
+      >
+        {{ field.name }}
+        <Tooltip
+          v-if="field.description"
+          :id="`request-body-formfield-tooltip-${field.name}-${data.id}`"
+        >
+          <template #content>
+            <MarkdownRenderer
+              :markdown="field.description"
+            />
+          </template>
+        </Tooltip>
+      </InputLabel>
+
+      <input
+        v-if="field.kind === 'text'"
+        :id="`request-body-formfield-input-${field.name}-${data.id}`"
+        v-model="fieldState[field.name]!.value"
+        :aria-describedby="`request-body-formfield-tooltip-${field.name}-${data.id}`"
+        autocomplete="off"
+        :data-testid="`tryit-body-formfield-${field.name}-${data.id}`"
+        type="text"
+      >
+
+      <EditableCodeBlock
+        v-else-if="field.kind === 'json'"
+        class="form-field-code-block"
+        :code="fieldState[field.name]!.value ?? ''"
+        :data-testid="`tryit-body-formfield-${field.name}-${data.id}`"
+        lang="json"
+        @request-body-changed="(newValue: string) => setTextValue(field.name, newValue)"
+      />
+
+      <div
+        v-else
+        class="file-field"
+      >
+        <button
+          class="choose-file-btn secondary"
+          :data-testid="`tryit-body-formfield-choose-file-${field.name}-${data.id}`"
+          type="button"
+          @click="chooseFile(field)"
+        >
+          Choose file{{ field.multiple ? 's' : '' }}
+        </button>
+        <span
+          v-if="!fieldState[field.name]?.files?.length"
+          class="choose-file-text"
+        >No file selected</span>
+        <span
+          v-else
+          class="choose-file-text"
+          :data-testid="`tryit-body-formfield-filename-${field.name}-${data.id}`"
+        >{{ fieldState[field.name].files!.map(f => f.name).join(', ') }}</span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { reactive, ref, watch } from 'vue'
+import { useFileDialog } from '@vueuse/core'
+import type { IHttpOperation } from '@stoplight/types'
+import InputLabel from '@/components/common/InputLabel.vue'
+import Tooltip from '@/components/common/TooltipPopover.vue'
+import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
+import EditableCodeBlock from '@/components/common/EditableCodeBlock.vue'
+import type { RequestBody, RequestFormField } from '@/types'
+
+const { data, fields = [] } = defineProps<{
+  data: IHttpOperation
+  fields?: RequestFormField[]
+}>()
+
+const emit = defineEmits<{
+  (e: 'request-body-changed', newBody: RequestBody): void
+}>()
+
+interface FieldState {
+  value?: string
+  files?: File[]
+}
+
+// Local value/files per field, kept separate from the `fields` prop so in-progress edits survive
+// the request body round-tripping back down from the parent.
+const fieldState = reactive<Record<string, FieldState>>({})
+
+// Only a genuine operation change forces every field back to its schema-derived default; otherwise
+// existing entries are preserved so the round-tripped `fields` prop doesn't reset what the user typed.
+const currentEndpointID = ref(data.id)
+
+// Resets all fields on an operation change; otherwise only fills in fields with no local state yet.
+watch(() => fields, (newFields) => {
+  const operationChanged = data.id !== currentEndpointID.value
+  currentEndpointID.value = data.id
+
+  const seenNames = new Set<string>()
+  newFields.forEach(field => {
+    seenNames.add(field.name)
+    if (operationChanged || !fieldState[field.name]) {
+      fieldState[field.name] = { value: field.value, files: field.files }
+    }
+  })
+
+  if (operationChanged) {
+    Object.keys(fieldState).forEach(name => {
+      if (!seenNames.has(name)) {
+        delete fieldState[name]
+      }
+    })
+  }
+}, { immediate: true })
+
+const activeFileField = ref<RequestFormField | null>(null)
+
+const { open: openFileDialog, onChange: onChangeFileDialog } = useFileDialog({
+  directory: false,
+  reset: true,
+})
+
+onChangeFileDialog((files) => {
+  if (!activeFileField.value || !files) {
+    return
+  }
+  fieldState[activeFileField.value.name] = { ...fieldState[activeFileField.value.name], files: Array.from(files) }
+  activeFileField.value = null
+})
+
+const chooseFile = (field: RequestFormField) => {
+  activeFileField.value = field
+  openFileDialog({ multiple: !!field.multiple, accept: field.contentType })
+}
+
+const setTextValue = (name: string, value: string) => {
+  fieldState[name] = { ...fieldState[name], value }
+}
+
+// Re-emits the full multipart RequestBody whenever any field's value/files change.
+watch(fieldState, (newFieldState) => {
+  const formFields: RequestFormField[] = fields.map(field => ({
+    ...field,
+    value: newFieldState[field.name]?.value,
+    files: newFieldState[field.name]?.files,
+  }))
+  emit('request-body-changed', { isMultipart: true, formFields })
+}, { deep: true })
+</script>
+
+<style lang="scss" scoped>
+.form-data-fields {
+  .param-wrapper {
+    margin-bottom: var(--kui-space-40, $kui-space-40);
+
+    &:last-child {
+      margin-bottom: var(--kui-space-20, $kui-space-20);
+    }
+
+    .param-label {
+      margin-bottom: var(--kui-space-40, $kui-space-40);
+    }
+  }
+}
+
+input[type=text] {
+  @include input-default;
+}
+
+.choose-file-btn {
+  @include button-default;
+  margin: var(--kui-space-0, $kui-space-0) var(--kui-space-30, $kui-space-30) var(--kui-space-0, $kui-space-0) 0!important;
+  width: 100px;
+}
+
+.choose-file-text {
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+}
+</style>
