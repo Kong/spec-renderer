@@ -1,3 +1,10 @@
+## [1.111.2](https://github.com/Kong/spec-renderer/compare/v1.111.1...v1.111.2) (2026-08-03)
+
+
+### Bug Fixes
+
+* prevent cross-request state bleed under concurrent SSR ([#938](https://github.com/Kong/spec-renderer/issues/938)) ([ba1ba2c](https://github.com/Kong/spec-renderer/commit/ba1ba2cd896fbd1ce2b6c03453fe454d9262dbeb))
+
 ## [1.111.1](https://github.com/Kong/spec-renderer/compare/v1.111.0...v1.111.1) (2026-08-03)
 
 
