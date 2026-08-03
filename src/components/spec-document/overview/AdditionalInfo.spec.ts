@@ -124,4 +124,30 @@ describe('<AdditionalInfo />', () => {
     expect(contact.text()).toContain('(email.example.com)')
     expect(contact.find('a').exists()).toBe(false)
   })
+
+  it('does not render the panel when no props are provided', () => {
+    const wrapper = mount(AdditionalInfo, {
+      props: {},
+    })
+
+    expect(wrapper.findTestId('overview-additional-info').exists()).toBe(false)
+  })
+
+  it('does not render the panel when the only provided values are unsafe URLs', () => {
+    const wrapper = mount(AdditionalInfo, {
+      props: {
+        contact: {
+          url: 'javascript:alert(1)',
+        },
+        license: {
+          url: 'javascript:alert(1)',
+        },
+        externalDocs: {
+          url: 'javascript:alert(1)',
+        },
+      },
+    })
+
+    expect(wrapper.findTestId('overview-additional-info').exists()).toBe(false)
+  })
 })

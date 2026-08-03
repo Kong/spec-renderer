@@ -66,10 +66,7 @@ export function sanitizeHref(href?: string): string | undefined {
  *
  * Contact values may legitimately include mailto query params (e.g. `?subject=...`),
  * so those are preserved. This is not full RFC email validation: it enforces a basic
- * single-`@` address shape and blocks CR/LF characters — in both raw and
- * percent-encoded form — which are the mailto header-injection vector (e.g. an
- * injected `Bcc:` header). A `mailto:` link cannot execute script, so the scheme
- * itself is not a concern.
+ * email address shape and blocks CR/LF characters. A `mailto:` link cannot execute script, so the scheme itself is not a concern.
  */
 export function sanitizeMailtoHref(email?: string): string | undefined {
   const trimmedEmail = email?.trim()
