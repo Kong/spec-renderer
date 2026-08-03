@@ -122,7 +122,7 @@ watch(() => fields, (newFields) => {
   }
 }, { immediate: true })
 
-let activeFileField: RequestFormField | null = null
+const activeFileField = ref<RequestFormField | null>(null)
 
 const { open: openFileDialog, onChange: onChangeFileDialog } = useFileDialog({
   directory: false,
@@ -130,14 +130,15 @@ const { open: openFileDialog, onChange: onChangeFileDialog } = useFileDialog({
 })
 
 onChangeFileDialog((files) => {
-  if (!activeFileField || !files) {
+  if (!activeFileField.value || !files) {
     return
   }
-  fieldState[activeFileField.name] = { ...fieldState[activeFileField.name], files: Array.from(files) }
+  fieldState[activeFileField.value.name] = { ...fieldState[activeFileField.value.name], files: Array.from(files) }
+  activeFileField.value = null
 })
 
 const chooseFile = (field: RequestFormField) => {
-  activeFileField = field
+  activeFileField.value = field
   openFileDialog({ multiple: !!field.multiple, accept: field.contentType })
 }
 
