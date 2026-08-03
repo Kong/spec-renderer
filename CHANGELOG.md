@@ -1,3 +1,10 @@
+# [1.111.0](https://github.com/Kong/spec-renderer/compare/v1.110.0...v1.111.0) (2026-08-03)
+
+
+### Features
+
+* add multipart/form-data support[TDX-6302] ([#932](https://github.com/Kong/spec-renderer/issues/932)) ([01ad2fd](https://github.com/Kong/spec-renderer/commit/01ad2fde4572c8d4b2eac6333b1defdb9c93187a))
+
 # [1.110.0](https://github.com/Kong/spec-renderer/compare/v1.109.0...v1.110.0) (2026-07-30)
 
 
