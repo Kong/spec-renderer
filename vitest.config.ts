@@ -9,7 +9,21 @@ export default mergeConfig(viteConfig, defineConfig({
     exclude: [
       './dist/**',
       './sandbox/**',
+      './cli/**',
       'node_modules',
+    ],
+    projects: [
+      {
+        extends: true,
+      },
+      {
+        test: {
+          name: 'cli',
+          globals: true,
+          environment: 'node',
+          include: ['cli/**/*.spec.ts'],
+        },
+      },
     ],
     setupFiles: ['./vitest.setup.ts'],
     deps: {

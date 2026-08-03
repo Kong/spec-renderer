@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spec Preview - @kong/spec-renderer</title>
+  <link rel="stylesheet" href="/assets/spec-renderer.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+    rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: 'Inter', Roboto, Helvetica, sans-serif;
+    }
+    kong-spec-renderer {
+      display: block;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <kong-spec-renderer id="preview"></kong-spec-renderer>
+  <script type="module">
+    import { registerKongSpecRenderer } from '/assets/kong-spec-renderer.web-component.es.js'
+    registerKongSpecRenderer()
+  </script>
+  <script type="module" src="/client.js"></script>
+</body>
+</html>
