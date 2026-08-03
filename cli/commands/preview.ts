@@ -82,10 +82,12 @@ export async function runPreviewCommand(specArg: string, flags: PreviewCommandFl
           console.error(`${pc.red('✖')} Failed to reload spec: ${readError instanceof Error ? readError.message : String(readError)}`)
         })
     })
-  }
-
-  if (flags.open !== false) {
-    await open(url)
+    watcher.on('unlink', () => {
+      console.error(`${pc.red('✖')} Spec file was deleted or moved - live reload has stopped. The preview will keep showing its last-known content.`)
+    })
+    watcher.on('error', (watchError: unknown) => {
+      console.error(`${pc.red('✖')} File watcher error: ${watchError instanceof Error ? watchError.message : String(watchError)}`)
+    })
   }
 
   let isShuttingDown = false
@@ -104,6 +106,19 @@ export async function runPreviewCommand(specArg: string, flags: PreviewCommandFl
       .finally(() => process.exit(0))
   }
 
+  // Registered before opening the browser so the server/watcher always have a
+  // clean shutdown path via Ctrl+C, even if the browser launch below fails.
   process.on('SIGINT', shutdown)
   process.on('SIGTERM', shutdown)
+
+  if (flags.open !== false) {
+    try {
+      await open(url)
+    } catch (openError) {
+      // Opening the browser is a convenience, not essential to the preview
+      // working - warn and keep the server/watcher running rather than
+      // failing the whole command.
+      console.error(`${pc.red('✖')} Failed to open the browser automatically: ${openError instanceof Error ? openError.message : String(openError)}`)
+    }
+  }
 }

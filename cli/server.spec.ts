@@ -94,6 +94,22 @@ describe('startPreviewServer', () => {
     expect(server.port).toBeGreaterThan(0)
   })
 
+  it('rejects cleanly rather than crashing when the requested port is already in use', async () => {
+    const { server: firstServer } = await start()
+    const { distDir, previewPageDir } = await makeFixtureDirs()
+
+    // Regression: without an 'error' listener on the underlying http.Server,
+    // this EADDRINUSE would throw as an unhandled 'error' event instead of
+    // rejecting the returned promise.
+    await expect(startPreviewServer({
+      port: firstServer.port,
+      getSpecText: () => 'openapi: 3.0.0',
+      config: CONFIG,
+      distDir,
+      previewPageDir,
+    })).rejects.toThrow()
+  })
+
   it('serves the current spec text at /spec', async () => {
     let specText = 'openapi: 3.0.0'
     const { baseUrl } = await start(() => specText)

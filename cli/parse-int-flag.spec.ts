@@ -31,4 +31,12 @@ describe('parseIntFlag', () => {
   it('has no max bound by default', () => {
     expect(parseIntFlag('--max-expanded-depth')('999999')).toBe(999999)
   })
+
+  it('throws rather than truncating trailing non-digit characters', () => {
+    expect(() => parseIntFlag('--port')('5000abc')).toThrow(InvalidArgumentError)
+  })
+
+  it('throws rather than truncating a decimal value', () => {
+    expect(() => parseIntFlag('--max-expanded-depth')('2.9')).toThrow(InvalidArgumentError)
+  })
 })

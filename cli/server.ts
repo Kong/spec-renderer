@@ -85,7 +85,32 @@ export async function startPreviewServer(options: StartPreviewServerOptions): Pr
 
   const wss = new WebSocketServer({ server })
 
-  await new Promise<void>((resolve) => server.listen(options.port, resolve))
+  // Without an 'error' listener, a failed listen() (e.g. EADDRINUSE from a
+  // TOCTOU race against find-open-port.ts's earlier probe) throws and crashes
+  // the process instead of rejecting cleanly through the CLI's own error path.
+  // `ws`'s WebSocketServer re-emits the underlying http.Server's 'error' event
+  // on itself, so the listener has to guard `wss`, not just `server` - an
+  // unhandled 'error' on the WebSocketServer instance crashes just the same.
+  await new Promise<void>((resolve, reject) => {
+    const onListenError = (error: unknown): void => reject(error)
+
+    server.once('error', onListenError)
+    wss.once('error', onListenError)
+    server.listen(options.port, () => {
+      server.off('error', onListenError)
+      wss.off('error', onListenError)
+      resolve()
+    })
+  })
+
+  // A runtime error after startup (e.g. a transient socket error) should be
+  // logged, not left to crash the process as an unhandled 'error' event.
+  server.on('error', (error) => {
+    console.error(`Preview server error: ${error instanceof Error ? error.message : String(error)}`)
+  })
+  wss.on('error', (error) => {
+    console.error(`Preview server error: ${error instanceof Error ? error.message : String(error)}`)
+  })
 
   const address = server.address()
   // `address()` returns a string for a Unix socket/pipe, never the case here

@@ -15,12 +15,21 @@ export interface ParseIntFlagOptions {
  */
 export function parseIntFlag(flagName: string, options: ParseIntFlagOptions = {}): (value: string) => number {
   return (value: string): number => {
-    const parsed = Number.parseInt(value, 10)
-
-    if (Number.isNaN(parsed) || parsed < 0 || (options.max !== undefined && parsed > options.max)) {
+    // `Number.parseInt` stops at the first non-digit rather than requiring
+    // the whole string to be numeric (e.g. `parseInt('5000abc', 10) === 5000`,
+    // `parseInt('2.9', 10) === 2`) - reject anything that isn't purely
+    // digits up front so trailing garbage or a decimal point can't silently
+    // produce a value the user never typed.
+    if (!/^\d+$/.test(value.trim())) {
       const bound = options.max === undefined ? '' : ` up to ${options.max}`
 
       throw new InvalidArgumentError(`${flagName} must be a non-negative integer${bound}.`)
+    }
+
+    const parsed = Number.parseInt(value, 10)
+
+    if (options.max !== undefined && parsed > options.max) {
+      throw new InvalidArgumentError(`${flagName} must be a non-negative integer up to ${options.max}.`)
     }
 
     return parsed
