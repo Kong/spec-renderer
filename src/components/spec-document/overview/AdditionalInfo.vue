@@ -62,6 +62,12 @@
         >
           {{ externalDocs.description || externalDocs.url }}
         </a>
+        <span
+          v-else-if="externalDocs?.description"
+          class="overview-additional-info-external-docs"
+        >
+          {{ externalDocs.description }}
+        </span>
       </div>
     </template>
   </OverviewPanel>
@@ -96,7 +102,7 @@ const licenseUrl = computed(() => sanitizeHref(props.license?.url))
 const externalDocsUrl = computed(() => sanitizeHref(props.externalDocs?.url))
 
 const hasAdditionalInfo = computed(() => Boolean(
-  contactUrl.value || props.contact?.email || props.contact?.name || props.license?.name || externalDocsUrl.value,
+  contactUrl.value || props.contact?.email || props.contact?.name || props.license?.name || externalDocsUrl.value || props.externalDocs?.description,
 ))
 </script>
 
@@ -110,7 +116,7 @@ const hasAdditionalInfo = computed(() => Boolean(
   }
 
   .overview-additional-info-license[href],
-  .overview-additional-info-external-docs {
+  .overview-additional-info-external-docs[href] {
     @include link;
   }
 

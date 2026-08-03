@@ -86,4 +86,16 @@ describe('html-sanitizer', () => {
     expect(sanitizeMailtoHref('@example.com')).toBeUndefined()
     expect(sanitizeMailtoHref('user@')).toBeUndefined()
   })
+
+  it('preserves legitimate mailto query params', () => {
+    expect(sanitizeMailtoHref('user@example.com?subject=Hello%20World')).toBe('mailto:user@example.com?subject=Hello%20World')
+    expect(sanitizeMailtoHref('user@example.com?subject=Hi&cc=team@example.com')).toBe('mailto:user@example.com?subject=Hi&cc=team@example.com')
+  })
+
+  it('blocks mailto header injection via CR/LF', () => {
+    // percent-encoded CRLF
+    expect(sanitizeMailtoHref('user@example.com?subject=Hi%0D%0ABcc:attacker@evil.com')).toBeUndefined()
+    // raw CRLF
+    expect(sanitizeMailtoHref('user@example.com\r\nBcc:attacker@evil.com')).toBeUndefined()
+  })
 })

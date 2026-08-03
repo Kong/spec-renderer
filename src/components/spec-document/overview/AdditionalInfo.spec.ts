@@ -57,7 +57,7 @@ describe('<AdditionalInfo />', () => {
     expect(wrapper.findTestId('overview-additional-info-license').element).instanceOf(HTMLParagraphElement)
   })
 
-  it('does not render unsafe external docs hrefs', () => {
+  it('renders external docs description as plain text when the URL is unsafe', () => {
     const wrapper = mount(AdditionalInfo, {
       props: {
         externalDocs: {
@@ -67,7 +67,13 @@ describe('<AdditionalInfo />', () => {
       },
     })
 
-    expect(wrapper.findTestId('overview-additional-info').exists()).toBe(false)
+    const externalDocs = wrapper.find('.overview-additional-info-external-docs')
+
+    // The panel and description must still render even though the URL was rejected.
+    expect(wrapper.findTestId('overview-additional-info').exists()).toBe(true)
+    expect(externalDocs.text()).toContain('sample external docs')
+    expect(externalDocs.find('a').exists()).toBe(false)
+    expect(wrapper.find('a.overview-additional-info-external-docs').exists()).toBe(false)
   })
 
   it('renders unsafe license URLs as plain text', () => {

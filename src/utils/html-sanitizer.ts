@@ -62,8 +62,14 @@ export function sanitizeHref(href?: string): string | undefined {
 }
 
 /**
- * Builds a mailto href from a basic email-like value.
- * This is not full RFC validation; it only checks for text before and after `@`.
+ * Builds a mailto href from a spec-provided contact value.
+ *
+ * Contact values may legitimately include mailto query params (e.g. `?subject=...`),
+ * so those are preserved. This is not full RFC email validation: it enforces a basic
+ * single-`@` address shape and blocks CR/LF characters — in both raw and
+ * percent-encoded form — which are the mailto header-injection vector (e.g. an
+ * injected `Bcc:` header). A `mailto:` link cannot execute script, so the scheme
+ * itself is not a concern.
  */
 export function sanitizeMailtoHref(email?: string): string | undefined {
   const trimmedEmail = email?.trim()
@@ -72,9 +78,27 @@ export function sanitizeMailtoHref(email?: string): string | undefined {
     return undefined
   }
 
-  const atIndex = trimmedEmail.indexOf('@')
+  // Separate the address from optional mailto query params (e.g. `?subject=...`).
+  const queryIndex = trimmedEmail.indexOf('?')
+  const address = queryIndex === -1 ? trimmedEmail : trimmedEmail.slice(0, queryIndex)
 
-  if (atIndex <= 0 || atIndex === trimmedEmail.length - 1) {
+  // The address must contain a single `@` with text on both sides.
+  const atIndex = address.indexOf('@')
+  if (!atIndex || atIndex === address.length - 1 || atIndex === 0) {
+    return undefined
+  }
+
+  // Block CR/LF (raw or percent-encoded) anywhere in the value to prevent mailto
+  // header injection. Malformed percent-encoding is rejected rather than guessed.
+  let decodedEmail = trimmedEmail
+
+  try {
+    decodedEmail = decodeURIComponent(trimmedEmail)
+  } catch {
+    return undefined
+  }
+
+  if (/[\r\n]/.test(trimmedEmail) || /[\r\n]/.test(decodedEmail)) {
     return undefined
   }
 
