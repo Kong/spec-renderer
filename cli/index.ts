@@ -24,9 +24,16 @@ interface RawPreviewFlags {
   maxExpandedDepth?: number
   verbose?: boolean
   traceParsing?: boolean
+  withCredentials?: boolean
   /** Commander's auto-derived name for `--no-content-scrolling`. */
   contentScrolling?: boolean
+  /** Commander's auto-derived name for `--no-custom-server-url`. */
+  customServerUrl?: boolean
+  showNavigationButtons?: boolean
+  hideDownloadButton?: boolean
+  enableOperationLinks?: boolean
   hidePoweredBy?: boolean
+  path?: string
 }
 
 // The CLI isn't versioned independently - it always reports the package's
@@ -53,15 +60,22 @@ program
   .option('--hide-schemas', 'hide schemas (models) from the table of contents')
   .option('--hide-try-it', 'hide the "Try it" UI')
   .option('--hide-insomnia-try-it', 'hide the "Insomnia" option within the "Try it" UI')
+  .option('--with-credentials', 'send credentials when resolving external (http) $refs within the spec')
   .option('--max-expanded-depth <depth>', 'maximum depth to expand nested schema properties by default', parseIntFlag('--max-expanded-depth'))
   .option('--verbose', 'log spec parsing stages to the browser console, for troubleshooting (alias: --trace-parsing)')
   .addOption(new Option('--trace-parsing', 'alias for --verbose').hideHelp())
   .option('--no-content-scrolling', 'navigate between operations/schemas one at a time instead of scrolling through them continuously')
+  .option('--no-custom-server-url', 'do not let the preview add a custom server URL to the servers list')
+  .option('--show-navigation-buttons', 'show prev/next buttons at the bottom of each operation - useful with --no-content-scrolling')
+  .option('--hide-download-button', 'hide the spec download button')
+  .option('--enable-operation-links', 'show a permalink icon on each operation that copies its URL to the clipboard')
   .option('--hide-powered-by', 'hide the "Powered by" branding in the table of contents')
+  .option('--path <path>', 'open the preview at a specific operation/schema path, e.g. /pets/{id}')
   .action(async (spec: string, raw: RawPreviewFlags) => {
     const flags: PreviewCommandFlags = {
       ...raw,
       allowContentScrolling: raw.contentScrolling,
+      currentPath: raw.path,
     }
 
     try {

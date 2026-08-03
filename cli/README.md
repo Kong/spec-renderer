@@ -79,7 +79,13 @@ The CLI isn't versioned independently - `--version`/`-V` always reports the inst
 | `--max-expanded-depth <depth>` | Maximum depth to expand nested schema properties by default. | `1` |
 | `--verbose` (alias: `--trace-parsing`) | Log spec parsing stages to the browser console - useful when troubleshooting a spec that fails to render. | `false` |
 | `--no-content-scrolling` | Navigate between operations/schemas one at a time instead of scrolling through them continuously. | scrolls continuously |
+| `--show-navigation-buttons` | Show prev/next buttons at the bottom of each operation - useful with `--no-content-scrolling`, since the TOC sidebar is otherwise the only in-page way to move between operations in that mode. | `false` (hidden) |
 | `--hide-powered-by` | Hide the "Powered by" branding in the table of contents. | `false` (shown) |
+| `--with-credentials` | Send credentials when the browser resolves external (http) `$ref`s within the spec during parsing. Only matters if your spec's `$ref`s point to authenticated endpoints. | `false` |
+| `--no-custom-server-url` | Don't let the preview add a custom server URL to the servers list - useful if you want to lock the preview to only the servers defined in the spec. | can add one |
+| `--hide-download-button` | Hide the spec download button. | `false` (shown) |
+| `--enable-operation-links` | Show a permalink icon on each operation that copies its URL to the clipboard. | `false` |
+| `--path <path>` | Open the preview at a specific operation/schema path, e.g. `/pets/{id}`, instead of the doc's overview. | overview |
 
 > [!Note]
 > The underlying component only fully hides the "Try it" panel when **both** `--hide-try-it` and `--hide-insomnia-try-it` are set - pass both together if you want it gone entirely.
