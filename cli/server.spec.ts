@@ -172,23 +172,26 @@ describe('startPreviewServer', () => {
   it('returns 404 rather than escaping distDir for a path-traversal attempt', async () => {
     const { server, distDir } = await start()
 
-    // distDir is a direct mkdtemp child of tmpdir(), so a single `../` plus
-    // this file's name reaches it from inside `/assets/`.
+    // distDir and secretDir are both direct mkdtemp children of tmpdir() with
+    // unpredictable, securely-created names/permissions (unlike a fixed or
+    // pid-derived path directly under the shared tmpdir), so a single `../`
+    // plus secretDir's name reaches it from inside `/assets/`.
     expect(dirname(distDir)).toBe(tmpdir())
 
-    const secretPath = join(tmpdir(), `spec-renderer-cli-traversal-secret-${process.pid}.txt`)
+    const secretDir = await mkdtemp(join(tmpdir(), 'spec-renderer-cli-traversal-secret-'))
+    const secretPath = join(secretDir, 'secret.txt')
 
     await writeFile(secretPath, 'top secret contents outside distDir', 'utf-8')
 
     try {
       // Sent as a raw request (not fetch()) so the literal `../` segment
       // reaches the server unnormalized - see rawGet's doc comment.
-      const response = await rawGet(server.port, `/assets/../${basename(secretPath)}`)
+      const response = await rawGet(server.port, `/assets/../${basename(secretDir)}/${basename(secretPath)}`)
 
       expect(response.status).toBe(404)
       expect(response.body).not.toContain('top secret contents')
     } finally {
-      await rm(secretPath)
+      await rm(secretDir, { recursive: true })
     }
   })
 
