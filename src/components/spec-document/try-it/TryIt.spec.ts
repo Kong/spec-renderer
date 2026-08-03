@@ -360,4 +360,33 @@ describe('<TryIt />', () => {
 
     expect(wrapper.findTestId('tryit-body-123').exists()).toBe(true)
   })
+
+  it('renders the body section when a multipart/form-data request body is present', async () => {
+    const wrapper = mount(TryIt, {
+      props: {
+        data: {
+          id: '123',
+          method: 'post',
+          path: '/sample-path',
+          responses: [],
+          request: {
+            body: {
+              id: 'bodyId',
+              contents: [{ id: 'mediatypeId', mediaType: 'multipart/form-data' }],
+            },
+          },
+          servers: [{
+            id: 'sample-server-id',
+            url: 'https://global.api.konghq.com/v2',
+          }],
+        },
+        requestBody: { isMultipart: true, formFields: [{ name: 'title', kind: 'text' }] },
+        serverUrl: 'https://global.api.konghq.com/v2',
+      },
+    })
+
+    await flushPromises()
+
+    expect(wrapper.findTestId('tryit-body-123').exists()).toBe(true)
+  })
 })
