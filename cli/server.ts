@@ -2,14 +2,15 @@ import { createServer as createHttpServer, type Server as HttpServer } from 'nod
 import { readFile } from 'node:fs/promises'
 import { dirname, extname, join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import type { AddressInfo } from 'node:net'
 import { WebSocketServer } from 'ws'
 import type { RenderOptions } from './resolve-render-options.js'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
 // The preview server ships inside the package's own dist/ output (dist/cli/server.js),
 // so the already-built web-component bundle sits one directory up.
-const packageDistDir = dirname(currentDir)
-const previewPageDir = join(currentDir, 'preview-page')
+const DEFAULT_DIST_DIR = dirname(currentDir)
+const DEFAULT_PREVIEW_PAGE_DIR = join(currentDir, 'preview-page')
 
 const CONTENT_TYPES: Record<string, string> = {
   '.js': 'text/javascript',
@@ -21,18 +22,18 @@ const CONTENT_TYPES: Record<string, string> = {
 }
 
 /**
- * Resolves an `/assets/*` request path against the package's built `dist/`
- * directory, returning `undefined` if the path would escape it.
+ * Resolves an `/assets/*` request path against `distDir`, returning
+ * `undefined` if the path would escape it.
  *
  * The web-component bundle is code-split (syntax-highlighting language
  * grammars/themes, etc.), so the browser fetches an open-ended set of
  * relatively-imported chunk files from `dist/` at runtime - not just the
  * entry bundle and its stylesheet.
  */
-function resolveDistAsset(requestPath: string): string | undefined {
-  const candidate = join(packageDistDir, requestPath)
+function resolveDistAsset(distDir: string, requestPath: string): string | undefined {
+  const candidate = join(distDir, requestPath)
 
-  if (relative(packageDistDir, candidate).startsWith('..')) {
+  if (relative(distDir, candidate).startsWith('..')) {
     return undefined
   }
 
@@ -41,6 +42,11 @@ function resolveDistAsset(requestPath: string): string | undefined {
 
 export interface PreviewServer {
   server: HttpServer
+  /**
+   * The port the server actually bound to. May differ from the requested
+   * port - e.g. requesting port `0` asks the OS to assign any free port.
+   */
+  port: number
   /** Broadcasts a reload signal to every connected preview page. */
   broadcastReload: () => void
   close: () => Promise<void>
@@ -51,6 +57,10 @@ export interface StartPreviewServerOptions {
   /** Returns the current spec text; called fresh on every `/spec` request. */
   getSpecText: () => string
   config: RenderOptions
+  /** Directory `/assets/*` is served from. Defaults to the package's built `dist/` directory. */
+  distDir?: string
+  /** Directory containing the preview page's `index.html`/`client.js`. Defaults to the CLI's own `preview-page/` directory. */
+  previewPageDir?: string
 }
 
 /**
@@ -60,8 +70,11 @@ export interface StartPreviewServerOptions {
  * file changes.
  */
 export async function startPreviewServer(options: StartPreviewServerOptions): Promise<PreviewServer> {
+  const distDir = options.distDir ?? DEFAULT_DIST_DIR
+  const previewPageDir = options.previewPageDir ?? DEFAULT_PREVIEW_PAGE_DIR
+
   const server = createHttpServer((req, res) => {
-    void handleRequest(req.url, options).then(({ status, body, contentType }) => {
+    void handleRequest(req.url, options, distDir, previewPageDir).then(({ status, body, contentType }) => {
       res.writeHead(status, contentType ? { 'content-type': contentType } : undefined)
       res.end(body)
     }).catch((error: unknown) => {
@@ -74,8 +87,14 @@ export async function startPreviewServer(options: StartPreviewServerOptions): Pr
 
   await new Promise<void>((resolve) => server.listen(options.port, resolve))
 
+  const address = server.address()
+  // `address()` returns a string for a Unix socket/pipe, never the case here
+  // since we always listen on a numeric port - but guard rather than assume.
+  const port = typeof address === 'object' && address !== null ? (address as AddressInfo).port : options.port
+
   return {
     server,
+    port,
     broadcastReload: () => {
       const message = JSON.stringify({ type: 'reload' })
 
@@ -105,6 +124,8 @@ export async function startPreviewServer(options: StartPreviewServerOptions): Pr
 async function handleRequest(
   url: string | undefined,
   options: StartPreviewServerOptions,
+  distDir: string,
+  previewPageDir: string,
 ): Promise<{ status: number, body?: string | Buffer, contentType?: string }> {
   if (url === '/spec') {
     return { status: 200, body: options.getSpecText(), contentType: 'text/plain; charset=utf-8' }
@@ -127,7 +148,7 @@ async function handleRequest(
   }
 
   if (url?.startsWith('/assets/')) {
-    const assetPath = resolveDistAsset(url.slice('/assets/'.length))
+    const assetPath = resolveDistAsset(distDir, url.slice('/assets/'.length))
 
     if (assetPath) {
       try {

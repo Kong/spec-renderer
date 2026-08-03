@@ -4,6 +4,7 @@ export interface PreviewCliFlags {
   hideDeprecated?: boolean
   hideSchemas?: boolean
   hideTryIt?: boolean
+  hideInsomniaTryIt?: boolean
   maxExpandedDepth?: number
   /** From `--verbose` - a friendlier alias for `--trace-parsing`. */
   verbose?: boolean
@@ -15,6 +16,8 @@ export interface PreviewCliFlags {
    * `contentScrolling` (stripped from the negatable flag name).
    */
   allowContentScrolling?: boolean
+  /** From `--hide-powered-by`, deliberately not mentioning "Kong" in the flag itself. */
+  hidePoweredBy?: boolean
 }
 
 /** The `SpecRendererProps` subset the preview page applies to `<kong-spec-renderer>`. */
@@ -23,9 +26,11 @@ export interface RenderOptions {
   hideDeprecated: boolean
   hideSchemas: boolean
   hideTryIt: boolean
+  hideInsomniaTryIt: boolean
   maxExpandedDepth?: number
   traceParsing: boolean
   allowContentScrolling: boolean
+  showPoweredBy: boolean
   navigationType: 'path'
   controlAddressBar: true
 }
@@ -36,6 +41,9 @@ export interface RenderOptions {
  *
  * `navigationType` and `controlAddressBar` are always hardcoded - the CLI, not
  * the user, owns the single-page preview environment those props govern.
+ * `showPoweredBy` defaults to `true` here even though the component prop
+ * itself defaults to `false` - the CLI wants branding visible unless a user
+ * opts out with `--hide-powered-by`.
  */
 export function resolveRenderOptions(flags: PreviewCliFlags): RenderOptions {
   return {
@@ -43,9 +51,11 @@ export function resolveRenderOptions(flags: PreviewCliFlags): RenderOptions {
     hideDeprecated: flags.hideDeprecated ?? false,
     hideSchemas: flags.hideSchemas ?? false,
     hideTryIt: flags.hideTryIt ?? false,
+    hideInsomniaTryIt: flags.hideInsomniaTryIt ?? false,
     ...(flags.maxExpandedDepth === undefined ? {} : { maxExpandedDepth: flags.maxExpandedDepth }),
     traceParsing: (flags.verbose ?? false) || (flags.traceParsing ?? false),
     allowContentScrolling: flags.allowContentScrolling ?? true,
+    showPoweredBy: !flags.hidePoweredBy,
     navigationType: 'path',
     controlAddressBar: true,
   }

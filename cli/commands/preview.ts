@@ -27,14 +27,16 @@ export async function runPreviewCommand(specArg: string, flags: PreviewCommandFl
   const source = await loadSpecSource(specArg)
   let specText = source.text
 
-  const port = await findOpenPort(flags.port ?? DEFAULT_PORT)
+  const requestedPort = await findOpenPort(flags.port ?? DEFAULT_PORT)
   const previewServer = await startPreviewServer({
-    port,
+    port: requestedPort,
     getSpecText: () => specText,
     config: resolveRenderOptions(flags),
   })
 
-  const url = `http://localhost:${port}`
+  // Use the port the server actually bound to, not the requested one - they
+  // differ when the requested port is `0` (OS picks any free port).
+  const url = `http://localhost:${previewServer.port}`
   const isWatching = source.watch && !!source.watchPath
 
   printPreviewBanner([
@@ -49,11 +51,29 @@ export async function runPreviewCommand(specArg: string, flags: PreviewCommandFl
 
   if (source.watch && source.watchPath) {
     const watchPath = source.watchPath
+    // Guards against a slower, now-stale read completing after a newer one -
+    // e.g. two rapid saves in quick succession - and clobbering fresher content.
+    let latestChangeToken = 0
 
-    watcher = watch(watchPath)
+    watcher = watch(watchPath, {
+      // Some editors/tools write a file's contents in multiple chunks before
+      // the save is complete; without this, a `change` event can fire mid-write
+      // and be read as truncated/invalid content, surfacing a bogus parse error
+      // for what was actually a valid save.
+      awaitWriteFinish: {
+        stabilityThreshold: 200,
+        pollInterval: 20,
+      },
+    })
     watcher.on('change', () => {
+      const changeToken = ++latestChangeToken
+
       readFile(watchPath, 'utf-8')
         .then((text) => {
+          if (changeToken !== latestChangeToken) {
+            return
+          }
+
           specText = text
           previewServer.broadcastReload()
           console.log(`${pc.magenta('↻')} Spec changed, reloading preview...`)
@@ -78,6 +98,9 @@ export async function runPreviewCommand(specArg: string, flags: PreviewCommandFl
 
     void Promise.resolve(watcher?.close())
       .then(() => previewServer.close())
+      .catch((shutdownError: unknown) => {
+        console.error(`${pc.red('✖')} Error during shutdown: ${shutdownError instanceof Error ? shutdownError.message : String(shutdownError)}`)
+      })
       .finally(() => process.exit(0))
   }
 

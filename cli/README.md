@@ -57,6 +57,14 @@ npx @kong/spec-renderer preview https://example.com/openapi.yaml
 
 The spec is fetched once when the server starts. There's no local file to watch, so live-reload isn't available for a remote URL - the CLI logs this so it isn't a surprise.
 
+### Version
+
+```sh
+kong-spec-renderer --version
+```
+
+The CLI isn't versioned independently - `--version`/`-V` always reports the installed `@kong/spec-renderer` package version.
+
 ## Flags
 
 | Flag | Description | Default |
@@ -67,9 +75,14 @@ The spec is fetched once when the server starts. There's no local file to watch,
 | `--hide-deprecated` | Hide deprecated operations from the table of contents. | `false` |
 | `--hide-schemas` | Hide schemas (models) from the table of contents. | `false` |
 | `--hide-try-it` | Hide the "Try it" UI. | `false` |
+| `--hide-insomnia-try-it` | Hide the "Insomnia" option within the "Try it" UI. | `false` |
 | `--max-expanded-depth <depth>` | Maximum depth to expand nested schema properties by default. | `1` |
 | `--verbose` (alias: `--trace-parsing`) | Log spec parsing stages to the browser console - useful when troubleshooting a spec that fails to render. | `false` |
 | `--no-content-scrolling` | Navigate between operations/schemas one at a time instead of scrolling through them continuously. | scrolls continuously |
+| `--hide-powered-by` | Hide the "Powered by" branding in the table of contents. | `false` (shown) |
+
+> [!Note]
+> The underlying component only fully hides the "Try it" panel when **both** `--hide-try-it` and `--hide-insomnia-try-it` are set - pass both together if you want it gone entirely.
 
 Examples:
 
