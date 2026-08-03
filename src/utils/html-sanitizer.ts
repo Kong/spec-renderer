@@ -84,7 +84,7 @@ export function sanitizeMailtoHref(email?: string): string | undefined {
 
   // The address must contain a single `@` with text on both sides.
   const atIndex = address.indexOf('@')
-  if (!atIndex || atIndex === address.length - 1 || atIndex === 0) {
+  if (atIndex === -1 || atIndex === address.length - 1 || atIndex === 0) {
     return undefined
   }
 
