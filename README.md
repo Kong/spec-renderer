@@ -306,6 +306,10 @@ This will trigger the Commitizen interactive prompt for building your commit mes
 
 Additionally, CI will use `commitlint` to validate the commits associated with a PR in the `Lint and Validate` job.
 
+### Agentic reviewer
+
+[View the reference for the `/muthur` agentic reviewer](./docs/agentic-reviewer.md)
+
 ### Approvals
 
 - All pull requests require review and approval from authorized team members.
