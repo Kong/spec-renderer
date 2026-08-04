@@ -23,6 +23,7 @@ An online API specification editor is available at [api-documentation.dev](https
   - [Build for production](#build-for-production)
   - [Committing Changes](#committing-changes)
     - [Enforcing Commit Format](#enforcing-commit-format)
+    - [Agentic Reviewer](#agentic-reviewer)
   - [Approvals](#approvals)
   - [Package Publishing](#package-publishing)
 - [Third-party packages and Thank You](#third-party-packages-and-thank-you)
@@ -305,6 +306,10 @@ This will trigger the Commitizen interactive prompt for building your commit mes
 - A `pre-push` hook is used that runs `eslint` before allowing you to push your changes to the repository
 
 Additionally, CI will use `commitlint` to validate the commits associated with a PR in the `Lint and Validate` job.
+
+### Agentic reviewer
+
+[View the reference for the `/muthur` agentic reviewer](./docs/agentic-reviewer.md)
 
 ### Approvals
 
