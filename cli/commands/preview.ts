@@ -43,9 +43,9 @@ export async function runPreviewCommand(specArg: string, flags: PreviewCommandFl
   const specLinkTarget = source.watchPath ? pathToFileURL(source.watchPath).href : specArg
 
   printPreviewBanner([
+    { label: 'Preview URL', value: pc.bold(pc.underline(hyperlink(url, url))) },
     { label: 'Spec', value: pc.bold(pc.underline(hyperlink(specArg, specLinkTarget))) },
-    { label: 'URL', value: pc.bold(pc.underline(hyperlink(url, url))) },
-    { label: 'Reload', value: isWatching ? pc.green('watching for changes') : pc.yellow('not available (remote URL)') },
+    { label: 'Live Reload', value: isWatching ? pc.green('watching for changes') : pc.yellow('not available (remote URL)') },
   ])
   console.log()
   info('Press Ctrl+C to stop')
