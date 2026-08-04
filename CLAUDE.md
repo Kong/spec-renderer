@@ -83,3 +83,7 @@ When logic needs to be shared between more than one component and depends on rea
 
 - Tests are colocated with source (`Foo.vue` / `Foo.ts` next to `Foo.spec.ts`), run via Vitest with `jsdom` and `@vue/test-utils`.
 - For component tests exercising recursive rendering (variant selection, nested properties), prefer testing through the actual component tree (`mount`, not `shallowMount`) rather than only at the composable level - several real bugs in this codebase have only been reproducible through the full recursive render, not the composable in isolation (see the reference doc above).
+
+## CLI (`cli/`)
+
+The `kong-spec-renderer` CLI lives under `cli/` - a plain Node/TS tree, separate from the Vue build pipeline above (own `tsconfig.cli.json`, own Vitest project running in a Node environment, not jsdom). **Read `cli/CLAUDE.md` before touching anything under `cli/`** - it covers the CLI's architecture and several sharp edges already hit and fixed (Vue custom-element prop timing, chokidar quirks, `ws`/`http.Server` error handling) that are easy to reintroduce.
