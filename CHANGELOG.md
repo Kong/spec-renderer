@@ -1,3 +1,10 @@
+# [1.113.0](https://github.com/Kong/spec-renderer/compare/v1.112.0...v1.113.0) (2026-08-04)
+
+
+### Features
+
+* enhance AsyncMessage with example selection and update schema example rendering [TDX-8482] ([#922](https://github.com/Kong/spec-renderer/issues/922)) ([ded84a8](https://github.com/Kong/spec-renderer/commit/ded84a8a66b7ec2bb629fcc62a5748c7dde25df1))
+
 # [1.112.0](https://github.com/Kong/spec-renderer/compare/v1.111.3...v1.112.0) (2026-08-04)
 
 
