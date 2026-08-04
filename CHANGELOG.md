@@ -1,3 +1,10 @@
+## [1.111.3](https://github.com/Kong/spec-renderer/compare/v1.111.2...v1.111.3) (2026-08-04)
+
+
+### Bug Fixes
+
+* **overview:** sanitize urls rendered in overview section [KHCP-21411] ([#937](https://github.com/Kong/spec-renderer/issues/937)) ([c5b6164](https://github.com/Kong/spec-renderer/commit/c5b61649b43028f6837e92919be0b78900df074b))
+
 ## [1.111.2](https://github.com/Kong/spec-renderer/compare/v1.111.1...v1.111.2) (2026-08-03)
 
 
