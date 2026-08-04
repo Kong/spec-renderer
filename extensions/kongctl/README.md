@@ -1,6 +1,6 @@
 # kong/spec-renderer kongctl extension
 
-A [`kongctl`](https://github.com/Kong/kongctl) extension that wraps the [`kong-spec-renderer`](../../cli/README.md) CLI, letting you preview a local OpenAPI or AsyncAPI spec without leaving `kongctl`.
+A [`kongctl`](https://github.com/Kong/kongctl) extension that wraps the [`kong-spec-renderer`](../../cli/README.md) CLI, letting you preview an OpenAPI or AsyncAPI spec (from a local file or remote URL) without leaving `kongctl`.
 
 ```sh
 kongctl preview spec ./openapi.yaml

@@ -95,7 +95,7 @@ export function createProgram(): Command {
 
   program
     .name('kong-spec-renderer')
-    .description('Preview a local OpenAPI/AsyncAPI spec using @kong/spec-renderer')
+    .description('Preview an OpenAPI/AsyncAPI spec (local file or remote URL) using @kong/spec-renderer')
     .version(version, '-V, --version', 'output the current version')
     .addHelpText('after', `\nDocs: ${DOCS_URL}`)
 

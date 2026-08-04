@@ -12,10 +12,10 @@ command_paths:
     path:
       - name: preview
       - name: spec
-    summary: Preview a local OpenAPI or AsyncAPI spec using @kong/spec-renderer
-    description: Starts a local preview server for an OpenAPI or AsyncAPI spec, rendered with
-      @kong/spec-renderer's own UI, with auto-reload on save. Runs `npx @kong/spec-renderer preview`
-      under the hood - requires Node.js.
+    summary: Preview an OpenAPI or AsyncAPI spec (local file or remote URL) using @kong/spec-renderer
+    description: Starts a preview server for an OpenAPI or AsyncAPI spec (from a local file or remote
+      URL), rendered with @kong/spec-renderer's own UI, with auto-reload on save. Runs `npx
+      @kong/spec-renderer preview` under the hood - requires Node.js.
     usage: kongctl preview spec <spec> [flags]
     examples:
       - kongctl preview spec ./openapi.yaml
