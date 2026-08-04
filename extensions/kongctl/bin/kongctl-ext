@@ -1,0 +1,63 @@
+#!/usr/bin/env sh
+set -e
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "kongctl preview spec requires Node.js to be installed: https://nodejs.org" >&2
+  exit 1
+fi
+
+# Explicit, per-invocation opt-in for local development against a workspace
+# build, e.g.:
+#   kongctl preview spec ./openapi.yaml --local-cli "$(pwd)/dist/cli/index.js"
+# Scoped to a single call (unlike an env var) so there's no ambient state to
+# forget about later. Never inferred from incidental file presence - an
+# invalid path is a hard error, not a silent fall-through to npx.
+#
+# Extracted here (not left for the underlying CLI to reject) using a
+# rotate-and-shift loop, since POSIX sh has no arrays: any arg that isn't
+# --local-cli/--local-cli=<path> is moved to the end of the positional
+# params, preserving relative order, so the remaining args can be forwarded
+# untouched (including paths containing spaces).
+LOCAL_CLI=""
+i=0
+total=$#
+while [ "$i" -lt "$total" ]; do
+  case "$1" in
+    --local-cli)
+      shift
+      i=$((i + 1))
+      if [ "$i" -ge "$total" ]; then
+        echo "--local-cli requires a path argument" >&2
+        exit 1
+      fi
+      LOCAL_CLI="$1"
+      shift
+      i=$((i + 1))
+      ;;
+    --local-cli=*)
+      LOCAL_CLI="${1#--local-cli=}"
+      shift
+      i=$((i + 1))
+      ;;
+    *)
+      set -- "$@" "$1"
+      shift
+      i=$((i + 1))
+      ;;
+  esac
+done
+
+if [ -n "$LOCAL_CLI" ]; then
+  if [ ! -f "$LOCAL_CLI" ]; then
+    echo "--local-cli was given '$LOCAL_CLI' but no file exists there" >&2
+    exit 1
+  fi
+  exec node "$LOCAL_CLI" preview "$@"
+fi
+
+VERSION="__SPEC_RENDERER_VERSION__"
+case "$VERSION" in
+  __SPEC_RENDERER_VERSION__) VERSION="latest" ;;
+esac
+
+exec npx --yes "@kong/spec-renderer@${VERSION}" preview "$@"

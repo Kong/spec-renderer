@@ -2,6 +2,7 @@ node_modules
 .DS_Store
 dist
 bin
+!extensions/kongctl/bin/
 *.local
 bundle-analyzer
 
