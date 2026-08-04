@@ -1,3 +1,10 @@
+# [1.112.0](https://github.com/Kong/spec-renderer/compare/v1.111.3...v1.112.0) (2026-08-04)
+
+
+### Features
+
+* add kong-spec-renderer CLI for local spec previews ([#942](https://github.com/Kong/spec-renderer/issues/942)) ([2b7697f](https://github.com/Kong/spec-renderer/commit/2b7697fb265a661f07efde02b2a3291ce93618ca)), closes [#948](https://github.com/Kong/spec-renderer/issues/948)
+
 ## [1.111.3](https://github.com/Kong/spec-renderer/compare/v1.111.2...v1.111.3) (2026-08-04)
 
 
