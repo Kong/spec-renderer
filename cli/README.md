@@ -1,6 +1,6 @@
 # Spec Renderer CLI
 
-A small CLI for previewing a local OpenAPI or AsyncAPI spec, rendered with `@kong/spec-renderer`'s own UI, right on your machine - no host app or project setup required. The preview reloads automatically whenever you save changes to the spec file.
+A small CLI for previewing an OpenAPI or AsyncAPI spec (from a local file or remote URL), rendered with `@kong/spec-renderer`'s own UI, right on your machine - no host app or project setup required. The preview reloads automatically whenever you save changes to the spec file.
 
 ## Table of Contents
 

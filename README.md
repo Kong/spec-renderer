@@ -228,7 +228,7 @@ As of now only `SpecRenderer` as single component is supported for this. Let us 
 
 ## CLI
 
-Preview a local OpenAPI or AsyncAPI spec, rendered with this package's own UI, right on your machine - no host app or project setup required. The preview reloads automatically when you save changes to the spec file.
+Preview an OpenAPI or AsyncAPI spec (from a local file or remote URL), rendered with this package's own UI, right on your machine - no host app or project setup required. The preview reloads automatically when you save changes to the spec file.
 
 ```sh
 npx @kong/spec-renderer preview ./openapi.yaml
