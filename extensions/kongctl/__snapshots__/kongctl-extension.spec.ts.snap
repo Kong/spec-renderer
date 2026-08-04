@@ -1,0 +1,82 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`extensions/kongctl/kongctl-extension.yaml > matches its committed raw text 1`] = `
+"# GENERATED FILE - DO NOT EDIT BY HAND.
+# Source: extensions/kongctl/kongctl-extension.config.mjs + cli/program.ts
+# Regenerate: pnpm run generate:kongctl-manifest
+
+schema_version: 1
+publisher: kong
+name: spec-renderer
+runtime:
+  command: bin/kongctl-ext
+command_paths:
+  - id: preview_spec
+    path:
+      - name: preview
+      - name: spec
+    summary: Preview an OpenAPI or AsyncAPI spec (local file or remote URL) using @kong/spec-renderer
+    description: Starts a preview server for an OpenAPI or AsyncAPI spec (from a local file or remote
+      URL), rendered with @kong/spec-renderer's own UI, with auto-reload on save. Runs \`npx
+      @kong/spec-renderer preview\` under the hood - requires Node.js.
+    usage: kongctl preview spec <spec> [flags]
+    examples:
+      - kongctl preview spec ./openapi.yaml
+      - kongctl preview spec ./openapi.yaml --port 4000 --hide-internal
+      - kongctl preview spec -- --help
+    args:
+      - name: spec
+        required: true
+        description: path to a local spec file, or a URL to a remote spec
+    flags:
+      - name: port
+        type: string
+        description: port to run the preview server on
+      - name: no-open
+        description: do not automatically open the preview in a browser
+      - name: hide-internal
+        description: hide internal operations from the table of contents
+      - name: hide-deprecated
+        description: hide deprecated operations from the table of contents
+      - name: hide-schemas
+        description: hide schemas (models) from the table of contents
+      - name: hide-try-it
+        description: hide the "Try it" UI
+      - name: hide-insomnia-try-it
+        description: hide the "Insomnia" option within the "Try it" UI
+      - name: with-credentials
+        description: send credentials when resolving external (http) $refs within the spec
+      - name: max-expanded-depth
+        type: string
+        description: maximum depth to expand nested schema properties by default
+      - name: verbose
+        description: "log spec parsing stages to the browser console, for troubleshooting (alias:
+          --trace-parsing)"
+      - name: no-content-scrolling
+        description: navigate between operations/schemas one at a time instead of scrolling through them
+          continuously (has no effect above 1200 combined operations/schemas, where this is always
+          enforced)
+      - name: no-custom-server-url
+        description: do not let the preview add a custom server URL to the servers list
+      - name: show-navigation-buttons
+        description: show prev/next buttons at the bottom of each operation - useful with --no-content-scrolling
+      - name: hide-download-button
+        description: hide the spec download button
+      - name: enable-operation-links
+        description: show a permalink icon on each operation that copies its URL to the clipboard
+      - name: hide-powered-by
+        description: hide the "Powered by" branding in the table of contents
+      - name: path
+        type: string
+        description: open the preview at a specific operation/schema, e.g. /operations/getPets or
+          /schemas/Pet (not the raw OAS path)
+      - name: navigation-type
+        type: path|hash
+        description: how the current operation/schema is tracked in the URL - "path" breaks a browser
+          refresh at a deep link, since the server has no route fallback for it
+      - name: local-cli
+        type: string
+        description: Extension-only flag. Path to a local kong-spec-renderer CLI build (dist/cli/index.js)
+          to use instead of npx, for local development.
+"
+`;

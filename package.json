@@ -6,6 +6,9 @@
   "type": "module",
   "main": "./dist/kong-spec-renderer.cjs",
   "module": "./dist/kong-spec-renderer.es.js",
+  "bin": {
+    "kong-spec-renderer": "./dist/cli/index.js"
+  },
   "files": [
     "dist"
   ],
@@ -31,15 +34,19 @@
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
-    "build": "pnpm run typecheck && pnpm run build:package && pnpm run build:webcomponent && pnpm run build:types && pnpm run build:aliases",
+    "build": "pnpm run typecheck && pnpm run build:package && pnpm run build:webcomponent && pnpm run build:types && pnpm run build:aliases && pnpm run build:cli",
     "build:package": "vite build -m production",
     "build:webcomponent": "cross-env VITE_AS_WEB_COMPONENT='true' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "build:aliases": "tsc-alias -p './tsconfig.build.json'",
+    "build:cli": "tsc -p './tsconfig.cli.build.json' && node ./scripts/build-cli-assets.js && node ./scripts/generate-kongctl-manifest.mjs",
+    "generate:kongctl-manifest": "pnpm run build:cli",
     "build:analyzer": "BUILD_VISUALIZER='true' vite build -m production",
     "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
     "preview": "pnpm run build:sandbox && cross-env USE_SANDBOX=true vite preview",
-    "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
+    "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit && pnpm run typecheck:cli && pnpm run typecheck:scripts",
+    "typecheck:cli": "tsc -p './tsconfig.cli.json' --noEmit",
+    "typecheck:scripts": "tsc -p './tsconfig.scripts.json' --noEmit",
     "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,vue}'",
     "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,vue}' --fix",
     "lint": "eslint",
@@ -65,13 +72,18 @@
     "@stoplight/yaml": "^4.3.0",
     "@vueuse/core": "^14.3.0",
     "allof-merge": "^0.6.8",
+    "chokidar": "^5.0.0",
+    "commander": "^15.0.0",
     "flatted": "^3.4.2",
     "form-urlencoded": "^6.1.7",
     "httpsnippet": "^3.0.10",
     "lodash-es": "^4.18.1",
     "markdown-it": "^14.3.0",
+    "open": "^11.0.0",
+    "picocolors": "^1.1.1",
     "sanitize-html": "^2.17.6",
-    "shiki": "^3.23.0"
+    "shiki": "^3.23.0",
+    "ws": "^8.21.1"
   },
   "resolutions": {
     "openapi3-ts": "4.6.0"
@@ -86,6 +98,7 @@
     "@kong/eslint-config-kong-ui": "1.7.1",
     "@kong/stylelint-plugin-design-tokens": "1.0.1",
     "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@stylistic/stylelint-plugin": "^5.2.1",
     "@types/jsdom": "^28.0.3",
@@ -93,6 +106,7 @@
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^24.13.3",
     "@types/sanitize-html": "^2.16.1",
+    "@types/ws": "^8.18.1",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vitest/ui": "^3.2.7",
     "@vue/test-utils": "^2.4.11",
@@ -128,7 +142,8 @@
     "vitest": "4.1.10",
     "vue": "^3.5.39",
     "vue-router": "^4.6.4",
-    "vue-tsc": "^3.3.7"
+    "vue-tsc": "^3.3.7",
+    "yaml": "^2.9.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -231,7 +246,23 @@
           ]
         }
       ],
-      "@semantic-release/github"
+      [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "scripts/build-kongctl-extension.sh ${nextRelease.version}"
+        }
+      ],
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            {
+              "path": "dist/kongctl-ext-spec-preview-universal.tar.gz",
+              "label": "kongctl-ext-spec-preview (universal, requires Node.js)"
+            }
+          ]
+        }
+      ]
     ]
   },
   "engines": {

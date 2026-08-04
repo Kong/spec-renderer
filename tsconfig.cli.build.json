@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.cli.json",
+  "compilerOptions": {
+    "noEmit": false
+  },
+  "exclude": [
+    "cli/**/*.spec.ts"
+  ]
+}
