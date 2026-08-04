@@ -46,7 +46,9 @@
         </CollapsibleSection>
       </div>
       <SchemaExample
-        v-if="exampleModel"
+        v-if="hasExample"
+        example-select-test-id="async-message-example-selector"
+        :examples="messageExamples"
         :schema-example-json="exampleModel"
       />
     </div>
@@ -55,8 +57,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { PropType } from 'vue'
-import type { SchemaModelPropertyField, SchemaObject, AsyncMessageObject } from '@/types'
+import type { SchemaExampleItem, SchemaModelPropertyField, SchemaObject, AsyncMessageObject } from '@/types'
 import ModelNode from './schema-model/ModelNode.vue'
 import PageHeader from '../common/PageHeader.vue'
 import SchemaExample from '../common/SchemaExample.vue'
@@ -67,29 +68,38 @@ import CollapsibleSection from '@/components/spec-document/endpoint/CollapsibleS
 import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue'
 
 
-const props = defineProps({
-  data: {
-    type: Object as PropType<AsyncMessageObject>,
-    required: true,
-  },
-  title: {
-    type: String,
-    required: true,
-  },
-})
+const props = defineProps<{
+  data: AsyncMessageObject
+  title: string
+}>()
 const dataTestId = computed(() => `http-async-message-${props.title.replaceAll(' ', '-')}`)
 const payload = computed(() => props.data.payload ?? {})
 const activeSchemaModel = ref<SchemaObject>(payload.value)
+const messageExamples = computed<SchemaExampleItem[]>(() =>
+  (props.data.messageExamples ?? [])
+    .filter(example => example.hasPayload())
+    .map((example, index) => ({
+      label: example.name() || `Example ${index + 1}`,
+      value: example.payload(),
+      // AsyncAPI example names are optional and are not required to be unique.
+      key: `async-message-example-${index}`,
+    })),
+)
 const exampleModel = computed(() => {
+  if (messageExamples.value.length) {
+    return ''
+  }
+
   const crawledExample = crawl({
     objData: activeSchemaModel.value,
     filteringOptions: { excludeReadonly: false, excludeNotRequired: false },
   })
   return crawledExample && Object.keys(crawledExample).length ? JSON.stringify(crawledExample, null, CODE_INDENT_SPACES) : ''
 })
+const hasExample = computed<boolean>(() => messageExamples.value.length > 0 || Boolean(exampleModel.value))
 
 const hiddenFieldList = computed<SchemaModelPropertyField[]>(() =>
-  exampleModel.value
+  hasExample.value
     ? ['info', 'description', 'example']
     : ['info', 'description'],
 )
