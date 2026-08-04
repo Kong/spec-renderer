@@ -24,7 +24,7 @@ A [kongctl](https://github.com/Kong/kongctl) extension contributing `kongctl pre
   stamps `version: <release-version>` into a *copy* at release-build time (via `awk`, right
   after `name:`), so only the published release archive's manifest has one.
 - `kongctl-extension.config.mjs` - the actual source of truth for hand-authored manifest fields.
-- `bin/kongctl-ext` - the shipped POSIX shell entrypoint (macOS/Linux only - see `TODO.md`).
+- `bin/kongctl-ext` - the shipped POSIX shell entrypoint (macOS/Linux only).
 - `kongctl-extension.spec.ts` - two things: a parsed-data equality check (fast local feedback -
   it imports `cli/program.ts` source directly, so it catches drift even without building), and
   a raw-text snapshot test. The snapshot is what actually catches "forgot to commit" in CI: its
@@ -32,7 +32,6 @@ A [kongctl](https://github.com/Kong/kongctl) extension contributing `kongctl pre
   though `build` auto-regenerates `kongctl-extension.yaml` itself before this test runs.
 - `bin/kongctl-ext.spec.ts` - runs the real shell script as a subprocess with fake `node`/`npx`
   on a scoped `PATH`, asserting on actual argv rather than re-implementing the script's logic.
-- `TODO.md` - known upstream kongctl limitations (Windows support, `--help` interception).
 
 ## Commands
 

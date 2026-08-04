@@ -20,7 +20,7 @@ Since the build regenerates it automatically, a plain "does the committed file m
 ## Requirements
 
 - Node.js (the extension shells out to `npx @kong/spec-renderer preview`)
-- macOS or Linux — **Windows is not supported** (`kongctl` execs `runtime.command` directly, with no shell/shebang interpretation, so this POSIX shell script cannot run on Windows; see `TODO.md`)
+- macOS or Linux — **Windows is not supported** (`kongctl` execs `runtime.command` directly, with no shell/shebang interpretation, so this POSIX shell script cannot run on Windows)
 
 ## Local development
 
