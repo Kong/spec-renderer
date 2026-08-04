@@ -1,3 +1,10 @@
+## [1.113.1](https://github.com/Kong/spec-renderer/compare/v1.113.0...v1.113.1) (2026-08-04)
+
+
+### Bug Fixes
+
+* **cli:** rename and reorder fields ([#955](https://github.com/Kong/spec-renderer/issues/955)) ([f5427c1](https://github.com/Kong/spec-renderer/commit/f5427c16ca4946b53a56691606a68af4f6c676c2))
+
 # [1.113.0](https://github.com/Kong/spec-renderer/compare/v1.112.0...v1.113.0) (2026-08-04)
 
 
