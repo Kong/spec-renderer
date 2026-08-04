@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { computeAPITree, transformOasToServiceNode } from '@/stoplight/elements'
-import type { ServiceNode, ParseOptions } from '@/types'
+import type { ServiceNode, ParseOptions, ParseResult } from '@/types'
 import { parse as parseYaml, safeStringify } from '@stoplight/yaml'
 import type { TableOfContentsItem } from '@/stoplight/elements-core'
 import refParser from '@apidevtools/json-schema-ref-parser'
@@ -33,16 +33,15 @@ let specText = ''
 let specTitle = ''
 
 export default (): {
-  parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
-  parseOpenApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
-  parseAsyncApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<void>
+  parseSpecDocument: (spec: string, options?: ParseOptions) => Promise<ParseResult>
+  parseOpenApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<ParseResult>
+  parseAsyncApiSpecDocument: (spec: string, options?: ParseOptions) => Promise<ParseResult>
   downloadSpecFile: (format?: 'json' | 'yaml', content?: string) => Promise<void>
   parsedDocument: Ref<ServiceNode | string | undefined>
   tableOfContents: Ref<TableOfContentsItem[] | string | undefined>
 } => {
 
   const parsedDocument = ref<ServiceNode | string | undefined>()
-  const jsonDocument = ref<Record<string, any> | undefined>()
 
   const tableOfContents = ref<TableOfContentsItem[] | undefined>()
 
@@ -104,7 +103,7 @@ export default (): {
   }
 
 
-  const parseAsyncApiSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<void> => {
+  const parseAsyncApiSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<ParseResult> => {
 
     if (!asyncParser) {
       const AsyncParser:any = await import('@asyncapi/parser/browser')
@@ -122,7 +121,7 @@ export default (): {
         specToParse = await (await fetch(options.specUrl)).text()
       } catch (e) {
         console.error(`@kong/spec-renderer: error fetching async document from ${options.specUrl}`, e)
-        return
+        return { parsedDocument: undefined, tableOfContents: undefined }
       }
       trace(options.traceParsing, 'async document fetched')
     }
@@ -136,12 +135,12 @@ export default (): {
       const { document/*, diagnostics*/ } = await asyncParser.parse(specToParse)
       if (!document) {
         trace(options.traceParsing, 'async document undefined after parsing')
-        return
+        return { parsedDocument: undefined, tableOfContents: undefined }
       }
       parsed = document
     } catch (e) {
       console.error('@kong/spec-renderer: error parsing async document', e)
-      return
+      return { parsedDocument: undefined, tableOfContents: undefined }
     }
     trace(options.traceParsing, 'async document parsed')
 
@@ -155,12 +154,16 @@ export default (): {
       })
 
       trace(options.traceParsing, 'async document transformed')
+      /**
+       * `toc` / `transformed` are request-local; assign the shared refs for backward compatibility,
+       * then return the locals so concurrent callers each get their own result.
+       */
       tableOfContents.value = toc
       parsedDocument.value = transformed
-      return
+      return { parsedDocument: transformed, tableOfContents: toc }
     } catch (e) {
       console.error('@kong/spec-renderer: error transforming async document', e)
-      return
+      return { parsedDocument: undefined, tableOfContents: undefined }
     }
   }
 
@@ -168,11 +171,12 @@ export default (): {
     Parsing spec (sepcText) or by URL produced in  ParseOptions
   */
 
-  const fetchAndBundle = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<void> => {
+  const fetchAndBundle = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<Record<string, any> | undefined> => {
+    let json: Record<string, any> | undefined
     // if we have URL passed, but no spec, we call bundle to fetch and resolve external refs
     if (options.specUrl && !spec) {
       // fetches spec by URL provided and resolves all external references
-      jsonDocument.value = await refParser.bundle(options.specUrl, {
+      json = await refParser.bundle(options.specUrl, {
         resolve: {
           file: false,
           external: true,
@@ -185,28 +189,41 @@ export default (): {
           circular: true,
         },
         continueOnError: true,
-      })
+      }) as Record<string, any> | undefined
       trace(options.traceParsing, 'fetched and external referenced bundled')
     } else {
       // if we have string holding spec content, we try to convert it to json obect (from json string or yaml)
-      jsonDocument.value = tryParseYamlOrObject(spec)
+      json = tryParseYamlOrObject(spec)
       trace(options.traceParsing, 'parsed from string')
     }
 
     // save the spec title to be used as file name for the downloaded spec file
-    specTitle = jsonDocument.value?.info?.title
+    specTitle = json?.info?.title
+    /**
+     * Return the parsed document rather than writing shared module state, so callers can thread it
+     * through request-local state (see `parseOpenApiSpecDocument`).
+     */
+    return json
   }
-  const parseOpenApiSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}):Promise<void> => {
+  /**
+   * @param preBundledJson Internal use only: a document already fetched/bundled by
+   *   `parseSpecDocument`, passed through to avoid a second bundle. External callers never pass it.
+   */
+  const parseOpenApiSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}, preBundledJson?: Record<string, any>): Promise<ParseResult> => {
 
     await saveSpecText(spec, options.specUrl)
 
-    if (!jsonDocument.value || options.enforceResetBeforeParsing) {
-      await fetchAndBundle(spec, options)
-    }
-    if (!jsonDocument.value) {
+    /**
+     * Request-local working document. We ALWAYS (re)bundle the provided spec — unless our own
+     * `parseSpecDocument` already did and handed us the result via `preBundledJson` — and never
+     * read shared module state as a cache. That makes the parse fail-safe: an omitted
+     * `enforceResetBeforeParsing` can never return a prior request's document for this spec.
+     */
+    let localJson: Record<string, any> | undefined = preBundledJson ?? await fetchAndBundle(spec, options)
+    if (!localJson) {
       // was it even a spec or even something that could be converted to json?
       console.error('@kong/spec-renderer: empty jsonDocument initial processing')
-      return
+      return { parsedDocument: undefined, tableOfContents: undefined }
     }
 
     trace(options.traceParsing, 'json document available')
@@ -214,13 +231,13 @@ export default (): {
     // TODO: let's see if we can detect some validation errors here
 
     // resolve the titles for internal refs
-    jsonDocument.value = titleResolve(jsonDocument.value)
+    localJson = titleResolve(localJson)
 
     trace(options.traceParsing, 'title resolved')
 
     try {
       // resolve the internal refs
-      const dereferenced = await refParser.dereference(jsonDocument.value, {
+      localJson = await refParser.dereference(localJson, {
         continueOnError: true,
         dereference: {
           circular: true,
@@ -231,8 +248,7 @@ export default (): {
           // http references resolved during bundle call above
           http: false,
         },
-      })
-      jsonDocument.value = dereferenced
+      }) as Record<string, any>
     } catch (err) {
       console.error('@kong/spec-renderer: error dereferencing:', err)
     }
@@ -241,31 +257,32 @@ export default (): {
 
 
     // it was not async, let's try openAPI
+    let localParsed: ServiceNode | string | undefined
     try {
       // convert to AST for ui layer to use
-      parsedDocument.value = transformOasToServiceNode(jsonDocument.value)
+      localParsed = transformOasToServiceNode(localJson)
     } catch (err) {
       console.error('@kong/spec-renderer: error in transformOasToServiceNode:', err)
     }
 
     const fixSecurityScopes = () => {
-      if (jsonDocument.value?.components?.securitySchemes) {
-        for (const [key, scheme] of Object.entries(jsonDocument.value.components.securitySchemes)) {
+      if (localJson?.components?.securitySchemes) {
+        for (const [key, scheme] of Object.entries(localJson.components.securitySchemes)) {
           for (const [keyFlow, flow] of Object.entries((scheme as IOauth2SecurityScheme).flows || {})) {
             if (flow.scopes) {
-              const destSchema: IOauth2SecurityScheme | undefined = (parsedDocument.value as ServiceNode)?.data?.securitySchemes?.find(s => s.key === key) as IOauth2SecurityScheme
+              const destSchema: IOauth2SecurityScheme | undefined = (localParsed as ServiceNode)?.data?.securitySchemes?.find(s => s.key === key) as IOauth2SecurityScheme
               if ((destSchema?.flows as IOauthFlowObjects)?.[keyFlow]?.scopes) {
                 ((destSchema.flows as IOauthFlowObjects)[keyFlow] as IOauth2ClientCredentialsFlow).scopes = flow.scopes
               }
               // loop trough all security schemes and upate flows with scopes
-              for (const destSecurity of (parsedDocument.value as ServiceNode)?.data?.security || []) {
+              for (const destSecurity of (localParsed as ServiceNode)?.data?.security || []) {
                 const dS = destSecurity.find(s => s.key === key) as IOauth2SecurityScheme
                 if ((dS?.flows as IOauthFlowObjects)?.[keyFlow]?.scopes) {
                   ((dS.flows as IOauthFlowObjects)[keyFlow] as IOauth2ClientCredentialsFlow).scopes = flow.scopes
                 }
               }
               // loop trough all operations and update security there with scopes
-              for (const operation of ((parsedDocument.value as ServiceNode)?.children || []).filter((op) => op.type === 'http_operation')) {
+              for (const operation of ((localParsed as ServiceNode)?.children || []).filter((op) => op.type === 'http_operation')) {
                 if (operation.data.security) {
                   for (const security of operation.data.security) {
                     const dS = security.find(s => s.key === key) as IOauth2SecurityScheme
@@ -290,10 +307,11 @@ export default (): {
 
     trace(options.traceParsing, 'transformed')
 
+    let localToc: TableOfContentsItem[] | string | undefined
     try {
-      if (parsedDocument.value) {
+      if (localParsed) {
         // generate table of contents
-        tableOfContents.value = computeAPITree(<ServiceNode>parsedDocument.value, {
+        localToc = computeAPITree(<ServiceNode>localParsed, {
           hideSchemas: options?.hideSchemas,
           hideInternal: options?.hideInternal,
           hideDeprecated: options?.hideDeprecated,
@@ -306,36 +324,45 @@ export default (): {
 
     if (options.webComponentSafe) {
       try {
-        parsedDocument.value = stringify(parsedDocument.value)
-        //@ts-ignore string is allowed
-        tableOfContents.value = stringify(tableOfContents.value)
-        //@ts-ignore string is allowed
-        validationResults.value = stringify(validationResults.value)
+        localParsed = stringify(localParsed)
+        localToc = stringify(localToc)
       } catch (err) {
         console.error('@kong/spec-renderer: error in stringifying for web-component:', err)
       }
     }
+
+    /**
+     * Backward compatibility: keep populating the shared refs for existing single-request / client
+     * consumers. The returned values are the concurrency-safe source of truth for SSR consumers.
+     */
+    parsedDocument.value = localParsed
+    // @ts-ignore - localToc may be a `flatted`-stringified TOC in the web-component-safe path
+    tableOfContents.value = localToc
+
     trace(options.traceParsing, 'APITree computed')
+    return { parsedDocument: localParsed, tableOfContents: localToc }
   }
 
-  const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<void> => {
-    await fetchAndBundle(spec, options)
+  const parseSpecDocument = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<ParseResult> => {
+    const localJson = await fetchAndBundle(spec, options)
 
-    if (!jsonDocument.value) {
+    if (!localJson) {
       // was it even a spec or even something that could be converted to json?
       console.error('@kong/spec-renderer: empty jsonDocument initial processing')
-      return
+      return { parsedDocument: undefined, tableOfContents: undefined }
     }
 
     trace(options.traceParsing, 'json document available')
 
     // at this point we have json schema, so we can look when spec is it and if it is asyc, we call async if not in ssr mode
-    if (jsonDocument.value?.asyncapi) {
+    // Branch on the request-local document, not the shared ref, to avoid the same cross-request race.
+    if (localJson.asyncapi) {
       trace(options.traceParsing, 'asyncapi spec detected')
-      await parseAsyncApiSpecDocument(spec, options)
+      return await parseAsyncApiSpecDocument(spec, options)
     } else {
       trace(options.traceParsing, 'openapi spec detected')
-      await parseOpenApiSpecDocument(spec, options)
+      // Hand the already-bundled document to the delegate so it is not fetched/bundled twice.
+      return await parseOpenApiSpecDocument(spec, options, localJson)
     }
   }
 
