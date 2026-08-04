@@ -119,3 +119,35 @@ This is a full page reload rather than an in-place update, so scroll position/ex
 - **`ENOENT: no such file or directory`**: the given spec path doesn't exist or isn't readable. Double check the path is correct relative to your current directory.
 - **Port already in use**: the CLI automatically tries the next few ports after the requested/default one. If it still fails, pass a different `--port` explicitly.
 - **Live reload not happening for a URL**: this is expected - see [Remote URL](#remote-url) above. Reload isn't available when previewing a remote URL, since there's no local file to watch.
+
+## kongctl Extension
+
+This CLI is also available as a [kongctl](https://github.com/Kong/kongctl) extension, making it easy to preview specs directly from the `kongctl` CLI.
+
+### Installation
+
+```sh
+kongctl install extension kong/spec-renderer
+```
+
+### Usage
+
+Once installed, you can preview a spec with:
+
+```sh
+kongctl preview spec ./openapi.yaml
+```
+
+Extension-specific arguments and flags are normally passed directly:
+
+```sh
+kongctl preview spec ./openapi.yaml --port 5000 --hide-deprecated
+```
+
+Use `--` only as an escape hatch when an extension needs to receive a flag that collides with a host `kongctl` flag, such as `--help`
+
+```sh
+kongctl preview spec ./openapi.yaml -- --help
+```
+
+For more information, visit the [kongctl repository](https://github.com/Kong/kongctl).
