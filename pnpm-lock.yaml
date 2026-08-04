@@ -50,7 +50,7 @@ overrides:
   linkify-it@<=5.0.0: '>=5.0.2'
   js-yaml@>=4.0.0 <=4.1.1: '>=4.3.0'
   js-yaml@>=5.0.0 <=5.2.1: '>=5.2.2'
-  undici@>=7.0.0 <7.28.0: '>=7.28.0'
+  undici@>=7.0.0 <7.28.0: '>=8.9.0'
 
 importers:
 
@@ -5441,9 +5441,9 @@ packages:
   undici-types@7.25.0:
     resolution: {integrity: sha512-AXNgS1Byr27fTI+2bsPEkV9CxkT8H6xNyRI68b3TatlZo3RkzlqQBLL+w7SmGPVpokjHbcuNVQUWE7FRTg+LRA==}
 
-  undici@7.28.0:
-    resolution: {integrity: sha512-cRZYrTDwWznlnRiPjggAGxZXanty6M8RV1ff8Wm4LWXBp7/IG8v5DnOm74DtUBp9OONpK75YlPnIjQqX0dBDtA==}
-    engines: {node: '>=20.18.1'}
+  undici@8.10.0:
+    resolution: {integrity: sha512-HvltHd7avK13QIw/oLe4qoOLyoVSoafqJ2jYOrtMRBkbYT31eiBQ8O0ehRKZiEZCMEyLFQNIADpgCWC5fALvYQ==}
+    engines: {node: '>=22.19.0'}
 
   undici@8.6.0:
     resolution: {integrity: sha512-l2FlC6I510GawyEd1qgcE/okihKrzy+BRTEBlu6T0fdbM9m5yxtIH5Oa3ysRsH0zC4EhmWUEaSDsy2QngBeRlw==}
@@ -6967,7 +6967,7 @@ snapshots:
       p-filter: 4.1.0
       semantic-release: 25.0.8(typescript@5.9.3)
       tinyglobby: 0.2.17
-      undici: 8.6.0
+      undici: 8.10.0
       url-join: 5.0.0
     transitivePeerDependencies:
       - supports-color
@@ -9720,7 +9720,7 @@ snapshots:
       saxes: 6.0.0
       symbol-tree: 3.2.4
       tough-cookie: 6.0.1
-      undici: 7.28.0
+      undici: 8.10.0
       w3c-xmlserializer: 5.0.0
       webidl-conversions: 8.0.1
       whatwg-mimetype: 5.0.0
@@ -11460,7 +11460,7 @@ snapshots:
 
   undici-types@7.25.0: {}
 
-  undici@7.28.0: {}
+  undici@8.10.0: {}
 
   undici@8.6.0: {}
 
