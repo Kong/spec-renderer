@@ -1,5 +1,8 @@
 <template>
-  <OverviewPanel title="Additional Information">
+  <OverviewPanel
+    v-if="hasAdditionalInfo"
+    title="Additional Information"
+  >
     <template #header-icon>
       <InfoIcon
         :size="20"
@@ -11,60 +14,74 @@
         data-testid="overview-additional-info"
       >
         <div
-          v-if="contact?.url || contact?.email"
+          v-if="contactUrl || contact?.email || contact?.name"
           class="overview-additional-info-contact"
           data-testid="overview-additional-info-contact"
         >
           Contact
           <a
-            v-if="contact?.url"
-            :href="contact.url"
+            v-if="contactUrl"
+            :href="contactUrl"
             rel="noopener noreferrer"
             target="_blank"
           >
             {{ contact.name }}
           </a>
+          <span v-else-if="contact?.name">
+            {{ contact.name }}
+          </span>
           <a
-            v-if="contact?.email"
-            :href="`mailto:${contact.email}`"
+            v-if="contactEmailHref"
+            :href="contactEmailHref"
             rel="noopener noreferrer"
             target="_blank"
           >
             ({{ contact.email }})
           </a>
+          <span v-else-if="contact?.email">
+            ({{ contact.email }})
+          </span>
         </div>
         <component
-          :is="license?.url ? 'a' : 'p'"
+          :is="licenseUrl ? 'a' : 'p'"
           v-if="license?.name"
           class="overview-additional-info-license"
           data-testid="overview-additional-info-license"
-          :href="license.url"
+          :href="licenseUrl"
           rel="noopener noreferrer"
           target="_blank"
         >
           {{ license.name }} License
         </component>
         <a
-          v-if="externalDocs?.url"
+          v-if="externalDocsUrl"
           class="overview-additional-info-external-docs"
-          :href="externalDocs.url"
+          :href="externalDocsUrl"
           rel="noopener noreferrer"
           target="_blank"
         >
           {{ externalDocs.description || externalDocs.url }}
         </a>
+        <span
+          v-else-if="externalDocs?.description"
+          class="overview-additional-info-external-docs"
+        >
+          {{ externalDocs.description }}
+        </span>
       </div>
     </template>
   </OverviewPanel>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { PropType } from 'vue'
 import type { IHttpService } from '@stoplight/types'
 import { InfoIcon } from '@kong/icons'
 import OverviewPanel from './OverviewPanel.vue'
+import { sanitizeHref, sanitizeMailtoHref } from '@/utils/html-sanitizer'
 
-defineProps({
+const props = defineProps({
   contact: {
     type: Object as PropType<IHttpService['contact']>,
     default: () => ({}),
@@ -78,6 +95,15 @@ defineProps({
     default: () => ({}),
   },
 })
+
+const contactUrl = computed(() => sanitizeHref(props.contact?.url))
+const contactEmailHref = computed(() => sanitizeMailtoHref(props.contact?.email))
+const licenseUrl = computed(() => sanitizeHref(props.license?.url))
+const externalDocsUrl = computed(() => sanitizeHref(props.externalDocs?.url))
+
+const hasAdditionalInfo = computed(() => Boolean(
+  contactUrl.value || props.contact?.email || props.contact?.name || props.license?.name || externalDocsUrl.value || props.externalDocs?.description,
+))
 </script>
 
 <style lang="scss" scoped>
@@ -90,7 +116,7 @@ defineProps({
   }
 
   .overview-additional-info-license[href],
-  .overview-additional-info-external-docs {
+  .overview-additional-info-external-docs[href] {
     @include link;
   }
 

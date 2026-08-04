@@ -56,4 +56,98 @@ describe('<AdditionalInfo />', () => {
     // since license URL is not present, it should render as p tag
     expect(wrapper.findTestId('overview-additional-info-license').element).instanceOf(HTMLParagraphElement)
   })
+
+  it('renders external docs description as plain text when the URL is unsafe', () => {
+    const wrapper = mount(AdditionalInfo, {
+      props: {
+        externalDocs: {
+          description: 'sample external docs',
+          url: 'javascript:alert(1)',
+        },
+      },
+    })
+
+    const externalDocs = wrapper.find('.overview-additional-info-external-docs')
+
+    // The panel and description must still render even though the URL was rejected.
+    expect(wrapper.findTestId('overview-additional-info').exists()).toBe(true)
+    expect(externalDocs.text()).toContain('sample external docs')
+    expect(externalDocs.find('a').exists()).toBe(false)
+    expect(wrapper.find('a.overview-additional-info-external-docs').exists()).toBe(false)
+  })
+
+  it('renders unsafe license URLs as plain text', () => {
+    const wrapper = mount(AdditionalInfo, {
+      props: {
+        license: {
+          name: 'sample license',
+          url: 'javascript:alert(1)',
+        },
+      },
+    })
+
+    const license = wrapper.findTestId('overview-additional-info-license')
+
+    expect(license.element).instanceOf(HTMLParagraphElement)
+    expect(license.attributes('href')).toBeUndefined()
+  })
+
+  it('renders contact name as plain text when the contact URL is unsafe', () => {
+    const wrapper = mount(AdditionalInfo, {
+      props: {
+        contact: {
+          name: 'Support Team',
+          url: 'javascript:alert(1)',
+        },
+      },
+    })
+
+    const contact = wrapper.findTestId('overview-additional-info-contact')
+
+    // The panel and contact name must still render even though the URL was rejected.
+    expect(wrapper.findTestId('overview-additional-info').exists()).toBe(true)
+    expect(contact.text()).toContain('Support Team')
+    expect(contact.find('a').exists()).toBe(false)
+  })
+
+  it('renders invalid contact emails as plain text', () => {
+    const wrapper = mount(AdditionalInfo, {
+      props: {
+        contact: {
+          email: 'email.example.com',
+        },
+      },
+    })
+
+    const contact = wrapper.findTestId('overview-additional-info-contact')
+
+    expect(contact.text()).toContain('(email.example.com)')
+    expect(contact.find('a').exists()).toBe(false)
+  })
+
+  it('does not render the panel when no props are provided', () => {
+    const wrapper = mount(AdditionalInfo, {
+      props: {},
+    })
+
+    expect(wrapper.findTestId('overview-additional-info').exists()).toBe(false)
+  })
+
+  it('does not render the panel when the only provided values are unsafe URLs', () => {
+    const wrapper = mount(AdditionalInfo, {
+      props: {
+        contact: {
+          url: 'javascript:alert(1)',
+        },
+        license: {
+          url: 'javascript:alert(1)',
+        },
+        externalDocs: {
+          url: 'javascript:alert(1)',
+        },
+      },
+    })
+
+    expect(wrapper.findTestId('overview-additional-info').exists()).toBe(false)
+  })
 })

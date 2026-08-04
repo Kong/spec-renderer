@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { sanitizeCodeBlockHtml, sanitizeMarkdownHtml } from './html-sanitizer'
+import { sanitizeCodeBlockHtml, sanitizeHref, sanitizeMailtoHref, sanitizeMarkdownHtml } from './html-sanitizer'
 
 describe('html-sanitizer', () => {
   it('sanitizes code block HTML with a narrow allowlist', () => {
@@ -61,5 +61,41 @@ describe('html-sanitizer', () => {
     const sanitized = sanitizeMarkdownHtml('<p class="copy" style="color:red">Text</p><a href="https://example.com" style="color:red">Link</a>')
 
     expect(sanitized).toBe('<p>Text</p><a href="https://example.com">Link</a>')
+  })
+
+  it('allows safe HTTP hrefs and relative hrefs', () => {
+    expect(sanitizeHref('https://example.com/docs')).toBe('https://example.com/docs')
+    expect(sanitizeHref('http://example.com/docs')).toBe('http://example.com/docs')
+    expect(sanitizeHref('/docs')).toBe('/docs')
+    expect(sanitizeHref('//example.com/docs')).toBe('//example.com/docs')
+  })
+
+  it('blocks hrefs with unsafe protocols', () => {
+    expect(sanitizeHref('javascript:alert(1)')).toBeUndefined()
+    expect(sanitizeHref('data:text/html,<script>alert(1)</script>')).toBeUndefined()
+    expect(sanitizeHref('mailto:user@example.com')).toBeUndefined()
+  })
+
+  it('builds mailto hrefs from basic email addresses', () => {
+    expect(sanitizeMailtoHref('user@example.com')).toBe('mailto:user@example.com')
+    expect(sanitizeMailtoHref(' user+docs@example.com ')).toBe('mailto:user+docs@example.com')
+  })
+
+  it('blocks clearly invalid email values', () => {
+    expect(sanitizeMailtoHref('user.example.com')).toBeUndefined()
+    expect(sanitizeMailtoHref('@example.com')).toBeUndefined()
+    expect(sanitizeMailtoHref('user@')).toBeUndefined()
+  })
+
+  it('preserves legitimate mailto query params', () => {
+    expect(sanitizeMailtoHref('user@example.com?subject=Hello%20World')).toBe('mailto:user@example.com?subject=Hello%20World')
+    expect(sanitizeMailtoHref('user@example.com?subject=Hi&cc=team@example.com')).toBe('mailto:user@example.com?subject=Hi&cc=team@example.com')
+  })
+
+  it('blocks mailto header injection via CR/LF', () => {
+    // percent-encoded CRLF
+    expect(sanitizeMailtoHref('user@example.com?subject=Hi%0D%0ABcc:attacker@evil.com')).toBeUndefined()
+    // raw CRLF
+    expect(sanitizeMailtoHref('user@example.com\r\nBcc:attacker@evil.com')).toBeUndefined()
   })
 })
