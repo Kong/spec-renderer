@@ -22,11 +22,6 @@ describe('transformMessage', () => {
       hasPayload: () => false,
     } as unknown as MessageInterface
 
-    expect(transformMessage(message).data.messageExamples).toEqual([{
-      name: 'Profile update',
-      summary: 'A profile update event',
-      payload: { member: { id: '123' } },
-      headers: { event: 'ACCOUNT' },
-    }])
+    expect(transformMessage(message).data.messageExamples).toEqual([example])
   })
 })

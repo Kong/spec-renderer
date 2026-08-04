@@ -1,7 +1,19 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import AsyncMessage from './AsyncMessage.vue'
-import SchemaExample from '@/components/common/SchemaExample.vue'
+import CodeBlock from '@/components/common/CodeBlock.vue'
+
+const messageExample = (name: string, payload: Record<string, any>) => ({
+  hasName: () => true,
+  name: () => name,
+  hasSummary: () => false,
+  summary: () => undefined,
+  hasHeaders: () => false,
+  headers: () => undefined,
+  hasPayload: () => true,
+  payload: () => payload,
+  extensions: () => ({}),
+})
 
 describe('<AsyncMessage />', () => {
   it('should render and switch between inline message payload examples', async () => {
@@ -11,21 +23,21 @@ describe('<AsyncMessage />', () => {
         data: {
           payload: { type: 'object' },
           messageExamples: [
-            { name: 'Accrual', payload: { event: 'ACCRUAL' } },
-            { name: 'Profile update', payload: { event: 'PROFILE' } },
+            messageExample('Accrual', { event: 'ACCRUAL' }),
+            messageExample('Profile update', { event: 'PROFILE' }),
           ],
         },
       },
       attachTo: document.body,
     })
 
-    expect(wrapper.findComponent(SchemaExample).props('schemaExampleJson')).toContain('ACCRUAL')
+    expect(wrapper.findComponent(CodeBlock).props('code')).toContain('ACCRUAL')
     expect(wrapper.findTestId('async-message-example-selector').exists()).toBe(true)
 
     await wrapper.findTestId('trigger-button').trigger('click')
     await wrapper.findTestId('async-message-example-1-item-trigger').trigger('click')
 
-    expect(wrapper.findComponent(SchemaExample).props('schemaExampleJson')).toContain('PROFILE')
+    expect(wrapper.findComponent(CodeBlock).props('code')).toContain('PROFILE')
     wrapper.unmount()
   })
 })

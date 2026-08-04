@@ -461,10 +461,9 @@ components:
       const message = (parsedDocument.value as ServiceNode).children
         .find(child => child.uri === '/message-accountEvent')
 
-      expect(message?.data.messageExamples).toEqual([{
-        name: 'Profile Update',
-        payload: { member: { id: '123' } },
-      }])
+      const example = message?.data.messageExamples?.[0]
+      expect(example?.name()).toEqual('Profile Update')
+      expect(example?.payload()).toEqual({ member: { id: '123' } })
     })
 
     it('should parse avro', async () => {

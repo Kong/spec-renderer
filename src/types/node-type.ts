@@ -3,7 +3,7 @@ import { NodeType as OasNodeType } from '@stoplight/types'
 import type { Node, OperationNode, WebhookNode, SchemaNode, SpecVersion } from '@/stoplight/elements'
 import type { JSONSchema7 } from 'json-schema'
 import type { SchemaObject } from './spec-renderer'
-import type { OperationInterface, MessageInterface } from '@asyncapi/parser'
+import type { OperationInterface, MessageInterface, MessageExampleInterface } from '@asyncapi/parser'
 
 
 export const NodeType = {
@@ -19,14 +19,7 @@ export interface AsyncMessageObject extends SchemaObject {
   messageId?: string
   correlationId?: string
   message?: MessageInterface
-  messageExamples?: AsyncMessageExample[]
-}
-
-export interface AsyncMessageExample {
-  name?: string
-  summary?: string
-  payload?: Record<string, any>
-  headers?: Record<string, any>
+  messageExamples?: MessageExampleInterface[]
 }
 
 export interface AsyncOperationObject extends SchemaObject {

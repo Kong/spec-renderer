@@ -43,12 +43,7 @@ const getOperationTypeLabel = ({
  * @returns
  */
 export const transformMessage = (message: MessageInterface): AsyncMessageNode => {
-  const messageExamples = message.examples().all().map(example => ({
-    ...(example.name() ? { name: example.name() } : null),
-    ...(example.summary() ? { summary: example.summary() } : null),
-    ...(example.hasPayload() ? { payload: example.payload() } : null),
-    ...(example.hasHeaders() ? { headers: example.headers() } : null),
-  }))
+  const messageExamples = message.examples().all()
 
   return <AsyncMessageNode>{
     type: NodeType.AsyncMessage,

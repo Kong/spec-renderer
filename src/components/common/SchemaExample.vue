@@ -6,15 +6,23 @@
       <slot>
         <span>{{ title }}</span>
         <div class="schema-example-header-actions">
-          <slot name="header-actions" />
+          <SelectDropdown
+            v-if="exampleSelectItems.length > 1"
+            id="schema-example-select"
+            :data-testid="exampleSelectTestId"
+            :items="exampleSelectItems"
+            :model-value="activeExample?.key"
+            placement="bottom-end"
+            @change="selectExample"
+          />
           <CopyButton
-            :content="schemaExampleJson"
+            :content="activeSchemaExampleJson"
           />
         </div>
       </slot>
     </div>
     <CodeBlock
-      :code="schemaExampleJson"
+      :code="activeSchemaExampleJson"
       :is-resizable="isResizable"
       lang="json"
     />
@@ -22,23 +30,43 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import CodeBlock from '../common/CodeBlock.vue'
 import CopyButton from '../common/CopyButton.vue'
+import SelectDropdown from '../common/SelectDropdown.vue'
+import { CODE_INDENT_SPACES } from '@/constants'
+import type { SchemaExampleItem, SelectItem } from '@/types'
 
-defineProps({
-  schemaExampleJson: {
-    type: String,
-    required: true,
-  },
-  title: {
-    type: String,
-    default: 'Example',
-  },
-  isResizable: {
-    type: Boolean,
-    default: false,
-  },
-})
+const {
+  schemaExampleJson,
+  title = 'Example',
+  isResizable = false,
+  examples = [],
+  exampleSelectTestId = 'schema-example-selector',
+} = defineProps<{
+  schemaExampleJson: string
+  title?: string
+  isResizable?: boolean
+  examples?: SchemaExampleItem[]
+  exampleSelectTestId?: string
+}>()
+
+const activeExample = ref<SchemaExampleItem | undefined>(examples[0])
+
+const exampleSelectItems = computed<SelectItem[]>(() => examples.map(example => ({
+  key: example.key,
+  label: example.label,
+  value: example.key,
+})))
+
+const activeSchemaExampleJson = computed<string>(() => activeExample.value
+  ? JSON.stringify(activeExample.value.value, null, CODE_INDENT_SPACES) ?? ''
+  : schemaExampleJson,
+)
+
+const selectExample = (item: SelectItem): void => {
+  activeExample.value = examples.find(example => example.key === item.value)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -65,6 +93,10 @@ defineProps({
     align-items: center;
     display: inline-flex;
     gap: var(--kui-space-50, $kui-space-50);
+
+    :deep(.trigger-button) {
+      @include small-bordered-trigger-button;
+    }
   }
 }
 </style>
