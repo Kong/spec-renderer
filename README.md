@@ -23,6 +23,7 @@ An online API specification editor is available at [api-documentation.dev](https
   - [Build for production](#build-for-production)
   - [Committing Changes](#committing-changes)
     - [Enforcing Commit Format](#enforcing-commit-format)
+    - [Agentic Reviewer](#agentic-reviewer)
   - [Approvals](#approvals)
   - [Package Publishing](#package-publishing)
 - [Third-party packages and Thank You](#third-party-packages-and-thank-you)
