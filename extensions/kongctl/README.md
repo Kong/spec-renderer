@@ -13,13 +13,9 @@ Every flag supported by `kong-spec-renderer preview` passes straight through. Se
 
 ## Manifest maintenance
 
-**`kongctl-extension.yaml` is entirely generated - never hand-edit it.** It's rebuilt from scratch every time from two inputs: `kongctl-extension.config.mjs` (hand-authored: `summary`, `description`, `examples`, `publisher`, `name`, `runtime`) and `cli/program.ts`'s own commander definition (`args`/`flags`, introspected live via its real `Option`/`Argument` objects - not hand-copied, which previously let them drift: a `--navigation-type` flag was added to the CLI without ever making it into the manifest). To change anything in the manifest, edit `kongctl-extension.config.mjs` (for hand-authored fields) or `cli/program.ts` (for flags/args), then run:
+**`kongctl-extension.yaml` is entirely generated - never hand-edit it.** It's rebuilt from scratch every time from two inputs: `kongctl-extension.config.mjs` (hand-authored: `summary`, `description`, `examples`, `publisher`, `name`, `runtime`) and `cli/program.ts`'s own commander definition (`args`/`flags`, introspected live via its real `Option`/`Argument` objects - not hand-copied, which previously let them drift: a `--navigation-type` flag was added to the CLI without ever making it into the manifest). `pnpm run build:cli` (and therefore `pnpm run build`) always regenerates it as part of the build - `pnpm run generate:kongctl-manifest` is just an alias for `build:cli` for when you only care about the manifest. To change anything, edit `kongctl-extension.config.mjs` or `cli/program.ts`, then run either and commit the result.
 
-```sh
-pnpm run generate:kongctl-manifest
-```
-
-`extensions/kongctl/kongctl-extension.spec.ts` verifies the committed file matches what regenerating it would produce right now, and runs as part of the normal `pnpm run test` - so CI catches drift with a plain, readable test diff, without ever needing to write anything back to the repo. The actual merge logic (`scripts/build-kongctl-manifest.mjs`) is a pure function with its own unit tests (`scripts/build-kongctl-manifest.spec.ts`), so it doesn't depend on parsing/mutating a possibly-hand-edited YAML file at all.
+Since the build regenerates it automatically, a plain "does the committed file match what regenerating produces" test would trivially pass in CI (the build already fixed it before any test ran). `extensions/kongctl/kongctl-extension.spec.ts`'s raw-text snapshot test is what actually catches "forgot to commit": its `.snap` baseline is a separately committed file that only changes via a deliberate `vitest -u`, so if the build produces different text than what's frozen in the snapshot, the test fails with a real diff - equivalent to a `git diff --exit-code` check, just via Vitest's own mechanism. The actual merge logic (`scripts/build-kongctl-manifest.mjs`) is a pure function with its own unit tests (`scripts/build-kongctl-manifest.spec.ts`), so it doesn't depend on parsing/mutating a possibly-hand-edited YAML file at all.
 
 ## Requirements
 

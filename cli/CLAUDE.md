@@ -16,7 +16,7 @@ bundle's job.
 
 ## Layout
 
-- `index.ts` - commander setup, all flag definitions, `--version`/`--help` wiring.
+- `program.ts` - commander setup, all flags, `--version`/`--help` wiring, exported as `createProgram()` (builds the program without parsing `process.argv`, so it's importable/introspectable). `index.ts` is just `createProgram().parseAsync(process.argv)` wrapped in a try/catch.
 - `commands/preview.ts` - orchestration: load spec → start server → watch file → open browser.
 - `server.ts` - the http+ws server (static assets, `/spec`, `/config`, reload broadcast).
 - `resolve-render-options.ts` - pure mapping: parsed CLI flags → `SpecRendererProps` subset.
@@ -28,6 +28,12 @@ Pure logic is deliberately split from I/O (mirrors `src/composables` vs `src/uti
 unit-testable without a real server/filesystem/browser. `server.ts`/`commands/preview.ts` stay
 thin orchestration and are covered mostly by `server.spec.ts`'s real-server integration tests,
 not unit tests of the orchestration itself.
+
+`program.ts` has a second consumer outside this directory: the `extensions/kongctl/` kongctl
+extension imports `createProgram()` (from source in its tests, from `dist/cli/program.js` in
+its manifest generator) to derive kongctl's `--help` output from this CLI's real flags - see
+`extensions/kongctl/CLAUDE.md`. Don't break `createProgram()`'s importability (no top-level
+`process.argv`/`process.exit()` side effects) without checking that extension too.
 
 ## Commands
 
@@ -69,3 +75,11 @@ run for this repo's own publish build, not for consumers installing the package.
 - **Terminal color is forced on** via `picocolors`' `createColors(true)` (still honors
   `NO_COLOR`) - the preview banner is meant to be readable when piped through another tool,
   not just in a raw TTY. Import `pc`/`hyperlink` from `ui.ts`, not `picocolors` directly.
+- **`program.ts`'s `findPackageVersion()` walks up directories looking for `package.json`**
+  (needed since it runs both from `cli/` source, one level below the repo root, and from
+  compiled `dist/cli/`, two levels below - a hardcoded `'..', '..'` is only correct for one).
+  It validates `name`/`version` on each candidate before accepting it, not just existence - a
+  stray version-less marker `package.json` (e.g. a `{"type":"module"}` dual-package hazard
+  file some build tool drops into `dist/`) would otherwise be silently accepted and crash
+  `program.version(undefined, ...)` deep in commander. Don't loosen that check back to a bare
+  `existsSync`.

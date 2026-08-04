@@ -87,3 +87,7 @@ When logic needs to be shared between more than one component and depends on rea
 ## CLI (`cli/`)
 
 The `kong-spec-renderer` CLI lives under `cli/` - a plain Node/TS tree, separate from the Vue build pipeline above (own `tsconfig.cli.json`, own Vitest project running in a Node environment, not jsdom). **Read `cli/CLAUDE.md` before touching anything under `cli/`** - it covers the CLI's architecture and several sharp edges already hit and fixed (Vue custom-element prop timing, chokidar quirks, `ws`/`http.Server` error handling) that are easy to reintroduce.
+
+## kongctl extension (`extensions/kongctl/`)
+
+A [kongctl](https://github.com/Kong/kongctl) extension wrapping the CLI above (`kongctl preview spec`). **Read `extensions/kongctl/CLAUDE.md` before touching anything under `extensions/kongctl/`** - its manifest (`kongctl-extension.yaml`) is fully generated and must never be hand-edited; the CLAUDE.md there covers what generates it and why.

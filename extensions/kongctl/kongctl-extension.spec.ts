@@ -20,6 +20,19 @@ describe('extensions/kongctl/kongctl-extension.yaml', () => {
     expect(committed).toEqual(expected)
   })
 
+  it('matches its committed raw text', () => {
+    // Parsed-equality above only catches data drift - YAML.parse() discards
+    // comments and exact formatting, so a regression to the header comment
+    // or to generate-kongctl-manifest.mjs's stringify() options wouldn't
+    // fail that test. This snapshot exists to catch exactly that: if it
+    // fails because of an *intentional* formatting change, update it with
+    // `pnpm exec vitest run extensions/kongctl -u` and review the diff like
+    // a lockfile diff, the same way the parsed-equality test above expects
+    // `pnpm run generate:kongctl-manifest` to be run and committed first.
+    const raw = readFileSync(manifestPath, 'utf-8')
+    expect(raw).toMatchSnapshot()
+  })
+
   it('has the manifest fields required by the kongctl extension schema', () => {
     const committed = parse(readFileSync(manifestPath, 'utf-8'))
 
