@@ -15,6 +15,7 @@ An online API specification editor is available at [api-documentation.dev](https
     - [Example for html/script](#-example-for-htmlscript)
   - [Props](#props)
     - [v-model](#v-model)
+- [CLI](#cli)
 - [Contributing & Local Development](#contributing--local-development)
   - [Development Sandbox](#development-sandbox)
     - [Build and Preview the Development Sandbox](#build-and-preview-the-development-sandbox)
@@ -225,6 +226,27 @@ As of now only `SpecRenderer` as single component is supported for this. Let us 
 ### Props
 
 [Check out the `SpecRendererProps` interface](./src/types/spec-renderer.ts) for all props valid for the `SpecRenderer` component.
+
+## CLI
+
+Preview an OpenAPI or AsyncAPI spec (from a local file or remote URL), rendered with this package's own UI, right on your machine - no host app or project setup required. The preview reloads automatically when you save changes to the spec file.
+
+### Via `npx` or `pnpm dlx`
+
+```sh
+npx @kong/spec-renderer preview ./openapi.yaml
+```
+
+### Via kongctl Extension
+
+The CLI is also available as a [kongctl](https://github.com/Kong/kongctl) extension:
+
+```sh
+kongctl install extension kong/spec-renderer
+kongctl preview spec ./openapi.yaml
+```
+
+See the [CLI docs](./cli/README.md) for full usage, flags, and troubleshooting.
 
 ## Contributing & Local Development
 

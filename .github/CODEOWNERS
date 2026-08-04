@@ -7,6 +7,11 @@
 /.github/ @adamdehaven @jillztom @ValeryG
 /lefthook.yaml @adamdehaven @jillztom @ValeryG
 
+# CLI & extensions
+/cli/ @adamdehaven @jillztom @ValeryG
+/scripts/ @adamdehaven @jillztom @ValeryG
+/extensions/ @adamdehaven @jillztom @ValeryG
+
 # Main library code
 /src/ @Kong/team-core-ui
 
