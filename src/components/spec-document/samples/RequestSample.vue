@@ -104,7 +104,7 @@ import type { PropType, Ref } from 'vue'
 import type { IHttpOperation, INodeExample } from '@stoplight/types'
 import { HTTPSnippet } from 'httpsnippet'
 import { requestSampleConfigs, CODE_INDENT_SPACES } from '@/constants'
-import { getRequestHeaders, getFormattedBody, maskAuthHeaders, maskAuthQuery, hasMasking, MASK_PLACEHOLDER, maskBodyExample, safeJSONParse, resolveSchemaObjectFields } from '@/utils'
+import { getRequestHeaders, getFormattedBody, maskAuthHeaders, maskAuthQuery, hasMasking, MASK_PLACEHOLDER, maskBodyExample, safeJSONParse, resolveSchemaObjectFields, flattenMultipartFields } from '@/utils'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
@@ -180,7 +180,10 @@ const bodySchema = computed((): Record<string, any> | undefined => {
   const entry = contents.find(c => c.mediaType === props.contentType) ?? contents[0]
   return entry?.schema ? resolveSchemaObjectFields(entry.schema) as Record<string, any> : undefined
 })
-const hasMaskedData = computed((): boolean => hasMasking(bodySchema.value, props.maskRules))
+const hasMaskedData = computed((): boolean => {
+  if (props.requestBody.isMultipart) return false
+  return hasMasking(bodySchema.value, props.maskRules)
+})
 const activeAuthHeaders = computed(() =>
   !showSensitiveData.value ? maskAuthHeaders(props.authHeaders, props.maskRules) : props.authHeaders,
 )
@@ -343,7 +346,9 @@ watch(() => ({
         ...getRequestHeaders(props.data),
         ...newValue.customHeaders,
         ...newValue.authHeaders,
-      ]
+        // the browser/HTTPSnippet must set Content-Type itself (with the multipart boundary) - an
+        // explicit value here (from getRequestHeaders' default) would conflict with it
+      ].filter(h => !(newValue.requestBody.isMultipart && h.name?.toLowerCase() === 'content-type'))
       // returns json or formencoded body based on content-type header, we need to provide headers as an plain object key = header name, value: header value
       const { body: textBody } = getFormattedBody(headers.reduce<Record<string, string>>((acc, current) => {
         if (current.name && current.value !== undefined) {
@@ -370,15 +375,30 @@ watch(() => ({
 
       } as unknown as HarRequest)
 
-      if (!newValue.requestBody.isBinary && textBody) {
+      if (newValue.requestBody.isMultipart) {
+        const multipartParams: Array<{ name: string, value?: string, fileName?: string, contentType?: string }> = []
+        // json parts always have a value here (flattenMultipartFields defaults it to ''), so this
+        // single check covers both json and plain text parts; only file parts need their own branch
+        flattenMultipartFields(newValue.requestBody.formFields).forEach(part => {
+          if (part.kind === 'file' && part.file) {
+            multipartParams.push({ name: part.name, fileName: part.file.name, contentType: part.contentType })
+          } else if (part.value !== undefined) {
+            multipartParams.push({ name: part.name, value: part.value, contentType: part.contentType })
+          }
+        })
+        // HTTPSnippet renders each param as its own part (e.g. curl -F) instead of a single body string
+        reqData.postData = {
+          mimeType: 'multipart/form-data',
+          params: multipartParams,
+        }
+      } else if (!newValue.requestBody.isBinary && textBody) {
         reqData.postData = {
           // HTTPsnippet is not doing nice trying to handle with body params based on mimeType, so we going to send pre-formatted body, and
           // make HTTPsnippet to use as is by forcing mimeType as `text/plain`
           mimeType: 'text/plain',
           text: textBody,
         }
-      }
-      if (newValue.requestBody.isBinary && newValue.requestBody.content && newValue.requestBody.content?.length > 0) {
+      } else if (newValue.requestBody.isBinary && newValue.requestBody.content && newValue.requestBody.content?.length > 0) {
         reqData.postData = {
           mimeType: 'application/pdf',
           text: `@${(newValue.requestBody.content[0] as File).name}`,

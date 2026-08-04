@@ -60,7 +60,7 @@ Both entry points share the same component tree underneath - when changing a com
 2. Dereference `$ref`s via `@apidevtools/json-schema-ref-parser`, with `dereference: { circular: true }`. **This preserves circular references as live circular JS object references rather than erroring or truncating them** - any code that walks a `SchemaObject` recursively must be written assuming the object graph can contain cycles (see `.claude/references/circular-schema-recursion.md`).
 3. Transform into a `ServiceNode` tree via `transformOasToServiceNode` and compute the table of contents via `computeAPITree` - both adapted from Stoplight's `elements`/`http-spec` packages, vendored under `src/stoplight/` (see the README's Thank You section; a PR upstreaming parts of this is pending).
 
-`parsedDocument` and `tableOfContents` are the resulting reactive refs consumed by the rendering components.
+`parsedDocument` and `tableOfContents` are the resulting reactive refs consumed by the rendering components. **They are also re-exported as process-global singletons via `src/utils/schema-parser.ts` (`useSchemaParser()` is called once at module load), so under concurrent SSR they are last-writer-wins and unsafe to read directly** - the parse functions instead **return** a request-local `ParseResult` (`{ parsedDocument, tableOfContents }`) that SSR consumers must read. **Read `.claude/references/ssr-request-local-parsing.md` before changing the parse pipeline (`useSchemaParser.ts`, `schema-parser.ts`) or consuming its output server-side.**
 
 ### Rendering components (`src/components/spec-document/`)
 
