@@ -32,7 +32,7 @@
       example in the extension developer guide. This is why our own manifest fully
       declares `args`/`flags` mirroring `kong-spec-renderer preview`'s real flags -
       `kongctl-extension.yaml` is entirely generated from `cli/program.ts` +
-      `kongctl-extension.config.mjs` (`pnpm run generate:kongctl-manifest`), verified
-      by a plain Vitest equality check (`extensions/kongctl/kongctl-extension.spec.ts`)
-      that runs in CI, so they can't drift silently the way they did once already
-      (see manifest maintenance notes in `README.md`).
+      `kongctl-extension.config.mjs`, automatically as part of `pnpm run build`, and
+      verified by `extensions/kongctl/kongctl-extension.spec.ts`'s raw-text snapshot
+      test in CI, so they can't drift silently the way they did once already (see
+      manifest maintenance notes in `README.md`).

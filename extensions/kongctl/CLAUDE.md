@@ -20,6 +20,9 @@ A [kongctl](https://github.com/Kong/kongctl) extension contributing `kongctl pre
   `name`/`runtime`) and `cli/program.ts`'s live commander definition (`args`/`flags`, via
   `../../scripts/build-kongctl-manifest.mjs`). To change anything, edit one of those two inputs
   and rebuild - never patch the `.yaml` output directly.
+  The committed manifest has **no `version` field** - `../../scripts/build-kongctl-extension.sh`
+  stamps `version: <release-version>` into a *copy* at release-build time (via `awk`, right
+  after `name:`), so only the published release archive's manifest has one.
 - `kongctl-extension.config.mjs` - the actual source of truth for hand-authored manifest fields.
 - `bin/kongctl-ext` - the shipped POSIX shell entrypoint (macOS/Linux only - see `TODO.md`).
 - `kongctl-extension.spec.ts` - two things: a parsed-data equality check (fast local feedback -
@@ -35,6 +38,7 @@ A [kongctl](https://github.com/Kong/kongctl) extension contributing `kongctl pre
 
 ```sh
 pnpm run build:cli   # regenerates kongctl-extension.yaml as its last step (generate:kongctl-manifest is an alias)
+pnpm run typecheck:scripts   # tsc against tsconfig.scripts.json - covers this dir + scripts/*.mjs
 pnpm exec vitest run extensions/kongctl   # this directory's tests only
 
 # Local dev against a real kongctl checkout:
