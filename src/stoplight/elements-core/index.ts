@@ -4,6 +4,7 @@ export type {
   TableOfContentsItem,
   TableOfContentsNode,
   TableOfContentsNodeGroup,
+  TableOfContentsLabel,
 } from './components/Docs/types'
 export type { TableOfContentsExternalLink } from './components/Docs/types'
 export { isHttpOperation, isHttpService, isHttpWebhookOperation } from './utils/guards'

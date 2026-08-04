@@ -1,6 +1,7 @@
 import type { HttpSecurityScheme, IHttpOperationResponse } from '@stoplight/types'
 import type { XSensitiveData, SecuritySchemeMaskRule } from '@/types'
 import { isValidSchemaObject, resolveSchemaObjectFields } from './schema-model'
+import { normalizeContentType } from './response'
 import { OAS_EXT_SENSITIVE_DATA } from '@/oas-extensions'
 
 // ─── Mask placeholder ─────────────────────────────────────────────────────────
@@ -334,8 +335,7 @@ export const findResponseSchema = (
   if (!responses?.length) return undefined
 
   const statusStr = String(statusCode)
-  // Strip charset and other params so 'application/json; charset=utf-8' matches 'application/json'
-  const normalizedCT = contentType.replace(/;.*$/, '').trim().toLowerCase()
+  const normalizedCT = normalizeContentType(contentType)
 
   // Build a priority-ordered list of candidates: exact → wildcard (e.g. 2XX) → default
   // Undefined entries (no match) are filtered out before iterating

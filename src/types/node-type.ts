@@ -1,6 +1,6 @@
 import type { IHttpService } from '@stoplight/types'
 import { NodeType as OasNodeType } from '@stoplight/types'
-import type { Node, OperationNode, WebhookNode, SchemaNode, SpecVersion } from '@/stoplight/elements'
+import type { Node, OperationNode, WebhookNode, SchemaNode, SpecVersion, OasTagGroup } from '@/stoplight/elements'
 import type { JSONSchema7 } from 'json-schema'
 import type { SchemaObject } from './spec-renderer'
 import type { OperationInterface, MessageInterface, MessageExampleInterface } from '@asyncapi/parser'
@@ -35,4 +35,4 @@ export type AsyncOperationNode = Node<typeof NodeType.AsyncOperation, AsyncOpera
 
 
 export type ServiceChildNode = OperationNode | WebhookNode | SchemaNode | AsyncMessageNode | AsyncOperationNode
-export type ServiceNode = Node<typeof NodeType.HttpService, IHttpService> & { children: ServiceChildNode[] } & { specVersion: SpecVersion }
+export type ServiceNode = Node<typeof NodeType.HttpService, IHttpService> & { children: ServiceChildNode[] } & { specVersion: SpecVersion, tagGroups?: OasTagGroup[] }

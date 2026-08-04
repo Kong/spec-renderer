@@ -81,6 +81,56 @@ describe('<TryIt />', () => {
     })
   })
 
+  it('should send a FormData body with no explicit content-type header for multipart/form-data', async () => {
+    const wrapper = mount(TryIt, {
+      props: {
+        data: {
+          id: '123',
+          method: 'post',
+          path: '/upload',
+          responses: [],
+          request: {
+            body: {
+              id: 'bodyId',
+              contents: [
+                {
+                  id: 'mediatypeId',
+                  mediaType: 'multipart/form-data',
+                },
+              ],
+            },
+          },
+          servers: [{
+            id: 'sample-server-id',
+            url: 'https://global.api.konghq.com/v2',
+          }],
+        },
+        requestBody: {
+          isMultipart: true,
+          formFields: [
+            { name: 'title', kind: 'text', required: true, value: 'my title' },
+            { name: 'avatar', kind: 'file', required: false, files: [new File(['abc'], 'avatar.png', { type: 'image/png' })] },
+          ],
+        },
+        serverUrl: 'https://global.api.konghq.com/v2',
+      },
+    })
+
+    global.fetch = vi.fn()
+    await wrapper.findTestId('tryit-call-button-123').trigger('click')
+
+    expect(fetch).toHaveBeenCalledTimes(1)
+    const [url, options] = (fetch as any).mock.calls[0]
+    expect(url).toBe('https://global.api.konghq.com/v2/upload')
+    expect(options.method).toBe('POST')
+    // the browser must set Content-Type itself (with the multipart boundary)
+    expect(options.headers['Content-Type']).toBeUndefined()
+    expect(options.headers['content-type']).toBeUndefined()
+    expect(options.body).toBeInstanceOf(FormData)
+    expect(options.body.get('title')).toBe('my title')
+    expect((options.body.get('avatar') as File).name).toBe('avatar.png')
+  })
+
   it('should call fetch with correct url and headers for GET', async () => {
     const wrapper = mount(TryIt, {
       props: {
@@ -256,5 +306,87 @@ describe('<TryIt />', () => {
     const component = wrapper.findTestId('tryit-wrapper-123')
 
     expect(component.exists()).toBe(true)
+  })
+
+  it('hides the body section for an operation with no params, auth, body, or response', async () => {
+    const wrapper = mount(TryIt, {
+      props: {
+        data: {
+          id: '123',
+          method: 'get',
+          path: '/sample-path',
+          responses: [],
+          servers: [{
+            id: 'sample-server-id',
+            url: 'https://global.api.konghq.com/v2',
+          }],
+        },
+        serverUrl: 'https://global.api.konghq.com/v2',
+      },
+    })
+
+    await flushPromises()
+
+    // wrapper renders, but the body is collapsed since there is nothing to show
+    expect(wrapper.findTestId('tryit-wrapper-123').exists()).toBe(true)
+    expect(wrapper.findTestId('tryit-body-123').exists()).toBe(false)
+  })
+
+  it('renders the body section when a request body sample is present', async () => {
+    const wrapper = mount(TryIt, {
+      props: {
+        data: {
+          id: '123',
+          method: 'post',
+          path: '/sample-path',
+          responses: [],
+          request: {
+            body: {
+              id: 'bodyId',
+              contents: [{ id: 'mediatypeId', mediaType: 'application/json' }],
+            },
+          },
+          servers: [{
+            id: 'sample-server-id',
+            url: 'https://global.api.konghq.com/v2',
+          }],
+        },
+        requestBody: { isBinary: false, content: '{"a": "1"}' },
+        serverUrl: 'https://global.api.konghq.com/v2',
+      },
+    })
+
+    await flushPromises()
+
+    expect(wrapper.findTestId('tryit-body-123').exists()).toBe(true)
+  })
+
+  it('renders the body section when a multipart/form-data request body is present', async () => {
+    const wrapper = mount(TryIt, {
+      props: {
+        data: {
+          id: '123',
+          method: 'post',
+          path: '/sample-path',
+          responses: [],
+          request: {
+            body: {
+              id: 'bodyId',
+              contents: [{ id: 'mediatypeId', mediaType: 'multipart/form-data' }],
+            },
+          },
+          servers: [{
+            id: 'sample-server-id',
+            url: 'https://global.api.konghq.com/v2',
+          }],
+        },
+        requestBody: { isMultipart: true, formFields: [{ name: 'title', kind: 'text' }] },
+        serverUrl: 'https://global.api.konghq.com/v2',
+      },
+    })
+
+    await flushPromises()
+
+    expect(wrapper.findTestId('tryit-body-123').exists()).toBe(true)
   })
 })

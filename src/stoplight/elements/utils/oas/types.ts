@@ -38,6 +38,11 @@ export type OperationNode = Node<NodeType.HttpOperation, IHttpOperation>
 export type WebhookNode = Node<NodeType.HttpWebhook, IHttpWebhookOperation>
 export type SchemaNode = Node<NodeType.Model, JSONSchema7>
 export type ServiceChildNode = OperationNode | WebhookNode | SchemaNode
+export interface OasTagGroup {
+  name: string
+  tags: string[]
+}
 export type ServiceNode = Node<NodeType.HttpService, IHttpService> & { children: ServiceChildNode[] } & {
   specVersion: SpecVersion
+  tagGroups?: OasTagGroup[]
 }

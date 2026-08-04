@@ -151,3 +151,39 @@ flowchart TD
 
 5. **TryIt response headers** — Response headers are checked against the auth mask rules. Any header name matching a rule (e.g. `Authorization`) is replaced with its placeholder before display.
 
+---
+
+## x-tagGroups
+
+`x-tagGroups` is an OpenAPI extension for organizing endpoint navigation by named tag groups.
+
+The renderer follows strict grouping behavior:
+
+- `x-tagGroups` must be defined as a top-level OpenAPI extension.
+- Every tag that should appear in endpoint navigation must be listed in an `x-tagGroups[].tags` array.
+- When `x-tagGroups` is active, operations with unlisted tags and untagged operations are hidden from the endpoint navigation.
+- Tags listed in `x-tagGroups` that do not exist in the OpenAPI `tags` list or on any operation are skipped and a warning is emitted.
+- `x-tagGroups` only scopes endpoint navigation. Other navigation sections, such as schemas or articles, are not grouped by this extension.
+
+Example:
+
+```yaml
+openapi: 3.0.3
+tags:
+  - name: Orders
+  - name: Payments
+x-tagGroups:
+  - name: Commerce APIs
+    tags:
+      - Orders
+      - Payments
+paths:
+  /orders:
+    get:
+      tags:
+        - Orders
+      summary: List orders
+      responses:
+        '200':
+          description: OK
+```

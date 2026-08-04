@@ -1,3 +1,52 @@
+## [1.111.3](https://github.com/Kong/spec-renderer/compare/v1.111.2...v1.111.3) (2026-08-04)
+
+
+### Bug Fixes
+
+* **overview:** sanitize urls rendered in overview section [KHCP-21411] ([#937](https://github.com/Kong/spec-renderer/issues/937)) ([c5b6164](https://github.com/Kong/spec-renderer/commit/c5b61649b43028f6837e92919be0b78900df074b))
+
+## [1.111.2](https://github.com/Kong/spec-renderer/compare/v1.111.1...v1.111.2) (2026-08-03)
+
+
+### Bug Fixes
+
+* prevent cross-request state bleed under concurrent SSR ([#938](https://github.com/Kong/spec-renderer/issues/938)) ([ba1ba2c](https://github.com/Kong/spec-renderer/commit/ba1ba2cd896fbd1ce2b6c03453fe454d9262dbeb))
+
+## [1.111.1](https://github.com/Kong/spec-renderer/compare/v1.111.0...v1.111.1) (2026-08-03)
+
+
+### Bug Fixes
+
+* update try it body logic for multipart ([#941](https://github.com/Kong/spec-renderer/issues/941)) ([684a02d](https://github.com/Kong/spec-renderer/commit/684a02d2695629d83299cba8cfa90e858b9e251b))
+
+# [1.111.0](https://github.com/Kong/spec-renderer/compare/v1.110.0...v1.111.0) (2026-08-03)
+
+
+### Features
+
+* add multipart/form-data support[TDX-6302] ([#932](https://github.com/Kong/spec-renderer/issues/932)) ([01ad2fd](https://github.com/Kong/spec-renderer/commit/01ad2fde4572c8d4b2eac6333b1defdb9c93187a))
+
+# [1.110.0](https://github.com/Kong/spec-renderer/compare/v1.109.0...v1.110.0) (2026-07-30)
+
+
+### Features
+
+* handle binary responses[TDX-8495] ([#910](https://github.com/Kong/spec-renderer/issues/910)) ([046bccd](https://github.com/Kong/spec-renderer/commit/046bccdd9c8a7df7fbadefb76f11ab7b5fdbdc44))
+
+# [1.109.0](https://github.com/Kong/spec-renderer/compare/v1.108.7...v1.109.0) (2026-07-28)
+
+
+### Features
+
+* add support for x-tagGroups extension [TDX-8530] ([#924](https://github.com/Kong/spec-renderer/issues/924)) ([c1be3e9](https://github.com/Kong/spec-renderer/commit/c1be3e91c2de2e5a27a78ade818a46802ddc4fdc))
+
+## [1.108.7](https://github.com/Kong/spec-renderer/compare/v1.108.6...v1.108.7) (2026-07-23)
+
+
+### Bug Fixes
+
+* add max-height and scrolling to SelectDropdown for better UX [TDX-8533] ([#923](https://github.com/Kong/spec-renderer/issues/923)) ([34af086](https://github.com/Kong/spec-renderer/commit/34af0868b91b0ddc7f1e52c62740c1804f92f406))
+
 ## [1.108.6](https://github.com/Kong/spec-renderer/compare/v1.108.5...v1.108.6) (2026-07-22)
 
 

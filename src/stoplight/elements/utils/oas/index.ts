@@ -18,7 +18,7 @@ import { transformOas3Operation, transformOas3Service } from '@stoplight/http-sp
 import { slugify } from '../../../elements-core/utils/string'
 import { oas2SourceMap } from './oas2'
 import { oas3SourceMap } from './oas3'
-import type { ISourceNodeMap, ServiceChildNode, ServiceNode } from './types'
+import type { ISourceNodeMap, OasTagGroup, ServiceChildNode, ServiceNode } from './types'
 import { NodeTypes, SpecVersion } from './types'
 
 type OpenAPIObject = _OpenAPIObject & {
@@ -88,9 +88,31 @@ function computeServiceNode(
     tags: serviceDocument.tags?.map(tag => tag.name) || [],
     children: computeChildNodes(document, document, map, transformOperation),
     specVersion,
+    tagGroups: getOasTagGroups(document),
   }
 
   return serviceNode
+}
+
+function getOasTagGroups(document: Spec | OpenAPIObject): OasTagGroup[] | undefined {
+  const tagGroups = document['x-tagGroups']
+
+  if (tagGroups === undefined) return undefined
+
+  if (!Array.isArray(tagGroups)) {
+    console.warn('@kong/spec-renderer: ignoring invalid x-tagGroups extension')
+    return undefined
+  }
+
+  // Keep only well-formed groups so TOC generation can treat this as trusted shape.
+  return tagGroups.flatMap((tagGroup): OasTagGroup[] => {
+    if (!isObject(tagGroup) || typeof tagGroup.name !== 'string' || !Array.isArray(tagGroup.tags) || tagGroup.tags.some(tag => typeof tag !== 'string')) {
+      console.warn('@kong/spec-renderer: ignoring invalid x-tagGroups entry', tagGroup)
+      return []
+    }
+
+    return [{ name: tagGroup.name, tags: tagGroup.tags }]
+  })
 }
 
 function computeChildNodes(

@@ -859,3 +859,108 @@ paths: {}`
     })
   })
 })
+describe('concurrency (cross-request state bleed)', () => {
+  /**
+   * Builds an OpenAPI spec with a unique, identifiable marker in `info.title` and a chain of
+   * `schemaCount` cross-referencing schemas, so two specs of different sizes take different
+   * amounts of dereferencing work and their concurrent parses resolve out of order.
+   *
+   * @param marker unique identifier surfaced as `info.title` (becomes the parsed `ServiceNode.name`)
+   * @param schemaCount number of chained schemas, used to vary dereference cost between specs
+   */
+  const buildSpec = (marker: string, schemaCount: number): string => {
+    const schemas: Record<string, unknown> = {}
+    for (let i = 0; i < schemaCount; i++) {
+      schemas[`Schema${i}`] = {
+        type: 'object',
+        properties: {
+          next: i < schemaCount - 1 ? { $ref: `#/components/schemas/Schema${i + 1}` } : { type: 'string' },
+          marker: { type: 'string', example: marker },
+        },
+      }
+    }
+    return JSON.stringify({
+      openapi: '3.1.0',
+      info: { title: marker, version: '1.0.0' },
+      paths: {
+        [`/${marker}`]: {
+          get: { operationId: `op-${marker}`, summary: marker, responses: { '200': { description: 'ok' } } },
+        },
+      },
+      components: { schemas },
+    })
+  }
+
+  const titleOf = (doc: unknown): string | undefined => (doc as ServiceNode)?.name
+
+  it('two concurrent parses of different specs each RETURN their own document [KHCP cross-request bleed]', async () => {
+    const { parseOpenApiSpecDocument } = composables.useSchemaParser()
+
+    // ALPHA is larger, so its dereference is slower and resolves after BETA — forcing the
+    // interleaving that previously caused the shared refs to bleed one spec into the other.
+    const specA = buildSpec('ALPHA', 60)
+    const specB = buildSpec('BETA', 2)
+
+    const [resultA, resultB] = await Promise.all([
+      parseOpenApiSpecDocument(specA, { enforceResetBeforeParsing: true }),
+      parseOpenApiSpecDocument(specB, { enforceResetBeforeParsing: true }),
+    ])
+
+    // Before the fix, resultA would come back as BETA (the other request's spec).
+    expect(titleOf(resultA.parsedDocument)).toBe('ALPHA')
+    expect(titleOf(resultB.parsedDocument)).toBe('BETA')
+    expect((resultA.tableOfContents as Array<{ title: string }>)?.some((t) => t.title === 'Endpoints')).toBe(true)
+  })
+
+  it('parseSpecDocument returns its own document under concurrency and detects the correct spec type', async () => {
+    const { parseSpecDocument } = composables.useSchemaParser()
+
+    const specA = buildSpec('DELTA', 40)
+    const specB = buildSpec('EPSILON', 2)
+
+    const [resultA, resultB] = await Promise.all([
+      parseSpecDocument(specA, { enforceResetBeforeParsing: true }),
+      parseSpecDocument(specB, { enforceResetBeforeParsing: true }),
+    ])
+
+    expect(titleOf(resultA.parsedDocument)).toBe('DELTA')
+    expect(titleOf(resultB.parsedDocument)).toBe('EPSILON')
+  })
+
+  it('is fail-safe: reusing an instance for a different spec WITHOUT enforceResetBeforeParsing does not return the prior spec', async () => {
+    const { parseOpenApiSpecDocument } = composables.useSchemaParser()
+
+    // First parse populates the instance's shared refs.
+    const first = await parseOpenApiSpecDocument(buildSpec('TENANT_A', 10), { enforceResetBeforeParsing: true })
+    expect(titleOf(first.parsedDocument)).toBe('TENANT_A')
+
+    // Second parse of a DIFFERENT spec, flag omitted. Before the fail-safe change this returned
+    // TENANT_A's document (a cross-tenant leak); it must now return TENANT_B's own document.
+    const second = await parseOpenApiSpecDocument(buildSpec('TENANT_B', 3))
+    expect(titleOf(second.parsedDocument)).toBe('TENANT_B')
+  })
+
+  it('parseSpecDocument bundles the source only once per call (delegate reuses it)', async () => {
+    const spec = buildSpec('SOLO', 4)
+    const parseSpy = vi.spyOn(JSON, 'parse')
+    const { parseSpecDocument } = composables.useSchemaParser()
+
+    await parseSpecDocument(spec)
+
+    // Count only JSON.parse calls made on the spec string itself (the bundle step), ignoring any
+    // unrelated internal JSON.parse the ref-parser may do. It must be exactly one — not two.
+    const specBundleParses = parseSpy.mock.calls.filter((args) => args[0] === spec).length
+    parseSpy.mockRestore()
+
+    expect(specBundleParses).toBe(1)
+  })
+
+  it('still exposes the shared refs for backward compatibility', () => {
+    const parser = composables.useSchemaParser()
+    expect(parser).toHaveProperty('parsedDocument')
+    expect(parser).toHaveProperty('tableOfContents')
+    expect(parser.parseOpenApiSpecDocument).toBeTypeOf('function')
+    expect(parser.parseSpecDocument).toBeTypeOf('function')
+    expect(parser.parseAsyncApiSpecDocument).toBeTypeOf('function')
+  })
+})

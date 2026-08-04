@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { extractSample, getRequestHeaders, getFormattedBody, getSampleQuery, getSampleBody } from './request-data'
+import { extractSample, getRequestHeaders, getFormattedBody, getSampleQuery, getSampleBody, getSampleFormFields } from './request-data'
 import type { IHttpOperation, IMediaTypeContent } from '@stoplight/types'
 import type { JSONSchema7 } from 'json-schema'
 import type { XSensitiveData } from '@/types'
@@ -33,6 +33,132 @@ describe('getFormattedBody', () => {
   it('should return form-url-encoded', () => {
     expect(getFormattedBody({ 'content-type': 'application/x-www-form-urlencoded' }, { content: '{"a": "b", "c": "d"}' })).toEqual({ body: 'a=b&c=d', contentType: 'application/x-www-form-urlencoded' } )
 
+  })
+
+  it('should return null body for multipart (built as FormData/postData by the caller instead)', () => {
+    expect(getFormattedBody({ 'content-type': 'multipart/form-data' }, { isMultipart: true, formFields: [] })).toEqual({ body: null, contentType: 'multipart/form-data' })
+  })
+})
+
+describe('getSampleFormFields', () => {
+  it('maps scalar properties, including boolean and enum, to text fields', () => {
+    const content: IMediaTypeContent = {
+      id: 'c1',
+      mediaType: 'multipart/form-data',
+      schema: {
+        type: 'object',
+        required: ['id'],
+        properties: {
+          id: { type: 'string', example: 'u-42' },
+          active: { type: 'boolean' },
+          role: { type: 'string', enum: ['admin', 'user'] },
+        },
+      },
+    }
+    expect(getSampleFormFields(content, { excludeReadonly: true, excludeNotRequired: false })).toEqual([
+      { name: 'id', kind: 'text', required: true, value: 'u-42' },
+      { name: 'active', kind: 'text', required: false, value: 'false' },
+      { name: 'role', kind: 'text', required: false, value: 'admin' },
+    ])
+  })
+
+  it('maps a binary string property to a single file field', () => {
+    const content: IMediaTypeContent = {
+      id: 'c1',
+      mediaType: 'multipart/form-data',
+      schema: {
+        type: 'object',
+        required: ['avatar'],
+        properties: {
+          avatar: { type: 'string', format: 'binary' },
+        },
+      },
+    }
+    expect(getSampleFormFields(content, { excludeReadonly: true, excludeNotRequired: false })).toEqual([
+      { name: 'avatar', kind: 'file', required: true },
+    ])
+  })
+
+  it('maps an array of binary items to a file field with multiple: true', () => {
+    const content: IMediaTypeContent = {
+      id: 'c1',
+      mediaType: 'multipart/form-data',
+      schema: {
+        type: 'object',
+        properties: {
+          gallery: { type: 'array', items: { type: 'string', format: 'binary' } },
+        },
+      },
+    }
+    expect(getSampleFormFields(content, { excludeReadonly: true, excludeNotRequired: false })).toEqual([
+      { name: 'gallery', kind: 'file', required: false, multiple: true },
+    ])
+  })
+
+  it('maps an object property to a json field with a stringified sample and application/json contentType', () => {
+    const content: IMediaTypeContent = {
+      id: 'c1',
+      mediaType: 'multipart/form-data',
+      schema: {
+        type: 'object',
+        properties: {
+          metadata: { type: 'object', properties: { role: { type: 'string' } } },
+        },
+      },
+    }
+    expect(getSampleFormFields(content, { excludeReadonly: true, excludeNotRequired: false })).toEqual([
+      { name: 'metadata', kind: 'json', required: false, value: JSON.stringify({ role: 'role' }, null, 2), contentType: 'application/json' },
+    ])
+  })
+
+  it('maps an array-of-scalar property to a json field wrapped in an array', () => {
+    const content: IMediaTypeContent = {
+      id: 'c1',
+      mediaType: 'multipart/form-data',
+      schema: {
+        type: 'object',
+        properties: {
+          tags: { type: 'array', items: { type: 'string', example: 'tag1' } },
+        },
+      },
+    }
+    const result = getSampleFormFields(content, { excludeReadonly: true, excludeNotRequired: false })
+    expect(result[0]?.kind).toBe('json')
+    expect(JSON.parse(result[0]?.value ?? '')).toEqual(['tag1'])
+  })
+
+  it('excludes non-required fields when excludeNotRequired is true', () => {
+    const content: IMediaTypeContent = {
+      id: 'c1',
+      mediaType: 'multipart/form-data',
+      schema: {
+        type: 'object',
+        required: ['id'],
+        properties: {
+          id: { type: 'string', example: 'u-42' },
+          optional: { type: 'string' },
+        },
+      },
+    }
+    expect(getSampleFormFields(content, { excludeReadonly: true, excludeNotRequired: true })).toEqual([
+      { name: 'id', kind: 'text', required: true, value: 'u-42' },
+    ])
+  })
+
+  it('sets contentType from encodings[].mediaType when present', () => {
+    const content = {
+      id: 'c1',
+      mediaType: 'multipart/form-data',
+      schema: {
+        type: 'object',
+        properties: {
+          profile: { type: 'string' },
+        },
+      },
+      encodings: [{ property: 'profile', mediaType: 'text/plain' }],
+    } as unknown as IMediaTypeContent
+    const result = getSampleFormFields(content, { excludeReadonly: true, excludeNotRequired: false })
+    expect(result[0]?.contentType).toBe('text/plain')
   })
 })
 
