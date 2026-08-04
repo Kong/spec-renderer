@@ -10,6 +10,8 @@ export default mergeConfig(viteConfig, defineConfig({
       './dist/**',
       './sandbox/**',
       './cli/**',
+      './scripts/**',
+      './extensions/**',
       'node_modules',
     ],
     projects: [
@@ -21,7 +23,11 @@ export default mergeConfig(viteConfig, defineConfig({
           name: 'cli',
           globals: true,
           environment: 'node',
-          include: ['cli/**/*.spec.ts'],
+          include: [
+            'cli/**/*.spec.ts',
+            'scripts/**/*.spec.ts',
+            'extensions/**/*.spec.ts',
+          ],
         },
       },
     ],
