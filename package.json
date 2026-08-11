@@ -96,7 +96,7 @@
     "@evilmartians/lefthook": "^2.1.10",
     "@kong/design-tokens": "3.1.6",
     "@kong/eslint-config-kong-ui": "1.7.1",
-    "@kong/stylelint-plugin-design-tokens": "1.0.1",
+    "@kong/stylelint-plugin-design-tokens": "2.0.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
