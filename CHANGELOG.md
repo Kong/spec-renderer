@@ -1,3 +1,10 @@
+## [1.113.3](https://github.com/Kong/spec-renderer/compare/v1.113.2...v1.113.3) (2026-08-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/design-tokens to v3 ([#933](https://github.com/Kong/spec-renderer/issues/933)) ([70ed942](https://github.com/Kong/spec-renderer/commit/70ed94283a70485a87f8e97c6a3813a427cf95b6))
+
 ## [1.113.2](https://github.com/Kong/spec-renderer/compare/v1.113.1...v1.113.2) (2026-08-11)
 
 
