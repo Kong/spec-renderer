@@ -240,7 +240,7 @@ importers:
         specifier: ^25.0.8
         version: 25.0.8(typescript@5.9.3)
       stylelint:
-        specifier: ^17.14.0
+        specifier: ^17.14.1
         version: 17.14.1(typescript@5.9.3)
       stylelint-config-html:
         specifier: ^1.1.0
