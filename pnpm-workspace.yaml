@@ -8,3 +8,45 @@ minimumReleaseAgeExclude:
 trustPolicy: no-downgrade
 # Ignore policy if published at least 12 days (17280 minutes)
 trustPolicyIgnoreAfter: 17280
+overrides:
+  openapi3-ts: 4.5.0
+  jsonpath-plus@<10.3.0: '>=10.4.0'
+  elliptic@<=6.6.0: '>=6.6.1'
+  '@babel/helpers@<7.26.10': '>=7.29.2'
+  cross-spawn@>=7.0.0 <7.0.5: '>=7.0.6'
+  brace-expansion@>=1.0.0 <=1.1.11: '>=2.1.0'
+  brace-expansion@>=2.0.0 <=2.0.1: '>=2.0.2'
+  pbkdf2@<=3.1.2: '>=3.1.5'
+  sha.js@<=2.4.11: '>=2.4.12'
+  cipher-base@<=1.0.4: '>=1.0.7'
+  tmp@<=0.2.3: '>=0.2.5'
+  js-yaml@>=4.0.0 <4.1.1: '>=4.1.1'
+  glob@>=10.2.0 <10.5.0: '>=13.0.6'
+  diff@>=4.0.0 <4.0.4: '>=4.0.4'
+  '@isaacs/brace-expansion@<=5.0.0': '>=5.0.1'
+  mdast-util-to-hast@>=13.0.0 <13.2.1: '>=13.2.1'
+  qs@>=6.7.0 <=6.14.1: '>=6.15.1'
+  markdown-it@>=13.0.0 <14.1.1: '>=14.1.1'
+  bn.js@>=5.0.0 <5.2.3: '>=5.2.3'
+  bn.js@<4.12.3: '>=5.2.3'
+  rollup@>=4.0.0 <4.59.0: '>=4.60.4'
+  minimatch@<10.2.3: '>=10.2.5'
+  ajv@<6.14.0: ^6.15.0
+  immutable@>=5.0.0 <5.1.5: '>=5.1.5'
+  flatted@<=3.4.1: '>=3.4.2'
+  undici@<6.24.0: '>=6.25.0'
+  undici@>=7.0.0 <7.24.0: '>=7.25.0'
+  handlebars@>=4.0.0 <4.7.9: '>=4.7.9'
+  picomatch@>=4.0.0 <4.0.4: '>=4.0.4'
+  picomatch@<2.3.2: '>=2.3.2'
+  lodash-es@<=4.17.23: '>=4.18.0'
+  lodash@<=4.17.23: '>=4.18.0'
+  yaml@>=2.0.0 <2.8.3: '>=2.8.4'
+  vite@>=7.0.0 <=7.3.1: '>=7.3.3'
+  form-data@>=4.0.0 <4.0.6: ^4.0.6
+strictPeerDependencies: false
+allowBuilds:
+  '@evilmartians/lefthook': true
+  '@parcel/watcher': true
+  esbuild: true
+  vue-demi: true
