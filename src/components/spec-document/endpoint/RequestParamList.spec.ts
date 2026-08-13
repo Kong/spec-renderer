@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import RequestParamList from './RequestParamList.vue'
 import { HttpParamStyles } from '@stoplight/types'
+import type { SchemaObject } from '@/types'
 
 describe('<RequestParamList />', () => {
   const wrapper = mount(RequestParamList, {
@@ -54,4 +55,35 @@ describe('<RequestParamList />', () => {
       expect(wrapper.findTestId(component).exists()).toBe(true)
     })
   }
+
+  it('renders the param description even when the schema carries a stale x-stoplight explicit-fields allow-list', () => {
+    // some stoplight http-spec transforms (e.g. numeric `format`s like int32) add `x-stoplight.explicitProperties`
+    // onto the schema before the param's own `description` gets merged in. that stale allow-list must not filter the description back out.
+    const limitSchema: SchemaObject = {
+      type: 'integer',
+      format: 'int32',
+      minimum: 1,
+      maximum: 100,
+      default: 20,
+      'x-stoplight': {
+        explicitProperties: ['type', 'format', 'minimum', 'maximum', 'default'],
+      },
+    }
+    const paramWithStaleAllowList = mount(RequestParamList, {
+      props: {
+        paramList: [
+          {
+            name: 'limit',
+            id: 'limit',
+            style: HttpParamStyles.Form,
+            description: 'The maximum number of results per page.',
+            schema: limitSchema,
+          },
+        ],
+        title: 'sample-title',
+      },
+    })
+
+    expect(paramWithStaleAllowList.findTestId('property-field-description').text()).toBe('The maximum number of results per page.')
+  })
 })
