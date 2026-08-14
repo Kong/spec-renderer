@@ -1,9 +1,16 @@
 <template>
   <div class="spec-renderer-wrapper">
+    <div class="spec-renderer-slideout-target">
+      <div
+        ref="specRendererSlideoutTarget"
+        class="spec-renderer-slideout-target-inner"
+      />
+    </div>
     <div class="spec-renderer-content">
       <SlideOut
-        v-if="tableOfContents"
+        v-if="tableOfContents && specRendererSlideoutTarget"
         class="slideout-toc"
+        :teleport-target="specRendererSlideoutTarget"
         :title="(parsedDocument as ServiceNode)?.name || 'Table of Contents'"
         :visible="slideoutTocVisible"
         @close="slideoutTocVisible = false"
@@ -121,6 +128,7 @@ const { parseSpecDocument, parsedDocument, tableOfContents } = composables.useSc
 
 const currentPathTOC = ref<string>(currentPath)
 const currentPathDOC = ref<string>(currentPath)
+const specRendererSlideoutTarget = ref<HTMLElement | null>(null)
 
 const itemSelected = (id: any) => {
   /*
@@ -210,7 +218,24 @@ watch(() => ({
 .spec-renderer-wrapper {
   box-sizing: border-box;
   container: spec-renderer / inline-size;
+  position: relative;
   width: 100%;
+
+  .spec-renderer-slideout-target {
+    height: 0;
+    left: 0;
+    pointer-events: none;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+
+    .spec-renderer-slideout-target-inner {
+      height: 100vh;
+      position: relative;
+      width: 100%;
+    }
+  }
 
   .spec-renderer-content {
     display: flex;
@@ -316,7 +341,7 @@ aside {
 
 <style lang="scss">
 /*
-! Needs to be unscoped because .slideout-toc is teleported to the body.
+! Needs to be unscoped because .slideout-toc is teleported by SlideOut.
 Styles for SpecRendererToc that need to live here so that they apply to the TOC when it's rendered in the context of the SpecRenderer.
 Otherwise host app should have control over these styles.
 */

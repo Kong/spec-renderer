@@ -1,5 +1,5 @@
 <template>
-  <Teleport to="body">
+  <Teleport :to="teleportTarget">
     <div
       v-bind="attrs"
       class="slideout"
@@ -56,24 +56,23 @@ defineOptions({
 
 const attrs = useAttrs()
 
-const props = defineProps({
-  visible: {
-    type: Boolean,
-    default: false,
-  },
-  title: {
-    type: String,
-    default: '',
-  },
+const {
+  visible = false,
+  title = '',
+  maxWidth = '500px',
+  teleportTarget,
+} = defineProps<{
+  visible?: boolean
+  title?: string
   /**
    * Max width of SlideOut container.
+  */
+  maxWidth?: string
+  /**
+   * Element SlideOut should mount into.
    */
-  maxWidth: {
-    type: String,
-    required: false,
-    default: '500px',
-  },
-})
+  teleportTarget: string | Element
+}>()
 
 const emit = defineEmits<{
   (e: 'close'): void
@@ -81,7 +80,7 @@ const emit = defineEmits<{
 
 const handleClose = (e: any): void => {
   // close on escape key
-  if ((props.visible && e.keyCode === 27)) {
+  if ((visible && e.keyCode === 27)) {
     emit('close')
   }
 }
@@ -106,7 +105,7 @@ const toggleBodyScroll = (isActive: boolean): void => {
   }
 }
 
-watch(() => props.visible, async (visible: boolean): Promise<void> => {
+watch(() => visible, async (visible: boolean): Promise<void> => {
   if (visible) {
     toggleEventListeners(true)
     toggleBodyScroll(true)
@@ -126,6 +125,14 @@ onUnmounted(() => {
 @use '@/styles/styles' as *;
 
 .slideout {
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+
   .slideout-container {
     background-color: var(--kui-color-background, $kui-color-background);
     border-left: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
@@ -133,15 +140,16 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    height: 100vh;
+    height: 100%;
     inset: 0;
     overflow-y: auto;
-    position: fixed;
+    pointer-events: auto;
+    position: absolute;
     width: 100%;
     z-index: 1000;
 
     @media (min-width: $kui-breakpoint-mobile) {
-      max-width: v-bind('props.maxWidth');
+      max-width: v-bind('maxWidth');
     }
 
     .slideout-header {
@@ -198,8 +206,10 @@ onUnmounted(() => {
 
   .slideout-backdrop {
     background: var(--kui-color-background-overlay, $kui-color-background-overlay);
+    height: 100%;
     inset: 0;
-    position: fixed;
+    pointer-events: auto;
+    position: absolute;
     z-index: 1000;
   }
 }
