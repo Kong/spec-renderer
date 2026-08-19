@@ -37,24 +37,32 @@ const removeCircularRefs = (obj: Record<string, any>):Record<string, any> => {
 }
 
 /**
- * allof-merge concatenates the `examples` arrays contributed by an allOf branch and the containing
- * schema's own sibling `example`/`examples`, rather than letting the sibling override the branch's
- * value. attaching `example`/`description` alongside `allOf: [$ref]` is the standard OpenAPI
- * pattern for overriding a shared component's example for one specific usage site so if the schema itself declared its own example(s), that's
- * the authoritative value and should win outright, not be combined with the referenced schema's.
+ * Merges a schema's allOf sub-schemas via allof-merge, then makes the schema's own sibling
+ * `title`/`example`/`examples` win over the merge result.
+ *
+ * @param originalSchema the schema to merge; also read for the sibling overrides
+ * @param allOfForMerge the allOf array to merge, if different from originalSchema.allOf (e.g. a
+ * circular-reference-safe copy - see resolveAllOf)
  */
-const restoreSiblingExample = (originalSchema: SchemaObject, mergedSchema: SchemaObject): SchemaObject => {
+const mergeAllOf = (originalSchema: SchemaObject, allOfForMerge: SchemaObject['allOf'] = originalSchema.allOf): SchemaObject => {
+  const merged: SchemaObject = { ...(merge({ ...originalSchema, allOf: allOfForMerge }, { mergeCombinarySibling: true }) as SchemaObject) }
+
+  // restore title as allof-merge lets an allOf branch's title silently overwrite the sibling's
+  if (originalSchema.title) {
+    merged.title = originalSchema.title
+  }
+
+  // allof-merge concatenates example/examples across allOf branches instead of letting the sibling
+  // override - keep only the sibling's own value, clearing the other key so it can't win instead
   if (Object.hasOwn(originalSchema, 'examples')) {
-    const result = { ...mergedSchema, examples: originalSchema.examples }
-    delete result.example
-    return result
+    merged.examples = originalSchema.examples
+    delete merged.example
+  } else if (Object.hasOwn(originalSchema, 'example')) {
+    merged.example = originalSchema.example
+    delete merged.examples
   }
-  if (Object.hasOwn(originalSchema, 'example')) {
-    const result = { ...mergedSchema, example: originalSchema.example }
-    delete result.examples
-    return result
-  }
-  return mergedSchema
+
+  return merged
 }
 
 /**
@@ -86,17 +94,11 @@ const resolveAllOf = (schema: SchemaObject): SchemaObject => {
         delete result.anyOf
         return result
       })
-      return restoreSiblingExample(schema, {
-        ...(merge({ ...schema, allOf: cleanedAllOf }, { mergeCombinarySibling: true }) as SchemaObject),
-        ...(schema.title ? { title: schema.title } : {}),
-      })
+      return mergeAllOf(schema, cleanedAllOf)
     }
 
     // we are clean and do not have any circular refs - safe to use merge
-    return restoreSiblingExample(schema, {
-      ...(merge(schema, { mergeCombinarySibling: true }) as SchemaObject),
-      ...(schema.title ? { title: schema.title } : {}),
-    })
+    return mergeAllOf(schema)
   } else {
     return schema
   }
