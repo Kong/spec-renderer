@@ -227,6 +227,35 @@ describe('resolveSchemaObjectFields', () => {
     }
     expect(resolveSchemaObjectFields(schemaObject)).toStrictEqual(expectedSchemaObject)
   })
+
+  it('lets a sibling `examples` override an allOf branch\'s `examples`, instead of concatenating both', () => {
+    // shape produced by @stoplight/http-spec, which converts `example` -> `examples: [value]`
+    // independently at every schema level (both the allOf branch and the containing schema)
+    const schemaObject: SchemaObject = {
+      allOf: [
+        { type: 'string', description: 'A generic string.', examples: ['foo'] },
+      ],
+      description: 'A specific, overriding description.',
+      examples: ['bar'],
+    }
+
+    const result = resolveSchemaObjectFields(schemaObject)
+    expect(result.examples).toStrictEqual(['bar'])
+    expect(result.example).toBeUndefined()
+  })
+
+  it('lets a sibling `example` override an allOf branch\'s `example`, instead of allof-merge\'s default behavior', () => {
+    const allOfItem: SchemaObject = { type: 'string', description: 'A generic string.', example: 'foo' }
+    const schemaObject: SchemaObject = {
+      allOf: [allOfItem],
+      description: 'A specific, overriding description.',
+      example: 'bar',
+    }
+
+    const result = resolveSchemaObjectFields(schemaObject)
+    expect(result.example).toBe('bar')
+    expect(result.examples).toBeUndefined()
+  })
 })
 
 describe('filterSchemaObjectArray', () => {

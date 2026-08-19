@@ -37,6 +37,35 @@ const removeCircularRefs = (obj: Record<string, any>):Record<string, any> => {
 }
 
 /**
+ * Merges a schema's allOf sub-schemas via allof-merge, then makes the schema's own sibling
+ * `title`/`example`/`examples` win over the merge result.
+ *
+ * @param originalSchema the schema to merge; also read for the sibling overrides
+ * @param allOfForMerge the allOf array to merge, if different from originalSchema.allOf (e.g. a
+ * circular-reference-safe copy - see resolveAllOf)
+ */
+const mergeAllOf = (originalSchema: SchemaObject, allOfForMerge: SchemaObject['allOf'] = originalSchema.allOf): SchemaObject => {
+  const merged: SchemaObject = { ...(merge({ ...originalSchema, allOf: allOfForMerge }, { mergeCombinarySibling: true }) as SchemaObject) }
+
+  // restore title as allof-merge lets an allOf branch's title silently overwrite the sibling's
+  if (originalSchema.title) {
+    merged.title = originalSchema.title
+  }
+
+  // allof-merge concatenates example/examples across allOf branches instead of letting the sibling
+  // override - keep only the sibling's own value, clearing the other key so it can't win instead
+  if (Object.hasOwn(originalSchema, 'examples')) {
+    merged.examples = originalSchema.examples
+    delete merged.example
+  } else if (Object.hasOwn(originalSchema, 'example')) {
+    merged.example = originalSchema.example
+    delete merged.examples
+  }
+
+  return merged
+}
+
+/**
  * Utility to resolve allOf fields in a schema object.
  *
  * If allOf is present, we merge the sub-schemas in allOf into the current schema object
@@ -65,17 +94,11 @@ const resolveAllOf = (schema: SchemaObject): SchemaObject => {
         delete result.anyOf
         return result
       })
-      return {
-        ...(merge({ ...schema, allOf: cleanedAllOf }, { mergeCombinarySibling: true }) as SchemaObject),
-        ...(schema.title ? { title: schema.title } : {}),
-      }
+      return mergeAllOf(schema, cleanedAllOf)
     }
 
     // we are clean and do not have any circular refs - safe to use merge
-    return {
-      ...(merge(schema, { mergeCombinarySibling: true }) as SchemaObject),
-      ...(schema.title ? { title: schema.title } : {}),
-    }
+    return mergeAllOf(schema)
   } else {
     return schema
   }

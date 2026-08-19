@@ -24,6 +24,7 @@ import type { PropType } from 'vue'
 import type { IHttpParam } from '@stoplight/types'
 import ModelProperty from '../schema-model/ModelProperty.vue'
 import CollapsibleSection from './CollapsibleSection.vue'
+import { OAS_EXT_STOPLIGHT } from '@/oas-extensions'
 import type { SchemaObject } from '@/types'
 
 defineProps({
@@ -41,11 +42,23 @@ defineProps({
 const populateParamProperty = (param: IHttpParam, schema: SchemaObject) => {
   if (!param.schema) return null
 
-  const property: SchemaObject = schema
+  // schema can be a reference shared by multiple params (e.g. via a shared $ref) - copy it
+  // rather than mutating it in place, or setting one param's description would leak onto every
+  // other param sharing the same schema object
+  const property: SchemaObject = { ...schema }
   if (param.description && !property?.description) {
     // sometimes description for path param is not present in the schema
     // and is instead added to the path param itself
     property.description = param.description
+
+    // x-stoplight.explicitProperties, when present, is an allow-list PropertyFieldList component uses to decide
+    // which fields to render. it's a snapshot of the schema's fields taken earlier by the stoplight
+    // transform (e.g. for formats like int32), before the description above was added. add
+    // 'description' to it too, or the description we just set gets filtered out of the render
+    const explicitProperties = property[OAS_EXT_STOPLIGHT]?.explicitProperties
+    if (Array.isArray(explicitProperties) && !explicitProperties.includes('description')) {
+      property[OAS_EXT_STOPLIGHT] = { ...property[OAS_EXT_STOPLIGHT], explicitProperties: [...explicitProperties, 'description'] }
+    }
   }
 
   return property
