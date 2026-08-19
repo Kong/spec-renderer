@@ -230,8 +230,10 @@ onUnmounted(() => {
 </style>
 
 <style lang="scss">
-// must be unscoped since it targets the document's scrolling element or a host-provided scroll container
+// must be unscoped since it targets the document's scrolling element or a host-provided scroll container.
 .spec-renderer-no-scroll {
-  overflow: hidden;
+  // !important is needed because a host-provided scroll container can have its own overflow rules with
+  // higher specificity than this single-class selector (e.g. multiple classes/attribute selectors).
+  overflow: hidden !important;
 }
 </style>
