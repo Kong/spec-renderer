@@ -1,33 +1,26 @@
 <template>
   <div class="spec-renderer-wrapper">
-    <div class="spec-renderer-slideout-target">
-      <div
-        ref="specRendererSlideoutTarget"
-        class="spec-renderer-slideout-target-inner"
+    <SlideOut
+      v-if="tableOfContents"
+      class="slideout-toc"
+      :title="(parsedDocument as ServiceNode)?.name || 'Table of Contents'"
+      :visible="slideoutTocVisible"
+      @close="slideoutTocVisible = false"
+    >
+      <SpecRendererToc
+        v-if="slideoutTocVisible"
+        :base-path="basePath"
+        class="spec-renderer-toc"
+        :control-address-bar="controlAddressBar"
+        :current-path="currentPathTOC"
+        :navigation-type="navigationType"
+        :show-powered-by="showPoweredBy"
+        :table-of-contents="tableOfContents"
+        @item-selected="itemSelected"
       />
-    </div>
-    <div class="spec-renderer-content">
-      <SlideOut
-        v-if="tableOfContents && specRendererSlideoutTarget"
-        class="slideout-toc"
-        :teleport-target="specRendererSlideoutTarget"
-        :title="(parsedDocument as ServiceNode)?.name || 'Table of Contents'"
-        :visible="slideoutTocVisible"
-        @close="slideoutTocVisible = false"
-      >
-        <SpecRendererToc
-          v-if="slideoutTocVisible"
-          :base-path="basePath"
-          class="spec-renderer-toc"
-          :control-address-bar="controlAddressBar"
-          :current-path="currentPathTOC"
-          :navigation-type="navigationType"
-          :show-powered-by="showPoweredBy"
-          :table-of-contents="tableOfContents"
-          @item-selected="itemSelected"
-        />
-      </SlideOut>
+    </SlideOut>
 
+    <div class="spec-renderer-content">
       <aside>
         <SpecRendererToc
           v-if="tableOfContents && !slideoutTocVisible"
@@ -48,6 +41,7 @@
       >
         <button
           class="slideout-toc-trigger-button"
+          data-testid="slideout-toc-trigger-button"
           type="button"
           @click="openSlideoutToc"
         >
@@ -128,7 +122,6 @@ const { parseSpecDocument, parsedDocument, tableOfContents } = composables.useSc
 
 const currentPathTOC = ref<string>(currentPath)
 const currentPathDOC = ref<string>(currentPath)
-const specRendererSlideoutTarget = ref<HTMLElement | null>(null)
 
 const itemSelected = (id: any) => {
   /*
@@ -220,22 +213,6 @@ watch(() => ({
   container: spec-renderer / inline-size;
   position: relative;
   width: 100%;
-
-  .spec-renderer-slideout-target {
-    height: 0;
-    left: 0;
-    pointer-events: none;
-    position: sticky;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-
-    .spec-renderer-slideout-target-inner {
-      height: 100vh;
-      position: relative;
-      width: 100%;
-    }
-  }
 
   .spec-renderer-content {
     display: flex;
@@ -337,16 +314,15 @@ aside {
     }
   }
 }
-</style>
 
-<style lang="scss">
 /*
-! Needs to be unscoped because .slideout-toc is teleported by SlideOut.
 Styles for SpecRendererToc that need to live here so that they apply to the TOC when it's rendered in the context of the SpecRenderer.
 Otherwise host app should have control over these styles.
+`.spec-renderer-toc` itself carries SpecRenderer's scope attribute (it's passed in as slot content from
+this component's own template), but `:deep()` is needed below for markup that's internal to SlideOut/SpecRendererToc.
 */
 .slideout-toc {
-  .slideout-content {
+  :deep(.slideout-content) {
     flex-grow: 1;
   }
 
@@ -354,7 +330,7 @@ Otherwise host app should have control over these styles.
     height: 100%;
     position: relative; // important, need this for scrolling to selected item
 
-    > {
+    :deep(>) {
       ul > * {
         // overview item
         &:first-child {
@@ -369,7 +345,7 @@ Otherwise host app should have control over these styles.
       }
     }
 
-    .group-item {
+    :deep(.group-item) {
       &.root {
         padding-left: var(--kui-space-40, $kui-space-40);
         padding-right: var(--kui-space-40, $kui-space-40);

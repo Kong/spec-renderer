@@ -35,7 +35,7 @@ describe('<SpecRenderer />', () => {
     expect(wrapper.exists()).toBe(true)
   })
 
-  it('mounts the slideout inside the spec renderer wrapper', async () => {
+  it('opens the slideout toc and renders its content when the trigger button is clicked', async () => {
     const wrapper = mount(SpecRenderer, {
       attachTo: document.body,
       props: {
@@ -51,21 +51,15 @@ describe('<SpecRenderer />', () => {
 
     await flushPromises()
 
-    let slideout = wrapper.element.querySelector('.slideout-toc')
-    expect(slideout).not.toBeNull()
+    const slideoutContainer = wrapper.find('[data-testid="slideout-container"]')
+    expect(slideoutContainer.exists()).toBe(true)
+    expect(slideoutContainer.isVisible()).toBe(false)
 
-    await wrapper.find('.slideout-toc-trigger-button').trigger('click')
+    await wrapper.find('[data-testid="slideout-toc-trigger-button"]').trigger('click')
     await flushPromises()
 
-    const rendererWrapper = wrapper.element
-    const slideoutTarget = rendererWrapper.querySelector('.spec-renderer-slideout-target-inner')
-    slideout = rendererWrapper.querySelector('.slideout-toc')
-
-    expect(slideout).not.toBeNull()
-    expect(slideout?.parentElement).toBe(slideoutTarget)
-    expect(slideoutTarget?.closest('.spec-renderer-wrapper')).toBe(rendererWrapper)
-    expect(document.body.querySelector(':scope > .slideout-toc')).toBeNull()
-    expect(document.body.children[document.body.children.length - 1]).not.toBe(slideout)
+    expect(slideoutContainer.isVisible()).toBe(true)
+    expect(slideoutContainer.findComponent({ name: 'SpecRendererToc' }).exists()).toBe(true)
 
     wrapper.unmount()
   })

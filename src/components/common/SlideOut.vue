@@ -1,9 +1,9 @@
 <template>
-  <Teleport :to="teleportTarget">
-    <div
-      v-bind="attrs"
-      class="slideout"
-    >
+  <div
+    v-bind="attrs"
+    class="slideout"
+  >
+    <div class="slideout-viewport">
       <Transition name="spec-renderer-fade">
         <div
           v-show="visible"
@@ -43,7 +43,7 @@
         </div>
       </Transition>
     </div>
-  </Teleport>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -60,7 +60,6 @@ const {
   visible = false,
   title = '',
   maxWidth = '500px',
-  teleportTarget,
 } = defineProps<{
   visible?: boolean
   title?: string
@@ -68,10 +67,6 @@ const {
    * Max width of SlideOut container.
   */
   maxWidth?: string
-  /**
-   * Element SlideOut should mount into.
-   */
-  teleportTarget: string | Element
 }>()
 
 const emit = defineEmits<{
@@ -125,13 +120,21 @@ onUnmounted(() => {
 @use '@/styles/styles' as *;
 
 .slideout {
-  bottom: 0;
+  height: 0;
   left: 0;
   pointer-events: none;
-  position: absolute;
-  right: 0;
+  position: sticky;
   top: 0;
+  width: 100%;
   z-index: 1000;
+
+  // Gives the absolutely positioned backdrop/container below a one-screen-tall
+  // positioning context to fill, since the sticky root above has zero height.
+  .slideout-viewport {
+    height: 100vh;
+    position: relative;
+    width: 100%;
+  }
 
   .slideout-container {
     background-color: var(--kui-color-background, $kui-color-background);
