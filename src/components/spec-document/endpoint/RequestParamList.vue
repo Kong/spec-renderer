@@ -42,7 +42,10 @@ defineProps({
 const populateParamProperty = (param: IHttpParam, schema: SchemaObject) => {
   if (!param.schema) return null
 
-  const property: SchemaObject = schema
+  // schema can be a reference shared by multiple params (e.g. via a shared $ref) - copy it
+  // rather than mutating it in place, or setting one param's description would leak onto every
+  // other param sharing the same schema object
+  const property: SchemaObject = { ...schema }
   if (param.description && !property?.description) {
     // sometimes description for path param is not present in the schema
     // and is instead added to the path param itself
@@ -54,7 +57,7 @@ const populateParamProperty = (param: IHttpParam, schema: SchemaObject) => {
     // 'description' to it too, or the description we just set gets filtered out of the render
     const explicitProperties = property[OAS_EXT_STOPLIGHT]?.explicitProperties
     if (Array.isArray(explicitProperties) && !explicitProperties.includes('description')) {
-      explicitProperties.push('description')
+      property[OAS_EXT_STOPLIGHT] = { ...property[OAS_EXT_STOPLIGHT], explicitProperties: [...explicitProperties, 'description'] }
     }
   }
 

@@ -86,4 +86,24 @@ describe('<RequestParamList />', () => {
 
     expect(paramWithStaleAllowList.findTestId('property-field-description').text()).toBe('The maximum number of results per page.')
   })
+
+  it('renders each param\'s own description when multiple params share the same schema object reference', () => {
+    // e.g. two params referencing the same components.parameters/components.schemas entry - the
+    // dereferenced schema object can be the exact same reference for both params
+    const sharedSchema: SchemaObject = { type: 'integer' }
+    const sharedSchemaParams = mount(RequestParamList, {
+      props: {
+        paramList: [
+          { name: 'paramA', id: 'paramA', style: HttpParamStyles.Form, description: 'Description A', schema: sharedSchema },
+          { name: 'paramB', id: 'paramB', style: HttpParamStyles.Form, description: 'Description B', schema: sharedSchema },
+        ],
+        title: 'sample-title',
+      },
+    })
+
+    expect(sharedSchemaParams.findTestId('model-property-param-a').find('[data-testid="property-field-description"]').text()).toBe('Description A')
+    expect(sharedSchemaParams.findTestId('model-property-param-b').find('[data-testid="property-field-description"]').text()).toBe('Description B')
+    // the shared schema object itself must not be mutated by rendering either param
+    expect(sharedSchema.description).toBeUndefined()
+  })
 })
