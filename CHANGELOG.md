@@ -1,3 +1,10 @@
+## [1.113.4](https://github.com/Kong/spec-renderer/compare/v1.113.3...v1.113.4) (2026-08-19)
+
+
+### Bug Fixes
+
+* query param description, allOf example[TDX-8636] ([#972](https://github.com/Kong/spec-renderer/issues/972)) ([3276946](https://github.com/Kong/spec-renderer/commit/327694646e990e0601004ebc5d2e2308f76fa318))
+
 ## [1.113.3](https://github.com/Kong/spec-renderer/compare/v1.113.2...v1.113.3) (2026-08-11)
 
 
