@@ -1,6 +1,5 @@
 <template>
   <div
-    v-bind="attrs"
     class="slideout"
   >
     <div class="slideout-viewport">
@@ -47,14 +46,8 @@
 </template>
 
 <script lang="ts" setup>
-import { onUnmounted, watch, useAttrs } from 'vue'
+import { onUnmounted, watch } from 'vue'
 import { CloseIcon } from '@kong/icons'
-
-defineOptions({
-  inheritAttrs: false,
-})
-
-const attrs = useAttrs()
 
 const {
   visible = false,

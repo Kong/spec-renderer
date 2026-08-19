@@ -1,21 +1,21 @@
 // Vitest unit test spec file
 
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import SpecRenderer from './SpecRenderer.vue'
 
-vi.mock('../composables', async () => {
-  const { ref } = await import('vue')
-
-  return {
-    default: {
-      useSchemaParser: () => ({
-        parseSpecDocument: vi.fn().mockResolvedValue({ parsedDocument: undefined, tableOfContents: undefined }),
-        parsedDocument: ref({ name: 'Test API' }),
-        tableOfContents: ref([{ id: '/', title: 'Overview' }]),
-      }),
+const minimalOpenApiSpec = JSON.stringify({
+  openapi: '3.0.0',
+  info: { title: 'Test API', version: '1.0.0' },
+  paths: {
+    '/pets': {
+      get: {
+        operationId: 'listPets',
+        summary: 'List pets',
+        responses: { 200: { description: 'ok' } },
+      },
     },
-  }
+  },
 })
 
 describe('<SpecRenderer />', () => {
@@ -39,7 +39,7 @@ describe('<SpecRenderer />', () => {
     const wrapper = mount(SpecRenderer, {
       attachTo: document.body,
       props: {
-        spec: '[]',
+        spec: minimalOpenApiSpec,
       },
       global: {
         stubs: {
