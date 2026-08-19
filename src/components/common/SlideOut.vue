@@ -53,6 +53,7 @@ const {
   visible = false,
   title = '',
   maxWidth = '500px',
+  documentScrollingContainer = '',
 } = defineProps<{
   visible?: boolean
   title?: string
@@ -60,6 +61,11 @@ const {
    * Max width of SlideOut container.
   */
   maxWidth?: string
+  /**
+   * Selector for the element that scrolls the content behind the SlideOut.
+   * Falls back to the document's own scrolling element when not provided or not found.
+   */
+  documentScrollingContainer?: string
 }>()
 
 const emit = defineEmits<{
@@ -85,10 +91,22 @@ const toggleEventListeners = (isActive: boolean): void => {
 
 const toggleBodyScroll = (isActive: boolean): void => {
   if (typeof document !== 'undefined') {
+    // by default, use the document's scrolling element to lock scroll.
+    // This is usually the <html> element, but can be overridden by providing a documentScrollingContainer selector prop.
+    let scrollLockElement = document.scrollingElement
+
+    // If a documentScrollingContainer prop is provided, try to find that element and use it instead
+    if (documentScrollingContainer) {
+      const scrollingContainer = document.querySelector(documentScrollingContainer)
+      if (scrollingContainer) {
+        scrollLockElement = scrollingContainer
+      }
+    }
+
     if (isActive) {
-      document.scrollingElement?.classList.add('spec-renderer-no-scroll')
+      scrollLockElement?.classList.add('spec-renderer-no-scroll')
     } else {
-      document.scrollingElement?.classList.remove('spec-renderer-no-scroll')
+      scrollLockElement?.classList.remove('spec-renderer-no-scroll')
     }
   }
 }
@@ -212,7 +230,7 @@ onUnmounted(() => {
 </style>
 
 <style lang="scss">
-// must be unscoped since it's targeting the body element
+// must be unscoped since it targets the document's scrolling element or a host-provided scroll container
 .spec-renderer-no-scroll {
   overflow: hidden;
 }

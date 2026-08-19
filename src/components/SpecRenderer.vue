@@ -3,6 +3,7 @@
     <SlideOut
       v-if="tableOfContents"
       class="slideout-toc"
+      :document-scrolling-container="documentScrollingContainer"
       :title="(parsedDocument as ServiceNode)?.name || 'Table of Contents'"
       :visible="slideoutTocVisible"
       @close="slideoutTocVisible = false"
