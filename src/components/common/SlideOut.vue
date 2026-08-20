@@ -71,22 +71,9 @@ const {
 
 const slideoutRef = useTemplateRef('slideout')
 
-// Scroll container to lock and measure against: an explicit selector if given, else the nearest real scrolling ancestor.
-const resolveScrollingContainer = (): Element | null => {
-  if (documentScrollingContainer) {
-    const explicit = document.querySelector(documentScrollingContainer)
-    if (explicit) {
-      return explicit
-    }
-  }
-
-  // walk up to the nearest ancestor that actually scrolls (overflow-y: auto/scroll)
-  let current = slideoutRef.value?.parentElement ?? null
-  while (current && !/auto|scroll/.test(getComputedStyle(current).overflowY)) {
-    current = current.parentElement
-  }
-  return current
-}
+// Scroll container to lock and measure against - same contract as SpecDocument's own documentScrollingContainer handling.
+const resolveScrollingContainer = (): Element | null =>
+  documentScrollingContainer ? document.querySelector(documentScrollingContainer) : null
 
 // Visible height below the sticky root, measured once on open (scroll is locked while open, so it can't change).
 const viewportHeight = ref('100dvh')
@@ -99,12 +86,7 @@ const updateViewportHeight = (): void => {
   }
 
   const scrollParent = resolveScrollingContainer()
-
-  // document.scrollingElement's own box spans all its content, not just the viewport - use window.innerHeight
-  // instead, which also covers the "whole page scrolls" case (no scrolling ancestor found).
-  const visibleBottom = scrollParent && scrollParent !== document.scrollingElement
-    ? scrollParent.getBoundingClientRect().bottom
-    : window.innerHeight
+  const visibleBottom = scrollParent ? scrollParent.getBoundingClientRect().bottom : window.innerHeight
 
   viewportHeight.value = `${visibleBottom - el.getBoundingClientRect().top}px`
 }
