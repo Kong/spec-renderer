@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="slideout"
     class="slideout"
   >
     <div class="slideout-viewport">
@@ -46,7 +47,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onUnmounted, watch } from 'vue'
+import { onUnmounted, ref, useTemplateRef, watch } from 'vue'
 import { CloseIcon } from '@kong/icons'
 
 const {
@@ -67,6 +68,46 @@ const {
    */
   documentScrollingContainer?: string
 }>()
+
+const slideoutRef = useTemplateRef('slideout')
+
+// Scroll container to lock and measure against: an explicit selector if given, else the nearest real scrolling ancestor.
+const resolveScrollingContainer = (): Element | null => {
+  if (documentScrollingContainer) {
+    const explicit = document.querySelector(documentScrollingContainer)
+    if (explicit) {
+      return explicit
+    }
+  }
+
+  // walk up to the nearest ancestor that actually scrolls (overflow-y: auto/scroll)
+  let current = slideoutRef.value?.parentElement ?? null
+  while (current && !/auto|scroll/.test(getComputedStyle(current).overflowY)) {
+    current = current.parentElement
+  }
+  return current
+}
+
+// Visible height below the sticky root, measured once on open (scroll is locked while open, so it can't change).
+const viewportHeight = ref('100dvh')
+
+const updateViewportHeight = (): void => {
+  const el = slideoutRef.value
+  if (!el) {
+    viewportHeight.value = '100dvh'
+    return
+  }
+
+  const scrollParent = resolveScrollingContainer()
+
+  // document.scrollingElement's own box spans all its content, not just the viewport - use window.innerHeight
+  // instead, which also covers the "whole page scrolls" case (no scrolling ancestor found).
+  const visibleBottom = scrollParent && scrollParent !== document.scrollingElement
+    ? scrollParent.getBoundingClientRect().bottom
+    : window.innerHeight
+
+  viewportHeight.value = `${visibleBottom - el.getBoundingClientRect().top}px`
+}
 
 const emit = defineEmits<{
   (e: 'close'): void
@@ -91,17 +132,8 @@ const toggleEventListeners = (isActive: boolean): void => {
 
 const toggleBodyScroll = (isActive: boolean): void => {
   if (typeof document !== 'undefined') {
-    // by default, use the document's scrolling element to lock scroll.
-    // This is usually the <html> element, but can be overridden by providing a documentScrollingContainer selector prop.
-    let scrollLockElement = document.scrollingElement
-
-    // If a documentScrollingContainer prop is provided, try to find that element and use it instead
-    if (documentScrollingContainer) {
-      const scrollingContainer = document.querySelector(documentScrollingContainer)
-      if (scrollingContainer) {
-        scrollLockElement = scrollingContainer
-      }
-    }
+    // falls back to the document's own scrolling element (usually <html>) if no scrolling ancestor is found
+    const scrollLockElement = resolveScrollingContainer() ?? document.scrollingElement
 
     if (isActive) {
       scrollLockElement?.classList.add('spec-renderer-no-scroll')
@@ -113,6 +145,7 @@ const toggleBodyScroll = (isActive: boolean): void => {
 
 watch(() => visible, async (visible: boolean): Promise<void> => {
   if (visible) {
+    updateViewportHeight() // must run before the scroll lock, which hides the scrolling ancestor's overflow
     toggleEventListeners(true)
     toggleBodyScroll(true)
   } else {
@@ -139,10 +172,9 @@ onUnmounted(() => {
   width: 100%;
   z-index: 1000;
 
-  // Gives the absolutely positioned backdrop/container below a one-screen-tall
-  // positioning context to fill, since the sticky root above has zero height.
+  // gives the absolutely-positioned children a box to fill, since the sticky root above has zero height
   .slideout-viewport {
-    height: 100vh;
+    height: v-bind('viewportHeight');
     position: relative;
     width: 100%;
   }
@@ -230,10 +262,9 @@ onUnmounted(() => {
 </style>
 
 <style lang="scss">
-// must be unscoped since it targets the document's scrolling element or a host-provided scroll container.
+// unscoped: targets an element outside this component (document or host-provided scroll container)
 .spec-renderer-no-scroll {
-  // !important is needed because a host-provided scroll container can have its own overflow rules with
-  // higher specificity than this single-class selector (e.g. multiple classes/attribute selectors).
+  // !important: that element's own overflow rules can outrank this single-class selector
   overflow: hidden !important;
 }
 </style>
