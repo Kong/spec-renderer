@@ -8,11 +8,11 @@ overrides:
   openapi3-ts: 4.6.1
   jsonpath-plus@<10.3.0: '>=10.4.0'
   elliptic@<=6.6.0: '>=6.6.1'
-  '@babel/helpers@<7.26.10': '>=7.29.2'
+  '@babel/helpers@<7.26.10': '>=7.29.7'
   cross-spawn@>=7.0.0 <7.0.5: '>=7.0.6'
   brace-expansion@>=1.0.0 <=1.1.11: '>=2.1.4'
   brace-expansion@>=2.0.0 <=2.0.1: '>=2.0.3'
-  pbkdf2@<=3.1.2: '>=3.1.5'
+  pbkdf2@<=3.1.2: '>=3.1.6'
   sha.js@<=2.4.11: '>=2.4.12'
   cipher-base@<=1.0.4: '>=1.0.7'
   tmp@<=0.2.3: '>=0.2.6'
@@ -21,24 +21,24 @@ overrides:
   diff@>=4.0.0 <4.0.4: '>=4.0.4'
   '@isaacs/brace-expansion@<=5.0.0': '>=5.0.1'
   mdast-util-to-hast@>=13.0.0 <13.2.1: '>=13.2.1'
-  qs@>=6.7.0 <=6.14.1: '>=6.15.2'
+  qs@>=6.7.0 <=6.14.1: '>=6.15.3'
   markdown-it@>=13.0.0 <14.1.1: '>=14.3.0'
-  bn.js@>=5.0.0 <5.2.3: '>=5.2.3'
-  bn.js@<4.12.3: '>=5.2.3'
+  bn.js@>=5.0.0 <5.2.3: '>=5.2.5'
+  bn.js@<4.12.3: '>=5.2.5'
   rollup@>=4.0.0 <4.59.0: '>=4.62.4'
-  minimatch@<10.2.3: '>=10.2.5'
+  minimatch@<10.2.3: '>=10.2.6'
   ajv@<6.14.0: ^6.15.0
-  immutable@>=5.0.0 <5.1.5: '>=5.1.8'
-  flatted@<=3.4.1: '>=3.4.2'
+  immutable@>=5.0.0 <5.1.5: '>=5.1.9'
+  flatted@<=3.4.1: '>=3.4.4'
   undici@<6.24.0: '>=6.28.0'
   undici@>=7.0.0 <7.24.0: '>=7.29.0'
   handlebars@>=4.0.0 <4.7.9: '>=4.7.9'
-  picomatch@>=4.0.0 <4.0.4: '>=4.0.4'
+  picomatch@>=4.0.0 <4.0.4: '>=4.0.5'
   picomatch@<2.3.2: '>=2.3.2'
   lodash-es@<=4.17.23: '>=4.18.0'
   lodash@<=4.17.23: '>=4.18.0'
   yaml@>=2.0.0 <2.8.3: '>=2.9.0'
-  vite@>=7.0.0 <=7.3.1: '>=7.3.5'
+  vite@>=7.0.0 <=7.3.1: '>=7.3.6'
   form-data@>=4.0.0 <4.0.6: ^4.0.6
 
 importers:
@@ -55,7 +55,7 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(@asyncapi/parser@3.6.3)
       '@asyncapi/parser':
-        specifier: ^3.6.1
+        specifier: ^3.6.3
         version: 3.6.3
       '@floating-ui/vue':
         specifier: ^1.1.11
@@ -115,8 +115,8 @@ importers:
         specifier: ^3.23.0
         version: 3.23.0
       ws:
-        specifier: ^8.21.1
-        version: 8.21.1
+        specifier: ^8.21.3
+        version: 8.21.3
     devDependencies:
       '@babel/types':
         specifier: ^8.0.4
@@ -144,13 +144,13 @@ importers:
         version: 2.0.0(stylelint@17.14.1(supports-color@10.2.2)(typescript@5.9.3))
       '@semantic-release/changelog':
         specifier: ^6.0.3
-        version: 6.0.3(semantic-release@25.0.8(supports-color@10.2.2)(typescript@5.9.3))
+        version: 6.0.3(semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3))
       '@semantic-release/exec':
         specifier: ^6.0.3
-        version: 6.0.3(semantic-release@25.0.8(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)
+        version: 6.0.3(semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)
       '@semantic-release/git':
         specifier: ^10.0.1
-        version: 10.0.1(semantic-release@25.0.8(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)
+        version: 10.0.1(semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)
       '@stylistic/stylelint-plugin':
         specifier: ^5.2.1
         version: 5.2.1(stylelint@17.14.1(supports-color@10.2.2)(typescript@5.9.3))
@@ -200,7 +200,7 @@ importers:
         specifier: ^3.3.0
         version: 3.3.0(@types/node@24.13.3)(typescript@5.9.3)
       eslint:
-        specifier: ^10.8.0
+        specifier: ^10.8.1
         version: 10.8.1(jiti@2.4.2)(supports-color@10.2.2)
       jsdom:
         specifier: ^29.1.1
@@ -209,7 +209,7 @@ importers:
         specifier: 4.6.1
         version: 4.6.1
       postcss:
-        specifier: ^8.5.25
+        specifier: ^8.5.26
         version: 8.5.26
       postcss-html:
         specifier: ^1.8.1
@@ -227,8 +227,8 @@ importers:
         specifier: ^1.100.0
         version: 1.100.0
       semantic-release:
-        specifier: ^25.0.8
-        version: 25.0.8(supports-color@10.2.2)(typescript@5.9.3)
+        specifier: ^25.0.9
+        version: 25.0.9(supports-color@10.2.2)(typescript@5.9.3)
       stylelint:
         specifier: ^17.14.1
         version: 17.14.1(supports-color@10.2.2)(typescript@5.9.3)
@@ -272,7 +272,7 @@ importers:
         specifier: 4.1.10
         version: 4.1.10(@types/node@24.13.3)(@vitest/ui@3.2.7)(jsdom@29.1.1)(vite@7.3.6(@types/node@24.13.3)(jiti@2.4.2)(sass-embedded@1.100.0)(sass@1.102.0)(yaml@2.9.0))
       vue:
-        specifier: ^3.5.40
+        specifier: ^3.5.41
         version: 3.5.41(typescript@5.9.3)
       vue-router:
         specifier: ^4.6.4
@@ -1731,7 +1731,7 @@ packages:
     resolution: {integrity: sha512-0ZjgOg7oO6farnNGup7yvoM/YXZV84OZxHAwtflItNa/6zzQyVb5LNxyea3FEKEX2XlagIKzrlH7wwxkKgtiew==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
-      vite: '>=7.3.5'
+      vite: '>=7.3.6'
       vue: ^3.2.25
 
   '@vitest/expect@4.1.10':
@@ -1741,7 +1741,7 @@ packages:
     resolution: {integrity: sha512-v0xaezt+DKEmKfaxg133ldzADrwLGd7Ze1MfQQTYfvs8OqZIwbxyxaYURivwV7sWy5fqn3rH5uOrSp07bp44Ow==}
     peerDependencies:
       msw: ^2.4.9
-      vite: '>=7.3.5'
+      vite: '>=7.3.6'
     peerDependenciesMeta:
       msw:
         optional: true
@@ -2957,7 +2957,7 @@ packages:
     resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
-      picomatch: '>=4.0.4'
+      picomatch: '>=4.0.5'
     peerDependenciesMeta:
       picomatch:
         optional: true
@@ -4859,8 +4859,8 @@ packages:
     resolution: {integrity: sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA==}
     engines: {node: '>=v12.22.7'}
 
-  semantic-release@25.0.8:
-    resolution: {integrity: sha512-w/iZ0bur36rKffXZYmIUmy068eoBY3Ij1DCCddx2JwWEM5Tg+eU9ld/E9qSInVvPASyyR2Ln/XGfQ9OZrMlhtw==}
+  semantic-release@25.0.9:
+    resolution: {integrity: sha512-bxve7csK0/Txr++CkfrmV+X1r4jqiSOw2WsSad9E2S68R+ZfLBwDn8IceM8WfiOmKQIHgsQc1cNA8Dzg7U75pg==}
     engines: {node: ^22.14.0 || >= 24.10.0}
     hasBin: true
 
@@ -5536,19 +5536,19 @@ packages:
   vite-dev-rpc@1.1.0:
     resolution: {integrity: sha512-pKXZlgoXGoE8sEKiKJSng4hI1sQ4wi5YT24FCrwrLt6opmkjlqPPVmiPWWJn8M8byMxRGzp1CrFuqQs4M/Z39A==}
     peerDependencies:
-      vite: '>=7.3.5'
+      vite: '>=7.3.6'
 
   vite-hot-client@2.1.0:
     resolution: {integrity: sha512-7SpgZmU7R+dDnSmvXE1mfDtnHLHQSisdySVR7lO8ceAXvM0otZeuQQ6C8LrS5d/aYyP/QZ0hI0L+dIPrm4YlFQ==}
     peerDependencies:
-      vite: '>=7.3.5'
+      vite: '>=7.3.6'
 
   vite-plugin-inspect@11.3.3:
     resolution: {integrity: sha512-u2eV5La99oHoYPHE6UvbwgEqKKOQGz86wMg40CCosP6q8BkB6e5xPneZfYagK4ojPJSj5anHCrnvC20DpwVdRA==}
     engines: {node: '>=14'}
     peerDependencies:
       '@nuxt/kit': '*'
-      vite: '>=7.3.5'
+      vite: '>=7.3.6'
     peerDependenciesMeta:
       '@nuxt/kit':
         optional: true
@@ -5556,7 +5556,7 @@ packages:
   vite-plugin-node-polyfills@0.28.0:
     resolution: {integrity: sha512-NXct/ci2ef4fRyCfTb8fk2HmR80Rv7icLd+cRH41TnUugDzdKMFKqFPpZYCFUInZMMem9bkLv5pkq02+7Xu7+w==}
     peerDependencies:
-      vite: '>=7.3.5'
+      vite: '>=7.3.6'
 
   vite-plugin-replace@0.1.1:
     resolution: {integrity: sha512-v+okl3JNt2pf1jDYijw+WPVt6h9FWa/atTi+qnSFBqmKThLTDhlesx0r3bh+oFPmxRJmis5tNx9HtN6lGFoqWg==}
@@ -5567,13 +5567,13 @@ packages:
     resolution: {integrity: sha512-5JLxXWWCo5lJMw16/xVeNvJ8k2zLwZPf1vITLzya/2IePrCBeGe/p/iAokgXHZpEi39fcYtPXmO8SaKeXmqCAA==}
     engines: {node: '>=v14.21.3'}
     peerDependencies:
-      vite: '>=7.3.5'
+      vite: '>=7.3.6'
       vue: '*'
 
   vite-plugin-vue-inspector@6.0.0:
     resolution: {integrity: sha512-OpyITJLgZNibxlrik1EmRtvXHDjLRxNPsWkGFTERZs2LgMEdG4W0WoFt5GIgp3a3jRou+eJR8U1zOBk/XQgEbw==}
     peerDependencies:
-      vite: '>=7.3.5'
+      vite: '>=7.3.6'
 
   vite@7.3.6:
     resolution: {integrity: sha512-4XP60spRGjSZFf1qYH+dJIkK2znL3zQfl9KkOV9MkkRR/3Dls0dxaBsQPTloEc5BLXWPL9vsOxopxyKoMmDueg==}
@@ -5631,7 +5631,7 @@ packages:
       '@vitest/ui': 4.1.10
       happy-dom: '*'
       jsdom: '*'
-      vite: '>=7.3.5'
+      vite: '>=7.3.6'
     peerDependenciesMeta:
       '@edge-runtime/vm':
         optional: true
@@ -5777,8 +5777,8 @@ packages:
     resolution: {integrity: sha512-OTIk8iR8/aCRWBqvxrzxR0hgxWpnYBblY1S5hDWBQfk/VFmJwzmJgQFN3WsoUKHISv2eAwe+PpbUzyL1CKTLXg==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  ws@8.21.1:
-    resolution: {integrity: sha512-+0NTnW77fFN/DjQi6k/Sq/Yvk4Sgajw7urW8V+asjXnRgDs9gyGkdb7EzgfhA4goXsRIZKE28fzIXBHEzhuiWw==}
+  ws@8.21.3:
+    resolution: {integrity: sha512-201TZ/kPWxoPr/OKWjquZR1SWKXcvxdH+e1xrx89b3YbmzLMFCLfnaG1HFIgWzJOEWZ7MvpK++odZufgYR50Rw==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -6935,15 +6935,15 @@ snapshots:
 
   '@sec-ant/readable-stream@0.4.1': {}
 
-  '@semantic-release/changelog@6.0.3(semantic-release@25.0.8(supports-color@10.2.2)(typescript@5.9.3))':
+  '@semantic-release/changelog@6.0.3(semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3))':
     dependencies:
       '@semantic-release/error': 3.0.0
       aggregate-error: 3.1.0
       fs-extra: 11.2.0
       lodash: 4.18.1
-      semantic-release: 25.0.8(supports-color@10.2.2)(typescript@5.9.3)
+      semantic-release: 25.0.9(supports-color@10.2.2)(typescript@5.9.3)
 
-  '@semantic-release/commit-analyzer@13.0.1(semantic-release@25.0.8(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)':
+  '@semantic-release/commit-analyzer@13.0.1(semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)':
     dependencies:
       conventional-changelog-angular: 8.0.0
       conventional-changelog-writer: 8.0.0
@@ -6953,7 +6953,7 @@ snapshots:
       import-from-esm: 2.0.0(supports-color@10.2.2)
       lodash-es: 4.18.1
       micromatch: 4.0.8
-      semantic-release: 25.0.8(supports-color@10.2.2)(typescript@5.9.3)
+      semantic-release: 25.0.9(supports-color@10.2.2)(typescript@5.9.3)
     transitivePeerDependencies:
       - supports-color
 
@@ -6961,7 +6961,7 @@ snapshots:
 
   '@semantic-release/error@4.0.0': {}
 
-  '@semantic-release/exec@6.0.3(semantic-release@25.0.8(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)':
+  '@semantic-release/exec@6.0.3(semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)':
     dependencies:
       '@semantic-release/error': 3.0.0
       aggregate-error: 3.1.0
@@ -6969,11 +6969,11 @@ snapshots:
       execa: 5.1.1
       lodash: 4.18.1
       parse-json: 5.2.0
-      semantic-release: 25.0.8(supports-color@10.2.2)(typescript@5.9.3)
+      semantic-release: 25.0.9(supports-color@10.2.2)(typescript@5.9.3)
     transitivePeerDependencies:
       - supports-color
 
-  '@semantic-release/git@10.0.1(semantic-release@25.0.8(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)':
+  '@semantic-release/git@10.0.1(semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)':
     dependencies:
       '@semantic-release/error': 3.0.0
       aggregate-error: 3.1.0
@@ -6983,11 +6983,11 @@ snapshots:
       lodash: 4.18.1
       micromatch: 4.0.8
       p-reduce: 2.1.0
-      semantic-release: 25.0.8(supports-color@10.2.2)(typescript@5.9.3)
+      semantic-release: 25.0.9(supports-color@10.2.2)(typescript@5.9.3)
     transitivePeerDependencies:
       - supports-color
 
-  '@semantic-release/github@12.0.2(semantic-release@25.0.8(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)':
+  '@semantic-release/github@12.0.2(semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)':
     dependencies:
       '@octokit/core': 7.0.6
       '@octokit/plugin-paginate-rest': 14.0.0(@octokit/core@7.0.6)
@@ -7003,14 +7003,14 @@ snapshots:
       lodash-es: 4.18.1
       mime: 4.0.4
       p-filter: 4.1.0
-      semantic-release: 25.0.8(supports-color@10.2.2)(typescript@5.9.3)
+      semantic-release: 25.0.9(supports-color@10.2.2)(typescript@5.9.3)
       tinyglobby: 0.2.17
-      undici: 7.29.0
+      undici: 8.10.0
       url-join: 5.0.0
     transitivePeerDependencies:
       - supports-color
 
-  '@semantic-release/npm@13.1.2(semantic-release@25.0.8(supports-color@10.2.2)(typescript@5.9.3))':
+  '@semantic-release/npm@13.1.2(semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3))':
     dependencies:
       '@actions/core': 1.11.1
       '@semantic-release/error': 4.0.0
@@ -7025,11 +7025,11 @@ snapshots:
       rc: 1.2.8
       read-pkg: 10.0.0
       registry-auth-token: 5.0.2
-      semantic-release: 25.0.8(supports-color@10.2.2)(typescript@5.9.3)
+      semantic-release: 25.0.9(supports-color@10.2.2)(typescript@5.9.3)
       semver: 7.8.5
       tempy: 3.1.0
 
-  '@semantic-release/release-notes-generator@14.1.0(semantic-release@25.0.8(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)':
+  '@semantic-release/release-notes-generator@14.1.0(semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)':
     dependencies:
       conventional-changelog-angular: 8.0.0
       conventional-changelog-writer: 8.0.0
@@ -7041,7 +7041,7 @@ snapshots:
       into-stream: 7.0.0
       lodash-es: 4.18.1
       read-package-up: 11.0.0
-      semantic-release: 25.0.8(supports-color@10.2.2)(typescript@5.9.3)
+      semantic-release: 25.0.9(supports-color@10.2.2)(typescript@5.9.3)
     transitivePeerDependencies:
       - supports-color
 
@@ -7287,7 +7287,7 @@ snapshots:
       eslint-visitor-keys: 4.2.1
       espree: 10.4.0
       estraverse: 5.3.0
-      picomatch: 4.0.4
+      picomatch: 4.0.5
 
   '@stylistic/stylelint-plugin@5.2.1(stylelint@17.14.1(supports-color@10.2.2)(typescript@5.9.3))':
     dependencies:
@@ -8951,6 +8951,10 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.4
 
+  fdir@6.5.0(picomatch@4.0.5):
+    optionalDependencies:
+      picomatch: 4.0.5
+
   fflate@0.8.2: {}
 
   figures@2.0.0:
@@ -10292,7 +10296,7 @@ snapshots:
 
   parse-json@8.3.0:
     dependencies:
-      '@babel/code-frame': 7.29.0
+      '@babel/code-frame': 7.29.7
       index-to-position: 1.2.0
       type-fest: 4.41.0
 
@@ -10617,7 +10621,7 @@ snapshots:
   rollup-plugin-visualizer@6.0.11(rollup@4.62.4):
     dependencies:
       open: 8.4.2
-      picomatch: 4.0.4
+      picomatch: 4.0.5
       source-map: 0.7.4
       yargs: 17.7.2
     optionalDependencies:
@@ -10806,13 +10810,13 @@ snapshots:
     dependencies:
       xmlchars: 2.2.0
 
-  semantic-release@25.0.8(supports-color@10.2.2)(typescript@5.9.3):
+  semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3):
     dependencies:
-      '@semantic-release/commit-analyzer': 13.0.1(semantic-release@25.0.8(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)
+      '@semantic-release/commit-analyzer': 13.0.1(semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)
       '@semantic-release/error': 4.0.0
-      '@semantic-release/github': 12.0.2(semantic-release@25.0.8(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)
-      '@semantic-release/npm': 13.1.2(semantic-release@25.0.8(supports-color@10.2.2)(typescript@5.9.3))
-      '@semantic-release/release-notes-generator': 14.1.0(semantic-release@25.0.8(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)
+      '@semantic-release/github': 12.0.2(semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)
+      '@semantic-release/npm': 13.1.2(semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3))
+      '@semantic-release/release-notes-generator': 14.1.0(semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3))(supports-color@10.2.2)
       aggregate-error: 5.0.0
       cosmiconfig: 9.0.2(typescript@5.9.3)
       debug: 4.4.3(supports-color@10.2.2)
@@ -11627,8 +11631,8 @@ snapshots:
   vite@7.3.6(@types/node@24.13.3)(jiti@2.4.2)(sass-embedded@1.100.0)(sass@1.102.0)(yaml@2.9.0):
     dependencies:
       esbuild: 0.28.1
-      fdir: 6.5.0(picomatch@4.0.4)
-      picomatch: 4.0.4
+      fdir: 6.5.0(picomatch@4.0.5)
+      picomatch: 4.0.5
       postcss: 8.5.26
       rollup: 4.62.4
       tinyglobby: 0.2.17
@@ -11654,7 +11658,7 @@ snapshots:
       magic-string: 0.30.21
       obug: 2.1.3
       pathe: 2.0.3
-      picomatch: 4.0.4
+      picomatch: 4.0.5
       std-env: 4.1.0
       tinybench: 2.9.0
       tinyexec: 1.2.4
@@ -11802,7 +11806,7 @@ snapshots:
     dependencies:
       signal-exit: 4.1.0
 
-  ws@8.21.1: {}
+  ws@8.21.3: {}
 
   wsl-utils@0.1.0:
     dependencies:
