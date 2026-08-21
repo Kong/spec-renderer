@@ -62,7 +62,7 @@
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "14.0.3",
     "@asyncapi/avro-schema-parser": "^3.0.24",
-    "@asyncapi/openapi-schema-parser": "^3.0.24",
+    "@asyncapi/openapi-schema-parser": "^3.1.0",
     "@asyncapi/parser": "^3.6.1",
     "@floating-ui/vue": "^1.1.11",
     "@kong/icons": "^1.62.1",
@@ -214,7 +214,7 @@
     "node": ">=18.17.0"
   },
   "volta": {
-    "node": "24.18.1",
+    "node": "24.19.0",
     "pnpm": "11.21.0"
   },
   "config": {
