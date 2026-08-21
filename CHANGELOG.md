@@ -1,3 +1,10 @@
+## [1.113.5](https://github.com/Kong/spec-renderer/compare/v1.113.4...v1.113.5) (2026-08-21)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#979](https://github.com/Kong/spec-renderer/issues/979)) ([277cbcf](https://github.com/Kong/spec-renderer/commit/277cbcf8a1e11199ac04def6d51b0ae6ea5155c4))
+
 ## [1.113.4](https://github.com/Kong/spec-renderer/compare/v1.113.3...v1.113.4) (2026-08-19)
 
 
