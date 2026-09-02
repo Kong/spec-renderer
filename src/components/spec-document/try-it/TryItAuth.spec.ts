@@ -1,10 +1,19 @@
 import { ref } from 'vue'
-import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { describe, it, expect, beforeEach } from 'vitest'
+import { mount, flushPromises } from '@vue/test-utils'
 import TryItAuth from './TryItAuth.vue'
+import composables from '@/composables'
 
 
 describe('<TryItAuth />', () => {
+
+  beforeEach(() => {
+    const { activeSecurityScheme, authHeadersMap, authQueryMap, authInputs } = composables.useAuth()
+    activeSecurityScheme.value = ''
+    authHeadersMap.value = {}
+    authQueryMap.value = {}
+    authInputs.value = {}
+  })
 
   it('Should renderer basic auth', async () => {
 
@@ -86,6 +95,34 @@ describe('<TryItAuth />', () => {
       },
     })
     expect(wrapper.html()).toContain('Scopes')
+  })
+
+  it('combines headers for schemes in the same security requirement', async () => {
+    const security = [[
+      { id: 'bearer', key: 'BearerAuth', extensions: {}, type: 'http', scheme: 'bearer' },
+      { id: 'api-key', key: 'ApiKeyAuth', extensions: {}, type: 'apiKey', in: 'header', name: 'apikey' },
+    ]]
+    const group = { title: 'BearerAuth & ApiKeyAuth', key: 'BearerAuth-ApiKeyAuth', schemeList: security[0] }
+    const { activeSecurityScheme } = composables.useAuth()
+    activeSecurityScheme.value = group.key
+    const wrapper = mount(TryItAuth, {
+      props: {
+        data: { id: 'dual-auth', method: 'post', path: '/example', responses: [], servers: [], security },
+      },
+      global: { provide: { 'security-scheme-group-list': ref([group]) } },
+    })
+
+    const inputs = wrapper.findAll('input')
+    await inputs[0].setValue('jwt-value')
+    await inputs[1].setValue('api-key-value')
+    await new Promise(resolve => setTimeout(resolve, 300))
+    await flushPromises()
+
+    const { authHeadersMap } = composables.useAuth()
+    expect(authHeadersMap.value[group.key]).toEqual([
+      { name: 'Authorization', value: 'Bearer jwt-value' },
+      { name: 'apikey', value: 'api-key-value' },
+    ])
   })
 
 })
