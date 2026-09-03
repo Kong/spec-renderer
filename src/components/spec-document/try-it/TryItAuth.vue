@@ -189,7 +189,10 @@ const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
   if (!auth2ComponentRef.value?.[0]?.auth2ClientCredentialsAuth) {
     return { ok: true } as Response
   }
-  return await auth2ComponentRef.value[0].auth2ClientCredentialsAuth()
+  const response = await auth2ComponentRef.value[0].auth2ClientCredentialsAuth()
+  // The request proceeds immediately after this returns, before the input debounce runs.
+  updateAuthDataImpl()
+  return response
 }
 
 defineExpose({
@@ -226,15 +229,17 @@ const currentSecuritySchemeMap = ref<Record<string, HttpSecurityScheme>>({})
 
 
 /**
- * Debounced function to update auth headers and queries
+ * Update auth headers and queries for the current security requirement.
  */
-const updateAuthData = useDebounceFn(() => {
+const updateAuthDataImpl = () => {
+  const headers: Array<Record<string, string>> = []
+  const query: string[] = []
 
-  const append = (key: string, name: string, value: string, schemeIn: string) => {
+  const append = (name: string, value: string, schemeIn: string) => {
     if (schemeIn === 'query') {
-      authQueryMap.value[key] = `${name}=${value}`
+      query.push(`${name}=${value}`)
     } else {
-      authHeadersMap.value[key] = [...[{ name, value }]]
+      headers.push({ name, value })
     }
   }
 
@@ -243,9 +248,11 @@ const updateAuthData = useDebounceFn(() => {
     // @ts-ignore `in` is valid attribute of the schema
     const schemeIn = scheme.in
 
-    // this is handled in TryItAuth2.vue
+    // The token is acquired in TryItAuth2.vue, but it must still be included
+    // when this security requirement contains multiple schemes.
     if (scheme.type === 'oauth2' && scheme.flows.clientCredentials) {
-      return
+      append('Authorization', authInputs.value[`${key}-token`] || 'Bearer', schemeIn)
+      continue
     }
 
     if (scheme.type === 'http' && scheme.scheme === 'basic') {
@@ -253,19 +260,27 @@ const updateAuthData = useDebounceFn(() => {
       const password = authInputs.value[`${key}-password`] || ''
       const basicAuthValue = btoa(`${username}:${password}`)
       // if the scheme is in header, we add it to the headers
-      append(key, 'Authorization', `Basic ${basicAuthValue}`, schemeIn)
+      append('Authorization', `Basic ${basicAuthValue}`, schemeIn)
 
     } else if (scheme.type === 'http' && scheme.scheme === 'bearer') {
       const value = authInputs.value[`${key}-token`] || ''
-      append(key, 'Authorization', `Bearer ${value}`, schemeIn)
+      append('Authorization', `Bearer ${value}`, schemeIn)
 
     } else {
       const value = authInputs.value[`${key}-token`] || ''
       // @ts-ignore `name` is valid attribute of the schema
-      append(key, scheme.name || 'Authorization', value, schemeIn)
+      append(scheme.name || 'Authorization', value, schemeIn)
     }
   }
-}, 100)
+
+  // Requests select credentials by security requirement (an AND group), not
+  // by an individual scheme. For a single-scheme requirement the keys match,
+  // which previously hid this bug.
+  authHeadersMap.value[currentSecurityScheme.value] = headers
+  authQueryMap.value[currentSecurityScheme.value] = query.join('&')
+}
+
+const updateAuthData = useDebounceFn(updateAuthDataImpl, 100)
 
 const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): string => {
   //@ts-ignore `name` is valid property
