@@ -161,7 +161,10 @@ describe('<TryItAuth />', () => {
     const inputs = wrapper.findAll('input')
     await inputs[0].setValue('jwt-value')
     await inputs[1].setValue('api-key-value')
-    await new Promise(resolve => setTimeout(resolve, 300))
+    await inputs[0].setValue('jwt-value')
+    await inputs[1].setValue('api-key-value')
+    await vi.advanceTimersByTimeAsync(100)
+    await flushPromises()
     await flushPromises()
 
     const { authHeadersMap } = composables.useAuth()
