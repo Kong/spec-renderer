@@ -1,3 +1,10 @@
+## [1.113.9](https://github.com/Kong/spec-renderer/compare/v1.113.8...v1.113.9) (2026-09-03)
+
+
+### Bug Fixes
+
+* missing auth headers in try_it feature when multiple securitySchemes are defined [TDX-8806] ([#993](https://github.com/Kong/spec-renderer/issues/993)) ([abb9fd9](https://github.com/Kong/spec-renderer/commit/abb9fd9dcaff23d1d2e4c742a50410aa5c7e4032))
+
 ## [1.113.8](https://github.com/Kong/spec-renderer/compare/v1.113.7...v1.113.8) (2026-09-03)
 
 
