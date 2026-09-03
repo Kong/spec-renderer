@@ -144,6 +144,7 @@ describe('<TryItAuth />', () => {
   })
 
   it('combines headers for schemes in the same security requirement', async () => {
+    vi.useFakeTimers()
     const security = [[
       { id: 'bearer', key: 'BearerAuth', extensions: {}, type: 'http', scheme: 'bearer' },
       { id: 'api-key', key: 'ApiKeyAuth', extensions: {}, type: 'apiKey', in: 'header', name: 'apikey' },
@@ -161,10 +162,7 @@ describe('<TryItAuth />', () => {
     const inputs = wrapper.findAll('input')
     await inputs[0].setValue('jwt-value')
     await inputs[1].setValue('api-key-value')
-    await inputs[0].setValue('jwt-value')
-    await inputs[1].setValue('api-key-value')
     await vi.advanceTimersByTimeAsync(100)
-    await flushPromises()
     await flushPromises()
 
     const { authHeadersMap } = composables.useAuth()
