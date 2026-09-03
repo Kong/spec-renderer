@@ -1,9 +1,10 @@
-import { ref } from 'vue'
-import { describe, it, expect, beforeEach } from 'vitest'
-import { mount, flushPromises } from '@vue/test-utils'
+import { ref, nextTick } from 'vue'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { mount, flushPromises, enableAutoUnmount } from '@vue/test-utils'
 import TryItAuth from './TryItAuth.vue'
 import composables from '@/composables'
 
+enableAutoUnmount(afterEach)
 
 describe('<TryItAuth />', () => {
 
@@ -13,6 +14,12 @@ describe('<TryItAuth />', () => {
     authHeadersMap.value = {}
     authQueryMap.value = {}
     authInputs.value = {}
+  })
+
+  afterEach(() => {
+    vi.clearAllTimers()
+    vi.useRealTimers()
+    vi.unstubAllGlobals()
   })
 
   it('Should renderer basic auth', async () => {
@@ -95,6 +102,45 @@ describe('<TryItAuth />', () => {
       },
     })
     expect(wrapper.html()).toContain('Scopes')
+  })
+
+  it('updates combined headers before OAuth token acquisition returns', async () => {
+    vi.useFakeTimers()
+    const security = [[
+      {
+        id: 'oauth', key: 'OAuth', extensions: {}, type: 'oauth2' as const,
+        flows: { clientCredentials: { tokenUrl: 'https://example.test/token', scopes: {} } },
+      },
+      { id: 'api-key', key: 'ApiKey', extensions: {}, type: 'apiKey' as const, in: 'header' as const, name: 'apikey' },
+    ]]
+    const group = { title: 'OAuth & ApiKey', key: 'OAuth-ApiKey', schemeList: security[0] }
+    const { activeSecurityScheme, authInputs, authHeadersMap } = composables.useAuth()
+    activeSecurityScheme.value = group.key
+    authInputs.value = { 'OAuth-clientId': 'client', 'OAuth-clientSecret': 'secret', 'ApiKey-token': 'key-value' }
+    const tokenResponse = {
+      ok: true,
+      json: async () => ({ access_token: 'new-token', token_type: 'Bearer', expires_in: 60 }),
+    }
+    const fetchMock = vi.fn().mockResolvedValue(tokenResponse)
+    vi.stubGlobal('fetch', fetchMock)
+    const wrapper = mount(TryItAuth, {
+      props: {
+        data: { id: 'oauth-combined', method: 'post', path: '/example', responses: [], servers: [], security },
+      },
+      global: { provide: { 'security-scheme-group-list': ref([group]) } },
+    })
+    await nextTick()
+    await vi.advanceTimersByTimeAsync(100)
+
+    expect(await wrapper.vm.auth2ClientCredentialsAuth()).toBe(tokenResponse)
+
+    // The API request uses these headers immediately, before the debounce runs.
+    expect(authHeadersMap.value[group.key]).toEqual([
+      { name: 'Authorization', value: 'Bearer new-token' },
+      { name: 'apikey', value: 'key-value' },
+    ])
+    await wrapper.vm.auth2ClientCredentialsAuth()
+    expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
   it('combines headers for schemes in the same security requirement', async () => {

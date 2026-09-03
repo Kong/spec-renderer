@@ -189,7 +189,10 @@ const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
   if (!auth2ComponentRef.value?.[0]?.auth2ClientCredentialsAuth) {
     return { ok: true } as Response
   }
-  return await auth2ComponentRef.value[0].auth2ClientCredentialsAuth()
+  const response = await auth2ComponentRef.value[0].auth2ClientCredentialsAuth()
+  // The request proceeds immediately after this returns, before the input debounce runs.
+  updateAuthDataImpl()
+  return response
 }
 
 defineExpose({
@@ -226,9 +229,9 @@ const currentSecuritySchemeMap = ref<Record<string, HttpSecurityScheme>>({})
 
 
 /**
- * Debounced function to update auth headers and queries
+ * Update auth headers and queries for the current security requirement.
  */
-const updateAuthData = useDebounceFn(() => {
+const updateAuthDataImpl = () => {
   const headers: Array<Record<string, string>> = []
   const query: string[] = []
 
@@ -275,7 +278,9 @@ const updateAuthData = useDebounceFn(() => {
   // which previously hid this bug.
   authHeadersMap.value[currentSecurityScheme.value] = headers
   authQueryMap.value[currentSecurityScheme.value] = query.join('&')
-}, 100)
+}
+
+const updateAuthData = useDebounceFn(updateAuthDataImpl, 100)
 
 const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): string => {
   //@ts-ignore `name` is valid property
