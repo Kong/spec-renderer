@@ -108,7 +108,7 @@
     "@types/sanitize-html": "^2.16.1",
     "@types/ws": "^8.18.1",
     "@vitejs/plugin-vue": "^6.0.8",
-    "@vitest/ui": "^3.2.7",
+    "@vitest/ui": "^4.1.11",
     "@vue/test-utils": "^2.4.11",
     "@vue/tsconfig": "^0.9.1",
     "autoprefixer": "^10.5.4",
