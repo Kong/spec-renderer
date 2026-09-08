@@ -1,5 +1,6 @@
 import type { SchemaObject } from '@/types'
-import { merge } from 'allof-merge'
+import { jsonSchemaMergeRules, merge, mergeObjects } from 'allof-merge'
+import type { MergeResolver, MergeRules } from 'allof-merge'
 
 /**
  * Type guard for verifying object is of type SchemaObject
@@ -36,30 +37,99 @@ const removeCircularRefs = (obj: Record<string, any>):Record<string, any> => {
   return res
 }
 
+// examples can be defined either as 'example' or 'examples' fields
+type ExampleField = 'example' | 'examples'
+
 /**
- * Merges a schema's allOf sub-schemas via allof-merge, then makes the schema's own sibling
- * `title`/`example`/`examples` win over the merge result.
+ * Type guard for verifying that a schema has a specific example-related field (`example` or `examples`).
+ */
+const hasOwnField = <T extends ExampleField>(schema: unknown, field: T): schema is Record<T, unknown> => (
+  typeof schema === 'object' && schema !== null && Object.hasOwn(schema, field)
+)
+
+/**
+ * Creates a custom merge resolver for handling example fields in a schema.
+ * It prioritizes the explicitly specified field and falls back to the default merge behavior of allof-merge.
+ *
+ * @param schema The schema object to check for example fields.
+ * @param field The primary example field to prioritize.
+ * @param alternateField The alternate example field to fall back to if the primary field is not present.
+ * @returns A merge resolver function for handling example fields in the schema.
+ */
+const createExampleMergeResolver = (schema: unknown, field: ExampleField, alternateField: ExampleField): MergeResolver => (values, context) => {
+  if (hasOwnField(schema, field)) return schema[field]
+  // Explicitly return undefined if the alternate field exists but the primary field does not
+  // because if the primary field is not present, and we want to explicitly indicate that no value should be used for it.
+  if (hasOwnField(schema, alternateField)) return undefined
+
+  // fallback to the default merge behavior if neither the primary nor the alternate field is present
+  return mergeObjects(values, context)
+}
+
+/**
+ * Create a custom set of merge rules for a given allOf schema, for handling example fields merging in our own way.
+ */
+const createSchemaMergeRules = (schema: unknown): MergeRules => {
+  const rules = jsonSchemaMergeRules()
+
+  rules['/example'] = { $: createExampleMergeResolver(schema, 'example', 'examples') }
+  rules['/examples'] = { $: createExampleMergeResolver(schema, 'examples', 'example') }
+
+  // Common OpenAPI fields whose children are schemas
+  for (const key of ['properties', 'oneOf', 'anyOf']) {
+    const childSchemaRule = rules[`/${key}`] // existing rule for this field
+    if (childSchemaRule && typeof childSchemaRule !== 'function') {
+      // append our custom merge rules to existing rules
+      rules[`/${key}`] = {
+        ...childSchemaRule,
+        '/*': ({ value }) => createSchemaMergeRules(value),
+      }
+    }
+  }
+
+  // Common OpenAPI fields that hold a schema directly. Their rules are functions and not objects, hence handled separately.
+  for (const key of ['items', 'additionalProperties']) {
+    const schemaRule = rules[`/${key}`] // existing rule for this field. It's a function that returns the merge rules for this schema field.
+    if (typeof schemaRule === 'function') {
+      rules[`/${key}`] = (context) => {
+        const resolvedSchemaRule = schemaRule(context)
+        // Extract the existing schema resolver from the rule if it exists, so we can preserve it after extending the merge rules.
+        const specializedResolver = '$' in resolvedSchemaRule ? resolvedSchemaRule.$ : undefined
+
+        return {
+          ...resolvedSchemaRule,
+          ...createSchemaMergeRules(context.value),
+          // createSchemaMergeRules includes the generic JSON Schema `$` resolver. Restore this
+          // field's specialized resolver last so items/additionalProperties keep their merge logic.
+          ...(specializedResolver ? { $: specializedResolver } : {}),
+          // For the 'items' field, we also apply our custom merge rules to each item in the array
+          ...(key === 'items' ? { '/*': ({ value }) => createSchemaMergeRules(value) } : {}),
+        }
+      }
+    }
+  }
+
+  return rules
+}
+
+/**
+ * Merges a schema's allOf sub-schemas via allof-merge, then makes the schema's own sibling `title`
+ * win over the merge result. Custom merge rules make sibling examples win at every schema level.
  *
  * @param originalSchema the schema to merge; also read for the sibling overrides
  * @param allOfForMerge the allOf array to merge, if different from originalSchema.allOf (e.g. a
  * circular-reference-safe copy - see resolveAllOf)
  */
 const mergeAllOf = (originalSchema: SchemaObject, allOfForMerge: SchemaObject['allOf'] = originalSchema.allOf): SchemaObject => {
-  const merged: SchemaObject = { ...(merge({ ...originalSchema, allOf: allOfForMerge }, { mergeCombinarySibling: true }) as SchemaObject) }
+  const schemaForMerge = { ...originalSchema, allOf: allOfForMerge }
+  const merged: SchemaObject = { ...(merge(schemaForMerge, {
+    mergeCombinarySibling: true,
+    rules: createSchemaMergeRules(schemaForMerge),
+  }) as SchemaObject) }
 
   // restore title as allof-merge lets an allOf branch's title silently overwrite the sibling's
   if (originalSchema.title) {
     merged.title = originalSchema.title
-  }
-
-  // allof-merge concatenates example/examples across allOf branches instead of letting the sibling
-  // override - keep only the sibling's own value, clearing the other key so it can't win instead
-  if (Object.hasOwn(originalSchema, 'examples')) {
-    merged.examples = originalSchema.examples
-    delete merged.example
-  } else if (Object.hasOwn(originalSchema, 'example')) {
-    merged.example = originalSchema.example
-    delete merged.examples
   }
 
   return merged
