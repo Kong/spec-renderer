@@ -102,8 +102,8 @@ const createSchemaMergeRules = (schema: unknown): MergeRules => {
           // createSchemaMergeRules includes the generic JSON Schema `$` resolver. Restore this
           // field's specialized resolver last so items/additionalProperties keep their merge logic.
           ...(specializedResolver ? { $: specializedResolver } : {}),
-          // For the 'items' field, we also apply our custom merge rules to each item in the array
-          ...(key === 'items' ? { '/*': ({ value }) => createSchemaMergeRules(value) } : {}),
+          // For `items` array, apply our custom merge rules to each item.
+          ...(key === 'items' && Array.isArray(context.value) ? { '/*': ({ value }) => createSchemaMergeRules(value) } : {}),
         }
       }
     }

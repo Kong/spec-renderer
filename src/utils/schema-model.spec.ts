@@ -372,6 +372,56 @@ describe('resolveSchemaObjectFields', () => {
     })
   })
 
+  it('uses the standard merge rules for keywords in object-form items', () => {
+    const schemaObject: SchemaObject = {
+      allOf: [
+        {
+          type: 'array',
+          items: {
+            type: 'string',
+            description: 'An identifier',
+            format: 'uuid',
+            default: '00000000-0000-0000-0000-000000000000',
+          },
+        },
+      ],
+    }
+
+    expect(resolveSchemaObjectFields(schemaObject)).toMatchObject({
+      items: {
+        type: 'string',
+        description: 'An identifier',
+        format: 'uuid',
+        default: '00000000-0000-0000-0000-000000000000',
+      },
+    })
+  })
+
+  it('applies custom example merge rules to each tuple-form items schema', () => {
+    const schemaObject: SchemaObject = {
+      allOf: [
+        {
+          type: 'array',
+          items: [
+            {
+              allOf: [{ type: 'string', examples: ['Inherited example'] }],
+              examples: ['Explicit example'],
+            },
+          ],
+        },
+      ],
+    }
+
+    expect(resolveSchemaObjectFields(schemaObject)).toMatchObject({
+      items: [
+        {
+          type: 'string',
+          examples: ['Explicit example'],
+        },
+      ],
+    })
+  })
+
   it('lets an explicit example override inherited examples in a property inside a oneOf branch', () => {
     const schemaObject: SchemaObject = {
       allOf: [
