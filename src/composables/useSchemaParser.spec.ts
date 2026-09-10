@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import composables from '.'
 import stripeSpec from '../../sandbox/public/specs/stripe.json'
 import type { ServiceNode } from '@/types'
+import { resolveSchemaObjectFields } from '@/utils'
 
 describe('useSchemaParser', () => {
   describe('inline-refs', () => {
@@ -418,6 +419,48 @@ components:
   })
 
   describe('async api parsing', () => {
+    it('resolves Gemini-style allOf schemas with parser-generated additionalProperties', async () => {
+      const specContent = `asyncapi: 3.1.0
+info:
+  title: Gemini Market Data Websocket API
+  version: 1.0.0
+channels: {}
+operations: {}
+components:
+  schemas:
+    heartbeat:
+      allOf:
+        - properties:
+            type:
+              type: string
+              const: heartbeat
+          required:
+            - type
+        - $ref: '#/components/schemas/default'
+    default:
+      type: object
+      required:
+        - socket_sequence
+      properties:
+        socket_sequence:
+          type: integer
+`
+
+      const { parseSpecDocument, parsedDocument } = composables.useSchemaParser()
+      await parseSpecDocument(specContent)
+
+      const heartbeat = (parsedDocument.value as ServiceNode).children
+        .find(child => child.uri === '/schema-heartbeat')
+
+      expect(resolveSchemaObjectFields(heartbeat?.data)).toMatchObject({
+        properties: {
+          type: { type: 'string', const: 'heartbeat' },
+          socket_sequence: { type: 'integer' },
+        },
+        required: expect.arrayContaining(['type', 'socket_sequence']),
+      })
+    })
+
     it('should preserve inline message examples without requiring schema references', async () => {
       const specContent = `asyncapi: 3.0.0
 info:
