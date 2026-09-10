@@ -151,13 +151,14 @@ export const resolveSchemaObjectFields = (candidate: unknown): SchemaObject => {
        * - fields listed directly under the model, except items
        * - fields listed under items, so we destructure items
        * - data type as 'array' and format as the array item data type
-       * if a field is present in both items and the model itself, we use the one from items
+       * item fields take precedence, except for the collection's own description
        */
     const candidateWithoutItems = { ...candidate }
     delete candidateWithoutItems.items
     return {
       ...candidateWithoutItems,
       ...resolveAllOf(candidate.items),
+      ...(Object.hasOwn(candidate, 'description') ? { description: candidate.description } : {}),
       type: candidate.type,
       itemType: candidate.items.type,
     }
