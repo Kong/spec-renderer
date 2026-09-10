@@ -93,6 +93,9 @@ const createSchemaMergeRules = (schema: unknown): MergeRules => {
     if (typeof schemaRule === 'function') {
       rules[`/${key}`] = (context) => {
         const resolvedSchemaRule = schemaRule(context)
+        // allof-merge also invokes rule factories without crawl context while merging allOf values.
+        if (!context) return resolvedSchemaRule
+
         // Extract the existing schema resolver from the rule if it exists, so we can preserve it after extending the merge rules.
         const specializedResolver = '$' in resolvedSchemaRule ? resolvedSchemaRule.$ : undefined
 
