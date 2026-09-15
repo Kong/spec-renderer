@@ -2,6 +2,9 @@ import { ref, nextTick } from 'vue'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { mount, flushPromises, enableAutoUnmount } from '@vue/test-utils'
 import TryItAuth from './TryItAuth.vue'
+import TryIt from './TryIt.vue'
+import RequestSample from '../samples/RequestSample.vue'
+import CodeBlock from '@/components/common/CodeBlock.vue'
 import composables from '@/composables'
 
 enableAutoUnmount(afterEach)
@@ -170,6 +173,67 @@ describe('<TryItAuth />', () => {
       { name: 'Authorization', value: 'Bearer jwt-value' },
       { name: 'apikey', value: 'api-key-value' },
     ])
+  })
+
+  it('omits empty credentials and removes cleared API keys from a combined requirement', async () => {
+    vi.useFakeTimers()
+    const schemeList = [
+      { id: 'bearer', key: 'Bearer', extensions: {}, type: 'http', scheme: 'bearer' },
+      { id: 'key', key: 'Key', extensions: {}, type: 'apiKey', in: 'header', name: 'apikey' },
+      { id: 'query', key: 'Query', extensions: {}, type: 'apiKey', in: 'query', name: 'api_key' },
+      { id: 'basic', key: 'Basic', extensions: {}, type: 'http', scheme: 'basic' },
+      { id: 'oauth', key: 'OAuth', extensions: {}, type: 'oauth2', flows: { clientCredentials: { tokenUrl: 'https://example.test/token', scopes: {} } } },
+    ]
+    const group = { title: 'Combined', key: 'combined', schemeList }
+    const { activeSecurityScheme, authInputs, authHeadersMap, authQueryMap } = composables.useAuth()
+    activeSecurityScheme.value = group.key
+    mount(TryItAuth, {
+      props: { data: { id: 'empty-auth', method: 'get', path: '/example', responses: [], servers: [], security: [schemeList] } },
+      global: { provide: { 'security-scheme-group-list': ref([group]) } },
+    })
+    await nextTick()
+    await vi.advanceTimersByTimeAsync(100)
+    authInputs.value = { 'Bearer-token': '', 'Key-token': '', 'Basic-username': '', 'Basic-password': '' }
+    await nextTick()
+    await vi.advanceTimersByTimeAsync(100)
+    expect(authHeadersMap.value[group.key]).toEqual([])
+    expect(authQueryMap.value[group.key]).toBe('')
+
+    authInputs.value = { 'Bearer-token': 'token', 'Key-token': '0', 'Query-token': 'query-key' }
+    await nextTick()
+    await vi.advanceTimersByTimeAsync(100)
+    expect(authHeadersMap.value[group.key]).toEqual([
+      { name: 'Authorization', value: 'Bearer token' },
+      { name: 'apikey', value: '0' },
+    ])
+    expect(authQueryMap.value[group.key]).toBe('api_key=query-key')
+
+    authInputs.value = { 'Bearer-token': 'token', 'Key-token': '', 'Query-token': '' }
+    await nextTick()
+    await vi.advanceTimersByTimeAsync(100)
+    expect(authHeadersMap.value[group.key]).toEqual([{ name: 'Authorization', value: 'Bearer token' }])
+    expect(authQueryMap.value[group.key]).toBe('')
+
+    // Both consumers receive the same filtered authentication headers.
+    const data = { id: 'filtered-auth', method: 'get' as const, path: '/example', responses: [], servers: [] }
+    const props = { data, serverUrl: 'https://example.test', authHeaders: authHeadersMap.value[group.key] }
+    const request = mount(TryIt, { props })
+    const fetchMock = vi.fn().mockResolvedValue(new Response('{}', { status: 200 }))
+    vi.stubGlobal('fetch', fetchMock)
+    await request.findTestId('tryit-call-button-filtered-auth').trigger('click')
+    expect(fetchMock.mock.calls[0][1].headers).toMatchObject({ authorization: 'Bearer token' })
+    expect(fetchMock.mock.calls[0][1].headers).not.toHaveProperty('apikey')
+
+    const sample = mount(RequestSample, { props: { ...props, requestPath: '/example' } })
+    await flushPromises()
+    const code = sample.getComponent(CodeBlock).props('code')
+    expect(code).toContain('Bearer token')
+    expect(code).not.toContain('apikey')
+
+    authInputs.value = { 'Bearer-token': '   ', 'Key-token': '   ', 'Basic-username': 'user' }
+    await nextTick()
+    await vi.advanceTimersByTimeAsync(100)
+    expect(authHeadersMap.value[group.key]).toEqual([{ name: 'Authorization', value: `Basic ${btoa('user:')}` }])
   })
 
 })
