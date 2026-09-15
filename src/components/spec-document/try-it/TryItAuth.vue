@@ -13,6 +13,14 @@
         Authentication
       </h3>
 
+      <LabelBadge
+        v-if="pkceTargets.length > 0"
+        :data-testid="`tryit-auth-status-${data.id}`"
+        :label="pkceStatusMeta[pkceAggregateStatus].label"
+        size="small"
+        :type="pkceStatusMeta[pkceAggregateStatus].type"
+      />
+
       <SelectDropdown
         v-if="securitySchemeGroupSelectItems.length > 1"
         :id="`tryit-scheme-selector-${data.id}`"
@@ -117,8 +125,7 @@
       </div>
 
       <TryItAuth2
-        v-else-if="scheme.type === 'oauth2' && scheme.flows.clientCredentials"
-        ref="auth2ComponentTemplate"
+        v-else-if="scheme.type === 'oauth2'"
         :data-id="data.id"
         :scheme="scheme"
         :scheme-key="key"
@@ -161,18 +168,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, watch, ref, useTemplateRef } from 'vue'
+import { computed, inject, watch, ref } from 'vue'
 import type { ComputedRef, PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { LockIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
-import type { IHttpOperation, HttpSecurityScheme } from '@stoplight/types'
+import type { IHttpOperation, HttpSecurityScheme, IOauth2SecurityScheme } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import type { SecuritySchemeGroup, SelectItem } from '@/types'
+import LabelBadge from '@/components/common/LabelBadge.vue'
+import { buildPkceTarget } from '@/utils/oauth-pkce'
+import type { SecuritySchemeGroup, SelectItem, AuthPreflightResult, Oauth2AuthStatus, Oauth2PkceTarget, LabelBadgeType } from '@/types'
 import composables from '@/composables'
 import TryItAuth2 from './TryItAuth2.vue'
 
@@ -183,20 +192,38 @@ const props = defineProps({
   },
 })
 
-const auth2ComponentRef = useTemplateRef('auth2ComponentTemplate')
+const { runPreflight } = composables.useAuthPreflight()
 
-const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
-  if (!auth2ComponentRef.value?.[0]?.auth2ClientCredentialsAuth) {
-    return { ok: true } as Response
+/**
+ * Runs the registered pre-request handlers (e.g. OAuth2 client-credentials token
+ * acquisition) for every scheme in the active security requirement, then - like
+ * `auth2ClientCredentialsAuth` above - resyncs the combined headers/query immediately,
+ * before the input debounce runs.
+ */
+const runAuthPreflight = async (): Promise<AuthPreflightResult> => {
+  const result = await runPreflight(Object.keys(currentSecuritySchemeMap.value))
+  if (!result.error) {
+    updateAuthDataImpl()
   }
-  const response = await auth2ComponentRef.value[0].auth2ClientCredentialsAuth()
-  // The request proceeds immediately after this returns, before the input debounce runs.
-  updateAuthDataImpl()
-  return response
+  return result
+}
+
+/**
+ * @deprecated Use `runAuthPreflight`. Retained as a thin wrapper so callers that need the
+ * raw token response keep working; flow components now self-register their pre-request
+ * handler with `useAuthPreflight` instead of being reached through a template ref.
+ */
+const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
+  const result = await runAuthPreflight()
+  if (result.error) {
+    throw result.error
+  }
+  return result.response ?? ({ ok: true } as Response)
 }
 
 defineExpose({
   auth2ClientCredentialsAuth,
+  runAuthPreflight,
 })
 
 
@@ -205,6 +232,7 @@ const emit = defineEmits<{
 }>()
 
 const { activeSecurityScheme, authHeadersMap, authQueryMap, authInputs } = composables.useAuth()
+const { aggregateStatus } = composables.useOAuthPkce()
 
 // tracks which password fields are currently revealed; keyed by `${schemeKey}-fieldname`
 const showFields = ref<Record<string, boolean>>({})
@@ -227,6 +255,25 @@ const currentSecurityScheme = ref<string>(props.data.security?.[0]?.[0]?.key || 
  */
 const currentSecuritySchemeMap = ref<Record<string, HttpSecurityScheme>>({})
 
+/**
+ * PKCE (authorizationCode) targets among the active security schemes - used to drive
+ * the status badge in the panel header. Derived from `currentSecuritySchemeMap`, not
+ * just the schemes currently rendering `TryItAuthCode`, so the badge reflects every
+ * authorizationCode scheme in the active security requirement.
+ */
+const pkceTargets = computed((): Oauth2PkceTarget[] => Object.entries(currentSecuritySchemeMap.value)
+  .filter(([, s]) => s.type === 'oauth2' && (s as IOauth2SecurityScheme).flows?.authorizationCode)
+  .map(([key, s]) => buildPkceTarget(key, s as IOauth2SecurityScheme, authInputs.value[`${key}-clientId`] || ''))
+  .filter((t): t is Oauth2PkceTarget => !!t))
+
+const pkceAggregateStatus = computed((): Oauth2AuthStatus => aggregateStatus(pkceTargets.value))
+
+const pkceStatusMeta: Record<Oauth2AuthStatus, { label: string, type: LabelBadgeType }> = {
+  unauthenticated: { label: 'Unauthenticated', type: 'neutral' },
+  authorizing: { label: 'Authorizing…', type: 'primary' },
+  authenticated: { label: 'Authenticated', type: 'success' },
+  expired: { label: 'Expired', type: 'warning' },
+}
 
 /**
  * Update auth headers and queries for the current security requirement.
@@ -253,8 +300,11 @@ const updateAuthDataImpl = () => {
     const schemeIn = scheme.in
 
     // The token is acquired in TryItAuth2.vue, but it must still be included
-    // when this security requirement contains multiple schemes.
-    if (scheme.type === 'oauth2' && scheme.flows.clientCredentials) {
+    // when this security requirement contains multiple schemes. Both the
+    // clientCredentials and authorizationCode (PKCE) flows store their token in
+    // authInputs[`${key}-token`] as the full "Bearer <token>" string, so one branch
+    // serves both flows.
+    if (scheme.type === 'oauth2') {
       append('Authorization', authInputs.value[`${key}-token`] || '', schemeIn)
       continue
     }
@@ -313,37 +363,53 @@ watch(authInputs, () => {
   updateAuthData()
 }, { immediate: true, deep: true })
 
+/**
+ * Set when the scheme below was resolved by local fallback rather than chosen by the user,
+ * so it is NOT pushed back to the shared `activeSecurityScheme`. Many operations are
+ * mounted at once (`SpecDocument` renders a `v-for` of them), so if every operation pushed
+ * its own group key to that global they would fight over it. Only a genuine dropdown pick
+ * propagates across endpoints.
+ */
+let suppressGlobalSync = false
+
 watch(currentSecurityScheme, (newScheme) => {
-  activeSecurityScheme.value = newScheme
+  if (!suppressGlobalSync) {
+    activeSecurityScheme.value = newScheme
+  }
+  suppressGlobalSync = false
   emit('security-scheme-changed', newScheme)
   updateAuthData()
 })
 
 // when new security schema selected from the dropdown
 watch(() => ({ key: activeSecurityScheme.value, list: securitySchemeGroupList.value }), () => {
-  const schemeMap: Record<string, HttpSecurityScheme> = {}
-  const schemeList = securitySchemeGroupList.value.find(group => group.key === activeSecurityScheme.value)?.schemeList ?? []
-
-  schemeList.forEach((scheme) => {
-    schemeMap[scheme.key] = scheme
-  })
-  if (Object.keys(schemeMap).length > 0) {
-    // if we have a scheme map, we set it to the currentSecuritySchemeMap
-    currentSecuritySchemeMap.value = schemeMap
-    currentSecurityScheme.value = activeSecurityScheme.value
+  const groups = securitySchemeGroupList.value
+  if (!groups.length) {
     return
   }
-  // if we didn't find any from global (active), we grab one from current
-  if (Object.keys(currentSecuritySchemeMap.value).length == 0) {
-    const schemeList = securitySchemeGroupList.value.find(group => group.key === currentSecurityScheme.value)?.schemeList ?? []
 
-    schemeList.forEach((scheme) => {
-      schemeMap[scheme.key] = scheme
-    })
-    currentSecuritySchemeMap.value = schemeMap
+  // Prefer the globally selected group, so a scheme chosen on one operation carries across
+  // endpoints. Fall back to this operation's own first group when it does not offer that
+  // group at all - e.g. the global holds a bare `A` selected on another endpoint while this
+  // operation's requirement is `A & B`, whose group key is `A-B`. The previous fallback
+  // compared the group key against `security[0][0].key`, which only ever matched for
+  // single-scheme requirements, so an AND group rendered an empty panel and sent no
+  // auth headers.
+  const matched = groups.find(group => group.key === activeSecurityScheme.value)
+    ?? groups.find(group => group.key === currentSecurityScheme.value)
+  const group = matched ?? groups[0]!
+
+  const schemeMap: Record<string, HttpSecurityScheme> = {}
+  group.schemeList.forEach((scheme) => {
+    schemeMap[scheme.key] = scheme
+  })
+  currentSecuritySchemeMap.value = schemeMap
+
+  if (currentSecurityScheme.value !== group.key) {
+    // A local fallback must not clobber another endpoint's global selection.
+    suppressGlobalSync = !matched
+    currentSecurityScheme.value = group.key
   }
-
-
 }, { immediate: true } )
 
 </script>

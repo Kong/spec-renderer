@@ -1,0 +1,215 @@
+openapi: 3.1.0
+info:
+  title: OAuth2 Authorization Code (PKCE)
+  description: |
+    A spec for manually exercising the OAuth 2.0 authorization-code + PKCE (S256)
+    Try-It flow against the sandbox's mock identity provider (`sandbox/mock-oauth-plugin.ts`).
+
+    See `docs/oauth-pkce.md` for the full flow and troubleshooting.
+
+    - **Get widget** - single `authorizationCode` scheme, single scope.
+    - **Create widget** - `authorizationCode` AND `apiKey` combined (tests combined-header
+      assembly across two security requirements in one AND group).
+    - **List widgets (no-CORS token endpoint)** - uses a token endpoint with no CORS
+      headers, to reproduce the CORS-failure guidance UI on demand.
+    - **Delete widget (dual scheme)** - security scheme offers both `authorizationCode`
+      and `clientCredentials` flows, to exercise dual-panel dispatch and scope-key
+      namespacing between the two flows on the same scheme.
+    - **Health check** - no security, for contrast.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5173/mock/api
+
+components:
+  securitySchemes:
+    OAuthAuthCode:
+      type: oauth2
+      description: Authorization-code + PKCE flow against the sandbox mock IdP.
+      flows:
+        authorizationCode:
+          authorizationUrl: http://localhost:5173/mock/oauth/authorize
+          tokenUrl: http://localhost:5173/mock/oauth/token
+          refreshUrl: http://localhost:5173/mock/oauth/token
+          scopes:
+            read: Read access
+            write: Write access
+
+    OAuthNoCors:
+      type: oauth2
+      description: |
+        Same authorization-code + PKCE flow, but the token endpoint omits CORS
+        headers entirely. Use this to reproduce the "could not reach the token
+        endpoint" guidance in the Try-It panel.
+      flows:
+        authorizationCode:
+          authorizationUrl: http://localhost:5173/mock/oauth/authorize
+          tokenUrl: http://localhost:5173/mock/oauth/token-nocors
+          refreshUrl: http://localhost:5173/mock/oauth/token-nocors
+          scopes:
+            read: Read access
+            write: Write access
+
+    OAuthBoth:
+      type: oauth2
+      description: |
+        Offers both an authorization-code (PKCE) flow and a client-credentials flow
+        on the same security scheme, to exercise dual-panel dispatch and scope-key
+        namespacing between the two flows.
+      flows:
+        authorizationCode:
+          authorizationUrl: http://localhost:5173/mock/oauth/authorize
+          tokenUrl: http://localhost:5173/mock/oauth/token
+          refreshUrl: http://localhost:5173/mock/oauth/token
+          scopes:
+            read: Read access
+            write: Write access
+        clientCredentials:
+          tokenUrl: http://localhost:5173/mock/oauth/token
+          scopes:
+            read: Read access
+            write: Write access
+
+    ApiKey:
+      type: apiKey
+      name: X-API-Key
+      in: header
+      description: A simple API key, combined with OAuthAuthCode on the create-widget operation.
+
+  schemas:
+    Widget:
+      type: object
+      properties:
+        id:
+          type: string
+          example: wid_123abc
+        name:
+          type: string
+          example: Sprocket
+        createdAt:
+          type: string
+          format: date-time
+          example: '2024-01-15T10:30:00Z'
+
+paths:
+  # ── 1. Single authorizationCode scheme, single scope ────────────────────────
+  /widgets/{widgetId}:
+    get:
+      summary: Get widget
+      description: |
+        Secured by `OAuthAuthCode` with the `read` scope. The simplest case: sign in,
+        get a token, the `Authorization` header is attached automatically.
+      operationId: getWidget
+      security:
+        - OAuthAuthCode: [read]
+      parameters:
+        - name: widgetId
+          in: path
+          required: true
+          schema:
+            type: string
+            example: wid_123abc
+      responses:
+        '200':
+          description: Widget found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Widget'
+        '404':
+          description: Widget not found
+
+  # ── 2. Combined AND group: OAuthAuthCode + ApiKey ────────────────────────────
+  /widgets:
+    post:
+      summary: Create widget
+      description: |
+        Secured by a single AND group of `OAuthAuthCode` (`write` scope) **and**
+        `ApiKey`. Both the bearer token and the `X-API-Key` header must be supplied
+        for the request to succeed - this exercises combined-header assembly across
+        two security requirements in one group.
+      operationId: createWidget
+      security:
+        - OAuthAuthCode: [write]
+          ApiKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Sprocket
+      responses:
+        '201':
+          description: Widget created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Widget'
+
+    # ── 3. token-nocors scheme, to reproduce the CORS guidance UI ─────────────
+    get:
+      summary: List widgets (no-CORS token endpoint)
+      description: |
+        Secured by `OAuthNoCors`. Its token endpoint (`/mock/oauth/token-nocors`)
+        deliberately omits CORS headers and does not answer `OPTIONS`, so signing in
+        should surface the "could not reach the token endpoint" CORS guidance.
+      operationId: listWidgets
+      security:
+        - OAuthNoCors: [read]
+      responses:
+        '200':
+          description: Widgets list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Widget'
+
+  # ── 4. Dual-flow scheme: authorizationCode + clientCredentials ──────────────
+  /widgets/{widgetId}/archive:
+    delete:
+      summary: Delete widget (dual scheme)
+      description: |
+        Secured by `OAuthBoth`, which declares both an `authorizationCode` flow and a
+        `clientCredentials` flow on the same scheme. Exercises dual-panel dispatch and
+        scope-key namespacing between the two flows.
+      operationId: deleteWidget
+      security:
+        - OAuthBoth: [write]
+      parameters:
+        - name: widgetId
+          in: path
+          required: true
+          schema:
+            type: string
+            example: wid_123abc
+      responses:
+        '204':
+          description: Widget archived
+
+  # ── 5. No security, for contrast ─────────────────────────────────────────────
+  /health:
+    get:
+      summary: Health check
+      description: No security scheme - included for contrast with the secured operations above.
+      operationId: getHealth
+      security: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok

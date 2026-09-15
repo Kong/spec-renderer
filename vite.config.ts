@@ -5,6 +5,7 @@ import { replaceCodePlugin } from 'vite-plugin-replace'
 import path, { join } from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
+import { mockOAuthPlugin } from './sandbox/mock-oauth-plugin'
 
 // Include the rollup-plugin-visualizer if the BUILD_VISUALIZER env var is set to "true"
 const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
@@ -88,6 +89,11 @@ export default defineConfig({
       },
     }),
     VueDevTools(),
+    // Mock OAuth2 identity provider + protected API for exercising the PKCE Try-It flow
+    // by hand in the sandbox. Sandbox/dev only - must never ship in the library or
+    // web-component bundle, so it's guarded by the same `USE_SANDBOX` flag as the rest
+    // of the sandbox-only build config below.
+    process.env.USE_SANDBOX ? mockOAuthPlugin() : undefined,
   ],
   resolve: {
     alias: {
@@ -160,6 +166,13 @@ export default defineConfig({
   },
   server: {
     open: !!process.env.USE_SANDBOX,
+    // Vite's own default CORS middleware (`server.cors: true`) answers every OPTIONS
+    // preflight and reflects `Access-Control-Allow-Origin` for ALL routes, including
+    // `/mock/oauth/token-nocors` - which defeats the whole point of that mock endpoint
+    // (reproducing a token endpoint that does NOT support CORS). Disable it for the
+    // sandbox dev server so `mock-oauth-plugin.ts` is the sole authority on CORS for its
+    // own routes.
+    cors: !process.env.USE_SANDBOX,
     fs: {
       // Allow serving files from one level up from the package root - IMPORTANT - to support the sandbox
       allow: [join(__dirname, '..')],

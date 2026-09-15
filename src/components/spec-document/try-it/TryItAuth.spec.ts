@@ -5,6 +5,7 @@ import TryItAuth from './TryItAuth.vue'
 import TryIt from './TryIt.vue'
 import RequestSample from '../samples/RequestSample.vue'
 import CodeBlock from '@/components/common/CodeBlock.vue'
+import TryItAuthCode from './TryItAuthCode.vue'
 import composables from '@/composables'
 
 enableAutoUnmount(afterEach)
@@ -17,6 +18,7 @@ describe('<TryItAuth />', () => {
     authHeadersMap.value = {}
     authQueryMap.value = {}
     authInputs.value = {}
+    composables.useOAuthPkce().__resetForTests()
   })
 
   afterEach(() => {
@@ -236,4 +238,105 @@ describe('<TryItAuth />', () => {
     expect(authHeadersMap.value[group.key]).toEqual([{ name: 'Authorization', value: `Basic ${btoa('user:')}` }])
   })
 
+  it('renders TryItAuthCode for an authorizationCode scheme', () => {
+    const security = [[
+      {
+        id: 'auth-code-scheme',
+        key: 'AuthCodeAuth',
+        extensions: {},
+        description: 'OAuth2 authorization code flow',
+        type: 'oauth2',
+        flows: {
+          authorizationCode: {
+            authorizationUrl: 'https://auth.example.com/authorize',
+            tokenUrl: 'https://auth.example.com/token',
+            scopes: { read: 'Grants read access' },
+          },
+        },
+      },
+    ]]
+    const group = { title: 'AuthCodeAuth', key: 'AuthCodeAuth', schemeList: security[0] }
+
+    const wrapper = mount(TryItAuth, {
+      props: {
+        data: { id: 'auth-code-op', method: 'get', path: '/example', responses: [], servers: [], security },
+      },
+      global: { provide: { 'security-scheme-group-list': ref([group]) } },
+    })
+
+    expect(wrapper.findComponent(TryItAuthCode).exists()).toBe(true)
+    expect(wrapper.html()).not.toContain('App credential')
+  })
+
+  it('shows the status badge for an authorizationCode scheme, and hides it for a non-oauth2 scheme', () => {
+    const authCodeSecurity = [[
+      {
+        id: 'auth-code-scheme',
+        key: 'AuthCodeAuth',
+        extensions: {},
+        type: 'oauth2',
+        flows: {
+          authorizationCode: {
+            authorizationUrl: 'https://auth.example.com/authorize',
+            tokenUrl: 'https://auth.example.com/token',
+            scopes: {},
+          },
+        },
+      },
+    ]]
+    const authCodeGroup = { title: 'AuthCodeAuth', key: 'AuthCodeAuth', schemeList: authCodeSecurity[0] }
+
+    const authCodeWrapper = mount(TryItAuth, {
+      props: {
+        data: { id: 'auth-code-op', method: 'get', path: '/example', responses: [], servers: [], security: authCodeSecurity },
+      },
+      global: { provide: { 'security-scheme-group-list': ref([authCodeGroup]) } },
+    })
+
+    expect(authCodeWrapper.findTestId('tryit-auth-status-auth-code-op').exists()).toBe(true)
+    expect(authCodeWrapper.findTestId('tryit-auth-status-auth-code-op').text()).toBe('Unauthenticated')
+    authCodeWrapper.unmount()
+
+    const basicSecurity = [[{ id: 'b8d834b8fb9f5', key: 'basicAuth', extensions: {}, type: 'http', scheme: 'basic' }]]
+    const basicGroup = { title: 'basicAuth', key: 'basicAuth', schemeList: basicSecurity[0] }
+
+    const basicWrapper = mount(TryItAuth, {
+      props: {
+        data: { id: 'basic-op', method: 'get', path: '/example', responses: [], servers: [], security: basicSecurity },
+      },
+      global: { provide: { 'security-scheme-group-list': ref([basicGroup]) } },
+    })
+
+    expect(basicWrapper.findTestId('tryit-auth-status-basic-op').exists()).toBe(false)
+  })
+
+
+  // Regression: another endpoint whose requirement is a single scheme (`A`) claims the
+  // shared `activeSecurityScheme` first, then this endpoint's AND group (`A & B`, key
+  // `A-B`) has to still resolve. The old fallback compared the group key against
+  // `security[0][0].key`, which only matched single-scheme groups, so this rendered an
+  // empty panel and sent no auth headers. [POST /widgets in the PKCE sandbox fixture]
+  it('renders an AND group when another endpoint already claimed the active scheme', async () => {
+    const oauth = {
+      id: 'o', key: 'OAuthAuthCode', extensions: {}, type: 'oauth2' as const,
+      flows: { authorizationCode: { authorizationUrl: 'https://idp.test/a', tokenUrl: 'https://idp.test/t', scopes: { read: 'r' } } },
+    }
+    const apikey = { id: 'k', key: 'ApiKey', extensions: {}, type: 'apiKey' as const, in: 'header' as const, name: 'apikey' }
+    const security = [[oauth, apikey]]
+    const group = { title: 'OAuthAuthCode & ApiKey', key: 'OAuthAuthCode-ApiKey', schemeList: security[0] }
+
+    // simulate a single-scheme endpoint having mounted first and taken the global
+    composables.useAuth().activeSecurityScheme.value = 'OAuthAuthCode'
+
+    const wrapper = mount(TryItAuth, {
+      props: { data: { id: 'and-group', method: 'post', path: '/widgets', responses: [], servers: [], security } },
+      global: { provide: { 'security-scheme-group-list': ref([group]) } },
+    })
+
+    // both schemes in the requirement must render, and the PKCE status badge must appear
+    expect(wrapper.html()).toContain('apikey')
+    expect(wrapper.findTestId('tryit-auth-status-and-group').exists()).toBe(true)
+    // the local fallback must not have clobbered the other endpoint's global selection
+    expect(composables.useAuth().activeSecurityScheme.value).toBe('OAuthAuthCode')
+  })
 })
