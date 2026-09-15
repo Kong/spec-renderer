@@ -41,9 +41,9 @@ const removeCircularRefs = (obj: Record<string, any>):Record<string, any> => {
 type ExampleField = 'example' | 'examples'
 
 /**
- * Type guard for verifying that a schema has a specific example-related field (`example` or `examples`).
+ * Type guard for verifying that a schema has a specific property.
  */
-const hasOwnField = <T extends ExampleField>(schema: unknown, field: T): schema is Record<T, unknown> => (
+const hasOwnField = <T extends PropertyKey>(schema: unknown, field: T): schema is Record<T, unknown> => (
   typeof schema === 'object' && schema !== null && Object.hasOwn(schema, field)
 )
 
