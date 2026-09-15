@@ -82,7 +82,7 @@ import type { PropType, Ref } from 'vue'
 import TryItDropdown from './TryItDropdown.vue'
 import { getRequestHeaders, getSampleHeaders, getFormattedBody, getSamplePath, getSampleQuery, flattenMultipartFields } from '@/utils'
 import type { IHttpOperation } from '@stoplight/types'
-import type { SecuritySchemeMaskRule } from '@/types'
+import type { SecuritySchemeMaskRule, AuthPreflightResult } from '@/types'
 import MethodBadge from '@/components/common/MethodBadge.vue'
 import TryItAuth from './TryItAuth.vue'
 import TryItParams from './TryItParams.vue'
@@ -223,26 +223,24 @@ const readFileAsArrayBuffer = (file: File) => {
  * @param callAsIs when true, we do not do any modifications of the headers for GET requests, otherwise we attempt to convert get to simple request by removing 'content-type' header
  */
 const doApiCall = async (callAsIs = false) => {
-
   const isGet = props.data.method.toUpperCase() === 'GET'
+  apiCallLoading.value = true
 
-  // now we need to call uth2ClientCredentialsAuth is present, it will set headerMaps in useAuth composable, so we do not need to do anything other than call it and wait for it to finish
-  if (authComponentRef.value && authComponentRef.value.auth2ClientCredentialsAuth) {
-    try {
-      const tokenResp = await authComponentRef.value.auth2ClientCredentialsAuth()
-      if (tokenResp && !tokenResp.ok) {
-        response.value = tokenResp
-        throw new Error(`Error: ${tokenResp.status} ${tokenResp.statusText}`)
-      }
-    } catch (error: any) {
-      responseError.value = error
-      apiCallLoading.value = false
-      return
+  // Flow components (e.g. OAuth2) register a pre-request handler; ask the registry to run
+  // the handlers for the active security scheme group before the request goes out.
+  const preflight: AuthPreflightResult = await (authComponentRef.value?.runAuthPreflight?.() ?? { ok: true })
+  if (!preflight.ok) {
+    if (preflight.response) {
+      response.value = preflight.response
+      responseError.value = new Error(`Error: ${preflight.response.status} ${preflight.response.statusText}`)
+    } else {
+      responseError.value = preflight.error ?? new Error('Authentication failed')
     }
+    apiCallLoading.value = false
+    return
   }
 
   try {
-    apiCallLoading.value = true
     const url = new URL(`${currentServerUrl.value}${currentRequestPath.value}`.replaceAll('{', '').replaceAll('}', ''))
     let queryStr = currentRequestQuery.value
     url.search = queryStr

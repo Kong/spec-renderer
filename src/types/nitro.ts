@@ -18,5 +18,6 @@ Required<'specUrl'> |
 'hideNavigationButtons' |
 'hideDownloadButton' |
 'showPoweredBy' |
-'maxExpandedDepth'
+'maxExpandedDepth' |
+'oauthRedirectUri'
 > { }

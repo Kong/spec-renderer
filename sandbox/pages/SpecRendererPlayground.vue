@@ -88,6 +88,13 @@
             hash
           </option>
         </select>
+        |
+        <label for="oauth-redirect-uri">OAuth redirect URI: &nbsp;</label>
+        <input
+          id="oauth-redirect-uri"
+          v-model="oauthRedirectUri"
+          type="text"
+        >
       </div>
     </div>
     <SpecRenderer
@@ -105,6 +112,7 @@
       :hide-try-it="hideTryIt"
       :markdown-styles="markdownStyles"
       :navigation-type="navigationType"
+      :oauth-redirect-uri="oauthRedirectUri"
       :show-powered-by="showPoweredBy"
       :spec="specText"
       :spec-url="specUrl"
@@ -138,6 +146,7 @@ const markdownStyles = ref<boolean>(true)
 const showPoweredBy = ref<boolean>(false)
 const allowCustomServerUrl = ref<boolean>(true)
 const hideNavigationButtons = ref<boolean>(false)
+const oauthRedirectUri = ref<string>('')
 
 const handlePathNotFound = (requestedPath: string) => {
   console.error(`@kong/spec-renderer: ${requestedPath} not found. App to redirect to it's own 404`)

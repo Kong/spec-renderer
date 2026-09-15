@@ -61,6 +61,14 @@ export interface SpecRendererProps {
   showPoweredBy?: boolean | 'true' | 'false'
   /** The max depth until which nested properties should remain expanded by default. */
   maxExpandedDepth?: number | string
+  /**
+   * Absolute or root-relative URL of a page the host application serves that forwards the
+   * OAuth 2.0 authorization response back to the renderer via `window.postMessage`.
+   * Required to enable "Try it" OAuth authorization for `authorizationCode` security schemes;
+   * when empty, the Authorize action is disabled.
+   * See `docs/oauth-pkce.md` for the callback page contract.
+   */
+  oauthRedirectUri?: string
 }
 
 /**
