@@ -201,6 +201,10 @@ const props = defineProps({
     validator: NUMBER_VALIDATOR,
     default: DEFAULT_EXPANDED_PROPERTIES_DEPTH,
   },
+  oauthRedirectUri: {
+    type: String,
+    default: '',
+  },
 })
 
 const { highlighter, createHighlighter } = composables.useShiki()
@@ -222,6 +226,7 @@ provide<ComputedRef<boolean>>('hide-tryit', computed((): boolean => IS_TRUE(prop
 provide<ComputedRef<boolean>>('hide-insomnia-tryit', computed((): boolean => IS_TRUE(props.hideInsomniaTryIt)))
 provide<ComputedRef<boolean>>('markdown-styles', computed((): boolean => IS_TRUE(props.markdownStyles)))
 provide<ComputedRef<number>>('max-expanded-depth', computed((): number => convertToNumber(props.maxExpandedDepth) || DEFAULT_EXPANDED_PROPERTIES_DEPTH))
+provide<ComputedRef<string>>('oauth-redirect-uri', computed((): string => props.oauthRedirectUri))
 
 const emit = defineEmits<{
   (e: 'path-not-found', requestedPath: string): void

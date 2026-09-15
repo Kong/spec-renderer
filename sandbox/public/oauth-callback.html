@@ -1,0 +1,85 @@
+<!doctype html>
+<!--
+  OAuth2 authorization-code callback page.
+
+  This is the page the identity provider redirects the pop-up back to once the user
+  authorizes (or denies) access. It reads `code`/`state` (or `error`/`error_description`)
+  from the query string and hands them to the opener (the page that opened the pop-up)
+  via `postMessage`, then closes itself.
+
+  Host applications must serve a copy of this exact file at the URL they pass as the
+  `oauthRedirectUri` prop (or `oauth-redirect-uri` attribute). See docs/oauth-pkce.md.
+
+  This file is intentionally plain HTML/JS with no framework and no build step - it must
+  load and run instantly, with nothing (router boot, auth guards, bundlers) that could
+  delay or drop the callback.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Signing in...</title>
+</head>
+<body>
+  <p id="message">Signing in...</p>
+
+  <script>
+    // The message contract with the renderer's opener side
+    // (see `src/utils/oauth-popup.ts` in @kong/spec-renderer).
+    var OAUTH_MESSAGE_TYPE = 'kong-spec-renderer:oauth-callback';
+
+    function showFallback(text) {
+      var el = document.getElementById('message');
+      el.textContent = text;
+    }
+
+    function main() {
+      var params = new URLSearchParams(window.location.search);
+
+      // Never render or log `code` - it is a live, single-use authorization code.
+      var code = params.get('code') || undefined;
+      var state = params.get('state') || undefined;
+      var error = params.get('error') || undefined;
+      var errorDescription = params.get('error_description') || undefined;
+
+      var message = {
+        type: OAUTH_MESSAGE_TYPE,
+        version: 1,
+        state: state,
+        code: code,
+        error: error,
+        error_description: errorDescription,
+      };
+
+      try {
+        if (!window.opener) {
+          // `window.opener` can be missing/null if the opener was closed, or if the
+          // opener page is served with `Cross-Origin-Opener-Policy: same-origin` (that
+          // header severs the opener relationship once this pop-up navigates away to the
+          // identity provider, and it is not restored on return). There is no way to
+          // recover the token/code exchange from here - show a visible message instead
+          // of failing silently, so the user isn't left staring at a page that hangs.
+          showFallback('Sign-in finished, but this window lost its connection to the page ' +
+            'that opened it, so it could not report back. This usually means the opener ' +
+            'page has "Cross-Origin-Opener-Policy: same-origin" set - use ' +
+            '"same-origin-allow-popups" instead, or unset the header. You can close this window.');
+          return;
+        }
+
+        // IMPORTANT: `targetOrigin` must be an exact origin, never '*'. This deployment
+        // is same-origin with the renderer page, so `window.location.origin` is correct.
+        // A cross-origin deployment must hardcode the renderer's exact origin here
+        // instead - '*' would broadcast the authorization code to any document that
+        // happens to be the opener.
+        window.opener.postMessage(message, window.location.origin);
+
+        showFallback('Signing in... you can close this window.');
+        window.close();
+      } catch (e) {
+        showFallback('Sign-in finished, but reporting back to the opener failed. You can close this window.');
+      }
+    }
+
+    main();
+  </script>
+</body>
+</html>
