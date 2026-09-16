@@ -256,6 +256,284 @@ describe('resolveSchemaObjectFields', () => {
     expect(result.example).toBe('bar')
     expect(result.examples).toBeUndefined()
   })
+
+  it('lets an explicit example override inherited examples in a nested property schema', () => {
+    const schemaObject: SchemaObject = {
+      allOf: [
+        {
+          type: 'object',
+          properties: {
+            next: {
+              allOf: [
+                {
+                  type: 'string',
+                  examples: ['Some Text'],
+                },
+              ],
+              examples: ['ye3dkAzck434kekQSscAAc4dzdz=='],
+            },
+          },
+        },
+      ],
+    }
+
+    expect(resolveSchemaObjectFields(schemaObject)).toMatchObject({
+      properties: {
+        next: {
+          examples: ['ye3dkAzck434kekQSscAAc4dzdz=='],
+        },
+      },
+    })
+  })
+
+  it('lets an explicitly empty `example` override an inherited value in a nested property schema', () => {
+    const schemaObject: SchemaObject = {
+      allOf: [
+        {
+          type: 'object',
+          properties: {
+            reason: {
+              allOf: [{ type: 'string', example: 'Generic reason' }],
+              example: '',
+            },
+          },
+        },
+      ],
+    }
+
+    expect(resolveSchemaObjectFields(schemaObject)).toMatchObject({
+      properties: {
+        reason: {
+          example: '',
+        },
+      },
+    })
+  })
+
+  it('lets an explicit example override inherited examples in a property nested under array items', () => {
+    const schemaObject: SchemaObject = {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          code_name: {
+            allOf: [
+              {
+                type: 'string',
+                examples: ['Some Text'],
+              },
+            ],
+            examples: ['NBO-4023-001'],
+          },
+        },
+      },
+    }
+
+    const arrayResult = resolveSchemaObjectFields(schemaObject)
+    const codeNameResult = resolveSchemaObjectFields(arrayResult.properties?.code_name)
+    expect(codeNameResult).toMatchObject({
+      type: 'string',
+      examples: ['NBO-4023-001'],
+    })
+    expect(codeNameResult).not.toHaveProperty('allOf')
+  })
+
+  it('lets an explicit example override inherited examples in an allOf nested through array items', () => {
+    const schemaObject: SchemaObject = {
+      allOf: [
+        {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              code_name: {
+                allOf: [
+                  {
+                    type: 'string',
+                    examples: ['Some Text'],
+                  },
+                ],
+                examples: ['NBO-4023-001'],
+              },
+            },
+          },
+        },
+      ],
+    }
+
+    expect(resolveSchemaObjectFields(schemaObject)).toMatchObject({
+      items: {
+        properties: {
+          code_name: {
+            examples: ['NBO-4023-001'],
+          },
+        },
+      },
+    })
+  })
+
+  it('uses the standard merge rules for keywords in object-form items', () => {
+    const schemaObject: SchemaObject = {
+      allOf: [
+        {
+          type: 'array',
+          items: {
+            type: 'string',
+            description: 'An identifier',
+            format: 'uuid',
+            default: '00000000-0000-0000-0000-000000000000',
+          },
+        },
+      ],
+    }
+
+    expect(resolveSchemaObjectFields(schemaObject)).toMatchObject({
+      items: {
+        type: 'string',
+        description: 'An identifier',
+        format: 'uuid',
+        default: '00000000-0000-0000-0000-000000000000',
+      },
+    })
+  })
+
+  it('applies custom example merge rules to each tuple-form items schema', () => {
+    const schemaObject: SchemaObject = {
+      allOf: [
+        {
+          type: 'array',
+          items: [
+            {
+              allOf: [{ type: 'string', examples: ['Inherited example'] }],
+              examples: ['Explicit example'],
+            },
+          ],
+        },
+      ],
+    }
+
+    expect(resolveSchemaObjectFields(schemaObject)).toMatchObject({
+      items: [
+        {
+          type: 'string',
+          examples: ['Explicit example'],
+        },
+      ],
+    })
+  })
+
+  it('lets an explicit example override inherited examples in a property inside a oneOf branch', () => {
+    const schemaObject: SchemaObject = {
+      allOf: [
+        {
+          type: 'object',
+          oneOf: [
+            {
+              type: 'object',
+              properties: {
+                on_hold_reason_detail: {
+                  allOf: [
+                    {
+                      type: 'string',
+                      examples: ['Some Text'],
+                    },
+                  ],
+                  examples: ['Waiting for additional information from the client.'],
+                },
+              },
+            },
+          ],
+        },
+      ],
+    }
+
+    expect(resolveSchemaObjectFields(schemaObject)).toMatchObject({
+      oneOf: [
+        {
+          properties: {
+            on_hold_reason_detail: {
+              examples: ['Waiting for additional information from the client.'],
+            },
+          },
+        },
+      ],
+    })
+  })
+
+  it('lets an explicit example override inherited examples in a property inside an anyOf branch', () => {
+    const schemaObject: SchemaObject = {
+      allOf: [
+        {
+          type: 'object',
+          anyOf: [
+            {
+              type: 'object',
+              properties: {
+                reason: {
+                  allOf: [{ type: 'string', examples: ['Generic reason'] }],
+                  examples: ['Specific reason'],
+                },
+              },
+            },
+          ],
+        },
+      ],
+    }
+
+    expect(resolveSchemaObjectFields(schemaObject)).toMatchObject({
+      anyOf: [
+        {
+          properties: {
+            reason: {
+              examples: ['Specific reason'],
+            },
+          },
+        },
+      ],
+    })
+  })
+
+  it('lets an explicit example override inherited examples inside additionalProperties', () => {
+    const schemaObject: SchemaObject = {
+      allOf: [
+        {
+          type: 'object',
+          additionalProperties: {
+            allOf: [{ type: 'string', examples: ['Some Text'] }],
+            examples: ['Explicit additional property'],
+          },
+        },
+      ],
+    }
+
+    expect(resolveSchemaObjectFields(schemaObject)).toMatchObject({
+      additionalProperties: {
+        examples: ['Explicit additional property'],
+      },
+    })
+  })
+
+  it('keeps merging examples from allOf branches when the containing schema has no explicit example', () => {
+    const schemaObject: SchemaObject = {
+      allOf: [
+        { examples: ['foo'] },
+        { examples: ['bar'] },
+      ],
+    }
+
+    expect(resolveSchemaObjectFields(schemaObject).examples).toStrictEqual(['foo', 'bar'])
+  })
+
+  it('lets an explicitly empty examples array override inherited examples', () => {
+    const schemaObject: SchemaObject = {
+      allOf: [
+        { examples: ['foo'] },
+      ],
+      examples: [],
+    }
+
+    expect(resolveSchemaObjectFields(schemaObject).examples).toStrictEqual([])
+  })
 })
 
 describe('filterSchemaObjectArray', () => {
