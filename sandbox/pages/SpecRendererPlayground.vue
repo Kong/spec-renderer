@@ -69,6 +69,13 @@
         >
         <label for="show-powered-by">Show powered by</label>
         |
+        <input
+          id="dark-mode"
+          v-model="darkMode"
+          type="checkbox"
+        >
+        <label for="dark-mode">Dark mode</label>
+        |
         <label for="navigation-type">Navigation: &nbsp;</label>
         <select
           id="navigation-type"
@@ -113,6 +120,7 @@ import SampleSpecSelector from '../components/SampleSpecSelector.vue'
 import SpecRenderer from '../../src/components/SpecRenderer.vue'
 import type { NavigationTypes } from '../../src/types'
 import { useRoute as useVueRoute } from 'vue-router'
+import { darkMode } from '../color-mode'
 
 const route = useVueRoute()
 
