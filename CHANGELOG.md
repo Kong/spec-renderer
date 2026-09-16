@@ -1,3 +1,10 @@
+## [1.113.11](https://github.com/Kong/spec-renderer/compare/v1.113.10...v1.113.11) (2026-09-16)
+
+
+### Bug Fixes
+
+* **editable-code-block:** visible caret color in dark mode ([#1000](https://github.com/Kong/spec-renderer/issues/1000)) ([812d393](https://github.com/Kong/spec-renderer/commit/812d3937bc39ce7a83dce218f3dbb9a2f56e9b18))
+
 ## [1.113.10](https://github.com/Kong/spec-renderer/compare/v1.113.9...v1.113.10) (2026-09-15)
 
 
