@@ -279,6 +279,11 @@ html.dark,
   .editable-code-wrapper {
     /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/token-var-usage */
     background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-strongest) !important;
+
+    .editable-code {
+      /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/token-var-usage */
+      caret-color: var(--kui-color-text, $kui-color-text-inverse);
+    }
   }
 }
 </style>
@@ -303,7 +308,7 @@ html.dark,
 
   .editable-code {
     background: transparent;
-    caret-color: black;
+    caret-color: var(--kui-color-text, $kui-color-text);
     color: transparent;
     font-family: var(--kui-font-family-code, $kui-font-family-code);
     font-size: var(--kui-font-size-20, $kui-font-size-20);
