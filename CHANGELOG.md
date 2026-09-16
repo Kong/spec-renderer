@@ -1,3 +1,10 @@
+## [1.113.10](https://github.com/Kong/spec-renderer/compare/v1.113.9...v1.113.10) (2026-09-15)
+
+
+### Bug Fixes
+
+* **schema-model:** add custom allOf resolver for merging example fields [TDX-8742] ([#996](https://github.com/Kong/spec-renderer/issues/996)) ([c221231](https://github.com/Kong/spec-renderer/commit/c2212315a722d601804b9da6988dfaa1889cbe14))
+
 ## [1.113.9](https://github.com/Kong/spec-renderer/compare/v1.113.8...v1.113.9) (2026-09-03)
 
 
