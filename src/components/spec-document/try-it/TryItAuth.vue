@@ -236,6 +236,10 @@ const updateAuthDataImpl = () => {
   const query: string[] = []
 
   const append = (name: string, value: string, schemeIn: string) => {
+    if (!value.trim()) {
+      return
+    }
+
     if (schemeIn === 'query') {
       query.push(`${name}=${value}`)
     } else {
@@ -251,19 +255,26 @@ const updateAuthDataImpl = () => {
     // The token is acquired in TryItAuth2.vue, but it must still be included
     // when this security requirement contains multiple schemes.
     if (scheme.type === 'oauth2' && scheme.flows.clientCredentials) {
-      append('Authorization', authInputs.value[`${key}-token`] || 'Bearer', schemeIn)
+      append('Authorization', authInputs.value[`${key}-token`] || '', schemeIn)
       continue
     }
 
     if (scheme.type === 'http' && scheme.scheme === 'basic') {
       const username = authInputs.value[`${key}-username`] || ''
       const password = authInputs.value[`${key}-password`] || ''
+      // A username with an empty password (or vice versa) is still a supplied credential.
+      if (!username && !password) {
+        continue
+      }
       const basicAuthValue = btoa(`${username}:${password}`)
       // if the scheme is in header, we add it to the headers
       append('Authorization', `Basic ${basicAuthValue}`, schemeIn)
 
     } else if (scheme.type === 'http' && scheme.scheme === 'bearer') {
       const value = authInputs.value[`${key}-token`] || ''
+      if (!value.trim()) {
+        continue
+      }
       append('Authorization', `Bearer ${value}`, schemeIn)
 
     } else {
