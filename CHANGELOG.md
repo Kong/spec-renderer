@@ -1,3 +1,10 @@
+## [1.113.12](https://github.com/Kong/spec-renderer/compare/v1.113.11...v1.113.12) (2026-09-17)
+
+
+### Bug Fixes
+
+* don't send auth headers if they're not filled [TDX-5989] ([#999](https://github.com/Kong/spec-renderer/issues/999)) ([7b8134b](https://github.com/Kong/spec-renderer/commit/7b8134bd4e3617b0c9892dfaae2a7002e4320886))
+
 ## [1.113.11](https://github.com/Kong/spec-renderer/compare/v1.113.10...v1.113.11) (2026-09-16)
 
 
