@@ -11,6 +11,8 @@
 
 <style lang="scss" scoped>
 .sandbox-container {
+  background-color: var(--kui-color-background, $kui-color-background);
+  color: var(--kui-color-text, $kui-color-text);
   font-family: $kui-font-family-text;
 }
 
