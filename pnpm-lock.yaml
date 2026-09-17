@@ -139,8 +139,8 @@ importers:
         specifier: 3.3.1
         version: 3.3.1
       '@kong/eslint-config-kong-ui':
-        specifier: 1.7.1
-        version: 1.7.1(@typescript-eslint/parser@8.61.1(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3))(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3)
+        specifier: 1.8.0
+        version: 1.8.0(@typescript-eslint/parser@8.61.1(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3))(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3)
       '@kong/stylelint-plugin-design-tokens':
         specifier: 2.0.0
         version: 2.0.0(stylelint@17.14.1(supports-color@10.2.2)(typescript@5.9.3))
@@ -1005,8 +1005,8 @@ packages:
     resolution: {integrity: sha512-2nwOiWmFZt2I5S7FxpcK9iOpvpr4XhetNTIetL9HG9+pmgaeUISywFBHflq6OOwuYFPRbGGiPRNfM9YOzeWtHw==}
     engines: {node: '>=20.19.5', pnpm: '>=10.28.2'}
 
-  '@kong/eslint-config-kong-ui@1.7.1':
-    resolution: {integrity: sha512-LAvIZJtTpf7yWRdqlrYeI7nUWmG9x5QMy4m2OGBpDwt+MCxveH6xPRMMgQZwGjupl4odR5Kg4KN1AVMCFdlk6g==}
+  '@kong/eslint-config-kong-ui@1.8.0':
+    resolution: {integrity: sha512-fXLIXR/qKz6f949glvjqy4UrvYGH/9GuTbTfTJyqnVqnunmv/+NfGzxj5mQZBolbczspjl+XnzENEemqWwMdhg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       eslint: '>= 9.37.0'
@@ -2815,6 +2815,12 @@ packages:
     peerDependencies:
       eslint: '>=8.23.0'
 
+  eslint-plugin-playwright@2.12.0:
+    resolution: {integrity: sha512-7HpSKR/D2oCH4RKRauFskcrnDrHvLQKopW7Nen8lqrFZtx/SB+FgqVaH+zyQd32noZSZy9Lrsa+DsYrVUpn6hg==}
+    engines: {node: '>=16.9.0'}
+    peerDependencies:
+      eslint: '>=8.40.0'
+
   eslint-plugin-promise@7.3.0:
     resolution: {integrity: sha512-6uGiOR0INuujr6PEQmeSSP7GbIMJ/ebEXXiEzb/nOj68LknH5Pxzb/AbZivmr6VE6TkTE8rTjRK9zhKpK6HsRA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -3185,6 +3191,10 @@ packages:
 
   globals@16.5.0:
     resolution: {integrity: sha512-c/c15i26VrJ4IRt5Z89DnIzCGDn9EcebibhAOjw5ibqEHsE1wLUgkPn9RDmNcUKyU87GeaL633nyJ+pplFR2ZQ==}
+    engines: {node: '>=18'}
+
+  globals@17.12.0:
+    resolution: {integrity: sha512-cezEd/DTyyht9cvSSURyygXPfy04GtWO/5e6ZPvH7fCtjKz9PYOmuawphw1Ctd1f6C+5JypXfGD7ahNMXvevBA==}
     engines: {node: '>=18'}
 
   globalthis@1.0.4:
@@ -6644,7 +6654,7 @@ snapshots:
 
   '@kong/design-tokens@3.3.1': {}
 
-  '@kong/eslint-config-kong-ui@1.7.1(@typescript-eslint/parser@8.61.1(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3))(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3)':
+  '@kong/eslint-config-kong-ui@1.8.0(@typescript-eslint/parser@8.61.1(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3))(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3)':
     dependencies:
       '@eslint/js': 9.39.4
       '@kong/eslint-plugin-design-tokens': 1.0.1(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(vue-eslint-parser@10.4.1(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2))
@@ -6653,6 +6663,7 @@ snapshots:
       eslint-plugin-cypress: 5.3.0(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))
       eslint-plugin-jsonc: 2.21.1(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))
       eslint-plugin-n: 17.24.0(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(typescript@5.9.3)
+      eslint-plugin-playwright: 2.12.0(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))
       eslint-plugin-promise: 7.3.0(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))
       eslint-plugin-vue: 10.9.2(@stylistic/eslint-plugin@5.10.0(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2)))(@typescript-eslint/parser@8.61.1(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3))(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(vue-eslint-parser@10.4.1(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2))
       globals: 15.15.0
@@ -8770,6 +8781,11 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
+  eslint-plugin-playwright@2.12.0(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2)):
+    dependencies:
+      eslint: 10.10.0(jiti@2.4.2)(supports-color@10.2.2)
+      globals: 17.12.0
+
   eslint-plugin-promise@7.3.0(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2)):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))
@@ -8781,7 +8797,7 @@ snapshots:
       eslint: 10.10.0(jiti@2.4.2)(supports-color@10.2.2)
       natural-compare: 1.4.0
       nth-check: 2.1.1
-      postcss-selector-parser: 7.1.4
+      postcss-selector-parser: 7.1.5
       semver: 7.8.5
       vue-eslint-parser: 10.4.1(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)
       xml-name-validator: 4.0.0
@@ -9219,6 +9235,8 @@ snapshots:
   globals@15.15.0: {}
 
   globals@16.5.0: {}
+
+  globals@17.12.0: {}
 
   globalthis@1.0.4:
     dependencies:
