@@ -21,3 +21,6 @@ docs/.vitepress/dist
 # Claude local files
 .claude/settings.local.json
 .claude/worktrees/
+
+# Worktrees
+.worktrees/
