@@ -82,8 +82,9 @@ jobs:
       statuses: read        # the older API a build may report through
       actions: write        # old caller review dispatch, successor plan runs and test publication
     with:
-      trigger_phrase: ${{ vars.KSAI_TRIGGER_PHRASE }}
       runs_on: ubuntu-latest
+      trigger_phrase: ${{ vars.KSAI_TRIGGER_PHRASE }}
+      anthropic_base_url: ${{ vars.KSAI_ANTHROPIC_BASE_URL }}
       client_id: ${{ vars.CORE_UI_GH_APP_READ_ID }}
       federation_rule_id: ${{ vars.KSAI_FEDERATION_RULE_ID }}
       organization_id: ${{ vars.KSAI_ORGANIZATION_ID }}
