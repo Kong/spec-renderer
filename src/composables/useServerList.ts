@@ -1,5 +1,6 @@
 import { computed, ref, shallowRef } from 'vue'
 import { removeTrailingSlash } from '@/utils/strings'
+import { formatServerUrl } from '@/utils/server-url'
 import type { IServer } from '@/types'
 
 type ServerList = IServer[]
@@ -19,41 +20,24 @@ const selectedServerUrl = shallowRef<SelectedServerUrl>('')
 export default function useServerList() {
 
   /**
-   * format url from the server variables
-   * @param idx
-   * @param server
-   * @returns
-   */
-  const getServerUrl = (idx: number, server: IServer | undefined): string => {
-    if (!server) {
-      return ''
-    }
-    let url = server.origUrl || server.url
-    if (server.variables) {
-      for (const [key, value] of Object.entries(server.variables)) {
-        url = url.replace(`{${key}}`, value.extensions?.value as string || value.default)
-      }
-    }
-    return removeTrailingSlash(url)
-  }
-
-  /**
    * Initialize the centralized state for server list.
    */
   const initialize = (newServerList: ServerList) => {
-    // strip trailing slash from server urls
-    const filteredServerList = newServerList.map((server, idx) => ({
+    // strip trailing slash from server urls; origUrl keeps the url as defined in
+    // the spec document - it distinguishes document servers from the custom
+    // server urls added by the user at runtime, which have no origUrl
+    const filteredServerList = newServerList.map(server => ({
       ...server,
-      origUrl: server.url,
-      url: getServerUrl(idx, server),
+      origUrl: server.origUrl || server.url,
+      url: formatServerUrl(server),
     }))
 
     serverList.value = filteredServerList
-    selectedServerUrl.value = getServerUrl(0, filteredServerList[0])
+    selectedServerUrl.value = formatServerUrl(filteredServerList[0])
   }
 
   /**
-   * Add a new server to the list of servers in the state and generates a unique ID for the server, based on its index in the list.
+   * Add a new custom server to the list of servers in the state and generates a unique ID for the server, based on its index in the list.
    * Also sets the selected server URL to the newly added server URL.
    */
   const addServerUrl = (newServerUrl: string) => {
@@ -94,7 +78,7 @@ export default function useServerList() {
     }
     server.variables[variableKey].extensions.value = variableValue
 
-    server.url = getServerUrl(serverIdx, server)
+    server.url = formatServerUrl(server)
     selectedServerUrl.value = server.url
   }
 
