@@ -91,6 +91,7 @@ const fName = ref<string>('Drop your own spec file')
 
 const optionsArrayOAS = [
   { url: `${window.location.origin}/spec-renderer/specs/stoplight.yaml`, label: 'Stoplight ToDo' },
+  { url: `${window.location.origin}/spec-renderer/specs/servers.yaml`, label: 'Multiple Server Playground' },
   {
     url: `${window.location.origin}/spec-renderer/specs/konnect-api.yaml`, label: 'Konnect Api' },
   {
