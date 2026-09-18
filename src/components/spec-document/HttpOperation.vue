@@ -271,7 +271,7 @@ const excludeNotRequired = computed((): boolean => {
 const {
   serverUrlList,
   selectedServerUrl,
-} = composables.useServerList()
+} = composables.useEndpointServerList(computed(() => operationData.value.servers))
 
 const currentRequestPath = ref<string>('')
 const currentRequestQuery = ref<string>('')
