@@ -1,0 +1,169 @@
+
+openapi: 3.1.0
+info:
+  title: Server Precedence Playground
+  version: 1.0.0
+  description: |
+    A sandbox playground for exploring every kind of OpenAPI `servers` block:
+    root level, path level and operation level, variable substitution,
+    overrides, precedence and renderer fallbacks.
+
+# 1. Multiple root level servers - every endpoint without its own servers block
+#    resolves against this list, with a dropdown to switch between all of them
+servers:
+  - url: https://api.example.com/v1
+    description: Primary API server
+  - url: https://api-eu.example.com/v1
+    description: European region server
+  # 2. Trailing slashes are stripped in the rendered URL
+  - url: https://staging.example.com/v1/
+    description: Staging server (trailing slash is stripped)
+  # 3. A templated server with multiple variables - variables are editable in
+  #    the overview and the substitution applies to every endpoint using it
+  - url: https://{tenant}.{region}.example.com/v1
+    description: Tenant server with variables
+    variables:
+      tenant:
+        default: acme
+        description: Tenant name (free form)
+      region:
+        default: us
+        description: Tenant region
+        enum:
+          - us
+          - eu
+
+paths:
+  # 4. No servers block anywhere - the root list applies and the selection
+  #    syncs across all endpoints using the global list
+  /root-defaults:
+    get:
+      summary: Uses the root servers (dropdown offers all four, selection syncs across endpoints)
+      responses:
+        '200':
+          description: OK
+
+  # 5. Path level servers apply to every operation under the path
+  /health:
+    servers:
+      - url: https://health.example.com
+        description: Dedicated health service
+    get:
+      summary: Health check (path level, resolves to https://health.example.com/health)
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Ping (same path level server, resolves to https://health.example.com/health)
+      responses:
+        '200':
+          description: OK
+
+  # 6. Path level servers with multiple servers, overridden per operation
+  /orders:
+    servers:
+      - url: https://orders.example.com
+        description: Orders service
+      - url: https://orders-eu.example.com
+        description: European orders service
+    get:
+      summary: List orders (path level dropdown, resolves to https://orders.example.com/orders)
+      responses:
+        '200':
+          description: OK
+    # 7. Operation level servers win over path level servers
+    post:
+      summary: Create order (overrides the path level servers, resolves to https://orders-upload.example.com/orders)
+      servers:
+        - url: https://orders-upload.example.com
+          description: High capacity order intake
+      responses:
+        '201':
+          description: Created
+    # 8. Operation level templated server with variables
+    put:
+      summary: Replace order (operation level templated server, resolves to https://orders-us.example.com/orders)
+      servers:
+        - url: https://orders-{region}.example.com
+          description: Regional order service
+          variables:
+            region:
+              default: us
+              description: Orders region
+              enum:
+                - us
+                - eu
+      responses:
+        '200':
+          description: OK
+
+  # 9. Sibling paths can each declare their own path level servers
+  /admin/stats:
+    servers:
+      - url: https://admin.example.com
+        description: Admin service
+    get:
+      summary: Admin stats (resolves to https://admin.example.com/admin/stats)
+      responses:
+        '200':
+          description: OK
+
+  /admin/audit:
+    servers:
+      - url: https://audit.example.com
+        description: Audit service
+      - url: https://audit-eu.example.com
+        description: European audit service
+    get:
+      summary: Audit trail (resolves to https://audit.example.com/admin/audit)
+      responses:
+        '200':
+          description: OK
+
+  # 10. A path level block that partially overlaps the root list still replaces
+  #     it entirely (OpenAPI `servers` blocks override, they never merge)
+  /partial:
+    servers:
+      - url: https://api.example.com/v1
+        description: Same URL as the root primary server
+      - url: https://partial.example.com
+        description: Partial-only server
+    get:
+      summary: Partial overlap (scoped list replaces the root list, resolves to https://api.example.com/v1/partial)
+      responses:
+        '200':
+          description: OK
+
+  # 11. An operation block that is a subset of the root list is indistinguishable
+  #     from a plain copy of the root servers, so the endpoint keeps using the
+  #     global (synced) server list
+  /subset:
+    get:
+      summary: Subset of root servers (still uses the global list and syncs)
+      servers:
+        - url: https://api.example.com/v1
+          description: Primary API server
+      responses:
+        '200':
+          description: OK
+
+  # 12. An empty operation level servers block falls back to the root servers
+  /empty:
+    get:
+      summary: Empty servers block (falls back to the root servers)
+      servers: []
+      responses:
+        '200':
+          description: OK
+
+# 13. Webhooks can carry their own server blocks too
+webhooks:
+  new-order:
+    post:
+      summary: New order webhook (own servers, resolves to https://webhooks.example.com)
+      servers:
+        - url: https://webhooks.example.com
+          description: Dedicated webhook receiver
+      responses:
+        '200':
+          description: OK
