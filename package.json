@@ -126,7 +126,7 @@
     "sass": "^1.104.0",
     "sass-embedded": "^1.104.0",
     "semantic-release": "^25.0.9",
-    "stylelint": "^17.14.1",
+    "stylelint": "^17.15.0",
     "stylelint-config-html": "^1.1.0",
     "stylelint-config-recommended-scss": "^17.0.1",
     "stylelint-config-recommended-vue": "^1.6.1",
@@ -214,8 +214,8 @@
     "node": ">=18.17.0"
   },
   "volta": {
-    "node": "24.20.0",
-    "pnpm": "11.25.0"
+    "node": "24.21.0",
+    "pnpm": "11.26.0"
   },
   "config": {
     "commitizen": {
@@ -227,5 +227,5 @@
       "jiraAppend": "]"
     }
   },
-  "packageManager": "pnpm@11.25.0"
+  "packageManager": "pnpm@11.26.0"
 }
