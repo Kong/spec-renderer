@@ -156,7 +156,31 @@ paths:
         '200':
           description: OK
 
-# 13. Webhooks can carry their own server blocks too
+  # 13. Same URL template as a root server but different variable defaults - the
+  #     declaration is distinct from the root tenant server, so the endpoint is
+  #     scoped: it resolves against its own defaults and does not follow the
+  #     root server's variable overrides made in the overview
+  /tenant-eu:
+    get:
+      summary: Tenant EU (same template as the root tenant server, resolves to https://acme.eu.example.com/v1/tenant-eu)
+      servers:
+        - url: https://{tenant}.{region}.example.com/v1
+          description: Tenant server pinned to the EU region
+          variables:
+            tenant:
+              default: acme
+              description: Tenant name (free form)
+            region:
+              default: eu
+              description: Tenant region (defaults to eu, not the root server's us)
+              enum:
+                - us
+                - eu
+      responses:
+        '200':
+          description: OK
+
+# 14. Webhooks can carry their own server blocks too
 webhooks:
   new-order:
     post:

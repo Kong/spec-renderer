@@ -11,7 +11,7 @@ const globalServerList: IServer[] = [{
 }]
 
 describe('useEndpointServerList', () => {
-  const { initialize, selectedServerUrl: globalSelectedServerUrl, addServerUrl } = useServerList()
+  const { initialize, selectedServerUrl: globalSelectedServerUrl, addServerUrl, setServerVariable } = useServerList()
 
   beforeEach(() => {
     initialize(globalServerList)
@@ -28,6 +28,98 @@ describe('useEndpointServerList', () => {
     const { serverUrlList } = useEndpointServerList(computed(() => globalServerList))
 
     expect(serverUrlList.value).toEqual(['https://api.example.com/v1'])
+  })
+
+  it('falls back to the global server list when the operation servers match the document servers including variable defaults', () => {
+    initialize(<IServer[]>[
+      {
+        id: 'global-server-id',
+        url: 'https://{region}.example.com',
+        variables: {
+          region: {
+            default: 'us',
+          },
+        },
+      },
+    ])
+
+    const { serverUrlList, selectedServerUrl } = useEndpointServerList(computed(() => <IServer[]>[
+      {
+        id: 'operation-server-id',
+        url: 'https://{region}.example.com',
+        variables: {
+          region: {
+            default: 'us',
+          },
+        },
+      },
+    ]))
+
+    expect(serverUrlList.value).toEqual(['https://us.example.com'])
+    expect(selectedServerUrl.value).toBe('https://us.example.com')
+  })
+
+  it('treats an operation server that shares a url template with a document server but declares different variable defaults as scoped', () => {
+    initialize(<IServer[]>[
+      {
+        id: 'global-server-id',
+        url: 'https://{region}.example.com',
+        variables: {
+          region: {
+            default: 'us',
+          },
+        },
+      },
+    ])
+
+    const { serverUrlList, selectedServerUrl } = useEndpointServerList(computed(() => <IServer[]>[
+      {
+        id: 'operation-server-id',
+        url: 'https://{region}.example.com',
+        variables: {
+          region: {
+            default: 'eu',
+          },
+        },
+      },
+    ]))
+
+    // the operation defaults to its own `eu` region, not the document server's `us`
+    expect(serverUrlList.value).toEqual(['https://eu.example.com'])
+    expect(selectedServerUrl.value).toBe('https://eu.example.com')
+  })
+
+  it('does not let runtime variable overrides on document servers affect scope detection', () => {
+    initialize(<IServer[]>[
+      {
+        id: 'global-server-id',
+        url: 'https://{region}.example.com',
+        variables: {
+          region: {
+            default: 'us',
+          },
+        },
+      },
+    ])
+    // the user overrides the document server's region at runtime
+    setServerVariable('global-server-id', 'region', 'apac')
+
+    const { serverUrlList, selectedServerUrl } = useEndpointServerList(computed(() => <IServer[]>[
+      {
+        id: 'operation-server-id',
+        url: 'https://{region}.example.com',
+        variables: {
+          region: {
+            default: 'us',
+          },
+        },
+      },
+    ]))
+
+    // the operation declares the same server as the document, so it stays unscoped and follows
+    // the global selection - including the runtime override
+    expect(serverUrlList.value).toEqual(['https://apac.example.com'])
+    expect(selectedServerUrl.value).toBe('https://apac.example.com')
   })
 
   it('uses the operation servers when they are scoped to the operation', () => {

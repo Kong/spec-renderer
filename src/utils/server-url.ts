@@ -18,3 +18,18 @@ export function formatServerUrl(server: IServer | undefined): string {
   }
   return removeTrailingSlash(url)
 }
+
+/**
+ * We can identify a server by combining: URL template + variable defaults.
+ * Two servers that share a url template but declare different variable defaults are distinct servers.
+ *
+ * @param server The server object.
+ * @returns A string that is equal for identical server declarations and different otherwise.
+ */
+export function getServerIdentity(server: IServer): string {
+  const url = server.origUrl || server.url
+  const variables = Object.entries(server.variables ?? {})
+    .map(([key, variable]) => `${key}=${variable.default}`)
+    .sort()
+  return variables.length ? `${url}|${variables.join(',')}` : url
+}

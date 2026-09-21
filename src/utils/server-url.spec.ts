@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { formatServerUrl } from './server-url'
+import { formatServerUrl, getServerIdentity } from './server-url'
 import type { IServer } from '@/types'
 
 describe('formatServerUrl', () => {
@@ -43,5 +43,88 @@ describe('formatServerUrl', () => {
         },
       },
     })).toBe('https://staging.example.com')
+  })
+})
+
+describe('getServerIdentity', () => {
+  it('should be the url template for a server without variables', () => {
+    expect(getServerIdentity(<IServer>{ id: '1', url: 'https://api.example.com/v1' })).toBe('https://api.example.com/v1')
+  })
+
+  it('should prefer origUrl over the formatted url', () => {
+    expect(getServerIdentity(<IServer>{ id: '1', origUrl: 'https://{env}.example.com', url: 'https://prod.example.com' })).toBe('https://{env}.example.com')
+  })
+
+  it('should include the declared variable defaults', () => {
+    expect(getServerIdentity(<IServer>{
+      id: '1',
+      url: 'https://{region}.example.com',
+      variables: {
+        region: {
+          default: 'us',
+        },
+      },
+    })).toBe('https://{region}.example.com|region=us')
+  })
+
+  it('should be order-independent in the declared variables', () => {
+    const identity = 'https://{region}.{env}.example.com|env=prod,region=us'
+    expect(getServerIdentity(<IServer>{
+      id: '1',
+      url: 'https://{region}.{env}.example.com',
+      variables: {
+        region: {
+          default: 'us',
+        },
+        env: {
+          default: 'prod',
+        },
+      },
+    })).toBe(identity)
+    expect(getServerIdentity(<IServer>{
+      id: '1',
+      url: 'https://{region}.{env}.example.com',
+      variables: {
+        env: {
+          default: 'prod',
+        },
+        region: {
+          default: 'us',
+        },
+      },
+    })).toBe(identity)
+  })
+
+  it('should ignore runtime variable overrides', () => {
+    expect(getServerIdentity(<IServer>{
+      id: '1',
+      url: 'https://{region}.example.com',
+      variables: {
+        region: {
+          default: 'us',
+          extensions: { value: 'eu' },
+        },
+      },
+    })).toBe('https://{region}.example.com|region=us')
+  })
+
+  it('should differ for servers that share a url template but declare different variable defaults', () => {
+    expect(getServerIdentity(<IServer>{
+      id: '1',
+      url: 'https://{region}.example.com',
+      variables: {
+        region: {
+          default: 'us',
+        },
+      },
+    })).not.toBe(getServerIdentity(<IServer>{
+      id: '2',
+      url: 'https://{region}.example.com',
+      variables: {
+        region: {
+          default: 'eu',
+        },
+      },
+    }))
   })
 })

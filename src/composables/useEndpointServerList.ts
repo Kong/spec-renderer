@@ -2,7 +2,7 @@ import { computed, ref, unref, watch } from 'vue'
 import type { ComputedRef, Ref, WritableComputedRef } from 'vue'
 import type { IServer } from '@/types'
 import useServerList from './useServerList'
-import { formatServerUrl } from '@/utils/server-url'
+import { formatServerUrl, getServerIdentity } from '@/utils/server-url'
 
 /**
  * Drop-in replacement for `useServerList` for an individual endpoint/operation.
@@ -29,11 +29,14 @@ export default function useEndpointServerList(operationServers: Ref<IServer[] | 
   const servers = computed(() => unref(operationServers) ?? [])
 
   /**
-   * Server urls as defined in the spec document's service-level `servers` block - the `serverList`
-   * entries that come from the document (custom server urls added by the user have no origUrl).
+   * Identities of the servers as defined in the spec's `servers` block.
+   * We filter out the custom server urls added by the user at runtime, as they do not have an `origUrl`.
+   *
+   * Then we append the server's "identity" (i.e. the combination of its URL template + variable defaults) to it
+   * so that we can distinguish between servers that share the same URL template but have different variable defaults.
    */
-  const documentServerUrls = computed(() =>
-    new Set(serverList.value.filter(server => server.origUrl).map(server => server.origUrl ?? server.url)),
+  const documentServerIdentities = computed(() =>
+    new Set(serverList.value.filter(server => server.origUrl).map(getServerIdentity)),
   )
 
   /** Custom server urls added by the user at runtime (not part of the spec document). */
@@ -47,7 +50,7 @@ export default function useEndpointServerList(operationServers: Ref<IServer[] | 
     if (!servers.value.length) {
       return false
     }
-    return servers.value.some(server => !documentServerUrls.value.has(server.origUrl || server.url))
+    return servers.value.some(server => !documentServerIdentities.value.has(getServerIdentity(server)))
   })
 
   /** Formatted urls of the operation's own servers, with server variables applied. */
