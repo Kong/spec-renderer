@@ -214,8 +214,8 @@
     "node": ">=18.17.0"
   },
   "volta": {
-    "node": "24.20.0",
-    "pnpm": "11.25.0"
+    "node": "24.21.0",
+    "pnpm": "11.26.0"
   },
   "config": {
     "commitizen": {
@@ -227,5 +227,5 @@
       "jiraAppend": "]"
     }
   },
-  "packageManager": "pnpm@11.25.0"
+  "packageManager": "pnpm@11.26.0"
 }
