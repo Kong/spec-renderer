@@ -17,6 +17,7 @@ permissions:
   id-token: write
   contents: read
   actions: read
+  pull-requests: write
 
 jobs:
   remove-prev-comments:
@@ -30,7 +31,7 @@ jobs:
         with:
           header: pr_preview_consumption
           delete: true
-          GITHUB_TOKEN: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   run-tests:
     name: Tests
@@ -47,7 +48,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
-          token: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Setup PNPM with Dependencies
@@ -113,7 +114,7 @@ jobs:
              ```sh
              ${{ steps.package-preview.outputs.npm_instructions }}
              ```
-          GITHUB_TOKEN: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-release:
     name: Publish Release
@@ -125,7 +126,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
-          token: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Setup PNPM with Dependencies
@@ -147,4 +148,4 @@ jobs:
         uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6.0.0
         env:
           # Since branch protections are on (pushing commits) you need to use a bot PAT
-          GITHUB_TOKEN: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

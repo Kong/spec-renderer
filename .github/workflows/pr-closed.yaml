@@ -16,4 +16,4 @@ jobs:
         with:
           header: pr_preview_consumption
           delete: true
-          GITHUB_TOKEN: ${{ secrets.SPEC_RENDERER_BOT_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
