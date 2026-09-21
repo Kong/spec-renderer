@@ -274,6 +274,47 @@ describe('<HttpOperation />', () => {
       expect(selectedServerUrl.value).toBe('https://api.example.com/v1')
     })
 
+    it('displays a custom url that becomes active globally even after a scoped server selection', async () => {
+      const data = {
+        id: '123',
+        method: 'get',
+        path: '/reports',
+        responses: [],
+        servers: <IServer[]>[{
+          id: 'analytics-server-id',
+          url: 'https://analytics.example.com',
+        }, {
+          id: 'analytics-eu-server-id',
+          url: 'https://analytics-eu.example.com',
+        }],
+      }
+
+      const wrapper = mount(HttpOperation, {
+        props: {
+          data,
+        },
+      })
+
+      // a scoped server is selected locally through the server dropdown
+      wrapper.findComponent(SelectDropdown).vm.$emit('update:modelValue', 'https://analytics-eu.example.com')
+      await flushPromises()
+      expect(wrapper.findTestId('server-endpoint-123').text()).toContain('https://analytics-eu.example.com')
+
+      // ...then a custom url becomes the active selection globally - the
+      // scoped operation adopts it
+      const { addServerUrl } = composables.useServerList()
+      addServerUrl('https://proxy.example.com')
+      await flushPromises()
+      expect(wrapper.findTestId('server-endpoint-123').text()).toContain('https://proxy.example.com')
+
+      // the scoped selection can be made locally again without updating the
+      // globally selected custom url
+      wrapper.findComponent(SelectDropdown).vm.$emit('update:modelValue', 'https://analytics.example.com')
+      await flushPromises()
+      expect(wrapper.findTestId('server-endpoint-123').text()).toContain('https://analytics.example.com')
+      expect(selectedServerUrl.value).toBe('https://proxy.example.com')
+    })
+
     it('syncs a global server selection across operations', async () => {
       initialize(<IServer[]>[{
         id: 'global-server-id',

@@ -1,4 +1,4 @@
-import { computed, ref, unref } from 'vue'
+import { computed, ref, unref, watch } from 'vue'
 import type { ComputedRef, Ref, WritableComputedRef } from 'vue'
 import type { IServer } from '@/types'
 import useServerList from './useServerList'
@@ -15,7 +15,9 @@ import { formatServerUrl } from '@/utils/server-url'
  *
  * Custom server urls added by the user at runtime are also offered to scoped
  * operations; selecting one syncs globally, since it is not a server that is
- * only scoped for that endpoint.
+ * only scoped for that endpoint. When a custom url becomes the active
+ * selection globally, scoped operations adopt it, dropping their local scoped
+ * selection (which can be made locally again afterwards).
  *
  * Operations without scoped servers fall through to the global `useServerList`
  * state, exactly as before.
@@ -93,12 +95,25 @@ export default function useEndpointServerList(operationServers: Ref<IServer[] | 
   const isCustomServerUrl = (url: string): boolean => customServerUrls.value.includes(url)
 
   /**
-   * Currently selected server url for the operation's endpoint. When the scoped
-   * selection is not (or no longer) part of the scoped list, the globally
-   * selected custom url is used, falling back to the first scoped server url.
-   * Reading falls back to the global selection when the operation has no scoped
-   * servers; writing routes the selection to the scoped (local) or global
-   * (synced) state - a custom url selection always syncs globally.
+   * When a custom server url becomes the active selection globally, scoped
+   * operations adopt it: any local scoped selection is dropped so the global
+   * custom url is displayed. The user can pick a scoped server locally again
+   * afterwards without affecting the globally selected custom url.
+   */
+  watch(globalSelectedServerUrl, (url) => {
+    if (isCustomServerUrl(url)) {
+      selectedScopedServerUrl.value = ''
+    }
+  })
+
+  /**
+   * Currently selected server url for the operation's endpoint. The local
+   * scoped selection takes precedence; when it is not (or no longer) part of
+   * the scoped list, the globally selected custom url is used, falling back
+   * to the first scoped server url. Reading falls back to the global
+   * selection when the operation has no scoped servers; writing routes the
+   * selection to the scoped (local) or global (synced) state - a custom url
+   * selection always syncs globally.
    */
   const selectedServerUrl: WritableComputedRef<string> = computed({
     get: () => {

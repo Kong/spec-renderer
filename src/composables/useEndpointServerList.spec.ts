@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { describe, it, expect, beforeEach } from 'vitest'
 import useEndpointServerList from './useEndpointServerList'
 import useServerList from './useServerList'
@@ -72,6 +72,29 @@ describe('useEndpointServerList', () => {
 
     expect(selectedServerUrl.value).toBe('https://analytics-eu.example.com')
     expect(globalSelectedServerUrl.value).toBe('https://api.example.com/v1')
+  })
+
+  it('adopts a custom server url that becomes active globally even after a scoped server was selected', async () => {
+    const { selectedServerUrl } = useEndpointServerList(computed(() => <IServer[]>[
+      { id: 'analytics-server-id', url: 'https://analytics.example.com' },
+      { id: 'analytics-eu-server-id', url: 'https://analytics-eu.example.com' },
+    ]))
+
+    // a scoped server is selected locally first
+    selectedServerUrl.value = 'https://analytics-eu.example.com'
+    expect(selectedServerUrl.value).toBe('https://analytics-eu.example.com')
+
+    // ...then a custom url becomes the active selection globally - the scoped
+    // operation adopts it, dropping its local scoped selection
+    addServerUrl('https://proxy.example.com')
+    await nextTick()
+    expect(selectedServerUrl.value).toBe('https://proxy.example.com')
+
+    // the scoped selection can be made locally again without updating the
+    // globally selected custom url
+    selectedServerUrl.value = 'https://analytics.example.com'
+    expect(selectedServerUrl.value).toBe('https://analytics.example.com')
+    expect(globalSelectedServerUrl.value).toBe('https://proxy.example.com')
   })
 
   it('offers custom server urls to operations with scoped servers', () => {
