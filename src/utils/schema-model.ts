@@ -127,6 +127,34 @@ export const resolveSchemaType = (schemaType: SchemaObject['type']): SchemaObjec
 }
 
 /**
+ * Fields that describe or constrain the array itself rather than each item in it.
+ *
+ * Array models are flattened with their item schema for rendering, so these fields must be
+ * restored from the array schema when the item schema defines the same field.
+ */
+const arraySchemaFieldKeys = [
+  'title',
+  'description',
+  'default',
+  'example',
+  'examples',
+  'enum',
+  'readOnly',
+  'writeOnly',
+  'deprecated',
+  'minItems',
+  'maxItems',
+  'uniqueItems',
+  'x-stoplight',
+] as const satisfies ReadonlyArray<keyof SchemaObject>
+
+const pickOwnArraySchemaFields = (schema: SchemaObject): Partial<SchemaObject> => Object.fromEntries(
+  arraySchemaFieldKeys
+    .filter(key => Object.hasOwn(schema, key))
+    .map(key => [key, schema[key]]),
+) as Partial<SchemaObject>
+
+/**
  * util to compute from where to extract the fields of the candidate object
  * - if it's a valid Schema Object, we can directly use it, as it is
  * - if candidate is of type array, we can extract the fields from items field
@@ -151,14 +179,14 @@ export const resolveSchemaObjectFields = (candidate: unknown): SchemaObject => {
        * - fields listed directly under the model, except items
        * - fields listed under items, so we destructure items
        * - data type as 'array' and format as the array item data type
-       * item fields take precedence, except for the collection's own description
+       * item fields take precedence, except for fields that describe or constrain the array itself
        */
     const candidateWithoutItems = { ...candidate }
     delete candidateWithoutItems.items
     return {
       ...candidateWithoutItems,
       ...resolveAllOf(candidate.items),
-      ...(Object.hasOwn(candidate, 'description') ? { description: candidate.description } : {}),
+      ...pickOwnArraySchemaFields(candidate),
       type: candidate.type,
       itemType: candidate.items.type,
     }
