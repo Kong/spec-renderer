@@ -35,21 +35,25 @@ const isOas3 = (parsed: unknown): parsed is OpenAPIObject =>
   'openapi' in parsed &&
   Number.parseFloat(String((parsed as Partial<{ openapi: unknown }>).openapi)) >= 3
 
-const isOas31 = (parsed: unknown): parsed is OpenAPIObject =>
+// >= 3.1 rather than an exact match on 3.1: OAS 3.2 is an incremental revision on top of 3.1,
+// and should be routed through the same 3.1-era handling below rather than falling through to
+// the plain isOas3 branch (which would silently drop webhooks/dialect handling for 3.2 docs).
+const isOas31OrLater = (parsed: unknown): parsed is OpenAPIObject =>
   isObject(parsed) &&
   'openapi' in parsed &&
-  Number.parseFloat(String((parsed as Partial<{ openapi: unknown }>).openapi)) === 3.1
+  Number.parseFloat(String((parsed as Partial<{ openapi: unknown }>).openapi)) >= 3.1
 
 const OAS_MODEL_REGEXP = /((definitions|components)\/?(schemas)?)\//
 
 export function transformOasToServiceNode(apiDescriptionDocument: unknown) {
-  if (isOas31(apiDescriptionDocument)) {
+  if (isOas31OrLater(apiDescriptionDocument)) {
+    const version = Number.parseFloat(String(apiDescriptionDocument.openapi))
     return computeServiceNode(
       { ...apiDescriptionDocument, jsonSchemaDialect: 'http://json-schema.org/draft-07/schema#' },
       oas3SourceMap,
       transformOas3Service,
       transformOas3Operation,
-      SpecVersion.OAS31,
+      version >= 3.2 ? SpecVersion.OAS32 : SpecVersion.OAS31,
     )
   }
   if (isOas3(apiDescriptionDocument)) {
