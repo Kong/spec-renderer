@@ -1,5 +1,5 @@
 import markdownit from 'markdown-it'
-import type MarkdownIt from 'markdown-it'
+import type { MarkdownIt } from 'markdown-it'
 import { sanitizeMarkdownHtml } from '@/utils/html-sanitizer'
 
 let md: MarkdownIt | null
