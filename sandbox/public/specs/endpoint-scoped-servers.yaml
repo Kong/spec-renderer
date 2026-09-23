@@ -1,0 +1,83 @@
+openapi: 3.1.0
+info:
+  title: Endpoint Scoped Servers Playground
+  version: 1.0.0
+  description: |
+    A sandbox playground with NO root level `servers` block: every server in
+    this document is declared at the path or operation level.
+
+    Use this spec to verify that deep-linking to an operation does not leak
+    its scoped servers into the global server list used by sibling endpoints
+    and the TryIt panel: open the page directly at an operation's URL (or
+    click into one), then check other endpoints - they must not offer the
+    scoped server's URL.
+
+# No root servers block - operations with their own `servers` block are scoped
+# to that endpoint only; operations without one have no server to resolve
+# against (a custom URL can still be added at runtime in the overview).
+paths:
+  # 1. Operation level server - scoped to this endpoint only
+  /files:
+    post:
+      summary: Upload file (resolves to https://uploads.example.com/files)
+      servers:
+        - url: https://uploads.example.com
+          description: High capacity upload intake
+      responses:
+        '201':
+          description: Created
+
+  # 2. No servers block - nothing to resolve against, and it must never pick up
+  #    the scoped servers of /files above, even when deep-linking to /files
+  /status:
+    get:
+      summary: Get status (no servers anywhere, resolves against nothing)
+      responses:
+        '200':
+          description: OK
+
+  # 3. A second, different scoped server - proves scoped servers do not bleed
+  #    into each other either
+  /reports:
+    get:
+      summary: Get report (resolves to https://reports.example.com/reports)
+      servers:
+        - url: https://reports.example.com
+          description: Reporting service
+      responses:
+        '200':
+          description: OK
+
+  # 4. Path level server applies to every operation under the path
+  /admin/health:
+    servers:
+      - url: https://health.example.com
+        description: Dedicated health service
+    get:
+      summary: Health check (resolves to https://health.example.com/admin/health)
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Ping (resolves to https://health.example.com/admin/health)
+      responses:
+        '200':
+          description: OK
+
+  # 5. Templated scoped server with variables, editable locally on the endpoint
+  /tenant-data:
+    get:
+      summary: Tenant data (resolves to https://tenant-us.example.com/tenant-data)
+      servers:
+        - url: https://tenant-{region}.example.com
+          description: Regional tenant service
+          variables:
+            region:
+              default: us
+              description: Tenant region
+              enum:
+                - us
+                - eu
+      responses:
+        '200':
+          description: OK

@@ -4,6 +4,7 @@ import useCurrentCallback from './useCurrentCallback'
 import useCurrentResponse from './useCurrentResponse'
 import useContentTypes from './useContentTypes'
 import useServerList from './useServerList'
+import useEndpointServerList from './useEndpointServerList'
 import useTryItState from './useTryItState'
 import useMarkdown from './useMarkdown'
 import useAuth from './useAuth'
@@ -16,6 +17,7 @@ export default {
   useCurrentResponse,
   useContentTypes,
   useServerList,
+  useEndpointServerList,
   useTryItState,
   useMarkdown,
   useAuth,

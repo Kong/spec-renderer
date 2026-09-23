@@ -4,6 +4,7 @@ import { mount, flushPromises } from '@vue/test-utils'
 
 window.HTMLElement.prototype.scrollIntoView = vi.fn()
 import HttpOperation from './HttpOperation.vue'
+import SelectDropdown from '@/components/common/SelectDropdown.vue'
 import type { IHttpOperation, IServer } from '@stoplight/types'
 import composables from '@/composables'
 
@@ -154,6 +155,201 @@ describe('<HttpOperation />', () => {
 
       // server endpoint is not rendered
       expect(wrapper.findTestId(`server-endpoint-${data.id}`).exists()).toBe(false)
+    })
+  })
+
+  describe('operation-level server blocks', () => {
+    const { initialize, selectedServerUrl } = composables.useServerList()
+
+    beforeEach(() => {
+      initialize(<IServer[]>[{
+        id: 'global-server-id',
+        url: 'https://api.example.com/v1',
+      }])
+    })
+
+    it('renders the operation scoped server url when the operation has its own servers block', () => {
+      const data = {
+        id: '123',
+        method: 'post',
+        path: '/files',
+        responses: [],
+        servers: <IServer[]>[{
+          id: 'uploads-server-id',
+          url: 'https://uploads.example.com',
+        }],
+      }
+
+      const wrapper = mount(HttpOperation, {
+        props: {
+          data,
+        },
+      })
+
+      // the operation's own scoped server url is rendered, not the global one
+      expect(wrapper.findTestId('server-url-post-https://uploads.example.com/files').exists()).toBe(true)
+      expect(wrapper.findTestId('server-endpoint-123').text()).not.toContain('https://api.example.com/v1')
+    })
+
+    it('renders the global server url when the operation does not have scoped servers', () => {
+      const data = {
+        id: '123',
+        method: 'get',
+        path: '/users',
+        responses: [],
+        servers: <IServer[]>[{
+          id: 'global-server-id',
+          url: 'https://api.example.com/v1',
+        }],
+      }
+
+      const wrapper = mount(HttpOperation, {
+        props: {
+          data,
+        },
+      })
+
+      expect(wrapper.findTestId('server-url-get-https://api.example.com/v1/users').exists()).toBe(true)
+    })
+
+    it('offers custom server urls on operations with scoped servers', async () => {
+      initialize(<IServer[]>[{
+        id: 'global-server-id',
+        url: 'https://api.example.com/v1',
+      }])
+      const { addServerUrl } = composables.useServerList()
+      addServerUrl('https://proxy.example.com')
+
+      const data = {
+        id: '123',
+        method: 'get',
+        path: '/reports',
+        responses: [],
+        servers: <IServer[]>[{
+          id: 'analytics-server-id',
+          url: 'https://analytics.example.com',
+        }],
+      }
+
+      const wrapper = mount(HttpOperation, {
+        props: {
+          data,
+        },
+      })
+
+      // the scoped server and the custom url are both offered
+      const items = wrapper.findComponent(SelectDropdown).props('items') as Array<{ label: string }>
+      expect(items.map(item => item.label)).toEqual(['https://analytics.example.com', 'https://proxy.example.com'])
+      // the globally selected custom url is displayed on the scoped operation
+      expect(wrapper.findTestId('server-endpoint-123').text()).toContain('https://proxy.example.com')
+    })
+
+    it('does not sync a scoped server selection with the global server selection', async () => {
+      const data = {
+        id: '123',
+        method: 'get',
+        path: '/reports',
+        responses: [],
+        servers: <IServer[]>[{
+          id: 'analytics-server-id',
+          url: 'https://analytics.example.com',
+        }, {
+          id: 'analytics-eu-server-id',
+          url: 'https://analytics-eu.example.com',
+        }],
+      }
+
+      const wrapper = mount(HttpOperation, {
+        props: {
+          data,
+        },
+      })
+
+      // scoped server selection happens through the server dropdown
+      wrapper.findComponent(SelectDropdown).vm.$emit('update:modelValue', 'https://analytics-eu.example.com')
+      await flushPromises()
+
+      expect(wrapper.findTestId('server-endpoint-123').text()).toContain('https://analytics-eu.example.com')
+      // the global server selection is left untouched
+      expect(selectedServerUrl.value).toBe('https://api.example.com/v1')
+    })
+
+    it('displays a custom url that becomes active globally even after a scoped server selection', async () => {
+      const data = {
+        id: '123',
+        method: 'get',
+        path: '/reports',
+        responses: [],
+        servers: <IServer[]>[{
+          id: 'analytics-server-id',
+          url: 'https://analytics.example.com',
+        }, {
+          id: 'analytics-eu-server-id',
+          url: 'https://analytics-eu.example.com',
+        }],
+      }
+
+      const wrapper = mount(HttpOperation, {
+        props: {
+          data,
+        },
+      })
+
+      // a scoped server is selected locally through the server dropdown
+      wrapper.findComponent(SelectDropdown).vm.$emit('update:modelValue', 'https://analytics-eu.example.com')
+      await flushPromises()
+      expect(wrapper.findTestId('server-endpoint-123').text()).toContain('https://analytics-eu.example.com')
+
+      // ...then a custom url becomes the active selection globally - the
+      // scoped operation adopts it
+      const { addServerUrl } = composables.useServerList()
+      addServerUrl('https://proxy.example.com')
+      await flushPromises()
+      expect(wrapper.findTestId('server-endpoint-123').text()).toContain('https://proxy.example.com')
+
+      // the scoped selection can be made locally again without updating the
+      // globally selected custom url
+      wrapper.findComponent(SelectDropdown).vm.$emit('update:modelValue', 'https://analytics.example.com')
+      await flushPromises()
+      expect(wrapper.findTestId('server-endpoint-123').text()).toContain('https://analytics.example.com')
+      expect(selectedServerUrl.value).toBe('https://proxy.example.com')
+    })
+
+    it('syncs a global server selection across operations', async () => {
+      initialize(<IServer[]>[{
+        id: 'global-server-id',
+        url: 'https://api.example.com/v1',
+      }, {
+        id: 'global-eu-server-id',
+        url: 'https://api-eu.example.com/v1',
+      }])
+
+      const operation1 = mount(HttpOperation, {
+        props: {
+          data: {
+            id: '123',
+            method: 'get',
+            path: '/users',
+            responses: [],
+          },
+        },
+      })
+      const operation2 = mount(HttpOperation, {
+        props: {
+          data: {
+            id: '456',
+            method: 'get',
+            path: '/reports',
+            responses: [],
+          },
+        },
+      })
+
+      operation1.findComponent(SelectDropdown).vm.$emit('update:modelValue', 'https://api-eu.example.com/v1')
+      await flushPromises()
+
+      expect(operation1.findTestId('server-endpoint-123').text()).toContain('https://api-eu.example.com/v1')
+      expect(operation2.findTestId('server-endpoint-456').text()).toContain('https://api-eu.example.com/v1')
     })
   })
 

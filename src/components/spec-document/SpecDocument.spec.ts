@@ -149,6 +149,135 @@ describe('<SpecDocument />', () => {
     expect(wrapper.findTestId('server-url-get-http://localhost:8001/coffee/hot').exists()).toBe(true)
   })
 
+  it('should render scoped server urls for operations with their own servers blocks', () => {
+    const wrapper = mount(SpecDocument, {
+      props: {
+        document: {
+          'type': 'http_service',
+          'uri': '/',
+          'name': 'Multi-Server API',
+          'data': {
+            'version': '1.0.0',
+            'name': 'Multi-Server API',
+            'servers': [
+              {
+                'id': 'root-server-id',
+                'url': 'https://api.example.com/v1',
+                'description': 'Primary API server',
+              },
+            ],
+          },
+          'children': [
+            {
+              // no override - resolves to the root server
+              'type': 'http_operation',
+              'uri': '/operations/getUsers',
+              'data': {
+                'id': 'op-users',
+                'method': 'get',
+                'path': '/users',
+                'responses': [],
+                'servers': [
+                  {
+                    'id': 'root-server-id',
+                    'url': 'https://api.example.com/v1',
+                  },
+                ],
+              },
+              'name': 'Get user list',
+            },
+            {
+              // operation level override
+              'type': 'http_operation',
+              'uri': '/operations/postFiles',
+              'data': {
+                'id': 'op-files',
+                'method': 'post',
+                'path': '/files',
+                'responses': [],
+                'servers': [
+                  {
+                    'id': 'uploads-server-id',
+                    'url': 'https://uploads.example.com',
+                  },
+                ],
+              },
+              'name': 'Upload file',
+            },
+          ],
+          'specVersion': 'OAS 3.1',
+        } as unknown as ServiceNode,
+        currentPath: '/',
+      },
+    })
+
+    // operation without override uses the root server
+    expect(wrapper.findTestId('server-url-get-https://api.example.com/v1/users').exists()).toBe(true)
+    // operation with a scoped server block uses its own server
+    expect(wrapper.findTestId('server-url-post-https://uploads.example.com/files').exists()).toBe(true)
+  })
+
+  it('should not seed the global server list with a deep-linked operation\'s scoped servers', async () => {
+    const wrapper = mount(SpecDocument, {
+      props: {
+        document: {
+          'type': 'http_service',
+          'uri': '/',
+          'name': 'Scoped Servers API',
+          // no root servers block
+          'data': {
+            'version': '1.0.0',
+            'name': 'Scoped Servers API',
+          },
+          'children': [
+            {
+              // operation with scoped servers
+              'type': 'http_operation',
+              'uri': '/operations/postFiles',
+              'data': {
+                'id': 'op-files',
+                'method': 'post',
+                'path': '/files',
+                'responses': [],
+                'servers': [
+                  {
+                    'id': 'uploads-server-id',
+                    'url': 'https://uploads.example.com',
+                  },
+                ],
+              },
+              'name': 'Upload file',
+            },
+            {
+              // operation without its own servers
+              'type': 'http_operation',
+              'uri': '/operations/getStatus',
+              'data': {
+                'id': 'op-status',
+                'method': 'get',
+                'path': '/status',
+                'responses': [],
+              },
+              'name': 'Get status',
+            },
+          ],
+          'specVersion': 'OAS 3.1',
+        } as unknown as ServiceNode,
+        // deep-link to the operation with scoped servers
+        currentPath: '/operations/postFiles',
+      },
+    })
+
+    // the deep-linked operation still resolves against its own scoped servers
+    expect(wrapper.findTestId('server-url-post-https://uploads.example.com/files').exists()).toBe(true)
+    // the sibling operation without its own servers must not offer the scoped server
+    expect(wrapper.findTestId('server-url-get-https://uploads.example.com/status').exists()).toBe(false)
+
+    // the global server list must stay unseeded when navigating to the sibling operation
+    await wrapper.setProps({ currentPath: '/operations/getStatus' })
+    expect(wrapper.findTestId('server-url-get-https://uploads.example.com/status').exists()).toBe(false)
+  })
+
   it('should render operation tags', () => {
     const wrapper = mount(SpecDocument, {
       props: {
