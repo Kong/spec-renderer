@@ -1,3 +1,10 @@
+# [1.114.0](https://github.com/Kong/spec-renderer/compare/v1.113.13...v1.114.0) (2026-09-23)
+
+
+### Features
+
+* endpoint scoped servers [TDX-8959] ([#1007](https://github.com/Kong/spec-renderer/issues/1007)) ([b21f35a](https://github.com/Kong/spec-renderer/commit/b21f35ac19ae35aebc34b80fa93e55de604ddfa6))
+
 ## [1.113.13](https://github.com/Kong/spec-renderer/compare/v1.113.12...v1.113.13) (2026-09-23)
 
 
