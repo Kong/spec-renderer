@@ -153,7 +153,6 @@ jobs:
           git config --global user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config --global user.name 'kong-bot'
 
-
       - name: Download Build Artifacts
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
