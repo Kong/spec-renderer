@@ -1,3 +1,12 @@
+## [1.113.13](https://github.com/Kong/spec-renderer/compare/v1.113.12...v1.113.13) (2026-09-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency markdown-it to v15 ([#1015](https://github.com/Kong/spec-renderer/issues/1015)) ([3941c50](https://github.com/Kong/spec-renderer/commit/3941c50fbcef8df1f7b0ccc38d9268f1402d0c8e))
+* fix release token 2 ([#1018](https://github.com/Kong/spec-renderer/issues/1018)) ([efc4fa4](https://github.com/Kong/spec-renderer/commit/efc4fa419282c8d63621b68c52a26eb3e9f6e053))
+* use CoreUI app token for publishing ([#1017](https://github.com/Kong/spec-renderer/issues/1017)) ([4fd718c](https://github.com/Kong/spec-renderer/commit/4fd718c5e9cf12130adc80c82b4a4e341f15060b))
+
 ## [1.113.12](https://github.com/Kong/spec-renderer/compare/v1.113.11...v1.113.12) (2026-09-17)
 
 
