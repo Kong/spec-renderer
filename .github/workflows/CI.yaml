@@ -143,6 +143,14 @@ jobs:
           git config --global user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config --global user.name 'kong-bot'
 
+      - name: Generate Kong token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app-token-kong
+        with:
+          client-id: ${{ vars.CORE_UI_GH_APP_READ_ID }}
+          private-key: ${{ secrets.CORE_UI_GH_APP_READ_PRIVATE_KEY }}
+          owner: Kong
+
       - name: Download Build Artifacts
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
@@ -153,5 +161,5 @@ jobs:
         if: github.event_name == 'push'
         uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6.0.0
         env:
-          # Since branch protections are on (pushing commits) you need to use a bot PAT
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Since branch protections are on (pushing commits) you need to use a app token
+          GITHUB_TOKEN: ${{ steps.app-token-kong.outputs.token }}
