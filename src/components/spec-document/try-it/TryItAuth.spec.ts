@@ -135,14 +135,14 @@ describe('<TryItAuth />', () => {
     await nextTick()
     await vi.advanceTimersByTimeAsync(100)
 
-    expect(await wrapper.vm.auth2ClientCredentialsAuth()).toBe(tokenResponse)
+    expect((await wrapper.vm.runPreRequestAuth()).response).toBe(tokenResponse)
 
     // The API request uses these headers immediately, before the debounce runs.
     expect(authHeadersMap.value[group.key]).toEqual([
       { name: 'Authorization', value: 'Bearer new-token' },
       { name: 'apikey', value: 'key-value' },
     ])
-    await wrapper.vm.auth2ClientCredentialsAuth()
+    await wrapper.vm.runPreRequestAuth()
     expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 

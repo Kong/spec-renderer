@@ -118,7 +118,6 @@
 
       <TryItAuth2
         v-else-if="scheme.type === 'oauth2' && scheme.flows.clientCredentials"
-        ref="auth2ComponentTemplate"
         :data-id="data.id"
         :scheme="scheme"
         :scheme-key="key"
@@ -161,7 +160,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, watch, ref, useTemplateRef } from 'vue'
+import { computed, inject, watch, ref } from 'vue'
 import type { ComputedRef, PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { LockIcon } from '@kong/icons'
@@ -172,7 +171,7 @@ import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import type { SecuritySchemeGroup, SelectItem } from '@/types'
+import type { SecuritySchemeGroup, SelectItem, PreRequestAuthResult } from '@/types'
 import composables from '@/composables'
 import TryItAuth2 from './TryItAuth2.vue'
 
@@ -183,20 +182,20 @@ const props = defineProps({
   },
 })
 
-const auth2ComponentRef = useTemplateRef('auth2ComponentTemplate')
+const { runPreRequestAuth: runHandlers } = composables.usePreRequestAuth()
 
-const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
-  if (!auth2ComponentRef.value?.[0]?.auth2ClientCredentialsAuth) {
-    return { ok: true } as Response
+// Runs the registered pre-request handlers for the active schemes, then resyncs the
+// combined headers immediately, before the input debounce runs.
+const runPreRequestAuth = async (): Promise<PreRequestAuthResult> => {
+  const result = await runHandlers(Object.keys(currentSecuritySchemeMap.value))
+  if (!result.error) {
+    updateAuthDataImpl()
   }
-  const response = await auth2ComponentRef.value[0].auth2ClientCredentialsAuth()
-  // The request proceeds immediately after this returns, before the input debounce runs.
-  updateAuthDataImpl()
-  return response
+  return result
 }
 
 defineExpose({
-  auth2ClientCredentialsAuth,
+  runPreRequestAuth,
 })
 
 

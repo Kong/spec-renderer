@@ -8,6 +8,7 @@ import useEndpointServerList from './useEndpointServerList'
 import useTryItState from './useTryItState'
 import useMarkdown from './useMarkdown'
 import useAuth from './useAuth'
+import usePreRequestAuth from './usePreRequestAuth'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
@@ -21,4 +22,5 @@ export default {
   useTryItState,
   useMarkdown,
   useAuth,
+  usePreRequestAuth,
 }
