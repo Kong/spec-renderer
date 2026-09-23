@@ -9,16 +9,10 @@ export interface SecuritySchemeGroup {
 /** Result of the pre-request auth step run before a Try-It call goes out. */
 export interface PreRequestAuthResult {
   ok: boolean
+  /** the token endpoint's response, set when it failed */
   response?: Response
   error?: Error
 }
 
-/**
- * A flow component's pre-request hook. `undefined` means "nothing to do".
- * A bare `Response` is the legacy clientCredentials shape and is treated as ok when `response.ok`.
- */
-export type PreRequestAuthHandler = () =>
-  | Promise<Response | PreRequestAuthResult | undefined>
-  | Response
-  | PreRequestAuthResult
-  | undefined
+/** A flow panel's pre-request hook, run before a Try-It call goes out. */
+export type PreRequestAuthHandler = () => Promise<PreRequestAuthResult>

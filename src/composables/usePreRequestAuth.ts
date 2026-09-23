@@ -1,63 +1,64 @@
+import { inject, onMounted, onUnmounted, provide } from 'vue'
 import type { PreRequestAuthHandler, PreRequestAuthResult } from '@/types'
 
-// Keyed by scheme key. Written only from onMounted, so never during SSR.
-// Many operations share a scheme key; last mount wins, which is fine as all handlers read the same global state.
-const handlers = new Map<string, PreRequestAuthHandler>()
+interface PreRequestAuthRegistry {
+  registerHandler: (schemeKey: string, handler: PreRequestAuthHandler) => () => void
+  runHandlers: (schemeKeys: string[]) => Promise<PreRequestAuthResult>
+}
 
-// Handlers return either a raw Response or an PreRequestAuthResult, so tell them apart.
-// instanceof is not enough: the try-it specs use hand-rolled Response doubles.
-const isResponseLike = (value: object): value is Response =>
-  (typeof Response !== 'undefined' && value instanceof Response) ||
-  typeof (value as Response).status === 'number' ||
-  typeof (value as Response).json === 'function'
+// One list per endpoint, so endpoints never touch each other's handlers.
+// A list per scheme key, since a scheme that declares two flows renders two panels.
+const createRegistry = (): PreRequestAuthRegistry => {
+  const handlers = new Map<string, PreRequestAuthHandler[]>()
+
+  const registerHandler = (schemeKey: string, handler: PreRequestAuthHandler): (() => void) => {
+    handlers.set(schemeKey, [...(handlers.get(schemeKey) ?? []), handler])
+    return () => {
+      handlers.set(schemeKey, (handlers.get(schemeKey) ?? []).filter(h => h !== handler))
+    }
+  }
+
+  // runs the handlers for these schemes in order, stopping at the first failure
+  const runHandlers = async (schemeKeys: string[]): Promise<PreRequestAuthResult> => {
+    for (const schemeKey of schemeKeys) {
+      for (const handler of handlers.get(schemeKey) ?? []) {
+        try {
+          const result = await handler()
+          if (!result.ok) {
+            return result
+          }
+        } catch (error) {
+          return { ok: false, error: error as Error }
+        }
+      }
+    }
+    return { ok: true }
+  }
+
+  return { registerHandler, runHandlers }
+}
 
 export default function usePreRequestAuth() {
+  // Called by TryItAuth: gives the endpoint its own handler list and shares it with its flow panels.
+  const providePreRequestAuth = (): PreRequestAuthRegistry => {
+    const registry = createRegistry()
+    provide<PreRequestAuthRegistry>('pre-request-auth', registry)
+    return registry
+  }
+
+  // Called by flow panels during setup: the handler is active while the panel is mounted.
   const registerPreRequestAuth = (schemeKey: string, handler: PreRequestAuthHandler): void => {
-    handlers.set(schemeKey, handler)
-  }
-
-  const unregisterPreRequestAuth = (schemeKey: string): void => {
-    handlers.delete(schemeKey)
-  }
-
-  const runPreRequestAuth = async (schemeKeys: string[]): Promise<PreRequestAuthResult> => {
-    let lastResponse: Response | undefined
-
-    for (const schemeKey of schemeKeys) {
-      const handler = handlers.get(schemeKey)
-      if (!handler) {
-        continue
-      }
-
-      let out: Response | PreRequestAuthResult | undefined
-      try {
-        out = await handler()
-      } catch (error) {
-        return { ok: false, error: error as Error }
-      }
-
-      if (!out) {
-        continue
-      }
-
-      if (isResponseLike(out)) {
-        if (out.ok) {
-          // keep it so callers that need the raw token response can read it back
-          lastResponse = out
-          continue
-        }
-        return { ok: false, response: out }
-      }
-
-      const result = out as PreRequestAuthResult
-      if (result.ok) {
-        continue
-      }
-      return result
+    const registry = inject<PreRequestAuthRegistry | null>('pre-request-auth', null)
+    if (!registry) {
+      return
     }
 
-    return lastResponse ? { ok: true, response: lastResponse } : { ok: true }
+    let unregister: (() => void) | undefined
+    onMounted(() => {
+      unregister = registry.registerHandler(schemeKey, handler)
+    })
+    onUnmounted(() => unregister?.())
   }
 
-  return { registerPreRequestAuth, unregisterPreRequestAuth, runPreRequestAuth }
+  return { providePreRequestAuth, registerPreRequestAuth }
 }

@@ -137,14 +137,14 @@
 </template>
 
 <script setup lang="ts">
-import { watch, computed, ref, onMounted, onUnmounted } from 'vue'
+import { watch, computed, ref } from 'vue'
 import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import composables from '@/composables'
 import { useTimeoutFn } from '@vueuse/core'
 
-import type { XKongClientCredentialsConfig, ExtraTokenRequestParameter } from '@/types'
+import type { XKongClientCredentialsConfig, ExtraTokenRequestParameter, PreRequestAuthResult } from '@/types'
 import type { IOauth2SecurityScheme } from '@stoplight/types'
 import { useDebounceFn } from '@vueuse/core'
 import { OAS_EXT_KONG_CLIENT_CREDENTIALS } from '@/oas-extensions'
@@ -172,13 +172,18 @@ const setAllScopes = (value: boolean) => {
   })
 }
 
-const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
+/**
+ * Pre-request handler for the OAuth2 client credentials flow:
+ * fetches an access token before a Try It request.
+ * Fails with the token endpoint's response if the token request is rejected.
+ */
+const auth2ClientCredentialsAuth = async (): Promise<PreRequestAuthResult> => {
   const clientId = authInputs.value[`${props.schemeKey}-clientId`] || ''
   const clientSecret = authInputs.value[`${props.schemeKey}-clientSecret`] || ''
   const btoaValue = btoa(`${clientId}:${clientSecret}`)
   const scopes:string[] = []
   if (authInputs.value[`${props.schemeKey}-token`]) {
-    return
+    return { ok: true }
   }
 
   Object.keys(authInputs.value)
@@ -231,13 +236,11 @@ const auth2ClientCredentialsAuth = async (): Promise<Response | undefined> => {
       }, (resData.expires_in || 60) * 1000)
     }
   }
-  return resp
+  return resp.ok ? { ok: true } : { ok: false, response: resp }
 }
 
-// register so TryIt can run this before the request goes out
-const { registerPreRequestAuth, unregisterPreRequestAuth } = composables.usePreRequestAuth()
-onMounted(() => registerPreRequestAuth(props.schemeKey, auth2ClientCredentialsAuth))
-onUnmounted(() => unregisterPreRequestAuth(props.schemeKey))
+// Register so TryIt can run this before the request goes out.
+composables.usePreRequestAuth().registerPreRequestAuth(props.schemeKey, auth2ClientCredentialsAuth)
 
 const updateAuthDataImpl = async () => {
   const clientId = authInputs.value[`${props.schemeKey}-clientId`] || ''

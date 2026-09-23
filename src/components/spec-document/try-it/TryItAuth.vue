@@ -161,7 +161,7 @@
 
 <script setup lang="ts">
 import { computed, inject, watch, ref } from 'vue'
-import type { ComputedRef, PropType } from 'vue'
+import type { ComputedRef } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { LockIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
@@ -175,21 +175,23 @@ import type { SecuritySchemeGroup, SelectItem, PreRequestAuthResult } from '@/ty
 import composables from '@/composables'
 import TryItAuth2 from './TryItAuth2.vue'
 
-const props = defineProps({
-  data: {
-    type: Object as PropType<IHttpOperation>,
-    required: true,
-  },
-})
+const props = defineProps<{
+  data: IHttpOperation
+}>()
 
-const { runPreRequestAuth: runHandlers } = composables.usePreRequestAuth()
+const { runHandlers } = composables.usePreRequestAuth().providePreRequestAuth()
 
 // Runs the registered pre-request handlers for the active schemes, then resyncs the
 // combined headers immediately, before the input debounce runs.
 const runPreRequestAuth = async (): Promise<PreRequestAuthResult> => {
   const result = await runHandlers(Object.keys(currentSecuritySchemeMap.value))
-  if (!result.error) {
+  if (result.error) {
+    return result
+  }
+  try {
     updateAuthDataImpl()
+  } catch (error) {
+    return { ok: false, error: error as Error }
   }
   return result
 }

@@ -2,6 +2,8 @@ import { describe, it, expect, vi } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { ref } from 'vue'
 import TryIt from './TryIt.vue'
+import TryItResponse from './TryItResponse.vue'
+import composables from '@/composables'
 
 
 describe('<TryIt />', () => {
@@ -388,5 +390,44 @@ describe('<TryIt />', () => {
     await flushPromises()
 
     expect(wrapper.findTestId('tryit-body-123').exists()).toBe(true)
+  })
+
+  // Regression: the auth step ran outside any try, so a throw left Send disabled with no error shown.
+  it('re-enables Send and shows the error when the auth step throws', async () => {
+    // freeze only the input debounce, which would hit the same throw on its own later
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] })
+    const basic = { id: 'basic', key: 'Basic', extensions: {}, type: 'http' as const, scheme: 'basic' }
+    const group = { title: 'Basic', key: 'Basic', schemeList: [basic] }
+    const { activeSecurityScheme, authInputs } = composables.useAuth()
+    activeSecurityScheme.value = group.key
+    // btoa throws on characters outside Latin-1
+    authInputs.value = { 'Basic-username': '名前', 'Basic-password': 'secret' }
+    const wrapper = mount(TryIt, {
+      props: {
+        data: {
+          id: '123',
+          method: 'get',
+          path: '/sample-path',
+          responses: [],
+          servers: [{ id: 'sample-server-id', url: 'https://global.api.konghq.com/v2' }],
+          security: [[basic]],
+        },
+        serverUrl: 'https://global.api.konghq.com/v2',
+      },
+      global: { provide: { 'security-scheme-group-list': ref([group]) } },
+    })
+    global.fetch = vi.fn()
+
+    await wrapper.findTestId('tryit-call-button-123').trigger('click')
+    await flushPromises()
+
+    expect(fetch).not.toHaveBeenCalled()
+    expect(wrapper.findTestId('tryit-call-button-123').attributes('disabled')).toBeUndefined()
+    expect(wrapper.findComponent(TryItResponse).props('responseError')).toBeInstanceOf(Error)
+
+    wrapper.unmount()
+    activeSecurityScheme.value = ''
+    authInputs.value = {}
+    vi.useRealTimers()
   })
 })
