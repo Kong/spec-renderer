@@ -217,6 +217,67 @@ describe('<SpecDocument />', () => {
     expect(wrapper.findTestId('server-url-post-https://uploads.example.com/files').exists()).toBe(true)
   })
 
+  it('should not seed the global server list with a deep-linked operation\'s scoped servers', async () => {
+    const wrapper = mount(SpecDocument, {
+      props: {
+        document: {
+          'type': 'http_service',
+          'uri': '/',
+          'name': 'Scoped Servers API',
+          // no root servers block
+          'data': {
+            'version': '1.0.0',
+            'name': 'Scoped Servers API',
+          },
+          'children': [
+            {
+              // operation with scoped servers
+              'type': 'http_operation',
+              'uri': '/operations/postFiles',
+              'data': {
+                'id': 'op-files',
+                'method': 'post',
+                'path': '/files',
+                'responses': [],
+                'servers': [
+                  {
+                    'id': 'uploads-server-id',
+                    'url': 'https://uploads.example.com',
+                  },
+                ],
+              },
+              'name': 'Upload file',
+            },
+            {
+              // operation without its own servers
+              'type': 'http_operation',
+              'uri': '/operations/getStatus',
+              'data': {
+                'id': 'op-status',
+                'method': 'get',
+                'path': '/status',
+                'responses': [],
+              },
+              'name': 'Get status',
+            },
+          ],
+          'specVersion': 'OAS 3.1',
+        } as unknown as ServiceNode,
+        // deep-link to the operation with scoped servers
+        currentPath: '/operations/postFiles',
+      },
+    })
+
+    // the deep-linked operation still resolves against its own scoped servers
+    expect(wrapper.findTestId('server-url-post-https://uploads.example.com/files').exists()).toBe(true)
+    // the sibling operation without its own servers must not offer the scoped server
+    expect(wrapper.findTestId('server-url-get-https://uploads.example.com/status').exists()).toBe(false)
+
+    // the global server list must stay unseeded when navigating to the sibling operation
+    await wrapper.setProps({ currentPath: '/operations/getStatus' })
+    expect(wrapper.findTestId('server-url-get-https://uploads.example.com/status').exists()).toBe(false)
+  })
+
   it('should render operation tags', () => {
     const wrapper = mount(SpecDocument, {
       props: {

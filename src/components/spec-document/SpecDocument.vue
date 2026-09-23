@@ -604,9 +604,8 @@ watch(() => ({
     lastY.value = 0
     renderPlain.value = false
 
-    // initialize the centralized state for server list from the service-level servers of the document
-    // (an operation node can hold its own scoped servers, which must not seed the global state)
-    initialize(newDocument.data?.servers || serviceNode.value?.data?.servers || [])
+    // initialize the centralized state for server list from the document's root servers
+    initialize(newDocument.data?.servers ?? [])
   }
 
   if (!doContentScrolling.value) {
