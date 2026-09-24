@@ -314,69 +314,40 @@ describe('<SpecDocument />', () => {
     })
   })
 
-  describe('overview title/description suppression', () => {
-    it('hides the overview title and description when the hide props are set', () => {
+  describe('overview title suppression', () => {
+    it('hides the overview title when the hide prop is set', () => {
       const wrapper = mount(SpecDocument, {
         props: {
           document: alphaServiceNode,
           currentPath: '/',
-          // string values exercise the BOOL_VALIDATOR/IS_TRUE normalization
+          // string value exercises the BOOL_VALIDATOR/IS_TRUE normalization
           hideOverviewTitle: 'true',
-          hideOverviewDescription: 'true',
         },
       })
 
       // scope to the overview header: operations below also render PageHeader titles
       expect(wrapper.find('.overview-page-header [data-testid="spec-renderer-page-header-title"]').exists()).toBe(false)
-      expect(wrapper.text()).not.toContain('This is a specification document with tags for organizing endpoints.')
+      // the description stays visible
+      expect(wrapper.text()).toContain('This is a specification document with tags for organizing endpoints.')
       // version badges remain visible
       expect(wrapper.find('.overview-page-versions').exists()).toBe(true)
     })
 
-    it('hides only the title when hideOverviewTitle is set', () => {
-      const wrapper = mount(SpecDocument, {
-        props: {
-          document: alphaServiceNode,
-          currentPath: '/',
-          hideOverviewTitle: true,
-        },
-      })
-
-      // scope to the overview header: operations below also render PageHeader titles
-      expect(wrapper.find('.overview-page-header [data-testid="spec-renderer-page-header-title"]').exists()).toBe(false)
-      expect(wrapper.text()).toContain('This is a specification document with tags for organizing endpoints.')
-    })
-
-    it('hides only the description when hideOverviewDescription is set', () => {
-      const wrapper = mount(SpecDocument, {
-        props: {
-          document: alphaServiceNode,
-          currentPath: '/',
-          hideOverviewDescription: true,
-        },
-      })
-
-      expect(wrapper.find('.overview-page-header [data-testid="spec-renderer-page-header-title"]').text()).toBe('Spec with tags')
-      expect(wrapper.text()).not.toContain('This is a specification document with tags for organizing endpoints.')
-    })
-
     // 'false' as a string is the normal value for a web-component attribute; a plain-truthiness
     // regression in the IS_TRUE normalization would wrongly hide the title here
-    it('renders the title and description when the hide props are the string "false"', () => {
+    it('renders the overview title when the hide prop is the string "false"', () => {
       const wrapper = mount(SpecDocument, {
         props: {
           document: alphaServiceNode,
           currentPath: '/',
           hideOverviewTitle: 'false',
-          hideOverviewDescription: 'false',
         },
       })
 
       expect(wrapper.find('.overview-page-header [data-testid="spec-renderer-page-header-title"]').text()).toBe('Spec with tags')
-      expect(wrapper.text()).toContain('This is a specification document with tags for organizing endpoints.')
     })
 
-    it('renders the overview title and description by default', () => {
+    it('renders the overview title by default', () => {
       const wrapper = mount(SpecDocument, {
         props: {
           document: alphaServiceNode,

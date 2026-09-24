@@ -64,7 +64,6 @@
           :hide-download-button="hideDownloadButton"
           :hide-insomnia-try-it="hideInsomniaTryIt"
           :hide-navigation-buttons="hideNavigationButtons"
-          :hide-overview-description="hideOverviewDescription"
           :hide-overview-title="hideOverviewTitle"
           :hide-try-it="hideTryIt"
           :markdown-styles="markdownStyles"
@@ -114,7 +113,6 @@ const {
   hideNavigationButtons = true,
   hideDownloadButton = false,
   hideOverviewTitle = false,
-  hideOverviewDescription = false,
   enableOperationLinks = false,
   showPoweredBy = false,
   maxExpandedDepth = DEFAULT_EXPANDED_PROPERTIES_DEPTH,

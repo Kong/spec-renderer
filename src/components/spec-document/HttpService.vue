@@ -24,7 +24,7 @@
 
     <section class="overview-page-content">
       <MarkdownRenderer
-        v-if="data.description && !hideOverviewDescription"
+        v-if="data.description"
         :markdown="data.description"
       />
       <ServerList
@@ -81,11 +81,6 @@ const props = defineProps({
   },
   /** Hide the spec title in the overview page header. Version badges and the download button remain visible. */
   hideOverviewTitle: {
-    type: Boolean,
-    default: false,
-  },
-  /** Hide the spec description in the overview page. */
-  hideOverviewDescription: {
     type: Boolean,
     default: false,
   },

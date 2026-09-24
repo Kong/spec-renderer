@@ -195,14 +195,6 @@ const props = defineProps({
     default: false,
   },
   /**
-   * Hide the spec description in the overview page.
-   */
-  hideOverviewDescription: {
-    type: [Boolean, String],
-    validator: BOOL_VALIDATOR,
-    default: false,
-  },
-  /**
    * Show a permalink icon on each operation that copies its URL to clipboard.
    */
   enableOperationLinks: {
@@ -302,7 +294,6 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
           allowCustomServerUrl: IS_TRUE(props.allowCustomServerUrl),
           hideDownloadButton: IS_TRUE(props.hideDownloadButton),
           hideOverviewTitle: IS_TRUE(props.hideOverviewTitle),
-          hideOverviewDescription: IS_TRUE(props.hideOverviewDescription),
         },
         doc: forServiceNode,
       }
