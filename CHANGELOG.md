@@ -1,3 +1,10 @@
+# [1.115.0](https://github.com/Kong/spec-renderer/compare/v1.114.0...v1.115.0) (2026-09-24)
+
+
+### Features
+
+* allow hiding rendered overview title ([#1020](https://github.com/Kong/spec-renderer/issues/1020)) ([fb4d525](https://github.com/Kong/spec-renderer/commit/fb4d5257f9d1ec3fcc8105c1ccd68dd1e6f77749))
+
 # [1.114.0](https://github.com/Kong/spec-renderer/compare/v1.113.13...v1.114.0) (2026-09-23)
 
 
