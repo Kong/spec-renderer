@@ -186,6 +186,15 @@ const props = defineProps({
     default: false,
   },
   /**
+   * Hide the spec title in the overview page header.
+   * Version badges and the download button remain visible.
+   */
+  hideOverviewTitle: {
+    type: [Boolean, String],
+    validator: BOOL_VALIDATOR,
+    default: false,
+  },
+  /**
    * Show a permalink icon on each operation that copies its URL to clipboard.
    */
   enableOperationLinks: {
@@ -284,6 +293,7 @@ const getDocumentComponent = (forServiceNode: ServiceNode | ServiceChildNode | n
           specVersion: (<ServiceNode>forServiceNode).specVersion,
           allowCustomServerUrl: IS_TRUE(props.allowCustomServerUrl),
           hideDownloadButton: IS_TRUE(props.hideDownloadButton),
+          hideOverviewTitle: IS_TRUE(props.hideOverviewTitle),
         },
         doc: forServiceNode,
       }

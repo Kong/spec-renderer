@@ -39,6 +39,29 @@ describe('<PageHeader />', () => {
     expect(wrapper.findTestId('deprecated-badge').exists()).toBe(true)
   })
 
+  it('does not render the title heading when the title is empty', () => {
+    const wrapper = mount(PageHeader, {
+      props: {
+        title: '',
+      },
+    })
+
+    // the component itself is rendered
+    expect(wrapper.findTestId('spec-renderer-page-header').exists()).toBe(true)
+    // no empty title heading is rendered
+    expect(wrapper.findTestId('spec-renderer-page-header-title').exists()).toBe(false)
+  })
+
+  it('does not render the title heading when the title is whitespace only', () => {
+    const wrapper = mount(PageHeader, {
+      props: {
+        title: '   ',
+      },
+    })
+
+    expect(wrapper.findTestId('spec-renderer-page-header-title').exists()).toBe(false)
+  })
+
   it('renders slots correctly', () => {
     const wrapper = mount(PageHeader, {
       props: {

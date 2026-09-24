@@ -2,7 +2,7 @@
   <div class="overview-page">
     <PageHeader
       class="overview-page-header"
-      :title="data.name"
+      :title="hideOverviewTitle ? '' : data.name"
     >
       <template
         v-if="!hideDownloadButton"
@@ -76,6 +76,11 @@ const props = defineProps({
     default: false,
   },
   hideDownloadButton: {
+    type: Boolean,
+    default: false,
+  },
+  /** Hide the spec title in the overview page header. Version badges and the download button remain visible. */
+  hideOverviewTitle: {
     type: Boolean,
     default: false,
   },
