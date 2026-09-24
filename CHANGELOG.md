@@ -1,6 +1,18 @@
 # [1.115.0](https://github.com/Kong/spec-renderer/compare/v1.114.0...v1.115.0) (2026-09-24)
 
 
+### Bug Fixes
+
+* trigger release ([#1021](https://github.com/Kong/spec-renderer/issues/1021)) ([188fc53](https://github.com/Kong/spec-renderer/commit/188fc5356e84db16090cab71f29404ada6cbc923))
+
+
+### Features
+
+* allow hiding rendered overview title ([#1020](https://github.com/Kong/spec-renderer/issues/1020)) ([fb4d525](https://github.com/Kong/spec-renderer/commit/fb4d5257f9d1ec3fcc8105c1ccd68dd1e6f77749))
+
+# [1.115.0](https://github.com/Kong/spec-renderer/compare/v1.114.0...v1.115.0) (2026-09-24)
+
+
 ### Features
 
 * allow hiding rendered overview title ([#1020](https://github.com/Kong/spec-renderer/issues/1020)) ([fb4d525](https://github.com/Kong/spec-renderer/commit/fb4d5257f9d1ec3fcc8105c1ccd68dd1e6f77749))
