@@ -46,7 +46,7 @@
           v-model="hideOverviewTitle"
           type="checkbox"
         >
-        <label for="hide-overview-title">Hide overview title</label>
+        <label for="hide-overview-title">Hide Overview title</label>
         |
         <input
           id="allow-content-scrolling"
