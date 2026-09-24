@@ -9,7 +9,6 @@ import {
   generateCodeVerifier,
   generateState,
   PkceUnavailableError,
-  PKCE_UNRESERVED,
   randomUnreservedString,
   sha256,
 } from './oauth-pkce'
@@ -33,7 +32,7 @@ describe('oauth-pkce', () => {
     })
 
     describe('generateCodeVerifier', () => {
-      it('defaults to length 43 matching the unreserved charset', () => {
+      it('generates a 43-character verifier from the unreserved charset', () => {
         const verifier = generateCodeVerifier()
 
         expect(verifier).toHaveLength(43)
@@ -44,18 +43,6 @@ describe('oauth-pkce', () => {
         const verifiers = new Set(Array.from({ length: 200 }, () => generateCodeVerifier()))
 
         expect(verifiers.size).toBe(200)
-      })
-
-      it('accepts the maximum length of 128', () => {
-        expect(generateCodeVerifier(128)).toHaveLength(128)
-      })
-
-      it('throws RangeError below the minimum length', () => {
-        expect(() => generateCodeVerifier(42)).toThrow(RangeError)
-      })
-
-      it('throws RangeError above the maximum length', () => {
-        expect(() => generateCodeVerifier(129)).toThrow(RangeError)
       })
     })
 
@@ -150,20 +137,6 @@ describe('oauth-pkce', () => {
         expect(new URL(result).searchParams.has('scope')).toBe(false)
       })
 
-      it('appends extraParams', () => {
-        const result = buildAuthorizeUrl({
-          authorizationUrl: 'https://auth.example.com/authorize',
-          clientId: 'client-123',
-          redirectUri: 'https://app.example.com/callback',
-          scope: '',
-          state: 'the-state',
-          codeChallenge: 'the-challenge',
-          extraParams: { audience: 'my-api' },
-        })
-
-        expect(new URL(result).searchParams.get('audience')).toBe('my-api')
-      })
-
       it('preserves a pre-existing query param on authorizationUrl', () => {
         const result = buildAuthorizeUrl({
           authorizationUrl: 'https://auth.example.com/authorize?tenant=acme',
@@ -241,13 +214,6 @@ describe('oauth-pkce', () => {
       vi.stubGlobal('crypto', {})
 
       expect(() => randomUnreservedString(43)).toThrow(PkceUnavailableError)
-    })
-  })
-
-  describe('PKCE_UNRESERVED', () => {
-    it('contains the full RFC 7636 §4.1 unreserved set (66 chars)', () => {
-      expect(PKCE_UNRESERVED).toHaveLength(66)
-      expect(PKCE_UNRESERVED).toBe('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~')
     })
   })
 

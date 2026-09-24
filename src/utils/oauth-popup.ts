@@ -3,7 +3,7 @@
 // The host app serves the callback page and passes its URL in; that page postMessages code and state to window.opener.
 
 import { isSsr } from './ssr'
-import type { AuthorizationResponseParams, AwaitAuthorizationResponseOptions, AwaitAuthorizationResponseResult } from '@/types'
+import type { AuthorizationResponseParams, AwaitAuthorizationResponseResult } from '@/types'
 
 export const OAUTH_MESSAGE_TYPE = 'kong-spec-renderer:oauth-callback'
 export const POPUP_NAME = 'kong-spec-renderer-oauth'
@@ -59,11 +59,7 @@ export const navigateAuthorizationPopup = (popup: Window, authorizeUrl: string):
 export const awaitAuthorizationResponse = (
   popup: Window,
   expectedOrigin: string,
-  options?: AwaitAuthorizationResponseOptions,
 ): AwaitAuthorizationResponseResult => {
-  const timeoutMs = options?.timeoutMs ?? FLOW_TIMEOUT_MS
-  const pollMs = options?.pollMs ?? POPUP_POLL_MS
-
   // Populated once the executor below runs; `cancel()` just forwards to it.
   let cancelImpl = (): void => {}
 
@@ -143,11 +139,11 @@ export const awaitAuthorizationResponse = (
       if (popup.closed) {
         finish(() => reject(new Error('popup-closed')))
       }
-    }, pollMs)
+    }, POPUP_POLL_MS)
 
     timeoutHandle = setTimeout(() => {
       finish(() => reject(new Error('timeout')))
-    }, timeoutMs)
+    }, FLOW_TIMEOUT_MS)
 
     cancelImpl = () => finish(() => reject(new Error('cancelled')))
   })

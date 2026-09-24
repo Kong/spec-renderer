@@ -214,7 +214,7 @@ describe('oauth-popup', () => {
     it('rejects with "popup-closed" when the popup is closed by the user before any message', async () => {
       vi.useFakeTimers()
       const popup = makePopup()
-      const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN, { pollMs: 500 })
+      const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
 
       const assertion = expect(promise).rejects.toThrow('popup-closed')
       popup.closed = true
@@ -226,7 +226,7 @@ describe('oauth-popup', () => {
     it('rejects with "timeout" after the timeout elapses with no message and no close', async () => {
       vi.useFakeTimers()
       const popup = makePopup()
-      const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN, { timeoutMs: FLOW_TIMEOUT_MS, pollMs: 10_000_000 })
+      const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
 
       const assertion = expect(promise).rejects.toThrow('timeout')
       await vi.advanceTimersByTimeAsync(FLOW_TIMEOUT_MS + 10)
