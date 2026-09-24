@@ -135,14 +135,14 @@ describe('<TryItAuth />', () => {
     await nextTick()
     await vi.advanceTimersByTimeAsync(100)
 
-    expect(await wrapper.vm.auth2ClientCredentialsAuth()).toBe(tokenResponse)
+    expect((await wrapper.vm.runPreRequestAuth()).ok).toBe(true)
 
     // The API request uses these headers immediately, before the debounce runs.
     expect(authHeadersMap.value[group.key]).toEqual([
       { name: 'Authorization', value: 'Bearer new-token' },
       { name: 'apikey', value: 'key-value' },
     ])
-    await wrapper.vm.auth2ClientCredentialsAuth()
+    await wrapper.vm.runPreRequestAuth()
     expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
@@ -234,6 +234,55 @@ describe('<TryItAuth />', () => {
     await nextTick()
     await vi.advanceTimersByTimeAsync(100)
     expect(authHeadersMap.value[group.key]).toEqual([{ name: 'Authorization', value: `Basic ${btoa('user:')}` }])
+  })
+
+  it('returns the failed token response so TryIt can show it', async () => {
+    const oauth = {
+      id: 'oauth', key: 'OAuth2', extensions: {}, type: 'oauth2' as const,
+      flows: { clientCredentials: { tokenUrl: 'https://example.test/token', scopes: {} } },
+    }
+    const group = { title: 'OAuth2', key: 'OAuth2', schemeList: [oauth] }
+    const { activeSecurityScheme, authInputs } = composables.useAuth()
+    activeSecurityScheme.value = group.key
+    authInputs.value = { 'OAuth2-clientId': 'client', 'OAuth2-clientSecret': 'wrong' }
+    const tokenResponse = { ok: false, status: 401, statusText: 'Unauthorized' }
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(tokenResponse))
+    const wrapper = mount(TryItAuth, {
+      props: { data: { id: 'oauth-fail', method: 'get', path: '/example', responses: [], servers: [], security: [[oauth]] } },
+      global: { provide: { 'security-scheme-group-list': ref([group]) } },
+    })
+    await nextTick()
+
+    const result = await wrapper.vm.runPreRequestAuth()
+
+    expect(result.ok).toBe(false)
+    expect(result.response).toBe(tokenResponse)
+  })
+
+  // Regression: one endpoint going away used to remove the token step for every endpoint on that scheme.
+  it('still fetches the token after another endpoint with the same scheme unmounts', async () => {
+    const oauth = {
+      id: 'oauth', key: 'OAuth2', extensions: {}, type: 'oauth2' as const,
+      flows: { clientCredentials: { tokenUrl: 'https://example.test/token', scopes: {} } },
+    }
+    const group = { title: 'OAuth2', key: 'OAuth2', schemeList: [oauth] }
+    const { activeSecurityScheme, authInputs } = composables.useAuth()
+    activeSecurityScheme.value = group.key
+    authInputs.value = { 'OAuth2-clientId': 'client', 'OAuth2-clientSecret': 'secret' }
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ access_token: 'token' }) })
+    vi.stubGlobal('fetch', fetchMock)
+    const mountEndpoint = (id: string) => mount(TryItAuth, {
+      props: { data: { id, method: 'get', path: `/${id}`, responses: [], servers: [], security: [[oauth]] } },
+      global: { provide: { 'security-scheme-group-list': ref([group]) } },
+    })
+
+    const first = mountEndpoint('first')
+    const second = mountEndpoint('second')
+    await nextTick()
+    first.unmount()
+
+    await second.vm.runPreRequestAuth()
+    expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
 })
