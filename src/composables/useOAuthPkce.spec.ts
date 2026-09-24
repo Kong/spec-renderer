@@ -487,20 +487,15 @@ describe('token endpoint response handling', () => {
 })
 
 /** Flush pending microtasks/macrotasks repeatedly, the real WebCrypto digest resolves independently of fake timers and one advance isn't always enough under load. */
-const flushPendingCrypto = async (): Promise<void> => {
-  for (let i = 0; i < 20; i++) {
-    await vi.advanceTimersByTimeAsync(0)
-  }
-}
-
 describe('popup lifecycle', () => {
   it('reports popup-closed when the user closes the sign-in window', async () => {
-    vi.useFakeTimers()
     const target = buildTarget()
+    const { authorize, errorFor, precomputeChallenge } = useOAuthPkce()
+    // hash with real timers first: real crypto never finishes while timers are faked, so authorize() would hang on a slow machine
+    await precomputeChallenge(target)
+    vi.useFakeTimers()
 
-    const { authorize, errorFor } = useOAuthPkce()
     const promise = authorize({ target, ...AUTHORIZE_OPTS_BASE })
-    await flushPendingCrypto()
 
     fakePopup.closed = true
     await vi.advanceTimersByTimeAsync(600)
@@ -512,12 +507,13 @@ describe('popup lifecycle', () => {
   })
 
   it('reports timeout when the flow exceeds the 5-minute window', async () => {
-    vi.useFakeTimers()
     const target = buildTarget()
+    const { authorize, errorFor, precomputeChallenge } = useOAuthPkce()
+    // hash with real timers first, see the test above
+    await precomputeChallenge(target)
+    vi.useFakeTimers()
 
-    const { authorize, errorFor } = useOAuthPkce()
     const promise = authorize({ target, ...AUTHORIZE_OPTS_BASE })
-    await flushPendingCrypto()
 
     await vi.advanceTimersByTimeAsync(5 * 60_000 + 1_000)
 
