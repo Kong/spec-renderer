@@ -69,13 +69,6 @@ export interface BuildAuthorizeUrlParams {
   scope: string
   state: string
   codeChallenge: string
-  /** Seam for a future OAS extension - nothing passes this yet. */
-  extraParams?: Record<string, string>
-}
-
-export interface AwaitAuthorizationResponseOptions {
-  timeoutMs?: number
-  pollMs?: number
 }
 
 export interface AwaitAuthorizationResponseResult {

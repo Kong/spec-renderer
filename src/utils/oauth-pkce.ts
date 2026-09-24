@@ -8,15 +8,12 @@ import type { BuildAuthorizeUrlParams, Oauth2PkceTarget } from '@/types'
 // Reads globalThis.crypto not window.crypto since this runs during SSR too.
 const getCrypto = (): Crypto | undefined => globalThis.crypto
 
-/** RFC 7636 §4.1 unreserved character set (66 chars). Exported for tests/docs only. */
-export const PKCE_UNRESERVED = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~'
-
 // 64-char subset of the unreserved set, 64 divides 256 evenly.
 // byte & 63 is exactly uniform, unlike a naive % 66 which biases the first chars.
 const RANDOM_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
 
-export const MIN_VERIFIER_LENGTH = 43
-export const MAX_VERIFIER_LENGTH = 128
+// RFC 7636 minimum, 258 bits of randomness
+const VERIFIER_LENGTH = 43
 
 /** Thrown when the Web Crypto API required for PKCE is unavailable. */
 export class PkceUnavailableError extends Error {
@@ -63,14 +60,8 @@ export const randomUnreservedString = (length: number): string => {
   return result
 }
 
-/** Generate a PKCE code verifier (RFC 7636 §4.1). Length must be within [43, 128] inclusive or this throws RangeError. */
-export const generateCodeVerifier = (length = MIN_VERIFIER_LENGTH): string => {
-  if (length < MIN_VERIFIER_LENGTH || length > MAX_VERIFIER_LENGTH) {
-    throw new RangeError(`generateCodeVerifier: length must be between ${MIN_VERIFIER_LENGTH} and ${MAX_VERIFIER_LENGTH} inclusive, got ${length}`)
-  }
-
-  return randomUnreservedString(length)
-}
+/** Generate a PKCE code verifier (RFC 7636 §4.1). */
+export const generateCodeVerifier = (): string => randomUnreservedString(VERIFIER_LENGTH)
 
 /** Generate a random 32-character `state` parameter value. */
 export const generateState = (): string => randomUnreservedString(32)
@@ -97,7 +88,6 @@ export const buildAuthorizeUrl = (params: BuildAuthorizeUrlParams): string => {
     scope,
     state,
     codeChallenge,
-    extraParams,
   } = params
 
   const url = new URL(authorizationUrl)
@@ -111,12 +101,6 @@ export const buildAuthorizeUrl = (params: BuildAuthorizeUrlParams): string => {
   url.searchParams.set('state', state)
   url.searchParams.set('code_challenge', codeChallenge)
   url.searchParams.set('code_challenge_method', 'S256')
-
-  if (extraParams) {
-    for (const [key, value] of Object.entries(extraParams)) {
-      url.searchParams.set(key, value)
-    }
-  }
 
   return url.toString()
 }
