@@ -180,11 +180,11 @@ const setAllScopes = (value: boolean) => {
 const auth2ClientCredentialsAuth = async (): Promise<PreRequestAuthResult> => {
   const clientId = authInputs.value[`${props.schemeKey}-clientId`] || ''
   const clientSecret = authInputs.value[`${props.schemeKey}-clientSecret`] || ''
-  const btoaValue = btoa(`${clientId}:${clientSecret}`)
   const scopes:string[] = []
   if (authInputs.value[`${props.schemeKey}-token`]) {
     return { ok: true }
   }
+  const btoaValue = btoa(`${clientId}:${clientSecret}`)
 
   Object.keys(authInputs.value)
     .filter(key => key.startsWith(`${props.schemeKey}-scope-`))
@@ -250,7 +250,7 @@ const updateAuthDataImpl = async () => {
     authInputs.value[`${props.schemeKey}-token`] = ''
   }
 
-  // now we we got ourselves a token
+  // build the authorization header based on the current token
   authHeadersMap.value[props.schemeKey] = [{
     name: 'Authorization', value: authInputs.value[`${props.schemeKey}-token`] || 'Bearer',
   }]

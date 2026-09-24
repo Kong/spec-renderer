@@ -7,12 +7,14 @@ export interface SecuritySchemeGroup {
 }
 
 /** Result of the pre-request auth step run before a Try-It call goes out. */
-export interface PreRequestAuthResult {
-  ok: boolean
-  /** the token endpoint's response, set when it failed */
-  response?: Response
-  error?: Error
-}
+export type PreRequestAuthResult =
+  | { ok: true }
+  | {
+    ok: false
+    /** the token endpoint's response, set when it failed */
+    response?: Response
+    error?: Error
+  }
 
 /** A flow panel's pre-request hook, run before a Try-It call goes out. */
 export type PreRequestAuthHandler = () => Promise<PreRequestAuthResult>

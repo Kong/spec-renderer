@@ -185,7 +185,7 @@ const { runHandlers } = composables.usePreRequestAuth().providePreRequestAuth()
 // combined headers immediately, before the input debounce runs.
 const runPreRequestAuth = async (): Promise<PreRequestAuthResult> => {
   const result = await runHandlers(Object.keys(currentSecuritySchemeMap.value))
-  if (result.error) {
+  if (!result.ok) {
     return result
   }
   try {

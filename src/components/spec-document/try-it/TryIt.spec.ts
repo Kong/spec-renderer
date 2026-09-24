@@ -1,13 +1,23 @@
-import { describe, it, expect, vi } from 'vitest'
-import { mount, flushPromises } from '@vue/test-utils'
+import { describe, it, expect, afterEach, vi } from 'vitest'
+import { mount, flushPromises, enableAutoUnmount } from '@vue/test-utils'
 import { ref } from 'vue'
 import TryIt from './TryIt.vue'
 import TryItResponse from './TryItResponse.vue'
 import composables from '@/composables'
 
+enableAutoUnmount(afterEach)
 
 describe('<TryIt />', () => {
   vi.stubGlobal('open', vi.fn())
+
+  afterEach(() => {
+    vi.clearAllTimers()
+    vi.useRealTimers()
+    const { activeSecurityScheme, authInputs } = composables.useAuth()
+    activeSecurityScheme.value = ''
+    authInputs.value = {}
+  })
+
   it('should call fetch with correct url, headers and body for POST', async () => {
     const wrapper = mount(TryIt, {
       props: {
@@ -424,10 +434,5 @@ describe('<TryIt />', () => {
     expect(fetch).not.toHaveBeenCalled()
     expect(wrapper.findTestId('tryit-call-button-123').attributes('disabled')).toBeUndefined()
     expect(wrapper.findComponent(TryItResponse).props('responseError')).toBeInstanceOf(Error)
-
-    wrapper.unmount()
-    activeSecurityScheme.value = ''
-    authInputs.value = {}
-    vi.useRealTimers()
   })
 })
