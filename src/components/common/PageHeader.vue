@@ -4,7 +4,10 @@
     data-testid="spec-renderer-page-header"
   >
     <div class="page-header-title">
-      <h2 data-testid="spec-renderer-page-header-title">
+      <h2
+        v-if="title.trim()"
+        data-testid="spec-renderer-page-header-title"
+      >
         {{ title }}
       </h2>
       <LabelBadge

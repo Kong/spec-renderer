@@ -53,6 +53,10 @@ export interface SpecRendererProps {
    * Only relevant when not in content scrolling mode.
    */
   hideNavigationButtons?: boolean | 'true' | 'false'
+  /** Hide the spec title in the overview page header. Version badges and the download button remain visible. */
+  hideOverviewTitle?: boolean | 'true' | 'false'
+  /** Hide the spec description in the overview page. */
+  hideOverviewDescription?: boolean | 'true' | 'false'
   /** Hide the spec download button. */
   hideDownloadButton?: boolean | 'true' | 'false'
   /** Show a permalink icon on each operation that copies its URL to clipboard. */
