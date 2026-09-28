@@ -104,7 +104,7 @@
     "@types/jsdom": "^30.0.0",
     "@types/json-schema": "^7.0.15",
     "@types/markdown-it": "^14.2.0",
-    "@types/node": "^24.13.4",
+    "@types/node": "^24.13.5",
     "@types/sanitize-html": "^2.16.1",
     "@types/ws": "^8.18.1",
     "@vitejs/plugin-vue": "^6.0.9",
@@ -215,7 +215,7 @@
   },
   "volta": {
     "node": "24.21.0",
-    "pnpm": "11.26.0"
+    "pnpm": "11.27.0"
   },
   "config": {
     "commitizen": {
@@ -227,5 +227,5 @@
       "jiraAppend": "]"
     }
   },
-  "packageManager": "pnpm@11.26.0"
+  "packageManager": "pnpm@11.27.0"
 }
