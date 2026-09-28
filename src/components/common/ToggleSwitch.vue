@@ -120,7 +120,7 @@ const handleChange = (event: Event): void => {
 
 <style lang="scss" scoped>
 .toggle-switch {
-  $toggleSwitchPadding: var(--kui-input-switch-thumb-border-width, var(--kui-space-10, $kui-space-10));
+  $toggleSwitchPadding: var(--kui-space-10, $kui-space-10);
 
   align-items: center;
   display: inline-flex;
@@ -141,7 +141,7 @@ const handleChange = (event: Event): void => {
 
     .switch-control {
       background-color: var(--kui-input-switch-color-background, var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker));
-      border-radius: var(--kui-input-switch-border-radius-large, var(--kui-border-radius-20, $kui-border-radius-20));
+      border-radius: var(--kui-input-switch-border-radius-small, var(--kui-border-radius-20, $kui-border-radius-20));
       cursor: pointer;
       height: 20px;
       padding: $toggleSwitchPadding;
@@ -153,13 +153,13 @@ const handleChange = (event: Event): void => {
         background-color: var(--kui-input-switch-color-background-hover, var(--kui-color-background-neutral-weak, $kui-color-background-neutral-weak));
 
         &::after {
-          border: var(--kui-border-width-20, $kui-border-width-20) solid var(--kui-input-switch-icon-color-border-hover, var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker));
+          border: var(--kui-input-switch-thumb-border-width, var(--kui-border-width-20, $kui-border-width-20)) solid var(--kui-input-switch-icon-color-border-hover, var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker));
         }
       }
 
       &::before {
         background-color: var(--kui-input-switch-thumb-color-background, var(--kui-color-background, $kui-color-background));
-        border-radius: var(--kui-input-switch-thumb-border-radius, var(--kui-border-radius-20, $kui-border-radius-20));
+        border-radius: var(--kui-input-switch-border-radius-small, var(--kui-border-radius-20, $kui-border-radius-20));
         box-shadow: var(--kui-input-switch-thumb-shadow-border, var(--kui-shadow-border, $kui-shadow-border));
         content: '';
         display: block;
@@ -174,8 +174,8 @@ const handleChange = (event: Event): void => {
       }
 
       &:after {
-        border: var(--kui-border-width-20, $kui-border-width-20) solid var(--kui-input-switch-icon-color-border, var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak));
-        border-radius: var(--kui-border-radius-circle, $kui-border-radius-circle);
+        border: var(--kui-input-switch-thumb-border-width, var(--kui-border-width-20, $kui-border-width-20)) solid var(--kui-input-switch-icon-color-border, var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak));
+        border-radius: var(--kui-input-switch-thumb-border-radius, var(--kui-border-radius-circle, $kui-border-radius-circle));
         box-sizing: border-box;
         content: '';
         display: block;
@@ -190,7 +190,7 @@ const handleChange = (event: Event): void => {
 
       &-enabled-bar {
         background-color: var(--kui-input-switch-icon-color-background, var(--kui-color-background, $kui-color-background));
-        border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+        border-radius: var(--kui-input-switch-border-radius-small, var(--kui-border-radius-20, $kui-border-radius-20));
         display: block;
         height: 35%;
         left: 25%;
