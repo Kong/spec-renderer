@@ -1,64 +1,65 @@
-// Module-singleton state machine for the OAuth2 authorization-code-with-PKCE Try-It flow.
-// Never touches localStorage or sessionStorage - tokens live in memory only, so an XSS bug elsewhere can't read a persisted bearer token.
+// Module-singleton state for the OAuth2 authorization code + PKCE sign-in in Try It.
+// Tokens live in memory only, never in localStorage or sessionStorage, so an XSS bug elsewhere can't read them.
 import { ref } from 'vue'
 import { useTimeoutFn } from '@vueuse/core'
-import {
-  buildAuthorizeUrl,
-  canUsePkce,
-  generateCodeChallenge,
-  generateCodeVerifier,
-  generateState,
-  isAbsoluteHttpUrl,
-} from '@/utils/oauth-pkce'
-import {
-  awaitAuthorizationResponse,
-  navigateAuthorizationPopup,
-  openAuthorizationPopup,
-} from '@/utils/oauth-popup'
+import { buildAuthorizeUrl, canUsePkce, createPkceChallenge, isAbsoluteHttpUrl } from '@/utils/oauth-pkce'
+import { awaitAuthorizationResponse, FLOW_CANCELLED, openAuthorizationPopup } from '@/utils/oauth-popup'
+// imported directly, the composables barrel imports this file
 import useAuth from './useAuth'
-import type {
-  ActiveAuthorizationFlow,
-  AuthorizationResponseParams,
-  AuthorizeOptions,
-  Oauth2AuthError,
-  Oauth2AuthStatus,
-  Oauth2PkceTarget,
-  OauthToken,
-  PkceChallenge,
-  TokenRequestResult,
-  TokenResponseData,
-} from '@/types'
+import type { AuthorizeOptions, Oauth2AuthStatus, Oauth2PkceTarget, OauthToken, PkceChallenge, TokenResponseData } from '@/types'
 
-/** How far ahead of `expiresAt` a token is treated as already expired. */
+/** How long before expiresAt a token already counts as expired. */
 export const EXPIRY_SKEW_MS = 30_000
-/** Abort the token/refresh request if the identity provider never responds. */
+/** Give up on a token request the identity provider never answers. */
 export const TOKEN_TIMEOUT_MS = 30_000
 
-// Worst-wins precedence for `aggregateStatus`.
+// worst first, see aggregateStatus
 const STATUS_PRECEDENCE: Oauth2AuthStatus[] = ['authorizing', 'expired', 'unauthenticated', 'authenticated']
 
-const tokens = ref<Record<string, OauthToken>>({}) // keyed by scheme key
+// all keyed by scheme key
+const tokens = ref<Record<string, OauthToken>>({})
 const busy = ref<Record<string, boolean>>({})
-const errors = ref<Record<string, Oauth2AuthError | undefined>>({})
-const expiryTick = ref<number>(0)
+const errors = ref<Record<string, string | undefined>>({})
+const challengeCache = new Map<string, PkceChallenge>()
+const expiryTimers = new Map<string, () => void>()
+// bumped when a token expires, so statusFor re-runs
+const expiryTick = ref(0)
+// cancels the sign-in in progress, only one runs at a time
+let cancelActiveFlow: (() => void) | null = null
 
-// non-reactive module state
-let activeFlow: ActiveAuthorizationFlow | null = null
-const challengeCache = new Map<string, PkceChallenge>() // keyed by scheme key
-const refreshInFlight = new Map<string, Promise<boolean>>()
-const expiryTimers = new Map<string, () => void>() // scheme key -> stop fn
+// TryItAuth builds the request headers from authInputs, so the token goes there, never straight into authHeadersMap.
+const commitToken = (schemeKey: string): void => {
+  const token = tokens.value[schemeKey]
+  useAuth().authInputs.value[`${schemeKey}-token`] = token ? `${token.tokenType} ${token.accessToken}` : ''
+}
 
-// Keyed by scheme key. OauthToken is a fixed, shared type this module must not reshape, so the client id needed for silent refresh() is tracked here instead.
-const clientIds = new Map<string, string>()
+const stopExpiryTimer = (schemeKey: string): void => {
+  expiryTimers.get(schemeKey)?.()
+  expiryTimers.delete(schemeKey)
+}
 
-/**
- * POST a token/refresh request and interpret the result.
- * Discriminates on whether we got a Response at all: non-ok HTTP is an 'oauth' error (RFC 6749), a fetch that throws before any Response is a 'network' error (usually CORS, not a bad client id).
- */
-const requestToken = async (tokenUrl: string, body: URLSearchParams): Promise<TokenRequestResult> => {
+const saveToken = (target: Oauth2PkceTarget, data: TokenResponseData): void => {
+  const k = target.schemeKey
+  const expiresAt = typeof data.expires_in === 'number' ? Date.now() + data.expires_in * 1000 : undefined
+  tokens.value[k] = { accessToken: data.access_token, tokenType: data.token_type || 'Bearer', expiresAt, fingerprint: target.fingerprint }
+  // a success replaces any error, including a rejected second click on this scheme
+  errors.value[k] = undefined
+  commitToken(k)
+
+  stopExpiryTimer(k)
+  if (expiresAt) {
+    // only bumps the tick: the token stays, so the UI can show it as expired
+    const { stop } = useTimeoutFn(() => {
+      expiryTick.value++
+    }, Math.max(0, expiresAt - EXPIRY_SKEW_MS - Date.now()))
+    expiryTimers.set(k, stop)
+  }
+}
+
+/** POST to the token endpoint. Throws with a user-facing message when that fails. */
+const requestToken = async (tokenUrl: string, body: URLSearchParams): Promise<TokenResponseData> => {
   const controller = new AbortController()
   const timeoutHandle = setTimeout(() => controller.abort(), TOKEN_TIMEOUT_MS)
-
   try {
     let resp: Response
     try {
@@ -67,469 +68,191 @@ const requestToken = async (tokenUrl: string, body: URLSearchParams): Promise<To
         cache: 'no-cache',
         credentials: 'omit',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        // No client_secret or Authorization: Basic header, this is a public client by design; PKCE means it never needs one.
+        // no client_secret or Basic auth header: a PKCE client is public by design
         body,
         signal: controller.signal,
       })
     } catch (err) {
       if ((err as Error)?.name === 'AbortError') {
-        return { ok: false, error: { kind: 'timeout', message: 'The token request timed out. Please try again.' } }
+        throw new Error('The token request timed out. Please try again.')
       }
-
-      // No Response ever existed, so this is network/CORS not an HTTP error. Never string-match err.message, it differs by browser and version.
-      const tokenOrigin = new URL(tokenUrl).origin
-      const localOrigin = typeof window !== 'undefined' ? window.location.origin : ''
-      return {
-        ok: false,
-        error: {
-          kind: 'network',
-          tokenUrl,
-          message: `Could not reach the token endpoint at ${tokenOrigin}. This is almost always CORS configuration on the identity provider, not a wrong Client ID. The token endpoint must answer the preflight OPTIONS request and return Access-Control-Allow-Origin: ${localOrigin}, plus Access-Control-Allow-Methods: POST and Access-Control-Allow-Headers: Content-Type. The client must also be registered as a public/SPA client using PKCE. Check the Network tab for the failed request to ${tokenUrl}.`,
-        },
-      }
+      // No response at all means network or CORS. Never string-match err.message, it differs by browser.
+      throw new Error(`Could not reach the token endpoint at ${new URL(tokenUrl).origin}. This is almost always CORS configuration on the identity provider, not a wrong Client ID. The token endpoint must answer the preflight OPTIONS request and return Access-Control-Allow-Origin: ${window.location.origin}, plus Access-Control-Allow-Methods: POST and Access-Control-Allow-Headers: Content-Type. The client must also be registered as a public/SPA client using PKCE. Check the Network tab for the failed request to ${tokenUrl}.`)
     }
 
+    const data: Record<string, unknown> = await resp.json().catch(() => ({}))
     if (!resp.ok) {
-      let error: string | undefined
-      let errorDescription: string | undefined
-      try {
-        const errData = await resp.json()
-        error = typeof errData?.error === 'string' ? errData.error : undefined
-        errorDescription = typeof errData?.error_description === 'string' ? errData.error_description : undefined
-      } catch {
-        // Error body wasn't JSON (or was empty/absent) - fall through with no RFC 6749 detail.
-      }
-
-      return {
-        ok: false,
-        error: {
-          kind: 'oauth',
-          error,
-          errorDescription,
-          message: errorDescription || error || `The token endpoint responded with HTTP ${resp.status}.`,
-        },
-      }
+      // RFC 6749 error fields when the body has them
+      const text = (value: unknown): string => typeof value === 'string' ? value : ''
+      throw new Error(text(data.error_description) || text(data.error) || `The token endpoint responded with HTTP ${resp.status}.`)
     }
-
-    let data: Record<string, unknown>
-    try {
-      data = await resp.json()
-    } catch {
-      return { ok: false, error: { kind: 'invalid-response', message: 'The token endpoint returned a response that could not be parsed as JSON.' } }
+    if (typeof data.access_token !== 'string') {
+      throw new Error('The token endpoint response did not include an access_token.')
     }
-
-    if (typeof data?.access_token !== 'string') {
-      return { ok: false, error: { kind: 'invalid-response', message: 'The token endpoint response did not include an access_token.' } }
-    }
-
-    return { ok: true, data: data as unknown as TokenResponseData }
+    return data as unknown as TokenResponseData
   } finally {
     clearTimeout(timeoutHandle)
   }
 }
 
-/**
- * TryItAuth's updateAuthDataImpl assembles authHeadersMap/authQueryMap from authInputs under the GROUP key, not the scheme key.
- * So this module only ever sets authInputs, same as the clientCredentials flow in TryItAuth2, never authHeadersMap directly.
- */
-const commitToken = (target: Oauth2PkceTarget): void => {
-  const token = tokens.value[target.schemeKey]
-  const { authInputs } = useAuth()
-  authInputs.value[`${target.schemeKey}-token`] = token ? `${token.tokenType} ${token.accessToken}` : ''
-}
-
-/**
- * Arm a one-shot timer that bumps expiryTick when the token crosses the expiry skew.
- * Doesn't blank the token, it (and its refreshToken) must survive expiry so refresh() can still run; bumping expiryTick is enough for statusFor to re-evaluate.
- */
-const armExpiryTimer = (target: Oauth2PkceTarget): void => {
-  const token = tokens.value[target.schemeKey]
-
-  expiryTimers.get(target.schemeKey)?.()
-  expiryTimers.delete(target.schemeKey)
-
-  if (!token?.expiresAt) {
-    return
-  }
-
-  const delay = Math.max(0, token.expiresAt - EXPIRY_SKEW_MS - Date.now())
-
-  const { stop } = useTimeoutFn(() => {
-    expiryTick.value++
-  }, delay)
-
-  expiryTimers.set(target.schemeKey, stop)
-}
-
-/** Exchange an authorization code for a token and commit it to state on success. */
-const exchangeCode = async (
-  target: Oauth2PkceTarget,
-  code: string,
-  verifier: string,
-  redirectUri: string,
-  clientId: string,
-): Promise<void> => {
-  const k = target.schemeKey
-
-  const body = new URLSearchParams({
-    grant_type: 'authorization_code',
-    client_id: clientId,
-    code,
-    redirect_uri: redirectUri,
-    code_verifier: verifier,
-  })
-
-  const result = await requestToken(target.tokenUrl, body)
-
-  if (!result.ok) {
-    errors.value[k] = result.error
-    return
-  }
-
-  const { data } = result
-  const token: OauthToken = {
-    accessToken: data.access_token,
-    tokenType: data.token_type || 'Bearer',
-    refreshToken: data.refresh_token,
-    expiresAt: typeof data.expires_in === 'number' ? Date.now() + data.expires_in * 1000 : undefined,
-    scope: data.scope,
-    fingerprint: target.fingerprint,
-  }
-
-  tokens.value[k] = token
-  clientIds.set(k, clientId)
-  errors.value[k] = undefined
-  armExpiryTimer(target)
-  commitToken(target)
-}
-
 export default function useOAuthPkce() {
+  // Getters never mutate: a token minted for other endpoints or another client id just reads as missing.
+  const tokenFor = (target: Oauth2PkceTarget): OauthToken | undefined => {
+    const token = tokens.value[target.schemeKey]
+    return token?.fingerprint === target.fingerprint ? token : undefined
+  }
 
   const statusFor = (target: Oauth2PkceTarget): Oauth2AuthStatus => {
-    // Read first so a `computed` wrapping this re-evaluates when an expiry timer fires.
+    // read first, so a computed wrapping this re-runs when a token expires
     void expiryTick.value
-
     if (busy.value[target.schemeKey]) {
       return 'authorizing'
     }
-
-    const token = tokens.value[target.schemeKey]
-    if (!token || token.fingerprint !== target.fingerprint) {
+    const token = tokenFor(target)
+    if (!token) {
       return 'unauthenticated'
     }
-
-    if (token.expiresAt && token.expiresAt - EXPIRY_SKEW_MS <= Date.now()) {
-      return 'expired'
-    }
-
-    return 'authenticated'
+    return token.expiresAt && token.expiresAt - EXPIRY_SKEW_MS <= Date.now() ? 'expired' : 'authenticated'
   }
 
+  /** The worst status across the schemes of one security requirement. */
   const aggregateStatus = (targets: Oauth2PkceTarget[]): Oauth2AuthStatus => {
-    if (targets.length === 0) {
-      return 'unauthenticated'
-    }
-
     const statuses = targets.map(statusFor)
-    for (const status of STATUS_PRECEDENCE) {
-      if (statuses.includes(status)) {
-        return status
-      }
-    }
-
-    return 'unauthenticated'
+    return STATUS_PRECEDENCE.find(status => statuses.includes(status)) ?? 'unauthenticated'
   }
 
-  const tokenFor = (target: Oauth2PkceTarget): OauthToken | undefined => {
-    const token = tokens.value[target.schemeKey]
-    // Getters must not mutate. A fingerprint mismatch (e.g. the spec's client id changed) just reports no token, it never deletes the stale one.
-    if (!token || token.fingerprint !== target.fingerprint) {
-      return undefined
-    }
-    return token
-  }
+  const errorFor = (target: Oauth2PkceTarget): string | undefined => errors.value[target.schemeKey]
 
-  const errorFor = (target: Oauth2PkceTarget): Oauth2AuthError | undefined => errors.value[target.schemeKey]
-
-
+  /** Hash a challenge ahead of time, so authorize() rarely waits on it. Best effort. */
   const precomputeChallenge = async (target: Oauth2PkceTarget): Promise<void> => {
     if (!canUsePkce()) {
       return
     }
-
     try {
-      const verifier = generateCodeVerifier()
-      const challenge = await generateCodeChallenge(verifier)
-      const state = generateState()
-      challengeCache.set(target.schemeKey, { verifier, challenge, state })
+      challengeCache.set(target.schemeKey, await createPkceChallenge())
     } catch {
-      // Best-effort warm-up so authorize() can stay synchronous up to window.open. Failure here just means authorize() generates its own challenge; never surfaced to the user.
+      // authorize() makes its own
     }
   }
 
-  const authorize = async (opts: AuthorizeOptions): Promise<void> => {
-    const { target, clientId, scopes, redirectUri } = opts
+  const authorize = async ({ target, clientId, scopes, redirectUri }: AuthorizeOptions): Promise<void> => {
     const k = target.schemeKey
+    const fail = (message: string): void => {
+      errors.value[k] = message
+    }
 
-    // 1. Defence in depth - the Authorize button is normally disabled without a redirect URI.
+    // defence in depth, the Authorize button is disabled without these
     if (!redirectUri) {
-      errors.value[k] = { kind: 'oauth', message: 'Set the oauthRedirectUri prop to enable OAuth sign-in.' }
-      return
+      return fail('Set the oauthRedirectUri prop to enable OAuth sign-in.')
     }
-
-    // 2. No popup at all if PKCE crypto isn't available.
     if (!canUsePkce()) {
-      errors.value[k] = {
-        kind: 'unsupported-crypto',
-        message: 'Signing in requires a secure context. Open this page over HTTPS (or localhost) to use OAuth.',
-      }
-      return
+      return fail('Signing in requires a secure context. Open this page over HTTPS (or localhost) to use OAuth.')
     }
-
-    // 3. Resolve to absolute and reject any non-http(s) scheme.
-    let resolved: URL
+    let redirect: URL
     try {
-      resolved = new URL(redirectUri, window.location.href)
+      redirect = new URL(redirectUri, window.location.href)
     } catch {
-      errors.value[k] = { kind: 'oauth', message: 'The configured redirect URI is not a valid URL.' }
-      return
+      return fail('The configured redirect URI is not a valid URL.')
     }
-
-    if (resolved.protocol !== 'http:' && resolved.protocol !== 'https:') {
-      errors.value[k] = { kind: 'oauth', message: 'The configured redirect URI must use http or https.' }
-      return
+    if (!isAbsoluteHttpUrl(redirect.href)) {
+      return fail('The configured redirect URI must use http or https.')
     }
-
-    // Defence in depth - buildPkceTarget already rejects these, never trust a spec-supplied endpoint here either.
-    // A javascript: authorizationUrl would execute in the same-origin popup; a non-URL one throws an unhandled rejection.
+    // buildPkceTarget already checks these, but a javascript: authorizationUrl would run in the same-origin popup
     if (!isAbsoluteHttpUrl(target.authorizationUrl) || !isAbsoluteHttpUrl(target.tokenUrl)) {
-      errors.value[k] = {
-        kind: 'oauth',
-        message: 'The security scheme authorization or token URL is not a valid absolute http(s) URL.',
-      }
-      return
+      return fail('The security scheme authorization or token URL is not a valid absolute http(s) URL.')
+    }
+    // One sign-in at a time. Rejecting, not superseding, stops an old flow's cleanup from resetting busy mid-flow.
+    if (cancelActiveFlow) {
+      return fail('A sign-in is already in progress. Finish or close it before starting another.')
     }
 
-    const expectedOrigin = resolved.origin
-
-    // 4. Only one sign-in flow at a time - reject rather than supersede, so the active flow keeps
-    // exclusive ownership of its busy/errors slot (a superseded flow's async cleanup could clobber it).
-    if (activeFlow) {
-      errors.value[k] = { kind: 'oauth', message: 'A sign-in is already in progress. Finish or close it before starting another.' }
-      return
+    // Open the popup before any await. Awaiting the hash first loses the click's user activation, so the popup gets blocked.
+    const popup = openAuthorizationPopup()
+    if (!popup) {
+      return fail('Your browser blocked the sign-in window. Allow pop-ups for this site and try again.')
     }
+
+    // Register before the first await, so a double click during the hash still sees this flow.
+    const { promise, cancel } = awaitAuthorizationResponse(popup, redirect.origin)
+    // awaited below, this stops an early exit from leaving an unhandled rejection
+    promise.catch(() => {})
+    cancelActiveFlow = cancel
     errors.value[k] = undefined
     busy.value[k] = true
 
-    // 5. Open the popup SYNCHRONOUSLY, before any await below.
-    // crypto.subtle.digest (used to derive the PKCE challenge) is async; awaiting it first loses the click's user-activation, so Safari blocks the popup outright and Firefox intermittently.
-    const popup = openAuthorizationPopup()
-    if (!popup) {
-      errors.value[k] = {
-        kind: 'popup-blocked',
-        message: 'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.',
-      }
-      busy.value[k] = false
-      return
-    }
-
-    // Register the flow synchronously, before the first await below (the PKCE digest), so the
-    // activeFlow check in step 4 cannot miss a flow that is still computing its challenge.
-    const { promise, cancel } = awaitAuthorizationResponse(popup, expectedOrigin)
-    // Awaited further down. This stops an early exit before then from leaving an unhandled rejection.
-    promise.catch(() => {})
-    const flow: ActiveAuthorizationFlow = { schemeKey: k, state: '', cancel }
-    activeFlow = flow
-
-    // 6. It is safe to await from here on.
     try {
-      const cached = challengeCache.get(k)
-      const challenge: PkceChallenge = cached ?? await (async (): Promise<PkceChallenge> => {
-        const verifier = generateCodeVerifier()
-        return { verifier, challenge: await generateCodeChallenge(verifier), state: generateState() }
-      })()
-      // Filled in only now, the challenge exists after the digest.
-      flow.state = challenge.state
-
-      const authorizeUrl = buildAuthorizeUrl({
+      const challenge = challengeCache.get(k) ?? await createPkceChallenge()
+      // replace, not href: no history entry, and it still works once the popup is cross-origin
+      popup.location.replace(buildAuthorizeUrl({
         authorizationUrl: target.authorizationUrl,
         clientId,
-        redirectUri: resolved.href,
+        redirectUri: redirect.href,
         scope: scopes.join(' '),
         state: challenge.state,
         codeChallenge: challenge.challenge,
-      })
+      }))
 
-      navigateAuthorizationPopup(popup, authorizeUrl)
-
-      let params: AuthorizationResponseParams
-      try {
-        params = await promise
-      } catch (err) {
-        const message = (err as Error)?.message
-        if (message === 'popup-closed') {
-          let popupClosedMessage = 'The sign-in window closed before returning an authorization code. If the identity provider showed an error, the redirect URI is most likely not registered for this client.'
-          if (window.crossOriginIsolated === true) {
-            popupClosedMessage += ' This page sets a Cross-Origin-Opener-Policy that prevents the sign-in window from communicating back; it must be served with Cross-Origin-Opener-Policy: same-origin-allow-popups.'
-          }
-          errors.value[k] = { kind: 'popup-closed', message: popupClosedMessage }
-        } else if (message === 'timeout') {
-          errors.value[k] = { kind: 'timeout', message: 'Sign-in timed out. Please try again.' }
-        } else if (message === 'cancelled') {
-          // Cancelled programmatically, not a user-facing error.
-          errors.value[k] = undefined
-        } else {
-          errors.value[k] = { kind: 'oauth', message: message || 'Sign-in failed.' }
-        }
-        return
-      }
-
-      // 9. Validate state before doing anything else - no token request on mismatch.
+      const params = await promise
+      // check state first, a mismatch never reaches the token endpoint
       if (params.state !== challenge.state) {
-        errors.value[k] = { kind: 'state-mismatch', message: 'Sign-in could not be verified (state mismatch) and was cancelled. Please try again.' }
-        return
+        throw new Error('Sign-in could not be verified (state mismatch) and was cancelled. Please try again.')
       }
-
       if (params.error) {
-        errors.value[k] = params.error === 'access_denied'
-          ? { kind: 'user-denied', message: 'Access was denied at the identity provider.' }
-          : {
-            kind: 'oauth',
-            error: params.error,
-            errorDescription: params.errorDescription,
-            message: params.errorDescription || params.error,
-          }
-        return
+        throw new Error(params.error === 'access_denied' ? 'Access was denied at the identity provider.' : params.errorDescription || params.error)
       }
-
       if (!params.code) {
-        errors.value[k] = { kind: 'oauth', message: 'The identity provider did not return an authorization code.' }
-        return
+        throw new Error('The identity provider did not return an authorization code.')
       }
 
-      // 10. Exchange the code.
-      await exchangeCode(target, params.code, challenge.verifier, resolved.href, clientId)
+      saveToken(target, await requestToken(target.tokenUrl, new URLSearchParams({
+        grant_type: 'authorization_code',
+        client_id: clientId,
+        code: params.code,
+        redirect_uri: redirect.href,
+        code_verifier: challenge.verifier,
+      })))
     } catch (err) {
-      // Any unexpected failure must surface as a user-facing error, not an unhandled rejection with a blank popup left open.
-      errors.value[k] = { kind: 'oauth', message: `Sign-in failed: ${err instanceof Error ? err.message : String(err)}` }
-      // Tears down the listener and timers, and closes the popup.
+      const message = err instanceof Error ? err.message : String(err)
+      // a cancel from code isn't the user's error
+      if (message !== FLOW_CANCELLED) {
+        errors.value[k] = message
+      }
+      // stops the listener and timers, and closes the popup
       cancel()
     } finally {
       busy.value[k] = false
-      // The challenge is single-use regardless of outcome.
+      // single use, whatever the outcome
       challengeCache.delete(k)
-      // Compare by reference not scheme key - a newer authorize() call may have installed its own activeFlow by the time this finally runs, don't clobber it.
-      if (flow && activeFlow === flow) {
-        activeFlow = null
+      // only clear it if it's still this flow's, a test reset may have started another since
+      if (cancelActiveFlow === cancel) {
+        cancelActiveFlow = null
       }
     }
   }
 
   const clearCredentials = (target: Oauth2PkceTarget): void => {
     const k = target.schemeKey
-
     delete tokens.value[k]
     errors.value[k] = undefined
-    clientIds.delete(k)
     challengeCache.delete(k)
-
-    expiryTimers.get(k)?.()
-    expiryTimers.delete(k)
-
-    // No token now, so the combined-header assembly in TryItAuth must stop seeing one.
-    commitToken(target)
+    stopExpiryTimer(k)
+    commitToken(k)
   }
 
-  /**
-   * Refresh the token for target. Single-flight per scheme key for correctness, not perf - with refresh-token rotation, two concurrent refreshes would each present the same superseded token and the loser gets rejected, killing the whole session.
-   * Never opens a popup or navigates; a failed refresh just clears credentials so the user re-authorizes.
-   */
-  const refresh = (target: Oauth2PkceTarget): Promise<boolean> => {
-    const k = target.schemeKey
-
-    const inFlight = refreshInFlight.get(k)
-    if (inFlight) {
-      return inFlight
-    }
-
-    const run = async (): Promise<boolean> => {
-      const token = tokens.value[k]
-      if (!token || token.fingerprint !== target.fingerprint || !token.refreshToken) {
-        return false
-      }
-
-      const body = new URLSearchParams({
-        grant_type: 'refresh_token',
-        refresh_token: token.refreshToken,
-        client_id: clientIds.get(k) || '',
-      })
-      if (token.scope) {
-        body.set('scope', token.scope)
-      }
-
-      const result = await requestToken(target.refreshUrl || target.tokenUrl, body)
-
-      if (!result.ok) {
-        clearCredentials(target)
-        errors.value[k] = { kind: 'oauth', message: 'Your session expired. Click Authorize to sign in again.' }
-        return false
-      }
-
-      const { data } = result
-      const newToken: OauthToken = {
-        accessToken: data.access_token,
-        tokenType: data.token_type || 'Bearer',
-        // Rotation is optional - keep the previous refresh token when the server omits one.
-        refreshToken: data.refresh_token || token.refreshToken,
-        expiresAt: typeof data.expires_in === 'number' ? Date.now() + data.expires_in * 1000 : undefined,
-        scope: data.scope || token.scope,
-        fingerprint: target.fingerprint,
-      }
-
-      tokens.value[k] = newToken
-      errors.value[k] = undefined
-      armExpiryTimer(target)
-      commitToken(target)
-      return true
-    }
-
-    const promise = run().finally(() => {
-      refreshInFlight.delete(k)
-    })
-    refreshInFlight.set(k, promise)
-    return promise
-  }
-
-  /** Test-only: reset every piece of module state. Never call this from application code. */
-  const __resetForTests = (): void => {
+  /** Forget every token and error, and cancel a sign-in in progress. */
+  const reset = (): void => {
+    cancelActiveFlow?.()
+    cancelActiveFlow = null
     tokens.value = {}
     busy.value = {}
     errors.value = {}
     expiryTick.value = 0
-
-    activeFlow?.cancel()
-    activeFlow = null
-
     challengeCache.clear()
-    refreshInFlight.clear()
-
     for (const stop of expiryTimers.values()) {
       stop()
     }
     expiryTimers.clear()
-
-    clientIds.clear()
   }
 
-  return {
-    statusFor,
-    aggregateStatus,
-    tokenFor,
-    errorFor,
-    precomputeChallenge,
-    authorize,
-    refresh,
-    clearCredentials,
-    __resetForTests,
-  }
+  return { statusFor, aggregateStatus, tokenFor, errorFor, precomputeChallenge, authorize, clearCredentials, reset }
 }

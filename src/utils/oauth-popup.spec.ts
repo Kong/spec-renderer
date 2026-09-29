@@ -1,12 +1,13 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   awaitAuthorizationResponse,
+  FLOW_CANCELLED,
   FLOW_TIMEOUT_MS,
-  navigateAuthorizationPopup,
   OAUTH_MESSAGE_TYPE,
   openAuthorizationPopup,
   POPUP_HEIGHT,
   POPUP_NAME,
+  POPUP_POLL_MS,
   POPUP_WIDTH,
 } from './oauth-popup'
 
@@ -15,12 +16,18 @@ const makePopup = () => ({ closed: false, focus: vi.fn(), close: vi.fn(), locati
 
 const EXPECTED_ORIGIN = 'https://host.example.com'
 
-// Race a promise against a resolved sentinel to assert it's still pending without
-// hanging the test - used for every "ignored" message case below.
+// Checks a promise is still unsettled, without hanging the test - used for every "ignored" message case below.
+// Marks settlement via a plain flag rather than racing against a resolved sentinel: a raced `.catch()` adds
+// its own microtask hop, so an already-settled promise can still lose the race and look pending.
 const isStillPending = async (promise: Promise<unknown>): Promise<boolean> => {
-  const pending = Symbol('pending')
-  const result = await Promise.race([promise.catch(() => pending), Promise.resolve(pending)])
-  return result === pending
+  let settled = false
+  const markSettled = (): void => {
+    settled = true
+  }
+  promise.then(markSettled, markSettled).catch(() => {})
+  // yield a macrotask, giving any microtask-queued settlement a chance to run first
+  await new Promise(resolve => setTimeout(resolve, 0))
+  return !settled
 }
 
 describe('oauth-popup', () => {
@@ -31,7 +38,7 @@ describe('oauth-popup', () => {
 
   describe('openAuthorizationPopup', () => {
     it('calls window.open with an empty url, the popup name, and centred/sized features', () => {
-      const openSpy = vi.fn(() => makePopup())
+      const openSpy = vi.fn<typeof window.open>(() => makePopup() as unknown as Window)
       vi.stubGlobal('open', openSpy)
 
       openAuthorizationPopup()
@@ -46,61 +53,34 @@ describe('oauth-popup', () => {
     })
 
     it('never includes noopener or noreferrer in the features string', () => {
-      const openSpy = vi.fn(() => makePopup())
+      const openSpy = vi.fn<typeof window.open>(() => makePopup() as unknown as Window)
       vi.stubGlobal('open', openSpy)
 
       openAuthorizationPopup()
 
-      const features = openSpy.mock.calls[0]![2] as string
+      const features = openSpy.mock.calls[0]![2]!
       expect(features).not.toContain('noopener')
       expect(features).not.toContain('noreferrer')
     })
 
-    it('returns null when window.open returns undefined (jsdom default, and real blocking)', () => {
-      // jsdom's window.open is unimplemented and returns undefined - this is also
-      // exactly what a real browser returns when the popup was blocked.
-      vi.stubGlobal('open', vi.fn())
+    for (const { name, opened } of [
+      // also what a real browser returns when it blocks the popup
+      { name: 'window.open returns undefined (jsdom default, and real blocking)', opened: undefined },
+      { name: 'window.open returns null', opened: null },
+      { name: 'the returned window is already closed', opened: { ...makePopup(), closed: true } },
+    ]) {
+      it(`returns null when ${name}`, () => {
+        vi.stubGlobal('open', vi.fn(() => opened))
 
-      expect(openAuthorizationPopup()).toBeNull()
-    })
-
-    it('returns null when window.open returns null', () => {
-      vi.stubGlobal('open', vi.fn(() => null))
-
-      expect(openAuthorizationPopup()).toBeNull()
-    })
-
-    it('returns null when the returned window is already closed', () => {
-      vi.stubGlobal('open', vi.fn(() => ({ ...makePopup(), closed: true })))
-
-      expect(openAuthorizationPopup()).toBeNull()
-    })
+        expect(openAuthorizationPopup()).toBeNull()
+      })
+    }
 
     it('returns the popup when open succeeds', () => {
       const popup = makePopup()
       vi.stubGlobal('open', vi.fn(() => popup))
 
       expect(openAuthorizationPopup()).toBe(popup)
-    })
-  })
-
-  describe('navigateAuthorizationPopup', () => {
-    it('calls location.replace with the exact url and does not touch href', () => {
-      const popup = makePopup()
-
-      navigateAuthorizationPopup(popup as unknown as Window, 'https://auth.example.com/authorize?x=1')
-
-      expect(popup.location.replace).toHaveBeenCalledWith('https://auth.example.com/authorize?x=1')
-      expect(popup.location.href).toBe('')
-    })
-
-    it('wraps a thrown error in a plain Error with a clear message', () => {
-      const popup = makePopup()
-      popup.location.replace = vi.fn(() => {
-        throw new Error('boom')
-      })
-
-      expect(() => navigateAuthorizationPopup(popup as unknown as Window, 'https://auth.example.com')).toThrow(/Failed to navigate the authorization pop-up/)
     })
   })
 
@@ -132,103 +112,56 @@ describe('oauth-popup', () => {
       await expect(promise).resolves.toEqual({ code: 'c', state: 's', error: undefined, errorDescription: undefined })
     })
 
-    it('ignores a message from the wrong origin', async () => {
-      const popup = makePopup()
-      const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
+    const VALID_DATA = { type: OAUTH_MESSAGE_TYPE, code: 'c', state: 's' }
+    for (const { name, data, origin, fromPopup } of [
+      { name: 'from the wrong origin', data: VALID_DATA, origin: 'https://evil.example.com', fromPopup: true },
+      { name: 'with a truthy source that is not the popup', data: VALID_DATA, origin: EXPECTED_ORIGIN, fromPopup: false },
+      { name: 'missing a type', data: { code: 'c', state: 's' }, origin: EXPECTED_ORIGIN, fromPopup: true },
+      { name: 'with the wrong type', data: { ...VALID_DATA, type: 'some-other-type' }, origin: EXPECTED_ORIGIN, fromPopup: true },
+      { name: 'whose data is not an object', data: 'just a string', origin: EXPECTED_ORIGIN, fromPopup: true },
+      { name: 'whose state is not a string', data: { ...VALID_DATA, state: 123 }, origin: EXPECTED_ORIGIN, fromPopup: true },
+    ]) {
+      it(`ignores a message ${name}`, async () => {
+        const popup = makePopup()
+        const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
 
-      window.dispatchEvent(new MessageEvent('message', {
-        data: { type: OAUTH_MESSAGE_TYPE, code: 'c', state: 's' },
-        origin: 'https://evil.example.com',
-        source: popup as any,
-      }))
+        window.dispatchEvent(new MessageEvent('message', { data, origin, source: (fromPopup ? popup : makePopup()) as any }))
 
-      expect(await isStillPending(promise)).toBe(true)
-    })
+        expect(await isStillPending(promise)).toBe(true)
+      })
+    }
 
-    it('ignores a message with a truthy source that is not the popup', async () => {
-      const popup = makePopup()
-      const otherWindow = makePopup()
-      const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
-
-      window.dispatchEvent(new MessageEvent('message', {
-        data: { type: OAUTH_MESSAGE_TYPE, code: 'c', state: 's' },
-        origin: EXPECTED_ORIGIN,
-        source: otherWindow as any,
-      }))
-
-      expect(await isStillPending(promise)).toBe(true)
-    })
-
-    it('ignores a message missing a type', async () => {
-      const popup = makePopup()
-      const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
-
-      window.dispatchEvent(new MessageEvent('message', {
-        data: { code: 'c', state: 's' },
-        origin: EXPECTED_ORIGIN,
-        source: popup as any,
-      }))
-
-      expect(await isStillPending(promise)).toBe(true)
-    })
-
-    it('ignores a message with the wrong type', async () => {
-      const popup = makePopup()
-      const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
-
-      window.dispatchEvent(new MessageEvent('message', {
-        data: { type: 'some-other-type', code: 'c', state: 's' },
-        origin: EXPECTED_ORIGIN,
-        source: popup as any,
-      }))
-
-      expect(await isStillPending(promise)).toBe(true)
-    })
-
-    it('ignores a message whose data is not an object', async () => {
-      const popup = makePopup()
-      const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
-
-      window.dispatchEvent(new MessageEvent('message', {
-        data: 'just a string',
-        origin: EXPECTED_ORIGIN,
-        source: popup as any,
-      }))
-
-      expect(await isStillPending(promise)).toBe(true)
-    })
-
-    it('ignores a message whose state is not a string', async () => {
-      const popup = makePopup()
-      const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
-
-      window.dispatchEvent(new MessageEvent('message', {
-        data: { type: OAUTH_MESSAGE_TYPE, code: 'c', state: 123 },
-        origin: EXPECTED_ORIGIN,
-        source: popup as any,
-      }))
-
-      expect(await isStillPending(promise)).toBe(true)
-    })
-
-    it('rejects with "popup-closed" when the popup is closed by the user before any message', async () => {
+    it('rejects with the closed message when the popup is closed by the user before any message', async () => {
       vi.useFakeTimers()
       const popup = makePopup()
       const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
 
-      const assertion = expect(promise).rejects.toThrow('popup-closed')
+      const assertion = expect(promise).rejects.toThrow('closed before returning an authorization code')
       popup.closed = true
-      await vi.advanceTimersByTimeAsync(600)
+      await vi.advanceTimersByTimeAsync(POPUP_POLL_MS + 100)
 
       await assertion
     })
 
-    it('rejects with "timeout" after the timeout elapses with no message and no close', async () => {
+    it('adds a Cross-Origin-Opener-Policy hint when window.crossOriginIsolated is true', async () => {
+      vi.useFakeTimers()
+      vi.stubGlobal('crossOriginIsolated', true)
+      const popup = makePopup()
+      const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
+
+      const assertion = expect(promise).rejects.toThrow('Cross-Origin-Opener-Policy')
+      popup.closed = true
+      await vi.advanceTimersByTimeAsync(POPUP_POLL_MS + 100)
+
+      await assertion
+    })
+
+    it('rejects with the timeout message after the timeout elapses with no message and no close', async () => {
       vi.useFakeTimers()
       const popup = makePopup()
       const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
 
-      const assertion = expect(promise).rejects.toThrow('timeout')
+      const assertion = expect(promise).rejects.toThrow('Sign-in timed out')
       await vi.advanceTimersByTimeAsync(FLOW_TIMEOUT_MS + 10)
 
       await assertion
@@ -259,12 +192,12 @@ describe('oauth-popup', () => {
       await expect(promise).resolves.toEqual(result)
     })
 
-    it('cancel() removes the listener and rejects the promise with "cancelled"', async () => {
+    it('cancel() removes the listener and rejects the promise with FLOW_CANCELLED', async () => {
       const popup = makePopup()
       const removeSpy = vi.spyOn(window, 'removeEventListener')
       const { promise, cancel } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
 
-      const assertion = expect(promise).rejects.toThrow('cancelled')
+      const assertion = expect(promise).rejects.toThrow(FLOW_CANCELLED)
       cancel()
 
       await assertion

@@ -1,19 +1,16 @@
 import { webcrypto } from 'node:crypto'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import {
-  base64UrlEncode,
   buildAuthorizeUrl,
   buildPkceTarget,
   canUsePkce,
+  createPkceChallenge,
   generateCodeChallenge,
-  generateCodeVerifier,
-  generateState,
   isAbsoluteHttpUrl,
-  PkceUnavailableError,
-  randomUnreservedString,
-  sha256,
 } from './oauth-pkce'
 import type { IOauth2SecurityScheme } from '@stoplight/types'
+
+const RANDOM_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
 
 // jsdom provides crypto.getRandomValues but not crypto.subtle, so WebCrypto is stubbed per-suite here rather than globally in vitest.setup.ts.
 describe('oauth-pkce', () => {
@@ -32,69 +29,31 @@ describe('oauth-pkce', () => {
       expect(challenge).toBe('E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM')
     })
 
-    describe('generateCodeVerifier', () => {
-      it('generates a 43-character verifier from the unreserved charset', () => {
-        const verifier = generateCodeVerifier()
+    describe('createPkceChallenge', () => {
+      it('generates a 43-character verifier from the unreserved charset', async () => {
+        const { verifier } = await createPkceChallenge()
 
         expect(verifier).toHaveLength(43)
-        expect(verifier).toMatch(/^[A-Za-z0-9\-._~]+$/)
+        expect(verifier).toMatch(/^[A-Za-z0-9\-_]+$/)
       })
 
-      it('generates distinct verifiers across iterations', () => {
-        const verifiers = new Set(Array.from({ length: 200 }, () => generateCodeVerifier()))
-
-        expect(verifiers.size).toBe(200)
-      })
-    })
-
-    describe('generateState', () => {
-      it('generates a 32-character string from the random alphabet', () => {
-        const state = generateState()
+      it('generates a 32-character state', async () => {
+        const { state } = await createPkceChallenge()
 
         expect(state).toHaveLength(32)
         expect(state).toMatch(/^[A-Za-z0-9\-_]+$/)
       })
 
-      it('generates distinct states across iterations', () => {
-        const states = new Set(Array.from({ length: 200 }, () => generateState()))
+      it('challenge matches generateCodeChallenge(verifier)', async () => {
+        const { verifier, challenge } = await createPkceChallenge()
 
-        expect(states.size).toBe(200)
-      })
-    })
-
-    describe('base64UrlEncode', () => {
-      it('returns an empty string for empty input', () => {
-        expect(base64UrlEncode(new Uint8Array())).toBe('')
+        expect(challenge).toBe(await generateCodeChallenge(verifier))
       })
 
-      it('produces url-safe output with no padding', () => {
-        const encoded = base64UrlEncode(new Uint8Array([251, 255, 190]))
+      it('generates distinct verifiers across iterations', async () => {
+        const challenges = await Promise.all(Array.from({ length: 200 }, () => createPkceChallenge()))
 
-        expect(encoded).not.toContain('+')
-        expect(encoded).not.toContain('/')
-        expect(encoded).not.toContain('=')
-        expect(encoded).toMatch(/[-_]/)
-      })
-
-      it('accepts an ArrayBuffer', () => {
-        const bytes = new Uint8Array([1, 2, 3])
-        expect(base64UrlEncode(bytes.buffer)).toBe(base64UrlEncode(bytes))
-      })
-
-      it('accepts a Uint8Array', () => {
-        expect(base64UrlEncode(new Uint8Array([72, 101, 108]))).not.toBe('')
-      })
-
-      it('never contains padding at the 1-byte boundary', () => {
-        expect(base64UrlEncode(new Uint8Array([1]))).not.toContain('=')
-      })
-
-      it('never contains padding at the 2-byte boundary', () => {
-        expect(base64UrlEncode(new Uint8Array([1, 2]))).not.toContain('=')
-      })
-
-      it('never contains padding at the 3-byte boundary', () => {
-        expect(base64UrlEncode(new Uint8Array([1, 2, 3]))).not.toContain('=')
+        expect(new Set(challenges.map(c => c.verifier)).size).toBe(200)
       })
     })
 
@@ -158,31 +117,25 @@ describe('oauth-pkce', () => {
       vi.unstubAllGlobals()
     })
 
-    it('produces the exact RANDOM_ALPHABET characters for sequential byte values, proving no modulo bias', () => {
-      // Sequential bytes 0..255 wrapping; a % 66 implementation would produce a different string than & 63.
+    it('produces the exact RANDOM_ALPHABET characters for byte values starting at 64, proving no modulo bias', async () => {
+      // byte i is i + 64 (>= 64, so `& 63` and `% 66` disagree). A `% 66` implementation would not match RANDOM_ALPHABET.slice(0, 43).
       vi.stubGlobal('crypto', {
         getRandomValues: (arr: Uint8Array) => {
           for (let i = 0; i < arr.length; i++) {
-            arr[i] = i % 256
+            arr[i] = i + 64
           }
           return arr
         },
+        subtle: webcrypto.subtle,
       })
 
-      const length = 70
-      const result = randomUnreservedString(length)
+      const { verifier } = await createPkceChallenge()
 
-      const RANDOM_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
-      let expected = ''
-      for (let i = 0; i < length; i++) {
-        expected += RANDOM_ALPHABET[(i % 256) & 63]
-      }
-
-      expect(result).toBe(expected)
+      expect(verifier).toBe(RANDOM_ALPHABET.slice(0, 43))
     })
   })
 
-  describe('feature detection and error paths without crypto.subtle', () => {
+  describe('feature detection', () => {
     afterAll(() => {
       vi.unstubAllGlobals()
     })
@@ -198,77 +151,26 @@ describe('oauth-pkce', () => {
 
       expect(canUsePkce()).toBe(false)
     })
-
-    it('sha256 throws PkceUnavailableError when subtle is absent', async () => {
-      vi.stubGlobal('crypto', { getRandomValues: vi.fn() })
-
-      await expect(sha256('input')).rejects.toThrow(PkceUnavailableError)
-    })
-
-    it('generateCodeChallenge throws PkceUnavailableError when subtle is absent', async () => {
-      vi.stubGlobal('crypto', { getRandomValues: vi.fn() })
-
-      await expect(generateCodeChallenge('verifier')).rejects.toThrow(PkceUnavailableError)
-    })
-
-    it('randomUnreservedString throws PkceUnavailableError when getRandomValues is absent', () => {
-      vi.stubGlobal('crypto', {})
-
-      expect(() => randomUnreservedString(43)).toThrow(PkceUnavailableError)
-    })
   })
 
   describe('isAbsoluteHttpUrl', () => {
-    it('returns true for an https URL', () => {
-      expect(isAbsoluteHttpUrl('https://auth.example.com/authorize')).toBe(true)
-    })
-
-    it('returns true for an http URL', () => {
-      expect(isAbsoluteHttpUrl('http://localhost:8443/token')).toBe(true)
-    })
-
-    it('returns false for a javascript: URL', () => {
-      expect(isAbsoluteHttpUrl('javascript:evil();//')).toBe(false)
-    })
-
-    it('returns false for a javascript: URL without comment syntax', () => {
-      expect(isAbsoluteHttpUrl('javascript:alert(1)')).toBe(false)
-    })
-
-    it('returns false for another scheme like ftp', () => {
-      expect(isAbsoluteHttpUrl('ftp://auth.example.com/authorize')).toBe(false)
-    })
-
-    it('returns false for a non-URL string', () => {
-      expect(isAbsoluteHttpUrl('not a url')).toBe(false)
-    })
-
-    it('returns false for an empty string', () => {
-      expect(isAbsoluteHttpUrl('')).toBe(false)
-    })
-
-    it('returns false for a protocol-relative URL since new URL has no base', () => {
-      expect(isAbsoluteHttpUrl('//auth.example.com/authorize')).toBe(false)
-    })
+    for (const { name, url, expected } of [
+      { name: 'an https URL', url: 'https://auth.example.com/authorize', expected: true },
+      { name: 'an http URL', url: 'http://localhost:8443/token', expected: true },
+      { name: 'a javascript: URL', url: 'javascript:evil();//', expected: false },
+      { name: 'a javascript: URL without comment syntax', url: 'javascript:alert(1)', expected: false },
+      { name: 'another scheme like ftp', url: 'ftp://auth.example.com/authorize', expected: false },
+      { name: 'a non-URL string', url: 'not a url', expected: false },
+      { name: 'an empty string', url: '', expected: false },
+      { name: 'a protocol-relative URL since new URL has no base', url: '//auth.example.com/authorize', expected: false },
+    ]) {
+      it(`returns ${expected} for ${name}`, () => {
+        expect(isAbsoluteHttpUrl(url)).toBe(expected)
+      })
+    }
   })
 
   describe('buildPkceTarget', () => {
-    it('returns undefined when authorizationUrl is an empty string', () => {
-      const scheme = {
-        type: 'oauth2',
-        flows: { authorizationCode: { authorizationUrl: '', tokenUrl: 'https://idp.test/token', scopes: {} } },
-      } as unknown as IOauth2SecurityScheme
-      expect(buildPkceTarget('k', scheme, 'client')).toBeUndefined()
-    })
-
-    it('returns undefined when tokenUrl is blank', () => {
-      const scheme = {
-        type: 'oauth2',
-        flows: { authorizationCode: { authorizationUrl: 'https://idp.test/authorize', tokenUrl: '   ', scopes: {} } },
-      } as unknown as IOauth2SecurityScheme
-      expect(buildPkceTarget('k', scheme, 'client')).toBeUndefined()
-    })
-
     const scheme = (flows: IOauth2SecurityScheme['flows']): IOauth2SecurityScheme => ({
       id: 'scheme-id',
       key: 'oauth2Auth',
@@ -281,7 +183,6 @@ describe('oauth-pkce', () => {
         authorizationCode: {
           authorizationUrl: 'https://auth.example.com/authorize',
           tokenUrl: 'https://auth.example.com/token',
-          refreshUrl: 'https://auth.example.com/refresh',
           scopes: { read: 'Read access' },
         },
       }), 'client-123')
@@ -290,7 +191,6 @@ describe('oauth-pkce', () => {
         schemeKey: 'oauth2Auth',
         authorizationUrl: 'https://auth.example.com/authorize',
         tokenUrl: 'https://auth.example.com/token',
-        refreshUrl: 'https://auth.example.com/refresh',
         scopes: { read: 'Read access' },
         fingerprint: 'https://auth.example.com/authorize|https://auth.example.com/token|client-123',
       })
@@ -307,81 +207,18 @@ describe('oauth-pkce', () => {
       expect(target?.scopes).toEqual({})
     })
 
-    it('returns undefined when there is no authorizationCode flow', () => {
-      const target = buildPkceTarget('oauth2Auth', scheme({
-        clientCredentials: {
-          tokenUrl: 'https://auth.example.com/token',
-          scopes: {},
-        },
-      }), 'client-123')
-
-      expect(target).toBeUndefined()
-    })
-
-    it('returns undefined when the authorizationCode flow is missing tokenUrl', () => {
-      const target = buildPkceTarget('oauth2Auth', scheme({
-        authorizationCode: {
-          authorizationUrl: 'https://auth.example.com/authorize',
-          scopes: {},
-        } as IOauth2SecurityScheme['flows']['authorizationCode'],
-      }), 'client-123')
-
-      expect(target).toBeUndefined()
-    })
-
-    it('returns undefined when authorizationUrl is a javascript: URL', () => {
-      const target = buildPkceTarget('oauth2Auth', scheme({
-        authorizationCode: {
-          authorizationUrl: 'javascript:evil();//',
-          tokenUrl: 'https://auth.example.com/token',
-          scopes: {},
-        },
-      }), 'client-123')
-
-      expect(target).toBeUndefined()
-    })
-
-    it('returns undefined when tokenUrl is a javascript: URL', () => {
-      const target = buildPkceTarget('oauth2Auth', scheme({
-        authorizationCode: {
-          authorizationUrl: 'https://auth.example.com/authorize',
-          tokenUrl: 'javascript:evil();//',
-          scopes: {},
-        },
-      }), 'client-123')
-
-      expect(target).toBeUndefined()
-    })
-
-    it('keeps a valid refreshUrl', () => {
-      const target = buildPkceTarget('oauth2Auth', scheme({
-        authorizationCode: {
-          authorizationUrl: 'https://auth.example.com/authorize',
-          tokenUrl: 'https://auth.example.com/token',
-          refreshUrl: 'https://auth.example.com/refresh',
-          scopes: {},
-        },
-      }), 'client-123')
-
-      expect(target?.refreshUrl).toBe('https://auth.example.com/refresh')
-      expect(target?.authorizationUrl).toBe('https://auth.example.com/authorize')
-      expect(target?.tokenUrl).toBe('https://auth.example.com/token')
-    })
-
-    it('drops an invalid refreshUrl while keeping the required endpoints', () => {
-      const target = buildPkceTarget('oauth2Auth', scheme({
-        authorizationCode: {
-          authorizationUrl: 'https://auth.example.com/authorize',
-          tokenUrl: 'https://auth.example.com/token',
-          refreshUrl: 'javascript:evil()',
-          scopes: {},
-        },
-      }), 'client-123')
-
-      expect(target?.refreshUrl).toBeUndefined()
-      expect(target?.authorizationUrl).toBe('https://auth.example.com/authorize')
-      expect(target?.tokenUrl).toBe('https://auth.example.com/token')
-    })
+    for (const { name, flows } of [
+      { name: 'authorizationUrl is an empty string', flows: { authorizationCode: { authorizationUrl: '', tokenUrl: 'https://idp.test/token', scopes: {} } } },
+      { name: 'tokenUrl is blank', flows: { authorizationCode: { authorizationUrl: 'https://idp.test/authorize', tokenUrl: '   ', scopes: {} } } },
+      { name: 'there is no authorizationCode flow', flows: { clientCredentials: { tokenUrl: 'https://auth.example.com/token', scopes: {} } } },
+      { name: 'the authorizationCode flow is missing tokenUrl', flows: { authorizationCode: { authorizationUrl: 'https://auth.example.com/authorize', scopes: {} } } },
+      { name: 'authorizationUrl is a javascript: URL', flows: { authorizationCode: { authorizationUrl: 'javascript:evil();//', tokenUrl: 'https://auth.example.com/token', scopes: {} } } },
+      { name: 'tokenUrl is a javascript: URL', flows: { authorizationCode: { authorizationUrl: 'https://auth.example.com/authorize', tokenUrl: 'javascript:evil();//', scopes: {} } } },
+    ]) {
+      it(`returns undefined when ${name}`, () => {
+        expect(buildPkceTarget('oauth2Auth', scheme(flows as IOauth2SecurityScheme['flows']), 'client-123')).toBeUndefined()
+      })
+    }
 
     it('changes the fingerprint when the client id changes', () => {
       const flows: IOauth2SecurityScheme['flows'] = {
