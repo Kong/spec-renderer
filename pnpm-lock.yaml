@@ -166,7 +166,7 @@ importers:
         specifier: ^14.2.0
         version: 14.2.0
       '@types/node':
-        specifier: ^24.13.4
+        specifier: ^24.13.5
         version: 24.19.0
       '@types/sanitize-html':
         specifier: ^2.16.1
