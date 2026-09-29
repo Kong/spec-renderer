@@ -312,8 +312,12 @@ export default function useOAuthPkce() {
 
     const expectedOrigin = resolved.origin
 
-    // 4. Supersede any flow already in progress for this scheme, and reset for this one.
-    activeFlow?.cancel()
+    // 4. Only one sign-in flow at a time - reject rather than supersede, so the active flow keeps
+    // exclusive ownership of its busy/errors slot (a superseded flow's async cleanup could clobber it).
+    if (activeFlow) {
+      errors.value[k] = { kind: 'oauth', message: 'A sign-in is already in progress. Finish or close it before starting another.' }
+      return
+    }
     errors.value[k] = undefined
     busy.value[k] = true
 
@@ -329,14 +333,23 @@ export default function useOAuthPkce() {
       return
     }
 
+    // Register the flow synchronously, before the first await below (the PKCE digest), so the
+    // activeFlow check in step 4 cannot miss a flow that is still computing its challenge.
+    const { promise, cancel } = awaitAuthorizationResponse(popup, expectedOrigin)
+    // Awaited further down. This stops an early exit before then from leaving an unhandled rejection.
+    promise.catch(() => {})
+    const flow: ActiveAuthorizationFlow = { schemeKey: k, state: '', cancel }
+    activeFlow = flow
+
     // 6. It is safe to await from here on.
-    let flow: typeof activeFlow = null
     try {
       const cached = challengeCache.get(k)
       const challenge: PkceChallenge = cached ?? await (async (): Promise<PkceChallenge> => {
         const verifier = generateCodeVerifier()
         return { verifier, challenge: await generateCodeChallenge(verifier), state: generateState() }
       })()
+      // Filled in only now, the challenge exists after the digest.
+      flow.state = challenge.state
 
       const authorizeUrl = buildAuthorizeUrl({
         authorizationUrl: target.authorizationUrl,
@@ -348,10 +361,6 @@ export default function useOAuthPkce() {
       })
 
       navigateAuthorizationPopup(popup, authorizeUrl)
-
-      const { promise, cancel } = awaitAuthorizationResponse(popup, expectedOrigin)
-      flow = { schemeKey: k, state: challenge.state, cancel }
-      activeFlow = flow
 
       let params: AuthorizationResponseParams
       try {
@@ -367,7 +376,7 @@ export default function useOAuthPkce() {
         } else if (message === 'timeout') {
           errors.value[k] = { kind: 'timeout', message: 'Sign-in timed out. Please try again.' }
         } else if (message === 'cancelled') {
-          // A newer flow superseded this one - not a user-facing error.
+          // Cancelled programmatically, not a user-facing error.
           errors.value[k] = undefined
         } else {
           errors.value[k] = { kind: 'oauth', message: message || 'Sign-in failed.' }
@@ -403,11 +412,8 @@ export default function useOAuthPkce() {
     } catch (err) {
       // Any unexpected failure must surface as a user-facing error, not an unhandled rejection with a blank popup left open.
       errors.value[k] = { kind: 'oauth', message: `Sign-in failed: ${err instanceof Error ? err.message : String(err)}` }
-      try {
-        popup.close()
-      } catch {
-        // COOP can make close() throw on a cross-origin popup; closing is best-effort.
-      }
+      // Tears down the listener and timers, and closes the popup.
+      cancel()
     } finally {
       busy.value[k] = false
       // The challenge is single-use regardless of outcome.

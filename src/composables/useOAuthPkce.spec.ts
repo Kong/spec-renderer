@@ -573,6 +573,32 @@ describe('popup lifecycle', () => {
   })
 })
 
+describe('authorize unexpected failures', () => {
+  // Regression: the popup wait starts before the first await, so an early throw left its listener and
+  // timers running, and the popup poll later rejected with nobody handling it.
+  it('surfaces the error and tears the popup wait down when navigation throws', async () => {
+    const target = buildTarget()
+    const { authorize, errorFor, precomputeChallenge } = useOAuthPkce()
+    // hash with real timers first, see the popup lifecycle tests
+    await precomputeChallenge(target)
+    vi.useFakeTimers()
+    const removeSpy = vi.spyOn(window, 'removeEventListener')
+    fakePopup.location.replace.mockImplementation(() => {
+      throw new Error('blocked')
+    })
+
+    await authorize({ target, ...AUTHORIZE_OPTS_BASE })
+
+    expect(errorFor(target)?.message).toContain('Sign-in failed')
+    expect(removeSpy).toHaveBeenCalledWith('message', expect.any(Function))
+    expect(fakePopup.close).toHaveBeenCalled()
+
+    // run past the popup poll: nothing may be left running to reject
+    await vi.advanceTimersByTimeAsync(1_000)
+    expect(fetch).not.toHaveBeenCalled()
+  })
+})
+
 describe('refresh', () => {
   it('re-writes authInputs and keeps the old refreshToken when the response omits one', async () => {
     const target = buildTarget()
@@ -650,6 +676,100 @@ describe('clearCredentials', () => {
     expect(errorFor(target)).toBeUndefined()
     const { authInputs } = useAuth()
     expect(authInputs.value[`${target.schemeKey}-token`]).toBe('')
+  })
+})
+
+describe('authorize single-flow exclusivity', () => {
+  /** Wait until a specific popup has navigated past baselineCount, per-popup version of waitForPopupNavigation. */
+  const waitForPopupNavigationOn = (popup: ReturnType<typeof createFakePopup>, baselineCount: number): Promise<void> =>
+    waitFor(() => popup.location.replace.mock.calls.length > baselineCount)
+
+  const stateFromNavigation = (popup: ReturnType<typeof createFakePopup>): string =>
+    new URL(popup.location.replace.mock.calls.at(-1)![0]).searchParams.get('state')!
+
+  it('rejects a second authorize() for the same scheme while a flow is active, and the first still completes', async () => {
+    const target = buildTarget()
+    const popupA = createFakePopup()
+    openSpy.mockReturnValueOnce(popupA as unknown as Window)
+    global.fetch = vi.fn().mockResolvedValue(jsonResponse({ access_token: 'tok-A', token_type: 'Bearer', expires_in: 3600 }))
+
+    const { authorize, statusFor, tokenFor, errorFor } = useOAuthPkce()
+
+    const promiseA = authorize({ target, ...AUTHORIZE_OPTS_BASE })
+    await waitForPopupNavigationOn(popupA, 0)
+
+    await authorize({ target, ...AUTHORIZE_OPTS_BASE })
+
+    const error = errorFor(target)
+    expect(error?.kind).toBe('oauth')
+    expect(error?.message).toContain('already in progress')
+    expect(openSpy).toHaveBeenCalledTimes(1)
+    expect(statusFor(target)).toBe('authorizing')
+    expect(popupA.close).not.toHaveBeenCalled()
+
+    dispatchCallback(popupA, { code: 'auth-code-A', state: stateFromNavigation(popupA) })
+    await promiseA
+
+    expect(statusFor(target)).toBe('authenticated')
+    expect(tokenFor(target)?.accessToken).toBe('tok-A')
+    expect(errorFor(target)).toBeUndefined()
+  })
+
+  it('rejects a second authorize() for a different scheme too, leaving the active flow untouched', async () => {
+    const targetA = buildTarget({ schemeKey: 'kA' })
+    const targetB = buildTarget({ schemeKey: 'kB' })
+    const popupA = createFakePopup()
+    openSpy.mockReturnValueOnce(popupA as unknown as Window)
+    global.fetch = vi.fn().mockResolvedValue(jsonResponse({ access_token: 'tok-A', token_type: 'Bearer', expires_in: 3600 }))
+
+    const { authorize, statusFor, tokenFor, errorFor } = useOAuthPkce()
+
+    const promiseA = authorize({ target: targetA, ...AUTHORIZE_OPTS_BASE })
+    await waitForPopupNavigationOn(popupA, 0)
+
+    await authorize({ target: targetB, ...AUTHORIZE_OPTS_BASE })
+
+    const error = errorFor(targetB)
+    expect(error?.kind).toBe('oauth')
+    expect(error?.message).toContain('already in progress')
+    expect(errorFor(targetA)).toBeUndefined()
+    expect(openSpy).toHaveBeenCalledTimes(1)
+    expect(popupA.close).not.toHaveBeenCalled()
+
+    dispatchCallback(popupA, { code: 'auth-code-A', state: stateFromNavigation(popupA) })
+    await promiseA
+
+    expect(statusFor(targetA)).toBe('authenticated')
+    expect(tokenFor(targetA)?.accessToken).toBe('tok-A')
+    // Nothing in A's success path touches the rejected scheme's error slot.
+    expect(errorFor(targetB)?.message).toContain('already in progress')
+  })
+
+  it('double-click: the second call is rejected during the PKCE digest window, the first proceeds', async () => {
+    const target = buildTarget()
+    const popupA = createFakePopup()
+    openSpy.mockReturnValueOnce(popupA as unknown as Window)
+    global.fetch = vi.fn().mockResolvedValue(jsonResponse({ access_token: 'tok-A', token_type: 'Bearer', expires_in: 3600 }))
+
+    const { authorize, statusFor, tokenFor, errorFor } = useOAuthPkce()
+
+    // Same synchronous block with an empty challenge cache, exactly like a double-click. The second
+    // call must already see activeFlow even though the first has not navigated yet - that is what
+    // the synchronous registration before the PKCE digest guarantees.
+    const promiseA = authorize({ target, ...AUTHORIZE_OPTS_BASE })
+    const promiseB = authorize({ target, ...AUTHORIZE_OPTS_BASE })
+    await promiseB
+
+    expect(errorFor(target)?.message).toContain('already in progress')
+    expect(openSpy).toHaveBeenCalledTimes(1)
+
+    await waitForPopupNavigationOn(popupA, 0)
+    dispatchCallback(popupA, { code: 'auth-code-A', state: stateFromNavigation(popupA) })
+    await promiseA
+
+    expect(popupA.location.replace).toHaveBeenCalledTimes(1)
+    expect(statusFor(target)).toBe('authenticated')
+    expect(tokenFor(target)?.accessToken).toBe('tok-A')
   })
 })
 
