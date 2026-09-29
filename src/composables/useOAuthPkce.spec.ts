@@ -480,7 +480,7 @@ describe('token endpoint response handling', () => {
 
       await startSignIn(target).answer()
 
-      expect(useOAuthPkce().errorFor(target)).toContain('Could not reach the token endpoint')
+      expect(useOAuthPkce().errorFor(target)).toContain('Unable to reach the token endpoint')
     })
   }
 
@@ -496,13 +496,12 @@ describe('token endpoint response handling', () => {
   })
 })
 
-/** Real WebCrypto never finishes while timers are faked, so precomputeChallenge always runs with real timers first. */
+// Real SHA-256 never finishes while timers are faked, so the fake-timer tests below make it instant.
 describe('popup lifecycle', () => {
   it('reports a closed-popup message when the user closes the sign-in window', async () => {
     const target = buildTarget()
-    const { authorize, errorFor, precomputeChallenge } = useOAuthPkce()
-    // hash with real timers first: real crypto never finishes while timers are faked, so authorize() would hang on a slow machine
-    await precomputeChallenge(target)
+    const { authorize, errorFor } = useOAuthPkce()
+    vi.spyOn(webcrypto.subtle, 'digest').mockResolvedValue(new ArrayBuffer(32))
     vi.useFakeTimers()
 
     const promise = authorize({ target, ...AUTHORIZE_OPTS_BASE })
@@ -518,9 +517,8 @@ describe('popup lifecycle', () => {
 
   it('reports a timeout message when the flow exceeds the 5-minute window', async () => {
     const target = buildTarget()
-    const { authorize, errorFor, precomputeChallenge } = useOAuthPkce()
-    // hash with real timers first, see the test above
-    await precomputeChallenge(target)
+    const { authorize, errorFor } = useOAuthPkce()
+    vi.spyOn(webcrypto.subtle, 'digest').mockResolvedValue(new ArrayBuffer(32))
     vi.useFakeTimers()
 
     const promise = authorize({ target, ...AUTHORIZE_OPTS_BASE })
@@ -538,9 +536,9 @@ describe('authorize unexpected failures', () => {
   // timers running, and the popup poll later rejected with nobody handling it.
   it('surfaces the thrown message and tears the popup wait down when popup.location.replace throws', async () => {
     const target = buildTarget()
-    const { authorize, errorFor, statusFor, precomputeChallenge } = useOAuthPkce()
-    // hash with real timers first, see the popup lifecycle tests
-    await precomputeChallenge(target)
+    const { authorize, errorFor, statusFor } = useOAuthPkce()
+    // real SHA-256 never finishes while timers are faked, so make it instant
+    vi.spyOn(webcrypto.subtle, 'digest').mockResolvedValue(new ArrayBuffer(32))
     vi.useFakeTimers()
     const removeSpy = vi.spyOn(window, 'removeEventListener')
     fakePopup.location.replace.mockImplementation(() => {
