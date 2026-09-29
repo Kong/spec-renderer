@@ -8,6 +8,7 @@ import {
   generateCodeChallenge,
   generateCodeVerifier,
   generateState,
+  isAbsoluteHttpUrl,
 } from '@/utils/oauth-pkce'
 import {
   awaitAuthorizationResponse,
@@ -299,6 +300,16 @@ export default function useOAuthPkce() {
       return
     }
 
+    // Defence in depth - buildPkceTarget already rejects these, never trust a spec-supplied endpoint here either.
+    // A javascript: authorizationUrl would execute in the same-origin popup; a non-URL one throws an unhandled rejection.
+    if (!isAbsoluteHttpUrl(target.authorizationUrl) || !isAbsoluteHttpUrl(target.tokenUrl)) {
+      errors.value[k] = {
+        kind: 'oauth',
+        message: 'The security scheme authorization or token URL is not a valid absolute http(s) URL.',
+      }
+      return
+    }
+
     const expectedOrigin = resolved.origin
 
     // 4. Supersede any flow already in progress for this scheme, and reset for this one.
@@ -389,6 +400,14 @@ export default function useOAuthPkce() {
 
       // 10. Exchange the code.
       await exchangeCode(target, params.code, challenge.verifier, resolved.href, clientId)
+    } catch (err) {
+      // Any unexpected failure must surface as a user-facing error, not an unhandled rejection with a blank popup left open.
+      errors.value[k] = { kind: 'oauth', message: `Sign-in failed: ${err instanceof Error ? err.message : String(err)}` }
+      try {
+        popup.close()
+      } catch {
+        // COOP can make close() throw on a cross-origin popup; closing is best-effort.
+      }
     } finally {
       busy.value[k] = false
       // The challenge is single-use regardless of outcome.

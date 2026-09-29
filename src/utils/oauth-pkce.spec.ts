@@ -8,6 +8,7 @@ import {
   generateCodeChallenge,
   generateCodeVerifier,
   generateState,
+  isAbsoluteHttpUrl,
   PkceUnavailableError,
   randomUnreservedString,
   sha256,
@@ -217,6 +218,40 @@ describe('oauth-pkce', () => {
     })
   })
 
+  describe('isAbsoluteHttpUrl', () => {
+    it('returns true for an https URL', () => {
+      expect(isAbsoluteHttpUrl('https://auth.example.com/authorize')).toBe(true)
+    })
+
+    it('returns true for an http URL', () => {
+      expect(isAbsoluteHttpUrl('http://localhost:8443/token')).toBe(true)
+    })
+
+    it('returns false for a javascript: URL', () => {
+      expect(isAbsoluteHttpUrl('javascript:evil();//')).toBe(false)
+    })
+
+    it('returns false for a javascript: URL without comment syntax', () => {
+      expect(isAbsoluteHttpUrl('javascript:alert(1)')).toBe(false)
+    })
+
+    it('returns false for another scheme like ftp', () => {
+      expect(isAbsoluteHttpUrl('ftp://auth.example.com/authorize')).toBe(false)
+    })
+
+    it('returns false for a non-URL string', () => {
+      expect(isAbsoluteHttpUrl('not a url')).toBe(false)
+    })
+
+    it('returns false for an empty string', () => {
+      expect(isAbsoluteHttpUrl('')).toBe(false)
+    })
+
+    it('returns false for a protocol-relative URL since new URL has no base', () => {
+      expect(isAbsoluteHttpUrl('//auth.example.com/authorize')).toBe(false)
+    })
+  })
+
   describe('buildPkceTarget', () => {
     it('returns undefined when authorizationUrl is an empty string', () => {
       const scheme = {
@@ -292,6 +327,60 @@ describe('oauth-pkce', () => {
       }), 'client-123')
 
       expect(target).toBeUndefined()
+    })
+
+    it('returns undefined when authorizationUrl is a javascript: URL', () => {
+      const target = buildPkceTarget('oauth2Auth', scheme({
+        authorizationCode: {
+          authorizationUrl: 'javascript:evil();//',
+          tokenUrl: 'https://auth.example.com/token',
+          scopes: {},
+        },
+      }), 'client-123')
+
+      expect(target).toBeUndefined()
+    })
+
+    it('returns undefined when tokenUrl is a javascript: URL', () => {
+      const target = buildPkceTarget('oauth2Auth', scheme({
+        authorizationCode: {
+          authorizationUrl: 'https://auth.example.com/authorize',
+          tokenUrl: 'javascript:evil();//',
+          scopes: {},
+        },
+      }), 'client-123')
+
+      expect(target).toBeUndefined()
+    })
+
+    it('keeps a valid refreshUrl', () => {
+      const target = buildPkceTarget('oauth2Auth', scheme({
+        authorizationCode: {
+          authorizationUrl: 'https://auth.example.com/authorize',
+          tokenUrl: 'https://auth.example.com/token',
+          refreshUrl: 'https://auth.example.com/refresh',
+          scopes: {},
+        },
+      }), 'client-123')
+
+      expect(target?.refreshUrl).toBe('https://auth.example.com/refresh')
+      expect(target?.authorizationUrl).toBe('https://auth.example.com/authorize')
+      expect(target?.tokenUrl).toBe('https://auth.example.com/token')
+    })
+
+    it('drops an invalid refreshUrl while keeping the required endpoints', () => {
+      const target = buildPkceTarget('oauth2Auth', scheme({
+        authorizationCode: {
+          authorizationUrl: 'https://auth.example.com/authorize',
+          tokenUrl: 'https://auth.example.com/token',
+          refreshUrl: 'javascript:evil()',
+          scopes: {},
+        },
+      }), 'client-123')
+
+      expect(target?.refreshUrl).toBeUndefined()
+      expect(target?.authorizationUrl).toBe('https://auth.example.com/authorize')
+      expect(target?.tokenUrl).toBe('https://auth.example.com/token')
     })
 
     it('changes the fingerprint when the client id changes', () => {

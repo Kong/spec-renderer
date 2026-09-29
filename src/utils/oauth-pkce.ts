@@ -26,6 +26,16 @@ export const canUsePkce = (): boolean => {
   return typeof c?.getRandomValues === 'function' && typeof c?.subtle?.digest === 'function'
 }
 
+/** True when raw parses as an absolute http(s) URL. Spec-supplied OAuth endpoints are untrusted: a javascript: scheme would execute via popup.location.replace, and a relative or non-URL string throws in new URL() later. */
+export const isAbsoluteHttpUrl = (raw: string): boolean => {
+  try {
+    const url = new URL(raw)
+    return url.protocol === 'https:' || url.protocol === 'http:'
+  } catch {
+    return false
+  }
+}
+
 /** Base64url-encode (RFC 4648 §5) the given bytes via btoa, then swap +/ for -_ and strip = padding. */
 export const base64UrlEncode = (input: ArrayBuffer | Uint8Array): string => {
   const bytes = input instanceof Uint8Array ? input : new Uint8Array(input)
@@ -128,11 +138,20 @@ export const buildPkceTarget = (
     return undefined
   }
 
+  // The endpoints come from the rendered spec, treat them as untrusted. Anything but an absolute
+  // http(s) URL makes the scheme not authorizable so the UI disables Authorize instead of erroring on click.
+  if (!isAbsoluteHttpUrl(authorizationUrl) || !isAbsoluteHttpUrl(tokenUrl)) {
+    return undefined
+  }
+
+  // An invalid optional refreshUrl must never reach fetch(); drop it so refresh() falls back to the token endpoint.
+  const safeRefreshUrl = refreshUrl && isAbsoluteHttpUrl(refreshUrl) ? refreshUrl : undefined
+
   return {
     schemeKey,
     authorizationUrl,
     tokenUrl,
-    refreshUrl,
+    refreshUrl: safeRefreshUrl,
     scopes: scopes || {},
     fingerprint: `${authorizationUrl}|${tokenUrl}|${clientId}`,
   }

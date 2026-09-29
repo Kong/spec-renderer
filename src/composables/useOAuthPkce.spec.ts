@@ -290,6 +290,56 @@ describe('authorize guard rails', () => {
   })
 })
 
+describe('authorize endpoint validation', () => {
+  it('rejects a javascript: authorizationUrl before any popup opens', async () => {
+    const target = buildTarget({ authorizationUrl: 'javascript:evil();//' })
+    const { authorize, errorFor, statusFor } = useOAuthPkce()
+
+    await authorize({ target, ...AUTHORIZE_OPTS_BASE })
+
+    expect(errorFor(target)?.kind).toBe('oauth')
+    expect(errorFor(target)?.message).toContain('URL')
+    expect(window.open).not.toHaveBeenCalled()
+    expect(statusFor(target)).not.toBe('authorizing')
+
+    const { authInputs } = useAuth()
+    expect(authInputs.value[`${target.schemeKey}-token`]).toBeFalsy()
+  })
+
+  it('rejects a javascript: tokenUrl before any popup opens', async () => {
+    const target = buildTarget({ tokenUrl: 'javascript:evil()' })
+    const { authorize, errorFor, statusFor } = useOAuthPkce()
+
+    await authorize({ target, ...AUTHORIZE_OPTS_BASE })
+
+    expect(errorFor(target)?.kind).toBe('oauth')
+    expect(errorFor(target)?.message).toContain('URL')
+    expect(window.open).not.toHaveBeenCalled()
+    expect(statusFor(target)).not.toBe('authorizing')
+
+    const { authInputs } = useAuth()
+    expect(authInputs.value[`${target.schemeKey}-token`]).toBeFalsy()
+  })
+
+  it('records an error and closes the popup when navigation throws instead of rejecting', async () => {
+    const throwingPopup = createFakePopup()
+    throwingPopup.location.replace = vi.fn(() => {
+      throw new Error('nav fail')
+    })
+    openSpy.mockReturnValue(throwingPopup as unknown as Window)
+
+    const target = buildTarget()
+    const { authorize, errorFor, statusFor } = useOAuthPkce()
+
+    await authorize({ target, ...AUTHORIZE_OPTS_BASE })
+
+    expect(errorFor(target)?.kind).toBe('oauth')
+    expect(errorFor(target)?.message).toContain('Failed to navigate the authorization pop-up')
+    expect(throwingPopup.close).toHaveBeenCalled()
+    expect(statusFor(target)).not.toBe('authorizing')
+  })
+})
+
 describe('authorize URL correctness', () => {
   it('builds an authorize URL with exactly the required PKCE params, and the challenge matches the verifier later sent to the token endpoint', async () => {
     const target = buildTarget()
