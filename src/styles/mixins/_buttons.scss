@@ -8,8 +8,19 @@
   padding: var(--kui-space-0, $kui-space-0);
 }
 
+// Button component tokens for the non-color properties of a medium-sized button.
+// Only applied to the secondary and tertiary appearances for now - primary is not tokenized yet.
+@mixin button-medium-size-tokens {
+  border-radius: var(--kui-button-border-radius-medium, var(--kui-border-radius-30, $kui-border-radius-30));
+  font-size: var(--kui-button-font-size-medium, var(--kui-font-size-30, $kui-font-size-30));
+  font-weight: var(--kui-button-font-weight, var(--kui-font-weight-semibold, $kui-font-weight-semibold));
+  line-height: var(--kui-button-line-height-medium, var(--kui-line-height-30, $kui-line-height-30));
+  padding: var(--kui-button-padding-y-medium, var(--kui-space-20, $kui-space-20)) var(--kui-button-padding-x-medium, var(--kui-space-40, $kui-space-40));
+}
+
 @mixin button-default {
   @include default-button-reset;
+
   align-items: center;
   background-color: var(--kui-color-background-primary, $kui-color-background-primary);
   border: var(--kui-border-width-20, $kui-border-width-20) solid
@@ -43,49 +54,62 @@
   }
 
   &.secondary {
-    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-    border: var(--kui-border-width-20, $kui-border-width-20) solid
-      var(--kui-color-border-primary, $kui-color-border-primary);
-    color: var(--kui-color-text-primary, $kui-color-text-primary);
+    @include button-medium-size-tokens;
 
-    &:hover:not(:disabled):not(:focus):not(:active) {
-      background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-      border-color: var(--kui-color-border-primary-strong, $kui-color-border-primary-strong);
-      color: var(--kui-color-text-primary-strong, $kui-color-text-primary-strong);
+    // stylelint-disable-next-line no-duplicate-selectors
+    & {
+      background-color: var(--kui-button-color-background-secondary, var(--kui-color-background-transparent, $kui-color-background-transparent));
+      border: var(--kui-button-border-width-medium, var(--kui-border-width-20, $kui-border-width-20)) solid var(--kui-button-color-border-secondary, var(--kui-color-border-primary, $kui-color-border-primary));
+      color: var(--kui-button-color-text-secondary, var(--kui-color-text-primary, $kui-color-text-primary));
     }
 
+    &:hover:not(:disabled):not(:focus):not(:active) {
+      background-color: var(--kui-button-color-background-secondary-hover, var(--kui-color-background-transparent, $kui-color-background-transparent));
+      border-color: var(--kui-button-color-border-secondary-hover, var(--kui-color-border-primary-strong, $kui-color-border-primary-strong));
+      color: var(--kui-button-color-text-secondary-hover, var(--kui-color-text-primary-strong, $kui-color-text-primary-strong));
+    }
+
+    // there is no focus color token - focus-visible follows the hover state
     &:focus-visible {
-      background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-      border-color: var(--kui-color-border-primary-stronger, $kui-color-border-primary-stronger);
-      color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
+      background-color: var(--kui-button-color-background-secondary-hover, var(--kui-color-background-transparent, $kui-color-background-transparent));
+      border-color: var(--kui-button-color-border-secondary-hover, var(--kui-color-border-primary-stronger, $kui-color-border-primary-stronger));
+      color: var(--kui-button-color-text-secondary-hover, var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger));
     }
 
     &:active {
-      background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-      border-color: var(--kui-color-border-primary-strongest, $kui-color-border-primary-strongest);
-      color: var(--kui-color-text-primary-strongest, $kui-color-text-primary-strongest);
+      background-color: var(--kui-button-color-background-secondary-active, var(--kui-color-background-transparent, $kui-color-background-transparent));
+      border-color: var(--kui-button-color-border-secondary-active, var(--kui-color-border-primary-strongest, $kui-color-border-primary-strongest));
+      color: var(--kui-button-color-text-secondary-active, var(--kui-color-text-primary-strongest, $kui-color-text-primary-strongest));
     }
   }
 
   &.tertiary {
-    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-    border: var(--kui-border-width-20, $kui-border-width-20) solid
-      var(--kui-color-border-transparent, $kui-color-border-transparent);
-    color: var(--kui-color-text-primary, $kui-color-text-primary);
+    @include button-medium-size-tokens;
 
-    &:hover:not(:disabled):not(:focus):not(:active) {
-      background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
-      color: var(--kui-color-text-primary-strong, $kui-color-text-primary-strong);
+    // stylelint-disable-next-line no-duplicate-selectors
+    & {
+      background-color: var(--kui-button-color-background-tertiary, var(--kui-color-background-transparent, $kui-color-background-transparent));
+      border: var(--kui-button-border-width-medium, var(--kui-border-width-20, $kui-border-width-20)) solid var(--kui-button-color-border-tertiary, var(--kui-color-border-transparent, $kui-color-border-transparent));
+      color: var(--kui-button-color-text-tertiary, var(--kui-color-text-primary, $kui-color-text-primary));
     }
 
+    &:hover:not(:disabled):not(:focus):not(:active) {
+      background-color: var(--kui-button-color-background-tertiary-hover, var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest));
+      border-color: var(--kui-button-color-border-tertiary-hover, var(--kui-color-border-transparent, $kui-color-border-transparent));
+      color: var(--kui-button-color-text-tertiary-hover, var(--kui-color-text-primary-strong, $kui-color-text-primary-strong));
+    }
+
+    // there is no focus color token - focus-visible follows the hover state
     &:focus-visible {
-      background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
-      color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
+      background-color: var(--kui-button-color-background-tertiary-hover, var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest));
+      border-color: var(--kui-button-color-border-tertiary-hover, var(--kui-color-border-transparent, $kui-color-border-transparent));
+      color: var(--kui-button-color-text-tertiary-hover, var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger));
     }
 
     &:active {
-      background-color: var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker);
-      color: var(--kui-color-text-primary-strongest, $kui-color-text-primary-strongest);
+      background-color: var(--kui-button-color-background-tertiary-active, var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker));
+      border-color: var(--kui-button-color-border-tertiary-active, var(--kui-color-border-transparent, $kui-color-border-transparent));
+      color: var(--kui-button-color-text-tertiary-active, var(--kui-color-text-primary-strongest, $kui-color-text-primary-strongest));
     }
   }
 }

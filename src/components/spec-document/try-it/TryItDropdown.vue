@@ -153,46 +153,67 @@ watch([hideTryIt, showInsomnia], () => {
   $textColor: $methodColor,
 ) {
   .call-button {
-    border-color: $methodColor;
-    color: $textColor;
+    border-color: var(--kui-button-color-border-secondary, $methodColor);
+    color: var(--kui-button-color-text-secondary, $textColor);
 
     &:hover,
-    &:focus,
+    &:focus {
+      background-color: var(--kui-button-color-background-secondary-hover, $hoverBg);
+      border-color: var(--kui-button-color-border-secondary-hover, $methodColor);
+      color: var(--kui-button-color-text-secondary-hover, $textColor);
+    }
+
     &:active {
-      background-color: $hoverBg;
+      background-color: var(--kui-button-color-background-secondary-active, $hoverBg);
+      border-color: var(--kui-button-color-border-secondary-active, $methodColor);
+      color: var(--kui-button-color-text-secondary-active, $textColor);
     }
 
     &:disabled, &[disabled] {
-      background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-      border-color: var(--kui-color-border-disabled, $kui-color-border-disabled);
-      color: var(--kui-color-text-disabled, $kui-color-text-disabled);
+      background-color: var(--kui-button-color-background-secondary-disabled, var(--kui-color-background-transparent, $kui-color-background-transparent));
+      border-color: var(--kui-button-color-border-secondary-disabled, var(--kui-color-border-disabled, $kui-color-border-disabled));
+      color: var(--kui-button-color-text-secondary-disabled, var(--kui-color-text-disabled, $kui-color-text-disabled));
       cursor: not-allowed;
     }
   }
 
   .tryit-dropdown {
     :deep(.trigger-button) {
-      border-color: $methodColor;
+      border-color: var(--kui-button-color-border-secondary, $methodColor);
 
       .select-chevron-icon {
-        color: $textColor !important;
+        color: var(--kui-button-color-text-secondary, $textColor) !important;
       }
 
       &:hover,
-      &:focus,
+      &:focus {
+        background-color: var(--kui-button-color-background-secondary-hover, $hoverBg) !important;
+        border-color: var(--kui-button-color-border-secondary-hover, $methodColor);
+        color: var(--kui-button-color-text-secondary-hover, $textColor) !important;
+
+        .select-chevron-icon {
+          color: var(--kui-button-color-text-secondary-hover, $textColor) !important;
+        }
+      }
+
       &:active {
-        background-color: $hoverBg !important;
-        color: $textColor !important;
+        background-color: var(--kui-button-color-background-secondary-active, $hoverBg) !important;
+        border-color: var(--kui-button-color-border-secondary-active, $methodColor);
+        color: var(--kui-button-color-text-secondary-active, $textColor) !important;
+
+        .select-chevron-icon {
+          color: var(--kui-button-color-text-secondary-active, $textColor) !important;
+        }
       }
 
       &:disabled, &[disabled] {
-        background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-        border-color: var(--kui-color-border-disabled, $kui-color-border-disabled);
-        color: var(--kui-color-text-disabled, $kui-color-text-disabled);
+        background-color: var(--kui-button-color-background-secondary-disabled, var(--kui-color-background-transparent, $kui-color-background-transparent));
+        border-color: var(--kui-button-color-border-secondary-disabled, var(--kui-color-border-disabled, $kui-color-border-disabled));
+        color: var(--kui-button-color-text-secondary-disabled, var(--kui-color-text-disabled, $kui-color-text-disabled));
         cursor: not-allowed;
 
         .select-chevron-icon {
-          color: var(--kui-color-text-disabled, $kui-color-text-disabled) !important;
+          color: var(--kui-button-color-text-secondary-disabled, var(--kui-color-text-disabled, $kui-color-text-disabled)) !important;
         }
       }
     }
@@ -280,18 +301,18 @@ watch([hideTryIt, showInsomnia], () => {
 .call-button {
   @include default-button-reset;
   align-items: center;
-  background-color: var(--kui-color-background, $kui-color-background);
-  border-color: var(--kui-color-border, $kui-color-border);
-  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+  background-color: var(--kui-button-color-background-secondary, var(--kui-color-background, $kui-color-background));
+  border-color: var(--kui-button-color-border-secondary, var(--kui-color-border, $kui-color-border));
+  border-radius: var(--kui-button-border-radius-medium, var(--kui-border-radius-30, $kui-border-radius-30));
   border-style: solid;
-  border-width: var(--kui-border-width-20, $kui-border-width-20);
+  border-width: var(--kui-button-border-width-medium, var(--kui-border-width-20, $kui-border-width-20));
   display: flex;
-  font-size: var(--kui-font-size-30, $kui-font-size-30);
-  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+  font-size: var(--kui-button-font-size-medium, var(--kui-font-size-30, $kui-font-size-30));
+  font-weight: var(--kui-button-font-weight, var(--kui-font-weight-semibold, $kui-font-weight-semibold));
   gap: var(--kui-space-30, $kui-space-30);
   justify-content: center;
-  line-height: var(--kui-line-height-30, $kui-line-height-30);
-  padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
+  line-height: var(--kui-button-line-height-medium, var(--kui-line-height-30, $kui-line-height-30));
+  padding: var(--kui-button-padding-y-medium, var(--kui-space-20, $kui-space-20)) var(--kui-button-padding-x-medium, var(--kui-space-30, $kui-space-30));
   white-space: nowrap;
   width: 100%;
 
@@ -302,14 +323,14 @@ watch([hideTryIt, showInsomnia], () => {
   }
 
   &.no-dropdown {
-    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    border-right-width: var(--kui-border-width-20, $kui-border-width-20);
-    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
+    border-radius: var(--kui-button-border-radius-medium, var(--kui-border-radius-30, $kui-border-radius-30));
+    border-right-width: var(--kui-button-border-width-medium, var(--kui-border-width-20, $kui-border-width-20));
+    padding: var(--kui-button-padding-y-medium, var(--kui-space-20, $kui-space-20)) var(--kui-button-padding-x-medium, var(--kui-space-40, $kui-space-40));
   }
 
   .tryit-method-icon {
-    height: var(--kui-icon-size-40, $kui-icon-size-40) !important;
-    width: var(--kui-icon-size-40, $kui-icon-size-40) !important;
+    height: var(--kui-button-icon-size-medium, var(--kui-icon-size-40, $kui-icon-size-40)) !important;
+    width: var(--kui-button-icon-size-medium, var(--kui-icon-size-40, $kui-icon-size-40)) !important;
   }
 }
 
@@ -317,18 +338,20 @@ watch([hideTryIt, showInsomnia], () => {
   display: flex;
 
   :deep(.trigger-button) {
-    border-color: var(--kui-color-border, $kui-color-border);
-    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    background-color: var(--kui-button-color-background-secondary, var(--kui-color-background-transparent, $kui-color-background-transparent));
+    border-color: var(--kui-button-color-border-secondary, var(--kui-color-border, $kui-color-border));
+    border-radius: var(--kui-button-border-radius-medium, var(--kui-border-radius-30, $kui-border-radius-30));
     border-style: solid;
-    border-width: var(--kui-border-width-20, $kui-border-width-20);
+    border-width: var(--kui-button-border-width-medium, var(--kui-border-width-20, $kui-border-width-20));
     height: 100%;
-    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
+    padding: var(--kui-button-padding-y-medium, var(--kui-space-20, $kui-space-20)) var(--kui-button-padding-x-medium, var(--kui-space-30, $kui-space-30));
 
     @media (min-width: $kui-breakpoint-mobile) {
       border-bottom-left-radius: var(--kui-border-radius-0, $kui-border-radius-0);
       border-left-width: var(--kui-border-width-0, $kui-border-width-0);
       border-top-left-radius: var(--kui-border-radius-0, $kui-border-radius-0);
-      padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30) var(--kui-space-20, $kui-space-20) var(--kui-space-20, $kui-space-20);
+      // inner (left) edge keeps the tighter semantic padding so the chevron sits close to the split
+      padding: var(--kui-button-padding-y-medium, var(--kui-space-20, $kui-space-20)) var(--kui-button-padding-x-medium, var(--kui-space-30, $kui-space-30)) var(--kui-button-padding-y-medium, var(--kui-space-20, $kui-space-20)) var(--kui-space-20, $kui-space-20);
     }
   }
 }
