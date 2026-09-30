@@ -136,14 +136,14 @@ importers:
         specifier: ^2.1.14
         version: 2.1.14
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.3.2
+        version: 3.3.2
       '@kong/eslint-config-kong-ui':
-        specifier: 1.8.0
-        version: 1.8.0(@typescript-eslint/parser@8.61.1(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3))(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3)
+        specifier: 1.8.1
+        version: 1.8.1(@typescript-eslint/parser@8.61.1(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3))(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3)
       '@kong/stylelint-plugin-design-tokens':
-        specifier: 2.0.0
-        version: 2.0.0(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3))
+        specifier: 2.0.1
+        version: 2.0.1(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3))
       '@semantic-release/changelog':
         specifier: ^6.0.3
         version: 6.0.3(semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3))
@@ -1002,12 +1002,12 @@ packages:
   '@keyv/serialize@1.1.1':
     resolution: {integrity: sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA==}
 
-  '@kong/design-tokens@3.3.1':
-    resolution: {integrity: sha512-2nwOiWmFZt2I5S7FxpcK9iOpvpr4XhetNTIetL9HG9+pmgaeUISywFBHflq6OOwuYFPRbGGiPRNfM9YOzeWtHw==}
+  '@kong/design-tokens@3.3.2':
+    resolution: {integrity: sha512-1vnIknzK3kqixY/WpwCBR5Avyab9DY11HA1tozH1UiCpmJAYgprEg6gMc8vncXUNif/XgZThZnH6pWPYLLw6RA==}
     engines: {node: '>=20.19.5', pnpm: '>=10.28.2'}
 
-  '@kong/eslint-config-kong-ui@1.8.0':
-    resolution: {integrity: sha512-fXLIXR/qKz6f949glvjqy4UrvYGH/9GuTbTfTJyqnVqnunmv/+NfGzxj5mQZBolbczspjl+XnzENEemqWwMdhg==}
+  '@kong/eslint-config-kong-ui@1.8.1':
+    resolution: {integrity: sha512-fNdG2PHYhA3J8qfvzNdatDvOI3Dapq4SiFeu98ukhk9vf9Qctu98gHD60iNThlqmkGozXgLjC/J4pEILNO7BAw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       eslint: '>= 9.37.0'
@@ -1028,8 +1028,8 @@ packages:
     peerDependencies:
       vue: '>= 3.3.4 < 4'
 
-  '@kong/stylelint-plugin-design-tokens@2.0.0':
-    resolution: {integrity: sha512-gxFGm2KEZVSsALb5mQgC7nwZi9aQR62nXP/Sh4gfyOvbYlD+o6sWh8IGCUj1BRhpKZpVgddSIkPgsJpVaZsE3Q==}
+  '@kong/stylelint-plugin-design-tokens@2.0.1':
+    resolution: {integrity: sha512-C/8kFbIcLEU4swabK81sx+q+HFCBfoKmLZGGdKmUI57WvyoUyyIN2t/9KCP1MmUSUTyOLjfuQmpo1VmndzQL3Q==}
     engines: {node: '>=20.19.5', pnpm: '>=10.28.2'}
     peerDependencies:
       stylelint: '>=14.0.0'
@@ -6741,9 +6741,9 @@ snapshots:
 
   '@keyv/serialize@1.1.1': {}
 
-  '@kong/design-tokens@3.3.1': {}
+  '@kong/design-tokens@3.3.2': {}
 
-  '@kong/eslint-config-kong-ui@1.8.0(@typescript-eslint/parser@8.61.1(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3))(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3)':
+  '@kong/eslint-config-kong-ui@1.8.1(@typescript-eslint/parser@8.61.1(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3))(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3)':
     dependencies:
       '@eslint/js': 9.39.4
       '@kong/eslint-plugin-design-tokens': 1.0.1(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(vue-eslint-parser@10.4.1(eslint@10.10.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2))
@@ -6775,7 +6775,7 @@ snapshots:
     dependencies:
       vue: 3.5.42(typescript@5.9.3)
 
-  '@kong/stylelint-plugin-design-tokens@2.0.0(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3))':
+  '@kong/stylelint-plugin-design-tokens@2.0.1(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3))':
     dependencies:
       stylelint: 17.15.0(supports-color@10.2.2)(typescript@5.9.3)
 
