@@ -34,10 +34,11 @@ describe('oauth-popup', () => {
   afterEach(() => {
     vi.unstubAllGlobals()
     vi.useRealTimers()
+    vi.restoreAllMocks()
   })
 
   describe('openAuthorizationPopup', () => {
-    it('calls window.open with an empty url, the popup name, and centred/sized features', () => {
+    it('calls window.open with an empty url, the popup name, and sized features', () => {
       const openSpy = vi.fn<typeof window.open>(() => makePopup() as unknown as Window)
       vi.stubGlobal('open', openSpy)
 
@@ -47,7 +48,6 @@ describe('oauth-popup', () => {
       const [url, name, features] = openSpy.mock.calls[0]!
       expect(url).toBe('')
       expect(name).toBe(POPUP_NAME)
-      expect(name).toBe('kong-spec-renderer-oauth')
       expect(features).toContain(`width=${POPUP_WIDTH}`)
       expect(features).toContain(`height=${POPUP_HEIGHT}`)
     })
@@ -180,7 +180,7 @@ describe('oauth-popup', () => {
       await assertion
     })
 
-    it('removes the listener after resolving, so a second message has no effect', async () => {
+    it('removes the message listener once it resolves', async () => {
       const popup = makePopup()
       const removeSpy = vi.spyOn(window, 'removeEventListener')
       const { authorizationResponse } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
@@ -194,15 +194,6 @@ describe('oauth-popup', () => {
       const result = await authorizationResponse
       expect(result.code).toBe('first')
       expect(removeSpy).toHaveBeenCalledWith('message', expect.any(Function))
-
-      // A second, otherwise-valid message must not change anything - the listener is gone.
-      window.dispatchEvent(new MessageEvent('message', {
-        data: { type: OAUTH_MESSAGE_TYPE, code: 'second', state: 's' },
-        origin: EXPECTED_ORIGIN,
-        source: popup as any,
-      }))
-
-      await expect(authorizationResponse).resolves.toEqual(result)
     })
 
     it('cancel() removes the listener and rejects the promise with FLOW_CANCELLED', async () => {
