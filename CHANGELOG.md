@@ -1,3 +1,10 @@
+## [1.115.2](https://github.com/Kong/spec-renderer/compare/v1.115.1...v1.115.2) (2026-09-30)
+
+
+### Bug Fixes
+
+* try it button and toggle switch component tokens [TDX-8968] ([#1023](https://github.com/Kong/spec-renderer/issues/1023)) ([98258a8](https://github.com/Kong/spec-renderer/commit/98258a83d8a8e30193f8db81c9660bbb7b195b16))
+
 ## [1.115.1](https://github.com/Kong/spec-renderer/compare/v1.115.0...v1.115.1) (2026-09-27)
 
 
