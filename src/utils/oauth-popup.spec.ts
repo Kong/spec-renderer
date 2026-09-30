@@ -112,6 +112,19 @@ describe('oauth-popup', () => {
       await expect(authorizationResponse).resolves.toEqual({ code: 'c', state: 's', error: undefined, errorDescription: undefined })
     })
 
+    it('resolves an error message with no state (non-compliant provider), for authorize() to surface', async () => {
+      const popup = makePopup()
+      const { authorizationResponse } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
+
+      window.dispatchEvent(new MessageEvent('message', {
+        data: { type: OAUTH_MESSAGE_TYPE, error: 'server_error', error_description: 'upstream broke' },
+        origin: EXPECTED_ORIGIN,
+        source: popup as any,
+      }))
+
+      await expect(authorizationResponse).resolves.toEqual({ code: undefined, state: undefined, error: 'server_error', errorDescription: 'upstream broke' })
+    })
+
     const VALID_DATA = { type: OAUTH_MESSAGE_TYPE, code: 'c', state: 's' }
     for (const { name, data, origin, fromPopup } of [
       { name: 'from the wrong origin', data: VALID_DATA, origin: 'https://evil.example.com', fromPopup: true },
@@ -119,7 +132,7 @@ describe('oauth-popup', () => {
       { name: 'missing a type', data: { code: 'c', state: 's' }, origin: EXPECTED_ORIGIN, fromPopup: true },
       { name: 'with the wrong type', data: { ...VALID_DATA, type: 'some-other-type' }, origin: EXPECTED_ORIGIN, fromPopup: true },
       { name: 'whose data is not an object', data: 'just a string', origin: EXPECTED_ORIGIN, fromPopup: true },
-      { name: 'whose state is not a string', data: { ...VALID_DATA, state: 123 }, origin: EXPECTED_ORIGIN, fromPopup: true },
+      { name: 'whose state is not a string and which carries no error', data: { ...VALID_DATA, state: 123 }, origin: EXPECTED_ORIGIN, fromPopup: true },
     ]) {
       it(`ignores a message ${name}`, async () => {
         const popup = makePopup()

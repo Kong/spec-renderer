@@ -67,12 +67,14 @@ export const awaitAuthorizationResponse = (popup: Window, expectedOrigin: string
         return
       }
       const { type, state, code, error, error_description: errorDescription } = data as Record<string, unknown>
-      if (type !== OAUTH_MESSAGE_TYPE || typeof state !== 'string') {
+      const text = (value: unknown): string | undefined => typeof value === 'string' ? value : undefined
+      // Accept a stateless error too: a non-compliant provider can redirect with an error and no state,
+      // and authorize() surfaces it instead of waiting out the timeout. A success still needs a valid state.
+      if (type !== OAUTH_MESSAGE_TYPE || (typeof state !== 'string' && text(error) === undefined)) {
         // The message is not the expected OAuth response, ignore it.
         return
       }
-      const text = (value: unknown): string | undefined => typeof value === 'string' ? value : undefined
-      finish(() => resolve({ code: text(code), state, error: text(error), errorDescription: text(errorDescription) }))
+      finish(() => resolve({ code: text(code), state: text(state), error: text(error), errorDescription: text(errorDescription) }))
     }
 
     // Plain listeners and timers, not vueuse ones tied to a component: a panel can unmount mid sign-in.

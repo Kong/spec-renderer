@@ -200,12 +200,23 @@ export default function useOAuthPkce() {
 
       // wait for the authorization response from the popup (communicated via postMessage)
       const params = await authorizationResponse
-      // check state first, a mismatch never reaches the token endpoint
+
+      const providerError = (error: string): Error =>
+        new Error(
+          error === 'access_denied'
+            ? 'Access was denied at the identity provider.'
+            : params.errorDescription || error)
+
+      // a non-compliant provider can send an error with no state, surface it: an error can only fail the flow
+      if (params.state === undefined && params.error) {
+        throw providerError(params.error)
+      }
+      // check state before using the code, a mismatch never reaches the token endpoint
       if (params.state !== challenge.state) {
         throw new Error('Sign-in could not be verified (state mismatch) and was cancelled. Please try again.')
       }
       if (params.error) {
-        throw new Error(params.error === 'access_denied' ? 'Access was denied at the identity provider.' : params.errorDescription || params.error)
+        throw providerError(params.error)
       }
       if (!params.code) {
         throw new Error('The identity provider did not return an authorization code.')

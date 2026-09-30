@@ -428,6 +428,27 @@ describe('authorize callback error taxonomy', () => {
     expect(fetch).not.toHaveBeenCalled()
   })
 
+  it('surfaces the provider error when a non-compliant provider posts an error with no state', async () => {
+    const target = buildTarget()
+    const { errorFor } = useOAuthPkce()
+
+    // state: undefined overrides answer()'s default, so the callback carries no state at all
+    await startSignIn(target).answer({ state: undefined, error: 'server_error', errorDescription: 'Something broke upstream' })
+
+    expect(errorFor(target)).toBe('Something broke upstream')
+    expect(fetch).not.toHaveBeenCalled()
+  })
+
+  it('still rejects a state mismatch when the error carries a wrong state', async () => {
+    const target = buildTarget()
+    const { errorFor } = useOAuthPkce()
+
+    await startSignIn(target).answer({ state: 'not-the-real-state', error: 'server_error' })
+
+    expect(errorFor(target)).toContain('state mismatch')
+    expect(fetch).not.toHaveBeenCalled()
+  })
+
   for (const { name, params, expected } of [
     { name: 'maps error=access_denied to a user-facing denial message', params: { error: 'access_denied' }, expected: 'Access was denied at the identity provider.' },
     { name: 'uses error_description for another error', params: { error: 'server_error', errorDescription: 'Something broke upstream' }, expected: 'Something broke upstream' },
