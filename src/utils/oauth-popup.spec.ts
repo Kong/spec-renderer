@@ -87,7 +87,7 @@ describe('oauth-popup', () => {
   describe('awaitAuthorizationResponse', () => {
     it('resolves with code/state on a valid message, mapping error_description to errorDescription', async () => {
       const popup = makePopup()
-      const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
+      const { authorizationResponse } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
 
       window.dispatchEvent(new MessageEvent('message', {
         data: { type: OAUTH_MESSAGE_TYPE, code: 'the-code', state: 'the-state', error_description: 'oops' },
@@ -95,13 +95,13 @@ describe('oauth-popup', () => {
         source: popup as any,
       }))
 
-      const result = await promise
+      const result = await authorizationResponse
       expect(result).toEqual({ code: 'the-code', state: 'the-state', error: undefined, errorDescription: 'oops' })
     })
 
     it('accepts a null source with the correct origin', async () => {
       const popup = makePopup()
-      const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
+      const { authorizationResponse } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
 
       window.dispatchEvent(new MessageEvent('message', {
         data: { type: OAUTH_MESSAGE_TYPE, code: 'c', state: 's' },
@@ -109,7 +109,7 @@ describe('oauth-popup', () => {
         source: null,
       }))
 
-      await expect(promise).resolves.toEqual({ code: 'c', state: 's', error: undefined, errorDescription: undefined })
+      await expect(authorizationResponse).resolves.toEqual({ code: 'c', state: 's', error: undefined, errorDescription: undefined })
     })
 
     const VALID_DATA = { type: OAUTH_MESSAGE_TYPE, code: 'c', state: 's' }
@@ -123,20 +123,20 @@ describe('oauth-popup', () => {
     ]) {
       it(`ignores a message ${name}`, async () => {
         const popup = makePopup()
-        const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
+        const { authorizationResponse } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
 
         window.dispatchEvent(new MessageEvent('message', { data, origin, source: (fromPopup ? popup : makePopup()) as any }))
 
-        expect(await isStillPending(promise)).toBe(true)
+        expect(await isStillPending(authorizationResponse)).toBe(true)
       })
     }
 
     it('rejects with the closed message when the popup is closed by the user before any message', async () => {
       vi.useFakeTimers()
       const popup = makePopup()
-      const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
+      const { authorizationResponse } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
 
-      const assertion = expect(promise).rejects.toThrow('closed before returning an authorization code')
+      const assertion = expect(authorizationResponse).rejects.toThrow('closed before returning an authorization code')
       popup.closed = true
       await vi.advanceTimersByTimeAsync(POPUP_POLL_MS + 100)
 
@@ -147,9 +147,9 @@ describe('oauth-popup', () => {
       vi.useFakeTimers()
       vi.stubGlobal('crossOriginIsolated', true)
       const popup = makePopup()
-      const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
+      const { authorizationResponse } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
 
-      const assertion = expect(promise).rejects.toThrow('Cross-Origin-Opener-Policy')
+      const assertion = expect(authorizationResponse).rejects.toThrow('Cross-Origin-Opener-Policy')
       popup.closed = true
       await vi.advanceTimersByTimeAsync(POPUP_POLL_MS + 100)
 
@@ -159,9 +159,9 @@ describe('oauth-popup', () => {
     it('rejects with the timeout message after the timeout elapses with no message and no close', async () => {
       vi.useFakeTimers()
       const popup = makePopup()
-      const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
+      const { authorizationResponse } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
 
-      const assertion = expect(promise).rejects.toThrow('Sign-in timed out')
+      const assertion = expect(authorizationResponse).rejects.toThrow('Sign-in timed out')
       await vi.advanceTimersByTimeAsync(FLOW_TIMEOUT_MS + 10)
 
       await assertion
@@ -170,7 +170,7 @@ describe('oauth-popup', () => {
     it('removes the listener after resolving, so a second message has no effect', async () => {
       const popup = makePopup()
       const removeSpy = vi.spyOn(window, 'removeEventListener')
-      const { promise } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
+      const { authorizationResponse } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
 
       window.dispatchEvent(new MessageEvent('message', {
         data: { type: OAUTH_MESSAGE_TYPE, code: 'first', state: 's' },
@@ -178,7 +178,7 @@ describe('oauth-popup', () => {
         source: popup as any,
       }))
 
-      const result = await promise
+      const result = await authorizationResponse
       expect(result.code).toBe('first')
       expect(removeSpy).toHaveBeenCalledWith('message', expect.any(Function))
 
@@ -189,15 +189,15 @@ describe('oauth-popup', () => {
         source: popup as any,
       }))
 
-      await expect(promise).resolves.toEqual(result)
+      await expect(authorizationResponse).resolves.toEqual(result)
     })
 
     it('cancel() removes the listener and rejects the promise with FLOW_CANCELLED', async () => {
       const popup = makePopup()
       const removeSpy = vi.spyOn(window, 'removeEventListener')
-      const { promise, cancel } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
+      const { authorizationResponse, cancel } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
 
-      const assertion = expect(promise).rejects.toThrow(FLOW_CANCELLED)
+      const assertion = expect(authorizationResponse).rejects.toThrow(FLOW_CANCELLED)
       cancel()
 
       await assertion
@@ -206,10 +206,10 @@ describe('oauth-popup', () => {
 
     it('attempts popup.close() on a terminal path', async () => {
       const popup = makePopup()
-      const { promise, cancel } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
+      const { authorizationResponse, cancel } = awaitAuthorizationResponse(popup as unknown as Window, EXPECTED_ORIGIN)
 
       cancel()
-      await promise.catch(() => {})
+      await authorizationResponse.catch(() => {})
 
       expect(popup.close).toHaveBeenCalledTimes(1)
     })

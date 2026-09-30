@@ -9,8 +9,8 @@ export const POPUP_WIDTH = 600
 export const POPUP_HEIGHT = 760
 export const POPUP_POLL_MS = 500
 export const FLOW_TIMEOUT_MS = 5 * 60_000
-/** Rejection message for a flow cancelled from code. It's not the user's error, so callers ignore it. */
-export const FLOW_CANCELLED = 'cancelled'
+/** Rejection message for a flow cancelled from code. It's not the user's error, so callers ignore it. Namespaced: an identity-provider error string must never collide with it. */
+export const FLOW_CANCELLED = 'kong-spec-renderer:flow-cancelled'
 
 /**
  * Open an empty popup centred on the window, or return null when the browser blocked it.
@@ -24,6 +24,8 @@ export const openAuthorizationPopup = (): Window | null => {
   const left = Math.max(0, window.screenX + (window.outerWidth - POPUP_WIDTH) / 2)
   const top = Math.max(0, window.screenY + (window.outerHeight - POPUP_HEIGHT) / 2)
   // Never add noopener or noreferrer, they cut window.opener, which the callback page posts back through.
+  // Accepted risk: an attacker-controlled authorizationUrl can then navigate the host window, with no cheap fix here.
+  // Hosts rendering untrusted specs should vet the security scheme URLs before passing the spec in.
   const popup = window.open('', POPUP_NAME, `popup=1,width=${POPUP_WIDTH},height=${POPUP_HEIGHT},left=${left},top=${top},resizable=1,scrollbars=1`)
   // some blockers return a stub whose `closed` is undefined
   return popup?.closed === false ? popup : null
@@ -36,7 +38,7 @@ export const openAuthorizationPopup = (): Window | null => {
 export const awaitAuthorizationResponse = (popup: Window, expectedOrigin: string): AwaitAuthorizationResponseResult => {
   let cancel = (): void => {}
 
-  const promise = new Promise<AuthorizationResponseParams>((resolve, reject) => {
+  const authorizationResponse = new Promise<AuthorizationResponseParams>((resolve, reject) => {
     let settled = false
     const finish = (settle: () => void): void => {
       if (settled) {
@@ -66,6 +68,7 @@ export const awaitAuthorizationResponse = (popup: Window, expectedOrigin: string
       }
       const { type, state, code, error, error_description: errorDescription } = data as Record<string, unknown>
       if (type !== OAUTH_MESSAGE_TYPE || typeof state !== 'string') {
+        // The message is not the expected OAuth response, ignore it.
         return
       }
       const text = (value: unknown): string | undefined => typeof value === 'string' ? value : undefined
@@ -92,5 +95,5 @@ export const awaitAuthorizationResponse = (popup: Window, expectedOrigin: string
     cancel = () => finish(() => reject(new Error(FLOW_CANCELLED)))
   })
 
-  return { promise, cancel }
+  return { authorizationResponse, cancel }
 }

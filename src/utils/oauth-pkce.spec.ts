@@ -179,7 +179,7 @@ describe('oauth-pkce', () => {
     })
 
     it('flattens a valid authorizationCode flow', () => {
-      const target = buildPkceTarget('oauth2Auth', scheme({
+      const target = buildPkceTarget(scheme({
         authorizationCode: {
           authorizationUrl: 'https://auth.example.com/authorize',
           tokenUrl: 'https://auth.example.com/token',
@@ -197,7 +197,7 @@ describe('oauth-pkce', () => {
     })
 
     it('defaults scopes to an empty object when the flow has none', () => {
-      const target = buildPkceTarget('oauth2Auth', scheme({
+      const target = buildPkceTarget(scheme({
         authorizationCode: {
           authorizationUrl: 'https://auth.example.com/authorize',
           tokenUrl: 'https://auth.example.com/token',
@@ -216,7 +216,7 @@ describe('oauth-pkce', () => {
       { name: 'tokenUrl is a javascript: URL', flows: { authorizationCode: { authorizationUrl: 'https://auth.example.com/authorize', tokenUrl: 'javascript:evil();//', scopes: {} } } },
     ]) {
       it(`returns undefined when ${name}`, () => {
-        expect(buildPkceTarget('oauth2Auth', scheme(flows as IOauth2SecurityScheme['flows']), 'client-123')).toBeUndefined()
+        expect(buildPkceTarget(scheme(flows as IOauth2SecurityScheme['flows']), 'client-123')).toBeUndefined()
       })
     }
 
@@ -229,8 +229,8 @@ describe('oauth-pkce', () => {
         },
       }
 
-      const targetA = buildPkceTarget('oauth2Auth', scheme(flows), 'client-a')
-      const targetB = buildPkceTarget('oauth2Auth', scheme(flows), 'client-b')
+      const targetA = buildPkceTarget(scheme(flows), 'client-a')
+      const targetB = buildPkceTarget(scheme(flows), 'client-b')
 
       expect(targetA?.fingerprint).not.toBe(targetB?.fingerprint)
     })

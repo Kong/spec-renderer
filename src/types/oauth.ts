@@ -44,7 +44,7 @@ export interface BuildAuthorizeUrlParams {
 }
 
 export interface AwaitAuthorizationResponseResult {
-  promise: Promise<AuthorizationResponseParams>
+  authorizationResponse: Promise<AuthorizationResponseParams>
   cancel: () => void
 }
 

@@ -152,7 +152,7 @@ export default function useOAuthPkce() {
       return fail('Set the oauthRedirectUri prop to enable OAuth sign-in.')
     }
     if (!canUsePkce()) {
-      return fail('Signing in requires a secure context. Open this page over HTTPS (or localhost) to use OAuth.')
+      return fail('Signing in requires a secure context. Open this page over HTTPS, or on localhost, to use OAuth.')
     }
     let redirect: URL
     try {
@@ -163,7 +163,7 @@ export default function useOAuthPkce() {
     if (!isAbsoluteHttpUrl(redirect.href)) {
       return fail('The configured redirect URI must use http or https.')
     }
-    // buildPkceTarget already checks these, but a javascript: authorizationUrl would run in the same-origin popup
+    // buildPkceTarget checks these too, but a javascript: authorizationUrl would run in the same-origin popup
     if (!isAbsoluteHttpUrl(target.authorizationUrl) || !isAbsoluteHttpUrl(target.tokenUrl)) {
       return fail('The security scheme authorization or token URL is not a valid absolute http(s) URL.')
     }
@@ -179,16 +179,16 @@ export default function useOAuthPkce() {
     }
 
     // Register before the first await, so a double click during the hash still sees this flow.
-    const { promise, cancel } = awaitAuthorizationResponse(popup, redirect.origin)
-    // awaited below, this stops an early exit from leaving an unhandled rejection
-    promise.catch(() => {})
+    const { authorizationResponse, cancel } = awaitAuthorizationResponse(popup, redirect.origin)
+    authorizationResponse.catch(() => {}) // awaited below, this stops an early exit from leaving an unhandled rejection
     cancelActiveFlow = cancel
     errors.value[k] = undefined
     busy.value[k] = true
 
     try {
       const challenge = await createPkceChallenge()
-      // replace, not href: no history entry, and it still works once the popup is cross-origin
+      // redirect the popup to the authorization URL with the PKCE parameters
+      // replace, instead of href, so clicking "Back" in the popup doesn't land on the blank page
       popup.location.replace(buildAuthorizeUrl({
         authorizationUrl: target.authorizationUrl,
         clientId,
@@ -198,7 +198,8 @@ export default function useOAuthPkce() {
         codeChallenge: challenge.challenge,
       }))
 
-      const params = await promise
+      // wait for the authorization response from the popup (communicated via postMessage)
+      const params = await authorizationResponse
       // check state first, a mismatch never reaches the token endpoint
       if (params.state !== challenge.state) {
         throw new Error('Sign-in could not be verified (state mismatch) and was cancelled. Please try again.')
@@ -219,7 +220,7 @@ export default function useOAuthPkce() {
       })))
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
-      // a cancel from code isn't the user's error
+      // show the error, unless the flow was cancelled programmatically from code
       if (message !== FLOW_CANCELLED) {
         errors.value[k] = message
       }
@@ -235,12 +236,11 @@ export default function useOAuthPkce() {
   }
 
   /** Sign out of one scheme and remove its token from Try It requests. */
-  const clearCredentials = (target: Oauth2PkceTarget): void => {
-    const k = target.schemeKey
-    delete tokens.value[k]
-    errors.value[k] = undefined
-    stopExpiryTimer(k)
-    commitToken(k)
+  const clearCredentials = ({ schemeKey }: Oauth2PkceTarget): void => {
+    delete tokens.value[schemeKey]
+    errors.value[schemeKey] = undefined
+    stopExpiryTimer(schemeKey)
+    commitToken(schemeKey)
   }
 
   /** Forget every token and error, and cancel a sign-in in progress. */
