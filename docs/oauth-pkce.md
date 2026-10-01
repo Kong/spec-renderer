@@ -135,8 +135,6 @@ The sandbox uses the public demo server of Duende IdentityServer. It is a third-
 6. Log in as `bob` / `bob` (or `alice` / `alice`). The popup closes and the badge shows Authenticated.
 7. Click Send. The request returns 200.
 
-To try the client credentials side, pick `DuendeBoth` and use Client ID `m2m` with Client Secret `secret`. Both flows share one Client ID field, so only one flow works at a time: entering `m2m` drops the PKCE sign-in, and entering the PKCE client ID replaces `m2m`.
-
 ## Troubleshooting
 
 | Symptom | Likely cause |
