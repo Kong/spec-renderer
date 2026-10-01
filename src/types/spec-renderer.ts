@@ -63,6 +63,13 @@ export interface SpecRendererProps {
   showPoweredBy?: boolean | 'true' | 'false'
   /** The max depth until which nested properties should remain expanded by default. */
   maxExpandedDepth?: number | string
+  /**
+   * URL of the host's OAuth callback page, registered with the identity provider as the redirect URI.
+   * Setting it turns on OAuth2 authorization code (PKCE) sign-in in Try It.
+   * Without it, authorizationCode schemes keep the plain access token input.
+   * See `docs/oauth-pkce.md` for the callback page contract.
+   */
+  oauthRedirectUri?: string
 }
 
 /**

@@ -1,0 +1,96 @@
+openapi: 3.1.0
+info:
+  title: OAuth2 Authorization Code (PKCE)
+  description: |
+    A spec for trying the OAuth 2.0 authorization code + PKCE sign-in in the Try It panel.
+
+    It uses the public demo server of Duende IdentityServer (`https://demo.duendesoftware.com`).
+    This is a third-party demo that can change or go down at any time. Use it for local testing
+    only and never enter real credentials.
+
+    Pick a security scheme in the Try It auth dropdown:
+
+    - **DuendePkce**: authorization code flow only. Client ID `interactive.public.short`
+      (access token lasts 75 seconds, so you can see the Expired badge) or `interactive.public`
+      (1 hour). Select the `api` scope, click Authorize and log in as `bob` / `bob`.
+    - **DuendeBoth**: declares both client credentials and authorization code flows.
+      For client credentials use Client ID `m2m` and Client Secret `secret`.
+      Both flows share one Client ID, so only one flow works at a time.
+    - **ApiKey**: a plain API key, for contrast. It has no status badge.
+
+    The redirect URI is set in the sandbox playground and points to `oauth-callback.html`.
+    See `docs/oauth-pkce.md` for details.
+  version: 1.0.0
+
+servers:
+  - url: https://demo.duendesoftware.com/api
+
+paths:
+  /test:
+    get:
+      operationId: getTest
+      summary: Get test data
+      description: |
+        Returns the claims in the access token. Requires an access token with the `api` scope.
+        Use Authorize with `DuendePkce`, then Send.
+      security:
+        - DuendePkce:
+            - api
+        - DuendeBoth:
+            - api
+        - ApiKey: []
+      responses:
+        '200':
+          description: The request was authorized.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                    value:
+                      type: string
+        '401':
+          description: The access token is missing, invalid or expired.
+
+components:
+  securitySchemes:
+    DuendePkce:
+      type: oauth2
+      description: |
+        Authorization code flow with PKCE (S256), no client secret.
+        Client ID: `interactive.public.short` (75 second token) or `interactive.public` (1 hour token).
+        Log in as `bob` / `bob` or `alice` / `alice`.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://demo.duendesoftware.com/connect/authorize
+          tokenUrl: https://demo.duendesoftware.com/connect/token
+          scopes:
+            api: Access the demo API
+
+    DuendeBoth:
+      type: oauth2
+      description: |
+        Declares both flows, to show the dual-flow UI.
+        Authorization code: Client ID `interactive.public.short`, log in as `bob` / `bob`.
+        Client credentials: Client ID `m2m`, Client Secret `secret`.
+        Both flows share one Client ID, so only one works at a time: entering `m2m` drops the PKCE sign-in, and entering the PKCE client ID replaces `m2m`.
+      flows:
+        clientCredentials:
+          tokenUrl: https://demo.duendesoftware.com/connect/token
+          scopes:
+            api: Access the demo API
+        authorizationCode:
+          authorizationUrl: https://demo.duendesoftware.com/connect/authorize
+          tokenUrl: https://demo.duendesoftware.com/connect/token
+          scopes:
+            api: Access the demo API
+
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: A plain API key header. The demo API ignores it, so the request returns 401.

@@ -2,6 +2,7 @@ import { describe, it, vi, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import SpecDocument from './SpecDocument.vue'
 import { alphaServiceNode } from './SpecDocument.fixtures'
+import composables from '@/composables'
 import type { ServiceNode } from '@/types'
 
 window.scrollTo = vi.fn()
@@ -360,4 +361,62 @@ describe('<SpecDocument />', () => {
     })
   })
 
+  describe('oauthRedirectUri', () => {
+    const authCodeScheme = {
+      id: 'auth-code-scheme',
+      key: 'AuthCodeAuth',
+      extensions: {},
+      type: 'oauth2',
+      flows: {
+        authorizationCode: {
+          authorizationUrl: 'https://auth.example.com/authorize',
+          tokenUrl: 'https://auth.example.com/token',
+          scopes: {},
+        },
+      },
+    }
+    const buildDocument = () => ({
+      type: 'http_service',
+      uri: '/',
+      name: 'OAuth API',
+      data: { version: '1.0.0', name: 'OAuth API', servers: [{ id: 'server-1', url: 'https://api.example.com' }] },
+      children: [{
+        type: 'http_operation',
+        uri: '/operations/getWidgets',
+        data: {
+          id: 'op-widgets',
+          method: 'get',
+          path: '/widgets',
+          responses: [],
+          servers: [{ id: 'server-1', url: 'https://api.example.com' }],
+          security: [[authCodeScheme]],
+        },
+        name: 'Get widgets',
+      }],
+    } as unknown as ServiceNode)
+
+    // the Client ID is typed so Authorize is only ever disabled by the redirect URI
+    const authorizeDisabled = async (oauthRedirectUri?: string) => {
+      composables.useAuth().authInputs.value = { 'AuthCodeAuth-clientId': 'client-1' }
+      const wrapper = mount(SpecDocument, {
+        props: { document: buildDocument(), currentPath: '/', ...(oauthRedirectUri === undefined ? {} : { oauthRedirectUri }) },
+      })
+      const button = wrapper.findTestId('tryit-auth-authorize-op-widgets')
+      expect(button.exists()).toBe(true)
+      return button.attributes('disabled') !== undefined
+    }
+
+    it('reaches the PKCE panel through the provide, enabling Authorize', async () => {
+      expect(await authorizeDisabled('https://host.test/oauth-callback')).toBe(false)
+    })
+
+    it('keeps the generic token input and no PKCE panel when the prop is not passed', () => {
+      const wrapper = mount(SpecDocument, {
+        props: { document: buildDocument(), currentPath: '/' },
+      })
+
+      expect(wrapper.findTestId('tryit-auth-authorize-op-widgets').exists()).toBe(false)
+      expect(wrapper.find('#auth-token-input-Access\\ Token-op-widgets').exists()).toBe(true)
+    })
+  })
 })

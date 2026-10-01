@@ -230,8 +230,9 @@ const doApiCall = async (callAsIs = false) => {
   const authResult: PreRequestAuthResult = await (authComponentRef.value?.runPreRequestAuth?.() ?? { ok: true })
   if (!authResult.ok) {
     // auth failed before the real request went out; show its response/error instead and bail
+    // replace any earlier response, or it would hide this error
+    response.value = authResult.response
     if (authResult.response) {
-      response.value = authResult.response
       responseError.value = new Error(`Error: ${authResult.response.status} ${authResult.response.statusText}`)
     } else {
       responseError.value = authResult.error ?? new Error('Authentication failed')
