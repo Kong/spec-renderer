@@ -435,4 +435,42 @@ describe('<TryIt />', () => {
     expect(wrapper.findTestId('tryit-call-button-123').attributes('disabled')).toBeUndefined()
     expect(wrapper.findComponent(TryItResponse).props('responseError')).toBeInstanceOf(Error)
   })
+
+  // Regression: a failed auth step kept the previous response on screen, which hid the error.
+  it('replaces the previous response when the auth step fails', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] })
+    const basic = { id: 'basic', key: 'Basic', extensions: {}, type: 'http' as const, scheme: 'basic' as const }
+    const group = { title: 'Basic', key: 'Basic', schemeList: [basic] }
+    const { activeSecurityScheme, authInputs } = composables.useAuth()
+    activeSecurityScheme.value = group.key
+    authInputs.value = { 'Basic-username': 'user', 'Basic-password': 'secret' }
+    const wrapper = mount(TryIt, {
+      props: {
+        data: {
+          id: '123',
+          method: 'get',
+          path: '/sample-path',
+          responses: [],
+          servers: [{ id: 'sample-server-id', url: 'https://global.api.konghq.com/v2' }],
+          security: [[basic]],
+        },
+        serverUrl: 'https://global.api.konghq.com/v2',
+      },
+      global: { provide: { 'security-scheme-group-list': ref([group]) } },
+    })
+    global.fetch = vi.fn().mockResolvedValue(new Response('{}', { status: 200 }))
+
+    await wrapper.findTestId('tryit-call-button-123').trigger('click')
+    await flushPromises()
+    expect(wrapper.findComponent(TryItResponse).props('response')).toBeInstanceOf(Response)
+
+    // btoa throws on characters outside Latin-1, so the next auth step fails
+    authInputs.value['Basic-username'] = '名前'
+    await wrapper.findTestId('tryit-call-button-123').trigger('click')
+    await flushPromises()
+
+    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(wrapper.findComponent(TryItResponse).props('response')).toBeUndefined()
+    expect(wrapper.findComponent(TryItResponse).props('responseError')).toBeInstanceOf(Error)
+  })
 })

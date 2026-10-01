@@ -1,0 +1,43 @@
+<!doctype html>
+<!--
+  OAuth2 callback page for the spec-renderer Try It sign-in popup.
+  Serve a copy at the URL you pass as oauthRedirectUri (attribute: oauth-redirect-uri)
+  and register that exact URL with your identity provider. See docs/oauth-pkce.md.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Signing in...</title>
+</head>
+<body>
+  <p id="message">Signing in...</p>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search)
+      var message = {
+        type: 'kong-spec-renderer:oauth-callback',
+        state: params.get('state') || undefined,
+        // Never log or display the code, it is a live single-use credential
+        code: params.get('code') || undefined,
+        error: params.get('error') || undefined,
+        error_description: params.get('error_description') || undefined,
+      }
+
+      // Keep the code out of the browser history
+      window.history.replaceState(null, '', window.location.pathname)
+
+      var text = document.getElementById('message')
+      if (!window.opener) {
+        // Usually the opener page sets Cross-Origin-Opener-Policy: same-origin
+        text.textContent = 'This window lost its connection to the page that opened it. You can close it.'
+        return
+      }
+
+      // Target origin must be this page's own origin, never '*'
+      window.opener.postMessage(message, window.location.origin)
+      text.textContent = 'You can close this window.'
+      window.close()
+    })()
+  </script>
+</body>
+</html>

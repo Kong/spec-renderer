@@ -15,6 +15,7 @@ An online API specification editor is available at [api-documentation.dev](https
     - [Example for html/script](#-example-for-htmlscript)
   - [Props](#props)
     - [v-model](#v-model)
+  - [OAuth2 authorization code + PKCE in Try It](#oauth2-authorization-code--pkce-in-try-it)
 - [CLI](#cli)
 - [Contributing & Local Development](#contributing--local-development)
   - [Development Sandbox](#development-sandbox)
@@ -226,6 +227,12 @@ As of now only `SpecRenderer` as single component is supported for this. Let us 
 ### Props
 
 [Check out the `SpecRendererProps` interface](./src/types/spec-renderer.ts) for all props valid for the `SpecRenderer` component.
+
+### OAuth2 authorization code + PKCE in Try It
+
+The Try It panel can sign users in with the OAuth 2.0 authorization code flow and PKCE. It is opt-in: pass the `oauthRedirectUri` prop (`oauth-redirect-uri` for the web component) and serve a small callback page at that URI.
+
+See [docs/oauth-pkce.md](./docs/oauth-pkce.md) for setup, the callback page, identity provider and CORS requirements, and troubleshooting.
 
 ## CLI
 
