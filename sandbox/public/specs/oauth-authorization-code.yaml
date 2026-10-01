@@ -1,0 +1,52 @@
+openapi: 3.1.0
+info:
+  title: OAuth2 Authorization Code (PKCE)
+  description: |
+    Try the OAuth 2.0 authorization code + PKCE sign-in in the Try It panel.
+
+    This uses the public demo server of Duende IdentityServer (`https://demo.duendesoftware.com`).
+    It is a third-party demo that can change or go down at any time. Use it for local testing
+    only and never enter real credentials.
+
+    Select the `api` scope, click Authorize and log in as `bob` / `bob`. See the `DuendePkce`
+    scheme for the client IDs, and `docs/oauth-pkce.md` for details.
+  version: 1.0.0
+
+servers:
+  - url: https://demo.duendesoftware.com/api
+
+paths:
+  /test:
+    get:
+      operationId: getTest
+      summary: Get test data
+      description: |
+        Returns the claims in the access token. Requires an access token with the `api` scope.
+        Use Authorize with `DuendePkce`, then Send.
+      security:
+        - DuendePkce:
+            - api
+      responses:
+        '200':
+          description: The request was authorized.
+          content:
+            application/json:
+              schema:
+                type: array
+        '401':
+          description: The access token is missing, invalid or expired.
+
+components:
+  securitySchemes:
+    DuendePkce:
+      type: oauth2
+      description: |
+        Authorization code flow with PKCE (S256), no client secret.
+        Client ID: `interactive.public.short` (75 second token) or `interactive.public` (1 hour token).
+        Log in as `bob` / `bob` or `alice` / `alice`.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://demo.duendesoftware.com/connect/authorize
+          tokenUrl: https://demo.duendesoftware.com/connect/token
+          scopes:
+            api: Access the demo API

@@ -69,6 +69,7 @@
           :markdown-styles="markdownStyles"
           :max-expanded-depth="maxExpandedDepth"
           :navigation-type="navigationType"
+          :oauth-redirect-uri="oauthRedirectUri"
           :spec-url="specUrl"
           :table-of-contents="tableOfContents"
           @content-scrolled="onDocumentScroll"
@@ -116,6 +117,7 @@ const {
   enableOperationLinks = false,
   showPoweredBy = false,
   maxExpandedDepth = DEFAULT_EXPANDED_PROPERTIES_DEPTH,
+  oauthRedirectUri = '',
 } = defineProps<SpecRendererProps>()
 
 // TODO: introduce and handle isParsed. show parsing state while parsing

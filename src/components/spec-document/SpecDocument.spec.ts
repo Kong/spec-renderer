@@ -2,6 +2,7 @@ import { describe, it, vi, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import SpecDocument from './SpecDocument.vue'
 import { alphaServiceNode } from './SpecDocument.fixtures'
+import composables from '@/composables'
 import type { ServiceNode } from '@/types'
 
 window.scrollTo = vi.fn()
@@ -360,4 +361,50 @@ describe('<SpecDocument />', () => {
     })
   })
 
+  describe('oauthRedirectUri', () => {
+    const authCodeScheme = {
+      id: 'auth-code-scheme',
+      key: 'AuthCodeAuth',
+      extensions: {},
+      type: 'oauth2',
+      flows: {
+        authorizationCode: {
+          authorizationUrl: 'https://auth.example.com/authorize',
+          tokenUrl: 'https://auth.example.com/token',
+          scopes: {},
+        },
+      },
+    }
+    const buildDocument = () => ({
+      type: 'http_service',
+      uri: '/',
+      name: 'OAuth API',
+      data: { version: '1.0.0', name: 'OAuth API', servers: [{ id: 'server-1', url: 'https://api.example.com' }] },
+      children: [{
+        type: 'http_operation',
+        uri: '/operations/getWidgets',
+        data: {
+          id: 'op-widgets',
+          method: 'get',
+          path: '/widgets',
+          responses: [],
+          servers: [{ id: 'server-1', url: 'https://api.example.com' }],
+          security: [[authCodeScheme]],
+        },
+        name: 'Get widgets',
+      }],
+    } as unknown as ServiceNode)
+
+    it('reaches the PKCE panel through the provide, enabling Authorize', () => {
+      // the Client ID is typed so Authorize is only ever disabled by the redirect URI
+      composables.useAuth().authInputs.value = { 'AuthCodeAuth-clientId': 'client-1' }
+      const wrapper = mount(SpecDocument, {
+        props: { document: buildDocument(), currentPath: '/', oauthRedirectUri: 'https://host.test/oauth-callback' },
+      })
+
+      const button = wrapper.findTestId('tryit-auth-authorize-op-widgets')
+      expect(button.exists()).toBe(true)
+      expect(button.attributes('disabled')).toBeUndefined()
+    })
+  })
 })

@@ -24,8 +24,7 @@ export const openAuthorizationPopup = (): Window | null => {
   const left = Math.max(0, window.screenX + (window.outerWidth - POPUP_WIDTH) / 2)
   const top = Math.max(0, window.screenY + (window.outerHeight - POPUP_HEIGHT) / 2)
   // Never add noopener or noreferrer, they cut window.opener, which the callback page posts back through.
-  // Accepted risk: an attacker-controlled authorizationUrl can then navigate the host window, with no cheap fix here.
-  // Hosts rendering untrusted specs should vet the security scheme URLs before passing the spec in.
+  // Accepted risk, see the trust model in docs/oauth-pkce.md.
   const popup = window.open('', POPUP_NAME, `popup=1,width=${POPUP_WIDTH},height=${POPUP_HEIGHT},left=${left},top=${top},resizable=1,scrollbars=1`)
   // some blockers return a stub whose `closed` is undefined
   return popup?.closed === false ? popup : null
