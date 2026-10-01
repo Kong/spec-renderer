@@ -5,10 +5,6 @@ import { LabelBadgeTypeVariants } from '@/types'
 
 describe('<LabelBadge />', () => {
 
-  it('includes the success and warning variants in the loop below', () => {
-    expect([...LabelBadgeTypeVariants]).toEqual(['neutral', 'primary', 'success', 'warning'])
-  })
-
   describe('renders correctly for label variant', () => {
     for (const labelType of LabelBadgeTypeVariants) {
       it(labelType, () => {

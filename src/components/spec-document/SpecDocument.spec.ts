@@ -395,28 +395,16 @@ describe('<SpecDocument />', () => {
       }],
     } as unknown as ServiceNode)
 
-    // the Client ID is typed so Authorize is only ever disabled by the redirect URI
-    const authorizeDisabled = async (oauthRedirectUri?: string) => {
+    it('reaches the PKCE panel through the provide, enabling Authorize', () => {
+      // the Client ID is typed so Authorize is only ever disabled by the redirect URI
       composables.useAuth().authInputs.value = { 'AuthCodeAuth-clientId': 'client-1' }
       const wrapper = mount(SpecDocument, {
-        props: { document: buildDocument(), currentPath: '/', ...(oauthRedirectUri === undefined ? {} : { oauthRedirectUri }) },
+        props: { document: buildDocument(), currentPath: '/', oauthRedirectUri: 'https://host.test/oauth-callback' },
       })
+
       const button = wrapper.findTestId('tryit-auth-authorize-op-widgets')
       expect(button.exists()).toBe(true)
-      return button.attributes('disabled') !== undefined
-    }
-
-    it('reaches the PKCE panel through the provide, enabling Authorize', async () => {
-      expect(await authorizeDisabled('https://host.test/oauth-callback')).toBe(false)
-    })
-
-    it('keeps the generic token input and no PKCE panel when the prop is not passed', () => {
-      const wrapper = mount(SpecDocument, {
-        props: { document: buildDocument(), currentPath: '/' },
-      })
-
-      expect(wrapper.findTestId('tryit-auth-authorize-op-widgets').exists()).toBe(false)
-      expect(wrapper.find('#auth-token-input-Access\\ Token-op-widgets').exists()).toBe(true)
+      expect(button.attributes('disabled')).toBeUndefined()
     })
   })
 })

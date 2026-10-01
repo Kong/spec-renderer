@@ -2,21 +2,14 @@ openapi: 3.1.0
 info:
   title: OAuth2 Authorization Code (PKCE)
   description: |
-    A spec for trying the OAuth 2.0 authorization code + PKCE sign-in in the Try It panel.
+    Try the OAuth 2.0 authorization code + PKCE sign-in in the Try It panel.
 
-    It uses the public demo server of Duende IdentityServer (`https://demo.duendesoftware.com`).
-    This is a third-party demo that can change or go down at any time. Use it for local testing
+    This uses the public demo server of Duende IdentityServer (`https://demo.duendesoftware.com`).
+    It is a third-party demo that can change or go down at any time. Use it for local testing
     only and never enter real credentials.
 
-    Pick a security scheme in the Try It auth dropdown:
-
-    - **DuendePkce**: authorization code flow only. Client ID `interactive.public.short`
-      (access token lasts 75 seconds, so you can see the Expired badge) or `interactive.public`
-      (1 hour). Select the `api` scope, click Authorize and log in as `bob` / `bob`.
-    - **ApiKey**: a plain API key, for contrast. It has no status badge.
-
-    The redirect URI is set in the sandbox playground and points to `oauth-callback.html`.
-    See `docs/oauth-pkce.md` for details.
+    Select the `api` scope, click Authorize and log in as `bob` / `bob`. See the `DuendePkce`
+    scheme for the client IDs, and `docs/oauth-pkce.md` for details.
   version: 1.0.0
 
 servers:
@@ -33,7 +26,6 @@ paths:
       security:
         - DuendePkce:
             - api
-        - ApiKey: []
       responses:
         '200':
           description: The request was authorized.
@@ -41,13 +33,6 @@ paths:
             application/json:
               schema:
                 type: array
-                items:
-                  type: object
-                  properties:
-                    type:
-                      type: string
-                    value:
-                      type: string
         '401':
           description: The access token is missing, invalid or expired.
 
@@ -65,9 +50,3 @@ components:
           tokenUrl: https://demo.duendesoftware.com/connect/token
           scopes:
             api: Access the demo API
-
-    ApiKey:
-      type: apiKey
-      in: header
-      name: X-API-Key
-      description: A plain API key header. The demo API ignores it, so the request returns 401.

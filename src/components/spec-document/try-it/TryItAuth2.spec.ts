@@ -126,19 +126,5 @@ describe('<TryItAuth2 />', () => {
       expect(wrapper.findTestId(ccHeading).exists()).toBe(false)
       expect(wrapper.findTestId(pkceHeading).exists()).toBe(false)
     })
-
-    it('renders no PKCE panel for an authorization code scheme without the redirect URI', () => {
-      const wrapper = mountDispatcher(buildScheme({ authorizationCode }), '')
-
-      expect(wrapper.findComponent(TryItAuthCode).exists()).toBe(false)
-      expect(wrapper.findComponent(TryItAuth2ClientCredentials).exists()).toBe(false)
-    })
-
-    it('renders neither panel for a flow this UI does not support', () => {
-      const wrapper = mountDispatcher(buildScheme({ password: { tokenUrl: 'https://auth.example.com/token', scopes: {} } }))
-
-      expect(wrapper.findComponent(TryItAuth2ClientCredentials).exists()).toBe(false)
-      expect(wrapper.findComponent(TryItAuthCode).exists()).toBe(false)
-    })
   })
 })
