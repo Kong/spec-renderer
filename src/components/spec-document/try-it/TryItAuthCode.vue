@@ -101,13 +101,6 @@
     >
       This scheme's authorization or token URL is missing or not an absolute http(s) URL, so sign-in is unavailable.
     </div>
-    <div
-      v-else-if="!oauthRedirectUri"
-      class="auth-hint"
-      :data-testid="`tryit-auth-redirect-hint-${dataId}`"
-    >
-      OAuth sign-in requires the host application to configure the <span class="key-span">oauthRedirectUri</span> prop.
-    </div>
 
     <div
       v-if="error"
@@ -201,68 +194,7 @@ composables.usePreRequestAuth().registerPreRequestAuth(schemeKey, async () => {
 
 <style lang="scss" scoped>
 .panel-body {
-  .param-wrapper {
-    margin-bottom: var(--kui-space-40, $kui-space-40);
-
-    &:first-child {
-      margin-top: var(--kui-space-20, $kui-space-20);
-    }
-
-    &:last-child {
-      margin-bottom: var(--kui-space-20, $kui-space-20);
-    }
-
-    .button-wrapper {
-      align-items: center;
-      display: inline-flex;
-      gap: var(--kui-space-20, $kui-space-20);
-      justify-content: space-between;
-      margin-bottom: var(--kui-space-30, $kui-space-30);
-      margin-top: var(--kui-space-30, $kui-space-30);
-      width: 100%;
-
-      button {
-        background: transparent;
-        border: none;
-        color: var(--kui-color-text-primary, $kui-color-text-primary);
-        cursor: pointer;
-        font-size: var(--kui-font-size-20, $kui-font-size-20);
-        margin-left: var(--kui-space-20, $kui-space-20);
-        margin-right: var(--kui-space-20, $kui-space-20);
-        padding: 0;
-        text-decoration: underline;
-      }
-    }
-  }
-
-  input[type=text] {
-    @include input-default;
-  }
-
-  .scope-wrapper {
-    align-items: center;
-    display: flex;
-    font-size: var(--kui-font-size-20, $kui-font-size-20);
-    gap: var(--kui-space-20, $kui-space-20);
-    line-height: 1.6;
-    margin-bottom: var(--kui-space-20, $kui-space-20);
-
-    input[type=checkbox] {
-      cursor: pointer;
-      height: 12px;
-      width: 12px;
-    }
-
-    label {
-      cursor: pointer;
-    }
-
-    .key-span {
-      font-weight: bold;
-      margin-left: var(--kui-space-20, $kui-space-20);
-    }
-  }
-
+  @include try-it-auth-fields;
 
   .action-row {
     display: flex;
@@ -286,10 +218,6 @@ composables.usePreRequestAuth().registerPreRequestAuth(schemeKey, async () => {
     color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     margin-top: var(--kui-space-30, $kui-space-30);
-
-    .key-span {
-      font-weight: bold;
-    }
   }
 
   .auth-error {

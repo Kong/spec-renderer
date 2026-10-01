@@ -6,7 +6,7 @@ The sign-in happens in a popup. The identity provider redirects the popup to a c
 
 ## Pass the redirect URI
 
-Spec-renderer cannot guess the redirect URI. It has to be a real page that your app serves, registered exactly with the identity provider, and running the small callback script below. Without the prop nothing changes for existing hosts: `authorizationCode` schemes keep the Access Token input, where users paste a token, and a scheme that declares both flows shows only the client credentials panel. Passing the prop turns the PKCE panel and the status badge on.
+Spec-renderer cannot guess the redirect URI. It has to be a real page that your app serves, registered exactly with the identity provider, and running the small callback script described below. Without the prop nothing changes for existing hosts: `authorizationCode` schemes keep the Access Token input, where users paste a token, and a scheme that declares both flows shows only the client credentials panel. Passing the prop turns the PKCE panel and the status badge on.
 
 Vue component:
 
@@ -46,48 +46,7 @@ Rules:
 - The target origin must be the page's own origin (`window.location.origin`). Never use `'*'`. Spec-renderer only accepts messages whose origin matches the redirect URI's origin, so the callback page has to be served from the same origin as the page that renders spec-renderer.
 - Never log or display the code. It is a live, single-use credential.
 
-A copy-pasteable page is in [`sandbox/public/oauth-callback.html`](../sandbox/public/oauth-callback.html):
-
-```html
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Signing in...</title>
-</head>
-<body>
-  <p id="message">Signing in...</p>
-  <script>
-    (function () {
-      var params = new URLSearchParams(window.location.search)
-      var message = {
-        type: 'kong-spec-renderer:oauth-callback',
-        state: params.get('state') || undefined,
-        // Never log or display the code, it is a live single-use credential
-        code: params.get('code') || undefined,
-        error: params.get('error') || undefined,
-        error_description: params.get('error_description') || undefined,
-      }
-
-      // Keep the code out of the browser history
-      window.history.replaceState(null, '', window.location.pathname)
-
-      var text = document.getElementById('message')
-      if (!window.opener) {
-        // Usually the opener page sets Cross-Origin-Opener-Policy: same-origin
-        text.textContent = 'This window lost its connection to the page that opened it. You can close it.'
-        return
-      }
-
-      // Target origin must be this page's own origin, never '*'
-      window.opener.postMessage(message, window.location.origin)
-      text.textContent = 'You can close this window.'
-      window.close()
-    })()
-  </script>
-</body>
-</html>
-```
+A copy-pasteable page is in [`sandbox/public/oauth-callback.html`](../sandbox/public/oauth-callback.html).
 
 Keep this page free of frameworks, routers and auth guards, so nothing can delay or drop the callback.
 
@@ -129,7 +88,7 @@ The sandbox uses the public demo server of Duende IdentityServer. It is a third-
 
 1. Run `pnpm run dev`.
 2. Select "OAuth2 Authorization Code (PKCE)" in the sample spec selector. The "OAuth redirect URI" input is prefilled with `<origin>/spec-renderer/oauth-callback.html`.
-3. Open `GET /test`, open the Try It auth section and pick `DuendePkce`.
+3. Open `GET /test` and open the Try It auth section.
 4. Enter Client ID `interactive.public.short` (75 second token, so the Expired badge shows after about 45 seconds) or `interactive.public` (1 hour token).
 5. Tick the `api` scope and click Authorize.
 6. Log in as `bob` / `bob` (or `alice` / `alice`). The popup closes and the badge shows Authenticated.
@@ -142,7 +101,4 @@ The sandbox uses the public demo server of Duende IdentityServer. It is a third-
 | An `authorizationCode` scheme shows only an Access Token input, no Authorize button | The `oauthRedirectUri` prop is not set. |
 | "Your browser blocked the sign-in window" | The browser blocked the popup. Allow popups for the site. |
 | The popup shows an identity provider error, and after you close it the panel says the redirect URI is most likely not registered | The identity provider rejected the redirect URI. Register it exactly. |
-| "Unable to reach the token endpoint at ..." | Usually CORS on the token endpoint. See above. |
-| The popup stays open on "lost its connection", or sign-in never completes | `Cross-Origin-Opener-Policy: same-origin` on the host page, or the callback page is on another origin. |
 | "Signing in requires a secure context" | The page is not served over HTTPS or from `localhost`. |
-| Send is blocked with a session-expired message | The token expired. Click Authorize again. |

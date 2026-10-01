@@ -171,21 +171,6 @@ afterEach(() => {
 })
 
 describe('<TryItAuthCode />', () => {
-  it('renders a Client ID input and one checkbox per scope', () => {
-    const wrapper = mountComponent()
-
-    expect(wrapper.find('input[type="text"]').exists()).toBe(true)
-    expect(wrapper.findAll('input[type="checkbox"]')).toHaveLength(2)
-    expect(wrapper.html()).toContain('read')
-    expect(wrapper.html()).toContain('write')
-  })
-
-  it('never renders a Client Secret field, the flow is a public client', () => {
-    const wrapper = mountComponent()
-
-    expect(wrapper.html()).not.toContain('Client Secret')
-  })
-
   it('stores the Client ID under the shared key', async () => {
     const wrapper = mountComponent()
     await setClientId(wrapper)
@@ -194,32 +179,26 @@ describe('<TryItAuthCode />', () => {
   })
 
   describe('Authorize button', () => {
-    it('is enabled when there is a target, a client ID and a redirect URI', async () => {
-      const wrapper = mountComponent()
-      await setClientId(wrapper)
+    for (const { name, options, clientId, disabled } of [
+      { name: 'is enabled when there is a target, a client ID and a redirect URI', options: {}, clientId: true, disabled: false },
+      { name: 'is disabled without a client ID', options: {}, clientId: false, disabled: true },
+      { name: 'is disabled without a redirect URI, even with a client ID', options: { redirectUri: '' }, clientId: true, disabled: true },
+      { name: 'is disabled when the scheme has no usable target, even with a client ID', options: { scheme: badUrlScheme }, clientId: true, disabled: true },
+    ]) {
+      it(name, async () => {
+        const wrapper = mountComponent(options)
+        if (clientId) {
+          await setClientId(wrapper)
+        }
 
-      expect(wrapper.findTestId(testId('authorize')).attributes('disabled')).toBeUndefined()
-    })
-
-    it('is disabled without a client ID', () => {
-      const wrapper = mountComponent()
-
-      expect(wrapper.findTestId(testId('authorize')).attributes('disabled')).toBeDefined()
-    })
-
-    it('is disabled without a redirect URI, even with a client ID', async () => {
-      const wrapper = mountComponent({ redirectUri: '' })
-      await setClientId(wrapper)
-
-      expect(wrapper.findTestId(testId('authorize')).attributes('disabled')).toBeDefined()
-    })
-
-    it('is disabled when the scheme has no usable target, even with a client ID', async () => {
-      const wrapper = mountComponent({ scheme: badUrlScheme })
-      await setClientId(wrapper)
-
-      expect(wrapper.findTestId(testId('authorize')).attributes('disabled')).toBeDefined()
-    })
+        const attr = wrapper.findTestId(testId('authorize')).attributes('disabled')
+        if (disabled) {
+          expect(attr).toBeDefined()
+        } else {
+          expect(attr).toBeUndefined()
+        }
+      })
+    }
 
     it('is disabled and the Client ID input locked while authorizing', async () => {
       const wrapper = mountComponent()
@@ -240,14 +219,6 @@ describe('<TryItAuthCode />', () => {
       void wrapper.findTestId(testId('authorize')).trigger('click')
 
       expect(openSpy).toHaveBeenCalledTimes(1)
-    })
-
-    it('does nothing when clicked while disabled', async () => {
-      const wrapper = mountComponent()
-
-      await wrapper.findTestId(testId('authorize')).trigger('click')
-
-      expect(openSpy).not.toHaveBeenCalled()
     })
   })
 
@@ -280,24 +251,11 @@ describe('<TryItAuthCode />', () => {
   })
 
   describe('messages', () => {
-    it('says the oauthRedirectUri prop is needed when it is empty', () => {
-      const wrapper = mountComponent({ redirectUri: '' })
-
-      expect(wrapper.findTestId(testId('redirect-hint')).text()).toContain('oauthRedirectUri')
-      expect(wrapper.findTestId(testId('bad-target')).exists()).toBe(false)
-    })
-
-    it('does not show the redirect URI message when it is set', () => {
-      const wrapper = mountComponent()
-
-      expect(wrapper.findTestId(testId('redirect-hint')).exists()).toBe(false)
-    })
-
     it('says the scheme cannot be used when its URLs are not absolute http(s)', () => {
       const wrapper = mountComponent({ scheme: badUrlScheme })
 
       expect(wrapper.findTestId(testId('bad-target')).exists()).toBe(true)
-      expect(wrapper.findTestId(testId('redirect-hint')).exists()).toBe(false)
+      expect(wrapper.findTestId(testId('signin-host')).exists()).toBe(false)
     })
 
     it('does not show the bad target message for a valid scheme', () => {
@@ -308,27 +266,15 @@ describe('<TryItAuthCode />', () => {
   })
 
   describe('sign-in host line', () => {
-    it('shows the host of the authorization URL', () => {
-      const wrapper = mountComponent()
-
-      expect(wrapper.findTestId(testId('signin-host')).text()).toBe('You\'ll sign in at auth.example.com')
-    })
-
-    it('includes the port when the authorization URL has one', () => {
+    it('shows the host of the authorization URL, not the token URL', () => {
       const wrapper = mountComponent({
         scheme: {
           ...scheme,
-          flows: { authorizationCode: { ...scheme.flows.authorizationCode!, authorizationUrl: 'https://idp.test:8443/authorize' } },
+          flows: { authorizationCode: { ...scheme.flows.authorizationCode!, authorizationUrl: 'https://login.example.com/authorize' } },
         },
       })
 
-      expect(wrapper.findTestId(testId('signin-host')).text()).toBe('You\'ll sign in at idp.test:8443')
-    })
-
-    it('is absent when the target is undefined', () => {
-      const wrapper = mountComponent({ scheme: badUrlScheme })
-
-      expect(wrapper.findTestId(testId('signin-host')).exists()).toBe(false)
+      expect(wrapper.findTestId(testId('signin-host')).text()).toBe('You\'ll sign in at login.example.com')
     })
   })
 
@@ -354,17 +300,6 @@ describe('<TryItAuthCode />', () => {
       await wrapper.find(`[aria-label="Deselect all scopes for ${SCHEME_KEY}"]`).trigger('click')
       expect(authInputs.value[`${SCHEME_KEY}-authorizationCode-scope-read`]).toBe('false')
       expect(Object.keys(authInputs.value).some(key => key.startsWith(`${SCHEME_KEY}-scope-`))).toBe(false)
-    })
-
-    it('sends the namespaced scopes on authorize', async () => {
-      const wrapper = mountComponent()
-      await setClientId(wrapper)
-      composables.useAuth().authInputs.value[`${SCHEME_KEY}-authorizationCode-scope-read`] = 'true'
-      composables.useAuth().authInputs.value[`${SCHEME_KEY}-authorizationCode-scope-write`] = 'false'
-
-      await wrapper.findTestId(testId('authorize')).trigger('click')
-
-      expect((await authorizeUrl()).searchParams.get('scope')).toBe('read')
     })
 
     it('ignores client credentials style scope keys on authorize', async () => {

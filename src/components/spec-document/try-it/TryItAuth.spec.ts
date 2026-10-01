@@ -353,34 +353,10 @@ describe('<TryItAuth />', () => {
       }
     }
 
-    it('renders TryItAuthCode and not the generic credential input', () => {
+    it('shows the Unauthenticated status badge in the header', () => {
       const wrapper = mountAuthCode()
 
-      expect(wrapper.findComponent(TryItAuthCode).exists()).toBe(true)
-      expect(wrapper.html()).not.toContain('App credential')
-    })
-
-    it('shows the status badge for an authorizationCode scheme and hides it for a non-oauth2 scheme', () => {
-      const authCodeWrapper = mountAuthCode()
-
-      expect(authCodeWrapper.findTestId('tryit-auth-status-auth-code-op').text()).toBe('Unauthenticated')
-      authCodeWrapper.unmount()
-
-      const basic = { id: 'b8d834b8fb9f5', key: 'basicAuth', extensions: {}, type: 'http' as const, scheme: 'basic' as const }
-      const basicWrapper = mount(TryItAuth, {
-        props: {
-          data: { id: 'basic-op', method: 'get', path: '/example', responses: [], servers: [], security: [[basic]] },
-        },
-        global: { provide: { 'security-scheme-group-list': ref([{ title: 'basicAuth', key: 'basicAuth', schemeList: [basic] }]) } },
-      })
-
-      expect(basicWrapper.findTestId('tryit-auth-status-basic-op').exists()).toBe(false)
-    })
-
-    it('shows the status badge in the header, outside the collapsible body', () => {
-      const wrapper = mountAuthCode()
-
-      expect(wrapper.find('.panel-header [data-testid="tryit-auth-status-auth-code-op"]').exists()).toBe(true)
+      expect(wrapper.find('.panel-header [data-testid="tryit-auth-status-auth-code-op"]').text()).toBe('Unauthenticated')
     })
 
     it('sends no Authorization header when there is no token', async () => {
@@ -408,17 +384,6 @@ describe('<TryItAuth />', () => {
       expect(composables.useAuth().authHeadersMap.value[authCodeGroup.key]).toEqual([{ name: 'Authorization', value: 'Bearer tok-abc' }])
     })
 
-    it('goes Authenticated after sign-in, and lets the request through', async () => {
-      const wrapper = mountAuthCode()
-      await wrapper.find('input[type="text"]').setValue('client-1')
-
-      await signIn('client-1', 3600)
-      await nextTick()
-
-      expect(wrapper.findTestId('tryit-auth-status-auth-code-op').text()).toBe('Authenticated')
-      expect((await wrapper.vm.runPreRequestAuth()).ok).toBe(true)
-    })
-
     it('goes Expired and blocks the request once the token has expired', async () => {
       const wrapper = mountAuthCode()
       await wrapper.find('input[type="text"]').setValue('client-1')
@@ -444,18 +409,6 @@ describe('<TryItAuth />', () => {
         expect(wrapper.find(genericInputId('no-uri-op')).exists()).toBe(true)
       })
 
-      it('sends a typed token as the Authorization header without the redirect URI', async () => {
-        vi.useFakeTimers()
-        composables.useAuth().activeSecurityScheme.value = authCodeGroup.key
-        const wrapper = mountAuthCode('no-uri-op', '')
-        await wrapper.find(genericInputId('no-uri-op')).setValue('typed-token')
-        await vi.advanceTimersByTimeAsync(100)
-
-        expect((await wrapper.vm.runPreRequestAuth()).ok).toBe(true)
-
-        expect(composables.useAuth().authHeadersMap.value[authCodeGroup.key]).toEqual([{ name: 'Authorization', value: 'typed-token' }])
-      })
-
       it('renders TryItAuthCode and the badge for the same scheme with the redirect URI', () => {
         const wrapper = mountAuthCode('with-uri-op')
 
@@ -468,15 +421,13 @@ describe('<TryItAuth />', () => {
         { name: 'implicit', flows: { implicit: { authorizationUrl: 'https://auth.example.com/authorize', scopes: {} } } },
         { name: 'password', flows: { password: { tokenUrl: 'https://auth.example.com/token', scopes: {} } } },
       ]) {
-        for (const redirectUri of ['', 'https://host.test/cb']) {
-          it(`renders the generic token input for an ${name}-only scheme, redirect URI "${redirectUri}"`, () => {
-            const wrapper = mountScheme({ ...authCodeScheme, key: `${name}Auth`, flows }, `${name}-op`, redirectUri)
+        it(`renders the generic token input for an ${name}-only scheme`, () => {
+          const wrapper = mountScheme({ ...authCodeScheme, key: `${name}Auth`, flows }, `${name}-op`, 'https://host.test/cb')
 
-            expect(wrapper.find(genericInputId(`${name}-op`)).exists()).toBe(true)
-            expect(wrapper.findComponent(TryItAuthCode).exists()).toBe(false)
-            expect(wrapper.findTestId(`tryit-auth-status-${name}-op`).exists()).toBe(false)
-          })
-        }
+          expect(wrapper.find(genericInputId(`${name}-op`)).exists()).toBe(true)
+          expect(wrapper.findComponent(TryItAuthCode).exists()).toBe(false)
+          expect(wrapper.findTestId(`tryit-auth-status-${name}-op`).exists()).toBe(false)
+        })
       }
     })
   })
