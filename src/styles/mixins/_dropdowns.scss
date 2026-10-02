@@ -15,23 +15,31 @@
   }
 }
 
+// Dropdown item component tokens are applied here rather than in `dropdown-item-container`,
+// which is also used by the dropdown trigger button.
 @mixin dropdown-item {
-  padding: var(--kui-space-50, $kui-space-50) var(--kui-space-60, $kui-space-60);
+  background-color: var(--kui-dropdown-item-color-background, var(--kui-color-background-transparent, $kui-color-background-transparent));
+  color: var(--kui-dropdown-item-color-text, var(--kui-color-text, $kui-color-text));
+  font-size: var(--kui-dropdown-item-font-size, var(--kui-font-size-30, $kui-font-size-30));
+  font-weight: var(--kui-dropdown-item-font-weight, var(--kui-font-weight-regular, $kui-font-weight-regular));
+  line-height: var(--kui-dropdown-item-line-height, var(--kui-line-height-40, $kui-line-height-40));
+  padding: var(--kui-dropdown-item-padding-y, var(--kui-space-50, $kui-space-50)) var(--kui-dropdown-item-padding-x, var(--kui-space-60, $kui-space-60));
   width: 100%;
 
+  // there is no hover/active text token - themed items keep their regular text color, like KDropdownItem
   &:hover:not(:disabled):not(:focus):not(:active) {
-    background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
-    color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
+    background-color: var(--kui-dropdown-item-color-background-hover, var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest));
+    color: var(--kui-dropdown-item-color-text, var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger));
   }
 
   &:focus:not(:disabled),
   &:active:not(:disabled) {
-    background-color: var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker);
-    color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
+    background-color: var(--kui-dropdown-item-color-background-active, var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker));
+    color: var(--kui-dropdown-item-color-text, var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger));
   }
 
   &:disabled {
-    color: var(--kui-color-text-disabled, $kui-color-text-disabled);
+    color: var(--kui-dropdown-item-color-text-disabled, var(--kui-color-text-disabled, $kui-color-text-disabled));
     cursor: not-allowed;
   }
 }

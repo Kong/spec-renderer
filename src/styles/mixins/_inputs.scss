@@ -1,11 +1,11 @@
 @use "@kong/design-tokens/tokens/scss/variables" as *;
 
 @mixin input-text {
-  color: var(--kui-color-text, $kui-color-text);
-  // needs to be at least 16px to prevent automatic zoom in on focus on mobile
+  color: var(--kui-input-color-text, var(--kui-color-text, $kui-color-text));
+  // needs to be at least 16px to prevent automatic zoom in on focus on mobile - deliberately not themeable via --kui-input-font-size
   font-size: var(--kui-font-size-40, $kui-font-size-40);
-  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
-  line-height: var(--kui-line-height-40, $kui-line-height-40);
+  font-weight: var(--kui-input-font-weight, var(--kui-font-weight-regular, $kui-font-weight-regular));
+  line-height: var(--kui-input-line-height, var(--kui-line-height-40, $kui-line-height-40));
 
   @media (min-width: $kui-breakpoint-mobile) {
     // stylelint-disable-next-line no-invalid-position-declaration
@@ -19,13 +19,14 @@
   & {
     -webkit-appearance: none; // need this to allow box-shadow to apply on mobile
     appearance: none;
-    background-color: var(--kui-color-background, $kui-color-background);
+    background-color: var(--kui-input-color-background, var(--kui-color-background, $kui-color-background));
     border: 0;
-    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    box-shadow: var(--kui-shadow-border, $kui-shadow-border);
+    border-radius: var(--kui-input-border-radius, var(--kui-border-radius-30, $kui-border-radius-30));
+    box-shadow: var(--kui-input-shadow-border, var(--kui-shadow-border, $kui-shadow-border));
     box-sizing: border-box; // Ensure the padding is calculated in the element's width
     outline: none;
-    padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
+    padding: var(--kui-input-padding-y, var(--kui-space-40, $kui-space-40))
+      var(--kui-input-padding-x, var(--kui-space-50, $kui-space-50));
     transition: box-shadow var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
     width: 100%;
   }
@@ -36,22 +37,33 @@
     // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
     // stylelint-disable-next-line no-duplicate-selectors
     & {
-      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      color: var(--kui-input-color-text-placeholder, var(--kui-color-text-neutral, $kui-color-text-neutral));
     }
   }
 
   &:hover {
-    box-shadow: var(--kui-shadow-border-primary-weak, $kui-shadow-border-primary-weak);
+    box-shadow: var(
+      --kui-input-shadow-border-hover,
+      var(--kui-shadow-border-primary-weak, $kui-shadow-border-primary-weak)
+    );
   }
 
   &:focus {
-    box-shadow: var(--kui-shadow-border-primary, $kui-shadow-border-primary), var(--kui-shadow-focus, $kui-shadow-focus);
+    // there is no focus border token - like KInput, focus reuses the hover border token but keeps its own semantic fallback
+    box-shadow: var(--kui-input-shadow-border-hover, var(--kui-shadow-border-primary, $kui-shadow-border-primary)),
+      var(--kui-input-shadow-focus, var(--kui-shadow-focus, $kui-shadow-focus));
   }
 
   &:disabled {
-    background-color: var(--kui-color-background-disabled, $kui-color-background-disabled) !important;
-    box-shadow: var(--kui-shadow-border-disabled, $kui-shadow-border-disabled) !important;
-    color: var(--kui-color-text-disabled, $kui-color-text-disabled) !important;
+    background-color: var(
+      --kui-input-color-background-disabled,
+      var(--kui-color-background-disabled, $kui-color-background-disabled)
+    ) !important;
+    box-shadow: var(
+      --kui-input-shadow-border-disabled,
+      var(--kui-shadow-border-disabled, $kui-shadow-border-disabled)
+    ) !important;
+    color: var(--kui-input-color-text-disabled, var(--kui-color-text-disabled, $kui-color-text-disabled)) !important;
     cursor: not-allowed;
   }
 }

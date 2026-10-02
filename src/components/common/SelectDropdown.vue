@@ -252,12 +252,14 @@ $select-dropdown-max-height: 400px;
         }
 
         &.selected {
-          background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
+          background-color: var(--kui-dropdown-item-color-background-selected, var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest));
 
           button,
           :slotted(button),
           :slotted(a) {
-            color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
+            // themes give items an opaque background, so the selected background has to be set on the item itself too
+            background-color: var(--kui-dropdown-item-color-background-selected, var(--kui-color-background-transparent, $kui-color-background-transparent));
+            color: var(--kui-dropdown-item-color-text-selected, var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger));
           }
         }
       }
