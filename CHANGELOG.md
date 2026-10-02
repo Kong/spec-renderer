@@ -1,3 +1,11 @@
+## [1.115.3](https://github.com/Kong/spec-renderer/compare/v1.115.2...v1.115.3) (2026-10-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.63.0 ([#1027](https://github.com/Kong/spec-renderer/issues/1027)) ([46a9c72](https://github.com/Kong/spec-renderer/commit/46a9c7205e4786ea60d505e1c867b713f0931b50))
+* input and dropdown component tokens [TDX-8968] ([#1033](https://github.com/Kong/spec-renderer/issues/1033)) ([181fc7c](https://github.com/Kong/spec-renderer/commit/181fc7c1577a8901ca53cc46ef847903a37d9801))
+
 ## [1.115.2](https://github.com/Kong/spec-renderer/compare/v1.115.1...v1.115.2) (2026-09-30)
 
 
