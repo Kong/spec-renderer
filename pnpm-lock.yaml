@@ -237,14 +237,14 @@ importers:
         specifier: ^17.15.0
         version: 17.15.0(supports-color@10.2.2)(typescript@5.9.3)
       stylelint-config-html:
-        specifier: ^1.1.0
-        version: 1.1.0(postcss-html@2.0.0(postcss@8.5.28))(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3))
+        specifier: ^2.0.0
+        version: 2.0.0(postcss-html@2.0.0(postcss@8.5.28))(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3))
       stylelint-config-recommended-scss:
         specifier: ^17.0.1
         version: 17.0.1(postcss@8.5.28)(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3))
       stylelint-config-recommended-vue:
-        specifier: ^1.6.1
-        version: 1.6.1(postcss-html@2.0.0(postcss@8.5.28))(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3))
+        specifier: ^2.0.0
+        version: 2.0.0(postcss-html@2.0.0(postcss@8.5.28))(stylelint-config-html@2.0.0(postcss-html@2.0.0(postcss@8.5.28))(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3)))(stylelint-config-recommended-scss@17.0.1(postcss@8.5.28)(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3)))(stylelint-config-recommended@18.0.0(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3)))(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3))
       stylelint-order:
         specifier: ^8.1.1
         version: 8.1.1(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3))
@@ -4928,11 +4928,6 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  semver@7.7.2:
-    resolution: {integrity: sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.8.5:
     resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
     engines: {node: '>=10'}
@@ -5148,12 +5143,12 @@ packages:
   style-search@0.1.0:
     resolution: {integrity: sha512-Dj1Okke1C3uKKwQcetra4jSuk0DqbzbYtXipzFlFMZtowbF1x7BKJwB9AayVMyFARvU8EDrZdcax4At/452cAg==}
 
-  stylelint-config-html@1.1.0:
-    resolution: {integrity: sha512-IZv4IVESjKLumUGi+HWeb7skgO6/g4VMuAYrJdlqQFndgbj6WJAXPhaysvBiXefX79upBdQVumgYcdd17gCpjQ==}
-    engines: {node: ^12 || >=14}
+  stylelint-config-html@2.0.0:
+    resolution: {integrity: sha512-Lk1NPEdUxzHkPv3ehktjpiOk4MPaqQ3H8fkvhxdWlQpaZCm9ze0SoMbRQLqkUxEMfPE1G9/x968uxm/+d2njoA==}
+    engines: {node: ^22.12 || >=24}
     peerDependencies:
-      postcss-html: ^1.0.0
-      stylelint: '>=14.0.0'
+      postcss-html: ^2.0.0
+      stylelint: '>=16.0.0'
 
   stylelint-config-recommended-scss@17.0.1:
     resolution: {integrity: sha512-x5DVehzJudcwF0od3sGpgkln2PLLranFE7twwbp7dqDINCyZvwzFkMc6TLhNOvazRiVBJYATQLouJY0xPGB8WA==}
@@ -5165,18 +5160,18 @@ packages:
       postcss:
         optional: true
 
-  stylelint-config-recommended-vue@1.6.1:
-    resolution: {integrity: sha512-lLW7hTIMBiTfjenGuDq2kyHA6fBWd/+Df7MO4/AWOxiFeXP9clbpKgg27kHfwA3H7UNMGC7aeP3mNlZB5LMmEQ==}
-    engines: {node: ^12 || >=14}
+  stylelint-config-recommended-vue@2.0.0:
+    resolution: {integrity: sha512-SrGBfxgX+CmxRoFOl6HHhfKrp+6YvGnuiHj/N+/deI310eGNhix8aZOtPHG+OeqB6+5Si5BbjsZiC+kULUO1DQ==}
+    engines: {node: ^22.12 || >=24}
     peerDependencies:
-      postcss-html: ^1.0.0
-      stylelint: '>=14.0.0'
-
-  stylelint-config-recommended@16.0.0:
-    resolution: {integrity: sha512-4RSmPjQegF34wNcK1e1O3Uz91HN8P1aFdFzio90wNK9mjgAI19u5vsU868cVZboKzCaa5XbpvtTzAAGQAxpcXA==}
-    engines: {node: '>=18.12.0'}
-    peerDependencies:
-      stylelint: ^16.16.0
+      postcss-html: ^2.0.0
+      stylelint: '>=16.0.0'
+      stylelint-config-html: '>=2.0.0'
+      stylelint-config-recommended: '>=14.0.0'
+      stylelint-config-recommended-scss: '>=14.0.0'
+    peerDependenciesMeta:
+      stylelint-config-recommended-scss:
+        optional: true
 
   stylelint-config-recommended@18.0.0:
     resolution: {integrity: sha512-mxgT2XY6YZ3HWWe3Di8umG6aBmWmHTblTgu/f10rqFXnyWxjKWwNdjSWkgkwCtxIKnqjSJzvFmPT5yabVIRxZg==}
@@ -11014,8 +11009,6 @@ snapshots:
 
   semver@7.6.3: {}
 
-  semver@7.7.2: {}
-
   semver@7.8.5: {}
 
   set-function-length@1.2.2:
@@ -11260,7 +11253,7 @@ snapshots:
 
   style-search@0.1.0: {}
 
-  stylelint-config-html@1.1.0(postcss-html@2.0.0(postcss@8.5.28))(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3)):
+  stylelint-config-html@2.0.0(postcss-html@2.0.0(postcss@8.5.28))(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3)):
     dependencies:
       postcss-html: 2.0.0(postcss@8.5.28)
       stylelint: 17.15.0(supports-color@10.2.2)(typescript@5.9.3)
@@ -11274,17 +11267,15 @@ snapshots:
     optionalDependencies:
       postcss: 8.5.28
 
-  stylelint-config-recommended-vue@1.6.1(postcss-html@2.0.0(postcss@8.5.28))(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3)):
+  stylelint-config-recommended-vue@2.0.0(postcss-html@2.0.0(postcss@8.5.28))(stylelint-config-html@2.0.0(postcss-html@2.0.0(postcss@8.5.28))(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3)))(stylelint-config-recommended-scss@17.0.1(postcss@8.5.28)(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3)))(stylelint-config-recommended@18.0.0(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3)))(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3)):
     dependencies:
       postcss-html: 2.0.0(postcss@8.5.28)
-      semver: 7.7.2
+      semver: 7.8.5
       stylelint: 17.15.0(supports-color@10.2.2)(typescript@5.9.3)
-      stylelint-config-html: 1.1.0(postcss-html@2.0.0(postcss@8.5.28))(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3))
-      stylelint-config-recommended: 16.0.0(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3))
-
-  stylelint-config-recommended@16.0.0(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3)):
-    dependencies:
-      stylelint: 17.15.0(supports-color@10.2.2)(typescript@5.9.3)
+      stylelint-config-html: 2.0.0(postcss-html@2.0.0(postcss@8.5.28))(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3))
+      stylelint-config-recommended: 18.0.0(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3))
+    optionalDependencies:
+      stylelint-config-recommended-scss: 17.0.1(postcss@8.5.28)(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3))
 
   stylelint-config-recommended@18.0.0(stylelint@17.15.0(supports-color@10.2.2)(typescript@5.9.3)):
     dependencies:
