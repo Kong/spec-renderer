@@ -89,9 +89,9 @@
     "openapi3-ts": "4.6.1"
   },
   "devDependencies": {
-    "@babel/types": "^8.0.5",
-    "@commitlint/cli": "^21.2.2",
-    "@commitlint/config-conventional": "^21.2.2",
+    "@babel/types": "^8.0.6",
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
     "@evilmartians/lefthook": "^2.1.14",
     "@kong/design-tokens": "3.3.2",
@@ -215,7 +215,7 @@
   },
   "volta": {
     "node": "24.21.0",
-    "pnpm": "11.27.0"
+    "pnpm": "11.27.1"
   },
   "config": {
     "commitizen": {
@@ -227,5 +227,5 @@
       "jiraAppend": "]"
     }
   },
-  "packageManager": "pnpm@11.27.0"
+  "packageManager": "pnpm@11.27.1"
 }
