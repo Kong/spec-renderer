@@ -30,13 +30,14 @@ runs:
         if [[ $voltaNodeVersion == null ]]; then
           voltaNodeVersion="$NODEJS_VERSION"
         fi
-        voltaPnpmVersion=$(cat package.json|jq -r ".volta.pnpm")
-        if [[ $voltaPnpmVersion == null ]]; then
-          voltaPnpmVersion="8.10.5"
+        # packageManager looks like "pnpm@12.9.1" (optionally with a "+sha512..." suffix)
+        pnpmVersion=$(jq -r '.packageManager // empty' package.json | sed -E 's/^pnpm@([^+]+).*/\1/')
+        if [[ -z $pnpmVersion ]]; then
+          pnpmVersion="8.10.5"
         fi
 
         echo "node-version=${voltaNodeVersion}">> $GITHUB_OUTPUT
-        echo "pnpm-version=${voltaPnpmVersion}">> $GITHUB_OUTPUT
+        echo "pnpm-version=${pnpmVersion}">> $GITHUB_OUTPUT
 
     - name: Setup Node
       uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
