@@ -15,7 +15,6 @@
       <input
         :id="`auth-input-oauth2-authorizationCode-clientId-${dataId}`"
         v-model="authInputs[`${schemeKey}-clientId`]"
-        :aria-describedby="`auth-input-oauth2-authorizationCode-clientId-${dataId}`"
         autocomplete="off"
         :disabled="status === 'authorizing'"
         placeholder="Enter Client ID"
@@ -57,7 +56,6 @@
         <input
           :id="`auth-input-oauth2-authorizationCode-scope-${scopeKey}-${dataId}`"
           v-model="authInputs[`${schemeKey}-authorizationCode-scope-${scopeKey}`]"
-          :aria-describedby="`auth-input-oauth2-authorizationCode-scope-${scopeKey}-${dataId}`"
           autocomplete="off"
           type="checkbox"
         >
