@@ -2,11 +2,6 @@ minimumReleaseAgeExclude:
   - '@kong/*'
   - '@kong-ui/*'
   - '@kong-ui-public/*'
-audit:
-  ignore:
-    # braces <=3.0.3: stack overflow DoS via deeply nested brace patterns in the
-    # recursive AST walker. No patched version is available upstream.
-    - GHSA-vfj7-8cjw-p6xm
 # When set to no-downgrade, pnpm will fail if a package's trust level has decreased compared to previous releases
 trustPolicy: no-downgrade
 # Ignore policy if published at least 12 days (17280 minutes)
