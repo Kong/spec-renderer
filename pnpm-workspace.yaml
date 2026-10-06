@@ -46,6 +46,7 @@ overrides:
   form-data@>=4.0.0 <4.0.6: ^4.0.6
   '@faker-js/faker@<=10.4.0': ^10.6.0
   fast-uri@<3.1.6: ^4.2.1
+  source-map-js@>=1.0.0 <1.2.2: ^1.2.2
 strictPeerDependencies: false
 allowBuilds:
   '@evilmartians/lefthook': true
