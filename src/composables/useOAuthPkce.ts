@@ -247,7 +247,7 @@ export default function useOAuthPkce() {
   }
 
   /** Sign out of one scheme and remove its token from Try It requests. */
-  const clearCredentials = ({ schemeKey }: Oauth2PkceTarget): void => {
+  const clearCredentials = ({ schemeKey }: Pick<Oauth2PkceTarget, 'schemeKey'>): void => {
     delete tokens.value[schemeKey]
     errors.value[schemeKey] = undefined
     stopExpiryTimer(schemeKey)

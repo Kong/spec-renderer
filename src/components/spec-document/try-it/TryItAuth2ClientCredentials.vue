@@ -157,6 +157,7 @@ const props = defineProps<{
 
 
 const { authInputs, authHeadersMap } = composables.useAuth()
+const { clearCredentials } = composables.useOAuthPkce()
 
 const showClientSecret = ref(false)
 
@@ -228,6 +229,8 @@ const auth2ClientCredentialsAuth = async (): Promise<PreRequestAuthResult> => {
   if (resp.ok) {
     const resData = await resp.json()
     if (resData.access_token) {
+      // one credential per scheme slot, so a stale PKCE entry can't block this token as expired
+      clearCredentials({ schemeKey: props.schemeKey })
       authInputs.value[`${props.schemeKey}-token`] = `${resData.token_type || 'Bearer'} ${resData.access_token}`
       await updateAuthDataImpl()
       useTimeoutFn(async () => {

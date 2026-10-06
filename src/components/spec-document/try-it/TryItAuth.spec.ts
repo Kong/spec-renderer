@@ -417,11 +417,12 @@ describe('<TryItAuth />', () => {
         expect(wrapper.find(genericInputId('with-uri-op')).exists()).toBe(false)
       })
 
-      for (const { name, flows } of [
-        { name: 'implicit', flows: { implicit: { authorizationUrl: 'https://auth.example.com/authorize', scopes: {} } } },
-        { name: 'password', flows: { password: { tokenUrl: 'https://auth.example.com/token', scopes: {} } } },
+      for (const { name, label, flows } of [
+        { name: 'implicit', label: 'an implicit-only', flows: { implicit: { authorizationUrl: 'https://auth.example.com/authorize', scopes: {} } } },
+        { name: 'password', label: 'a password-only', flows: { password: { tokenUrl: 'https://auth.example.com/token', scopes: {} } } },
+        { name: 'relativeUrl', label: 'an authorizationCode with a relative URL', flows: { authorizationCode: { authorizationUrl: '/authorize', tokenUrl: 'https://auth.example.com/token', scopes: {} } } },
       ]) {
-        it(`renders the generic token input for an ${name}-only scheme`, () => {
+        it(`renders the generic token input for ${label} scheme`, () => {
           const wrapper = mountScheme({ ...authCodeScheme, key: `${name}Auth`, flows }, `${name}-op`, 'https://host.test/cb')
 
           expect(wrapper.find(genericInputId(`${name}-op`)).exists()).toBe(true)

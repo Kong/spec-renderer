@@ -114,7 +114,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject } from 'vue'
+import { computed, inject, watch } from 'vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import composables from '@/composables'
@@ -189,6 +189,14 @@ composables.usePreRequestAuth().registerPreRequestAuth(schemeKey, async () => {
   return t && statusFor(t) === 'expired'
     ? { ok: false, error: new Error('Your session expired. Click Authorize to sign in again.') }
     : { ok: true }
+})
+
+// a token minted for another client ID must not keep riding in requests
+watch(clientId, () => {
+  const t = target.value
+  if (t && !scheme.flows.clientCredentials && !tokenFor(t) && authInputs.value[`${schemeKey}-token`]) {
+    clearCredentials(t)
+  }
 })
 </script>
 

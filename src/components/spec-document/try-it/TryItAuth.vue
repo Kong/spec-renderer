@@ -221,7 +221,11 @@ const { aggregateStatus } = composables.useOAuthPkce()
 // PKCE is opt-in: without the host's redirect URI, authorizationCode schemes keep the plain token input
 const oauthRedirectUri = inject('oauth-redirect-uri', computed(() => ''))
 const usesOauth2Panel = (scheme: IOauth2SecurityScheme): boolean =>
-  !!scheme.flows.clientCredentials || (!!scheme.flows.authorizationCode && !!oauthRedirectUri.value)
+  !!scheme.flows.clientCredentials ||
+  // fall back to the token input while the scheme's URLs cannot drive sign-in
+  (!!scheme.flows.authorizationCode &&
+    !!oauthRedirectUri.value &&
+    !!buildPkceTarget(scheme, authInputs.value[`${scheme.key}-clientId`] || ''))
 
 // tracks which password fields are currently revealed; keyed by `${schemeKey}-fieldname`
 const showFields = ref<Record<string, boolean>>({})

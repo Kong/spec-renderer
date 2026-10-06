@@ -1,6 +1,6 @@
 # OAuth2 authorization code + PKCE in Try It
 
-The Try It panel can sign users in with the OAuth 2.0 authorization code flow and PKCE (S256), then send the access token with the request. The PKCE panel is opt-in: it shows for any security scheme that declares an `authorizationCode` flow once the host passes `oauthRedirectUri`. A scheme that declares both `clientCredentials` and `authorizationCode` then shows both panels. Next to the auth section title, a status badge shows Unauthenticated, Authorizing, Authenticated or Expired.
+The Try It panel can sign users in with the OAuth 2.0 authorization code flow and PKCE (S256), then send the access token with the request. The PKCE panel is opt-in: it shows for any security scheme that declares an `authorizationCode` flow once the host passes `oauthRedirectUri`, as long as its authorization and token URLs are absolute http(s) URLs (otherwise the Access Token input stays). A scheme that declares both `clientCredentials` and `authorizationCode` then shows both panels. Next to the auth section title, a status badge shows Unauthenticated, Authorizing, Authenticated or Expired.
 
 The sign-in happens in a popup. The identity provider redirects the popup to a callback page that your app serves, and that page passes the authorization code back to spec-renderer. Spec-renderer then exchanges the code for a token directly from the browser.
 

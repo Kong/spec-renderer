@@ -248,6 +248,18 @@ describe('<TryItAuthCode />', () => {
       expect(composables.useOAuthPkce().statusFor(buildPkceTarget(scheme, CLIENT_ID)!)).toBe('unauthenticated')
       expect(wrapper.findTestId(testId('clear')).exists()).toBe(false)
     })
+
+    it('drops the token from requests when the Client ID changes', async () => {
+      const wrapper = mountComponent()
+      await setClientId(wrapper)
+      await signIn()
+      const { authInputs } = composables.useAuth()
+      expect(authInputs.value[`${SCHEME_KEY}-token`]).toBe('Bearer tok-abc')
+
+      await setClientId(wrapper, 'another-client')
+
+      expect(authInputs.value[`${SCHEME_KEY}-token`]).toBe('')
+    })
   })
 
   describe('messages', () => {
