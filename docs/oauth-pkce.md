@@ -29,17 +29,21 @@ The page must use `http` or `https`, and the app must run in a secure context (H
 
 ## The callback page
 
-Serve a page at the redirect URI. It reads `code`, `state`, `error` and `error_description` from the URL and posts them to `window.opener` with this message shape:
+Serve a page at the redirect URI. It reads `code`, `state`, `error` and `error_description` from the URL and posts them to `window.opener`, using the message type exported by spec-renderer:
 
 ```js
-{
-  type: 'kong-spec-renderer:oauth-callback',
+import { OAUTH_MESSAGE_TYPE } from '@kong/spec-renderer'
+
+window.opener.postMessage({
+  type: OAUTH_MESSAGE_TYPE,
   state,
   code,
   error,
   error_description,
-}
+}, window.location.origin)
 ```
+
+If the page has no build step, or importing would bundle spec-renderer into an otherwise tiny page, use the constant's value `'kong-spec-renderer:oauth-callback'` directly, like the [sandbox page](../sandbox/public/oauth-callback.html).
 
 Rules:
 
@@ -47,8 +51,6 @@ Rules:
 - Never log or display the code. It is a live, single-use credential.
 
 A copy-pasteable page is in [`sandbox/public/oauth-callback.html`](../sandbox/public/oauth-callback.html).
-
-Keep this page free of frameworks, routers and auth guards, so nothing can delay or drop the callback.
 
 ## Identity provider setup
 
