@@ -325,7 +325,13 @@ const updateAuthDataImpl = () => {
   authQueryMap.value[currentSecurityScheme.value] = query.join('&')
 }
 
-const updateAuthData = useDebounceFn(updateAuthDataImpl, 100)
+const updateAuthData = useDebounceFn(() => {
+  try {
+    updateAuthDataImpl()
+  } catch {
+    // e.g. btoa on non Latin-1 credentials while typing, runPreRequestAuth reports it on Send
+  }
+}, 100)
 
 const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): string => {
   //@ts-ignore `name` is valid property

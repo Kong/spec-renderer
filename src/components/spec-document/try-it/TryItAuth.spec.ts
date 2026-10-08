@@ -53,6 +53,21 @@ describe('<TryItAuth />', () => {
     expect(wrapper.html()).toContain('Username')
   })
 
+  // Regression: the debounced header update threw uncaught while typing such credentials.
+  it('does not throw in the background for basic credentials btoa cannot encode', async () => {
+    vi.useFakeTimers()
+    const basic = { id: 'b8d834b8fb9f5', key: 'basicAuth', extensions: {}, type: 'http' as const, scheme: 'basic' as const }
+    mount(TryItAuth, {
+      props: { data: { id: '123', method: 'get', path: '/example', responses: [], servers: [], security: [[basic]] } },
+      global: { provide: { 'security-scheme-group-list': ref([{ title: 'basicAuth', key: 'basicAuth', schemeList: [basic] }]) } },
+    })
+
+    composables.useAuth().authInputs.value = { 'basicAuth-username': '名前', 'basicAuth-password': 'secret' }
+    await nextTick()
+
+    await expect(vi.advanceTimersByTimeAsync(100)).resolves.toBeDefined()
+  })
+
   it('Should renderer auth2 clientCredentials', async () => {
 
     const wrapper = mount(TryItAuth, {
