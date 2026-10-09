@@ -1,6 +1,7 @@
 <template>
   <CollapsablePanel
     :collapsible="false"
+    :content-to-copy="contentToCopy"
     :data-testid="`tryit-response-${dataId}`"
   >
     <template #header>
@@ -47,6 +48,7 @@
       />
       <CodeResponse
         v-else
+        ref="codeResponse"
         :body-schema="bodySchema"
         :content="responseContent"
         :lang="responseBodyType === 'json' ? 'json' : 'text'"
@@ -69,6 +71,7 @@
       class="wide"
     >
       <HeadersResponse
+        ref="headersResponse"
         :mask-rules="maskRules"
         :response="response"
         :show-sensitive-data="showSensitiveData"
@@ -78,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue'
+import { computed, watch, ref, useTemplateRef } from 'vue'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import type { PropType } from 'vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
@@ -149,6 +152,17 @@ const hasBodyResult = computed((): boolean => {
 const hasHeaders = computed((): boolean => {
   if (!props.response) return false
   return [...props.response.headers.entries()].length > 0
+})
+
+// Displayed (masked) text exposed by the body/headers views, used for the copy button
+const codeResponseRef = useTemplateRef('codeResponse')
+const headersResponseRef = useTemplateRef('headersResponse')
+
+// Copy applies to the visible text views only (not image, binary or error)
+const contentToCopy = computed((): string => {
+  if (selectedResOption.value === 'headers') return headersResponseRef.value?.headersText ?? ''
+  if (selectedResOption.value === 'body') return codeResponseRef.value?.bodyText ?? ''
+  return ''
 })
 
 const errorText = computed((): string => props.responseError?.message || '')
