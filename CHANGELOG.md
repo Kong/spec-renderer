@@ -1,3 +1,10 @@
+# [1.116.0](https://github.com/Kong/spec-renderer/compare/v1.115.3...v1.116.0) (2026-10-09)
+
+
+### Features
+
+* **try-it:** add OAuth2 authorization code + PKCE sign-in [TDX-9063] ([#1032](https://github.com/Kong/spec-renderer/issues/1032)) ([b88bcc4](https://github.com/Kong/spec-renderer/commit/b88bcc41870fc8db7f9b7ca015e20c9943973369))
+
 ## [1.115.3](https://github.com/Kong/spec-renderer/compare/v1.115.2...v1.115.3) (2026-10-02)
 
 
