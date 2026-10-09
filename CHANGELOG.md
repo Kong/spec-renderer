@@ -1,3 +1,10 @@
+# [1.117.0](https://github.com/Kong/spec-renderer/compare/v1.116.0...v1.117.0) (2026-10-09)
+
+
+### Features
+
+* **tryit-response:** allow copy tryit response headers and body [TDX-9132] ([#1052](https://github.com/Kong/spec-renderer/issues/1052)) ([3a7f817](https://github.com/Kong/spec-renderer/commit/3a7f81713c5a660036e98cb9d0a13488fe8c7512))
+
 # [1.116.0](https://github.com/Kong/spec-renderer/compare/v1.115.3...v1.116.0) (2026-10-09)
 
 
