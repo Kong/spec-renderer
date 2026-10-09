@@ -8,7 +8,7 @@ trustPolicy: no-downgrade
 trustPolicyIgnoreAfter: 17280
 overrides:
   openapi3-ts: 4.6.1
-  jsonpath-plus@<10.3.0: '>=10.4.0'
+  jsonpath-plus@<10.3.0: '>=11.1.0'
   elliptic@<=6.6.0: '>=6.6.1'
   '@babel/helpers@<7.26.10': '>=8.0.5'
   cross-spawn@>=7.0.0 <7.0.5: '>=7.0.6'
