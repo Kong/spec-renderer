@@ -4,6 +4,8 @@ import TryItResponse from './TryItResponse.vue'
 import CodeBlock from '@/components/common/CodeBlock.vue'
 import CopyButton from '@/components/common/CopyButton.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
+import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
+import type { IHttpOperationResponse } from '@stoplight/types'
 import { CODE_INDENT_SPACES } from '@/constants'
 
 /**
@@ -178,13 +180,26 @@ describe('<TryItResponse />', () => {
       expect(wrapper.findComponent(CopyButton).props('content')).toBe('plain body')
     })
 
-    it('does not render for image or binary responses', async () => {
+    it('does not render for an image response', async () => {
       const response = makeResponse({
         headers: { 'content-type': 'image/png' },
         blob: () => Promise.resolve(new Blob(['img'], { type: 'image/png' })),
       })
       const wrapper = mount(TryItResponse, {
         props: { dataId: 'op8', response },
+      })
+      await flushPromises()
+
+      expect(wrapper.findComponent(CopyButton).exists()).toBe(false)
+    })
+
+    it('does not render for a binary response', async () => {
+      const response = makeResponse({
+        headers: { 'content-type': 'application/pdf' },
+        blob: () => Promise.resolve(new Blob([new Uint8Array(2048)], { type: 'application/pdf' })),
+      })
+      const wrapper = mount(TryItResponse, {
+        props: { dataId: 'op8b', response },
       })
       await flushPromises()
 
@@ -211,6 +226,55 @@ describe('<TryItResponse />', () => {
       const copied = JSON.parse(wrapper.findComponent(CopyButton).props('content'))
       expect(copied['x-api-key']).toBe('<masked>')
       expect(copied['content-type']).toBe('application/json')
+    })
+
+    it('copies the real header values after the sensitive data is revealed', async () => {
+      const response = makeResponse({
+        headers: { 'content-type': 'application/json', 'x-api-key': 'secret' },
+        json: () => Promise.resolve({ hello: 'world' }),
+      })
+      const wrapper = mount(TryItResponse, {
+        props: {
+          dataId: 'op10',
+          response,
+          maskRules: [{ location: 'header', paramName: 'X-API-Key', placeholder: '<masked>' }],
+        },
+      })
+      await flushPromises()
+
+      // the visibility toggle only renders once the Headers view is active
+      wrapper.findComponent(SelectDropdown).vm.$emit('update:modelValue', 'headers')
+      await flushPromises()
+      wrapper.findComponent(VisibilityToggleButton).vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      const copied = JSON.parse(wrapper.findComponent(CopyButton).props('content'))
+      expect(copied['x-api-key']).toBe('secret')
+    })
+
+    it('copies the real body values after the sensitive data is revealed', async () => {
+      const response = makeResponse({
+        headers: { 'content-type': 'application/json' },
+        json: () => Promise.resolve({ password: 'secret' }),
+      })
+      const responseSchemas = [{
+        code: '200',
+        contents: [{
+          mediaType: 'application/json',
+          schema: { type: 'object', properties: { password: { type: 'string', 'x-sensitive-data': { mask: 'full' } } } },
+        }],
+      }] as unknown as IHttpOperationResponse[]
+      const wrapper = mount(TryItResponse, {
+        props: { dataId: 'op11', response, responseSchemas },
+      })
+      await flushPromises()
+
+      expect(wrapper.findComponent(CopyButton).props('content')).not.toContain('secret')
+
+      wrapper.findComponent(VisibilityToggleButton).vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      expect(JSON.parse(wrapper.findComponent(CopyButton).props('content')).password).toBe('secret')
     })
   })
 })
