@@ -64,7 +64,7 @@
     "@asyncapi/avro-schema-parser": "^3.0.24",
     "@asyncapi/openapi-schema-parser": "^3.1.0",
     "@asyncapi/parser": "^3.6.3",
-    "@floating-ui/vue": "^1.1.11",
+    "@floating-ui/vue": "^2.0.1",
     "@kong/icons": "^1.63.1",
     "@stoplight/http-spec": "^7.1.0",
     "@stoplight/json": "^3.21.7",
