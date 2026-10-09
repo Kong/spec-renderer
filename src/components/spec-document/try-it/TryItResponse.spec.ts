@@ -2,6 +2,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import TryItResponse from './TryItResponse.vue'
 import CodeBlock from '@/components/common/CodeBlock.vue'
+import CopyButton from '@/components/common/CopyButton.vue'
+import SelectDropdown from '@/components/common/SelectDropdown.vue'
+import { CODE_INDENT_SPACES } from '@/constants'
 
 /**
  * Builds a minimal fake `Response` exposing only what TryItResponse consumes.
@@ -144,5 +147,70 @@ describe('<TryItResponse />', () => {
     await flushPromises()
 
     expect(mockRevokeObjectURL).toHaveBeenCalledWith('blob:mock-url')
+  })
+
+  describe('copy button', () => {
+    it('copies the formatted JSON body', async () => {
+      const response = makeResponse({
+        headers: { 'content-type': 'application/json' },
+        json: () => Promise.resolve({ hello: 'world' }),
+      })
+      const wrapper = mount(TryItResponse, {
+        props: { dataId: 'op6', response },
+      })
+      await flushPromises()
+
+      const copyButton = wrapper.findComponent(CopyButton)
+      expect(copyButton.exists()).toBe(true)
+      expect(copyButton.props('content')).toBe(JSON.stringify({ hello: 'world' }, null, CODE_INDENT_SPACES))
+    })
+
+    it('copies the text body for a textual response', async () => {
+      const response = makeResponse({
+        headers: { 'content-type': 'text/plain' },
+        text: () => Promise.resolve('plain body'),
+      })
+      const wrapper = mount(TryItResponse, {
+        props: { dataId: 'op7', response },
+      })
+      await flushPromises()
+
+      expect(wrapper.findComponent(CopyButton).props('content')).toBe('plain body')
+    })
+
+    it('does not render for image or binary responses', async () => {
+      const response = makeResponse({
+        headers: { 'content-type': 'image/png' },
+        blob: () => Promise.resolve(new Blob(['img'], { type: 'image/png' })),
+      })
+      const wrapper = mount(TryItResponse, {
+        props: { dataId: 'op8', response },
+      })
+      await flushPromises()
+
+      expect(wrapper.findComponent(CopyButton).exists()).toBe(false)
+    })
+
+    it('copies the headers, masking sensitive values, when the Headers view is selected', async () => {
+      const response = makeResponse({
+        headers: { 'content-type': 'application/json', 'x-api-key': 'secret' },
+        json: () => Promise.resolve({ hello: 'world' }),
+      })
+      const wrapper = mount(TryItResponse, {
+        props: {
+          dataId: 'op9',
+          response,
+          maskRules: [{ location: 'header', paramName: 'X-API-Key', placeholder: '<masked>' }],
+        },
+      })
+      await flushPromises()
+
+      wrapper.findComponent(SelectDropdown).vm.$emit('update:modelValue', 'headers')
+      await flushPromises()
+
+      const copied = JSON.parse(wrapper.findComponent(CopyButton).props('content'))
+      expect(copied['x-api-key']).toBe('<masked>')
+      expect(copied['content-type']).toBe('application/json')
+    })
   })
 })

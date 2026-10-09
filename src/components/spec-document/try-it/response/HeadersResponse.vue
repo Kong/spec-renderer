@@ -33,4 +33,7 @@ const headersText = computed((): string => {
   }
   return Object.keys(headers).length ? JSON.stringify(headers, null, CODE_INDENT_SPACES) : ''
 })
+
+// Exposes the displayed text so the parent can offer it for copying
+defineExpose({ headersText })
 </script>

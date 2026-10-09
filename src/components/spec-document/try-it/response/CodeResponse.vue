@@ -32,6 +32,9 @@ const text = computed((): string => {
   if (lang === 'json') return JSON.stringify(content, null, CODE_INDENT_SPACES)
   return String(content ?? '')
 })
+
+// Exposes the displayed text so the parent can offer it for copying
+defineExpose({ bodyText: text })
 </script>
 
 <style lang="scss" scoped>
