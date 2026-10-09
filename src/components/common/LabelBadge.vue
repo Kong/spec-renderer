@@ -20,7 +20,7 @@ defineProps({
   },
   /**
    * Type variations
-   * One of ['neutral', 'primary' ]
+   * One of ['neutral', 'primary', 'success', 'warning' ]
    */
   type: {
     type: String as PropType<LabelBadgeType>,
@@ -68,6 +68,20 @@ defineProps({
     @include badge-appearance(
       $bgColor: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest),
       $textColor: var(--kui-color-text-primary, $kui-color-text-primary)
+    );
+  }
+
+  &.success {
+    @include badge-appearance(
+      $bgColor: var(--kui-color-background-success-weakest, $kui-color-background-success-weakest),
+      $textColor: var(--kui-color-text-success, $kui-color-text-success)
+    );
+  }
+
+  &.warning {
+    @include badge-appearance(
+      $bgColor: var(--kui-color-background-warning-weakest, $kui-color-background-warning-weakest),
+      $textColor: var(--kui-color-text-warning, $kui-color-text-warning)
     );
   }
 

@@ -23,6 +23,9 @@ export * from './utils/schema-parser'
 // exporting findMatchingNode
 export * from './utils/find-matching-node'
 
+// the message type a host's OAuth callback page must post back
+export { OAUTH_MESSAGE_TYPE } from './utils/oauth-popup'
+
 // These are types that used in properties of components exposed to outside word
 export type { ServiceNode, NavigationTypes, ParseOptions, ParseResult, SchemaObject, ServiceChildNode, SpecRendererProps, SpecRendererNitroConfig } from './types'
 export type { TableOfContentsItem } from '@/stoplight/elements-core'

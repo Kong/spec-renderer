@@ -13,6 +13,15 @@
         Authentication
       </h3>
 
+      <LabelBadge
+        v-if="pkceTargets.length > 0"
+        class="pkce-status-badge"
+        :data-testid="`tryit-auth-status-${data.id}`"
+        :label="pkceStatusBadge[pkceAggregateStatus].label"
+        size="small"
+        :type="pkceStatusBadge[pkceAggregateStatus].type"
+      />
+
       <SelectDropdown
         v-if="securitySchemeGroupSelectItems.length > 1"
         :id="`tryit-scheme-selector-${data.id}`"
@@ -117,7 +126,7 @@
       </div>
 
       <TryItAuth2
-        v-else-if="scheme.type === 'oauth2' && scheme.flows.clientCredentials"
+        v-else-if="scheme.type === 'oauth2' && usesOauth2Panel(scheme)"
         :data-id="data.id"
         :scheme="scheme"
         :scheme-key="key"
@@ -166,12 +175,14 @@ import { useDebounceFn } from '@vueuse/core'
 import { LockIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import VisibilityToggleButton from '@/components/common/VisibilityToggleButton.vue'
-import type { IHttpOperation, HttpSecurityScheme } from '@stoplight/types'
+import type { IHttpOperation, HttpSecurityScheme, IOauth2SecurityScheme } from '@stoplight/types'
 import CollapsablePanel from '@/components/common/CollapsablePanel.vue'
 import InputLabel from '@/components/common/InputLabel.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
 import SelectDropdown from '@/components/common/SelectDropdown.vue'
-import type { SecuritySchemeGroup, SelectItem, PreRequestAuthResult } from '@/types'
+import LabelBadge from '@/components/common/LabelBadge.vue'
+import { buildPkceTarget } from '@/utils/oauth-pkce'
+import type { SecuritySchemeGroup, SelectItem, PreRequestAuthResult, Oauth2AuthStatus, Oauth2PkceTarget, Oauth2StatusBadge } from '@/types'
 import composables from '@/composables'
 import TryItAuth2 from './TryItAuth2.vue'
 
@@ -200,12 +211,21 @@ defineExpose({
   runPreRequestAuth,
 })
 
-
 const emit = defineEmits<{
   (e: 'security-scheme-changed', newScheme: string): void
 }>()
 
 const { activeSecurityScheme, authHeadersMap, authQueryMap, authInputs } = composables.useAuth()
+const { aggregateStatus } = composables.useOAuthPkce()
+
+// PKCE is opt-in: without the host's redirect URI, authorizationCode schemes keep the plain token input
+const oauthRedirectUri = inject('oauth-redirect-uri', computed(() => ''))
+const usesOauth2Panel = (scheme: IOauth2SecurityScheme): boolean =>
+  !!scheme.flows.clientCredentials ||
+  // fall back to the token input while the scheme's URLs cannot drive sign-in
+  (!!scheme.flows.authorizationCode &&
+    !!oauthRedirectUri.value &&
+    !!buildPkceTarget(scheme, authInputs.value[`${scheme.key}-clientId`] || ''))
 
 // tracks which password fields are currently revealed; keyed by `${schemeKey}-fieldname`
 const showFields = ref<Record<string, boolean>>({})
@@ -228,6 +248,20 @@ const currentSecurityScheme = ref<string>(props.data.security?.[0]?.[0]?.key || 
  */
 const currentSecuritySchemeMap = ref<Record<string, HttpSecurityScheme>>({})
 
+// authorizationCode schemes of the active requirement, they drive the header status badge
+const pkceTargets = computed<Oauth2PkceTarget[]>(() => Object.entries(currentSecuritySchemeMap.value)
+  .filter(([, scheme]) => oauthRedirectUri.value && scheme.type === 'oauth2' && scheme.flows.authorizationCode)
+  .map(([key, scheme]) => buildPkceTarget(scheme as IOauth2SecurityScheme, authInputs.value[`${key}-clientId`] || ''))
+  .filter((target): target is Oauth2PkceTarget => !!target))
+
+const pkceAggregateStatus = computed<Oauth2AuthStatus>(() => aggregateStatus(pkceTargets.value))
+
+const pkceStatusBadge: Record<Oauth2AuthStatus, Oauth2StatusBadge> = {
+  unauthenticated: { label: 'Unauthenticated', type: 'neutral' },
+  authorizing: { label: 'Authorizing…', type: 'primary' },
+  authenticated: { label: 'Authenticated', type: 'success' },
+  expired: { label: 'Expired', type: 'warning' },
+}
 
 /**
  * Update auth headers and queries for the current security requirement.
@@ -253,9 +287,8 @@ const updateAuthDataImpl = () => {
     // @ts-ignore `in` is valid attribute of the schema
     const schemeIn = scheme.in
 
-    // The token is acquired in TryItAuth2.vue, but it must still be included
-    // when this security requirement contains multiple schemes.
-    if (scheme.type === 'oauth2' && scheme.flows.clientCredentials) {
+    // Every oauth2 token lives in `${key}-token`, whether TryItAuth2 fetched it or the user typed it.
+    if (scheme.type === 'oauth2') {
       append('Authorization', authInputs.value[`${key}-token`] || '', schemeIn)
       continue
     }
@@ -292,7 +325,13 @@ const updateAuthDataImpl = () => {
   authQueryMap.value[currentSecurityScheme.value] = query.join('&')
 }
 
-const updateAuthData = useDebounceFn(updateAuthDataImpl, 100)
+const updateAuthData = useDebounceFn(() => {
+  try {
+    updateAuthDataImpl()
+  } catch {
+    // e.g. btoa on non Latin-1 credentials while typing, runPreRequestAuth reports it on Send
+  }
+}, 100)
 
 const getSchemeLabel = (scheme: HttpSecurityScheme, defaultName?: string): string => {
   //@ts-ignore `name` is valid property
@@ -372,6 +411,9 @@ watch(() => ({ key: activeSecurityScheme.value, list: securitySchemeGroupList.va
     }
   }
 
+  .pkce-status-badge {
+    margin-right: var(--kui-space-40, $kui-space-40);
+  }
 
   .scheme-selector {
     margin-left: auto !important;

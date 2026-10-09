@@ -157,6 +157,7 @@ const props = defineProps<{
 
 
 const { authInputs, authHeadersMap } = composables.useAuth()
+const { clearCredentials } = composables.useOAuthPkce()
 
 const showClientSecret = ref(false)
 
@@ -228,6 +229,8 @@ const auth2ClientCredentialsAuth = async (): Promise<PreRequestAuthResult> => {
   if (resp.ok) {
     const resData = await resp.json()
     if (resData.access_token) {
+      // one credential per scheme slot, so a stale PKCE entry can't block this token as expired
+      clearCredentials({ schemeKey: props.schemeKey })
       authInputs.value[`${props.schemeKey}-token`] = `${resData.token_type || 'Bearer'} ${resData.access_token}`
       await updateAuthDataImpl()
       useTimeoutFn(async () => {
@@ -280,43 +283,7 @@ watch(extraTokenRequestParameters, (newValue) => {
 <style lang="scss" scoped>
 
 .panel-body {
-  .param-wrapper {
-    margin-bottom: var(--kui-space-40, $kui-space-40);
-
-    &:first-child {
-      margin-top: var(--kui-space-20, $kui-space-20);
-    }
-
-    &:last-child {
-      margin-bottom: var(--kui-space-20, $kui-space-20);
-    }
-
-    .button-wrapper {
-      align-items: center;
-      display: inline-flex;
-      gap: var(--kui-space-20, $kui-space-20);
-      justify-content: space-between;
-      margin-bottom: var(--kui-space-30, $kui-space-30);
-      margin-top: var(--kui-space-30, $kui-space-30);
-      width: 100%;
-
-      button {
-        background: transparent;
-        border: none;
-        color: var(--kui-color-text-primary, $kui-color-text-primary);
-        cursor: pointer;
-        font-size: var(--kui-font-size-20, $kui-font-size-20);
-        margin-left: var(--kui-space-20, $kui-space-20);
-        margin-right: var(--kui-space-20, $kui-space-20);
-        padding: 0;
-        text-decoration: underline;
-      }
-    }
-  }
-
-  input[type=text] {
-    @include input-default;
-  }
+  @include try-it-auth-fields;
 
   .input-wrapper {
     align-items: center;
@@ -333,30 +300,6 @@ watch(extraTokenRequestParameters, (newValue) => {
       padding-right: var(--kui-space-40, $kui-space-40);
       position: absolute;
       right: 0;
-    }
-  }
-
-  .scope-wrapper {
-    align-items: center;
-    display: flex;
-    font-size: var(--kui-font-size-20, $kui-font-size-20);
-    gap: var(--kui-space-20, $kui-space-20);
-    line-height: 1.6;
-    margin-bottom: var(--kui-space-20, $kui-space-20);
-
-    input[type=checkbox] {
-      cursor: pointer;
-      height: 12px;
-      width: 12px;
-    }
-
-    label {
-      cursor: pointer;
-    }
-
-    .key-span {
-      font-weight: bold;
-      margin-left: var(--kui-space-20, $kui-space-20);
     }
   }
 }

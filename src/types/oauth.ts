@@ -1,5 +1,13 @@
+import type { LabelBadgeType } from './badges'
+
 /** Sign-in state of one authorizationCode (PKCE) security scheme. */
 export type Oauth2AuthStatus = 'unauthenticated' | 'authorizing' | 'authenticated' | 'expired'
+
+/** Label and badge type shown in the Try It header for a sign-in status. */
+export interface Oauth2StatusBadge {
+  label: string
+  type: LabelBadgeType
+}
 
 /** What the PKCE flow needs from one authorizationCode security scheme. */
 export interface Oauth2PkceTarget {
