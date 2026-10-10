@@ -70,7 +70,7 @@
     "@stoplight/json": "^3.21.7",
     "@stoplight/types": "^14.1.1",
     "@stoplight/yaml": "^4.3.0",
-    "@vueuse/core": "^14.4.0",
+    "@vueuse/core": "^15.0.0",
     "allof-merge": "^0.6.8",
     "chokidar": "^5.0.0",
     "commander": "^15.0.0",
