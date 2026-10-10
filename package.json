@@ -83,7 +83,7 @@
     "picocolors": "^1.1.1",
     "sanitize-html": "^2.17.7",
     "shiki": "^3.23.0",
-    "ws": "^8.21.3"
+    "ws": "^8.22.0"
   },
   "resolutions": {
     "openapi3-ts": "4.6.1"
