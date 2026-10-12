@@ -1010,7 +1010,8 @@ describe('concurrency (cross-request state bleed)', () => {
 })
 
 describe('external refs in raw spec content', () => {
-  const beerRef = 'https://raw.githubusercontent.com/Kong/spec-renderer/main/sandbox/public/specs/beer-and-coffee.yaml#/components/schemas/Beer'
+  // pinned to a commit so edits to the file on main can't change what these tests fetch
+  const beerRef = 'https://raw.githubusercontent.com/Kong/spec-renderer/f41835ab0e594767e55ad0668958a3bcbd2c2f3d/sandbox/public/specs/beer-and-coffee.yaml#/components/schemas/Beer'
 
   const buildSpecWithRef = (ref: string): string => `
 openapi: 3.1.0
