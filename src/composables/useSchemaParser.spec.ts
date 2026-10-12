@@ -3,6 +3,7 @@ import composables from '.'
 import stripeSpec from '../../sandbox/public/specs/stripe.json'
 import type { ServiceNode } from '@/types'
 import { resolveSchemaObjectFields } from '@/utils'
+import refParser from '@apidevtools/json-schema-ref-parser'
 
 describe('useSchemaParser', () => {
   describe('inline-refs', () => {
@@ -1005,5 +1006,107 @@ describe('concurrency (cross-request state bleed)', () => {
     expect(parser.parseOpenApiSpecDocument).toBeTypeOf('function')
     expect(parser.parseSpecDocument).toBeTypeOf('function')
     expect(parser.parseAsyncApiSpecDocument).toBeTypeOf('function')
+  })
+})
+
+describe('external refs in raw spec content', () => {
+  const beerRef = 'https://raw.githubusercontent.com/Kong/spec-renderer/main/sandbox/public/specs/beer-and-coffee.yaml#/components/schemas/Beer'
+
+  const buildSpecWithRef = (ref: string): string => `
+openapi: 3.1.0
+info:
+  title: External ref spec
+  version: 1.0.0
+paths:
+  /beers:
+    get:
+      operationId: getBeers
+      summary: Get beers
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '${ref}'
+`
+
+  const getResponseSchema = (doc: unknown): any => {
+    const operation = (doc as ServiceNode).children.find((child: any) => child.type === 'http_operation') as any
+    return operation.data.responses[0].contents[0].schema
+  }
+
+  it('resolves an external http $ref when raw spec text is passed', async () => {
+    const { parseSpecDocument } = composables.useSchemaParser()
+
+    const { parsedDocument } = await parseSpecDocument(buildSpecWithRef(beerRef))
+
+    const schema = getResponseSchema(parsedDocument)
+    expect(Object.keys(schema.properties)).toEqual(expect.arrayContaining(['price', 'name', 'rating', 'image', 'id']))
+    expect(schema.properties.rating.properties.average.type).toBe('number')
+  }, 15000)
+
+  it('still parses the rest of the document when an external $ref is unreachable', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const { parseSpecDocument } = composables.useSchemaParser()
+
+    const { parsedDocument, tableOfContents } = await parseSpecDocument(
+      buildSpecWithRef('https://invalid.invalid/missing.yaml#/components/schemas/Nope'),
+    )
+    const errorMessages = errorSpy.mock.calls.map((args) => String(args[0]))
+    errorSpy.mockRestore()
+
+    expect((parsedDocument as ServiceNode).name).toBe('External ref spec')
+    expect((parsedDocument as ServiceNode).children.some((child: any) => child.type === 'http_operation')).toBe(true)
+    expect(tableOfContents).toBeDefined()
+    expect(errorMessages.some((m) => m.includes('@kong/spec-renderer: error resolving external references'))).toBe(true)
+  }, 15000)
+
+  // json-schema-ref-parser 14.1.0 threw "Cannot read properties of null (reading '$ref')" in bundle(), which is why it was pinned (#637, #643)
+  it('bundles external refs when the spec also contains null values', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const { parseSpecDocument } = composables.useSchemaParser()
+    const spec = `${buildSpecWithRef(beerRef)}components:
+  schemas:
+    Nullable:
+      type: string
+      example: null
+      default: null
+      enum: [null, a]
+`
+
+    const { parsedDocument } = await parseSpecDocument(spec)
+    const errorMessages = errorSpy.mock.calls.map((args) => String(args[0]))
+    errorSpy.mockRestore()
+
+    expect(errorMessages.some((m) => m.includes('error resolving external references'))).toBe(false)
+    expect(Object.keys(getResponseSchema(parsedDocument).properties)).toEqual(expect.arrayContaining(['price', 'name']))
+  }, 15000)
+
+  it('skips bundling when raw spec text has only local refs', async () => {
+    const bundleSpy = vi.spyOn(refParser, 'bundle')
+    const { parseSpecDocument } = composables.useSchemaParser()
+
+    await parseSpecDocument(`${buildSpecWithRef('#/components/schemas/Local')}components:
+  schemas:
+    Local:
+      type: object
+`)
+    const bundleCalls = bundleSpy.mock.calls.length
+    bundleSpy.mockRestore()
+
+    expect(bundleCalls).toBe(0)
+  })
+
+  it('does not overflow the stack when scanning deeply nested raw spec content', async () => {
+    // ~3400 levels: deeper than a recursive walk allows, but within what dereference handles
+    let deepSchema = '{"type":"object"}'
+    for (let i = 0; i < 1700; i++) deepSchema = `{"type":"object","properties":{"a":${deepSchema}}}`
+    const spec = `{"openapi":"3.0.0","info":{"title":"Deep","version":"1"},"paths":{},"components":{"schemas":{"Deep":${deepSchema}}}}`
+    const { parseSpecDocument } = composables.useSchemaParser()
+
+    const { parsedDocument } = await parseSpecDocument(spec)
+
+    expect((parsedDocument as ServiceNode).name).toBe('Deep')
   })
 })

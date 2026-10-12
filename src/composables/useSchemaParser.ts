@@ -66,6 +66,22 @@ export default (): {
     return undefined
   }
 
+  // true if any `$ref` points outside the document; iterative so deep nesting can't overflow the stack,
+  // and cycle-safe since parsed yaml can share nodes
+  const hasExternalRef = (root: unknown): boolean => {
+    const seen = new Set<object>()
+    const stack: unknown[] = [root]
+    while (stack.length) {
+      const node = stack.pop()
+      if (!node || typeof node !== 'object' || seen.has(node)) continue
+      seen.add(node)
+      const nodeRef = (node as Record<string, unknown>).$ref
+      if (typeof nodeRef === 'string' && !isLocalRef(nodeRef)) return true
+      for (const child of Object.values(node)) stack.push(child)
+    }
+    return false
+  }
+
   /*
     This is for the case when we point to the reference, and reference block
     doesn't have title. In this case we want to use 'key' (last element of the path) as a title,
@@ -173,28 +189,45 @@ export default (): {
 
   const fetchAndBundle = async (spec: string, options: ParseOptions = <ParseOptions>{}): Promise<Record<string, any> | undefined> => {
     let json: Record<string, any> | undefined
+    // resolve external http refs only, local refs are dereferenced later
+    const bundleOptions = {
+      resolve: {
+        file: false,
+        external: true,
+        http: {
+          timeout: 2000,
+          withCredentials: options.withCredentials,
+        },
+      },
+      dereference: {
+        circular: true,
+      },
+      continueOnError: true,
+    }
     // if we have URL passed, but no spec, we call bundle to fetch and resolve external refs
     if (options.specUrl && !spec) {
       // fetches spec by URL provided and resolves all external references
-      json = await refParser.bundle(options.specUrl, {
-        resolve: {
-          file: false,
-          external: true,
-          http: {
-            timeout: 2000,
-            withCredentials: options.withCredentials,
-          },
-        },
-        dereference: {
-          circular: true,
-        },
-        continueOnError: true,
-      }) as Record<string, any> | undefined
+      json = await refParser.bundle(options.specUrl, bundleOptions) as Record<string, any> | undefined
       trace(options.traceParsing, 'fetched and external referenced bundled')
     } else {
       // if we have string holding spec content, we try to convert it to json obect (from json string or yaml)
       json = tryParseYamlOrObject(spec)
       trace(options.traceParsing, 'parsed from string')
+
+      // bundling is slow and rewrites internal refs, so only run it when there is something external to fetch;
+      // asyncapi specs go to the async parser as raw text, so bundling them is wasted work
+      if (json && !json.asyncapi && hasExternalRef(json)) {
+        // bundle mutates `json` in place; on failure it stays a valid, partially bundled document
+        try {
+          // specUrl (when given) is the base path for relative refs
+          json = (options.specUrl
+            ? await refParser.bundle(options.specUrl, json, bundleOptions)
+            : await refParser.bundle(json, bundleOptions)) as Record<string, any>
+          trace(options.traceParsing, 'external references bundled')
+        } catch (e) {
+          console.error('@kong/spec-renderer: error resolving external references in spec content:', e)
+        }
+      }
     }
 
     // save the spec title to be used as file name for the downloaded spec file
