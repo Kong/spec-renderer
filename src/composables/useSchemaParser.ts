@@ -275,8 +275,8 @@ export default (): {
         dereference: {
           circular: true,
         },
-        external: false,
         resolve: {
+          external: false,
           file: false,
           // http references resolved during bundle call above
           http: false,
