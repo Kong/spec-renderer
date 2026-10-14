@@ -1,9 +1,9 @@
 <template>
-  <Teleport to="body">
-    <div
-      v-bind="attrs"
-      class="slideout"
-    >
+  <div
+    ref="slideout"
+    class="slideout"
+  >
+    <div class="slideout-viewport">
       <Transition name="spec-renderer-fade">
         <div
           v-show="visible"
@@ -43,37 +43,53 @@
         </div>
       </Transition>
     </div>
-  </Teleport>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { onUnmounted, watch, useAttrs } from 'vue'
+import { onUnmounted, ref, useTemplateRef, watch } from 'vue'
 import { CloseIcon } from '@kong/icons'
 
-defineOptions({
-  inheritAttrs: false,
-})
-
-const attrs = useAttrs()
-
-const props = defineProps({
-  visible: {
-    type: Boolean,
-    default: false,
-  },
-  title: {
-    type: String,
-    default: '',
-  },
+const {
+  visible = false,
+  title = '',
+  maxWidth = '500px',
+  documentScrollingContainer = '',
+} = defineProps<{
+  visible?: boolean
+  title?: string
   /**
    * Max width of SlideOut container.
+  */
+  maxWidth?: string
+  /**
+   * Selector for the element that scrolls the content behind the SlideOut.
+   * Falls back to the document's own scrolling element when not provided or not found.
    */
-  maxWidth: {
-    type: String,
-    required: false,
-    default: '500px',
-  },
-})
+  documentScrollingContainer?: string
+}>()
+
+const slideoutRef = useTemplateRef('slideout')
+
+// Scroll container to lock and measure against - same contract as SpecDocument's own documentScrollingContainer handling.
+const resolveScrollingContainer = (): Element | null =>
+  documentScrollingContainer ? document.querySelector(documentScrollingContainer) : null
+
+// Visible height below the sticky root, measured once on open (scroll is locked while open, so it can't change).
+const viewportHeight = ref('100dvh')
+
+const updateViewportHeight = (): void => {
+  const el = slideoutRef.value
+  if (!el) {
+    viewportHeight.value = '100dvh'
+    return
+  }
+
+  const scrollParent = resolveScrollingContainer()
+  const visibleBottom = scrollParent ? scrollParent.getBoundingClientRect().bottom : window.innerHeight
+
+  viewportHeight.value = `${visibleBottom - el.getBoundingClientRect().top}px`
+}
 
 const emit = defineEmits<{
   (e: 'close'): void
@@ -81,7 +97,7 @@ const emit = defineEmits<{
 
 const handleClose = (e: any): void => {
   // close on escape key
-  if ((props.visible && e.keyCode === 27)) {
+  if ((visible && e.keyCode === 27)) {
     emit('close')
   }
 }
@@ -98,16 +114,20 @@ const toggleEventListeners = (isActive: boolean): void => {
 
 const toggleBodyScroll = (isActive: boolean): void => {
   if (typeof document !== 'undefined') {
+    // falls back to the document's own scrolling element (usually <html>) if no scrolling ancestor is found
+    const scrollLockElement = resolveScrollingContainer() ?? document.scrollingElement
+
     if (isActive) {
-      document.scrollingElement?.classList.add('spec-renderer-no-scroll')
+      scrollLockElement?.classList.add('spec-renderer-no-scroll')
     } else {
-      document.scrollingElement?.classList.remove('spec-renderer-no-scroll')
+      scrollLockElement?.classList.remove('spec-renderer-no-scroll')
     }
   }
 }
 
-watch(() => props.visible, async (visible: boolean): Promise<void> => {
+watch(() => visible, async (visible: boolean): Promise<void> => {
   if (visible) {
+    updateViewportHeight() // must run before the scroll lock, which hides the scrolling ancestor's overflow
     toggleEventListeners(true)
     toggleBodyScroll(true)
   } else {
@@ -126,6 +146,21 @@ onUnmounted(() => {
 @use '@/styles/styles' as *;
 
 .slideout {
+  height: 0;
+  left: 0;
+  pointer-events: none;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+
+  // gives the absolutely-positioned children a box to fill, since the sticky root above has zero height
+  .slideout-viewport {
+    height: v-bind('viewportHeight');
+    position: relative;
+    width: 100%;
+  }
+
   .slideout-container {
     background-color: var(--kui-color-background, $kui-color-background);
     border-left: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
@@ -133,15 +168,16 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    height: 100vh;
+    height: 100%;
     inset: 0;
     overflow-y: auto;
-    position: fixed;
+    pointer-events: auto;
+    position: absolute;
     width: 100%;
     z-index: 1000;
 
     @media (min-width: $kui-breakpoint-mobile) {
-      max-width: v-bind('props.maxWidth');
+      max-width: v-bind('maxWidth');
     }
 
     .slideout-header {
@@ -198,16 +234,19 @@ onUnmounted(() => {
 
   .slideout-backdrop {
     background: var(--kui-color-background-overlay, $kui-color-background-overlay);
+    height: 100%;
     inset: 0;
-    position: fixed;
+    pointer-events: auto;
+    position: absolute;
     z-index: 1000;
   }
 }
 </style>
 
 <style lang="scss">
-// must be unscoped since it's targeting the body element
+// unscoped: targets an element outside this component (document or host-provided scroll container)
 .spec-renderer-no-scroll {
-  overflow: hidden;
+  // !important: that element's own overflow rules can outrank this single-class selector
+  overflow: hidden !important;
 }
 </style>
