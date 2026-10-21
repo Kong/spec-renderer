@@ -1,3 +1,10 @@
+## [1.117.1](https://github.com/Kong/spec-renderer/compare/v1.117.0...v1.117.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ws to ^8.22.0 ([#1051](https://github.com/Kong/spec-renderer/issues/1051)) ([5fd7dc5](https://github.com/Kong/spec-renderer/commit/5fd7dc5baa95e53225eb8ec670e7f7b4a0f20347))
+
 # [1.117.0](https://github.com/Kong/spec-renderer/compare/v1.116.0...v1.117.0) (2026-10-09)
 
 
