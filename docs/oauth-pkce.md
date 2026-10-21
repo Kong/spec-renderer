@@ -110,5 +110,4 @@ The sandbox uses the public demo server of Duende IdentityServer. It is a third-
 | An `authorizationCode` scheme shows only an Access Token input, no Authorize button | The `oauthRedirectUri` prop is not set. |
 | "Your browser blocked the sign-in window" | The browser blocked the popup. Allow popups for the site. |
 | The popup shows an identity provider error, and after you close it the panel says the redirect URI is most likely not registered | The identity provider rejected the redirect URI. Register it exactly. |
-| A pasted access token gets a 401 | The token is sent as typed. Include the `Bearer ` prefix. |
 | "Signing in requires a secure context" | The page is not served over HTTPS or from `localhost`. |

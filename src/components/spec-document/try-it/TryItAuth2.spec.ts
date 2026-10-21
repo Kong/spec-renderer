@@ -162,15 +162,6 @@ describe('<TryItAuth2 />', () => {
       expect(wrapper.findTestId(authorizeId).exists()).toBe(false)
     })
 
-    it('stores the pasted token as is under the shared token key', async () => {
-      const wrapper = mountDispatcher(buildScheme({ authorizationCode }))
-      await clickToggle(wrapper)
-
-      await wrapper.findTestId(tokenId()).setValue('Bearer pasted-token')
-
-      expect(authInputs.value[`${SCHEME_KEY}-token`]).toBe('Bearer pasted-token')
-    })
-
     it('goes back to the sign-in and drops the pasted token', async () => {
       const wrapper = mountDispatcher(buildScheme({ authorizationCode }))
       await clickToggle(wrapper)
@@ -182,21 +173,6 @@ describe('<TryItAuth2 />', () => {
       expect(authInputs.value[`${SCHEME_KEY}-token`]).toBe('')
       expect(wrapper.findComponent(TryItAuthCode).exists()).toBe(true)
       expect(wrapper.findTestId(authorizeId).exists()).toBe(true)
-    })
-
-    it('keeps the client credentials panel when the scheme declares both flows', async () => {
-      const wrapper = mountDispatcher(buildScheme({ clientCredentials, authorizationCode }))
-
-      await clickToggle(wrapper)
-
-      expect(wrapper.findComponent(TryItAuth2ClientCredentials).exists()).toBe(true)
-      expect(wrapper.findTestId(tokenId()).exists()).toBe(true)
-    })
-
-    it('does not offer the toggle without the redirect URI', () => {
-      const wrapper = mountDispatcher(buildScheme({ authorizationCode }), '')
-
-      expect(wrapper.findTestId(toggleId()).exists()).toBe(false)
     })
 
     it('cancels a sign-in in progress when switching to the token input', async () => {

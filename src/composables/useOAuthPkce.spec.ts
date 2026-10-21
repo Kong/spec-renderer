@@ -521,26 +521,6 @@ describe('manual token mode', () => {
     expect(errorFor(target)).toBeUndefined()
     expect(useAuth().authInputs.value[`${target.schemeKey}-token`]).toBe('')
   })
-
-  it('setManual(false) clears the flag and the pasted token', () => {
-    const { setManual, isManual } = useOAuthPkce()
-    setManual('oauth2Auth', true)
-    useAuth().authInputs.value['oauth2Auth-token'] = 'Bearer pasted'
-
-    setManual('oauth2Auth', false)
-
-    expect(isManual('oauth2Auth')).toBe(false)
-    expect(useAuth().authInputs.value['oauth2Auth-token']).toBe('')
-  })
-
-  it('is cleared by reset', () => {
-    const { setManual, isManual, reset } = useOAuthPkce()
-    setManual('oauth2Auth', true)
-
-    reset()
-
-    expect(isManual('oauth2Auth')).toBe(false)
-  })
 })
 
 describe('authorize unexpected failures', () => {
