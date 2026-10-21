@@ -22,6 +22,8 @@ const tokens = ref<Record<string, OauthToken>>({})
 const busy = ref<Record<string, boolean>>({})
 /** The last user-facing sign-in error, cleared on the next attempt or success. */
 const errors = ref<Record<string, string | undefined>>({})
+/** True while the user enters an access token by hand instead of signing in. */
+const manual = ref<Record<string, boolean>>({})
 /** Cancels each token's pending expiry timer, so a replaced or cleared token's timer never fires. */
 const expiryTimers = new Map<string, () => void>()
 // bumped when a token expires, so statusFor re-runs
@@ -140,6 +142,9 @@ export default function useOAuthPkce() {
   /** The last sign-in error for the scheme, if any. */
   const errorFor = (target: Oauth2PkceTarget): string | undefined => errors.value[target.schemeKey]
 
+  /** True while the scheme takes a hand-entered access token instead of the sign-in. */
+  const isManual = (schemeKey: string): boolean => !!manual.value[schemeKey]
+
   /** Sign in via authorization code + PKCE in a popup and store the token. Reports failures through errorFor instead of throwing. */
   const authorize = async ({ target, clientId, scopes, redirectUri }: AuthorizeOptions): Promise<void> => {
     const k = target.schemeKey
@@ -254,6 +259,19 @@ export default function useOAuthPkce() {
     commitToken(schemeKey)
   }
 
+  /** Switch the scheme between the sign-in and a hand-entered access token. Either way, the other mode's credential is dropped. */
+  const setManual = (schemeKey: string, value: boolean): void => {
+    if (value) {
+      // a stale PKCE token or error must not outlive the switch
+      clearCredentials({ schemeKey })
+      manual.value[schemeKey] = true
+      return
+    }
+    manual.value[schemeKey] = false
+    // the pasted token must not keep riding in requests after switching back
+    useAuth().authInputs.value[`${schemeKey}-token`] = ''
+  }
+
   /** Forget every token and error, and cancel a sign-in in progress. */
   const reset = (): void => {
     cancelActiveFlow?.()
@@ -261,6 +279,7 @@ export default function useOAuthPkce() {
     tokens.value = {}
     busy.value = {}
     errors.value = {}
+    manual.value = {}
     expiryTick.value = 0
     for (const stop of expiryTimers.values()) {
       stop()
@@ -268,5 +287,5 @@ export default function useOAuthPkce() {
     expiryTimers.clear()
   }
 
-  return { statusFor, aggregateStatus, tokenFor, errorFor, authorize, clearCredentials, reset }
+  return { statusFor, aggregateStatus, tokenFor, errorFor, isManual, setManual, authorize, clearCredentials, reset }
 }

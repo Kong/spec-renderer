@@ -79,6 +79,13 @@ The OAuth URLs come from the spec. The popup keeps `window.opener`, because the 
 
 If you render specs you do not control, vet the security scheme URLs (`authorizationUrl` and `tokenUrl`) before passing the spec in. The panel shows the sign-in host next to the Authorize button, so users can see where they will sign in.
 
+## Manual access token
+
+The PKCE panel has a "Use access token" toggle at the top. Turning it on swaps the sign-in fields for an Access token input. Turning it off goes back to the sign-in.
+
+- The value is sent as the `Authorization` header exactly as typed, so users type `Bearer <token>` themselves.
+- Switching modes drops the other mode's credential.
+
 ## Tokens
 
 - Tokens are kept in memory only. They are never written to `localStorage` or `sessionStorage`, and they are lost on reload.
@@ -103,4 +110,5 @@ The sandbox uses the public demo server of Duende IdentityServer. It is a third-
 | An `authorizationCode` scheme shows only an Access Token input, no Authorize button | The `oauthRedirectUri` prop is not set. |
 | "Your browser blocked the sign-in window" | The browser blocked the popup. Allow popups for the site. |
 | The popup shows an identity provider error, and after you close it the panel says the redirect URI is most likely not registered | The identity provider rejected the redirect URI. Register it exactly. |
+| A pasted access token gets a 401 | The token is sent as typed. Include the `Bearer ` prefix. |
 | "Signing in requires a secure context" | The page is not served over HTTPS or from `localhost`. |
