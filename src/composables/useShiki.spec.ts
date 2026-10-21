@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const { createHighlighterCore } = vi.hoisted(() => ({ createHighlighterCore: vi.fn() }))
 
 vi.mock('shiki/core', () => ({ createHighlighterCore }))
-vi.mock('shiki/engine/oniguruma', () => ({ createOnigurumaEngine: vi.fn(() => ({})) }))
+vi.mock('shiki/engine/javascript', () => ({ createJavaScriptRegexEngine: vi.fn(() => ({})) }))
 
 describe('useShiki', () => {
   beforeEach(() => {
