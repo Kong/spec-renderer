@@ -423,8 +423,8 @@ describe('<TryItAuth />', () => {
         const wrapper = mountAuthCode('manual-op')
         await nextTick()
 
-        await wrapper.findTestId('tryit-auth-manual-toggle-manual-op').find('[data-testid="switch-control"]').trigger('click')
-        await wrapper.findTestId('tryit-auth-manual-token-manual-op').setValue('Bearer pasted-token')
+        await wrapper.findTestId('tryit-auth-manual-toggle-AuthCodeAuth-manual-op').find('[data-testid="switch-control"]').trigger('click')
+        await wrapper.findTestId('tryit-auth-manual-token-AuthCodeAuth-manual-op').setValue('Bearer pasted-token')
         await vi.advanceTimersByTimeAsync(100)
 
         expect((await wrapper.vm.runPreRequestAuth()).ok).toBe(true)
@@ -435,11 +435,36 @@ describe('<TryItAuth />', () => {
         const wrapper = mountAuthCode('badge-op')
         expect(wrapper.findTestId('tryit-auth-status-badge-op').exists()).toBe(true)
 
-        await wrapper.findTestId('tryit-auth-manual-toggle-badge-op').find('[data-testid="switch-control"]').trigger('click')
+        await wrapper.findTestId('tryit-auth-manual-toggle-AuthCodeAuth-badge-op').find('[data-testid="switch-control"]').trigger('click')
         expect(wrapper.findTestId('tryit-auth-status-badge-op').exists()).toBe(false)
 
-        await wrapper.findTestId('tryit-auth-manual-toggle-badge-op').find('[data-testid="switch-control"]').trigger('click')
+        await wrapper.findTestId('tryit-auth-manual-toggle-AuthCodeAuth-badge-op').find('[data-testid="switch-control"]').trigger('click')
         expect(wrapper.findTestId('tryit-auth-status-badge-op').exists()).toBe(true)
+      })
+
+      it('gives each scheme of a requirement its own toggle and token input', async () => {
+        const otherScheme: IOauth2SecurityScheme = { ...authCodeScheme, id: 'other-auth-code', key: 'OtherAuth' }
+        const schemeList = [authCodeScheme, otherScheme]
+        composables.useAuth().activeSecurityScheme.value = 'both'
+        const wrapper = mount(TryItAuth, {
+          attachTo: document.body,
+          props: { data: { id: 'two-op', method: 'get', path: '/example', responses: [], servers: [], security: [schemeList] } },
+          global: {
+            provide: {
+              'security-scheme-group-list': ref([{ title: 'Both', key: 'both', schemeList }]),
+              'oauth-redirect-uri': computed(() => 'https://host.test/cb'),
+            },
+          },
+        })
+        await nextTick()
+
+        for (const key of ['AuthCodeAuth', 'OtherAuth']) {
+          await wrapper.findTestId(`tryit-auth-manual-toggle-${key}-two-op`).find('[data-testid="switch-control"]').trigger('click')
+        }
+
+        const inputs = wrapper.findAll('input[id^="auth-input-oauth2-authorizationCode-token-"]')
+        expect(new Set(inputs.map(input => input.attributes('id'))).size).toBe(2)
+        expect(wrapper.findTestId('tryit-auth-manual-token-OtherAuth-two-op').exists()).toBe(true)
       })
 
       describe('on a scheme that also declares clientCredentials', () => {
@@ -458,8 +483,8 @@ describe('<TryItAuth />', () => {
           vi.useFakeTimers()
           const wrapper = mountBoth('both-op')
           await nextTick()
-          await wrapper.findTestId('tryit-auth-manual-toggle-both-op').find('[data-testid="switch-control"]').trigger('click')
-          await wrapper.findTestId('tryit-auth-manual-token-both-op').setValue('Bearer pasted-token')
+          await wrapper.findTestId('tryit-auth-manual-toggle-BothAuth-both-op').find('[data-testid="switch-control"]').trigger('click')
+          await wrapper.findTestId('tryit-auth-manual-token-BothAuth-both-op').setValue('Bearer pasted-token')
 
           // the client credentials panel owns the visible Client ID input in manual mode
           await wrapper.find('#auth-input-oauth2-clientCredentials-clientId-both-op').setValue('edited-client')
@@ -472,12 +497,34 @@ describe('<TryItAuth />', () => {
           vi.useFakeTimers()
           const wrapper = mountBoth('both-scope-op')
           await nextTick()
-          await wrapper.findTestId('tryit-auth-manual-toggle-both-scope-op').find('[data-testid="switch-control"]').trigger('click')
-          await wrapper.findTestId('tryit-auth-manual-token-both-scope-op').setValue('Bearer pasted-token')
+          await wrapper.findTestId('tryit-auth-manual-toggle-BothAuth-both-scope-op').find('[data-testid="switch-control"]').trigger('click')
+          await wrapper.findTestId('tryit-auth-manual-token-BothAuth-both-scope-op').setValue('Bearer pasted-token')
 
           await wrapper.find('#auth-input-oauth2-clientCredentials-scope-read-both-scope-op').trigger('change')
 
           expect(composables.useAuth().authInputs.value['BothAuth-token']).toBe('Bearer pasted-token')
+        })
+
+        // Regression: the expiry timer of an earlier client credentials token used to wipe a pasted token.
+        it('keeps the pasted token when an earlier client credentials token expires', async () => {
+          vi.useFakeTimers()
+          const { activeSecurityScheme, authInputs } = composables.useAuth()
+          activeSecurityScheme.value = 'BothAuth'
+          authInputs.value = { 'BothAuth-clientId': 'client', 'BothAuth-clientSecret': 'secret' }
+          vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+            ok: true,
+            json: async () => ({ access_token: 'cc-token', token_type: 'Bearer', expires_in: 5 }),
+          }))
+          const wrapper = mountBoth('both-expiry-op')
+          await nextTick()
+          await wrapper.vm.runPreRequestAuth()
+          expect(authInputs.value['BothAuth-token']).toBe('Bearer cc-token')
+
+          await wrapper.findTestId('tryit-auth-manual-toggle-BothAuth-both-expiry-op').find('[data-testid="switch-control"]').trigger('click')
+          await wrapper.findTestId('tryit-auth-manual-token-BothAuth-both-expiry-op').setValue('Bearer pasted-token')
+          await vi.advanceTimersByTimeAsync(6_000)
+
+          expect(authInputs.value['BothAuth-token']).toBe('Bearer pasted-token')
         })
       })
     })

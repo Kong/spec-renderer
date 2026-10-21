@@ -1,8 +1,8 @@
 <template>
   <ToggleSwitch
-    :id="`auth-toggle-oauth2-authorizationCode-manual-${dataId}`"
+    :id="`auth-toggle-oauth2-authorizationCode-manual-${schemeKey}-${dataId}`"
     class="manual-toggle"
-    :data-testid="`tryit-auth-manual-toggle-${dataId}`"
+    :data-testid="`tryit-auth-manual-toggle-${schemeKey}-${dataId}`"
     label="Use access token"
     label-position="start"
     :model-value="model"

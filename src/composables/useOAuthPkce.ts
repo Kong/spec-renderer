@@ -48,6 +48,10 @@ const stopExpiryTimer = (schemeKey: string): void => {
 
 /** Store a token response, pass it to Try It, and schedule its expiry. */
 const saveToken = ({ schemeKey, fingerprint }: Oauth2PkceTarget, { expires_in, access_token, token_type }: TokenResponseData): void => {
+  // handle race condition where the user switches to manual mode before the oauth popup flow completes
+  if (manual.value[schemeKey]) {
+    return
+  }
   const expiresAt = typeof expires_in === 'number' ? Date.now() + expires_in * 1000 : undefined
   tokens.value[schemeKey] = {
     accessToken: access_token,

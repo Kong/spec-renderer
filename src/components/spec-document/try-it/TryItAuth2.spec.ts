@@ -134,8 +134,8 @@ describe('<TryItAuth2 />', () => {
   describe('manual access token', () => {
     const { authInputs } = composables.useAuth()
     const SWITCH_CONTROL = '[data-testid="switch-control"]'
-    const toggleId = (dataId = DATA_ID) => `tryit-auth-manual-toggle-${dataId}`
-    const tokenId = (dataId = DATA_ID) => `tryit-auth-manual-token-${dataId}`
+    const toggleId = (dataId = DATA_ID) => `tryit-auth-manual-toggle-${SCHEME_KEY}-${dataId}`
+    const tokenId = (dataId = DATA_ID) => `tryit-auth-manual-token-${SCHEME_KEY}-${dataId}`
     const authorizeId = `tryit-auth-authorize-${DATA_ID}`
     const clickToggle = (wrapper: ReturnType<typeof mountDispatcher>, dataId = DATA_ID) =>
       wrapper.findTestId(toggleId(dataId)).find(SWITCH_CONTROL).trigger('click')

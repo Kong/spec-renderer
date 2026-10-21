@@ -2,16 +2,16 @@
   <div class="param-wrapper">
     <InputLabel
       class="param-label"
-      :for="`auth-input-oauth2-authorizationCode-token-${dataId}`"
+      :for="`auth-input-oauth2-authorizationCode-token-${schemeKey}-${dataId}`"
     >
       Access token
     </InputLabel>
     <div class="input-wrapper">
       <input
-        :id="`auth-input-oauth2-authorizationCode-token-${dataId}`"
+        :id="`auth-input-oauth2-authorizationCode-token-${schemeKey}-${dataId}`"
         v-model="authInputs[`${schemeKey}-token`]"
         autocomplete="off"
-        :data-testid="`tryit-auth-manual-token-${dataId}`"
+        :data-testid="`tryit-auth-manual-token-${schemeKey}-${dataId}`"
         placeholder="Bearer eyJhbGciOi..."
         :type="showToken ? 'text' : 'password'"
       >

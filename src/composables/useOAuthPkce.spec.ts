@@ -521,6 +521,28 @@ describe('manual token mode', () => {
     expect(errorFor(target)).toBeUndefined()
     expect(useAuth().authInputs.value[`${target.schemeKey}-token`]).toBe('')
   })
+
+  // Regression: a token request already in flight used to replace the pasted token when it resolved.
+  it('keeps the pasted token when a sign-in finishes after the switch to manual', async () => {
+    const target = buildTarget()
+    const { setManual, tokenFor, statusFor } = useOAuthPkce()
+    let resolveFetch!: (response: ReturnType<typeof jsonResponse>) => void
+    global.fetch = vi.fn().mockReturnValue(new Promise(resolve => {
+      resolveFetch = resolve
+    }))
+    const { done, authorizeUrl } = startSignIn(target)
+    dispatchCallback(fakePopup, { code: 'auth-code-1', state: (await authorizeUrl()).searchParams.get('state')! })
+    await waitFor(() => vi.mocked(fetch).mock.calls.length > 0)
+
+    setManual(target.schemeKey, true)
+    useAuth().authInputs.value[`${target.schemeKey}-token`] = 'Bearer pasted-token'
+    resolveFetch(jsonResponse({ access_token: 'late-token', token_type: 'Bearer', expires_in: 3600 }))
+    await done
+
+    expect(useAuth().authInputs.value[`${target.schemeKey}-token`]).toBe('Bearer pasted-token')
+    expect(tokenFor(target)).toBeUndefined()
+    expect(statusFor(target)).toBe('unauthenticated')
+  })
 })
 
 describe('authorize unexpected failures', () => {
