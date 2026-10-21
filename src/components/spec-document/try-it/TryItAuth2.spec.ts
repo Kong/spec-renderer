@@ -1,10 +1,12 @@
+import { webcrypto } from 'node:crypto'
 import { computed } from 'vue'
-import { afterEach, beforeEach, describe, it, expect } from 'vitest'
+import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest'
 import { mount, enableAutoUnmount } from '@vue/test-utils'
 import TryItAuth2 from './TryItAuth2.vue'
 import TryItAuth2ClientCredentials from './TryItAuth2ClientCredentials.vue'
 import TryItAuthCode from './TryItAuthCode.vue'
 import composables from '@/composables'
+import { buildPkceTarget } from '@/utils/oauth-pkce'
 import type { IOauth2SecurityScheme } from '@stoplight/types'
 
 enableAutoUnmount(afterEach)
@@ -27,9 +29,10 @@ const buildScheme = (flows: IOauth2SecurityScheme['flows']): IOauth2SecuritySche
   flows,
 })
 
-const mountDispatcher = (scheme: IOauth2SecurityScheme, redirectUri = 'https://host.test/cb') => mount(TryItAuth2, {
-  props: { schemeKey: SCHEME_KEY, dataId: DATA_ID, scheme },
+const mountDispatcher = (scheme: IOauth2SecurityScheme, redirectUri = 'https://host.test/cb', dataId = DATA_ID) => mount(TryItAuth2, {
+  props: { schemeKey: SCHEME_KEY, dataId, scheme },
   global: { provide: { 'oauth-redirect-uri': computed(() => redirectUri) } },
+  attachTo: document.body, // the toggle click needs an attached DOM
 })
 
 const ccHeading = `tryit-auth-flow-heading-clientCredentials-${DATA_ID}`
@@ -125,6 +128,112 @@ describe('<TryItAuth2 />', () => {
       expect(wrapper.findComponent(TryItAuthCode).exists()).toBe(false)
       expect(wrapper.findTestId(ccHeading).exists()).toBe(false)
       expect(wrapper.findTestId(pkceHeading).exists()).toBe(false)
+    })
+  })
+
+  describe('manual access token', () => {
+    const { authInputs } = composables.useAuth()
+    const SWITCH_CONTROL = '[data-testid="switch-control"]'
+    const toggleId = (dataId = DATA_ID) => `tryit-auth-manual-toggle-${dataId}`
+    const tokenId = (dataId = DATA_ID) => `tryit-auth-manual-token-${dataId}`
+    const authorizeId = `tryit-auth-authorize-${DATA_ID}`
+    const clickToggle = (wrapper: ReturnType<typeof mountDispatcher>, dataId = DATA_ID) =>
+      wrapper.findTestId(toggleId(dataId)).find(SWITCH_CONTROL).trigger('click')
+
+    beforeEach(() => {
+      composables.useOAuthPkce().reset()
+      authInputs.value = {}
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+      vi.unstubAllGlobals()
+    })
+
+    it('swaps the sign-in fields for the token input in manual mode', async () => {
+      const wrapper = mountDispatcher(buildScheme({ authorizationCode }))
+
+      await clickToggle(wrapper)
+
+      expect(composables.useOAuthPkce().isManual(SCHEME_KEY)).toBe(true)
+      expect(wrapper.findTestId(tokenId()).exists()).toBe(true)
+      expect(wrapper.findTestId(toggleId()).text()).toBe('Use access token')
+      expect(wrapper.findComponent(TryItAuthCode).exists()).toBe(false)
+      expect(wrapper.findTestId(authorizeId).exists()).toBe(false)
+    })
+
+    it('stores the pasted token as is under the shared token key', async () => {
+      const wrapper = mountDispatcher(buildScheme({ authorizationCode }))
+      await clickToggle(wrapper)
+
+      await wrapper.findTestId(tokenId()).setValue('Bearer pasted-token')
+
+      expect(authInputs.value[`${SCHEME_KEY}-token`]).toBe('Bearer pasted-token')
+    })
+
+    it('goes back to the sign-in and drops the pasted token', async () => {
+      const wrapper = mountDispatcher(buildScheme({ authorizationCode }))
+      await clickToggle(wrapper)
+      await wrapper.findTestId(tokenId()).setValue('Bearer pasted-token')
+
+      await clickToggle(wrapper)
+
+      expect(composables.useOAuthPkce().isManual(SCHEME_KEY)).toBe(false)
+      expect(authInputs.value[`${SCHEME_KEY}-token`]).toBe('')
+      expect(wrapper.findComponent(TryItAuthCode).exists()).toBe(true)
+      expect(wrapper.findTestId(authorizeId).exists()).toBe(true)
+    })
+
+    it('keeps the client credentials panel when the scheme declares both flows', async () => {
+      const wrapper = mountDispatcher(buildScheme({ clientCredentials, authorizationCode }))
+
+      await clickToggle(wrapper)
+
+      expect(wrapper.findComponent(TryItAuth2ClientCredentials).exists()).toBe(true)
+      expect(wrapper.findTestId(tokenId()).exists()).toBe(true)
+    })
+
+    it('does not offer the toggle without the redirect URI', () => {
+      const wrapper = mountDispatcher(buildScheme({ authorizationCode }), '')
+
+      expect(wrapper.findTestId(toggleId()).exists()).toBe(false)
+    })
+
+    it('cancels a sign-in in progress when switching to the token input', async () => {
+      // jsdom has crypto.getRandomValues but no crypto.subtle
+      vi.stubGlobal('crypto', webcrypto)
+      const popup = { closed: false, focus: vi.fn(), close: vi.fn(), location: { replace: vi.fn() } }
+      vi.spyOn(window, 'open').mockReturnValue(popup as unknown as Window)
+      const authScheme = buildScheme({ authorizationCode })
+      const target = buildPkceTarget(authScheme, 'my-client-id')!
+      const wrapper = mountDispatcher(authScheme)
+
+      // the popup never answers, so the sign-in stays in progress
+      const signIn = composables.useOAuthPkce().authorize({ target, clientId: 'my-client-id', scopes: [], redirectUri: 'https://host.test/cb' })
+      expect(composables.useOAuthPkce().statusFor(target)).toBe('authorizing')
+
+      await clickToggle(wrapper)
+      await signIn
+
+      expect(popup.close).toHaveBeenCalled()
+      expect(composables.useOAuthPkce().statusFor(target)).toBe('unauthenticated')
+      expect(composables.useOAuthPkce().errorFor(target)).toBeUndefined()
+      expect(wrapper.findTestId(tokenId()).exists()).toBe(true)
+    })
+
+    it('syncs the mode and the pasted token across operations using the same scheme', async () => {
+      const authScheme = buildScheme({ authorizationCode })
+      const first = mountDispatcher(authScheme)
+      const second = mountDispatcher(authScheme, 'https://host.test/cb', 'op-2')
+
+      await clickToggle(first)
+      expect(second.findTestId(tokenId('op-2')).exists()).toBe(true)
+
+      await second.findTestId(tokenId('op-2')).setValue('Bearer pasted-token')
+      expect((first.findTestId(tokenId()).element as HTMLInputElement).value).toBe('Bearer pasted-token')
+
+      await clickToggle(second, 'op-2')
+      expect(first.findComponent(TryItAuthCode).exists()).toBe(true)
     })
   })
 })

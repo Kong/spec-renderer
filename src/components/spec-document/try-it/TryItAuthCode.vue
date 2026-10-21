@@ -1,141 +1,120 @@
 <template>
   <div>
-    <ToggleSwitch
-      :id="`auth-toggle-oauth2-authorizationCode-manual-${dataId}`"
-      v-model="manualMode"
-      class="manual-toggle"
-      :data-testid="`tryit-auth-manual-toggle-${dataId}`"
-      :disabled="status === 'authorizing'"
-      label="Use access token"
-      label-position="start"
-      size="small"
-    />
+    <div class="param-wrapper">
+      <InputLabel
+        class="param-label"
+        :for="`auth-input-oauth2-authorizationCode-clientId-${dataId}`"
+      >
+        Client ID
+        <Tooltip
+          v-if="scheme.description"
+          :id="`auth-tooltip-oauth2-authorizationCode-clientId-${dataId}`"
+          :text="scheme.description"
+        />
+      </InputLabel>
+      <input
+        :id="`auth-input-oauth2-authorizationCode-clientId-${dataId}`"
+        v-model="authInputs[`${schemeKey}-clientId`]"
+        autocomplete="off"
+        :disabled="status === 'authorizing'"
+        placeholder="Enter Client ID"
+        type="text"
+      >
+    </div>
 
-    <TryItAuthManualToken
-      v-if="manualMode"
-      :data-id="dataId"
-      :scheme-key="schemeKey"
-    />
-
-    <template v-else>
-      <div class="param-wrapper">
-        <InputLabel
-          class="param-label"
-          :for="`auth-input-oauth2-authorizationCode-clientId-${dataId}`"
-        >
-          Client ID
-          <Tooltip
-            v-if="scheme.description"
-            :id="`auth-tooltip-oauth2-authorizationCode-clientId-${dataId}`"
-            :text="scheme.description"
-          />
+    <div
+      v-if="scopeEntries.length"
+      class="param-wrapper"
+    >
+      <div class="button-wrapper">
+        <InputLabel class="param-label">
+          Scopes
         </InputLabel>
-        <input
-          :id="`auth-input-oauth2-authorizationCode-clientId-${dataId}`"
-          v-model="authInputs[`${schemeKey}-clientId`]"
-          autocomplete="off"
-          :disabled="status === 'authorizing'"
-          placeholder="Enter Client ID"
-          type="text"
-        >
-      </div>
-
-      <div
-        v-if="scopeEntries.length"
-        class="param-wrapper"
-      >
-        <div class="button-wrapper">
-          <InputLabel class="param-label">
-            Scopes
-          </InputLabel>
-          <div>
-            <button
-              :aria-label="`Select all scopes for ${schemeKey}`"
-              type="button"
-              @click="setAllScopes(true)"
-            >
-              Select all
-            </button>
-            <button
-              :aria-label="`Deselect all scopes for ${schemeKey}`"
-              type="button"
-              @click="setAllScopes(false)"
-            >
-              Deselect all
-            </button>
-          </div>
-        </div>
-
-        <div
-          v-for="[scopeKey, scope] in scopeEntries"
-          :key="scopeKey"
-          class="scope-wrapper"
-        >
-          <input
-            :id="`auth-input-oauth2-authorizationCode-scope-${scopeKey}-${dataId}`"
-            v-model="authInputs[`${schemeKey}-authorizationCode-scope-${scopeKey}`]"
-            autocomplete="off"
-            type="checkbox"
+        <div>
+          <button
+            :aria-label="`Select all scopes for ${schemeKey}`"
+            type="button"
+            @click="setAllScopes(true)"
           >
-          <label :for="`auth-input-oauth2-authorizationCode-scope-${scopeKey}-${dataId}`">
-            <span class="key-span">{{ scopeKey }}</span> - {{ scope }}
-          </label>
+            Select all
+          </button>
+          <button
+            :aria-label="`Deselect all scopes for ${schemeKey}`"
+            type="button"
+            @click="setAllScopes(false)"
+          >
+            Deselect all
+          </button>
         </div>
       </div>
 
-      <div class="action-row">
-        <button
-          class="button-default"
-          :data-testid="`tryit-auth-authorize-${dataId}`"
-          :disabled="authorizeDisabled"
-          type="button"
-          @click="onAuthorizeClick"
-        >
-          {{ token ? 'Re-authorize' : 'Authorize' }}
-        </button>
-        <button
-          v-if="token"
-          class="button-default tertiary"
-          :data-testid="`tryit-auth-clear-${dataId}`"
-          type="button"
-          @click="onClearCredentials"
-        >
-          Clear credentials
-        </button>
-      </div>
       <div
-        v-if="signInHost"
-        class="auth-hint"
-        :data-testid="`tryit-auth-signin-host-${dataId}`"
+        v-for="[scopeKey, scope] in scopeEntries"
+        :key="scopeKey"
+        class="scope-wrapper"
       >
-        You'll sign in at {{ signInHost }}
+        <input
+          :id="`auth-input-oauth2-authorizationCode-scope-${scopeKey}-${dataId}`"
+          v-model="authInputs[`${schemeKey}-authorizationCode-scope-${scopeKey}`]"
+          autocomplete="off"
+          type="checkbox"
+        >
+        <label :for="`auth-input-oauth2-authorizationCode-scope-${scopeKey}-${dataId}`">
+          <span class="key-span">{{ scopeKey }}</span> - {{ scope }}
+        </label>
       </div>
-      <div
-        v-if="!target"
-        class="auth-hint"
-        :data-testid="`tryit-auth-bad-target-${dataId}`"
-      >
-        This scheme's authorization or token URL is missing or not an absolute http(s) URL, so sign-in is unavailable.
-      </div>
+    </div>
 
-      <div
-        v-if="error"
-        class="auth-error"
-        :data-testid="`tryit-auth-error-${dataId}`"
-        role="alert"
+    <div class="action-row">
+      <button
+        class="button-default"
+        :data-testid="`tryit-auth-authorize-${dataId}`"
+        :disabled="authorizeDisabled"
+        type="button"
+        @click="onAuthorizeClick"
       >
-        {{ error }}
-      </div>
-    </template>
+        {{ token ? 'Re-authorize' : 'Authorize' }}
+      </button>
+      <button
+        v-if="token"
+        class="button-default tertiary"
+        :data-testid="`tryit-auth-clear-${dataId}`"
+        type="button"
+        @click="onClearCredentials"
+      >
+        Clear credentials
+      </button>
+    </div>
+    <div
+      v-if="signInHost"
+      class="auth-hint"
+      :data-testid="`tryit-auth-signin-host-${dataId}`"
+    >
+      You'll sign in at {{ signInHost }}
+    </div>
+    <div
+      v-if="!target"
+      class="auth-hint"
+      :data-testid="`tryit-auth-bad-target-${dataId}`"
+    >
+      This scheme's authorization or token URL is missing or not an absolute http(s) URL, so sign-in is unavailable.
+    </div>
+
+    <div
+      v-if="error"
+      class="auth-error"
+      :data-testid="`tryit-auth-error-${dataId}`"
+      role="alert"
+    >
+      {{ error }}
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, inject, watch } from 'vue'
 import InputLabel from '@/components/common/InputLabel.vue'
-import ToggleSwitch from '@/components/common/ToggleSwitch.vue'
 import Tooltip from '@/components/common/TooltipPopover.vue'
-import TryItAuthManualToken from '@/components/spec-document/try-it/TryItAuthManualToken.vue'
 import composables from '@/composables'
 import { buildPkceTarget } from '@/utils/oauth-pkce'
 import type { Oauth2AuthStatus, Oauth2PkceTarget, OauthToken } from '@/types'
@@ -151,7 +130,7 @@ const { schemeKey, dataId, scheme } = defineProps<{
 const oauthRedirectUri = inject('oauth-redirect-uri', computed(() => ''))
 
 const { authInputs } = composables.useAuth()
-const { statusFor, tokenFor, errorFor, isManual, setManual, authorize, clearCredentials } = composables.useOAuthPkce()
+const { statusFor, tokenFor, errorFor, authorize, clearCredentials } = composables.useOAuthPkce()
 
 // the client ID key is shared with the client credentials panel on purpose
 const clientId = computed<string>(() => authInputs.value[`${schemeKey}-clientId`] || '')
@@ -161,11 +140,6 @@ const error = computed<string | undefined>(() => target.value ? errorFor(target.
 const token = computed<OauthToken | undefined>(() => target.value ? tokenFor(target.value) : undefined)
 // buildPkceTarget guarantees an absolute http(s) URL
 const signInHost = computed<string>(() => target.value ? new URL(target.value.authorizationUrl).host : '')
-
-const manualMode = computed<boolean>({
-  get: () => isManual(schemeKey),
-  set: (value) => setManual(schemeKey, value),
-})
 
 const authorizeDisabled = computed<boolean>(() => !target.value || !clientId.value || !oauthRedirectUri.value || status.value === 'authorizing')
 
@@ -244,12 +218,6 @@ watch(clientId, () => {
         cursor: not-allowed;
       }
     }
-  }
-
-  .manual-toggle {
-    justify-content: right;
-    margin-bottom: var(--kui-space-40, $kui-space-40);
-    width: 100%;
   }
 
   .auth-hint {

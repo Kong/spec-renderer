@@ -262,6 +262,10 @@ export default function useOAuthPkce() {
   /** Switch the scheme between the sign-in and a hand-entered access token. Either way, the other mode's credential is dropped. */
   const setManual = (schemeKey: string, value: boolean): void => {
     if (value) {
+      // a sign-in finishing after the switch would overwrite the pasted token
+      if (busy.value[schemeKey]) {
+        cancelActiveFlow?.()
+      }
       // a stale PKCE token or error must not outlive the switch
       clearCredentials({ schemeKey })
       manual.value[schemeKey] = true

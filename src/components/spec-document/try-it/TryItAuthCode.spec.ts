@@ -67,10 +67,10 @@ const createFakePopup = () => ({
 let fakePopup: ReturnType<typeof createFakePopup>
 let openSpy: ReturnType<typeof vi.spyOn>
 
-const mountComponent = (options: { redirectUri?: string, scheme?: IOauth2SecurityScheme, dataId?: string } = {}) => mount(TryItAuthCode, {
+const mountComponent = (options: { redirectUri?: string, scheme?: IOauth2SecurityScheme } = {}) => mount(TryItAuthCode, {
   props: {
     schemeKey: SCHEME_KEY,
-    dataId: options.dataId ?? DATA_ID,
+    dataId: DATA_ID,
     scheme: options.scheme ?? scheme,
   },
   global: {
@@ -294,7 +294,7 @@ describe('<TryItAuthCode />', () => {
     it('writes selected scopes under the namespaced key, never under the client credentials prefix', async () => {
       const wrapper = mountComponent()
 
-      await wrapper.find('#auth-input-oauth2-authorizationCode-scope-read-' + DATA_ID).setValue(true)
+      await wrapper.find('input[type="checkbox"]').setValue(true)
 
       const keys = Object.keys(composables.useAuth().authInputs.value)
       expect(keys.some(key => key.startsWith(`${SCHEME_KEY}-authorizationCode-scope-`))).toBe(true)
@@ -341,70 +341,6 @@ describe('<TryItAuthCode />', () => {
       const error = wrapper.findTestId(testId('error'))
       expect(error.attributes('role')).toBe('alert')
       expect(error.text()).toBe('Unable to reach the token endpoint at https://auth.example.com.')
-    })
-  })
-
-  describe('manual access token', () => {
-    const { authInputs } = composables.useAuth()
-    const SWITCH_CONTROL = '[data-testid="switch-control"]'
-    const clickToggle = (wrapper: ReturnType<typeof mountComponent>, dataId?: string) =>
-      wrapper.findTestId(dataId ? `tryit-auth-manual-toggle-${dataId}` : testId('manual-toggle')).find(SWITCH_CONTROL).trigger('click')
-
-    it('swaps the sign-in fields for the token input in manual mode', async () => {
-      const wrapper = mountComponent()
-      await setClientId(wrapper)
-
-      await clickToggle(wrapper)
-
-      expect(composables.useOAuthPkce().isManual(SCHEME_KEY)).toBe(true)
-      expect(wrapper.findTestId(testId('manual-token')).exists()).toBe(true)
-      expect(wrapper.findTestId(testId('manual-toggle')).text()).toBe('Use access token')
-      expect(wrapper.findTestId(testId('authorize')).exists()).toBe(false)
-    })
-
-    it('stores the pasted token as is under the shared token key', async () => {
-      const wrapper = mountComponent()
-      await clickToggle(wrapper)
-
-      await wrapper.findTestId(testId('manual-token')).setValue('Bearer pasted-token')
-
-      expect(authInputs.value[`${SCHEME_KEY}-token`]).toBe('Bearer pasted-token')
-    })
-
-    it('goes back to the sign-in and drops the pasted token', async () => {
-      const wrapper = mountComponent()
-      await clickToggle(wrapper)
-      await wrapper.findTestId(testId('manual-token')).setValue('Bearer pasted-token')
-
-      await clickToggle(wrapper)
-
-      expect(composables.useOAuthPkce().isManual(SCHEME_KEY)).toBe(false)
-      expect(authInputs.value[`${SCHEME_KEY}-token`]).toBe('')
-      expect(wrapper.findTestId(testId('authorize')).exists()).toBe(true)
-    })
-
-    it('disables the toggle while a sign-in is in progress', async () => {
-      const wrapper = mountComponent()
-      await setClientId(wrapper)
-
-      await wrapper.findTestId(testId('authorize')).trigger('click')
-
-      expect(wrapper.findTestId(testId('manual-toggle')).classes()).toContain('disabled')
-      expect(wrapper.findTestId(testId('manual-toggle')).find(SWITCH_CONTROL).classes()).toContain('disabled')
-    })
-
-    it('syncs the mode and the pasted token across operations using the same scheme', async () => {
-      const first = mountComponent()
-      const second = mountComponent({ dataId: 'op-2' })
-
-      await clickToggle(first)
-      expect(second.findTestId('tryit-auth-manual-token-op-2').exists()).toBe(true)
-
-      await second.findTestId('tryit-auth-manual-token-op-2').setValue('Bearer pasted-token')
-      expect((first.findTestId(testId('manual-token')).element as HTMLInputElement).value).toBe('Bearer pasted-token')
-
-      await clickToggle(second, 'op-2')
-      expect(first.findTestId(testId('authorize')).exists()).toBe(true)
     })
   })
 
