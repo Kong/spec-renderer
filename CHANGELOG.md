@@ -1,3 +1,10 @@
+## [1.117.3](https://github.com/Kong/spec-renderer/compare/v1.117.2...v1.117.3) (2026-10-22)
+
+
+### Bug Fixes
+
+* **shiki:** use the javascript regex engine ([#1062](https://github.com/Kong/spec-renderer/issues/1062)) ([a358e2f](https://github.com/Kong/spec-renderer/commit/a358e2ffec3f2c224a2332be5ecfc69952426a4d))
+
 ## [1.117.2](https://github.com/Kong/spec-renderer/compare/v1.117.1...v1.117.2) (2026-10-22)
 
 
