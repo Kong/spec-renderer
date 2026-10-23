@@ -1,3 +1,10 @@
+## [1.117.4](https://github.com/Kong/spec-renderer/compare/v1.117.3...v1.117.4) (2026-10-23)
+
+
+### Bug Fixes
+
+* **oauth:** add raw token input as fallback for pkce flow [TDX-9276] ([#1065](https://github.com/Kong/spec-renderer/issues/1065)) ([b6b6aab](https://github.com/Kong/spec-renderer/commit/b6b6aab4b758edf96d4fba7a5ede138090eafd45))
+
 ## [1.117.3](https://github.com/Kong/spec-renderer/compare/v1.117.2...v1.117.3) (2026-10-22)
 
 
