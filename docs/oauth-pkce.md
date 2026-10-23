@@ -79,6 +79,13 @@ The OAuth URLs come from the spec. The popup keeps `window.opener`, because the 
 
 If you render specs you do not control, vet the security scheme URLs (`authorizationUrl` and `tokenUrl`) before passing the spec in. The panel shows the sign-in host next to the Authorize button, so users can see where they will sign in.
 
+## Manual access token
+
+The PKCE panel has a "Use access token" toggle at the top. Turning it on swaps the sign-in fields for an Access token input. Turning it off goes back to the sign-in.
+
+- The value is sent as the `Authorization` header exactly as typed, so users type `Bearer <token>` themselves.
+- Switching modes drops the other mode's credential.
+
 ## Tokens
 
 - Tokens are kept in memory only. They are never written to `localStorage` or `sessionStorage`, and they are lost on reload.

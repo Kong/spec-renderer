@@ -22,7 +22,18 @@
       >
         Authorization code (PKCE)
       </div>
+      <TryItAuthModeSwitch
+        v-model="manualMode"
+        :data-id="dataId"
+        :scheme-key="schemeKey"
+      />
+      <TryItAuthManualToken
+        v-if="manualMode"
+        :data-id="dataId"
+        :scheme-key="schemeKey"
+      />
       <TryItAuthCode
+        v-else
         :data-id="dataId"
         :scheme="scheme"
         :scheme-key="schemeKey"
@@ -33,10 +44,12 @@
 
 <script setup lang="ts">
 // Picks the panel for each OAuth2 flow the scheme declares. A scheme can declare several.
-import { computed, inject } from 'vue'
+import { computed, inject, ref } from 'vue'
 import type { IOauth2SecurityScheme } from '@stoplight/types'
 import TryItAuth2ClientCredentials from '@/components/spec-document/try-it/TryItAuth2ClientCredentials.vue'
 import TryItAuthCode from '@/components/spec-document/try-it/TryItAuthCode.vue'
+import TryItAuthManualToken from '@/components/spec-document/try-it/TryItAuthManualToken.vue'
+import TryItAuthModeSwitch from '@/components/spec-document/try-it/TryItAuthModeSwitch.vue'
 
 const { schemeKey, dataId, scheme } = defineProps<{
   schemeKey: string
@@ -51,6 +64,9 @@ const showPkce = computed<boolean>(() => !!scheme.flows.authorizationCode && !!o
 
 // headings only help when two panels share the space
 const hasBothFlows = computed<boolean>(() => !!scheme.flows.clientCredentials && showPkce.value)
+
+// shows the token input instead of the sign-in, kept in sync by the mode switch
+const manualMode = ref<boolean>(false)
 </script>
 
 <style lang="scss" scoped>

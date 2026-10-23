@@ -60,4 +60,34 @@ describe('<ToggleSwitch />', () => {
     expect(wrapper.emitted('input')).toBeFalsy()
     expect(wrapper.emitted('change')).toBeFalsy()
   })
+
+  it('uses the size as a class, medium by default', async () => {
+    const wrapper = mount(ToggleSwitch, {
+      props: {
+        modelValue: false,
+      },
+    })
+
+    expect(wrapper.findTestId('switch-control').classes()).toContain('medium')
+
+    await wrapper.setProps({ size: 'small' })
+
+    expect(wrapper.findTestId('switch-control').classes()).toContain('small')
+    expect(wrapper.findTestId('switch-control').classes()).not.toContain('medium')
+  })
+
+  it('places the label at the start only when asked', async () => {
+    const wrapper = mount(ToggleSwitch, {
+      props: {
+        modelValue: false,
+        label: 'Toggle Switch',
+      },
+    })
+
+    expect(wrapper.classes()).not.toContain('label-start')
+
+    await wrapper.setProps({ labelPosition: 'start' })
+
+    expect(wrapper.classes()).toContain('label-start')
+  })
 })

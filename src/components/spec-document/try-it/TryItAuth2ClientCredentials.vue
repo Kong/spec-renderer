@@ -157,11 +157,15 @@ const props = defineProps<{
 
 
 const { authInputs, authHeadersMap } = composables.useAuth()
-const { clearCredentials } = composables.useOAuthPkce()
+const { clearCredentials, isManual } = composables.useOAuthPkce()
 
 const showClientSecret = ref(false)
 
 const resetToken = () => {
+  // the token slot holds a pasted token while the PKCE panel is in manual mode
+  if (isManual(props.schemeKey)) {
+    return
+  }
   authInputs.value[`${props.schemeKey}-token`] = ''
 }
 
@@ -234,6 +238,10 @@ const auth2ClientCredentialsAuth = async (): Promise<PreRequestAuthResult> => {
       authInputs.value[`${props.schemeKey}-token`] = `${resData.token_type || 'Bearer'} ${resData.access_token}`
       await updateAuthDataImpl()
       useTimeoutFn(async () => {
+        // the token slot holds a pasted token while the PKCE panel is in manual mode
+        if (isManual(props.schemeKey)) {
+          return
+        }
         authInputs.value[`${props.schemeKey}-token`] = ''
         await updateAuthDataImpl()
       }, (resData.expires_in || 60) * 1000)
@@ -249,7 +257,8 @@ const updateAuthDataImpl = async () => {
   const clientId = authInputs.value[`${props.schemeKey}-clientId`] || ''
   const clientSecret = authInputs.value[`${props.schemeKey}-clientSecret`] || ''
 
-  if (!clientId || !clientSecret) {
+  // a pasted token has no client credentials behind it, keep it
+  if ((!clientId || !clientSecret) && !isManual(props.schemeKey)) {
     authInputs.value[`${props.schemeKey}-token`] = ''
   }
 

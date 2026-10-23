@@ -216,7 +216,7 @@ const emit = defineEmits<{
 }>()
 
 const { activeSecurityScheme, authHeadersMap, authQueryMap, authInputs } = composables.useAuth()
-const { aggregateStatus } = composables.useOAuthPkce()
+const { aggregateStatus, isManual } = composables.useOAuthPkce()
 
 // PKCE is opt-in: without the host's redirect URI, authorizationCode schemes keep the plain token input
 const oauthRedirectUri = inject('oauth-redirect-uri', computed(() => ''))
@@ -249,8 +249,9 @@ const currentSecurityScheme = ref<string>(props.data.security?.[0]?.[0]?.key || 
 const currentSecuritySchemeMap = ref<Record<string, HttpSecurityScheme>>({})
 
 // authorizationCode schemes of the active requirement, they drive the header status badge
+// a scheme in manual token mode is left out, its pasted token has no sign-in status
 const pkceTargets = computed<Oauth2PkceTarget[]>(() => Object.entries(currentSecuritySchemeMap.value)
-  .filter(([, scheme]) => oauthRedirectUri.value && scheme.type === 'oauth2' && scheme.flows.authorizationCode)
+  .filter(([key, scheme]) => oauthRedirectUri.value && !isManual(key) && scheme.type === 'oauth2' && scheme.flows.authorizationCode)
   .map(([key, scheme]) => buildPkceTarget(scheme as IOauth2SecurityScheme, authInputs.value[`${key}-clientId`] || ''))
   .filter((target): target is Oauth2PkceTarget => !!target))
 

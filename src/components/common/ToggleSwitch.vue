@@ -1,7 +1,7 @@
 <template>
   <div
     class="toggle-switch"
-    :class="{ disabled }"
+    :class="[`label-${labelPosition}`, { disabled }]"
     v-bind="sanitizedAttrs"
   >
     <input
@@ -16,7 +16,7 @@
     <div class="switch-control-wrapper">
       <span
         class="switch-control"
-        :class="{ 'checked': toggleValue, 'disabled': disabled }"
+        :class="[size, { 'checked': toggleValue, 'disabled': disabled }]"
         data-testid="switch-control"
         role="checkbox"
         v-bind="switchControlElAttrs"
@@ -46,16 +46,18 @@ defineOptions({
   inheritAttrs: false,
 })
 
-const props = defineProps({
-  label: {
-    type: String,
-    default: '',
-  },
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
-})
+const {
+  label = '',
+  disabled = false,
+  size = 'medium',
+  labelPosition = 'end',
+} = defineProps<{
+  label?: string
+  disabled?: boolean
+  size?: 'medium' | 'small'
+  /** Which side of the switch the label sits on. */
+  labelPosition?: 'start' | 'end'
+}>()
 
 const emit = defineEmits<{
   (e: 'change', val: boolean): void
@@ -77,7 +79,7 @@ const sanitizedAttrs = computed((): Record<string, any> => {
 
 const inputElAttrs = computed((): Record<string, any> => {
   const inputAttrs = {
-    disabled: props.disabled,
+    disabled: disabled,
     checked: toggleValue.value,
     ...(!!attrs.id && { id: String(attrs.id) }),
   }
@@ -88,7 +90,7 @@ const inputElAttrs = computed((): Record<string, any> => {
 const switchControlElAttrs = computed((): Record<string, any> => {
   const switchControlAttrs = {
     'aria-checked': toggleValue.value,
-    tabindex: props.disabled ? -1 : 0,
+    tabindex: disabled ? -1 : 0,
     ...(!!attrs.id && { 'aria-labelledby': String(attrs.id) }),
   }
 
@@ -100,7 +102,7 @@ const toggleValue = defineModel<boolean>({ required: true })
 const switchInputRef = useTemplateRef('switchInput')
 
 const propagateInputEvent = (event: Event): void => {
-  if (props.disabled) {
+  if (disabled) {
     return
   }
 
@@ -119,12 +121,32 @@ const handleChange = (event: Event): void => {
 </script>
 
 <style lang="scss" scoped>
+// height, ring position and thumb travel all follow from the track width
+@mixin toggle-switch-size($width, $circle-size) {
+  height: calc($width / 2);
+  width: $width;
+
+  &::after {
+    height: $circle-size;
+    right: calc(25% - ($circle-size / 2));
+    width: $circle-size;
+  }
+
+  &.checked::before {
+    transform: translateY(-50%) translateX(calc($width / 2));
+  }
+}
+
 .toggle-switch {
   $toggleSwitchPadding: var(--kui-space-10, $kui-space-10);
 
   align-items: center;
   display: inline-flex;
   gap: var(--kui-space-40, $kui-space-40);
+
+  &.label-start {
+    flex-direction: row-reverse;
+  }
 
   :deep(label) {
     margin-bottom: var(--kui-space-0, $kui-space-0);
@@ -143,11 +165,9 @@ const handleChange = (event: Event): void => {
       background-color: var(--kui-input-switch-color-background, var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker));
       border-radius: var(--kui-input-switch-border-radius-small, var(--kui-border-radius-20, $kui-border-radius-20));
       cursor: pointer;
-      height: 20px;
       padding: $toggleSwitchPadding;
       position: relative;
       transition: background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
-      width: 40px;
 
       &:hover:not(.disabled) {
         background-color: var(--kui-input-switch-color-background-hover, var(--kui-color-background-neutral-weak, $kui-color-background-neutral-weak));
@@ -179,13 +199,10 @@ const handleChange = (event: Event): void => {
         box-sizing: border-box;
         content: '';
         display: block;
-        height: 8px;
         position: absolute;
-        right: calc(25% - 4px);
         top: 50%;
         transform: translateY(-50%);
         transition: border-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
-        width: 8px;
       }
 
       &-enabled-bar {
@@ -209,8 +226,15 @@ const handleChange = (event: Event): void => {
 
         &::before {
           box-shadow: var(--kui-input-switch-thumb-shadow-border-selected, 0px 0px 0px var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border-primary-strong, $kui-color-border-primary-strong) inset);
-          transform: translateY(-50%) translateX(20px);
         }
+      }
+
+      &.medium {
+        @include toggle-switch-size(40px, 8px);
+      }
+
+      &.small {
+        @include toggle-switch-size(32px, 6px);
       }
 
       &.disabled {
