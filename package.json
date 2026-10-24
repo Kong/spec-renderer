@@ -226,5 +226,5 @@
       "jiraAppend": "]"
     }
   },
-  "packageManager": "pnpm@12.12.0"
+  "packageManager": "pnpm@12.12.1"
 }
