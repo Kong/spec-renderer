@@ -49,12 +49,12 @@ const highlightedCode = computed(():string => {
       },
       colorReplacements: {
         'catppuccin-latte': {
-          // Always use the neutral weakest token, fallback to **light** background
-          '#eff1f5': `var(--kui-color-background-neutral-weakest, ${KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST})`,
+          // Use the code block component token, then the spec renderer base token, then the neutral weakest token, fallback to **light** background
+          '#eff1f5': `var(--kui-code-block-color-background, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background-neutral-weakest, ${KUI_COLOR_BACKGROUND_NEUTRAL_WEAKEST})))`,
         },
         'catppuccin-mocha': {
-          // Always use the neutral weakest token, fallback to **dark** background
-          '#1e1e2e': `var(--kui-color-background-neutral-weakest, ${KUI_COLOR_BACKGROUND_NEUTRAL_STRONGEST})`,
+          // Use the code block component token, then the spec renderer base token, then the neutral weakest token, fallback to **dark** background
+          '#1e1e2e': `var(--kui-code-block-color-background, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background-neutral-weakest, ${KUI_COLOR_BACKGROUND_NEUTRAL_STRONGEST})))`,
         },
       },
     })
@@ -80,7 +80,7 @@ html.dark,
       /* stylelint-disable custom-property-pattern */
       /** !Important: The CSS custom property does not match the SCSS variable here purposefully so that it falls back to a dark color */
       /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/token-var-usage */
-      --shiki-dark-bg: var(--kui-color-background-neutral-weakest, #{$kui-color-background-neutral-strongest});
+      --shiki-dark-bg: var(--kui-code-block-color-background, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background-neutral-weakest, #{$kui-color-background-neutral-strongest})));
       background-color: var(--shiki-dark-bg) !important;
       color: var(--shiki-dark) !important;
       /* Optional, if you also want font styles */
@@ -98,7 +98,7 @@ html.dark,
 .code-block {
   :deep(.error) {
     color: var(--kui-color-text-danger, $kui-color-text-danger);
-    font-family: var(--kui-font-family-code, $kui-font-family-code);
+    font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     margin: var(--kui-space-60, $kui-space-60);
   }
@@ -127,7 +127,7 @@ html.dark,
     span.line {
       counter-increment: codeblock-line;
       display: inline-block;
-      font-family: var(--kui-font-family-code, $kui-font-family-code);
+      font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
       font-size: var(--kui-font-size-20, $kui-font-size-20);
       min-height: 16px; // this is to enforce height on empty line
       min-width: fit-content;
@@ -138,7 +138,7 @@ html.dark,
       &::after {
         background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
         bottom: 0;
-        color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+        color: var(--kui-code-block-line-number-color-text, var(--kui-color-text-neutral, $kui-color-text-neutral));
         content: counter(codeblock-line);
         left: 0;
         padding-right: calc(#{$codeblock-line-gap} * 2);

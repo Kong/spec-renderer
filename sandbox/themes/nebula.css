@@ -1,0 +1,63 @@
+/**
+ * Nebula - a purple and pink dark theme with boxed sections.
+ *
+ * Sample theme for the @kong/spec-renderer component tokens, see docs/theming.md.
+ * The base tokens alone theme the whole renderer; the second rule fine-tunes it, and the sandbox only applies it while
+ * its "Fine-tuned tokens" checkbox is checked.
+ * It is meant to sit on top of a dark semantic theme such as @kong/design-tokens' `classic-night`
+ * (the sandbox switches to dark mode when it is selected).
+ * Like the @kong/design-tokens themes, it lives in the `kui.theme` layer so that unlayered `:root` overrides still win.
+ */
+@layer kui.theme {
+  [data-spec-renderer-theme="nebula"] {
+    /* Base tokens - these alone theme the whole renderer */
+    --kui-spec-renderer-border-radius: 12px;
+    --kui-spec-renderer-border-radius-small: 6px;
+    --kui-spec-renderer-color-background: #130e24;
+    --kui-spec-renderer-color-background-neutral: #1a1430;
+    --kui-spec-renderer-color-background-primary: #2e2550;
+    --kui-spec-renderer-color-border: #2e2550;
+    --kui-spec-renderer-color-text: #e9d5ff;
+    --kui-spec-renderer-color-text-neutral: #cbc3e3;
+    --kui-spec-renderer-color-text-primary: #c084fc;
+    --kui-spec-renderer-font-family-code: "SF Mono", Menlo, Consolas, monospace;
+    --kui-spec-renderer-font-family-heading: Futura, "Trebuchet MS", sans-serif;
+  }
+
+  /* Fine-tuning on top of the base tokens */
+  [data-spec-renderer-theme="nebula"][data-spec-renderer-fine-tune] {
+    /* Boxed sections */
+    --kui-spec-renderer-section-border-width: 1px;
+    --kui-spec-renderer-section-color-background: #130e24;
+    --kui-spec-renderer-section-gap: 16px;
+    --kui-spec-renderer-section-header-color-background: #1a1430;
+    --kui-spec-renderer-section-padding-x: 16px;
+
+    /* Dedicated tokens - fine-tuning on top of the base tokens */
+    --kui-spec-renderer-page-header-title-font-weight: 800;
+    --kui-spec-renderer-panel-color-background-inset: #0d0919;
+    --kui-spec-renderer-schema-property-description-color-text: #d6cfee;
+    --kui-spec-renderer-schema-property-readonly-color-text: #67e8f9;
+    --kui-spec-renderer-schema-property-required-color-text: #fb7185;
+    --kui-spec-renderer-schema-property-value-shadow-border: 0px 0px 0px 1px #3b2f63 inset;
+    --kui-spec-renderer-subsection-header-padding: 8px 12px;
+    --kui-spec-renderer-toc-color-background: #0f0b1d;
+    --kui-spec-renderer-toc-group-title-color-text: #f0abfc;
+    --kui-spec-renderer-toc-item-color-background-hover: #1c1533;
+    --kui-spec-renderer-toc-item-color-background-selected: #3b1d6e;
+    --kui-spec-renderer-toc-item-color-text-hover: #ffffff;
+    --kui-spec-renderer-toc-item-color-text-selected: #f5d0fe;
+    --kui-spec-renderer-toc-item-font-weight-selected: 600;
+
+    /* Kongponents component tokens the spec renderer also reads */
+    --kui-badge-color-background-neutral: #2e2550;
+    --kui-badge-color-text-neutral: #e9d5ff;
+    --kui-code-block-line-number-color-text: #5b4d8a;
+    --kui-dropdown-item-color-background-selected: #7e22ce;
+    --kui-dropdown-item-color-text-selected: #ffffff;
+    --kui-link-color-text-hover: #f5d0fe;
+    --kui-pop-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.5);
+    --kui-tooltip-color-background: #f0abfc;
+    --kui-tooltip-color-text: #2e1065;
+  }
+}

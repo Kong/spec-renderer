@@ -108,7 +108,7 @@ const handleVariableChange = (serverId: string, variableKey: string, variableVal
       // stylelint-disable-next-line no-duplicate-selectors
       & {
         border: none;
-        color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+        color: var(--kui-spec-renderer-select-color-text, var(--kui-spec-renderer-color-text, var(--kui-color-text-neutral, $kui-color-text-neutral)));
         font: var(--kui-font-family-code, $kui-font-family-code);
         font-size: var(--kui-font-size-20, $kui-font-size-20);
         font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);

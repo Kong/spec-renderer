@@ -16,6 +16,7 @@ An online API specification editor is available at [api-documentation.dev](https
   - [Props](#props)
     - [v-model](#v-model)
   - [OAuth2 authorization code + PKCE in Try It](#oauth2-authorization-code--pkce-in-try-it)
+  - [Theming](#theming)
 - [CLI](#cli)
 - [Contributing & Local Development](#contributing--local-development)
   - [Development Sandbox](#development-sandbox)
@@ -233,6 +234,32 @@ As of now only `SpecRenderer` as single component is supported for this. Let us 
 The Try It panel can sign users in with the OAuth 2.0 authorization code flow and PKCE. It is opt-in: pass the `oauthRedirectUri` prop (`oauth-redirect-uri` for the web component) and serve a small callback page at that URI.
 
 See [docs/oauth-pkce.md](./docs/oauth-pkce.md) for setup, the callback page, identity provider and CORS requirements, and troubleshooting.
+
+### Theming
+
+The renderer is themeable with CSS custom properties that follow the [`@kong/design-tokens`](https://github.com/Kong/design-tokens) conventions. All of them are unset by default, so the renderer looks the same until you set them.
+
+Most themes only need the eleven base tokens, which the whole renderer follows:
+
+```css
+:root {
+  --kui-spec-renderer-color-text: #2e1065;
+  --kui-spec-renderer-color-text-neutral: #4a4566;
+  --kui-spec-renderer-color-text-primary: #7c3aed;
+  --kui-spec-renderer-color-background: #ffffff;
+  --kui-spec-renderer-color-background-neutral: #f8f6ff;
+  --kui-spec-renderer-color-background-primary: #ede9fe;
+  --kui-spec-renderer-color-border: #e4ddff;
+  --kui-spec-renderer-border-radius: 12px;
+  --kui-spec-renderer-border-radius-small: 6px;
+  --kui-spec-renderer-font-family-code: "SF Mono", Menlo, Consolas, monospace;
+  --kui-spec-renderer-font-family-heading: Optima, Candara, "Segoe UI", sans-serif;
+}
+```
+
+For finer control, dedicated `--kui-spec-renderer-{part}-*` tokens change one part of the renderer (the sidebar, sections, schema properties, panels, ...) and win over the base tokens. The renderer also reads the Kongponents component tokens (`--kui-button-*`, `--kui-tooltip-*`, ...) for the elements that mirror Kongponents components.
+
+See [docs/theming.md](./docs/theming.md) for the full token reference, and [sandbox/themes](./sandbox/themes) for sample themes you can try in the [development sandbox](#development-sandbox).
 
 ## CLI
 

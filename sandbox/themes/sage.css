@@ -1,0 +1,53 @@
+/**
+ * Sage - a calm light theme in muted greens, with soft rounded corners and boxed sections.
+ *
+ * Sample theme for the @kong/spec-renderer component tokens, see docs/theming.md.
+ * The base tokens alone theme the whole renderer; the second rule fine-tunes it, and the sandbox only applies it while
+ * its "Fine-tuned tokens" checkbox is checked.
+ * Like the @kong/design-tokens themes, it lives in the `kui.theme` layer so that unlayered `:root` overrides still win.
+ */
+@layer kui.theme {
+  [data-spec-renderer-theme="sage"] {
+    /* Base tokens - these alone theme the whole renderer */
+    --kui-spec-renderer-border-radius: 14px;
+    --kui-spec-renderer-border-radius-small: 10px;
+    --kui-spec-renderer-color-background: #ffffff;
+    --kui-spec-renderer-color-background-neutral: #f4f7f2;
+    --kui-spec-renderer-color-background-primary: #dbe8d1;
+    --kui-spec-renderer-color-border: #dfe8da;
+    --kui-spec-renderer-color-text: #23301d;
+    --kui-spec-renderer-color-text-neutral: #5f6f56;
+    --kui-spec-renderer-color-text-primary: #3f7a2a;
+    --kui-spec-renderer-font-family-code: "SF Mono", Menlo, Consolas, monospace;
+    --kui-spec-renderer-font-family-heading: Seravek, "Gill Sans Nova", Ubuntu, Calibri, sans-serif;
+  }
+
+  /* Fine-tuning on top of the base tokens */
+  [data-spec-renderer-theme="sage"][data-spec-renderer-fine-tune] {
+    /* Boxed sections */
+    --kui-spec-renderer-section-border-width: 1px;
+    --kui-spec-renderer-section-color-background: #ffffff;
+    --kui-spec-renderer-section-gap: 18px;
+    --kui-spec-renderer-section-header-color-background: #f4f7f2;
+    --kui-spec-renderer-section-padding-x: 18px;
+
+    /* Dedicated tokens - fine-tuning on top of the base tokens */
+    --kui-spec-renderer-page-header-title-font-weight: 700;
+    --kui-spec-renderer-schema-property-readonly-color-text: #7a5c2a;
+    --kui-spec-renderer-schema-property-required-color-text: #b4472a;
+    --kui-spec-renderer-schema-property-value-shadow-border: 0px 0px 0px 1px #cddcc2 inset;
+    --kui-spec-renderer-section-title-color-text: #2f5323;
+    --kui-spec-renderer-subsection-header-padding: 8px 12px;
+    --kui-spec-renderer-toc-group-title-color-text: #4d6b3c;
+    --kui-spec-renderer-toc-item-color-background-hover: #e8efe3;
+    --kui-spec-renderer-toc-item-color-text-selected: #2f5323;
+    --kui-spec-renderer-toc-item-font-weight-selected: 600;
+    --kui-spec-renderer-toc-item-padding: 8px 12px;
+
+    /* Kongponents component tokens the spec renderer also reads */
+    --kui-dropdown-item-color-background-selected: #3f7a2a;
+    --kui-dropdown-item-color-text-selected: #ffffff;
+    --kui-link-color-text-hover: #2f5323;
+    --kui-tooltip-color-background: #2f5323;
+  }
+}

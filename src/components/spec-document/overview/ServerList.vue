@@ -131,16 +131,16 @@ const clearCustomUrlInput = () => {
   }
 
   > .overview-server-list-item {
-    background-color: var(--kui-color-background, $kui-color-background);
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    background-color: var(--kui-spec-renderer-panel-color-background, var(--kui-spec-renderer-color-background, var(--kui-color-background, $kui-color-background)));
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-panel-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
+    border-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
     line-height: var(--kui-line-height-40, $kui-line-height-40);
     overflow-wrap: anywhere;
     padding: var(--kui-space-50, $kui-space-50);
 
     .server-item-header {
       color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
-      font-family: var(--kui-font-family-code, $kui-font-family-code);
+      font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
       font-size: var(--kui-font-size-30, $kui-font-size-30);
       line-height: var(--kui-line-height-30, $kui-line-height-30);
 
