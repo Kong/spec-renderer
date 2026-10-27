@@ -75,6 +75,10 @@ This is where an operation/model page is actually rendered. The schema-model ren
 
 When logic needs to be shared between more than one component and depends on reactive props (like the variant-selection/cycle-detection logic above), prefer extracting a composable over duplicating `computed`s across components - it's also what makes that logic independently unit-testable without mounting the full component tree.
 
+### Theming tokens
+
+Styles are themeable through CSS custom properties in tiers: dedicated `--kui-spec-renderer-{part}-*` tokens for spec-renderer-only parts, which fall back to a small set of base tokens (`--kui-spec-renderer-color-border`, `--kui-spec-renderer-border-radius`, ...) for the role they play, which fall back to the semantic token the declaration used before (`var(--kui-spec-renderer-x, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)))`). Wherever an element re-implements a Kongponents component it reads the Kongponents tokens (`--kui-button-*`, `--kui-tooltip-*`, ...) instead. The default rendering never depends on a token being set. **Read the "Adding a token" section of `docs/theming.md` before adding or renaming one** - every `--kui-spec-renderer-*` token must be documented there, which `src/styles/theming-tokens.spec.ts` enforces.
+
 ### Path alias
 
 `@` resolves to `./src/` (configured in `vite.config.ts`, mirrored in `tsconfig.json`).

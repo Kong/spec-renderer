@@ -13,9 +13,11 @@
   padding: var(--kui-space-0, $kui-space-0);
 }
 
+// compact bordered select, e.g. the response status and media type pickers
 @mixin small-bordered-trigger-button {
-  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-  font-family: var(--kui-font-family-code, $kui-font-family-code);
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-select-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
+  border-radius: var(--kui-spec-renderer-select-border-radius, var(--kui-spec-renderer-border-radius-small, var(--kui-border-radius-20, $kui-border-radius-20)));
+  font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
   font-size: var(--kui-font-size-20, $kui-font-size-20);
   line-height: var(--kui-line-height-20, $kui-line-height-20);
   padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);

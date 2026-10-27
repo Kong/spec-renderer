@@ -1,19 +1,22 @@
 @use "@kong/design-tokens/tokens/scss/variables" as *;
 
+// title of a panel header (CollapsablePanel, TryItResponse)
 @mixin collapsible-section-title {
-  color: var(--kui-color-text, $kui-color-text);
+  color: var(--kui-spec-renderer-panel-header-color-text, var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text)));
   font-size: var(--kui-font-size-30, $kui-font-size-30);
   font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
   line-height: var(--kui-line-height-40, $kui-line-height-40);
   margin: var(--kui-space-0, $kui-space-0);
 }
 
+// Link component tokens, like KExternalLink
 @mixin link {
-  color: var(--kui-color-text-primary, $kui-color-text-primary);
-  text-decoration: none;
+  color: var(--kui-link-color-text, var(--kui-spec-renderer-color-text-primary, var(--kui-color-text-primary, $kui-color-text-primary)));
+  text-decoration: var(--kui-link-text-decoration, none);
 
   &:hover {
-    color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
+    color: var(--kui-link-color-text-hover, var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger));
+    text-decoration: var(--kui-link-text-decoration-hover, var(--kui-link-text-decoration, none));
   }
 
   // Add external link icons

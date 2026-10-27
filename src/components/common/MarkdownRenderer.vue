@@ -192,7 +192,7 @@ html.dark,
 
     // inline code
     code {
-      font-family: var(--kui-font-family-code, $kui-font-family-code);
+      font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
     }
 
     // Inline code within the content area
@@ -210,7 +210,7 @@ html.dark,
     pre {
       @include pre;
 
-      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+      background-color: var(--kui-code-block-color-background, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest)));
       margin-top: var(--kui-space-50, $kui-space-50);
     }
 

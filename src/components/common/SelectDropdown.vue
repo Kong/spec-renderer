@@ -172,7 +172,8 @@ $select-dropdown-max-height: 400px;
     // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
     // stylelint-disable-next-line no-duplicate-selectors
     & {
-      border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+      border-radius: var(--kui-spec-renderer-select-border-radius, var(--kui-spec-renderer-border-radius-small, var(--kui-border-radius-20, $kui-border-radius-20)));
+      color: var(--kui-spec-renderer-select-color-text, var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text)));
       padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40);
     }
 
@@ -187,14 +188,15 @@ $select-dropdown-max-height: 400px;
     }
 
     &:hover:not(:disabled):not(:focus):not(:active) {
-      background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
-      color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
+      background-color: var(--kui-spec-renderer-select-color-background-hover, var(--kui-spec-renderer-color-background-primary, var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest)));
+      color: var(--kui-spec-renderer-select-color-text-hover, var(--kui-spec-renderer-color-text-primary, var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger)));
     }
 
+    // the open (focused) state shares the hover text color, like it does by default
     &:focus:not(:disabled),
     &:active:not(:disabled) {
-      background-color: var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker);
-      color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
+      background-color: var(--kui-spec-renderer-select-color-background-active, var(--kui-spec-renderer-color-background-primary, var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker)));
+      color: var(--kui-spec-renderer-select-color-text-hover, var(--kui-spec-renderer-color-text-primary, var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger)));
     }
 
     &:disabled {
@@ -207,11 +209,12 @@ $select-dropdown-max-height: 400px;
     }
   }
 
+  // KDropdown is built on KPop, so the menu reads the popover background and shadow tokens
   .select-items-container {
-    background-color: var(--kui-color-background, $kui-color-background);
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    box-shadow: var(--kui-shadow, $kui-shadow);
+    background-color: var(--kui-pop-color-background, var(--kui-spec-renderer-color-background, var(--kui-color-background, $kui-color-background)));
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-dropdown-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
+    border-radius: var(--kui-dropdown-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
+    box-shadow: var(--kui-pop-shadow, var(--kui-shadow, $kui-shadow));
     max-height: min($select-dropdown-max-height, calc(100vh - 16px));
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -252,14 +255,14 @@ $select-dropdown-max-height: 400px;
         }
 
         &.selected {
-          background-color: var(--kui-dropdown-item-color-background-selected, var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest));
+          background-color: var(--kui-dropdown-item-color-background-selected, var(--kui-spec-renderer-color-background-primary, var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest)));
 
           button,
           :slotted(button),
           :slotted(a) {
             // themes give items an opaque background, so the selected background has to be set on the item itself too
-            background-color: var(--kui-dropdown-item-color-background-selected, var(--kui-color-background-transparent, $kui-color-background-transparent));
-            color: var(--kui-dropdown-item-color-text-selected, var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger));
+            background-color: var(--kui-dropdown-item-color-background-selected, var(--kui-spec-renderer-color-background-primary, var(--kui-color-background-transparent, $kui-color-background-transparent)));
+            color: var(--kui-dropdown-item-color-text-selected, var(--kui-spec-renderer-color-text-primary, var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger)));
           }
         }
       }

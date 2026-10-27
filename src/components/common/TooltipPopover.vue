@@ -50,14 +50,15 @@ defineProps({
     width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
   }
 
+  // Tooltip component tokens, like KTooltip
   :deep(.popover-content) {
-    background-color: var(--kui-color-background-inverse, $kui-color-background-inverse);
-    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-    color: var(--kui-color-text-inverse, $kui-color-text-inverse);
-    font-size: var(--kui-font-size-20, $kui-font-size-20);
-    font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
-    line-height: var(--kui-line-height-20, $kui-line-height-20);
-    padding: var(--kui-space-20, $kui-space-20);
+    background-color: var(--kui-tooltip-color-background, var(--kui-color-background-inverse, $kui-color-background-inverse));
+    border-radius: var(--kui-tooltip-border-radius, var(--kui-border-radius-20, $kui-border-radius-20));
+    color: var(--kui-tooltip-color-text, var(--kui-color-text-inverse, $kui-color-text-inverse));
+    font-size: var(--kui-tooltip-font-size, var(--kui-font-size-20, $kui-font-size-20));
+    font-weight: var(--kui-tooltip-font-weight, var(--kui-font-weight-medium, $kui-font-weight-medium));
+    line-height: var(--kui-tooltip-line-height, var(--kui-line-height-20, $kui-line-height-20));
+    padding: var(--kui-tooltip-padding, var(--kui-space-20, $kui-space-20));
   }
 }
 </style>

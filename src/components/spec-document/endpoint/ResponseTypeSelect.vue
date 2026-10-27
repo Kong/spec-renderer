@@ -88,7 +88,7 @@ function handleSelectInputChange(item: SelectItem, componentName: ResponseSelect
     // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
     // stylelint-disable-next-line no-duplicate-selectors
     & {
-      border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+      border-radius: var(--kui-spec-renderer-select-border-radius, var(--kui-spec-renderer-border-radius-small, var(--kui-border-radius-20, $kui-border-radius-20)));
       font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
     }
   }

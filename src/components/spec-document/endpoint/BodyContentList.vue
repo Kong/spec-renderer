@@ -68,12 +68,15 @@ function parseSchema(schema: SchemaObject) {
 .body-content-list {
   padding: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0);
 
+  // a body description reads like a property description, so it shares its color
   .body-content-list-description {
-    color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+    color: var(--kui-spec-renderer-schema-property-description-color-text, var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger));
     margin-bottom: var(--kui-space-40, $kui-space-40);
   }
 
+  // title of the nested section for a titled body schema
   .content-list-schema-title {
+    color: var(--kui-spec-renderer-section-title-color-text, var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text)));
     font-size: var(--kui-font-size-30, $kui-font-size-30);
     line-height: var(--kui-line-height-30, $kui-line-height-30);
     overflow-wrap: anywhere;

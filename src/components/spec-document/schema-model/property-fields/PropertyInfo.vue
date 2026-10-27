@@ -155,7 +155,7 @@ function handleSelectChange(selecteditem: SelectItem) {
 
 <style lang="scss" scoped>
 .property-info {
-  font-family: var(--kui-font-family-code, $kui-font-family-code);
+  font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
 
   span {
     display: inline-flex;
@@ -179,7 +179,7 @@ function handleSelectChange(selecteditem: SelectItem) {
     }
 
     .property-title-name {
-      color: var(--kui-color-text-primary, $kui-color-text-primary);
+      color: var(--kui-spec-renderer-schema-property-name-color-text, var(--kui-spec-renderer-color-text-primary, var(--kui-color-text-primary, $kui-color-text-primary)));
       font-size: var(--kui-font-size-30, $kui-font-size-30);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       line-height: var(--kui-line-height-30, $kui-line-height-30);
@@ -192,7 +192,7 @@ function handleSelectChange(selecteditem: SelectItem) {
         // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
         // stylelint-disable-next-line no-duplicate-selectors
         & {
-          color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+          color: var(--kui-spec-renderer-select-color-text, var(--kui-spec-renderer-color-text, var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong)));
           height: var(--kui-icon-size-40, $kui-icon-size-40);
         }
       }
@@ -200,7 +200,7 @@ function handleSelectChange(selecteditem: SelectItem) {
   }
 
   .property-type {
-    color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+    color: var(--kui-spec-renderer-schema-property-type-color-text, var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong)));
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     line-height: var(--kui-line-height-20, $kui-line-height-20);
 
@@ -209,11 +209,11 @@ function handleSelectChange(selecteditem: SelectItem) {
     }
 
     .required-property {
-      color: var(--kui-color-text-danger, $kui-color-text-danger);
+      color: var(--kui-spec-renderer-schema-property-required-color-text, var(--kui-color-text-danger, $kui-color-text-danger));
     }
 
     .readonly-property {
-      color: var(--kui-color-text-primary-weak, $kui-color-text-primary-weak);
+      color: var(--kui-spec-renderer-schema-property-readonly-color-text, var(--kui-color-text-primary-weak, $kui-color-text-primary-weak));
     }
   }
 

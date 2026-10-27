@@ -75,10 +75,10 @@ const toggleState = (e: Event) => {
 
   .panel-header {
     align-items: center;
-    background-color: var(--kui-color-background, $kui-color-background);
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    border-top-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    background-color: var(--kui-spec-renderer-panel-header-color-background, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background, $kui-color-background)));
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-panel-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
+    border-top-left-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
+    border-top-right-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
     display: flex;
     flex-flow: row;
     padding: var(--kui-space-50, $kui-space-50);
@@ -88,8 +88,8 @@ const toggleState = (e: Event) => {
     }
 
     &.collapsed {
-      border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-      border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+      border-bottom-left-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
+      border-bottom-right-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
 
       :deep(.select-dropdown) {
         display: none;
@@ -123,10 +123,10 @@ const toggleState = (e: Event) => {
   }
 
   .panel-body {
-    background-color: var(--kui-color-background, $kui-color-background);
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    background-color: var(--kui-spec-renderer-panel-color-background, var(--kui-spec-renderer-color-background, var(--kui-color-background, $kui-color-background)));
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-panel-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
+    border-bottom-left-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
+    border-bottom-right-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
     border-top: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
