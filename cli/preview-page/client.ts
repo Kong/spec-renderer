@@ -15,8 +15,8 @@ const SCROLL_POLL_INTERVAL_MS = 100
 /**
  * The first restore can trigger more `scrollY` shifts: the renderer lazily
  * mounts sections around the viewport, and the browser's scroll anchoring
- * compensates. Re-assert the offset once more after this delay, then reveal
- * the page. Everything is hidden until then.
+ * compensates. Stay hidden for at least this long after the first restore,
+ * re-asserting the offset while the saved anchor still renders in.
  */
 const SCROLL_REASSERT_DELAY_MS = 800
 /**
@@ -177,8 +177,27 @@ function restoreScrollPosition(el: PreviewElement): void {
 
   const startedAt = performance.now()
   let hasRendered = false
+  let firstRestoreAt: number | undefined
 
-  const poll = (): void => {
+  /**
+   * Whether the saved anchor has rendered. An unmounted section is an
+   * empty placeholder: it has no `h2`, so `findSavedSection` cannot match
+   * it by heading and `scrollTarget` falls back to the raw `y`. Revealing
+   * there would show placeholder geometry with no later correction. A
+   * headingless anchor still matches by id, so its placeholder decides.
+   * The overall timeout bounds the wait.
+   */
+  const anchorSettled = (): boolean => {
+    if (saved.section === undefined) {
+      return true
+    }
+
+    const section = findSavedSection(saved.section)
+
+    return section !== null && section.querySelector('.placeholder') === null
+  }
+
+  const settle = (): void => {
     // The URL-restored path is invalid. The fallback handler already reset
     // the URL and remounted the overview.
     if (scrollRestoreCancelled) {
@@ -197,16 +216,22 @@ function restoreScrollPosition(el: PreviewElement): void {
     }
 
     if (hasRendered) {
-      // Restore, wait out the adjustments (see SCROLL_REASSERT_DELAY_MS),
-      // then re-assert and show the page. Each re-assert measures the
-      // target live, so virtualization differences self-correct.
+      firstRestoreAt ??= performance.now()
+
+      // Restore on every pass. Each pass measures the target live, so
+      // virtualization differences and scroll-anchoring shifts self-correct.
       restore()
-      setTimeout(() => {
-        restore()
+
+      // Wait out the adjustments (see SCROLL_REASSERT_DELAY_MS), and keep
+      // settling until the anchor renders. Then show the page.
+      if (anchorSettled() && performance.now() - firstRestoreAt >= SCROLL_REASSERT_DELAY_MS) {
         reveal()
-      }, SCROLL_REASSERT_DELAY_MS)
-    } else if (performance.now() - startedAt < SCROLL_RESTORE_TIMEOUT_MS) {
-      setTimeout(poll, SCROLL_POLL_INTERVAL_MS)
+        return
+      }
+    }
+
+    if (performance.now() - startedAt < SCROLL_RESTORE_TIMEOUT_MS) {
+      setTimeout(settle, SCROLL_POLL_INTERVAL_MS)
     } else {
       // Best effort after `SCROLL_RESTORE_TIMEOUT_MS`. When the document
       // never rendered past the target, leave the viewport where the
@@ -218,7 +243,7 @@ function restoreScrollPosition(el: PreviewElement): void {
     }
   }
 
-  poll()
+  settle()
 }
 
 /**
