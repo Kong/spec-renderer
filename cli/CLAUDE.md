@@ -25,8 +25,9 @@ bundle's job.
 - `preview-page/` - the static HTML page + its modules served to the browser: `client.ts`
   (all I/O and timing) and `preview-state.ts` (pure URL/scroll-position parsing + validation,
   unit-tested in `preview-state.spec.ts` per the pure/I-O split above). `server.ts` serves the
-  compiled modules via `CLIENT_MODULE_ROUTES` - the request path is only a lookup key, the
-  file name passed to `join()` is always a literal from the table (CodeQL `js/path-injection`).
+  compiled modules through explicit literal branches - the request URL is only ever *compared*,
+  never used as a path fragment (CodeQL and Aikido both flag request-derived paths; a lookup
+  table keyed by the request URL still reads as tainted to Aikido).
 
 Pure logic is deliberately split from I/O (mirrors `src/composables` vs `src/utils`) so it's
 unit-testable without a real server/filesystem/browser. `server.ts`/`commands/preview.ts` stay

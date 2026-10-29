@@ -22,19 +22,6 @@ const CONTENT_TYPES: Record<string, string> = {
 }
 
 /**
- * The preview page's modules, compiled into `preview-page/` alongside each
- * other - the browser resolves client.js's relative imports against its own
- * top-level path, so each module is served at `/<file>`. The request path is
- * only a lookup key: the file name passed to `join()` is always a literal
- * from this table, never derived from the request URL (CodeQL flags
- * request-derived values in path expressions).
- */
-const CLIENT_MODULE_ROUTES: Record<string, string> = {
-  '/client.js': 'client.js',
-  '/preview-state.js': 'preview-state.js',
-}
-
-/**
  * Resolves an `/assets/*` request path against `distDir`, returning
  * `undefined` if the path would escape it.
  *
@@ -179,10 +166,24 @@ async function handleRequest(
     return { status: 200, body, contentType: 'text/html; charset=utf-8' }
   }
 
-  const clientModuleFile = CLIENT_MODULE_ROUTES[url ?? '']
+  // The preview page's modules, compiled into `preview-page/` alongside each
+  // other - the browser resolves client.js's relative imports against its
+  // own top-level path, so each module is served at `/<file>`.
+  //
+  // Explicit literal branches, like the `/index.html` route above: the
+  // request URL is only ever *compared*, so no request-derived value can
+  // reach `join()` or `readFile`. A lookup table keyed by the request URL
+  // does not satisfy Aikido's taint model (it treats a value fetched with a
+  // tainted key as tainted), and an `.includes()` allowlist does not satisfy
+  // CodeQL's.
+  if (url === '/client.js') {
+    const body = await readFile(join(previewPageDir, 'client.js'))
 
-  if (clientModuleFile !== undefined) {
-    const body = await readFile(join(previewPageDir, clientModuleFile))
+    return { status: 200, body, contentType: 'text/javascript' }
+  }
+
+  if (url === '/preview-state.js') {
+    const body = await readFile(join(previewPageDir, 'preview-state.js'))
 
     return { status: 200, body, contentType: 'text/javascript' }
   }
