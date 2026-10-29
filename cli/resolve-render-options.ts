@@ -29,9 +29,8 @@ export interface PreviewCliFlags {
   currentPath?: string
   /**
    * From `--navigation-type <type>`. Defaults to `'hash'` (see `RenderOptions`
-   * below) - `'path'` is opt-in since the CLI's server doesn't fall back to
-   * the preview page for arbitrary paths, so refreshing the browser at a deep
-   * link (e.g. after `--path`, or after clicking through the doc) 404s.
+   * below) - `'path'` is opt-in as a URL-style preference; the server's
+   * single-page fallback makes deep links refreshable either way.
    */
   navigationType?: 'path' | 'hash'
 }
@@ -64,10 +63,10 @@ export interface RenderOptions {
  * `controlAddressBar` is always hardcoded true - the CLI, not the user, owns
  * the single-page preview environment that prop governs. `navigationType`
  * defaults to `'hash'` rather than the component's own `'path'` default -
- * with `'path'`, the CLI's server would need to fall back to the preview page
- * for arbitrary unmatched routes to support a browser refresh at a deep link,
- * which it doesn't do, so refreshing 404s; `'hash'` keeps the path client-side
- * only, so a refresh always hits `/`. `showPoweredBy` defaults to `true` here
+ * `'path'` works too (the server falls back to the preview page for unknown
+ * non-asset routes, and the client reads the path back out of the URL), but
+ * `'hash'` stays the default since it keeps deep links working even when the
+ * preview page is served statically. `showPoweredBy` defaults to `true` here
  * even though the component prop itself defaults to `false` - the CLI wants
  * branding visible unless a user opts out with `--hide-powered-by`.
  * `hideNavigationButtons` defaults to `true` (hidden), matching the

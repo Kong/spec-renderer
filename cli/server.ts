@@ -184,7 +184,18 @@ async function handleRequest(
         // Fall through to 404 below - e.g. the file doesn't exist.
       }
     }
+
+    // A missing asset stays a real 404 rather than falling through to the
+    // single-page fallback below - HTML served as JavaScript/CSS hides the
+    // failure instead of surfacing it in the console.
+    return { status: 404, body: 'Not found', contentType: 'text/plain' }
   }
 
-  return { status: 404, body: 'Not found', contentType: 'text/plain' }
+  // The preview is a single page: serve it for any remaining route so a deep
+  // link (e.g. `/operations/getPets` after a browser refresh with
+  // `--navigation-type path`) reaches the page - the client reads the path
+  // back out of the URL.
+  const body = await readFile(join(previewPageDir, 'index.html'), 'utf-8')
+
+  return { status: 200, body, contentType: 'text/html; charset=utf-8' }
 }

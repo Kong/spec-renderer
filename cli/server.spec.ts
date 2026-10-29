@@ -211,12 +211,14 @@ describe('startPreviewServer', () => {
     }
   })
 
-  it('returns 404 for an unknown route', async () => {
+  it('serves the preview page for an unknown non-asset route (single-page deep-link fallback)', async () => {
     const { baseUrl } = await start()
 
-    const response = await fetch(`${baseUrl}/this-route-does-not-exist`)
+    const response = await fetch(`${baseUrl}/operations/getPets`)
 
-    expect(response.status).toBe(404)
+    expect(response.status).toBe(200)
+    expect(response.headers.get('content-type')).toContain('text/html')
+    expect(await response.text()).toContain('fixture page')
   })
 
   it('broadcasts a reload message to a connected websocket client', async () => {

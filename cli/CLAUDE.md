@@ -62,7 +62,34 @@ run for this repo's own publish build, not for consumers installing the package.
   event, handled in `client.ts` (logs a warning, resets the address bar and re-mounts the
   element with a fresh `currentPath` since the prop can't be corrected in place - see above).
 - **`navigationType` defaults to `hash`**, not the component's own `path` default - the
-  server has no SPA fallback route, so a `path`-style deep link 404s on browser refresh.
+  server now has a single-page fallback (any non-`/assets` unknown route serves the preview
+  page, see `server.ts`), so both styles survive a browser refresh at a deep link; `hash`
+  stays the default because it also works under static hosting.
+- **The preview page restores the user's location across reloads** (hot reload and manual
+  refresh): `preview-page/client.ts` reads the path back out of the URL (hash or pathname)
+  and uses it as `currentPath`, winning over `--path` (the flag is only the first load's
+  start), and restores the scroll position from `sessionStorage`. The position is saved and
+  restored **anchored to the section** the viewport was in (section id + `h2` text + offset
+  within it), not as a raw `scrollY`: the document is virtualized (sections lazily
+  (un)mount, so the mounted set - and therefore absolute positions - differs between page
+  loads), and the same raw `y` can point hundreds of px away from the same content. The
+  restore target is re-measured live from the section's current position on every call, so
+  virtualization differences self-correct. Several scrolls happen while settling into the
+  offset (the component's own `scrollIntoView` to the section top ~50ms after render,
+  `SpecDocument.vue`; our restore; then `scrollY` adjustments from mounting, which scroll
+  anchoring compensates for). To keep that from showing as visible jumping, the element is
+  hidden *before* its content renders and only revealed once the offset is final. Don't break:
+  - The restore polls until the document has rendered past the saved offset, restores
+    immediately then re-asserts once (`SCROLL_REASSERT_DELAY_MS`) to absorb the adjustments -
+    every path out of the poll must reveal (re-assert, 4s timeout, `scrollRestoreCancelled`,
+    user interaction), or the page stays blank.
+  - A scroll-driven hash update during the restore is expected and must NOT cancel it; the
+    only cancel is the `scrollRestoreCancelled` flag, set by the `path-not-found` handler (a
+    URL-restored path the latest spec edit removed) - it resets the URL and remounts a fresh
+    visible element at the overview.
+- **`path-not-found` can now fire for a URL-restored path, not just `--path`** - the warning
+  in `client.ts` says which, and suggests the section may have been renamed/removed by the
+  spec edit that triggered the reload.
 - **chokidar**: needs `ignoreInitial: true` (its startup scan otherwise fires a real `add`
   event) and `awaitWriteFinish` (avoids reading a mid-write, truncated file). Some editors
   (e.g. Vim's default `writebackup` save) rename the file away and recreate it, which can
