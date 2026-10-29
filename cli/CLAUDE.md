@@ -22,7 +22,10 @@ bundle's job.
 - `resolve-render-options.ts` - pure mapping: parsed CLI flags → `SpecRendererProps` subset.
 - `resolve-spec-source.ts` / `spec-source.ts` - pure file-vs-URL classification / actual I/O.
 - `find-open-port.ts`, `parse-int-flag.ts`, `ui.ts` - small pure/near-pure helpers.
-- `preview-page/` - the static HTML page + `client.ts` served to the browser.
+- `preview-page/` - the static HTML page + its modules served to the browser: `client.ts`
+  (all I/O and timing) and `preview-state.ts` (pure URL/scroll-position parsing + validation,
+  unit-tested in `preview-state.spec.ts` per the pure/I-O split above). `server.ts` serves the
+  compiled modules by name (`CLIENT_MODULE_FILES`).
 
 Pure logic is deliberately split from I/O (mirrors `src/composables` vs `src/utils`) so it's
 unit-testable without a real server/filesystem/browser. `server.ts`/`commands/preview.ts` stay
@@ -79,10 +82,12 @@ run for this repo's own publish build, not for consumers installing the package.
   `SpecDocument.vue`; our restore; then `scrollY` adjustments from mounting, which scroll
   anchoring compensates for). To keep that from showing as visible jumping, the element is
   hidden *before* its content renders and only revealed once the offset is final. Don't break:
-  - The restore polls until the document has rendered past the saved offset, restores
-    immediately then re-asserts once (`SCROLL_REASSERT_DELAY_MS`) to absorb the adjustments -
-    every path out of the poll must reveal (re-assert, 4s timeout, `scrollRestoreCancelled`,
-    user interaction), or the page stays blank.
+  - The restore polls until the document has rendered past the restore *target* (the anchored
+    section position, or the raw `y` when the anchor is unusable), restores immediately then
+    re-asserts once (`SCROLL_REASSERT_DELAY_MS`) to absorb the adjustments - every path out of
+    the poll must reveal (re-assert, 4s timeout, `scrollRestoreCancelled`, user interaction),
+    or the page stays blank. A failed renderer-bundle load must reveal too (the try/catch in
+    `loadAndApply`).
   - A scroll-driven hash update during the restore is expected and must NOT cancel it; the
     only cancel is the `scrollRestoreCancelled` flag, set by the `path-not-found` handler (a
     URL-restored path the latest spec edit removed) - it resets the URL and remounts a fresh

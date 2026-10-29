@@ -22,6 +22,13 @@ const CONTENT_TYPES: Record<string, string> = {
 }
 
 /**
+ * The preview page's modules, compiled into `preview-page/` alongside each
+ * other - the browser resolves client.js's relative imports against its own
+ * top-level path, so each module is served at `/<file>`.
+ */
+const CLIENT_MODULE_FILES = ['client.js', 'preview-state.js']
+
+/**
  * Resolves an `/assets/*` request path against `distDir`, returning
  * `undefined` if the path would escape it.
  *
@@ -166,8 +173,8 @@ async function handleRequest(
     return { status: 200, body, contentType: 'text/html; charset=utf-8' }
   }
 
-  if (url === '/client.js') {
-    const body = await readFile(join(previewPageDir, 'client.js'))
+  if (typeof url === 'string' && CLIENT_MODULE_FILES.includes(url.slice(1))) {
+    const body = await readFile(join(previewPageDir, url.slice(1)))
 
     return { status: 200, body, contentType: 'text/javascript' }
   }

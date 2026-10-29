@@ -59,6 +59,7 @@ async function makeFixtureDirs(): Promise<{ distDir: string, previewPageDir: str
   await writeFile(join(distDir, 'nested', 'chunk-abc123.js'), 'export const chunk = true', 'utf-8')
   await writeFile(join(previewPageDir, 'index.html'), '<html><body>fixture page</body></html>', 'utf-8')
   await writeFile(join(previewPageDir, 'client.js'), 'console.log("fixture client")', 'utf-8')
+  await writeFile(join(previewPageDir, 'preview-state.js'), 'export const fixtureState = true', 'utf-8')
 
   return { distDir, previewPageDir }
 }
@@ -155,6 +156,16 @@ describe('startPreviewServer', () => {
     expect(response.status).toBe(200)
     expect(response.headers.get('content-type')).toContain('text/javascript')
     expect(await response.text()).toContain('fixture client')
+  })
+
+  it('serves the client modules compiled alongside client.js', async () => {
+    const { baseUrl } = await start()
+
+    const response = await fetch(`${baseUrl}/preview-state.js`)
+
+    expect(response.status).toBe(200)
+    expect(response.headers.get('content-type')).toContain('text/javascript')
+    expect(await response.text()).toContain('fixtureState')
   })
 
   it('serves a top-level dist asset with the correct content type', async () => {

@@ -1,13 +1,16 @@
+import {
+  nodePathFromUrl,
+  parseSavedScrollPosition,
+  SCROLL_STORAGE_KEY,
+  type SavedScrollPosition,
+  type SavedSection,
+} from './preview-state.js'
+
 interface PreviewElement extends HTMLElement {
   spec: string
   [prop: string]: unknown
 }
 
-/**
- * Remembers the scroll offset across the preview page's reloads (live-reload
- * and manual refresh both do a full page reload).
- */
-const SCROLL_STORAGE_KEY = 'kong-spec-renderer:scroll-position'
 const SCROLL_POLL_INTERVAL_MS = 100
 /**
  * The first restore can itself trigger further `scrollY` adjustments (the
@@ -24,19 +27,20 @@ const SCROLL_REASSERT_DELAY_MS = 800
  */
 const SCROLL_RESTORE_TIMEOUT_MS = 4000
 
-interface SavedScrollPosition {
-  href?: unknown
-  y?: unknown
-  section?: unknown
-}
+/**
+ * Set by the `path-not-found` handler when it falls back to the overview -
+ * cancels a running scroll restore, since the position it targets is under
+ * the removed/renamed section. (A scroll-driven hash update during the
+ * restore must NOT cancel it - see `restoreScrollPosition`.)
+ */
+let scrollRestoreCancelled = false
 
-interface SavedSection {
-  /** The section's `{idx}-nodecontainer` id - stable across reloads of an unchanged spec. */
-  id: string
-  /** The section's `h2` text, to re-find the section when the spec edit shifted indices. */
-  heading: string
-  /** How far below the section's top the viewport was. */
-  offsetIn: number
+function readSavedScrollPosition(): SavedScrollPosition | undefined {
+  try {
+    return parseSavedScrollPosition(sessionStorage.getItem(SCROLL_STORAGE_KEY))
+  } catch {
+    return undefined
+  }
 }
 
 /**
@@ -72,41 +76,6 @@ function findActiveSection(): SavedSection | undefined {
   }
 }
 
-/**
- * Set by the `path-not-found` handler when it falls back to the overview -
- * cancels a running scroll restore, since the position it targets is under
- * the removed/renamed section. (A scroll-driven hash update during the
- * restore must NOT cancel it - see `restoreScrollPosition`.)
- */
-let scrollRestoreCancelled = false
-
-/** Decodes a URL part, tolerating malformed input by returning it as-is. */
-function safeDecode(value: string): string {
-  try {
-    return decodeURIComponent(value)
-  } catch {
-    return value
-  }
-}
-
-function readSavedScrollPosition(): { href: string, y: number, section?: SavedSection } | undefined {
-  let saved: SavedScrollPosition
-
-  try {
-    saved = JSON.parse(sessionStorage.getItem(SCROLL_STORAGE_KEY) ?? '{}') as SavedScrollPosition
-  } catch {
-    return undefined
-  }
-
-  if (typeof saved.href !== 'string' || typeof saved.y !== 'number' || !Number.isFinite(saved.y) || saved.y <= 0) {
-    return undefined
-  }
-
-  return typeof saved.section === 'object' && saved.section !== null
-    ? { href: saved.href, y: saved.y, section: saved.section as SavedSection }
-    : { href: saved.href, y: saved.y }
-}
-
 function rememberScrollPosition(): void {
   try {
     sessionStorage.setItem(SCROLL_STORAGE_KEY, JSON.stringify({
@@ -119,19 +88,6 @@ function rememberScrollPosition(): void {
   }
 }
 
-/**
- * Restores the scroll offset saved by `rememberScrollPosition`.
- *
- * The spec renders asynchronously and the renderer then scrolls the restored
- * section into view, so the browser's own scroll restoration can't work.
- * Several scrolls happen in sequence while settling into the saved offset:
- * the renderer's own initial section scroll, our restore, and layout
- * adjustments triggered by the renderer lazily (un)mounting sections around
- * the viewport (which the browser's scroll anchoring compensates for).
- * Rather than show that as visible jumping, the caller hides the renderer
- * before its content renders and it is only revealed once the offset is
- * final.
- */
 /**
  * Finds the saved section in the freshly rendered document: by id when the
  * spec is unchanged (indices are stable), else by heading text when a spec
@@ -169,7 +125,7 @@ function findSavedSection(savedSection: SavedSection): HTMLElement | null {
  * raw saved `y` when the section can't be found again (e.g. the spec edit
  * removed it - though that case usually goes through `path-not-found`).
  */
-function scrollTarget(saved: { y: number, section?: SavedSection }): number {
+function scrollTarget(saved: SavedScrollPosition): number {
   if (saved.section === undefined) {
     return saved.y
   }
@@ -183,6 +139,19 @@ function scrollTarget(saved: { y: number, section?: SavedSection }): number {
   return section.getBoundingClientRect().top + window.scrollY + saved.section.offsetIn
 }
 
+/**
+ * Restores the scroll offset saved by `rememberScrollPosition`.
+ *
+ * The spec renders asynchronously and the renderer then scrolls the restored
+ * section into view, so the browser's own scroll restoration can't work.
+ * Several scrolls happen in sequence while settling into the saved offset:
+ * the renderer's own initial section scroll, our restore, and layout
+ * adjustments triggered by the renderer lazily (un)mounting sections around
+ * the viewport (which the browser's scroll anchoring compensates for).
+ * Rather than show that as visible jumping, the caller hides the renderer
+ * before its content renders and it is only revealed once the offset is
+ * final.
+ */
 function restoreScrollPosition(el: PreviewElement): void {
   const saved = readSavedScrollPosition()
 
@@ -228,7 +197,13 @@ function restoreScrollPosition(el: PreviewElement): void {
       return
     }
 
-    const isRendered = document.documentElement.scrollHeight > saved.y
+    // Gate on whichever position applies: the anchored target, or the raw
+    // `y` when the anchor is unusable. A spec edit can shrink the document
+    // above the section, making the raw `y` unreachable while the anchored
+    // target is fine - gating on the raw `y` alone would skip a perfectly
+    // good restore. The target is re-measured live, so sections that
+    // haven't rendered yet keep falling back to the raw `y`.
+    const isRendered = document.documentElement.scrollHeight > Math.min(scrollTarget(saved), saved.y)
 
     if (isRendered) {
       hasRendered = true
@@ -248,7 +223,7 @@ function restoreScrollPosition(el: PreviewElement): void {
       setTimeout(poll, SCROLL_POLL_INTERVAL_MS)
     } else {
       // Best effort - e.g. the spec shrank and the offset is near the end.
-      // If the document never rendered past the saved offset, leave the
+      // If the document never rendered past the restore target, leave the
       // viewport where the renderer's own section scroll put it.
       if (isRendered) {
         restore()
@@ -291,31 +266,20 @@ async function loadAndApply(): Promise<void> {
     el[key] = value
   }
 
+  // The config is parsed JSON - narrow rather than trust its shape.
+  const navigationType: 'path' | 'hash' = config.navigationType === 'path' ? 'path' : 'hash'
   // Matches how the component's own click-driven navigation builds the URL
   // for each `navigationType` (there's no `basePath` here - the CLI's preview
-  // page is always served from `/`).
-  const toAddressBarUrl = (path: string): string => config.navigationType === 'hash' ? `#${path}` : path
-  // ...and its inverse, for reading the user's last location back after a
-  // reload. The component reflects every navigation into the address bar, and
-  // the URL survives both live-reload and a manual refresh - so it holds the
-  // user's last location.
-  const pathFromAddressBar = (): string | undefined => {
-    let raw: string | undefined
-
-    if (config.navigationType === 'path') {
-      raw = location.pathname === '/' ? undefined : location.pathname
-    } else {
-      raw = location.hash ? location.hash.slice(1) : undefined
-    }
-
-    // The component only ever writes node URIs with a leading `/` - accept
-    // one without (e.g. from a hand-edited URL) rather than failing to match.
-    return raw === undefined ? undefined : safeDecode(raw).replace(/^([^/])/, '/$1')
-  }
+  // page is always served from `/`)...
+  const toAddressBarUrl = (path: string): string => navigationType === 'hash' ? `#${path}` : path
+  // ...and `nodePathFromUrl` is its inverse, reading the user's last location
+  // back out of the URL after a reload. The component reflects every
+  // navigation into the address bar, and the URL survives both live-reload
+  // and a manual refresh.
 
   // The URL wins over the `--path` flag: it is the user's latest location,
   // and the flag is only the first load's starting point.
-  const urlPath = pathFromAddressBar()
+  const urlPath = nodePathFromUrl(navigationType, location)
   const flagPath = typeof config.currentPath === 'string' ? config.currentPath : undefined
   const requestedPath = urlPath ?? flagPath
   const pathSource: 'url' | 'flag' = urlPath === undefined ? 'flag' : 'url'
@@ -388,9 +352,19 @@ async function loadAndApply(): Promise<void> {
   // treats this as an untyped dynamic import instead of trying to resolve
   // `/assets/...` at typecheck time - it only exists once the CLI serves it.
   const bundlePath = '/assets/kong-spec-renderer.web-component.es.js'
-  const { registerKongSpecRenderer } = await import(bundlePath) as { registerKongSpecRenderer: () => void }
 
-  registerKongSpecRenderer()
+  try {
+    const { registerKongSpecRenderer } = await import(bundlePath) as { registerKongSpecRenderer: () => void }
+
+    registerKongSpecRenderer()
+  } catch (error) {
+    // The element may be hidden for the scroll restore above - a failed
+    // bundle load must not leave a permanently blank page.
+    el.style.visibility = ''
+    console.error(`[kong-spec-renderer] Failed to load the renderer bundle: ${error instanceof Error ? error.message : String(error)}`)
+
+    return
+  }
 
   restoreScrollPosition(el)
 }
