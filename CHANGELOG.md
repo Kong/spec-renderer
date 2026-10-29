@@ -1,3 +1,10 @@
+## [1.117.5](https://github.com/Kong/spec-renderer/compare/v1.117.4...v1.117.5) (2026-10-29)
+
+
+### Bug Fixes
+
+* **cli:** retain scroll position for hot reload and manual refresh ([#1073](https://github.com/Kong/spec-renderer/issues/1073)) ([43bb50e](https://github.com/Kong/spec-renderer/commit/43bb50e687a38ba21e412518846981d50e4c6102))
+
 ## [1.117.4](https://github.com/Kong/spec-renderer/compare/v1.117.3...v1.117.4) (2026-10-23)
 
 
