@@ -21,7 +21,8 @@ const SCROLL_POLL_INTERVAL_MS = 100
 const SCROLL_REASSERT_DELAY_MS = 800
 /**
  * Give up on restoring after this long. The spec can shrink below the
- * saved offset.
+ * saved offset. The deadline extends past this when the first restore
+ * starts near it, so its re-assert window stays whole.
  */
 const SCROLL_RESTORE_TIMEOUT_MS = 4000
 
@@ -230,12 +231,20 @@ function restoreScrollPosition(el: PreviewElement): void {
       }
     }
 
-    if (performance.now() - startedAt < SCROLL_RESTORE_TIMEOUT_MS) {
+    // Once the first restore ran, let its re-assert window elapse in full
+    // even when the overall deadline is close. Otherwise a document that
+    // grows past the target near the deadline reveals with almost no
+    // re-assert window left, and anchoring shifts stay visible.
+    const deadline = Math.max(
+      startedAt + SCROLL_RESTORE_TIMEOUT_MS,
+      (firstRestoreAt ?? startedAt) + SCROLL_REASSERT_DELAY_MS,
+    )
+
+    if (performance.now() < deadline) {
       setTimeout(settle, SCROLL_POLL_INTERVAL_MS)
     } else {
-      // Best effort after `SCROLL_RESTORE_TIMEOUT_MS`. When the document
-      // never rendered past the target, leave the viewport where the
-      // renderer put it.
+      // Best effort after the deadline. When the document never rendered
+      // past the target, leave the viewport where the renderer put it.
       if (isRendered) {
         restore()
       }
