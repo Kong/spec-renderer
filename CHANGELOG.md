@@ -1,3 +1,10 @@
+## [1.117.6](https://github.com/Kong/spec-renderer/compare/v1.117.5...v1.117.6) (2026-10-29)
+
+
+### Bug Fixes
+
+* **cli:** keep settling scroll restore until the anchor section renders ([#1074](https://github.com/Kong/spec-renderer/issues/1074)) ([9ff7096](https://github.com/Kong/spec-renderer/commit/9ff7096437c15b41eb2ea115988edb85f114c6b9))
+
 ## [1.117.5](https://github.com/Kong/spec-renderer/compare/v1.117.4...v1.117.5) (2026-10-29)
 
 
