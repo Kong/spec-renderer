@@ -13,25 +13,23 @@ interface PreviewElement extends HTMLElement {
 
 const SCROLL_POLL_INTERVAL_MS = 100
 /**
- * The first restore can itself trigger further `scrollY` adjustments (the
- * renderer lazily (un)mounts sections around the viewport, and scroll
- * anchoring compensates), and the renderer's own initial section scroll can
- * also land after the first restore. Re-assert the saved offset once more
- * after this delay, then reveal the page - everything is hidden until then,
- * so none of these movements are visible.
+ * The first restore can trigger more `scrollY` shifts: the renderer lazily
+ * mounts sections around the viewport, and the browser's scroll anchoring
+ * compensates. Re-assert the offset once more after this delay, then reveal
+ * the page. Everything is hidden until then.
  */
 const SCROLL_REASSERT_DELAY_MS = 800
 /**
- * Give up on restoring after this long - e.g. the spec shrank and the saved
- * offset is past the end of the document.
+ * Give up on restoring after this long. The spec can shrink below the
+ * saved offset.
  */
 const SCROLL_RESTORE_TIMEOUT_MS = 4000
 
 /**
- * Set by the `path-not-found` handler when it falls back to the overview -
- * cancels a running scroll restore, since the position it targets is under
- * the removed/renamed section. (A scroll-driven hash update during the
- * restore must NOT cancel it - see `restoreScrollPosition`.)
+ * Set by the `path-not-found` handler. The saved position belongs to a
+ * section the latest spec edit removed, so a running restore must stop.
+ * A scroll-driven hash update must not set this flag. Only a removed
+ * section does.
  */
 let scrollRestoreCancelled = false
 
@@ -44,10 +42,8 @@ function readSavedScrollPosition(): SavedScrollPosition | undefined {
 }
 
 /**
- * The document is virtualized: sections lazily (un)mount, so the same window
- * `scrollY` can point at different content on the next page load (the
- * mounted set depends on how the page was scrolled). Anchoring to the
- * section the viewport was in, at an offset within it, survives that.
+ * Finds the section the viewport is in, plus the offset within it. See
+ * `SavedSection` for why the anchor is needed.
  */
 function findActiveSection(): SavedSection | undefined {
   const root = document.getElementById('preview')?.shadowRoot
@@ -84,14 +80,13 @@ function rememberScrollPosition(): void {
       section: findActiveSection(),
     }))
   } catch {
-    // sessionStorage is unavailable (e.g. Safari private mode) - skip.
+    // Skip when sessionStorage is unavailable (Safari private mode).
   }
 }
 
 /**
- * Finds the saved section in the freshly rendered document: by id when the
- * spec is unchanged (indices are stable), else by heading text when a spec
- * edit added/removed sections and shifted indices.
+ * Finds the saved section again: by id when the spec is unchanged, else by
+ * heading text when a spec edit shifted the indices.
  */
 function findSavedSection(savedSection: SavedSection): HTMLElement | null {
   const root = document.getElementById('preview')?.shadowRoot
@@ -119,11 +114,9 @@ function findSavedSection(savedSection: SavedSection): HTMLElement | null {
 
 /**
  * Where to scroll to: the saved section's live position plus the offset
- * within it, measured at call time - virtualization of the sections above
- * shifts a section's absolute position between page loads, but the offset
- * within the section always points at the same content. Falls back to the
- * raw saved `y` when the section can't be found again (e.g. the spec edit
- * removed it - though that case usually goes through `path-not-found`).
+ * within it, measured at call time. The offset within a section always
+ * points at the same content. Falls back to the raw `y` when the section
+ * is gone.
  */
 function scrollTarget(saved: SavedScrollPosition): number {
   if (saved.section === undefined) {
@@ -140,25 +133,22 @@ function scrollTarget(saved: SavedScrollPosition): number {
 }
 
 /**
- * Restores the scroll offset saved by `rememberScrollPosition`.
- *
- * The spec renders asynchronously and the renderer then scrolls the restored
- * section into view, so the browser's own scroll restoration can't work.
- * Several scrolls happen in sequence while settling into the saved offset:
- * the renderer's own initial section scroll, our restore, and layout
- * adjustments triggered by the renderer lazily (un)mounting sections around
- * the viewport (which the browser's scroll anchoring compensates for).
- * Rather than show that as visible jumping, the caller hides the renderer
- * before its content renders and it is only revealed once the offset is
- * final.
+ * Restores the scroll offset saved by `rememberScrollPosition`. The content
+ * renders asynchronously, so the browser's own scroll restoration cannot
+ * work. The settling moves the page several times, so the caller keeps the
+ * renderer hidden until the offset is final.
  */
 function restoreScrollPosition(el: PreviewElement): void {
   const saved = readSavedScrollPosition()
 
-  // The saved entry must belong to the page as it booted - e.g. a `--path`
-  // deep link that changed the URL before this ran must not inherit some
-  // earlier session's scroll offset.
+  // The saved entry must belong to the current URL. A deep link must not
+  // inherit an older scroll offset.
   if (!saved || saved.href !== location.href) {
+    // The caller hides the element when the entry matches at hide time.
+    // The URL can move on during the load, so reveal here. The page must
+    // never stay hidden.
+    el.style.visibility = ''
+
     return
   }
 
@@ -168,9 +158,8 @@ function restoreScrollPosition(el: PreviewElement): void {
     el.style.visibility = ''
   }
 
-  // Any real user input wins over the restore from here on - reveal whatever
-  // is on screen and don't yank the page out from under someone who is
-  // already reading/scrolling.
+  // User input wins over the restore. Reveal the page and do not move it
+  // while the user reads or scrolls.
   for (const type of ['pointerdown', 'wheel', 'keydown', 'touchstart'] as const) {
     window.addEventListener(type, () => {
       hasInteracted = true
@@ -190,19 +179,17 @@ function restoreScrollPosition(el: PreviewElement): void {
   let hasRendered = false
 
   const poll = (): void => {
-    // The path the URL restored turned out invalid - the fallback handler
-    // has already reset the URL and remounted at the overview.
+    // The URL-restored path is invalid. The fallback handler already reset
+    // the URL and remounted the overview.
     if (scrollRestoreCancelled) {
       reveal()
       return
     }
 
-    // Gate on whichever position applies: the anchored target, or the raw
-    // `y` when the anchor is unusable. A spec edit can shrink the document
-    // above the section, making the raw `y` unreachable while the anchored
-    // target is fine - gating on the raw `y` alone would skip a perfectly
-    // good restore. The target is re-measured live, so sections that
-    // haven't rendered yet keep falling back to the raw `y`.
+    // Gate on the anchored target, or on the raw `y` when no anchor applies.
+    // A spec edit can shrink the document above the section. Then the raw
+    // `y` is unreachable, but the target is fine. The target is measured
+    // live, so sections not yet rendered still fall back to the raw `y`.
     const isRendered = document.documentElement.scrollHeight > Math.min(scrollTarget(saved), saved.y)
 
     if (isRendered) {
@@ -210,10 +197,9 @@ function restoreScrollPosition(el: PreviewElement): void {
     }
 
     if (hasRendered) {
-      // Restore as soon as the document is tall enough, then re-assert once
-      // the adjustment dust has settled (see SCROLL_REASSERT_DELAY_MS) - the
-      // target is re-measured live each time, so virtualization differences
-      // self-correct - and only then show the page.
+      // Restore, wait out the adjustments (see SCROLL_REASSERT_DELAY_MS),
+      // then re-assert and show the page. Each re-assert measures the
+      // target live, so virtualization differences self-correct.
       restore()
       setTimeout(() => {
         restore()
@@ -222,9 +208,9 @@ function restoreScrollPosition(el: PreviewElement): void {
     } else if (performance.now() - startedAt < SCROLL_RESTORE_TIMEOUT_MS) {
       setTimeout(poll, SCROLL_POLL_INTERVAL_MS)
     } else {
-      // Best effort - e.g. the spec shrank and the offset is near the end.
-      // If the document never rendered past the restore target, leave the
-      // viewport where the renderer's own section scroll put it.
+      // Best effort after `SCROLL_RESTORE_TIMEOUT_MS`. When the document
+      // never rendered past the target, leave the viewport where the
+      // renderer put it.
       if (isRendered) {
         restore()
       }
@@ -266,45 +252,41 @@ async function loadAndApply(): Promise<void> {
     el[key] = value
   }
 
-  // The config is parsed JSON - narrow rather than trust its shape.
+  // Narrow the parsed JSON instead of trusting its shape.
   const navigationType: 'path' | 'hash' = config.navigationType === 'path' ? 'path' : 'hash'
-  // Matches how the component's own click-driven navigation builds the URL
-  // for each `navigationType` (there's no `basePath` here - the CLI's preview
-  // page is always served from `/`)...
+  // Builds the URL for a node path, the same way the component does (no
+  // `basePath`, because the preview page is always served from `/`)...
   const toAddressBarUrl = (path: string): string => navigationType === 'hash' ? `#${path}` : path
-  // ...and `nodePathFromUrl` is its inverse, reading the user's last location
-  // back out of the URL after a reload. The component reflects every
-  // navigation into the address bar, and the URL survives both live-reload
-  // and a manual refresh.
+  // ...and `nodePathFromUrl` is the inverse: it reads the user's last
+  // location back out of the URL after a reload.
 
-  // The URL wins over the `--path` flag: it is the user's latest location,
-  // and the flag is only the first load's starting point.
+  // The URL holds the user's latest location. The `--path` flag only sets
+  // the first load's starting point.
   const urlPath = nodePathFromUrl(navigationType, location)
   const flagPath = typeof config.currentPath === 'string' ? config.currentPath : undefined
   const requestedPath = urlPath ?? flagPath
   const pathSource: 'url' | 'flag' = urlPath === undefined ? 'flag' : 'url'
 
-  // `config` only carries `currentPath` when `--path` was passed - a
-  // URL-supplied path has to be set on the element itself, alongside the
-  // other props above and before registration, or the component boots at
-  // its own default instead of the user's location.
-  if (urlPath !== undefined && urlPath !== '/') {
+  // `config` carries `currentPath` only when `--path` was passed. A URL
+  // path must be set on the element itself before registration. This
+  // includes the overview: the config loop above already set the flag
+  // value, so a skipped assignment lets a stale `--path` outlive a click
+  // on "Overview".
+  if (urlPath !== undefined) {
     el.currentPath = urlPath
   }
 
   if (requestedPath && requestedPath !== '/') {
-    // The component only pushes address-bar updates from its own click-driven
-    // navigation, not for an initial `currentPath` prop supplied externally -
-    // reflect a flag-supplied path ourselves so the URL matches what's
-    // actually rendered. A URL-supplied path is already in the address bar.
+    // The component reflects only its own navigation into the address bar,
+    // not an initial `currentPath` prop. Reflect a flag path here. A URL
+    // path is already in the address bar.
     if (pathSource === 'flag') {
       history.replaceState({}, '', toAddressBarUrl(requestedPath))
     }
 
-    // The path has to match this library's internal node URI scheme
-    // (`/operations/{operationId}`, `/schemas/{SchemaName}`), not the raw OAS
-    // path - there's no other feedback if it doesn't match anything, so warn
-    // loudly rather than silently rendering a blank document pane.
+    // The path must match the library's node URI scheme
+    // (`/operations/{operationId}`, `/schemas/{SchemaName}`), not the raw
+    // OAS path. Warn loudly. A wrong path otherwise renders a blank pane.
     el.addEventListener('path-not-found', ((event: CustomEvent<[string]>) => {
       const requested = String(event.detail?.[0] ?? requestedPath)
       const source = pathSource === 'url'
@@ -317,15 +299,15 @@ async function loadAndApply(): Promise<void> {
         'Falling back to the overview.',
       )
 
-      // The saved scroll offset belongs to the (now invalid) section - cancel
-      // its restore so it can't yank the page mid-fallback.
+      // The saved offset belongs to the invalid section. Cancel its
+      // restore, so it cannot move the page during the fallback.
       scrollRestoreCancelled = true
 
       history.replaceState({}, '', '/')
 
-      // `currentPath` is only read once, at the component's initial setup -
-      // an invalid path can't be corrected by reassigning the property on
-      // the existing element, so replace it with a fresh one instead.
+      // The component reads `currentPath` only once, at setup. An invalid
+      // path cannot be fixed in place, so replace the element with a fresh
+      // one.
       const fallback = document.createElement(el.tagName) as PreviewElement
 
       fallback.id = el.id
@@ -339,11 +321,9 @@ async function loadAndApply(): Promise<void> {
     }) as EventListener)
   }
 
-  // A matching saved scroll offset means this load will end up mid-document
-  // (the section restore plus the offset restore, and the renderer's own
-  // initial scroll in between) - hide the renderer before its content
-  // renders so the settling isn't visible, and reveal it only once the
-  // offset is final (see restoreScrollPosition).
+  // A matching saved offset means this load settles mid-document. Hide the
+  // renderer before its content renders. Reveal it once the offset is final
+  // (see `restoreScrollPosition`).
   if (readSavedScrollPosition()?.href === location.href) {
     el.style.visibility = 'hidden'
   }
@@ -358,8 +338,7 @@ async function loadAndApply(): Promise<void> {
 
     registerKongSpecRenderer()
   } catch (error) {
-    // The element may be hidden for the scroll restore above - a failed
-    // bundle load must not leave a permanently blank page.
+    // A failed bundle load must not leave the hidden page blank forever.
     el.style.visibility = ''
     console.error(`[kong-spec-renderer] Failed to load the renderer bundle: ${error instanceof Error ? error.message : String(error)}`)
 
@@ -369,8 +348,8 @@ async function loadAndApply(): Promise<void> {
   restoreScrollPosition(el)
 }
 
-// The renderer renders asynchronously, so the browser's own scroll restoration
-// can't work across reloads - take it over manually.
+// The renderer renders asynchronously, so the browser's own scroll
+// restoration cannot work across reloads. Take it over manually.
 history.scrollRestoration = 'manual'
 window.addEventListener('pagehide', rememberScrollPosition)
 

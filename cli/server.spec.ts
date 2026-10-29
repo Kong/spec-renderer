@@ -232,6 +232,15 @@ describe('startPreviewServer', () => {
     expect(await response.text()).toContain('fixture page')
   })
 
+  it('returns 404 for /favicon.ico rather than serving the preview page as an image', async () => {
+    const { baseUrl } = await start()
+
+    const response = await fetch(`${baseUrl}/favicon.ico`)
+
+    expect(response.status).toBe(404)
+    expect(await response.text()).not.toContain('fixture page')
+  })
+
   it('broadcasts a reload message to a connected websocket client', async () => {
     const { server, baseUrl } = await start()
     const wsUrl = baseUrl.replace('http://', 'ws://')

@@ -2,17 +2,16 @@
 export const SCROLL_STORAGE_KEY = 'kong-spec-renderer:scroll-position'
 
 /**
- * Where the viewport was, anchored to the section it was in: the document is
- * virtualized (sections lazily (un)mount, so the mounted set - and therefore
- * absolute positions - differs between page loads), and the same raw
- * `scrollY` can point hundreds of px away from the same content.
+ * Where the viewport was, anchored to the section it was in. The document
+ * is virtualized (only sections near the viewport stay in the DOM). A raw
+ * `scrollY` from the previous page load can point at other content.
  */
 export interface SavedSection {
-  /** The section's `{idx}-nodecontainer` id - stable across reloads of an unchanged spec. */
+  /** The `{idx}-nodecontainer` id. It stays the same when the spec is unchanged. */
   id: string
-  /** The section's `h2` text, to re-find the section when a spec edit shifted indices. */
+  /** The section's `h2` text, to re-find the section after a spec edit. */
   heading: string
-  /** How far below the section's top the viewport was. */
+  /** How far below the section top the viewport was. */
   offsetIn: number
 }
 
@@ -38,10 +37,9 @@ function isSavedSection(value: unknown): value is SavedSection {
 
 /**
  * Parses the saved scroll position from its sessionStorage form. Returns
- * `undefined` when the entry is absent, malformed, or doesn't represent a
- * restorable position (`y` must be past the top). A malformed `section`
- * drops only the anchor - the entry still restores by its raw `y` - rather
- * than invalidating the whole entry.
+ * `undefined` when the entry is absent, malformed, or not restorable (`y`
+ * must be past the top). A malformed `section` drops only the anchor. The
+ * entry then still restores by its raw `y`.
  */
 export function parseSavedScrollPosition(raw: string | null): SavedScrollPosition | undefined {
   let saved: unknown
@@ -77,13 +75,11 @@ export function safeDecode(value: string): string {
 }
 
 /**
- * Reads the node path back out of the URL, mirroring how the component's own
- * click-driven navigation builds it for each `navigationType` - the component
- * reflects every navigation into the address bar, and the URL survives both
- * live-reload and a manual refresh, so it holds the user's last location.
+ * Reads the node path back out of the URL, the inverse of the component's
+ * address-bar updates. The URL holds the user's last location, because it
+ * survives both live reload and a manual refresh.
  *
- * Returns `undefined` when the URL holds no node path (a fresh load in hash
- * mode, or the overview in path mode).
+ * Returns `undefined` when the URL holds no node path.
  */
 export function nodePathFromUrl(
   navigationType: 'path' | 'hash',
@@ -103,7 +99,7 @@ export function nodePathFromUrl(
 
   const path = safeDecode(raw)
 
-  // The component only ever writes node URIs with a leading `/` - accept one
-  // without (e.g. from a hand-edited URL) rather than failing to match.
+  // The component writes node URIs with a leading `/`. Accept one without
+  // (from a hand-edited URL) instead of failing to match.
   return path.startsWith('/') ? path : `/${path}`
 }

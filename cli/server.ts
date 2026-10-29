@@ -166,24 +166,19 @@ async function handleRequest(
     return { status: 200, body, contentType: 'text/html; charset=utf-8' }
   }
 
-  // The preview page's modules, compiled into `preview-page/` alongside each
-  // other - the browser resolves client.js's relative imports against its
-  // own top-level path, so each module is served at `/<file>`.
-  //
-  // Explicit literal branches, like the `/index.html` route above: the
-  // request URL is only ever *compared*, so no request-derived value can
-  // reach `join()` or `readFile`. A lookup table keyed by the request URL
-  // does not satisfy Aikido's taint model (it treats a value fetched with a
-  // tainted key as tainted), and an `.includes()` allowlist does not satisfy
-  // CodeQL's.
+  // The compiled client modules, served through literal branches: the
+  // request URL is only compared, never used as a path. Aikido taints every
+  // `readFile` in a function that holds the request URL, so these reads
+  // carry a `// nosec` false-positive suppression. Do not make these paths
+  // request-derived. The suppression will hide a real vulnerability then.
   if (url === '/client.js') {
-    const body = await readFile(join(previewPageDir, 'client.js'))
+    const body = await readFile(join(previewPageDir, 'client.js')) // nosec
 
     return { status: 200, body, contentType: 'text/javascript' }
   }
 
   if (url === '/preview-state.js') {
-    const body = await readFile(join(previewPageDir, 'preview-state.js'))
+    const body = await readFile(join(previewPageDir, 'preview-state.js')) // nosec
 
     return { status: 200, body, contentType: 'text/javascript' }
   }
@@ -201,16 +196,20 @@ async function handleRequest(
       }
     }
 
-    // A missing asset stays a real 404 rather than falling through to the
-    // single-page fallback below - HTML served as JavaScript/CSS hides the
-    // failure instead of surfacing it in the console.
+    // A missing asset must stay a 404. The fallback below serves HTML as
+    // JavaScript and hides the failure.
     return { status: 404, body: 'Not found', contentType: 'text/plain' }
   }
 
-  // The preview is a single page: serve it for any remaining route so a deep
-  // link (e.g. `/operations/getPets` after a browser refresh with
-  // `--navigation-type path`) reaches the page - the client reads the path
-  // back out of the URL.
+  // The browser requests /favicon.ico on every load. It is not a document,
+  // so answer 404. The fallback would serve HTML that fails to decode as
+  // an image.
+  if (url === '/favicon.ico') {
+    return { status: 404, body: 'Not found', contentType: 'text/plain' }
+  }
+
+  // Any remaining route serves the single preview page. The client reads
+  // the node path back out of the URL, so deep links survive a refresh.
   const body = await readFile(join(previewPageDir, 'index.html'), 'utf-8')
 
   return { status: 200, body, contentType: 'text/html; charset=utf-8' }

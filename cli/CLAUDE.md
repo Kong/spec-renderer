@@ -22,12 +22,12 @@ bundle's job.
 - `resolve-render-options.ts` - pure mapping: parsed CLI flags → `SpecRendererProps` subset.
 - `resolve-spec-source.ts` / `spec-source.ts` - pure file-vs-URL classification / actual I/O.
 - `find-open-port.ts`, `parse-int-flag.ts`, `ui.ts` - small pure/near-pure helpers.
-- `preview-page/` - the static HTML page + its modules served to the browser: `client.ts`
-  (all I/O and timing) and `preview-state.ts` (pure URL/scroll-position parsing + validation,
-  unit-tested in `preview-state.spec.ts` per the pure/I-O split above). `server.ts` serves the
-  compiled modules through explicit literal branches - the request URL is only ever *compared*,
-  never used as a path fragment (CodeQL and Aikido both flag request-derived paths; a lookup
-  table keyed by the request URL still reads as tainted to Aikido).
+- `preview-page/` - the HTML page plus its modules: `client.ts` (all I/O and
+  timing) and `preview-state.ts` (pure parsing + validation, unit-tested per the split above).
+  The server serves the modules through literal branches, because Aikido taints any `readFile`
+  in a function that holds the request URL (CodeQL accepts more). They carry a `// nosec`
+  suppression. Remove it if you ever make these paths request-derived, because it will hide
+  a real vulnerability then.
 
 Pure logic is deliberately split from I/O (mirrors `src/composables` vs `src/utils`) so it's
 unit-testable without a real server/filesystem/browser. `server.ts`/`commands/preview.ts` stay
@@ -66,37 +66,26 @@ run for this repo's own publish build, not for consumers installing the package.
   validate it, so an invalid path only surfaces via the component's own `path-not-found`
   event, handled in `client.ts` (logs a warning, resets the address bar and re-mounts the
   element with a fresh `currentPath` since the prop can't be corrected in place - see above).
-- **`navigationType` defaults to `hash`**, not the component's own `path` default - the
-  server now has a single-page fallback (any non-`/assets` unknown route serves the preview
-  page, see `server.ts`), so both styles survive a browser refresh at a deep link; `hash`
-  stays the default because it also works under static hosting.
+- **`navigationType` defaults to `hash`**, not the component's own `path` default. The
+  server now has a single-page fallback (unknown non-asset routes serve the preview page,
+  see `server.ts`), so both modes survive a refresh at a deep link. `hash` also works under
+  static hosting.
 - **The preview page restores the user's location across reloads** (hot reload and manual
-  refresh): `preview-page/client.ts` reads the path back out of the URL (hash or pathname)
-  and uses it as `currentPath`, winning over `--path` (the flag is only the first load's
-  start), and restores the scroll position from `sessionStorage`. The position is saved and
-  restored **anchored to the section** the viewport was in (section id + `h2` text + offset
-  within it), not as a raw `scrollY`: the document is virtualized (sections lazily
-  (un)mount, so the mounted set - and therefore absolute positions - differs between page
-  loads), and the same raw `y` can point hundreds of px away from the same content. The
-  restore target is re-measured live from the section's current position on every call, so
-  virtualization differences self-correct. Several scrolls happen while settling into the
-  offset (the component's own `scrollIntoView` to the section top ~50ms after render,
-  `SpecDocument.vue`; our restore; then `scrollY` adjustments from mounting, which scroll
-  anchoring compensates for). To keep that from showing as visible jumping, the element is
-  hidden *before* its content renders and only revealed once the offset is final. Don't break:
-  - The restore polls until the document has rendered past the restore *target* (the anchored
-    section position, or the raw `y` when the anchor is unusable), restores immediately then
-    re-asserts once (`SCROLL_REASSERT_DELAY_MS`) to absorb the adjustments - every path out of
-    the poll must reveal (re-assert, 4s timeout, `scrollRestoreCancelled`, user interaction),
-    or the page stays blank. A failed renderer-bundle load must reveal too (the try/catch in
-    `loadAndApply`).
-  - A scroll-driven hash update during the restore is expected and must NOT cancel it; the
-    only cancel is the `scrollRestoreCancelled` flag, set by the `path-not-found` handler (a
-    URL-restored path the latest spec edit removed) - it resets the URL and remounts a fresh
-    visible element at the overview.
-- **`path-not-found` can now fire for a URL-restored path, not just `--path`** - the warning
-  in `client.ts` says which, and suggests the section may have been renamed/removed by the
-  spec edit that triggered the reload.
+  refresh): `client.ts` reads the node path from the URL and sets it as `currentPath`
+  (over `--path`, which only sets the first load's start), and restores the scroll position
+  from `sessionStorage`, anchored to the section (`id` + `h2` text + offset within it),
+  not as a raw `scrollY`: the document is virtualized (sections lazily unmount), so a raw
+  `y` from the last page load can point at other content. The target is re-measured live
+  on every call, so remount differences self-correct. Several scrolls happen while
+  settling (the component's own section scroll, our restore, then scroll anchoring), so
+  the element stays hidden until the offset is final. Do not break:
+  - Every path out of the restore must reveal the page (entry-check mismatch, re-assert,
+    4s timeout, `scrollRestoreCancelled`, user interaction, failed bundle load), or it
+    stays blank.
+  - A scroll-driven hash update must not cancel the restore. Only `path-not-found` does:
+    the section is gone, so the handler resets the URL and remounts the overview.
+- **`path-not-found` can fire for a URL-restored path, not just `--path`**. The warning
+  in `client.ts` names the source.
 - **chokidar**: needs `ignoreInitial: true` (its startup scan otherwise fires a real `add`
   event) and `awaitWriteFinish` (avoids reading a mid-write, truncated file). Some editors
   (e.g. Vim's default `writebackup` save) rename the file away and recreate it, which can
