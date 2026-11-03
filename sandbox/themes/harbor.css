@@ -1,0 +1,63 @@
+/**
+ * Harbor - an airy sky-blue light theme with larger type, flat sections and pill-shaped navigation.
+ *
+ * Sample theme for the @kong/spec-renderer component tokens, see docs/theming.md.
+ * The base tokens alone theme the whole renderer; the second rule fine-tunes it, and the sandbox only applies it while
+ * its "Fine-tuned tokens" checkbox is checked.
+ * Like the @kong/design-tokens themes, it lives in the `kui.theme` layer so that unlayered `:root` overrides still win.
+ */
+@layer kui.theme {
+  [data-spec-renderer-theme="harbor"] {
+    /* Base tokens - these alone theme the whole renderer. The small radius makes the controls pill-shaped */
+    --kui-spec-renderer-border-radius: 16px;
+    --kui-spec-renderer-border-radius-small: 100px;
+    --kui-spec-renderer-color-background: #ffffff;
+    --kui-spec-renderer-color-background-neutral: #f0f9ff;
+    --kui-spec-renderer-color-background-primary: #e0f2fe;
+    --kui-spec-renderer-color-border: #dbeafe;
+    --kui-spec-renderer-color-text: #1e3a5f;
+    --kui-spec-renderer-color-text-neutral: #475569;
+    --kui-spec-renderer-color-text-primary: #0369a1;
+    --kui-spec-renderer-font-family-code: "SF Mono", Menlo, Consolas, monospace;
+    --kui-spec-renderer-font-family-heading: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+  }
+
+  /* Fine-tuning on top of the base tokens */
+  [data-spec-renderer-theme="harbor"][data-spec-renderer-fine-tune] {
+    /* Sections stay flat, but nested sections (body schema titles) are boxed */
+    --kui-spec-renderer-subsection-border-width: 1px;
+    --kui-spec-renderer-subsection-color-background: #ffffff;
+    --kui-spec-renderer-subsection-content-padding: 0px 16px;
+    --kui-spec-renderer-subsection-header-color-background: #f0f9ff;
+    --kui-spec-renderer-subsection-header-padding: 10px 16px;
+
+    /* Dedicated tokens - fine-tuning on top of the base tokens: larger type and an inverted selected item */
+    --kui-spec-renderer-method-badge-font-weight: 700;
+    --kui-spec-renderer-page-header-title-font-size: 40px;
+    --kui-spec-renderer-page-header-title-font-weight: 800;
+    --kui-spec-renderer-page-header-title-line-height: 48px;
+    --kui-spec-renderer-schema-property-readonly-color-text: #7c3aed;
+    --kui-spec-renderer-schema-property-required-color-text: #e11d48;
+    --kui-spec-renderer-schema-property-value-shadow-border: 0px 0px 0px 1px #bae6fd inset;
+    --kui-spec-renderer-section-title-font-size: 20px;
+    --kui-spec-renderer-section-title-font-weight: 700;
+    --kui-spec-renderer-section-title-line-height: 28px;
+    --kui-spec-renderer-toc-group-title-color-text: #64748b;
+    --kui-spec-renderer-toc-group-title-font-size: 11px;
+    --kui-spec-renderer-toc-group-title-font-weight: 700;
+    --kui-spec-renderer-toc-item-color-background-hover: #e0f2fe;
+    --kui-spec-renderer-toc-item-color-background-selected: #0369a1;
+    --kui-spec-renderer-toc-item-color-text-selected: #ffffff;
+    --kui-spec-renderer-toc-item-font-size: 15px;
+    --kui-spec-renderer-toc-item-line-height: 22px;
+    --kui-spec-renderer-toc-item-padding: 8px 14px;
+
+    /* Kongponents component tokens the spec renderer also reads */
+    --kui-button-border-radius-medium: 100px;
+    --kui-dropdown-item-color-background-selected: #0369a1;
+    --kui-dropdown-item-color-text-selected: #ffffff;
+    --kui-input-border-radius: 10px;
+    --kui-link-color-text-hover: #075985;
+    --kui-tooltip-color-background: #0c4a6e;
+  }
+}

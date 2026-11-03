@@ -1,0 +1,63 @@
+/**
+ * Slate - a neutral dark theme with a blue accent and flat sections.
+ *
+ * Sample theme for the @kong/spec-renderer component tokens, see docs/theming.md.
+ * The base tokens alone theme the whole renderer; the second rule fine-tunes it, and the sandbox only applies it while
+ * its "Fine-tuned tokens" checkbox is checked.
+ * It is meant to sit on top of a dark semantic theme such as @kong/design-tokens' `classic-night`
+ * (the sandbox switches to dark mode when it is selected).
+ * Like the @kong/design-tokens themes, it lives in the `kui.theme` layer so that unlayered `:root` overrides still win.
+ */
+@layer kui.theme {
+  [data-spec-renderer-theme="slate"] {
+    /* Base tokens - these alone theme the whole renderer */
+    --kui-spec-renderer-border-radius: 6px;
+    --kui-spec-renderer-border-radius-small: 6px;
+    --kui-spec-renderer-color-background: #0d1117;
+    --kui-spec-renderer-color-background-neutral: #161b22;
+    --kui-spec-renderer-color-background-primary: #1c2d4a;
+    --kui-spec-renderer-color-border: #30363d;
+    --kui-spec-renderer-color-text: #e6edf3;
+    --kui-spec-renderer-color-text-neutral: #8b949e;
+    --kui-spec-renderer-color-text-primary: #58a6ff;
+    --kui-spec-renderer-font-family-code: "SF Mono", Menlo, Consolas, monospace;
+    --kui-spec-renderer-font-family-heading: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  /* Fine-tuning on top of the base tokens */
+  [data-spec-renderer-theme="slate"][data-spec-renderer-fine-tune] {
+    /* Sections stay flat, but nested sections (body schema titles) are boxed */
+    --kui-spec-renderer-subsection-border-width: 1px;
+    --kui-spec-renderer-subsection-color-background: #0d1117;
+    --kui-spec-renderer-subsection-content-padding: 0px 12px;
+    --kui-spec-renderer-subsection-header-color-background: #161b22;
+    --kui-spec-renderer-subsection-header-padding: 8px 12px;
+
+    /* Dedicated tokens - fine-tuning on top of the base tokens */
+    --kui-spec-renderer-page-header-title-font-weight: 700;
+    --kui-spec-renderer-panel-color-background-inset: #010409;
+    --kui-spec-renderer-schema-property-description-color-text: #c9d1d9;
+    --kui-spec-renderer-schema-property-readonly-color-text: #d2a8ff;
+    --kui-spec-renderer-schema-property-required-color-text: #ff7b72;
+    --kui-spec-renderer-schema-property-value-shadow-border: 0px 0px 0px 1px #30363d inset;
+    --kui-spec-renderer-toc-color-background: #0d1117;
+    --kui-spec-renderer-toc-group-title-color-text: #8b949e;
+    --kui-spec-renderer-toc-group-title-font-size: 11px;
+    --kui-spec-renderer-toc-group-title-font-weight: 700;
+    --kui-spec-renderer-toc-item-color-background-hover: #161b22;
+    --kui-spec-renderer-toc-item-color-text: #c9d1d9;
+    --kui-spec-renderer-toc-item-font-weight-selected: 600;
+
+    /* Kongponents component tokens the spec renderer also reads */
+    --kui-badge-color-background-neutral: #21262d;
+    --kui-badge-color-text-neutral: #c9d1d9;
+    --kui-code-block-color-background: #010409;
+    --kui-code-block-line-number-color-text: #484f58;
+    --kui-dropdown-item-color-background-selected: #1f6feb;
+    --kui-dropdown-item-color-text-selected: #ffffff;
+    --kui-link-color-text-hover: #79c0ff;
+    --kui-pop-shadow: 0px 8px 24px 0px rgba(1, 4, 9, 0.75);
+    --kui-tooltip-color-background: #f0f6fc;
+    --kui-tooltip-color-text: #0d1117;
+  }
+}

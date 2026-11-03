@@ -278,7 +278,7 @@ html.dark,
   // Force the scrollable container to match the shiki background color
   .editable-code-wrapper {
     /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/token-var-usage */
-    background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-strongest) !important;
+    background-color: var(--kui-code-block-color-background, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-strongest))) !important;
 
     .editable-code {
       /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/token-var-usage */
@@ -290,9 +290,10 @@ html.dark,
 
 <style lang="scss" scoped>
 .editable-code-wrapper {
-  background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+  // matches the background of the highlighted CodeBlock underneath
+  background-color: var(--kui-code-block-color-background, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest)));
   box-sizing: border-box;
-  font-family: var(--kui-font-family-code, $kui-font-family-code);
+  font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
   font-size: var(--kui-font-size-20, $kui-font-size-20);
   font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
   line-height: var(--kui-line-height-30, $kui-line-height-30);
@@ -310,7 +311,7 @@ html.dark,
     background: transparent;
     caret-color: var(--kui-color-text, $kui-color-text);
     color: transparent;
-    font-family: var(--kui-font-family-code, $kui-font-family-code);
+    font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
     left: calc(4ch + 14px);

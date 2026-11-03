@@ -84,7 +84,7 @@ const sizeText = computed((): string =>
 
       .response-download-name {
         color: var(--kui-color-text, $kui-color-text);
-        font-family: var(--kui-font-family-code, $kui-font-family-code);
+        font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
         font-size: var(--kui-font-size-30, $kui-font-size-30);
         font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
         overflow: hidden;

@@ -1,0 +1,78 @@
+/**
+ * Contrast - a high-contrast light theme with larger text, black borders, underlined links and a yellow highlight.
+ *
+ * Sample theme for the @kong/spec-renderer component tokens, see docs/theming.md.
+ * The base tokens alone theme the whole renderer; the second rule fine-tunes it, and the sandbox only applies it while
+ * its "Fine-tuned tokens" checkbox is checked.
+ * Like the @kong/design-tokens themes, it lives in the `kui.theme` layer so that unlayered `:root` overrides still win.
+ */
+@layer kui.theme {
+  [data-spec-renderer-theme="contrast"] {
+    /* Base tokens - these alone theme the whole renderer */
+    --kui-spec-renderer-border-radius: 4px;
+    --kui-spec-renderer-border-radius-small: 4px;
+    --kui-spec-renderer-color-background: #ffffff;
+    --kui-spec-renderer-color-background-neutral: #f2f2f2;
+    --kui-spec-renderer-color-background-primary: #ffe600;
+    --kui-spec-renderer-color-border: #000000;
+    --kui-spec-renderer-color-text: #000000;
+    --kui-spec-renderer-color-text-neutral: #1a1a1a;
+    --kui-spec-renderer-color-text-primary: #0040c1;
+    --kui-spec-renderer-font-family-code: Menlo, Consolas, monospace;
+    --kui-spec-renderer-font-family-heading: Verdana, Geneva, "Segoe UI", sans-serif;
+  }
+
+  /* Fine-tuning on top of the base tokens */
+  [data-spec-renderer-theme="contrast"][data-spec-renderer-fine-tune] {
+    /* Boxed sections */
+    --kui-spec-renderer-section-border-width: 2px;
+    --kui-spec-renderer-section-color-background: #ffffff;
+    --kui-spec-renderer-section-gap: 20px;
+    --kui-spec-renderer-section-header-color-background: #f2f2f2;
+    --kui-spec-renderer-section-padding-x: 16px;
+
+    /* Dedicated tokens - fine-tuning on top of the base tokens: larger text, and black text on the yellow highlight */
+    --kui-spec-renderer-document-navigation-color-background-hover: #ffe600;
+    --kui-spec-renderer-document-navigation-color-text-hover: #000000;
+    --kui-spec-renderer-method-badge-font-weight: 800;
+    --kui-spec-renderer-page-header-title-font-size: 36px;
+    --kui-spec-renderer-page-header-title-font-weight: 800;
+    --kui-spec-renderer-page-header-title-line-height: 44px;
+    --kui-spec-renderer-schema-property-color-border: #737373;
+    --kui-spec-renderer-schema-property-description-color-text: #000000;
+    --kui-spec-renderer-schema-property-readonly-color-text: #5b2a86;
+    --kui-spec-renderer-schema-property-required-color-text: #b00020;
+    --kui-spec-renderer-schema-property-value-color-background: #ffffff;
+    --kui-spec-renderer-schema-property-value-color-text: #000000;
+    --kui-spec-renderer-schema-property-value-shadow-border: 0px 0px 0px 1px #000000 inset;
+    --kui-spec-renderer-section-title-font-size: 20px;
+    --kui-spec-renderer-section-title-font-weight: 800;
+    --kui-spec-renderer-section-title-line-height: 28px;
+    --kui-spec-renderer-select-color-text-hover: #000000;
+    --kui-spec-renderer-subsection-header-padding: 10px 12px;
+    --kui-spec-renderer-toc-color-background: #ffffff;
+    --kui-spec-renderer-toc-group-title-font-size: 13px;
+    --kui-spec-renderer-toc-group-title-font-weight: 800;
+    --kui-spec-renderer-toc-item-color-background-hover: #e6e6e6;
+    --kui-spec-renderer-toc-item-color-text-selected: #000000;
+    --kui-spec-renderer-toc-item-font-size: 16px;
+    --kui-spec-renderer-toc-item-font-weight-selected: 700;
+    --kui-spec-renderer-toc-item-line-height: 24px;
+
+    /* Kongponents component tokens the spec renderer also reads */
+    --kui-badge-color-background-neutral: #000000;
+    --kui-badge-color-text-neutral: #ffffff;
+    --kui-code-block-line-number-color-text: #404040;
+    --kui-dropdown-item-color-background-selected: #000000;
+    --kui-dropdown-item-color-text-selected: #ffffff;
+    --kui-input-shadow-border: 0px 0px 0px 1px #000000 inset;
+    --kui-input-shadow-border-hover: 0px 0px 0px 2px #000000 inset;
+    --kui-label-color-text: #000000;
+    --kui-link-color-text-hover: #002b80;
+    --kui-link-text-decoration: underline;
+    --kui-tooltip-color-background: #000000;
+    --kui-tooltip-color-text: #ffffff;
+    --kui-tooltip-font-size: 14px;
+    --kui-tooltip-line-height: 20px;
+  }
+}

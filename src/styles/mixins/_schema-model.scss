@@ -11,11 +11,12 @@
   }
 }
 
+// default, example, enum, pattern and range value chips of a schema property
 @mixin model-property-field-value {
-  background-color: var(--kui-color-background, $kui-color-background);
-  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-  box-shadow: var(--kui-shadow-border, $kui-shadow-border);
-  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+  background-color: var(--kui-spec-renderer-schema-property-value-color-background, var(--kui-spec-renderer-color-background-primary, var(--kui-color-background, $kui-color-background)));
+  border-radius: var(--kui-spec-renderer-schema-property-value-border-radius, var(--kui-spec-renderer-border-radius-small, var(--kui-border-radius-20, $kui-border-radius-20)));
+  box-shadow: var(--kui-spec-renderer-schema-property-value-shadow-border, var(--kui-shadow-border, $kui-shadow-border));
+  color: var(--kui-spec-renderer-schema-property-value-color-text, var(--kui-spec-renderer-color-text-primary, var(--kui-color-text-neutral, $kui-color-text-neutral)));
   font-size: var(--kui-font-size-20, $kui-font-size-20);
   font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
   line-height: var(--kui-line-height-20, $kui-line-height-20);

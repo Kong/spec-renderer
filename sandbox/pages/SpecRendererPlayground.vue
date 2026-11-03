@@ -83,6 +83,27 @@
         >
         <label for="dark-mode">Dark mode</label>
         |
+        <label for="theme">Theme: &nbsp;</label>
+        <select
+          id="theme"
+          v-model="selectedTheme"
+        >
+          <option
+            v-for="theme in sandboxThemes"
+            :key="theme.value"
+            :value="theme.value"
+          >
+            {{ theme.label }}
+          </option>
+        </select>
+        <input
+          id="theme-fine-tune"
+          v-model="fineTune"
+          :disabled="!selectedTheme"
+          type="checkbox"
+        >
+        <label for="theme-fine-tune">Fine-tuned tokens</label>
+        |
         <label for="navigation-type">Navigation: &nbsp;</label>
         <select
           id="navigation-type"
@@ -138,6 +159,7 @@ import SpecRenderer from '../../src/components/SpecRenderer.vue'
 import type { NavigationTypes } from '../../src/types'
 import { useRoute as useVueRoute } from 'vue-router'
 import { darkMode } from '../color-mode'
+import { fineTune, sandboxThemes, selectedTheme } from '../theme'
 
 const route = useVueRoute()
 

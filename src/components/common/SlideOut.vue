@@ -125,11 +125,12 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 @use '@/styles/styles' as *;
 
+// Slideout component tokens, like KSlideout
 .slideout {
   .slideout-container {
-    background-color: var(--kui-color-background, $kui-color-background);
-    border-left: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    box-shadow: var(--kui-shadow, $kui-shadow);
+    background-color: var(--kui-slideout-color-background, var(--kui-spec-renderer-color-background, var(--kui-color-background, $kui-color-background)));
+    border-left: var(--kui-slideout-border-width, var(--kui-border-width-10, $kui-border-width-10)) solid var(--kui-slideout-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
+    box-shadow: var(--kui-slideout-shadow, var(--kui-shadow, $kui-shadow));
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -152,17 +153,17 @@ onUnmounted(() => {
       .slideout-title {
         display: flex;
         flex: 1;
-        font-family: var(--kui-font-family-text, $kui-font-family-text);
-        font-size: var(--kui-font-size-50, $kui-font-size-50);
-        font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+        font-family: var(--kui-slideout-title-font-family, var(--kui-font-family-text, $kui-font-family-text));
+        font-size: var(--kui-slideout-title-font-size, var(--kui-font-size-50, $kui-font-size-50));
+        font-weight: var(--kui-slideout-title-font-weight, var(--kui-font-weight-bold, $kui-font-weight-bold));
         gap: var(--kui-space-40, $kui-space-40);
-        line-height: var(--kui-line-height-40, $kui-line-height-40);
+        line-height: var(--kui-slideout-title-line-height, var(--kui-line-height-40, $kui-line-height-40));
       }
 
       .slideout-close-icon {
         @include default-button-reset;
 
-        border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+        border-radius: var(--kui-slideout-close-border-radius, var(--kui-border-radius-20, $kui-border-radius-20));
         margin-left: auto;
         outline: none;
 
@@ -173,7 +174,7 @@ onUnmounted(() => {
         &:hover,
         &:focus {
           .close-icon {
-            color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
+            color: var(--kui-slideout-close-color-text-hover, var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong)) !important;
           }
         }
       }
