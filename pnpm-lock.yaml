@@ -297,14 +297,14 @@ importers:
         specifier: ^2.2.1
         version: 2.2.1
       '@kong/design-tokens':
-        specifier: 3.3.3
-        version: 3.3.3
+        specifier: 3.3.5
+        version: 3.3.5
       '@kong/eslint-config-kong-ui':
         specifier: 1.8.1
         version: 1.8.1(@typescript-eslint/parser@8.61.1(eslint@10.12.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3))(eslint@10.12.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3)
       '@kong/stylelint-plugin-design-tokens':
-        specifier: 2.0.1
-        version: 2.0.1(stylelint@17.16.0(supports-color@10.2.2)(typescript@5.9.3))
+        specifier: 2.0.3
+        version: 2.0.3(stylelint@17.16.0(supports-color@10.2.2)(typescript@5.9.3))
       '@semantic-release/changelog':
         specifier: ^7.0.0
         version: 7.0.0(semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3))
@@ -1172,8 +1172,8 @@ packages:
   '@keyv/serialize@1.1.1':
     resolution: {integrity: sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA==}
 
-  '@kong/design-tokens@3.3.3':
-    resolution: {integrity: sha512-ozSO9gneNf5+ZMNbFfOKxeCF6Yr8uv92RNO7puVz0P5UIQk+M+z0MfSBI9cZx9zfM+Jb93xDU6GRpE9HLJcuOg==}
+  '@kong/design-tokens@3.3.5':
+    resolution: {integrity: sha512-GJpzx6s3QgudwXnHE/BZwwRvVcjFNBhNYBwiuSQPxcd9jeMSilNIJeMaYTEGiVzbKeBiGa3lbJSgv31U2RHo4Q==}
     engines: {node: '>=20.19.5', pnpm: '>=10.28.2'}
 
   '@kong/eslint-config-kong-ui@1.8.1':
@@ -1198,8 +1198,8 @@ packages:
     peerDependencies:
       vue: '>= 3.3.4 < 4'
 
-  '@kong/stylelint-plugin-design-tokens@2.0.1':
-    resolution: {integrity: sha512-C/8kFbIcLEU4swabK81sx+q+HFCBfoKmLZGGdKmUI57WvyoUyyIN2t/9KCP1MmUSUTyOLjfuQmpo1VmndzQL3Q==}
+  '@kong/stylelint-plugin-design-tokens@2.0.3':
+    resolution: {integrity: sha512-gQjshb59P0AEH5Y0Fa+rphgBEtXVwcxN/BNFPMv1alpCL2VQvM9w30HhNTM/m5by7P5uQdcxa9uStkYvZLXebQ==}
     engines: {node: '>=20.19.5', pnpm: '>=10.28.2'}
     peerDependencies:
       stylelint: '>=14.0.0'
@@ -6904,7 +6904,7 @@ snapshots:
 
   '@keyv/serialize@1.1.1': {}
 
-  '@kong/design-tokens@3.3.3': {}
+  '@kong/design-tokens@3.3.5': {}
 
   '@kong/eslint-config-kong-ui@1.8.1(@typescript-eslint/parser@8.61.1(eslint@10.12.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3))(eslint@10.12.0(jiti@2.4.2)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3)':
     dependencies:
@@ -6938,7 +6938,7 @@ snapshots:
     dependencies:
       vue: 3.5.43(typescript@5.9.3)
 
-  '@kong/stylelint-plugin-design-tokens@2.0.1(stylelint@17.16.0(supports-color@10.2.2)(typescript@5.9.3))':
+  '@kong/stylelint-plugin-design-tokens@2.0.3(stylelint@17.16.0(supports-color@10.2.2)(typescript@5.9.3))':
     dependencies:
       stylelint: 17.16.0(supports-color@10.2.2)(typescript@5.9.3)
 
