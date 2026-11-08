@@ -14,10 +14,11 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
+// a variant label (One Of, Any Of, All Of) is a neutral badge, so it reads the KBadge neutral tokens like LabelBadge
 .variant-label {
-  background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
-  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-  color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+  background-color: var(--kui-badge-color-background-neutral, var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker));
+  border-radius: var(--kui-badge-border-radius, var(--kui-spec-renderer-border-radius-small, var(--kui-border-radius-20, $kui-border-radius-20)));
+  color: var(--kui-badge-color-text-neutral, var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong));
   display: inline-block;
   font: var(--kui-font-family-code, $kui-font-family-code);
   font-size: var(--kui-font-size-20, $kui-font-size-20);

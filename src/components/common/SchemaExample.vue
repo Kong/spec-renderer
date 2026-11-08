@@ -71,16 +71,16 @@ const selectExample = (item: SelectItem): void => {
 
 <style lang="scss" scoped>
 .schema-example {
-  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-panel-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
+  border-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
   height: max-content;
   overflow: hidden;
 
   .schema-example-header {
     align-items: center;
-    background: var(--kui-color-background, $kui-color-background);
-    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    color: var(--kui-color-text, $kui-color-text);
+    background: var(--kui-spec-renderer-panel-header-color-background, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background, $kui-color-background)));
+    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-panel-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
+    color: var(--kui-spec-renderer-panel-header-color-text, var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text)));
     display: flex;
     font-size: var(--kui-font-size-30, $kui-font-size-30);
     font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);

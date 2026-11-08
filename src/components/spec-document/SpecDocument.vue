@@ -706,7 +706,7 @@ onBeforeMount(async () => {
 .spec-renderer-document {
   background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
   box-sizing: border-box;
-  color: var(--kui-color-text, $kui-color-text);
+  color: var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text));
   container: spec-document / inline-size;
   padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
 

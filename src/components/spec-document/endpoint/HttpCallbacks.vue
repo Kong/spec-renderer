@@ -53,8 +53,8 @@ defineProps({
   }
 
   .callback-collapsible-section-content {
-    background: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    background: var(--kui-spec-renderer-panel-color-background-inset, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest)));
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-panel-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
     margin-top: var(--kui-space-20, $kui-space-20);
     padding: var(--kui-space-50, $kui-space-50);
 
