@@ -1,0 +1,58 @@
+/**
+ * Midnight - a dark navy sidebar next to light content, with a teal accent and flat sections.
+ *
+ * Sample theme for the @kong/spec-renderer component tokens, see docs/theming.md.
+ * The base tokens alone theme the whole renderer; the second rule fine-tunes it, and the sandbox only applies it while
+ * its "Fine-tuned tokens" checkbox is checked.
+ * Like the @kong/design-tokens themes, it lives in the `kui.theme` layer so that unlayered `:root` overrides still win.
+ */
+@layer kui.theme {
+  [data-spec-renderer-theme="midnight"] {
+    /* Base tokens - these alone theme the whole renderer */
+    --kui-spec-renderer-border-radius: 8px;
+    --kui-spec-renderer-border-radius-small: 4px;
+    --kui-spec-renderer-color-background: #ffffff;
+    --kui-spec-renderer-color-background-neutral: #f8fafc;
+    --kui-spec-renderer-color-background-primary: #ccfbf1;
+    --kui-spec-renderer-color-border: #d5dde8;
+    --kui-spec-renderer-color-text: #0f172a;
+    --kui-spec-renderer-color-text-neutral: #475569;
+    --kui-spec-renderer-color-text-primary: #0f766e;
+    --kui-spec-renderer-font-family-code: Menlo, Consolas, monospace;
+    --kui-spec-renderer-font-family-heading: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+  }
+
+  /* Fine-tuning on top of the base tokens */
+  [data-spec-renderer-theme="midnight"][data-spec-renderer-fine-tune] {
+    /* Sections stay flat, but nested sections (body schema titles) are boxed */
+    --kui-spec-renderer-subsection-border-width: 1px;
+    --kui-spec-renderer-subsection-color-background: #ffffff;
+    --kui-spec-renderer-subsection-content-padding: 0px 12px;
+    --kui-spec-renderer-subsection-header-color-background: #f8fafc;
+    --kui-spec-renderer-subsection-header-padding: 8px 12px;
+
+    /* Dark sidebar - the sidebar tokens override the light base colors there */
+    --kui-spec-renderer-toc-color-background: #0f172a;
+    --kui-spec-renderer-toc-color-border-divider: #1e293b;
+    --kui-spec-renderer-toc-group-title-color-text: #5eead4;
+    --kui-spec-renderer-toc-item-color-background-hover: #1e293b;
+    --kui-spec-renderer-toc-item-color-background-selected: #134e4a;
+    --kui-spec-renderer-toc-item-color-text: #cbd5e1;
+    --kui-spec-renderer-toc-item-color-text-hover: #ffffff;
+    --kui-spec-renderer-toc-item-color-text-selected: #ccfbf1;
+    --kui-spec-renderer-toc-item-font-weight-selected: 600;
+
+    /* Dedicated tokens - fine-tuning on top of the base tokens */
+    --kui-spec-renderer-page-header-title-font-weight: 800;
+    --kui-spec-renderer-schema-property-readonly-color-text: #4f46e5;
+    --kui-spec-renderer-schema-property-required-color-text: #e11d48;
+    --kui-spec-renderer-schema-property-value-shadow-border: 0px 0px 0px 1px #99f6e4 inset;
+    --kui-spec-renderer-section-title-color-text: #115e59;
+
+    /* Kongponents component tokens the spec renderer also reads */
+    --kui-dropdown-item-color-background-selected: #0f766e;
+    --kui-dropdown-item-color-text-selected: #ffffff;
+    --kui-link-color-text-hover: #115e59;
+    --kui-tooltip-color-background: #0f172a;
+  }
+}

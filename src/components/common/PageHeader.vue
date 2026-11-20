@@ -69,12 +69,14 @@ defineProps({
   .page-header-title {
     align-items: center;
     display: flex;
+    // set on the title row rather than the h2, so that with no theme font the h2 still follows the host page's heading styles
+    font-family: var(--kui-spec-renderer-page-header-title-font-family, var(--kui-spec-renderer-font-family-heading, inherit));
     gap: var(--kui-space-50, $kui-space-50);
 
     h2 {
-      font-size: var(--kui-font-size-80, $kui-font-size-80);
-      font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
-      line-height: var(--kui-line-height-70, $kui-line-height-70);
+      font-size: var(--kui-spec-renderer-page-header-title-font-size, var(--kui-font-size-80, $kui-font-size-80));
+      font-weight: var(--kui-spec-renderer-page-header-title-font-weight, var(--kui-font-weight-bold, $kui-font-weight-bold));
+      line-height: var(--kui-spec-renderer-page-header-title-line-height, var(--kui-line-height-70, $kui-line-height-70));
       overflow-wrap: anywhere;
     }
 

@@ -230,7 +230,7 @@ watch(clientId, () => {
     background-color: var(--kui-color-background-danger-weakest, $kui-color-background-danger-weakest);
     border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     color: var(--kui-color-text-danger, $kui-color-text-danger);
-    font-family: var(--kui-font-family-code, $kui-font-family-code);
+    font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
     font-size: var(--kui-font-size-30, $kui-font-size-30);
     line-height: var(--kui-line-height-30, $kui-line-height-30);
     margin-top: var(--kui-space-30, $kui-space-30);

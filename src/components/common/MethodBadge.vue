@@ -47,8 +47,8 @@ defineProps({
   // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
   // stylelint-disable-next-line no-duplicate-selectors
   & {
-    border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
-    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    border-radius: var(--kui-spec-renderer-method-badge-border-radius, var(--kui-spec-renderer-border-radius-small, var(--kui-border-radius-round, $kui-border-radius-round)));
+    font-weight: var(--kui-spec-renderer-method-badge-font-weight, var(--kui-font-weight-semibold, $kui-font-weight-semibold));
     letter-spacing: var(--kui-letter-spacing-minus-30, $kui-letter-spacing-minus-30);
     line-height: var(--kui-line-height-20, $kui-line-height-20);
     text-transform: uppercase;

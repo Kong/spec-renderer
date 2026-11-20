@@ -297,7 +297,7 @@ Otherwise host app should have control over these styles.
 */
 aside {
   .spec-renderer-toc {
-    background-color: var(--kui-color-background, $kui-color-background);
+    background-color: var(--kui-spec-renderer-toc-color-background, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background, $kui-color-background)));
     position: relative; // important, need this for scrolling to selected item
 
     :deep(>) {

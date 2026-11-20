@@ -20,6 +20,6 @@ defineProps({
 
 <style lang="scss" scoped>
 .property-field-description {
-  color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+  color: var(--kui-spec-renderer-schema-property-description-color-text, var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger));
 }
 </style>

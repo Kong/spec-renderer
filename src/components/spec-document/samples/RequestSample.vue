@@ -485,9 +485,10 @@ watch(() => ({
     }
   }
 
+  // the code block is the panel body here, so its bottom corners follow the panel radius
   :deep(.code-block pre) {
-    border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    border-bottom-left-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
+    border-bottom-right-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
     border-top-left-radius: var(--kui-border-radius-0, $kui-border-radius-0);
     border-top-right-radius: var(--kui-border-radius-0, $kui-border-radius-0);
   }

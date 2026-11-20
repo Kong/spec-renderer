@@ -1,0 +1,53 @@
+/**
+ * Ember - a warm light theme with a terracotta accent, serif titles and boxed sections.
+ *
+ * Sample theme for the @kong/spec-renderer component tokens, see docs/theming.md.
+ * The base tokens alone theme the whole renderer; the second rule fine-tunes it, and the sandbox only applies it while
+ * its "Fine-tuned tokens" checkbox is checked.
+ * Like the @kong/design-tokens themes, it lives in the `kui.theme` layer so that unlayered `:root` overrides still win.
+ */
+@layer kui.theme {
+  [data-spec-renderer-theme="ember"] {
+    /* Base tokens - these alone theme the whole renderer */
+    --kui-spec-renderer-border-radius: 10px;
+    --kui-spec-renderer-border-radius-small: 8px;
+    --kui-spec-renderer-color-background: #ffffff;
+    --kui-spec-renderer-color-background-neutral: #fff6ee;
+    --kui-spec-renderer-color-background-primary: #ffe4d1;
+    --kui-spec-renderer-color-border: #f1dfcf;
+    --kui-spec-renderer-color-text: #3b2a1f;
+    --kui-spec-renderer-color-text-neutral: #6f5a4b;
+    --kui-spec-renderer-color-text-primary: #c2410c;
+    --kui-spec-renderer-font-family-code: "SF Mono", Menlo, Consolas, monospace;
+    --kui-spec-renderer-font-family-heading: Georgia, "Times New Roman", serif;
+  }
+
+  /* Fine-tuning on top of the base tokens */
+  [data-spec-renderer-theme="ember"][data-spec-renderer-fine-tune] {
+    /* Boxed sections */
+    --kui-spec-renderer-section-border-width: 1px;
+    --kui-spec-renderer-section-color-background: #ffffff;
+    --kui-spec-renderer-section-gap: 16px;
+    --kui-spec-renderer-section-header-color-background: #fff4ea;
+    --kui-spec-renderer-section-padding-x: 16px;
+
+    /* Dedicated tokens - fine-tuning on top of the base tokens */
+    --kui-spec-renderer-page-header-title-font-weight: 800;
+    --kui-spec-renderer-schema-property-readonly-color-text: #0f766e;
+    --kui-spec-renderer-schema-property-required-color-text: #be123c;
+    --kui-spec-renderer-schema-property-value-shadow-border: 0px 0px 0px 1px #f8d7bd inset;
+    --kui-spec-renderer-section-title-color-text: #7c2d12;
+    --kui-spec-renderer-subsection-header-color-background: #fff8f2;
+    --kui-spec-renderer-subsection-header-padding: 8px 12px;
+    --kui-spec-renderer-toc-group-title-color-text: #c2410c;
+    --kui-spec-renderer-toc-item-color-background-hover: #fdeee2;
+    --kui-spec-renderer-toc-item-color-text-selected: #9a3412;
+    --kui-spec-renderer-toc-item-font-weight-selected: 600;
+
+    /* Kongponents component tokens the spec renderer also reads */
+    --kui-dropdown-item-color-background-selected: #c2410c;
+    --kui-dropdown-item-color-text-selected: #ffffff;
+    --kui-link-color-text-hover: #9a3412;
+    --kui-tooltip-color-background: #431407;
+  }
+}

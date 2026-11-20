@@ -5,28 +5,33 @@
   align-items: center;
   // transparent so that it doesn't interfere with the parent's background color
   background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-  color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+  border-radius: var(--kui-spec-renderer-toc-item-border-radius, var(--kui-spec-renderer-border-radius-small, var(--kui-border-radius-20, $kui-border-radius-20)));
+  color: var(--kui-spec-renderer-toc-item-color-text, var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong)));
   display: flex;
-  font-size: var(--kui-font-size-30, $kui-font-size-30);
-  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+  font-size: var(--kui-spec-renderer-toc-item-font-size, var(--kui-font-size-30, $kui-font-size-30));
+  font-weight: var(--kui-spec-renderer-toc-item-font-weight, var(--kui-font-weight-regular, $kui-font-weight-regular));
   gap: var(--kui-space-30, $kui-space-30);
   justify-content: space-between;
-  line-height: var(--kui-line-height-30, $kui-line-height-30);
-  padding: var(--kui-space-30, $kui-space-30);
+  line-height: var(--kui-spec-renderer-toc-item-line-height, var(--kui-line-height-30, $kui-line-height-30));
+  padding: var(--kui-spec-renderer-toc-item-padding, var(--kui-space-30, $kui-space-30));
   text-align: left;
   text-decoration: none;
   transition: color var(--kui-animation-duration-20, $kui-animation-duration-20) ease, background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
 
   &:hover:not(.active) {
-    color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+    // the hover and selected backgrounds are transparent unless a theme sets them
+    background-color: var(--kui-spec-renderer-toc-item-color-background-hover, var(--kui-color-background-transparent, $kui-color-background-transparent));
+    color: var(--kui-spec-renderer-toc-item-color-text-hover, var(--kui-spec-renderer-color-text, var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger)));
   }
 
   .chevron-icon {
-    @include toggle-icon;
+    // follows the item text color so that chevrons stay visible on a themed sidebar background
+    @include toggle-icon($textColor: var(--kui-spec-renderer-toc-item-color-text, var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong))));
   }
 
   &.active {
-    color: var(--kui-color-text-primary, $kui-color-text-primary);
+    background-color: var(--kui-spec-renderer-toc-item-color-background-selected, var(--kui-spec-renderer-color-background-primary, var(--kui-color-background-transparent, $kui-color-background-transparent)));
+    color: var(--kui-spec-renderer-toc-item-color-text-selected, var(--kui-spec-renderer-color-text-primary, var(--kui-color-text-primary, $kui-color-text-primary)));
+    font-weight: var(--kui-spec-renderer-toc-item-font-weight-selected, var(--kui-spec-renderer-toc-item-font-weight, var(--kui-font-weight-regular, $kui-font-weight-regular)));
   }
 }

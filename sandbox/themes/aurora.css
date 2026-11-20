@@ -1,0 +1,52 @@
+/**
+ * Aurora - a soft, rounded, violet light theme with boxed sections.
+ *
+ * Sample theme for the @kong/spec-renderer component tokens, see docs/theming.md.
+ * The base tokens alone theme the whole renderer; the second rule fine-tunes it, and the sandbox only applies it while
+ * its "Fine-tuned tokens" checkbox is checked.
+ * Like the @kong/design-tokens themes, it lives in the `kui.theme` layer so that unlayered `:root` overrides still win.
+ */
+@layer kui.theme {
+  [data-spec-renderer-theme="aurora"] {
+    /* Base tokens - these alone theme the whole renderer */
+    --kui-spec-renderer-border-radius: 12px;
+    --kui-spec-renderer-border-radius-small: 6px;
+    --kui-spec-renderer-color-background: #ffffff;
+    --kui-spec-renderer-color-background-neutral: #f8f6ff;
+    --kui-spec-renderer-color-background-primary: #ede9fe;
+    --kui-spec-renderer-color-border: #e4ddff;
+    --kui-spec-renderer-color-text: #2e1065;
+    --kui-spec-renderer-color-text-neutral: #4a4566;
+    --kui-spec-renderer-color-text-primary: #7c3aed;
+    --kui-spec-renderer-font-family-code: "SF Mono", Menlo, Consolas, monospace;
+    --kui-spec-renderer-font-family-heading: Optima, Candara, "Segoe UI", sans-serif;
+  }
+
+  /* Fine-tuning on top of the base tokens */
+  [data-spec-renderer-theme="aurora"][data-spec-renderer-fine-tune] {
+    /* Boxed sections */
+    --kui-spec-renderer-section-border-width: 1px;
+    --kui-spec-renderer-section-color-background: #ffffff;
+    --kui-spec-renderer-section-gap: 16px;
+    --kui-spec-renderer-section-header-color-background: #f5f1ff;
+    --kui-spec-renderer-section-padding-x: 16px;
+
+    /* Dedicated tokens - fine-tuning on top of the base tokens */
+    --kui-spec-renderer-page-header-title-font-weight: 800;
+    --kui-spec-renderer-schema-property-readonly-color-text: #0e7490;
+    --kui-spec-renderer-schema-property-required-color-text: #db2777;
+    --kui-spec-renderer-schema-property-value-border-radius: 100px;
+    --kui-spec-renderer-subsection-header-color-background: #faf8ff;
+    --kui-spec-renderer-subsection-header-padding: 8px 12px;
+    --kui-spec-renderer-toc-group-title-color-text: #6d28d9;
+    --kui-spec-renderer-toc-item-color-background-hover: #efeaff;
+    --kui-spec-renderer-toc-item-font-weight-selected: 600;
+    --kui-spec-renderer-toc-item-padding: 8px 10px;
+
+    /* Kongponents component tokens the spec renderer also reads */
+    --kui-badge-border-radius: 100px;
+    --kui-dropdown-item-color-background-selected: #7c3aed;
+    --kui-dropdown-item-color-text-selected: #ffffff;
+    --kui-tooltip-color-background: #2e1065;
+  }
+}

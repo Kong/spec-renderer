@@ -122,13 +122,13 @@ watch(() => (props.item.initiallyExpanded), (newValue) => {
     padding-top: var(--kui-space-70, $kui-space-70);
 
     & + .group-item.root {
-      border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-toc-color-border-divider, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
     }
 
     > button {
-      color: var(--kui-color-text, $kui-color-text);
-      font-size: var(--kui-font-size-20, $kui-font-size-20);
-      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+      color: var(--kui-spec-renderer-toc-group-title-color-text, var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text)));
+      font-size: var(--kui-spec-renderer-toc-group-title-font-size, var(--kui-font-size-20, $kui-font-size-20));
+      font-weight: var(--kui-spec-renderer-toc-group-title-font-weight, var(--kui-font-weight-semibold, $kui-font-weight-semibold));
       line-height: var(--kui-line-height-20, $kui-line-height-20);
       text-transform: uppercase;
     }

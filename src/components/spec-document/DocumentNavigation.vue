@@ -84,10 +84,10 @@ const selectItem = (newUrl: string): void => {
 
   .document-navigation-link {
     align-items: center;
-    background-color: var(--kui-color-background, $kui-color-background);
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+    background-color: var(--kui-spec-renderer-document-navigation-color-background, var(--kui-spec-renderer-color-background, var(--kui-color-background, $kui-color-background)));
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-document-navigation-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
+    border-radius: var(--kui-spec-renderer-document-navigation-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
+    color: var(--kui-spec-renderer-document-navigation-color-text, var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong)));
     display: flex;
     flex: 1;
     font-size: var(--kui-font-size-30, $kui-font-size-30);
@@ -101,8 +101,8 @@ const selectItem = (newUrl: string): void => {
       background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
 
     &:hover {
-      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
-      color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
+      background-color: var(--kui-spec-renderer-document-navigation-color-background-hover, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest)));
+      color: var(--kui-spec-renderer-document-navigation-color-text-hover, var(--kui-spec-renderer-color-text-primary, var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest)));
     }
 
     &.next {

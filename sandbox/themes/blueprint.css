@@ -1,0 +1,68 @@
+/**
+ * Blueprint - a sharp, square-cornered, monochrome light theme with an orange accent and boxed sections.
+ *
+ * Sample theme for the @kong/spec-renderer component tokens, see docs/theming.md.
+ * The base tokens alone theme the whole renderer; the second rule fine-tunes it, and the sandbox only applies it while
+ * its "Fine-tuned tokens" checkbox is checked.
+ * Like the @kong/design-tokens themes, it lives in the `kui.theme` layer so that unlayered `:root` overrides still win.
+ */
+@layer kui.theme {
+  [data-spec-renderer-theme="blueprint"] {
+    /* Base tokens - these alone theme the whole renderer */
+    --kui-spec-renderer-border-radius: 0px;
+    --kui-spec-renderer-border-radius-small: 0px;
+    --kui-spec-renderer-color-background: #ffffff;
+    --kui-spec-renderer-color-background-neutral: #f5f5f5;
+    --kui-spec-renderer-color-background-primary: #ececec;
+    --kui-spec-renderer-color-border: #171717;
+    --kui-spec-renderer-color-text: #0a0a0a;
+    --kui-spec-renderer-color-text-neutral: #404040;
+    --kui-spec-renderer-color-text-primary: #0a0a0a;
+    --kui-spec-renderer-font-family-code: Menlo, Consolas, "Courier New", monospace;
+    --kui-spec-renderer-font-family-heading: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  /* Fine-tuning on top of the base tokens */
+  [data-spec-renderer-theme="blueprint"][data-spec-renderer-fine-tune] {
+    /* Boxed sections */
+    --kui-spec-renderer-section-border-width: 1px;
+    --kui-spec-renderer-section-color-background: #ffffff;
+    --kui-spec-renderer-section-gap: 24px;
+    --kui-spec-renderer-section-header-color-background: #ededed;
+    --kui-spec-renderer-section-padding-x: 16px;
+
+    /* Dedicated tokens - fine-tuning on top of the base tokens: heavier type and an inverted selected item */
+    --kui-spec-renderer-document-navigation-color-background-hover: #171717;
+    --kui-spec-renderer-document-navigation-color-text-hover: #ffffff;
+    --kui-spec-renderer-method-badge-font-weight: 700;
+    --kui-spec-renderer-page-header-title-font-size: 36px;
+    --kui-spec-renderer-page-header-title-font-weight: 800;
+    --kui-spec-renderer-page-header-title-line-height: 40px;
+    --kui-spec-renderer-schema-property-color-border: #d4d4d4;
+    --kui-spec-renderer-schema-property-required-color-text: #ea580c;
+    --kui-spec-renderer-schema-property-value-shadow-border: 0px 0px 0px 1px #171717 inset;
+    --kui-spec-renderer-section-title-font-size: 18px;
+    --kui-spec-renderer-section-title-font-weight: 800;
+    --kui-spec-renderer-section-title-line-height: 24px;
+    --kui-spec-renderer-subsection-header-color-background: #f5f5f5;
+    --kui-spec-renderer-subsection-header-padding: 8px 12px;
+    --kui-spec-renderer-toc-group-title-font-weight: 800;
+    --kui-spec-renderer-toc-item-color-background-hover: #ececec;
+    --kui-spec-renderer-toc-item-color-background-selected: #171717;
+    --kui-spec-renderer-toc-item-color-text-selected: #ffffff;
+    --kui-spec-renderer-toc-item-font-weight-selected: 700;
+
+    /* Kongponents component tokens the spec renderer also reads */
+    --kui-badge-color-background-neutral: #171717;
+    --kui-badge-color-text-neutral: #ffffff;
+    --kui-button-border-radius-medium: 0px;
+    --kui-dropdown-item-color-background-selected: #171717;
+    --kui-dropdown-item-color-text-selected: #ffffff;
+    --kui-input-border-radius: 0px;
+    --kui-input-switch-border-radius-small: 0px;
+    --kui-input-switch-thumb-border-radius: 0px;
+    --kui-link-color-text-hover: #ea580c;
+    --kui-link-text-decoration: underline;
+    --kui-tooltip-color-background: #0a0a0a;
+  }
+}
