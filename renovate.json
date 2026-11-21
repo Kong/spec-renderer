@@ -14,8 +14,5 @@
       ],
       "enabled": false
     }
-  ],
-  "ignoreDeps": [
-    "@apidevtools/json-schema-ref-parser"
   ]
 }
