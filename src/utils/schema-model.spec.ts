@@ -119,6 +119,65 @@ describe('resolveSchemaObjectFields', () => {
     expect(resolveSchemaObjectFields(schemaObject)?.description).toEqual(schemaDescription)
     expect(resolveSchemaObjectFields(schemaObject)?.readOnly).toEqual(true)
   })
+  it('prefers fields that describe the array over the same fields on its items', () => {
+    const schemaObject: SchemaObject = {
+      type: 'array',
+      title: 'Team members',
+      description: 'List of team members',
+      default: [],
+      examples: [[]],
+      enum: [[]],
+      readOnly: false,
+      deprecated: false,
+      minItems: 1,
+      maxItems: 10,
+      uniqueItems: true,
+      items: {
+        type: 'object',
+        title: 'User',
+        description: 'A single user object',
+        default: { userId: 1 },
+        examples: [{ userId: 2 }],
+        enum: [{ userId: 3 }],
+        readOnly: true,
+        deprecated: true,
+        minItems: 2,
+        maxItems: 3,
+        uniqueItems: false,
+        properties: { userId: { type: 'number' } },
+      },
+    }
+
+    const result = resolveSchemaObjectFields(schemaObject)
+
+    expect(result).toMatchObject({
+      title: 'Team members',
+      description: 'List of team members',
+      default: [],
+      examples: [[]],
+      enum: [[]],
+      readOnly: false,
+      deprecated: false,
+      minItems: 1,
+      maxItems: 10,
+      uniqueItems: true,
+      properties: { userId: { type: 'number' } },
+    })
+  })
+  it('falls back to item fields when the array does not define its own value', () => {
+    const schemaObject: SchemaObject = {
+      type: 'array',
+      items: {
+        type: 'object',
+        description: 'A single user object',
+      },
+    }
+
+    expect(resolveSchemaObjectFields(schemaObject)).toMatchObject({
+      description: 'A single user object',
+      deprecated: true,
+    })
+  })
   it('returns empty objects for invalid Schema Object', () => {
     const invalidSchemaObjectList = [
       [{

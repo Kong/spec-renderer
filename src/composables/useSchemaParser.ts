@@ -241,6 +241,8 @@ export default (): {
         continueOnError: true,
         dereference: {
           circular: true,
+          // Preserve use-site descriptions even when the referenced schema is already cached.
+          preservedProperties: ['description'],
         },
         external: false,
         resolve: {
