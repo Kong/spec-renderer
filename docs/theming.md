@@ -347,7 +347,7 @@ Where one of these tokens plays the same role as a base token, it falls back to 
 
 ## Sample themes
 
-[`sandbox/themes`](../sandbox/themes) has ten sample themes to start from. Each one has two rules: the eleven base tokens, then a fine-tuning rule with the boxed sections recipe (if it boxes its sections) and only the dedicated and Kongponents tokens that give it its character. The descriptions below are of the fine-tuned themes:
+[`sandbox/themes`](../sandbox/themes) has ten sample themes to start from. Each one has two rules: the eleven base tokens plus the shared [KButton](#kongponents-tokens) secondary/tertiary/disabled and [KInput](#kongponents-tokens) tokens, then a fine-tuning rule with the boxed sections recipe (if it boxes its sections) and only the dedicated and Kongponents tokens that give it its character. The descriptions below are of the fine-tuned themes:
 
 - `aurora.css`: soft, rounded and violet, with a tinted sidebar, pill-shaped selection and boxed sections.
 - `blueprint.css`: square corners, monochrome and high contrast, with an inverted selected item and boxed sections.

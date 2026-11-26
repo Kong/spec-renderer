@@ -235,14 +235,14 @@ html.dark,
       thead th {
         background-color: var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker));
         border: var(--kui-border-width-10, $kui-border-width-10) solid
-          var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker);
+          var(--kui-spec-renderer-color-border, var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker));
         font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
         padding: var(--kui-space-40, $kui-space-40);
         vertical-align: text-top;
         white-space: nowrap;
 
         &:not(:last-of-type) {
-          border-right-color: var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak);
+          border-right-color: var(--kui-spec-renderer-color-border, var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak));
         }
       }
 
