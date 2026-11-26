@@ -20,6 +20,44 @@
     --kui-spec-renderer-color-text-primary: #0369a1;
     --kui-spec-renderer-font-family-code: "SF Mono", Menlo, Consolas, monospace;
     --kui-spec-renderer-font-family-heading: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+
+    /* Kongponents secondary button tokens, so the Try It button follows the theme instead of the HTTP method colors */
+    --kui-button-color-background-secondary-active: #e0f2fe;
+    --kui-button-color-background-secondary-hover: #f0f9ff;
+    --kui-button-color-background-secondary: #ffffff;
+    --kui-button-color-border-secondary-active: #075985;
+    --kui-button-color-border-secondary-hover: #075985;
+    --kui-button-color-border-secondary: #0369a1;
+    --kui-button-color-text-secondary-active: #075985;
+    --kui-button-color-text-secondary-hover: #075985;
+    --kui-button-color-text-secondary: #0369a1;
+
+    /* Input tokens, so the text inputs follow the theme */
+    --kui-input-color-background: #ffffff;
+    --kui-input-color-text: #0c4a6e;
+    --kui-input-color-text-placeholder: #64748b;
+    --kui-input-shadow-border: 0px 0px 0px 1px #bae6fd inset;
+    --kui-input-shadow-border-hover: 0px 0px 0px 1px #0369a1 inset;
+    --kui-input-shadow-focus: 0px 0px 0px 4px rgba(3, 105, 161, 0.3);
+
+    /* Tertiary button tokens (the Cancel button next to the secondary ones) */
+    --kui-button-color-background-tertiary: transparent;
+    --kui-button-color-background-tertiary-active: #e0f2fe;
+    --kui-button-color-background-tertiary-hover: #f0f9ff;
+    --kui-button-color-border-tertiary: transparent;
+    --kui-button-color-border-tertiary-active: transparent;
+    --kui-button-color-border-tertiary-hover: transparent;
+    --kui-button-color-text-tertiary: #0369a1;
+    --kui-button-color-text-tertiary-active: #0c4a6e;
+    --kui-button-color-text-tertiary-hover: #075985;
+
+    /* Button disabled states (the Try It button while a request is in flight) */
+    --kui-button-color-background-primary-disabled: #bae6fd;
+    --kui-button-color-background-secondary-disabled: #ffffff;
+    --kui-button-color-border-primary-disabled: transparent;
+    --kui-button-color-border-secondary-disabled: #bae6fd;
+    --kui-button-color-text-primary-disabled: #64748b;
+    --kui-button-color-text-secondary-disabled: #64748b;
   }
 
   /* Fine-tuning on top of the base tokens */
@@ -27,9 +65,9 @@
     /* Sections stay flat, but nested sections (body schema titles) are boxed */
     --kui-spec-renderer-subsection-border-width: 1px;
     --kui-spec-renderer-subsection-color-background: #ffffff;
-    --kui-spec-renderer-subsection-content-padding: 0px 16px;
     --kui-spec-renderer-subsection-header-color-background: #f0f9ff;
-    --kui-spec-renderer-subsection-header-padding: 10px 16px;
+    --kui-spec-renderer-subsection-padding-x: 16px;
+    --kui-spec-renderer-subsection-padding-y: 10px;
 
     /* Dedicated tokens - fine-tuning on top of the base tokens: larger type and an inverted selected item */
     --kui-spec-renderer-method-badge-font-weight: 700;
@@ -49,14 +87,21 @@
     --kui-spec-renderer-toc-item-color-background-selected: #0369a1;
     --kui-spec-renderer-toc-item-color-text-selected: #ffffff;
     --kui-spec-renderer-toc-item-font-size: 15px;
-    --kui-spec-renderer-toc-item-line-height: 22px;
     --kui-spec-renderer-toc-item-padding: 8px 14px;
 
     /* Kongponents component tokens the spec renderer also reads */
     --kui-button-border-radius-medium: 100px;
+    --kui-button-color-background-primary: #0369a1;
+    --kui-button-color-background-primary-active: #075985;
+    --kui-button-color-background-primary-hover: #0284c7;
+    --kui-button-color-border-primary: #0369a1;
+    --kui-button-color-text-primary: #ffffff;
     --kui-dropdown-item-color-background-selected: #0369a1;
     --kui-dropdown-item-color-text-selected: #ffffff;
     --kui-input-border-radius: 10px;
+    --kui-input-switch-color-background-selected: #0369a1;
+    --kui-input-switch-color-background-selected-hover: #0284c7;
+    --kui-input-switch-thumb-shadow-border-selected: 0px 0px 0px 2px #0369a1 inset;
     --kui-link-color-text-hover: #075985;
     --kui-tooltip-color-background: #0c4a6e;
   }

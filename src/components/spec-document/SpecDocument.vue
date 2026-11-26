@@ -727,7 +727,7 @@ onBeforeMount(async () => {
   }
 
   .spec-renderer-document {
-    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border));
 
     &:last-child {
       border-bottom: none;

@@ -39,7 +39,7 @@ defineProps({
 
     .default-header {
       align-items: center;
-      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      color: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, $kui-color-text-neutral));
       display: flex;
       gap: var(--kui-space-40, $kui-space-40);
 

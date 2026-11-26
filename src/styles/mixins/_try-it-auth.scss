@@ -26,7 +26,7 @@
       button {
         background: transparent;
         border: none;
-        color: var(--kui-color-text-primary, $kui-color-text-primary);
+        color: var(--kui-spec-renderer-color-text-primary, var(--kui-color-text-primary, $kui-color-text-primary));
         cursor: pointer;
         font-size: var(--kui-font-size-20, $kui-font-size-20);
         margin-left: var(--kui-space-20, $kui-space-20);

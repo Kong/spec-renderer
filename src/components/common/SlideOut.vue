@@ -146,7 +146,7 @@ onUnmounted(() => {
     }
 
     .slideout-header {
-      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-slideout-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
       display: flex;
       padding: var(--kui-space-40, $kui-space-40);
 
@@ -168,7 +168,7 @@ onUnmounted(() => {
         outline: none;
 
         .close-icon {
-          color: var(--kui-color-text-neutral, $kui-color-text-neutral) !important;
+          color: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, $kui-color-text-neutral)) !important;
         }
 
         &:hover,
@@ -182,7 +182,7 @@ onUnmounted(() => {
 
     .slideout-content {
       box-sizing: border-box;
-      color: var(--kui-color-text, $kui-color-text);
+      color: var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text));
       display: flex;
       flex-direction: column;
       font-family: var(--kui-font-family-text, $kui-font-family-text);

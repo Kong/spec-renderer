@@ -41,18 +41,19 @@ defineProps({
 
   .overview-collapsible-panel-header {
     align-items: center;
-    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    color: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, $kui-color-text-neutral));
     cursor: pointer;
     display: flex;
     gap: var(--kui-space-40, $kui-space-40);
     padding: var(--kui-space-40, $kui-space-40);
 
     .chevron-icon {
-      @include toggle-icon;
+      // follows the header text color so that chevrons stay visible on a themed header
+      @include toggle-icon($textColor: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, $kui-color-text-neutral)));
     }
 
     .overview-collapsible-panel-header-title {
-      color: var(--kui-color-text, $kui-color-text);
+      color: var(--kui-spec-renderer-panel-header-color-text, var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text)));
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     }
   }

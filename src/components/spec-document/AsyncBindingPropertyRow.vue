@@ -65,7 +65,7 @@ const displayValue = computed(() =>
   padding: var(--kui-space-30, $kui-space-30) var(--kui-space-0, $kui-space-0);
 
   .binding-key {
-    color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+    color: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger));
     flex-shrink: 0;
 
     &--parent {
@@ -74,12 +74,12 @@ const displayValue = computed(() =>
   }
 
   .binding-value {
-    color: var(--kui-color-text, $kui-color-text);
+    color: var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text));
     font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
   }
 
   .binding-chevron {
-    color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+    color: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong));
     flex-shrink: 0;
     height: var(--kui-icon-size-30, $kui-icon-size-30);
     transition: transform 0.2s ease;
@@ -104,7 +104,7 @@ const displayValue = computed(() =>
   }
 
   .binding-nested-rows {
-    border-left: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-left: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border));
     margin-left: 4px;
     padding-left: var(--kui-space-50, $kui-space-50);
   }

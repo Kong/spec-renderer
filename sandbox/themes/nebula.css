@@ -22,6 +22,44 @@
     --kui-spec-renderer-color-text-primary: #c084fc;
     --kui-spec-renderer-font-family-code: "SF Mono", Menlo, Consolas, monospace;
     --kui-spec-renderer-font-family-heading: Futura, "Trebuchet MS", sans-serif;
+
+    /* Kongponents secondary button tokens, so the Try It button follows the theme instead of the HTTP method colors */
+    --kui-button-color-background-secondary-active: #2e2550;
+    --kui-button-color-background-secondary-hover: #231b40;
+    --kui-button-color-background-secondary: #1a1430;
+    --kui-button-color-border-secondary-active: #6b21a8;
+    --kui-button-color-border-secondary-hover: #9333ea;
+    --kui-button-color-border-secondary: #7e22ce;
+    --kui-button-color-text-secondary-active: #d8b4fe;
+    --kui-button-color-text-secondary-hover: #d8b4fe;
+    --kui-button-color-text-secondary: #c084fc;
+
+    /* Input tokens, so the text inputs follow the theme */
+    --kui-input-color-background: #1a1430;
+    --kui-input-color-text: #e9d5ff;
+    --kui-input-color-text-placeholder: #cbc3e3;
+    --kui-input-shadow-border: 0px 0px 0px 1px #3b2f63 inset;
+    --kui-input-shadow-border-hover: 0px 0px 0px 1px #7e22ce inset;
+    --kui-input-shadow-focus: 0px 0px 0px 4px rgba(126, 34, 206, 0.3);
+
+    /* Tertiary button tokens (the Cancel button next to the secondary ones) */
+    --kui-button-color-background-tertiary: transparent;
+    --kui-button-color-background-tertiary-active: #2e2550;
+    --kui-button-color-background-tertiary-hover: #231b40;
+    --kui-button-color-border-tertiary: transparent;
+    --kui-button-color-border-tertiary-active: transparent;
+    --kui-button-color-border-tertiary-hover: transparent;
+    --kui-button-color-text-tertiary: #7e22ce;
+    --kui-button-color-text-tertiary-active: #6b21a8;
+    --kui-button-color-text-tertiary-hover: #d8b4fe;
+
+    /* Button disabled states (the Try It button while a request is in flight) */
+    --kui-button-color-background-primary-disabled: #2e2550;
+    --kui-button-color-background-secondary-disabled: #1a1430;
+    --kui-button-color-border-primary-disabled: transparent;
+    --kui-button-color-border-secondary-disabled: #3b2f63;
+    --kui-button-color-text-primary-disabled: #cbc3e3;
+    --kui-button-color-text-secondary-disabled: #cbc3e3;
   }
 
   /* Fine-tuning on top of the base tokens */
@@ -40,7 +78,8 @@
     --kui-spec-renderer-schema-property-readonly-color-text: #67e8f9;
     --kui-spec-renderer-schema-property-required-color-text: #fb7185;
     --kui-spec-renderer-schema-property-value-shadow-border: 0px 0px 0px 1px #3b2f63 inset;
-    --kui-spec-renderer-subsection-header-padding: 8px 12px;
+    --kui-spec-renderer-subsection-padding-x: 12px;
+    --kui-spec-renderer-subsection-padding-y: 8px;
     --kui-spec-renderer-toc-color-background: #0f0b1d;
     --kui-spec-renderer-toc-group-title-color-text: #f0abfc;
     --kui-spec-renderer-toc-item-color-background-hover: #1c1533;
@@ -53,8 +92,19 @@
     --kui-badge-color-background-neutral: #2e2550;
     --kui-badge-color-text-neutral: #e9d5ff;
     --kui-code-block-line-number-color-text: #5b4d8a;
+    --kui-button-color-background-primary: #7e22ce;
+    --kui-button-color-background-primary-active: #6b21a8;
+    --kui-button-color-background-primary-hover: #9333ea;
+    --kui-button-color-border-primary: #7e22ce;
+    --kui-button-color-text-primary: #ffffff;
     --kui-dropdown-item-color-background-selected: #7e22ce;
     --kui-dropdown-item-color-text-selected: #ffffff;
+    --kui-input-shadow-border: 0px 0px 0px 1px #3b2f63 inset;
+    --kui-input-shadow-border-hover: 0px 0px 0px 1px #5b4d8a inset;
+    --kui-input-shadow-focus: 0px 0px 0px 4px rgba(192, 132, 252, 0.3);
+    --kui-input-switch-color-background-selected: #7e22ce;
+    --kui-input-switch-color-background-selected-hover: #9333ea;
+    --kui-input-switch-thumb-shadow-border-selected: 0px 0px 0px 2px #7e22ce inset;
     --kui-link-color-text-hover: #f5d0fe;
     --kui-pop-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.5);
     --kui-tooltip-color-background: #f0abfc;

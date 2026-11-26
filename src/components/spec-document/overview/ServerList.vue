@@ -116,7 +116,7 @@ const clearCustomUrlInput = () => {
 
 <style lang="scss" scoped>
 .overview-server-list {
-  color: var(--kui-color-text, $kui-color-text);
+  color: var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text));
   font-size: var(--kui-font-size-20, $kui-font-size-20);
   list-style: none;
   padding: var(--kui-space-0, $kui-space-0);
@@ -139,13 +139,13 @@ const clearCustomUrlInput = () => {
     padding: var(--kui-space-50, $kui-space-50);
 
     .server-item-header {
-      color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+      color: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong));
       font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
       font-size: var(--kui-font-size-30, $kui-font-size-30);
       line-height: var(--kui-line-height-30, $kui-line-height-30);
 
       > :first-child {
-        color: var(--kui-color-text, $kui-color-text);
+        color: var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text));
         font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
         margin-right: var(--kui-space-40, $kui-space-40);
       }

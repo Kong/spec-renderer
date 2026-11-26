@@ -457,7 +457,7 @@ watch(() => ({ id: props.data.id, excludeNotRequired: excludeNotRequired.value }
     width: 100%;
 
     .left {
-      color: var(--kui-color-text, $kui-color-text);
+      color: var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text));
     }
 
     .right {

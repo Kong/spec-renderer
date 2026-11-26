@@ -69,7 +69,7 @@ html.dark,
     h4,
     h5,
     h6 {
-      color: var(--kui-color-text, $kui-color-text);
+      color: var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text));
       font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
       margin-top: var(--kui-space-0, $kui-space-0);
     }
@@ -122,7 +122,7 @@ html.dark,
       position: relative;
 
       a.header-anchor {
-        fill: var(--kui-color-text, $kui-color-text);
+        fill: var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text));
         font-size: var(--kui-font-size-30, $kui-font-size-30);
         left: 0;
         line-height: 1;
@@ -154,7 +154,7 @@ html.dark,
     }
 
     hr {
-      border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border));
       margin: var(--kui-space-70, $kui-space-70) var(--kui-space-0, $kui-space-0);
     }
 
@@ -184,8 +184,8 @@ html.dark,
     }
 
     blockquote {
-      border-left: var(--kui-border-width-30, $kui-border-width-30) solid var(--kui-color-border, $kui-color-border);
-      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      border-left: var(--kui-border-width-30, $kui-border-width-30) solid var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border));
+      color: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, $kui-color-text-neutral));
       margin: var(--kui-space-70, $kui-space-70) var(--kui-space-0, $kui-space-0);
       padding: var(--kui-space-0, $kui-space-0) var(--kui-space-70, $kui-space-70);
     }
@@ -198,9 +198,9 @@ html.dark,
     // Inline code within the content area
     p code,
     td code {
-      background: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
+      background: var(--kui-spec-renderer-markdown-code-color-background, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker)));
       border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-      color: var(--kui-color-text, $kui-color-text);
+      color: var(--kui-spec-renderer-markdown-code-color-text, var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text)));
       font-size: var(--kui-font-size-20, $kui-font-size-20);
       overflow-wrap: break-word;
       padding: var(--kui-space-10, $kui-space-10) var(--kui-space-20, $kui-space-20);
@@ -225,15 +225,15 @@ html.dark,
     }
 
     table {
-      border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border));
       border-collapse: collapse;
       border-spacing: 0;
-      color: var(--kui-color-text, $kui-color-text);
+      color: var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text));
       font-size: var(--kui-font-size-30, $kui-font-size-30);
       margin-bottom: var(--kui-space-70, $kui-space-70);
 
       thead th {
-        background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
+        background-color: var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker));
         border: var(--kui-border-width-10, $kui-border-width-10) solid
           var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker);
         font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
@@ -247,7 +247,7 @@ html.dark,
       }
 
       tbody td {
-        border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+        border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border));
         padding: var(--kui-space-40, $kui-space-40);
         vertical-align: text-top;
       }

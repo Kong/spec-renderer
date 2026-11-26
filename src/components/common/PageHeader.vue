@@ -70,7 +70,7 @@ defineProps({
     align-items: center;
     display: flex;
     // set on the title row rather than the h2, so that with no theme font the h2 still follows the host page's heading styles
-    font-family: var(--kui-spec-renderer-page-header-title-font-family, var(--kui-spec-renderer-font-family-heading, inherit));
+    font-family: var(--kui-spec-renderer-font-family-heading, inherit);
     gap: var(--kui-space-50, $kui-space-50);
 
     h2 {

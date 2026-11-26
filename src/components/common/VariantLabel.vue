@@ -20,7 +20,7 @@ defineProps({
   border-radius: var(--kui-badge-border-radius, var(--kui-spec-renderer-border-radius-small, var(--kui-border-radius-20, $kui-border-radius-20)));
   color: var(--kui-badge-color-text-neutral, var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong));
   display: inline-block;
-  font: var(--kui-font-family-code, $kui-font-family-code);
+  font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
   font-size: var(--kui-font-size-20, $kui-font-size-20);
   font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
   line-height: var(--kui-line-height-20, $kui-line-height-20);

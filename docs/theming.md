@@ -7,6 +7,7 @@ Most themes only need the [base tokens](#base-tokens): eleven colors, corner rad
 - [How it works](#how-it-works)
 - [Base tokens](#base-tokens)
   - [Boxed sections](#boxed-sections)
+  - [Brand accent](#brand-accent)
 - [Applying a theme](#applying-a-theme)
 - [Dedicated tokens](#dedicated-tokens)
   - [Sidebar (table of contents)](#sidebar-table-of-contents)
@@ -18,6 +19,7 @@ Most themes only need the [base tokens](#base-tokens): eleven colors, corner rad
   - [Schema properties](#schema-properties)
   - [Panels](#panels)
   - [Previous / next navigation](#previous--next-navigation)
+  - [Markdown content](#markdown-content)
 - [Kongponents tokens](#kongponents-tokens)
 - [What is not themeable](#what-is-not-themeable)
 - [Sample themes](#sample-themes)
@@ -39,11 +41,13 @@ There are four kinds of tokens:
 - **Kongponents tokens** (`--kui-button-*`, `--kui-tooltip-*`, `--kui-badge-*`, ...) are read wherever the spec renderer re-implements a [Kongponents](https://kongponents.konghq.com) component, so a theme built for Kongponents (for example the `@kong/design-tokens` `electric-lime-*` themes) styles both the same way. Most of them fall back to the base tokens too.
 - **Semantic tokens** (`--kui-color-*`, `--kui-font-family-*`, `--kui-method-color-*`, ...) are the global defaults. Override them for changes that should apply everywhere, including outside the renderer, like the HTTP method colors.
 
-A dedicated token name reads as `--kui-spec-renderer-{part}-{property}-{variant}-{state}`, for example `--kui-spec-renderer-toc-item-color-background-selected`. The base tokens leave out the part, and otherwise mirror the semantic token names: `--kui-spec-renderer-color-text-primary` is the renderer's `--kui-color-text-primary`.
+In [`@kong/design-tokens`](https://github.com/Kong/design-tokens) terms, the base and dedicated tokens are both **component tokens**: value-less override slots, listed in that package's `KUI_THEMEABLE_TOKENS`, that only take effect when a theme sets them. A spec-renderer token does not have to carry the same value as the semantic token it is named after — the renderer picks its own default for each role, and a theme overrides either tier.
+
+A dedicated token name reads as `--kui-spec-renderer-{part}-{property}-{variant}-{state}`, for example `--kui-spec-renderer-toc-item-color-background-selected`. The base tokens leave out the part: `--kui-spec-renderer-color-text-primary` is the renderer-wide accent text, next to `--kui-spec-renderer-toc-item-color-text-selected` for the selected sidebar item only.
 
 ## Base tokens
 
-Eleven tokens theme the whole renderer. Each one feeds every dedicated token for the same role, so for example `--kui-spec-renderer-color-border` colors every border and divider. While a base token is unset, each part keeps its own default.
+Eleven tokens theme the whole renderer. Each one feeds every dedicated token for the same role, so for example `--kui-spec-renderer-color-border` colors every border and divider. While a base token is unset, each part keeps its own default. Keep `--kui-spec-renderer-color-text` a readable, near-neutral color: it colors body text, so a saturated value makes long descriptions hard to read.
 
 | Token | Falls back to | Styles |
 |-------|---------------|--------|
@@ -53,8 +57,8 @@ Eleven tokens theme the whole renderer. Each one feeds every dedicated token for
 | `--kui-spec-renderer-color-background-neutral` | each part's own default | Tinted areas: the sidebar, panel headers, the Try It and overview insets, the endpoint bar, code blocks and the previous / next hover |
 | `--kui-spec-renderer-color-background-primary` | each part's own default | Accent tint: the selected sidebar item, value chips, picker hover and open states, and menu item hover and selection |
 | `--kui-spec-renderer-color-border` | `--kui-color-border` | Every border and divider |
-| `--kui-spec-renderer-color-text` | `--kui-color-text` | Text: body text, section, panel and sidebar group titles, the endpoint path, and picker and menu text |
-| `--kui-spec-renderer-color-text-neutral` | each part's own default | Secondary text: sidebar items, property types, the endpoint URL and previous / next links |
+| `--kui-spec-renderer-color-text` | `--kui-color-text` | Text: body text, headings in markdown content, section, panel and sidebar group titles, the endpoint path, and picker and menu text |
+| `--kui-spec-renderer-color-text-neutral` | each part's own default | Secondary text: sidebar items, property types, the endpoint URL, previous / next links, icons and blockquotes |
 | `--kui-spec-renderer-color-text-primary` | each part's own default | Accent text: the selected sidebar item, property names, value chips, links, and picker and menu hover and selection |
 | `--kui-spec-renderer-font-family-code` | `--kui-font-family-code` | Code text: property names and types, endpoint and server URLs, the Try It path, bordered pickers, code samples, code in markdown descriptions and error messages. Unlike the global `--kui-font-family-code`, it leaves the Kongponents components on the host page alone |
 | `--kui-spec-renderer-font-family-heading` | inherited from the host page | Page and section titles. A global `h2`, `h3` or `h4` font rule on the host page still wins over it |
@@ -96,6 +100,27 @@ The operation sections (parameters, request body, responses, callbacks) are flat
 ```
 
 The box's border color and corners come from `--kui-spec-renderer-color-border` and `--kui-spec-renderer-border-radius`. To box only the nested sections, set the [nested section tokens](#operation-sections) instead.
+
+### Brand accent
+
+The base tokens carry the accent as *text* (`--kui-spec-renderer-color-text-primary`) and as a light *tint* (`--kui-spec-renderer-color-background-primary`). Two elements instead show a **filled** accent: a solid background with light text on top. They follow the Kongponents tokens, so a theme that brands the accent sets these:
+
+```css
+:root {
+  /* the toggle switch, for example Try It's "Show only required parameters" */
+  --kui-input-switch-color-background-selected: #7c3aed;
+  --kui-input-switch-color-background-selected-hover: #8b5cf6;
+  --kui-input-switch-thumb-shadow-border-selected: 0px 0px 0px 2px #7c3aed inset;
+
+  /* primary buttons, for example the Authorize button */
+  --kui-button-color-background-primary: #7c3aed;
+  --kui-button-color-background-primary-hover: #8b5cf6;
+  --kui-button-color-background-primary-active: #6d28d9;
+  --kui-button-color-text-primary: #ffffff;
+}
+```
+
+The selected dropdown menu item can be filled the same way, with `--kui-dropdown-item-color-background-selected` and `--kui-dropdown-item-color-text-selected`. A host that already brands the semantic `--kui-color-background-primary` (the Dev Portal, for example) covers all of these at once, since every one of these tokens falls back to it.
 
 ## Applying a theme
 
@@ -139,7 +164,6 @@ Each dedicated token changes one part of the renderer and wins over the base tok
 | `--kui-spec-renderer-toc-item-font-size` | `--kui-font-size-30` | Item text |
 | `--kui-spec-renderer-toc-item-font-weight` | `--kui-font-weight-regular` | Item text |
 | `--kui-spec-renderer-toc-item-font-weight-selected` | `--kui-spec-renderer-toc-item-font-weight` | Text of the item for the current page |
-| `--kui-spec-renderer-toc-item-line-height` | `--kui-line-height-30` | Item text |
 | `--kui-spec-renderer-toc-item-padding` | `--kui-space-30` | Item padding, which sets the density of the list |
 
 The method badge next to the selected item is inverted (method text color as background), so it stays readable on a selected background.
@@ -150,10 +174,11 @@ The title of the overview, operation and schema pages, and of `SchemaRenderer`.
 
 | Token | Falls back to | Styles |
 |-------|---------------|--------|
-| `--kui-spec-renderer-page-header-title-font-family` | `--kui-spec-renderer-font-family-heading`, then inherited | Page title row: the title and its badges. A global `h2` font rule on the host page still wins over it |
 | `--kui-spec-renderer-page-header-title-font-size` | `--kui-font-size-80` | Page title |
 | `--kui-spec-renderer-page-header-title-font-weight` | `--kui-font-weight-bold` | Page title |
 | `--kui-spec-renderer-page-header-title-line-height` | `--kui-line-height-70` | Page title |
+
+The title row reads `--kui-spec-renderer-font-family-heading` for its font. A global `h2` font rule on the host page still wins over it.
 
 ### Method badges
 
@@ -180,7 +205,7 @@ The collapsible sections of an operation: path, query and header parameters, req
 
 Sections are flat by default: a title, a divider and the content. The [boxed sections](#boxed-sections) recipe boxes them like the panels.
 
-A section nested in another one, the collapsible title of a body schema (for example `Report` inside a request body), has its own subsection tokens, listed below the main table. They fall back to the section tokens, so the nested sections follow the sections unless a subsection token is set.
+A section nested in another one, the collapsible title of a body schema (for example `Report` inside a request body), has its own subsection tokens, listed below the main table. They fall back to the section tokens, so the nested sections follow the sections unless a subsection token is set. AsyncAPI nests sections the same way: the **Payload** section inside a **Message accepted** section is a nested section too.
 
 | Token | Falls back to | Styles |
 |-------|---------------|--------|
@@ -192,10 +217,13 @@ A section nested in another one, the collapsible title of a body schema (for exa
 | `--kui-spec-renderer-section-header-color-background` | transparent | Background of the title area |
 | `--kui-spec-renderer-section-padding-x` | `--kui-space-0` | Horizontal padding of the title area and the content |
 | `--kui-spec-renderer-section-title-color-text` | `--kui-spec-renderer-color-text`, then `--kui-color-text` (`--kui-color-text-neutral-strong` for the chevron) | Section titles, including the titles of nested body schemas, and their collapse chevron |
-| `--kui-spec-renderer-section-title-font-family` | `--kui-spec-renderer-font-family-heading`, then inherited | Section title row, including the titles of nested body schemas. A global `h3` or `h4` font rule on the host page still wins over it |
 | `--kui-spec-renderer-section-title-font-size` | `--kui-font-size-40` | Section title |
 | `--kui-spec-renderer-section-title-font-weight` | `--kui-font-weight-semibold` | Section title |
 | `--kui-spec-renderer-section-title-line-height` | `--kui-line-height-40` | Section title |
+
+The section title row reads `--kui-spec-renderer-font-family-heading` for its font. A global `h3` or `h4` font rule on the host page still wins over it.
+
+The space between sections is a margin (`--kui-spec-renderer-section-gap`), not a flex `gap`: the sections sit at different depths in the tree (HttpRequest wraps the parameter and body sections, HttpCallbacks wraps the callback body, AsyncAPI adds a wrapper div), so they share no flex container a `gap` could be set on. The margin carries `!important` so that the renderer's own margin resets do not cancel it.
 
 Nested sections (body schema titles). To box only these, for example on flat sections, set the subsection tokens rather than the section ones:
 
@@ -203,8 +231,8 @@ Nested sections (body schema titles). To box only these, for example on flat sec
 :root {
   --kui-spec-renderer-subsection-border-width: 1px;
   --kui-spec-renderer-subsection-header-color-background: #f9fafb;
-  --kui-spec-renderer-subsection-header-padding: 8px 12px;
-  --kui-spec-renderer-subsection-content-padding: 0px 12px;
+  --kui-spec-renderer-subsection-padding-x: 12px;
+  --kui-spec-renderer-subsection-padding-y: 8px;
 }
 ```
 
@@ -213,11 +241,11 @@ Nested sections (body schema titles). To box only these, for example on flat sec
 | `--kui-spec-renderer-subsection-border-radius` | `--kui-spec-renderer-section-border-radius`, then `--kui-spec-renderer-border-radius`, then `--kui-border-radius-0` | Corners of the nested section box, and of its header (top corners, or all four when collapsed) |
 | `--kui-spec-renderer-subsection-border-width` | `--kui-spec-renderer-section-border-width`, then `--kui-border-width-0` | Border around the nested section, in the section border color. Anything above 0 boxes it |
 | `--kui-spec-renderer-subsection-color-background` | `--kui-spec-renderer-section-color-background`, then transparent | Nested section background, behind its fields |
-| `--kui-spec-renderer-subsection-content-padding` | `0` and `--kui-spec-renderer-section-padding-x` (top and bottom, sides) | Padding around the nested section's fields, as a `padding` shorthand like `0px 12px` |
 | `--kui-spec-renderer-subsection-header-color-background` | `--kui-spec-renderer-section-header-color-background`, then transparent | Background of the nested section's title bar |
-| `--kui-spec-renderer-subsection-header-padding` | `--kui-space-40`, `--kui-spec-renderer-section-padding-x` and `--kui-space-20` (top, sides, bottom) | Padding of the title bar, as a `padding` shorthand like `8px 12px` |
+| `--kui-spec-renderer-subsection-padding-x` | `--kui-spec-renderer-section-padding-x`, then `--kui-space-0` | Horizontal padding of the nested section's title bar and content |
+| `--kui-spec-renderer-subsection-padding-y` | `--kui-space-40` (top), `--kui-space-20` (bottom) | Vertical padding of the nested section's title bar |
 
-The nested section's border follows `--kui-spec-renderer-section-color-border`, and its title follows `--kui-spec-renderer-section-title-color-text` and `--kui-spec-renderer-section-title-font-family`.
+The nested section's border follows `--kui-spec-renderer-section-color-border`, and its title follows `--kui-spec-renderer-section-title-color-text` and `--kui-spec-renderer-font-family-heading`.
 
 The response status and media type next to a section title are [selects](#selects).
 
@@ -279,7 +307,16 @@ The links to the previous and next page at the bottom of a page.
 | `--kui-spec-renderer-document-navigation-color-background-hover` | `--kui-spec-renderer-color-background-neutral`, then `--kui-color-background-neutral-weakest` | Link background on hover |
 | `--kui-spec-renderer-document-navigation-color-border` | `--kui-spec-renderer-color-border`, then `--kui-color-border` | Link border |
 | `--kui-spec-renderer-document-navigation-color-text` | `--kui-spec-renderer-color-text-neutral`, then `--kui-color-text-neutral-strong` | Link text |
-| `--kui-spec-renderer-document-navigation-color-text-hover` | `--kui-spec-renderer-color-text-primary`, then `--kui-color-text-neutral-strongest` | Link text on hover |
+| `--kui-spec-renderer-document-navigation-color-text-hover` | `--kui-spec-renderer-color-text-primary`, then `--kui-color-text-neutral-strongest` | Link text on hover, and the link arrow icons |
+
+### Markdown content
+
+The prose areas: descriptions of operations, parameters and schemas, and the overview's introduction. Everything in them follows the base tokens: headings and body text read `--kui-spec-renderer-color-text`, secondary text (blockquotes) reads `--kui-spec-renderer-color-text-neutral`, borders and dividers read `--kui-spec-renderer-color-border`, and table headers read `--kui-spec-renderer-color-background-neutral`. Links follow the [KExternalLink](#kongponents-tokens) tokens. Only inline code has its own tokens:
+
+| Token | Falls back to | Styles |
+|-------|---------------|--------|
+| `--kui-spec-renderer-markdown-code-color-background` | `--kui-spec-renderer-color-background-neutral`, then `--kui-color-background-neutral-weaker` | Inline code background |
+| `--kui-spec-renderer-markdown-code-color-text` | `--kui-spec-renderer-color-text`, then `--kui-color-text` | Inline code text |
 
 ## Kongponents tokens
 
@@ -290,12 +327,12 @@ Where one of these tokens plays the same role as a base token, it falls back to 
 | Kongponents component | Tokens | Spec renderer elements |
 |-----------------------|--------|------------------------|
 | KBadge | `--kui-badge-border-radius`, `-font-size`, `-font-weight`, `-line-height`, `-padding-small`, `-padding-x`, `-padding-y`, `-color-background-{neutral,info,success,warning}`, `-color-text-{neutral,info,success,warning}` | Label badges: data type, `DEPRECATED`, `WEBHOOK` and the OAuth status badge. The `primary` badge type reads the `info` tokens. Schema variant labels (`One Of`, `Any Of`, `All Of`) read the `neutral` colors and the border radius |
-| KButton | `--kui-button-*` for the `secondary` and `tertiary` appearances in the `medium` size | The Try It button and its dropdown, the Try It file pickers and "Clear credentials" button, the custom server URL buttons and the "API documentation editor" button |
+| KButton | `--kui-button-*` for the `primary`, `secondary` and `tertiary` appearances in the `medium` size | The Try It button and its dropdown, the Try It file pickers and "Clear credentials" button, the Authorize button, the custom server URL buttons, the Download dropdown and the "API documentation editor" button |
 | KCodeBlock | `--kui-code-block-color-background`, `--kui-code-block-line-number-color-text` | Highlighted request and response samples, the editable request body and code blocks in markdown descriptions |
 | KDropdown and KPop | `--kui-dropdown-border-radius`, `--kui-dropdown-color-border`, `--kui-dropdown-item-*`, `--kui-pop-color-background`, `--kui-pop-shadow` | Select and dropdown menus. KDropdown is built on KPop, so the menu background and shadow come from the popover tokens |
 | KExternalLink | `--kui-link-color-text`, `--kui-link-color-text-hover`, `--kui-link-text-decoration`, `--kui-link-text-decoration-hover` | Links in markdown descriptions and in the overview's Additional Information |
 | KInput | `--kui-input-*` | Try It text inputs and the custom server URL input |
-| KInputSwitch | `--kui-input-switch-*` | Toggle switches |
+| KInputSwitch | `--kui-input-switch-color-background`, `-color-background-selected`, `-color-background-selected-hover`, `-color-background-hover`, `-thumb-shadow-border-selected`, `-border-radius-small`, `-thumb-border-radius` | Toggle switches, for example Try It's "Show only required parameters" |
 | KLabel | `--kui-label-color-text`, `-font-size`, `-font-weight`, `-line-height` | Try It field labels |
 | KSlideout | `--kui-slideout-color-background`, `-color-border`, `-border-width`, `-shadow`, `-title-font-family`, `-title-font-size`, `-title-font-weight`, `-title-line-height`, `-close-border-radius`, `-close-color-text-hover` | The table of contents slideout on small screens |
 | KTooltip | `--kui-tooltip-color-background`, `-color-text`, `-border-radius`, `-font-size`, `-font-weight`, `-line-height`, `-padding` | Info tooltips |
@@ -303,10 +340,10 @@ Where one of these tokens plays the same role as a base token, it falls back to 
 ## What is not themeable
 
 - **Layout sizes**: the design token conventions have no width tokens (the `use-proper-token` lint rule only allows icon size and breakpoint tokens for widths), so the 320px sidebar width and the column widths are fixed.
-- **Page title color**: the page title inherits its color from the host page, so it already follows the host's heading styles. Its size and weight are themeable.
+- **Page title font**: the page title's font follows `--kui-spec-renderer-font-family-heading`, but a global `h2` font rule on the host page still wins over it, since the title is a plain heading.
 - **Syntax highlighting**: code colors come from the Shiki `catppuccin-latte` (light) and `catppuccin-mocha` (dark mode) themes. Only the code block background is themeable, so pick a background that suits those palettes.
 - **Body text font**: the renderer does not set a text font, so the host page's font applies. Set it on the host page.
-- **Anything else** uses the semantic tokens directly, for example `--kui-color-text-primary` for the brand color.
+- **Anything else** uses the semantic tokens directly, for example `--kui-color-text-danger` for error messages and `--kui-method-color-*` for HTTP methods.
 
 ## Sample themes
 
@@ -324,6 +361,8 @@ Where one of these tokens plays the same role as a base token, it falls back to 
 - `terminal.css`: green on black with boxed sections, also for dark mode on top of `classic-night`.
 
 Run `pnpm run dev` and use the **Theme** picker in the sandbox to try them. A theme starts with its base tokens only, which shows how far those eleven tokens go on their own. Check **Fine-tuned tokens** next to the picker to add its fine-tuning rule. The sandbox applies a theme by setting `data-spec-renderer-theme` on `<html>`, and the fine-tuning by also setting `data-spec-renderer-fine-tune`.
+
+Each theme's base rule also sets the [KButton](#kongponents-tokens) secondary tokens, so picking a theme themes the Try It button right away: it loses the HTTP method colors and takes the theme's accent instead. A theme that prefers the method colors sets only the non-color button tokens, like the radius. The [brand accent](#brand-accent) tokens (primary button, toggle switch) stay in the fine-tuning rule.
 
 ## Adding a token
 

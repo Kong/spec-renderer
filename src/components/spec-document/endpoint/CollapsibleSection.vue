@@ -62,6 +62,9 @@ const toggleState = (e: Event) => {
   border-radius: var(--kui-spec-renderer-section-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-0, $kui-border-radius-0)));
   font-size: var(--kui-font-size-30, $kui-font-size-30);
   line-height: var(--kui-line-height-30, $kui-line-height-30);
+  // The gap between sections is a margin, not a flex gap: the sections sit at different depths in the tree
+  // (HttpRequest wraps the parameter and body sections, HttpCallbacks wraps the callback body, AsyncAPI adds
+  // a wrapper div), so they share no flex container a `gap` could be set on.
   // !important, like CollapsablePanel's margin, so that SpecDocument's `.reset-margin *` does not cancel the gap.
   // Named `-gap` like --kui-card-gap, which use-proper-token only accepts on margins when named `-space`.
   // stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token
@@ -75,7 +78,7 @@ const toggleState = (e: Event) => {
     cursor: pointer;
     display: flex;
     // set on the header rather than the title, so that with no theme font the title still follows the host page's heading styles
-    font-family: var(--kui-spec-renderer-section-title-font-family, var(--kui-spec-renderer-font-family-heading, inherit));
+    font-family: var(--kui-spec-renderer-font-family-heading, inherit);
     justify-content: space-between;
     padding: var(--kui-space-40, $kui-space-40) var(--kui-spec-renderer-section-padding-x, var(--kui-space-0, $kui-space-0));
 
@@ -127,7 +130,7 @@ const toggleState = (e: Event) => {
       background-color: var(--kui-spec-renderer-subsection-header-color-background, var(--kui-spec-renderer-section-header-color-background, var(--kui-color-background-transparent, $kui-color-background-transparent)));
       border-top-left-radius: var(--kui-spec-renderer-subsection-border-radius, var(--kui-spec-renderer-section-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-0, $kui-border-radius-0))));
       border-top-right-radius: var(--kui-spec-renderer-subsection-border-radius, var(--kui-spec-renderer-section-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-0, $kui-border-radius-0))));
-      padding: var(--kui-spec-renderer-subsection-header-padding, var(--kui-space-40, $kui-space-40) var(--kui-spec-renderer-section-padding-x, var(--kui-space-0, $kui-space-0)) var(--kui-space-20, $kui-space-20));
+      padding: var(--kui-spec-renderer-subsection-padding-y, var(--kui-space-40, $kui-space-40)) var(--kui-spec-renderer-subsection-padding-x, var(--kui-spec-renderer-section-padding-x, var(--kui-space-0, $kui-space-0))) var(--kui-spec-renderer-subsection-padding-y, var(--kui-space-20, $kui-space-20));
     }
 
     &:not([open]) > .endpoint-collapsible-section-header {
@@ -136,7 +139,7 @@ const toggleState = (e: Event) => {
     }
 
     > .endpoint-collapsible-section-content {
-      padding: var(--kui-spec-renderer-subsection-content-padding, var(--kui-space-0, $kui-space-0) var(--kui-spec-renderer-section-padding-x, var(--kui-space-0, $kui-space-0)));
+      padding: var(--kui-space-0, $kui-space-0) var(--kui-spec-renderer-subsection-padding-x, var(--kui-spec-renderer-section-padding-x, var(--kui-space-0, $kui-space-0)));
     }
   }
 }

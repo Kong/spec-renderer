@@ -12,7 +12,7 @@
   font-weight: var(--kui-spec-renderer-toc-item-font-weight, var(--kui-font-weight-regular, $kui-font-weight-regular));
   gap: var(--kui-space-30, $kui-space-30);
   justify-content: space-between;
-  line-height: var(--kui-spec-renderer-toc-item-line-height, var(--kui-line-height-30, $kui-line-height-30));
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
   padding: var(--kui-spec-renderer-toc-item-padding, var(--kui-space-30, $kui-space-30));
   text-align: left;
   text-decoration: none;

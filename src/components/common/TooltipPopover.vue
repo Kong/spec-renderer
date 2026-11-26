@@ -9,7 +9,7 @@
     <slot>
       <InfoIcon
         class="tooltip-trigger-info-icon"
-        :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
+        :color="`var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL}))`"
         tabindex="0"
       />
     </slot>

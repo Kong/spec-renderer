@@ -232,8 +232,8 @@ watch(() => ({
     }
 
     .spec-renderer-small-screen-header {
-      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
-      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      background-color: var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest));
+      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border));
       display: none;
       padding: var(--kui-space-30, $kui-space-30);
       position: sticky;
@@ -244,7 +244,7 @@ watch(() => ({
         @include default-button-reset;
 
         align-items: center;
-        color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+        color: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, $kui-color-text-neutral));
         display: flex;
         font-size: var(--kui-font-size-30, $kui-font-size-30);
         font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
@@ -253,17 +253,17 @@ watch(() => ({
         padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
 
         .menu-icon {
-          color: var(--kui-color-text-neutral, $kui-color-text-neutral) !important;
+          color: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, $kui-color-text-neutral)) !important;
           height: var(--kui-icon-size-40, $kui-icon-size-40) !important;
           width: var(--kui-icon-size-40, $kui-icon-size-40) !important;
         }
 
         &:hover,
         &:focus {
-          color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+          color: var(--kui-spec-renderer-color-text, var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong));
 
           .menu-icon {
-            color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong) !important;
+            color: var(--kui-spec-renderer-color-text, var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong)) !important;
           }
         }
       }
