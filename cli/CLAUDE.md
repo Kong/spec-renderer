@@ -22,7 +22,12 @@ bundle's job.
 - `resolve-render-options.ts` - pure mapping: parsed CLI flags → `SpecRendererProps` subset.
 - `resolve-spec-source.ts` / `spec-source.ts` - pure file-vs-URL classification / actual I/O.
 - `find-open-port.ts`, `parse-int-flag.ts`, `ui.ts` - small pure/near-pure helpers.
-- `preview-page/` - the static HTML page + `client.ts` served to the browser.
+- `preview-page/` - the HTML page plus its modules: `client.ts` (all I/O and
+  timing) and `preview-state.ts` (pure parsing + validation, unit-tested per the split above).
+  The server serves the modules through literal branches, because Aikido taints any `readFile`
+  in a function that holds the request URL (CodeQL accepts more). They carry a `// nosec`
+  suppression. Remove it if you ever make these paths request-derived, because it will hide
+  a real vulnerability then.
 
 Pure logic is deliberately split from I/O (mirrors `src/composables` vs `src/utils`) so it's
 unit-testable without a real server/filesystem/browser. `server.ts`/`commands/preview.ts` stay
@@ -61,8 +66,26 @@ run for this repo's own publish build, not for consumers installing the package.
   validate it, so an invalid path only surfaces via the component's own `path-not-found`
   event, handled in `client.ts` (logs a warning, resets the address bar and re-mounts the
   element with a fresh `currentPath` since the prop can't be corrected in place - see above).
-- **`navigationType` defaults to `hash`**, not the component's own `path` default - the
-  server has no SPA fallback route, so a `path`-style deep link 404s on browser refresh.
+- **`navigationType` defaults to `hash`**, not the component's own `path` default. The
+  server now has a single-page fallback (unknown non-asset routes serve the preview page,
+  see `server.ts`), so both modes survive a refresh at a deep link. `hash` also works under
+  static hosting.
+- **The preview page restores the user's location across reloads** (hot reload and manual
+  refresh): `client.ts` reads the node path from the URL and sets it as `currentPath`
+  (over `--path`, which only sets the first load's start), and restores the scroll position
+  from `sessionStorage`, anchored to the section (`id` + `h2` text + offset within it),
+  not as a raw `scrollY`: the document is virtualized (sections lazily unmount), so a raw
+  `y` from the last page load can point at other content. The target is re-measured live
+  on every call, so remount differences self-correct. Several scrolls happen while
+  settling (the component's own section scroll, our restore, then scroll anchoring), so
+  the element stays hidden until the offset is final. Do not break:
+  - Every path out of the restore must reveal the page (entry-check mismatch, re-assert,
+    4s timeout, `scrollRestoreCancelled`, user interaction, failed bundle load), or it
+    stays blank.
+  - A scroll-driven hash update must not cancel the restore. Only `path-not-found` does:
+    the section is gone, so the handler resets the URL and remounts the overview.
+- **`path-not-found` can fire for a URL-restored path, not just `--path`**. The warning
+  in `client.ts` names the source.
 - **chokidar**: needs `ignoreInitial: true` (its startup scan otherwise fires a real `add`
   event) and `awaitWriteFinish` (avoids reading a mid-write, truncated file). Some editors
   (e.g. Vim's default `writebackup` save) rename the file away and recreate it, which can

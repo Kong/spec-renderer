@@ -112,7 +112,9 @@ When previewing a local file, the CLI watches it on disk. Saving the file:
 2. Pushes a reload signal to the browser over a WebSocket connection.
 3. The preview page reloads and re-fetches the latest spec content.
 
-This is a full page reload rather than an in-place update, so scroll position/expanded state resets on each change - this keeps the preview simple and reliable rather than depending on the parser's internal reactivity.
+This is a full page reload rather than an in-place update, so expanded state (for example schema sections you manually expanded) resets on each change. This keeps the preview simple and reliable.
+
+Your place in the document survives live reload and manual refresh. The URL keeps the current operation or schema (see `--navigation-type`), and your scroll position is restored after the new content renders.
 
 ## Troubleshooting
 
