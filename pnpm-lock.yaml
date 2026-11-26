@@ -189,9 +189,9 @@ overrides:
   ajv@<6.14.0: ^6.15.0
   immutable@>=5.0.0 <5.1.5: '>=5.1.9'
   flatted@<=3.4.1: '>=3.4.4'
-  undici@<6.24.0: '>=8.11.2'
-  undici@>=7.0.0 <7.24.0: '>=8.11.2'
-  undici@>=8.0.0 <8.10.2: '>=8.11.2'
+  undici@<6.24.0: ^8.12.2
+  undici@>=7.0.0 <7.24.0: ^8.12.2
+  undici@>=8.0.0 <8.12.2: ^8.12.2
   handlebars@>=4.0.0 <4.7.9: '>=4.7.10'
   picomatch@>=4.0.0 <4.0.4: '>=4.0.7'
   picomatch@<2.3.2: '>=2.3.2'
@@ -203,7 +203,6 @@ overrides:
   '@faker-js/faker@<=10.4.0': ^10.6.0
   fast-uri@<3.1.6: ^4.2.1
   source-map-js@>=1.0.0 <1.2.2: ^1.2.2
-  undici@>=8.0.0 <8.12.2: ^8.12.2
 
 importers:
 
@@ -5610,10 +5609,6 @@ packages:
   undici-types@8.10.2:
     resolution: {integrity: sha512-7/+aSjzkUoLc92hV22bTW4aGanXf800zbwguhcICs0OAoCF9wDOE4wkopQ+SqfhXZm8mCK8gHpdTs7pZUWzK3w==}
 
-  undici@8.11.2:
-    resolution: {integrity: sha512-u4UB2/IrKdU6lFxumHmmo1a3fCQO5tzQllRorfoRS63txhrB7xTpSn1PftwC4qEHkOaqP95fCWW4lJzwErwzhQ==}
-    engines: {node: '>=22.19.0'}
-
   undici@8.12.2:
     resolution: {integrity: sha512-XtuDWVdqTLr3NAxm2ly9/hU6kUsJOgGh1RASzMBbsw6aWCOaQzHdW+QQDfdERjfJ2V5vL5pRPa4RetO9UfivDg==}
     engines: {node: '>=22.19.0'}
@@ -6127,7 +6122,7 @@ snapshots:
   '@actions/http-client@2.2.3':
     dependencies:
       tunnel: 0.0.6
-      undici: 8.11.2
+      undici: 8.12.2
 
   '@actions/io@1.1.3': {}
 
@@ -7250,7 +7245,7 @@ snapshots:
       p-filter: 4.1.0
       semantic-release: 25.0.9(supports-color@10.2.2)(typescript@5.9.3)
       tinyglobby: 0.2.17
-      undici: 8.11.2
+      undici: 8.12.2
       url-join: 5.0.0
     transitivePeerDependencies:
       - supports-color
@@ -11749,8 +11744,6 @@ snapshots:
   undici-types@7.24.6: {}
 
   undici-types@8.10.2: {}
-
-  undici@8.11.2: {}
 
   undici@8.12.2: {}
 
