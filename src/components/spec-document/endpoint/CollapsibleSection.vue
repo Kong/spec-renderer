@@ -67,7 +67,6 @@ const toggleState = (e: Event) => {
   // a wrapper div), so they share no flex container a `gap` could be set on.
   // !important, like CollapsablePanel's margin, so that SpecDocument's `.reset-margin *` does not cancel the gap.
   // Named `-gap` like --kui-card-gap, which use-proper-token only accepts on margins when named `-space`.
-  // stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token
   margin-bottom: var(--kui-spec-renderer-section-gap, var(--kui-space-0, $kui-space-0)) !important;
 
   .endpoint-collapsible-section-header {
