@@ -1,3 +1,10 @@
+## [1.117.8](https://github.com/Kong/spec-renderer/compare/v1.117.7...v1.117.8) (2026-11-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @floating-ui/vue to v2 ([#1043](https://github.com/Kong/spec-renderer/issues/1043)) ([a3834ec](https://github.com/Kong/spec-renderer/commit/a3834ec038ecf69c7ce10cbb77a722dc95c2ac77))
+
 ## [1.117.7](https://github.com/Kong/spec-renderer/compare/v1.117.6...v1.117.7) (2026-11-20)
 
 
