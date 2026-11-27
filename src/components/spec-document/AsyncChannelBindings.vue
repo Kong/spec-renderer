@@ -89,11 +89,12 @@ const bindingEntries = computed((): Array<[string, any]> =>
     }
   }
 
+  // the protocol picker and its single-protocol badge look like the other compact bordered selects
   .protocol-selector {
     :deep(.trigger-button) {
-      border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-      border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-      font-family: var(--kui-font-family-code, $kui-font-family-code);
+      border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-select-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
+      border-radius: var(--kui-spec-renderer-select-border-radius, var(--kui-spec-renderer-border-radius-small, var(--kui-border-radius-20, $kui-border-radius-20)));
+      font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
       font-size: var(--kui-font-size-20, $kui-font-size-20);
       font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
       line-height: var(--kui-line-height-40, $kui-line-height-40);
@@ -103,9 +104,9 @@ const bindingEntries = computed((): Array<[string, any]> =>
 
   :deep(.protocol-badge) {
     background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-    font-family: var(--kui-font-family-code, $kui-font-family-code);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-select-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
+    border-radius: var(--kui-spec-renderer-select-border-radius, var(--kui-spec-renderer-border-radius-small, var(--kui-border-radius-20, $kui-border-radius-20)));
+    font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
     line-height: var(--kui-line-height-40, $kui-line-height-40);
@@ -113,8 +114,8 @@ const bindingEntries = computed((): Array<[string, any]> =>
   }
 
   .channel-bindings-content {
-    background: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    background: var(--kui-spec-renderer-panel-color-background-inset, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest)));
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-panel-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
     margin-top: var(--kui-space-20, $kui-space-20);
     padding: var(--kui-space-50, $kui-space-50);
   }

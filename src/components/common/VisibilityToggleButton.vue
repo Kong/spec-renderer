@@ -26,10 +26,10 @@ const modelValue = defineModel<boolean>({ default: false })
 <style lang="scss" scoped>
 .visibility-toggle-button {
   @include default-button-reset;
-  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+  color: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, $kui-color-text-neutral));
 
   &:hover {
-    color: var(--kui-color-text, $kui-color-text);
+    color: var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text));
   }
 }
 </style>

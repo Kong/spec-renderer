@@ -45,16 +45,36 @@ const selectFormat = (item: SelectItem) => {
 </script>
 
 <style lang="scss" scoped>
+// the Download button is a secondary button, like KButton's secondary appearance
 .download-dropdown {
   :deep(.trigger-button) {
-    background-color: var(--kui-color-background, $kui-color-background);
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    color: var(--kui-color-text-primary, $kui-color-text-primary);
-    font-size: var(--kui-font-size-30, $kui-font-size-30);
-    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-    line-height: var(--kui-line-height-30, $kui-line-height-30);
-    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
+    background-color: var(--kui-button-color-background-secondary, var(--kui-color-background, $kui-color-background));
+    border: var(--kui-button-border-width-medium, var(--kui-border-width-10, $kui-border-width-10)) solid var(--kui-button-color-border-secondary, var(--kui-color-border, $kui-color-border));
+    border-radius: var(--kui-button-border-radius-medium, var(--kui-border-radius-30, $kui-border-radius-30));
+    color: var(--kui-button-color-text-secondary, var(--kui-color-text-primary, $kui-color-text-primary));
+    font-size: var(--kui-button-font-size-medium, var(--kui-font-size-30, $kui-font-size-30));
+    font-weight: var(--kui-button-font-weight, var(--kui-font-weight-semibold, $kui-font-weight-semibold));
+    line-height: var(--kui-button-line-height-medium, var(--kui-line-height-30, $kui-line-height-30));
+    padding: var(--kui-button-padding-y-medium, var(--kui-space-20, $kui-space-20)) var(--kui-button-padding-x-medium, var(--kui-space-40, $kui-space-40));
+
+    &:hover:not(:disabled):not(:focus):not(:active) {
+      background-color: var(--kui-button-color-background-secondary-hover, var(--kui-color-background, $kui-color-background));
+      border-color: var(--kui-button-color-border-secondary-hover, var(--kui-color-border-primary-strong, $kui-color-border-primary-strong));
+      color: var(--kui-button-color-text-secondary-hover, var(--kui-color-text-primary-strong, $kui-color-text-primary-strong));
+    }
+
+    // there is no focus color token - focus-visible follows the hover state
+    &:focus-visible {
+      background-color: var(--kui-button-color-background-secondary-hover, var(--kui-color-background, $kui-color-background));
+      border-color: var(--kui-button-color-border-secondary-hover, var(--kui-color-border-primary-stronger, $kui-color-border-primary-stronger));
+      color: var(--kui-button-color-text-secondary-hover, var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger));
+    }
+
+    &:active {
+      background-color: var(--kui-button-color-background-secondary-active, var(--kui-color-background, $kui-color-background));
+      border-color: var(--kui-button-color-border-secondary-active, var(--kui-color-border-primary-strongest, $kui-color-border-primary-strongest));
+      color: var(--kui-button-color-text-secondary-active, var(--kui-color-text-primary-strongest, $kui-color-text-primary-strongest));
+    }
   }
 }
 </style>

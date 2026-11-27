@@ -3,13 +3,13 @@
 @mixin default-button-reset {
   background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
   border: none;
-  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+  color: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, $kui-color-text-neutral));
   cursor: pointer;
   padding: var(--kui-space-0, $kui-space-0);
 }
 
 // Button component tokens for the non-color properties of a medium-sized button.
-// Only applied to the secondary and tertiary appearances for now - primary is not tokenized yet.
+// Applied to the primary, secondary and tertiary appearances.
 @mixin button-medium-size-tokens {
   border-radius: var(--kui-button-border-radius-medium, var(--kui-border-radius-30, $kui-border-radius-30));
   font-size: var(--kui-button-font-size-medium, var(--kui-font-size-30, $kui-font-size-30));
@@ -20,39 +20,37 @@
 
 @mixin button-default {
   @include default-button-reset;
+  @include button-medium-size-tokens;
 
+  // primary appearance, like KButton's primary: a solid background with inverse text
   align-items: center;
-  background-color: var(--kui-color-background-primary, $kui-color-background-primary);
-  border: var(--kui-border-width-20, $kui-border-width-20) solid
-    var(--kui-color-border-transparent, $kui-color-border-transparent);
-  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-  color: var(--kui-color-text-inverse, $kui-color-text-inverse);
+  background-color: var(--kui-button-color-background-primary, var(--kui-color-background-primary, $kui-color-background-primary));
+  border: var(--kui-button-border-width-medium, var(--kui-border-width-20, $kui-border-width-20)) solid var(--kui-button-color-border-primary, var(--kui-color-border-transparent, $kui-color-border-transparent));
+  color: var(--kui-button-color-text-primary, var(--kui-color-text-inverse, $kui-color-text-inverse));
   cursor: pointer;
   display: inline-flex;
   font-family: var(--kui-font-family-text, $kui-font-family-text);
-  font-size: var(--kui-font-size-30, $kui-font-size-30);
-  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
   gap: var(--kui-space-30, $kui-space-30);
   justify-content: center;
-  line-height: var(--kui-line-height-30, $kui-line-height-30);
-  padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
   transition: background-color var(--kui-animation-duration-20, 0.2s) ease-in-out,
     color var(--kui-animation-duration-20, 0.2s) ease-in-out,
     border-color var(--kui-animation-duration-20, 0.2s) ease-in-out;
   white-space: nowrap;
 
   &:hover:not(:disabled):not(:focus):not(:active) {
-    background-color: var(--kui-color-background-primary-strong, $kui-color-background-primary-strong);
+    background-color: var(--kui-button-color-background-primary-hover, var(--kui-color-background-primary-strong, $kui-color-background-primary-strong));
   }
 
+  // there is no focus color token - focus-visible follows the hover state
   &:focus-visible {
-    background-color: var(--kui-color-background-primary-stronger, $kui-color-background-primary-stronger);
+    background-color: var(--kui-button-color-background-primary-hover, var(--kui-color-background-primary-stronger, $kui-color-background-primary-stronger));
   }
 
   &:active {
-    background-color: var(--kui-color-background-primary-strongest, $kui-color-background-primary-strongest);
+    background-color: var(--kui-button-color-background-primary-active, var(--kui-color-background-primary-strongest, $kui-color-background-primary-strongest));
   }
 
+  // the secondary and tertiary appearances reset the primary look, so they repeat the size tokens
   &.secondary {
     @include button-medium-size-tokens;
 

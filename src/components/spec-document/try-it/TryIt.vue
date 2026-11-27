@@ -356,10 +356,10 @@ watch(() => (props.data.id), () => {
 <style lang="scss" scoped>
 .tryit-wrapper {
   .tryit-header {
-    background-color: var(--kui-color-background, $kui-color-background);
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    border-top-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    background-color: var(--kui-spec-renderer-panel-header-color-background, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background, $kui-color-background)));
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-panel-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
+    border-top-left-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
+    border-top-right-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
     display: flex;
     flex-direction: column;
     gap: var(--kui-space-30, $kui-space-30);
@@ -372,7 +372,8 @@ watch(() => (props.data.id), () => {
     }
 
     .path {
-      font-family: var(--kui-font-family-code, $kui-font-family-code);
+      color: var(--kui-spec-renderer-panel-header-color-text, var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text)));
+      font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
       font-size: var(--kui-font-size-30, $kui-font-size-30);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       line-height: var(--kui-line-height-30, $kui-line-height-30);
@@ -389,16 +390,16 @@ watch(() => (props.data.id), () => {
     }
 
     &.no-body {
-      border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-      border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+      border-bottom-left-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
+      border-bottom-right-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
     }
   }
 
   .tryit-body {
-    background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    background-color: var(--kui-spec-renderer-panel-color-background-inset, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest)));
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-panel-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
+    border-bottom-left-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
+    border-bottom-right-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
     border-top: 0px;
     padding: var(--kui-space-40, $kui-space-40);
   }

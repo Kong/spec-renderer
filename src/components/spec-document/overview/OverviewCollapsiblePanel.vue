@@ -32,33 +32,34 @@ defineProps({
 
 <style lang="scss" scoped>
 .overview-collapsible-panel {
-  background-color: var(--kui-color-background, $kui-color-background);
-  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+  background-color: var(--kui-spec-renderer-panel-color-background, var(--kui-spec-renderer-color-background, var(--kui-color-background, $kui-color-background)));
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-panel-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
+  border-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
   font-size: var(--kui-font-size-20, $kui-font-size-20);
   line-height: var(--kui-line-height-30, $kui-line-height-30);
   overflow: auto;
 
   .overview-collapsible-panel-header {
     align-items: center;
-    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    color: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, $kui-color-text-neutral));
     cursor: pointer;
     display: flex;
     gap: var(--kui-space-40, $kui-space-40);
     padding: var(--kui-space-40, $kui-space-40);
 
     .chevron-icon {
-      @include toggle-icon;
+      // follows the header text color so that chevrons stay visible on a themed header
+      @include toggle-icon($textColor: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, $kui-color-text-neutral)));
     }
 
     .overview-collapsible-panel-header-title {
-      color: var(--kui-color-text, $kui-color-text);
+      color: var(--kui-spec-renderer-panel-header-color-text, var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text)));
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     }
   }
 
   .overview-collapsible-panel-content {
-    border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-panel-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
 
     padding: var(--kui-space-50, $kui-space-50) var(--kui-space-90, $kui-space-90);
   }

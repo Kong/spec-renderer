@@ -1,0 +1,100 @@
+/**
+ * Ember - a warm light theme with a terracotta accent, serif titles and boxed sections.
+ *
+ * Sample theme for the @kong/spec-renderer component tokens, see docs/theming.md.
+ * The base tokens alone theme the whole renderer; the second rule fine-tunes it, and the sandbox only applies it while
+ * its "Fine-tuned tokens" checkbox is checked.
+ * Like the @kong/design-tokens themes, it lives in the `kui.theme` layer so that unlayered `:root` overrides still win.
+ */
+@layer kui.theme {
+  [data-spec-renderer-theme="ember"] {
+    /* Base tokens - these alone theme the whole renderer */
+    --kui-spec-renderer-border-radius: 10px;
+    --kui-spec-renderer-border-radius-small: 8px;
+    --kui-spec-renderer-color-background: #ffffff;
+    --kui-spec-renderer-color-background-neutral: #fff6ee;
+    --kui-spec-renderer-color-background-primary: #ffe4d1;
+    --kui-spec-renderer-color-border: #f1dfcf;
+    --kui-spec-renderer-color-text: #3b2a1f;
+    --kui-spec-renderer-color-text-neutral: #6f5a4b;
+    --kui-spec-renderer-color-text-primary: #c2410c;
+    --kui-spec-renderer-font-family-code: "SF Mono", Menlo, Consolas, monospace;
+    --kui-spec-renderer-font-family-heading: Georgia, "Times New Roman", serif;
+
+    /* Kongponents secondary button tokens, so the Try It button follows the theme instead of the HTTP method colors */
+    --kui-button-color-background-secondary-active: #ffedd5;
+    --kui-button-color-background-secondary-hover: #fff7ed;
+    --kui-button-color-background-secondary: #ffffff;
+    --kui-button-color-border-secondary-active: #9a3412;
+    --kui-button-color-border-secondary-hover: #9a3412;
+    --kui-button-color-border-secondary: #c2410c;
+    --kui-button-color-text-secondary-active: #9a3412;
+    --kui-button-color-text-secondary-hover: #9a3412;
+    --kui-button-color-text-secondary: #c2410c;
+
+    /* Input tokens, so the text inputs follow the theme */
+    --kui-input-color-background: #ffffff;
+    --kui-input-color-text: #1c1917;
+    --kui-input-color-text-placeholder: #78716c;
+    --kui-input-shadow-border: 0px 0px 0px 1px #f8d7bd inset;
+    --kui-input-shadow-border-hover: 0px 0px 0px 1px #c2410c inset;
+    --kui-input-shadow-focus: 0px 0px 0px 4px rgba(194, 65, 12, 0.3);
+
+    /* Tertiary button tokens (the Cancel button next to the secondary ones) */
+    --kui-button-color-background-tertiary: transparent;
+    --kui-button-color-background-tertiary-active: #ffedd5;
+    --kui-button-color-background-tertiary-hover: #fff7ed;
+    --kui-button-color-border-tertiary: transparent;
+    --kui-button-color-border-tertiary-active: transparent;
+    --kui-button-color-border-tertiary-hover: transparent;
+    --kui-button-color-text-tertiary: #c2410c;
+    --kui-button-color-text-tertiary-active: #7c2d12;
+    --kui-button-color-text-tertiary-hover: #9a3412;
+
+    /* Button disabled states (the Try It button while a request is in flight) */
+    --kui-button-color-background-primary-disabled: #f8d7bd;
+    --kui-button-color-background-secondary-disabled: #ffffff;
+    --kui-button-color-border-primary-disabled: transparent;
+    --kui-button-color-border-secondary-disabled: #f8d7bd;
+    --kui-button-color-text-primary-disabled: #78716c;
+    --kui-button-color-text-secondary-disabled: #78716c;
+  }
+
+  /* Fine-tuning on top of the base tokens */
+  [data-spec-renderer-theme="ember"][data-spec-renderer-fine-tune] {
+    /* Boxed sections */
+    --kui-spec-renderer-section-border-width: 1px;
+    --kui-spec-renderer-section-color-background: #ffffff;
+    --kui-spec-renderer-section-gap: 16px;
+    --kui-spec-renderer-section-header-color-background: #fff4ea;
+    --kui-spec-renderer-section-padding-x: 16px;
+
+    /* Dedicated tokens - fine-tuning on top of the base tokens */
+    --kui-spec-renderer-page-header-title-font-weight: 800;
+    --kui-spec-renderer-schema-property-readonly-color-text: #0f766e;
+    --kui-spec-renderer-schema-property-required-color-text: #be123c;
+    --kui-spec-renderer-schema-property-value-shadow-border: 0px 0px 0px 1px #f8d7bd inset;
+    --kui-spec-renderer-section-title-color-text: #7c2d12;
+    --kui-spec-renderer-subsection-header-color-background: #fff8f2;
+    --kui-spec-renderer-subsection-padding-x: 12px;
+    --kui-spec-renderer-subsection-padding-y: 8px;
+    --kui-spec-renderer-toc-group-title-color-text: #c2410c;
+    --kui-spec-renderer-toc-item-color-background-hover: #fdeee2;
+    --kui-spec-renderer-toc-item-color-text-selected: #9a3412;
+    --kui-spec-renderer-toc-item-font-weight-selected: 600;
+
+    /* Kongponents component tokens the spec renderer also reads */
+    --kui-button-color-background-primary: #c2410c;
+    --kui-button-color-background-primary-active: #9a3412;
+    --kui-button-color-background-primary-hover: #d97706;
+    --kui-button-color-border-primary: #c2410c;
+    --kui-button-color-text-primary: #ffffff;
+    --kui-dropdown-item-color-background-selected: #c2410c;
+    --kui-dropdown-item-color-text-selected: #ffffff;
+    --kui-input-switch-color-background-selected: #c2410c;
+    --kui-input-switch-color-background-selected-hover: #d97706;
+    --kui-input-switch-thumb-shadow-border-selected: 0px 0px 0px 2px #c2410c inset;
+    --kui-link-color-text-hover: #9a3412;
+    --kui-tooltip-color-background: #431407;
+  }
+}

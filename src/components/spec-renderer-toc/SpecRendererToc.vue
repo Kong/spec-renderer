@@ -206,7 +206,7 @@ const selectItem = (id: any) => {
 
 <style lang="scss" scoped>
 .table-of-contents {
-  background-color: var(--kui-color-background-transparent, $kui-color-background-transparent); // transparent so that it doesn't interfere with the parent's background
+  background-color: var(--kui-spec-renderer-toc-color-background, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background-transparent, $kui-color-background-transparent))); // transparent so that it doesn't interfere with the parent's background
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -227,8 +227,8 @@ const selectItem = (id: any) => {
 }
 
 .powered-by {
-  background-color: var(--kui-color-background, $kui-color-background);
-  border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+  background-color: var(--kui-spec-renderer-toc-color-background, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background, $kui-color-background)));
+  border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-toc-color-border-divider, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
   bottom: 0;
   box-sizing: border-box;
   padding: var(--kui-space-70, $kui-space-70);
@@ -237,7 +237,7 @@ const selectItem = (id: any) => {
 
   a {
     box-sizing: border-box;
-    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    color: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, $kui-color-text-neutral));
     font-family: var(--kui-font-family-text, $kui-font-family-text);
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
@@ -246,7 +246,7 @@ const selectItem = (id: any) => {
     transition: color 0.2s ease-in-out;
 
     &:not(.powered-by-button):hover {
-      color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+      color: var(--kui-spec-renderer-color-text, var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong));
       text-decoration: underline;
     }
   }

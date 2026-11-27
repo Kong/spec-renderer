@@ -80,7 +80,7 @@ const paramItemRequiredFields = (param: IHttpParam) => {
 .request-param-list {
   .request-param-list-items {
     > :not(:first-child) {
-      border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-schema-property-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
     }
   }
 }

@@ -186,9 +186,9 @@ const openDetailsElement = () => {
 
   .nested-fields-summary {
     align-items: center;
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border));
     border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+    color: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger));
     cursor: pointer;
     display: flex;
     font-size: var(--kui-font-size-20, $kui-font-size-20);
@@ -201,7 +201,7 @@ const openDetailsElement = () => {
 
     .add-circle-icon {
       @include toggle-icon(
-        $textColor: var(--kui-color-text-neutral, $kui-color-text-neutral),
+        $textColor: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, $kui-color-text-neutral)),
         $height: var(--kui-icon-size-30, $kui-icon-size-30),
         $width: var(--kui-icon-size-30, $kui-icon-size-30),
         $rotateDegree: 45deg,

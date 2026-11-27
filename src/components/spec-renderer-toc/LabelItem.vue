@@ -16,10 +16,11 @@ defineProps<{
 </script>
 
 <style lang="scss" scoped>
+// a label is a group title without a collapse toggle, so it shares the group title tokens
 .label-item {
-  color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
-  font-size: var(--kui-font-size-20, $kui-font-size-20);
-  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+  color: var(--kui-spec-renderer-toc-group-title-color-text, var(--kui-spec-renderer-color-text, var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger)));
+  font-size: var(--kui-spec-renderer-toc-group-title-font-size, var(--kui-font-size-20, $kui-font-size-20));
+  font-weight: var(--kui-spec-renderer-toc-group-title-font-weight, var(--kui-font-weight-semibold, $kui-font-weight-semibold));
   line-height: var(--kui-line-height-20, $kui-line-height-20);
   list-style-type: none;
   padding: var(--kui-space-30, $kui-space-30) var(--kui-space-30, $kui-space-30) var(--kui-space-0, $kui-space-0);

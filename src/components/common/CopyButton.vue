@@ -6,7 +6,7 @@
   >
     <component
       :is="copied ? CheckIcon : CopyIcon"
-      :color="copied ? 'green' : iconColor"
+      :color="copied ? `var(--kui-color-text-success, ${KUI_COLOR_TEXT_SUCCESS})` : iconColor"
       :size="iconsSize"
     />
   </button>
@@ -14,6 +14,7 @@
 
 <script setup lang="ts">
 import { CopyIcon, CheckIcon } from '@kong/icons'
+import { KUI_COLOR_TEXT_SUCCESS } from '@kong/design-tokens'
 import { useClipboard } from '@vueuse/core'
 
 const props = defineProps({

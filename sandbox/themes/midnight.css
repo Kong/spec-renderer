@@ -1,0 +1,104 @@
+/**
+ * Midnight - a dark navy sidebar next to light content, with a teal accent and flat sections.
+ *
+ * Sample theme for the @kong/spec-renderer component tokens, see docs/theming.md.
+ * The base tokens alone theme the whole renderer; the second rule fine-tunes it, and the sandbox only applies it while
+ * its "Fine-tuned tokens" checkbox is checked.
+ * Like the @kong/design-tokens themes, it lives in the `kui.theme` layer so that unlayered `:root` overrides still win.
+ */
+@layer kui.theme {
+  [data-spec-renderer-theme="midnight"] {
+    /* Base tokens - these alone theme the whole renderer */
+    --kui-spec-renderer-border-radius: 8px;
+    --kui-spec-renderer-border-radius-small: 4px;
+    --kui-spec-renderer-color-background: #ffffff;
+    --kui-spec-renderer-color-background-neutral: #f8fafc;
+    --kui-spec-renderer-color-background-primary: #ccfbf1;
+    --kui-spec-renderer-color-border: #d5dde8;
+    --kui-spec-renderer-color-text: #0f172a;
+    --kui-spec-renderer-color-text-neutral: #475569;
+    --kui-spec-renderer-color-text-primary: #0f766e;
+    --kui-spec-renderer-font-family-code: Menlo, Consolas, monospace;
+    --kui-spec-renderer-font-family-heading: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+
+    /* Kongponents secondary button tokens, so the Try It button follows the theme instead of the HTTP method colors */
+    --kui-button-color-background-secondary-active: #ccfbf1;
+    --kui-button-color-background-secondary-hover: #f0fdfa;
+    --kui-button-color-background-secondary: #ffffff;
+    --kui-button-color-border-secondary-active: #115e59;
+    --kui-button-color-border-secondary-hover: #115e59;
+    --kui-button-color-border-secondary: #0f766e;
+    --kui-button-color-text-secondary-active: #115e59;
+    --kui-button-color-text-secondary-hover: #115e59;
+    --kui-button-color-text-secondary: #0f766e;
+
+    /* Input tokens, so the text inputs follow the theme */
+    --kui-input-color-background: #ffffff;
+    --kui-input-color-text: #0f172a;
+    --kui-input-color-text-placeholder: #334155;
+    --kui-input-shadow-border: 0px 0px 0px 1px #ccfbf1 inset;
+    --kui-input-shadow-border-hover: 0px 0px 0px 1px #0f766e inset;
+    --kui-input-shadow-focus: 0px 0px 0px 4px rgba(15, 118, 110, 0.3);
+
+    /* Tertiary button tokens (the Cancel button next to the secondary ones) */
+    --kui-button-color-background-tertiary: transparent;
+    --kui-button-color-background-tertiary-active: #ccfbf1;
+    --kui-button-color-background-tertiary-hover: #f0fdfa;
+    --kui-button-color-border-tertiary: transparent;
+    --kui-button-color-border-tertiary-active: transparent;
+    --kui-button-color-border-tertiary-hover: transparent;
+    --kui-button-color-text-tertiary: #0f766e;
+    --kui-button-color-text-tertiary-active: #134e4a;
+    --kui-button-color-text-tertiary-hover: #115e59;
+
+    /* Button disabled states (the Try It button while a request is in flight) */
+    --kui-button-color-background-primary-disabled: #ccfbf1;
+    --kui-button-color-background-secondary-disabled: #ffffff;
+    --kui-button-color-border-primary-disabled: transparent;
+    --kui-button-color-border-secondary-disabled: #ccfbf1;
+    --kui-button-color-text-primary-disabled: #334155;
+    --kui-button-color-text-secondary-disabled: #334155;
+  }
+
+  /* Fine-tuning on top of the base tokens */
+  [data-spec-renderer-theme="midnight"][data-spec-renderer-fine-tune] {
+    /* Sections stay flat, but nested sections (body schema titles) are boxed */
+    --kui-spec-renderer-subsection-border-width: 1px;
+    --kui-spec-renderer-subsection-color-background: #ffffff;
+    --kui-spec-renderer-subsection-header-color-background: #f8fafc;
+    --kui-spec-renderer-subsection-padding-x: 12px;
+    --kui-spec-renderer-subsection-padding-y: 8px;
+
+    /* Dark sidebar - the sidebar tokens override the light base colors there */
+    --kui-spec-renderer-toc-color-background: #0f172a;
+    --kui-spec-renderer-toc-color-border-divider: #1e293b;
+    --kui-spec-renderer-toc-group-title-color-text: #5eead4;
+    --kui-spec-renderer-toc-item-color-background-hover: #1e293b;
+    --kui-spec-renderer-toc-item-color-background-selected: #134e4a;
+    --kui-spec-renderer-toc-item-color-text: #cbd5e1;
+    --kui-spec-renderer-toc-item-color-text-hover: #ffffff;
+    --kui-spec-renderer-toc-item-color-text-selected: #ccfbf1;
+    --kui-spec-renderer-toc-item-font-weight-selected: 600;
+
+    /* Dedicated tokens - fine-tuning on top of the base tokens */
+    --kui-spec-renderer-page-header-title-font-weight: 800;
+    --kui-spec-renderer-schema-property-readonly-color-text: #4f46e5;
+    --kui-spec-renderer-schema-property-required-color-text: #e11d48;
+    --kui-spec-renderer-schema-property-value-shadow-border: 0px 0px 0px 1px #99f6e4 inset;
+    --kui-spec-renderer-section-title-color-text: #115e59;
+
+    /* Kongponents component tokens the spec renderer also reads */
+    --kui-button-color-background-primary: #0f766e;
+    --kui-button-color-background-primary-active: #115e59;
+    --kui-button-color-background-primary-hover: #14b8a6;
+    --kui-button-color-border-primary: #0f766e;
+    --kui-button-color-text-primary: #ffffff;
+    --kui-dropdown-item-color-background-selected: #0f766e;
+    --kui-dropdown-item-color-text-selected: #ffffff;
+    --kui-input-switch-color-background-selected: #0f766e;
+    --kui-input-switch-color-background-selected-hover: #14b8a6;
+    --kui-input-switch-thumb-shadow-border-selected: 0px 0px 0px 2px #0f766e inset;
+    --kui-link-color-text-hover: #115e59;
+    --kui-tooltip-color-background: #0f172a;
+  }
+}

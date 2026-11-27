@@ -15,7 +15,7 @@
 }
 
 @mixin toggle-icon(
-  $textColor: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong),
+  $textColor: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong)),
   $height: var(--kui-icon-size-30, $kui-icon-size-30),
   $width: var(--kui-icon-size-30, $kui-icon-size-30),
   $rotateDegree: 90deg

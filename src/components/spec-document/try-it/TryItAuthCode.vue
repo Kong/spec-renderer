@@ -213,15 +213,16 @@ watch(clientId, () => {
 
       // the mixin has no disabled state, and Authorize is often disabled
       &:disabled {
-        background-color: var(--kui-color-background-disabled, $kui-color-background-disabled);
-        color: var(--kui-color-text-disabled, $kui-color-text-disabled);
+        background-color: var(--kui-button-color-background-primary-disabled, var(--kui-color-background-disabled, $kui-color-background-disabled));
+        border-color: var(--kui-button-color-border-primary-disabled, var(--kui-color-border-transparent, $kui-color-border-transparent));
+        color: var(--kui-button-color-text-primary-disabled, var(--kui-color-text-disabled, $kui-color-text-disabled));
         cursor: not-allowed;
       }
     }
   }
 
   .auth-hint {
-    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    color: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, $kui-color-text-neutral));
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     margin-top: var(--kui-space-30, $kui-space-30);
   }
@@ -230,7 +231,7 @@ watch(clientId, () => {
     background-color: var(--kui-color-background-danger-weakest, $kui-color-background-danger-weakest);
     border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     color: var(--kui-color-text-danger, $kui-color-text-danger);
-    font-family: var(--kui-font-family-code, $kui-font-family-code);
+    font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
     font-size: var(--kui-font-size-30, $kui-font-size-30);
     line-height: var(--kui-line-height-30, $kui-line-height-30);
     margin-top: var(--kui-space-30, $kui-space-30);

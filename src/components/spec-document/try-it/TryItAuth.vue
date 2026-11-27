@@ -6,7 +6,7 @@
   >
     <template #header>
       <LockIcon
-        :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
+        :color="`var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL}))`"
         :size="20"
       />
       <h3>

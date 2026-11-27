@@ -374,7 +374,7 @@ watch(fieldValues, (newFieldValues) => {
     margin: var(--kui-space-0, $kui-space-0);
 
     .required-fields-toggle {
-      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border));
       margin: var(--kui-space-0, $kui-space-0);
       padding: var(--kui-space-60, $kui-space-60) var(--kui-space-50, $kui-space-50);
     }
@@ -404,7 +404,7 @@ input[type=text] {
 
 .masked-body-hint {
   align-items: center;
-  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+  color: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, $kui-color-text-neutral));
   display: flex;
   font-size: var(--kui-font-size-20, $kui-font-size-20);
   gap: var(--kui-space-30, $kui-space-30);
@@ -413,12 +413,12 @@ input[type=text] {
 
   .masked-body-hint-action {
     @include default-button-reset;
-    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    color: var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral, $kui-color-text-neutral));
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     text-decoration: underline;
 
     &:hover {
-      color: var(--kui-color-text, $kui-color-text);
+      color: var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text));
     }
   }
 }

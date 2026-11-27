@@ -96,10 +96,12 @@ const selectItems = computed(() => props.serverUrlList.map((url) => ({ label: ur
 </script>
 
 <style lang="scss" scoped>
+// the endpoint bar is framed like the panels next to it, so it shares their border tokens
 .server-endpoint {
   align-items: center;
-  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+  background-color: var(--kui-spec-renderer-endpoint-color-background, var(--kui-spec-renderer-color-background-neutral, var(--kui-color-background-transparent, $kui-color-background-transparent)));
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-spec-renderer-panel-color-border, var(--kui-spec-renderer-color-border, var(--kui-color-border, $kui-color-border)));
+  border-radius: var(--kui-spec-renderer-panel-border-radius, var(--kui-spec-renderer-border-radius, var(--kui-border-radius-30, $kui-border-radius-30)));
   display: flex;
   gap: var(--kui-space-30, $kui-space-30);
   justify-content: space-between;
@@ -115,8 +117,8 @@ const selectItems = computed(() => props.serverUrlList.map((url) => ({ label: ur
 
     .server-select-dropdown {
       :deep(.trigger-button) {
-        color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
-        font-family: var(--kui-font-family-code, $kui-font-family-code);
+        color: var(--kui-spec-renderer-endpoint-color-text, var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong)));
+        font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
         gap: var(--kui-space-0, $kui-space-0);
         overflow-wrap: anywhere;
         padding: var(--kui-space-0, $kui-space-0) var(--kui-space-20, $kui-space-20);
@@ -129,9 +131,9 @@ const selectItems = computed(() => props.serverUrlList.map((url) => ({ label: ur
     }
 
     .server-url-with-path {
-      color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+      color: var(--kui-spec-renderer-endpoint-color-text, var(--kui-spec-renderer-color-text-neutral, var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong)));
       display: flex;
-      font-family: var(--kui-font-family-code, $kui-font-family-code);
+      font-family: var(--kui-spec-renderer-font-family-code, var(--kui-font-family-code, $kui-font-family-code));
       gap: var(--kui-space-20, $kui-space-20);
       overflow-wrap: anywhere;
     }
@@ -141,7 +143,7 @@ const selectItems = computed(() => props.serverUrlList.map((url) => ({ label: ur
     }
 
     .endpoint-path {
-      color: var(--kui-color-text, $kui-color-text);
+      color: var(--kui-spec-renderer-endpoint-path-color-text, var(--kui-spec-renderer-color-text, var(--kui-color-text, $kui-color-text)));
       display: contents;
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     }
