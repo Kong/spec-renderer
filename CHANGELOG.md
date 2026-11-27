@@ -1,3 +1,10 @@
+## [1.117.9](https://github.com/Kong/spec-renderer/compare/v1.117.8...v1.117.9) (2026-11-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency shiki to v4 ([#1055](https://github.com/Kong/spec-renderer/issues/1055)) ([e215d03](https://github.com/Kong/spec-renderer/commit/e215d0371f0727783e462be4e297a005956e46e3))
+
 ## [1.117.8](https://github.com/Kong/spec-renderer/compare/v1.117.7...v1.117.8) (2026-11-27)
 
 
