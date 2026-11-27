@@ -31,6 +31,7 @@ export enum SpecVersion {
   OAS2 = 'OAS 2.0',
   OAS3 = 'OAS 3.0',
   OAS31 = 'OAS 3.1',
+  OAS32 = 'OAS 3.2',
   ASYNC = 'ASYNC',
 }
 
